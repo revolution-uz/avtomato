@@ -4,14 +4,12 @@ namespace App\Console\Commands;
 
 use App\Database\DatabaseConnector;
 use App\Database\DatabaseHelper;
-use App\Enums\CompanyStatus;
-use App\Events\CompanyCreated;
+use App\Enums\Company\CompanyStatus;
 use App\Helpers\CompanyAccountHelper;
 use App\Models\Company;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
 
 class CreateCompanyCommand extends Command
 {
@@ -73,7 +71,6 @@ class CreateCompanyCommand extends Command
                     );
                 }
 
-                event(new CompanyCreated($company->id));
             }
         }
 

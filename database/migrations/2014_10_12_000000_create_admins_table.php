@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone')->nullable();
             $table->string('password');
+            $table->string('role', 55)->index();
+            $table->string('status', 55)->index();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('admins');
     }
 };

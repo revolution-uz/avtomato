@@ -3,6 +3,7 @@
 namespace App\Database;
 
 use App\Models\Company;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -21,22 +22,22 @@ class DatabaseHelper
 
         $result = DB::statement("CREATE USER $company->db_user WITH ENCRYPTED PASSWORD '$company->db_password'");
         if (! $result) {
-            throw new \Exception('Can not create a database user');
+            throw new Exception('Can not create a database user');
         }
 
         $result = DB::statement("CREATE DATABASE $company->db_name");
         if (! $result) {
-            throw new \Exception('Can not create a database user');
+            throw new Exception('Can not create a database user');
         }
 
         $config = DatabaseConnector::getTempConnectionFor($company->db_name);
         $result = DB::connection($config)->statement("GRANT ALL PRIVILEGES ON DATABASE $company->db_name TO $company->db_user");
         if (! $result) {
-            throw new \Exception('Can not create a database user');
+            throw new Exception('Can not create a database user');
         }
         $result = DB::connection($config)->statement("GRANT ALL ON schema public TO $company->db_user");
         if (! $result) {
-            throw new \Exception('Can not create a database user');
+            throw new Exception('Can not create a database user');
         }
         DatabaseConnector::removeTempConnectionFor($company->db_name);
 
