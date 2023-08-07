@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Models\Admin\Company;
+use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Console\OutputStyle;
 

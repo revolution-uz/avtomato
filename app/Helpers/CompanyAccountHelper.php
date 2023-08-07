@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Database\DatabaseConnector;
+use App\Enums\Company\UserStatus;
 use App\Models\Company;
 use App\Models\Company\User;
 use Cache;
@@ -26,6 +27,7 @@ class CompanyAccountHelper
                     'phone' => $company->owner_phone,
                     'first_name' => $director_name[0] ?? null,
                     'last_name' => $director_name[1] ?? null,
+                    'status' => UserStatus::ACTIVE
                 ]
             );
         }

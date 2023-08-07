@@ -7,6 +7,8 @@ use App\Database\DatabaseHelper;
 use App\Enums\Company\CompanyStatus;
 use App\Helpers\CompanyAccountHelper;
 use App\Models\Company;
+use Database\Seeders\Company\PermissionSeeder;
+use DB;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -44,12 +46,26 @@ class CreateCompanyCommand extends Command
         } else {
             $companies = [Company::findOrFail($companyId)];
         }
-
+        $cnt = count($companies);
+        $this->info(strtr("Creating :database for :companies_count :companies_str", [
+            ':database' => $cnt > 1 ? 'databases' : 'database',
+            ':companies_count' => $cnt,
+            ':companies_str' => $cnt > 1 ? 'companies' : 'company'
+        ]));
         foreach ($companies as $company) {
-            DatabaseHelper::createCompanyDatabase($company);
+            $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
+            $db = DB::select($query, [DatabaseHelper::getCompanyDatabaseName($company)]);
+            if (empty($db)) {
+                DatabaseHelper::createCompanyDatabase($company);
+            } else {
+                $this->info("[$company->name] Skipping database creation, it already exist.");
+            }
+
+            $this->info("[$company->name] Database created.");
             if (! $this->option('withoutMigrations')) {
                 //needed for migrations correctly run
                 DatabaseConnector::setCompanyConnection($company->id);
+                $this->info("[$company->name] Running migrations");
                 if (Artisan::call('migrate:company', ['--companyIds' => $companyId, '--force' => true]) !== 0) {
                     throw new Exception(
                         'Migrations were executed with errors in the company ' .
@@ -57,7 +73,7 @@ class CreateCompanyCommand extends Command
                     );
                 }
 
-
+                $this->info("[$company->name] Creating admin user");
                 CompanyAccountHelper::createCompanyUser($companyId);
                 $company->update([
                     'status' => CompanyStatus::CREATED,
@@ -71,9 +87,11 @@ class CreateCompanyCommand extends Command
                     );
                 }
 
+            } else {
+                $this->info("[$company->name] Migrations skipped");
             }
         }
-
+        $this->info("[$company->name] All done.");
         return Command::SUCCESS;
     }
 }

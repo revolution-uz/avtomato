@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('owner_phone');
             $table->string('owner_name');
             $table->string('subdomain')->unique();
-            $table->string('db_user');
-            $table->string('db_name');
-            $table->string('db_password');
+            $table->string('db_user')->nullable();
+            $table->string('db_name')->nullable();
+            $table->string('db_password')->nullable();
             $table->string('status', 55)->index();
             $table->timestamps();
         });

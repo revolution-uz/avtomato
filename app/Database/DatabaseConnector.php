@@ -148,6 +148,6 @@ class DatabaseConnector
      */
     private static function hasCompanyConnection(int $companyId): bool
     {
-        return Config::has(self::CONFIG_PREFIX . '.' . self::getCompanyConnectionName($companyId));
+        return Config::get(self::CONFIG_PREFIX . '.' . self::getCompanyConnectionName($companyId)) !== null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -16,7 +17,12 @@ class User extends Model
         'status',
         'first_name',
         'last_name',
-        'phone'
+        'phone',
+        'status'
+    ];
+
+    protected $casts = [
+        'status' => UserStatus::class
     ];
     /**
      * @param $permission
