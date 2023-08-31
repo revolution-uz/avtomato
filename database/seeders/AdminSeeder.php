@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'role' => AdminRole::SUPER_USER,
-            'status' => AdminStatus::ACTIVE,
+//            'status' => AdminStatus::ACTIVE,
             'phone' => '+998901112233',
             'name' => 'Admin'
         ]);

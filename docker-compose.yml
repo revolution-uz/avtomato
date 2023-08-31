@@ -7,7 +7,7 @@ services:
         image: postgres:alpine3.18
         container_name: ${APP_NAME}-postgres
         volumes:
-            - "./storage/data/postgres:/var/lib/postgresql/data"
+            - volume-postgres:/var/lib/postgresql/data
         environment:
             - POSTGRES_USER=${DB_USERNAME}
             - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -47,3 +47,6 @@ services:
 networks:
     app-network:
         driver: bridge
+volumes:
+    volume-postgres:
+        driver: local
