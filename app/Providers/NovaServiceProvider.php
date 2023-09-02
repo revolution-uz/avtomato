@@ -2,7 +2,19 @@
 
 namespace App\Providers;
 
+use App\Enums\Main\AdminRole;
+use App\Helpers\UrlHelper;
+use App\Models\Company;
+use App\Nova\AdminResource;
+use App\Nova\Company\UserResource;
+use App\Nova\CompanyResource;
+use App\Nova\Dashboards\Main;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Nova\Menu\Menu;
+use Laravel\Nova\Menu\MenuGroup;
+use Laravel\Nova\Menu\MenuItem;
+use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
@@ -13,9 +25,59 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
+
+        if (!app()->runningInConsole() && UrlHelper::isHasCompanySlugInCurrentHost()) {
+            Nova::mainMenu(function (Request $request, Menu $menu) {
+                /** @var Company $company */
+                $company = Company::query()
+                    ->where('subdomain', UrlHelper::getCompanySlugFromCurrentHost())
+                    ->firstOrFail();
+
+                return [
+                    MenuItem::externalLink('BACK TO GLOBAL PANEL', UrlHelper::getAdminUrl())->openInNewTab(),
+                    MenuItem::link($company->name, '/'),
+                    MenuSection::make('Dashboards', [
+                        MenuItem::dashboard(Main::class),
+                        // here will be another statistic dashboards
+                    ])->collapsable()->icon('view-grid'),
+                    MenuSection::make('Resources', [
+                        MenuItem::resource(UserResource::class),
+                    ])->collapsable(),
+                ];
+            });
+
+            Nova::initialPath('/dashboards/main');
+        } else {
+            Nova::mainMenu(function (Request $request, Menu $menu) {
+                return [
+                    MenuSection::make('Dashboards', [
+                        MenuItem::dashboard(Main::class),
+                        // here will be another statistic dashboards
+                    ])->collapsable()->icon('view-grid'),
+                    MenuSection::make('Resources', [
+                        MenuItem::resource(CompanyResource::class),
+                        MenuItem::resource(AdminResource::class),
+                    ])->collapsable(),
+                ];
+            });
+
+            Nova::initialPath('/dashboards/main');
+        }
+
+        Nova::userMenu(function (Request $request, Menu $menu) {
+            if ($request->user()->role === AdminRole::SUPER_ADMIN) {
+                $menu->prepend(
+                    MenuItem::link('Horizon dashboard', '/horizon')
+                );
+            }
+
+            return $menu;
+        });
+
+        Nova::withoutNotificationCenter();
     }
 
     /**
@@ -23,7 +85,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    protected function routes()
+    protected function routes(): void
     {
         Nova::routes()
                 ->withAuthenticationRoutes()
@@ -37,7 +99,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    protected function gate()
+    protected function gate(): void
     {
         Gate::define('viewNova', function ($user) {
             return in_array($user->email, [
@@ -51,10 +113,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return array
      */
-    protected function dashboards()
+    protected function dashboards(): array
     {
         return [
-            new \App\Nova\Dashboards\Main,
+            new Main,
         ];
     }
 
@@ -63,7 +125,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return array
      */
-    public function tools()
+    public function tools(): array
     {
         return [];
     }

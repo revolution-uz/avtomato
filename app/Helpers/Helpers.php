@@ -3,11 +3,10 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Str;
 
 class Helpers
 {
-  public static function appClasses()
+  public static function appClasses(): array
   {
 
     $data = config('custom.custom');
@@ -171,7 +170,7 @@ class Helpers
     return $layoutClasses;
   }
 
-  public static function updatePageConfig($pageConfigs)
+  public static function updatePageConfig($pageConfigs): void
   {
     $demo = 'custom';
     if (isset($pageConfigs)) {

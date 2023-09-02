@@ -1,4 +1,4 @@
-@extends('layouts/layoutMaster')
+@extends('template-layouts/layoutMaster')
 
 @section('title', ' Horizontal Layouts - Forms')
 
@@ -16,7 +16,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/form-layouts.js')}}"></script>
+<script src="{{asset('assets/js/form-template-layouts.js')}}"></script>
 @endsection
 
 @section('content')

@@ -2,10 +2,9 @@
 
 namespace App\Enums\Company;
 
-enum CompanyStatus: string
+enum CompanyStatus: int
 {
-    case NEW = 'new';
-    case CREATED = 'created';
-    case ACTIVE = 'active';
-    case  INACTIVE = 'inactive';
+    case CREATED = 0; // means just created and need to run company:create command
+    case ACTIVE = 1; // means active
+    case  INACTIVE = -1; // means disabled
 }

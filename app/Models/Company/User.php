@@ -4,12 +4,23 @@ namespace App\Models\Company;
 
 use App\Enums\Company\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Model
+/**
+ * @property int $id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $phone
+ * @property UserStatus $status
+ * @property string $avatar
+ *
+ * @property-read string $avatarUrl
+ */
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
@@ -18,12 +29,14 @@ class User extends Model
         'first_name',
         'last_name',
         'phone',
-        'status'
+        'status',
+        'avatar',
     ];
 
     protected $casts = [
         'status' => UserStatus::class
     ];
+
     /**
      * @param $permission
      * @param $guardName
@@ -45,5 +58,10 @@ class User extends Model
         }
 
         return $hasPermission;
+    }
+
+    public function getAvatarUrlAttribute(): string
+    {
+        return Storage::url("avatar/$this->avatar");
     }
 }

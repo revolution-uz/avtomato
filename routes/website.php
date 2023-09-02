@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\template\laravel_example\UserManagement;
-use Illuminate\Support\Facades\Route;
 
 
 /*
@@ -15,4 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'App\Http\Controllers\Website\HomeController@index')->name('website-home');
+use App\Http\Controllers\Website\HomeController;
+use Illuminate\Support\Facades\Route;
+
+Route::multilingual('/', [HomeController::class, 'index'])->name('website-home');

@@ -2,8 +2,8 @@
 
 namespace App\Enums\Main;
 
-enum AdminRole: string
+enum AdminRole: int
 {
-    case SUPER_USER = 'superuser';
-    case SUPPORT = 'support';
+    case SUPER_ADMIN = 0;
+    case SUPPORT = 1;
 }

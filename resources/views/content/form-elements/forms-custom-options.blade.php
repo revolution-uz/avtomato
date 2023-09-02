@@ -1,4 +1,4 @@
-@extends('layouts/layoutMaster')
+@extends('template-layouts/layoutMaster')
 
 @section('title', 'Custom Options - Forms')
 

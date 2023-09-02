@@ -1,4 +1,4 @@
-@extends('layouts/layoutMaster')
+@extends('template-layouts/layoutMaster')
 
 @section('title', 'Fullscreen Timeline - Extended UI')
 

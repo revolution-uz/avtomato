@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\template\laravel_example;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Company\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -17,9 +17,9 @@ class UserManagement extends Controller
   {
     $users = User::all();
     $userCount = $users->count();
-    $verified = User::whereNotNull('email_verified_at')->get()->count();
-    $notVerified = User::whereNull('email_verified_at')->get()->count();
-    $usersUnique = $users->unique(['email']);
+    $verified = User::whereNotNull('updated_at')->get()->count();
+    $notVerified = User::whereNull('updated_at')->get()->count();
+    $usersUnique = $users->unique(['username']);
     $userDuplicates = $users->diff($usersUnique)->count();
 
     return view('content.laravel-example.user-management', [

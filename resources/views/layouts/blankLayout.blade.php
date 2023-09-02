@@ -10,12 +10,14 @@
 
 @endphp
 
-@extends('layouts/commonMaster' )
+@extends('layouts/baseLayout')
 
-@section('layoutContent')
+@section('content')
 
     <!-- Content -->
-    @yield('content')
+    <main>
+        {{ $slot }}
+    </main>
     <!--/ Content -->
 
 @endsection

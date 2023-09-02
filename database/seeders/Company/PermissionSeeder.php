@@ -13,15 +13,13 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $owner = Role::create([
-            'name' => \App\Enums\Company\Role::OWNER,
+        Role::create([
+            'name' => \App\Enums\Company\UserRole::OWNER,
             'guard_name' => 'web'
         ]);
-
-        $manager = Role::create([
-            'name' => \App\Enums\Company\Role::SALES_MANAGER,
+        Role::create([
+            'name' => \App\Enums\Company\UserRole::SALES_MANAGER,
             'guard_name' => 'web'
         ]);
-        User::first()->assignRole($owner);
     }
 }

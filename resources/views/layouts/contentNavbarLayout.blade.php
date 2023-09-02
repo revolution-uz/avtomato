@@ -5,7 +5,7 @@
 @php
     $configData = Helpers::appClasses();
 @endphp
-@extends('layouts/commonMaster' )
+@extends('layouts/baseLayout' )
 
 @php
     /* Display elements */
@@ -30,7 +30,7 @@
 
 @endphp
 
-@section('layoutContent')
+@section('content')
     <div class="layout-wrapper layout-content-navbar {{ $isMenu ? '' : 'layout-without-menu' }}">
         <div class="layout-container">
 
@@ -47,7 +47,7 @@
 
                 <!-- BEGIN: Navbar-->
                 @if ($isNavbar)
-                    @include('layouts/sections/navbar/navbar')
+                    @livewire('components.navbar')
                 @endif
                 <!-- END: Navbar-->
 
@@ -62,7 +62,9 @@
                                 <div class="{{$container}} flex-grow-1 container-p-y">
                                     @endif
 
-                                    @yield('content')
+                                    <main>
+                                        {{ $slot }}
+                                    </main>
 
                                     <!-- pricingModal -->
                                     @if ($pricingModal)

@@ -2,7 +2,7 @@
 $pricingModal = true;
 @endphp
 
-@extends('layouts/layoutMaster')
+@extends('template-layouts/layoutMaster')
 
 @section('title', 'Modals - UI elements')
 

@@ -78,9 +78,12 @@
                 </div>
                 <div class="top-button">
                     <div class="language-box">
-                        <select class="langSel select">
-                            <option value="en"                                 selected >English</option>
-                            <option value="es" >Spanish</option>
+                        <select class="langSel select" onchange="window.location = this.value">
+                            @foreach (config('locales.supported') as $locale)
+                                <option value="{{ current_route($locale) }}" {{ app()->getLocale() === $locale ? 'selected' : '' }}>
+                                    {{ \App\Helpers\LanguageHelper::getLanguageName($locale) }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                     <ul class="login-registration-list d-flex flex-wrap justify-content-between align-items-center ms-2">

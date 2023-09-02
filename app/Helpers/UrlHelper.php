@@ -2,8 +2,6 @@
 
 namespace App\Helpers;
 
-use Exception;
-
 class UrlHelper
 {
     /**
@@ -68,12 +66,12 @@ class UrlHelper
      * otherwise returns null (if subdomain doesn't match)
      * @return string|null
      */
-    public static function getCompanyIDFromCurrentHost(): ?string
+    public static function getCompanySlugFromCurrentHost(): ?string
     {
         return self::getFirstSubdomainOfCurrentHost();
     }
 
-    public static function isHasCompanyIDInCurrentHost(): bool
+    public static function isHasCompanySlugInCurrentHost(): bool
     {
         return self::getFirstSubdomainOfCurrentHost() !== null;
     }
@@ -92,11 +90,8 @@ class UrlHelper
         if (count($subs) === 2) {
             return null;
         }
-        if (! is_numeric($subs[0])) {
-            return null;
-        }
 
-        return (int) $subs[0];
+        return $subs[0];
     }
 
     public static function buildUrl(

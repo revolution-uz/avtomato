@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Helpers\UrlHelper;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -33,11 +34,13 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
-
-            Route::middleware('web')
-                ->group(base_path('routes/website.php'));
+            if (!app()->runningInConsole() && UrlHelper::isHasCompanySlugInCurrentHost()) {
+                Route::middleware('web')
+                    ->group(base_path('routes/client-panel.php'));
+            } else {
+                Route::middleware('web')
+                    ->group(base_path('routes/website.php'));
+            }
         });
     }
 }

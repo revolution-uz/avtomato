@@ -30,13 +30,14 @@ class DatabaseHelper
 
     public static function createCompanyDatabase(Company $company): Company
     {
-
         $company->db_name = self::getCompanyDatabaseName($company);
         $company->db_user = self::getCompanyDatabaseUser($company);
         $company->db_password = Str::random();
         $company->save();
 
+        DB::statement("DROP ROLE IF EXISTS $company->db_user");
         $result = DB::statement("CREATE USER $company->db_user WITH ENCRYPTED PASSWORD '$company->db_password'");
+
         if (!$result) {
             throw new Exception('Can not create a database user');
         }

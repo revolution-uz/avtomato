@@ -4,7 +4,7 @@ $container = 'container-xxl';
 $containerNav = 'container-xxl';
 @endphp
 
-@extends('layouts/layoutMaster')
+@extends('template-layouts/layoutMaster')
 
 @section('title', 'Container - Layouts')
 
@@ -13,9 +13,9 @@ $containerNav = 'container-xxl';
 <div class="layout-demo-wrapper">
   <div class="layout-demo-placeholder">
     @if ($configData['layout'] === 'horizontal')
-    <img src="{{asset('assets/img/layouts/layout-horizontal-container-'.$configData['style'].'.png')}}" class="img-fluid" alt="Layout container" data-app-light-img="layouts/layout-horizontal-container-light.png" data-app-dark-img="layouts/layout-horizontal-container-dark.png">
+    <img src="{{asset('assets/img/template-layouts/layout-horizontal-container-'.$configData['style'].'.png')}}" class="img-fluid" alt="Layout container" data-app-light-img="template-layouts/layout-horizontal-container-light.png" data-app-dark-img="template-layouts/layout-horizontal-container-dark.png">
     @else
-    <img src="{{asset('assets/img/layouts/layout-container-'.$configData['style'].'.png')}}" class="img-fluid" alt="Layout container" data-app-light-img="layouts/layout-container-light.png" data-app-dark-img="layouts/layout-container-dark.png">
+    <img src="{{asset('assets/img/template-layouts/layout-container-'.$configData['style'].'.png')}}" class="img-fluid" alt="Layout container" data-app-light-img="template-layouts/layout-container-light.png" data-app-dark-img="template-layouts/layout-container-dark.png">
     @endif
   </div>
   <div class="layout-demo-info">

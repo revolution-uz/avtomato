@@ -6,7 +6,6 @@
     <div class="{{$containerNav}} d-flex h-100">
         <ul class="menu-inner">
             @foreach ($menuData[1]->menu as $menu)
-
                 {{-- active menu method --}}
                 @php
                     $activeClass = null;

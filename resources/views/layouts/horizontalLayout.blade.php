@@ -8,7 +8,6 @@
 
 @extends('layouts/commonMaster' )
 @php
-
     $menuHorizontal = true;
     $navbarFull = true;
 
@@ -32,13 +31,13 @@
 
 @endphp
 
-@section('layoutContent')
+@section('content')
     <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
         <div class="layout-container">
 
             <!-- BEGIN: Navbar-->
             @if ($isNavbar)
-                @include('layouts/sections/navbar/navbar')
+                @livewire('components.navbar')
             @endif
             <!-- END: Navbar-->
 
@@ -63,7 +62,9 @@
                                 <div class="{{$container}} flex-grow-1 container-p-y">
                                     @endif
 
-                                    @yield('content')
+                                    <main>
+                                        {{ $slot }}
+                                    </main>
 
                                     <!-- pricingModal -->
                                     @if ($pricingModal)

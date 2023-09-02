@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\template\laravel_example\UserManagement;
+use App\Livewire\DashboardPage;
+use App\Livewire\LoginPage;
 use Illuminate\Support\Facades\Route;
 
 
@@ -14,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::multilingual('/login', LoginPage::class)->name('login');
+
+Route::middleware('auth')->group(function () {
+    Route::multilingual('/', DashboardPage::class)->name('dashboard');
+});
 
 Route::prefix('template')->group(
     function () {

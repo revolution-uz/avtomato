@@ -3,7 +3,7 @@ $customizerHidden = 'customizer-hide';
 $configData = \App\Helpers\Helpers::appClasses();
 @endphp
 
-@extends('layouts/layoutMaster')
+@extends('template-layouts/layoutMaster')
 
 @section('title', 'Verify Email Cover - Pages')
 

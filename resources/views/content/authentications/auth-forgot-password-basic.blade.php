@@ -1,7 +1,7 @@
 @php
 $customizerHidden = 'customizer-hide';
 @endphp
-@extends('layouts/layoutMaster')
+@extends('template-layouts/layoutMaster')
 
 @section('title', 'Forgot Password Basic - Pages')
 

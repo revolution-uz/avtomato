@@ -2,8 +2,8 @@
 
 namespace App\Enums\Company;
 
-enum UserStatus: string
+enum UserStatus: int
 {
-    case ACTIVE = 'active';
-    case INACTIVE = 'inactive';
+    case ACTIVE = 1;
+    case INACTIVE = 0;
 }

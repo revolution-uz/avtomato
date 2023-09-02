@@ -22,10 +22,10 @@
   
 
   <!-- Include Styles -->
-  @include('layouts/sections/styles')
+  @include('template-layouts/sections/styles')
 
   <!-- Include Scripts for customizer, helper, analytics, config -->
-  @include('layouts/sections/scriptsIncludes')
+  @include('template-layouts/sections/scriptsIncludes')
 </head>
 
 <body>
@@ -38,7 +38,7 @@
   
 
   <!-- Include Scripts -->
-  @include('layouts/sections/scripts')
+  @include('template-layouts/sections/scripts')
 
 </body>
 
