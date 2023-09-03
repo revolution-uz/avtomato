@@ -72,8 +72,8 @@
             <div class="top-header-wrapper">
                 <div class="top-contact">
                     <ul class="contact-list">
-                        <li class="contact-list__item"> <span class="contact-list__item-icon"><i class="fas fa-phone"></i></span><a href="tel:5657647672" class="contact-list__link">5657647672</a></li>
-                        <li class="contact-list__item"> <span class="contact-list__item-icon"><i class="fas fa-envelope"></i></span><a href="https://preview.wstacks.com/cdn-cgi/l/email-protection#94f5f0f9fdfad4e0f1e7e0baf7fbf9" class="contact-list__link"><span class="__cf_email__" data-cfemail="fd9c99909493bd89988e89d39e9290">[email&#160;protected]</span></a></li>
+                        <li class="contact-list__item"> <span class="contact-list__item-icon"><i class="fas fa-phone"></i></span><a href="tel:+998933993300" class="contact-list__link">+998(93)-399-33-00</a></li>
+                        <li class="contact-list__item"> <span class="contact-list__item-icon"><i class="fas fa-envelope"></i></span><a href="mailto:info@revolution.uz" class="contact-list__link"><span class="__cf_email__" data-cfemail="fd9c99909493bd89988e89d39e9290">info@revolution.uz</span></a></li>
                     </ul>
                 </div>
                 <div class="top-button">
@@ -89,10 +89,9 @@
                     <ul class="login-registration-list d-flex flex-wrap justify-content-between align-items-center ms-2">
                         <li class="login-registration-list__item">
                             <ul class="social-list">
-                                <li class="social-list__item"><a href="https://www.linkedin.com/" class="social-list__link"><i class="fab fa-linkedin"></i></a> </li>
-                                <li class="social-list__item"><a href="https://www.instagram.com/" class="social-list__link"><i class="fab fa-instagram"></i></a> </li>
-                                <li class="social-list__item"><a href="https://twitter.com/i/flow/login" class="social-list__link"><i class="fab fa-twitter"></i></a> </li>
-                                <li class="social-list__item"><a href="https://www.facebook.com/" class="social-list__link"><i class="fab fa-facebook-f"></i></a> </li>
+                                <li class="social-list__item"><a href="https://www.instagram.com/avtomatouz/" class="social-list__link"><i class="fab fa-instagram"></i></a> </li>
+                                <li class="social-list__item"><a href="https://t.me/uzavtomato/" class="social-list__link"><i class="fab fa-telegram"></i></a> </li>
+                                <li class="social-list__item"><a href="https://www.facebook.com/avtomatouz/" class="social-list__link"><i class="fab fa-facebook-f"></i></a> </li>
                             </ul>
                         </li>
                     </ul>
@@ -116,12 +115,12 @@
 
                     <div class="menu-wrapper">
                         <ul class="main-menu">
-                            <li><a href="/" aria-current="page" class="">Home</a></li>
-                            <li><a href="plan.html" aria-current="page" class="">Plan</a></li>
-                            <li><a href="services.html" aria-current="page" class="">Services</a></li>
-                            <li><a href="blog.html" aria-current="page" class="">Blog</a></li>
-                            <li><a href="about.html" aria-current="page" class="">About</a></li>
-                            <li><a href="contact.html" aria-current="page" class="">Contact</a></li>
+                            <li><a href="#" aria-current="page" class="">{{__('website.home')}}</a></li>
+                            <li><a href="#plan" aria-current="page" class="">{{__('website.plan')}}</a></li>
+                            <li><a href="#services" aria-current="page" class="">{{__('website.services')}}</a></li>
+                            <li><a href="#blog" aria-current="page" class="">{{__('website.blog')}}</a></li>
+                            <li><a href="#about" aria-current="page" class="">{{__('website.about')}}</a></li>
+                            <!-- <li><a href="contact.html" aria-current="page" class="">{{__('website.contact')}}</a></li> -->
                         </ul>
                     </div>
 
@@ -135,7 +134,7 @@
                                     <i class='fas fa-sun sun-icon'></i>
                                 </div>
                             </li>
-                            <li><a class='btn btn--base' href="user/login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                            <li><a class='btn btn--base' href="user/login.html">{{__("website.contact-us")}}</a></li>
                             <li><i class="fas fa-bars sidebar-menu-show-hide"></i></li>
                         </ul>
                     </div>
@@ -166,26 +165,23 @@
 
 
         <li class="sidebar-menu-list__item ">
-            <a href="https://preview.wstacks.com/finbiz" class="sidebar-menu-list__link"> Home</a>
+            <a href="#" class="sidebar-menu-list__link">{{__("website.home")}}</a>
         </li>
         <li class="sidebar-menu-list__item ">
-            <a href="plan.html" class="sidebar-menu-list__link"> Plan</a>
+            <a href="#plan" class="sidebar-menu-list__link">{{__("website.plan")}}</a>
         </li>
         <li class="sidebar-menu-list__item ">
-            <a href="services.html" class="sidebar-menu-list__link"> Services</a>
+            <a href="#services" class="sidebar-menu-list__link">{{__("website.services")}}</a>
         </li>
         <li class="sidebar-menu-list__item ">
-            <a href="blog.html" class="sidebar-menu-list__link"> Blog</a>
+            <a href="#blog" class="sidebar-menu-list__link">{{__("website.blog")}}</a>
         </li>
         <li class="sidebar-menu-list__item ">
-            <a href="about.html" class="sidebar-menu-list__link"> About</a>
+            <a href="#about" class="sidebar-menu-list__link">{{__("website.about")}}</a>
         </li>
-        <li class="sidebar-menu-list__item ">
+        <!-- <li class="sidebar-menu-list__item ">
             <a href="contact.html" class="sidebar-menu-list__link"> Contact</a>
-        </li>
-        <li class="sidebar-menu-list__item ">
-            <a class="btn btn--base mt-2 mb-2 ms-3" href="user/login.html"><i class="fas fa-sign-in-alt"></i> Login </a>
-        </li>
+        </li> -->
     </ul>
 </div>
 <!--========================== Sidebar mobile menu wrap End ==========================-->
@@ -225,7 +221,7 @@
                                     <i class="fas fa-envelope"></i>
                                 </div>
                                 <div class="footer-contact-menu__item-content">
-                                    <p><a href="https://preview.wstacks.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="442520292d2a04302137306a272b29">[email&#160;protected]</a></p>
+                                    <p><a href="mailto:info@revolution.uz" data-cfemail="442520292d2a04302137306a272b29" style="color: #fff;">info@revolution.uz</a></p>
                                 </div>
                             </li>
                             <li class="footer-contact-menu__item">
@@ -233,7 +229,7 @@
                                     <i class="fas fa-phone"></i>
                                 </div>
                                 <div class="footer-contact-menu__item-content">
-                                    <p>5657647672</p>
+                                    <p><a href="tel:+998933993300" style="color: #fff;">+998(93)-399-33-00</a></p>
                                 </div>
                             </li>
                         </ul>
@@ -243,8 +239,8 @@
                     <div class="footer-item">
                         <h5 class="footer-item__title">Company Links</h5>
                         <ul class="footer-menu">
-                            <li class="footer-menu__item"><a href="index.html" class="footer-menu__link">Home</a></li>
-                            <li class="footer-menu__item"><a href="about.html" class="footer-menu__link">About</a></li>
+                            <li class="footer-menu__item"><a href="index.html" class="footer-menu__link">{{ __('website.home') }}</a></li>
+                            <li class="footer-menu__item"><a href="about.html" class="footer-menu__link">{{__("website.about")}}</a></li>
                             <li class="footer-menu__item"><a href="cookie-policy.html" class="footer-menu__link">Cookie Policy</a></li>
                             <li class="footer-menu__item"><a href="policy/terms-of-service/43.html" class="footer-menu__link">Terms of Service</a></li>
                             <li class="footer-menu__item"><a href="policy/privacy-policy/42.html" class="footer-menu__link">Privacy Policy</a></li>
@@ -255,9 +251,9 @@
                     <div class="footer-item">
                         <h5 class="footer-item__title">Important Link</h5>
                         <ul class="footer-menu">
-                            <li class="footer-menu__item"><a href="services.html" class="footer-menu__link">Services</a></li>
-                            <li class="footer-menu__item"><a href="contact.html" class="footer-menu__link">Contact</a></li>
-                            <li class="footer-menu__item"><a href="plan.html" class="footer-menu__link">Plans</a></li>
+                            <li class="footer-menu__item"><a href="services.html" class="footer-menu__link">{{__("website.services")}}</a></li>
+                            <!-- <li class="footer-menu__item"><a href="contact.html" class="footer-menu__link">Contact</a></li> -->
+                            <li class="footer-menu__item"><a href="plan.html" class="footer-menu__link">{{__("website.plan")}}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -277,10 +273,9 @@
                         </form>
 
                         <ul class="social-list">
-                            <li class="social-list__item"><a href="https://www.linkedin.com/" class="social-list__link" target="_blank"><i class="fab fa-linkedin"></i></a> </li>
-                            <li class="social-list__item"><a href="https://www.instagram.com/" class="social-list__link" target="_blank"><i class="fab fa-instagram"></i></a> </li>
-                            <li class="social-list__item"><a href="https://twitter.com/i/flow/login" class="social-list__link" target="_blank"><i class="fab fa-twitter"></i></a> </li>
-                            <li class="social-list__item"><a href="https://www.facebook.com/" class="social-list__link" target="_blank"><i class="fab fa-facebook-f"></i></a> </li>
+                            <li class="social-list__item"><a href="https://www.instagram.com/avtomatouz" class="social-list__link" target="_blank"><i class="fab fa-instagram"></i></a> </li>
+                            <li class="social-list__item"><a href="https://t.me/uzavtomato/" class="social-list__link" target="_blank"><i class="fab fa-telegram"></i></a> </li>
+                            <li class="social-list__item"><a href="https://www.facebook.com/avtomatouz/" class="social-list__link" target="_blank"><i class="fab fa-facebook-f"></i></a> </li>
                         </ul>
                     </div>
                 </div>

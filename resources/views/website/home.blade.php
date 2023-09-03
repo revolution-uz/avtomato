@@ -38,7 +38,7 @@
 
 
 <!--========================== About Section Start ==========================-->
-<div class="about-section pt-80 pb-100">
+<div id="about" class="about-section pt-80 pb-100">
     <div class="container">
         <div class="row flex-wrap-reverse gy-4">
 
@@ -220,7 +220,7 @@
 <!--========================== About Section End ==========================-->
 
 <!-- ==================== Service Start Here ==================== -->
-<section class="service-area section-bg py-80 ">
+<section id="services" class="service-area section-bg py-80 ">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
@@ -500,7 +500,7 @@
 <!-- ==================== Experience End Here ==================== -->
 
 <!-- ==================== Pricing Start Here ==================== -->
-<section class="pricing-plan py-80">
+<section id="plan" class="pricing-plan py-80">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
@@ -1177,7 +1177,7 @@
 </section>
 <!-- ==================== Accordion End Here ==================== -->
 <!-- ==================== Blog Start Here ==================== -->
-<section class="blog py-80">
+<section id="blog" class="blog py-80">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
