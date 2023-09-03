@@ -35,8 +35,21 @@ class DatabaseHelper
         $company->db_password = Str::random();
         $company->save();
 
-        DB::statement("DROP ROLE IF EXISTS $company->db_user");
-        $result = DB::statement("CREATE USER $company->db_user WITH ENCRYPTED PASSWORD '$company->db_password'");
+        $result = DB::statement('
+            DO
+            $do$
+            BEGIN
+               IF NOT EXISTS (
+                  SELECT
+                  FROM   pg_catalog.pg_roles
+                  WHERE  rolname = \'' . $company->db_user . '\')
+               THEN
+                  CREATE ROLE ' . $company->db_user . ' LOGIN PASSWORD \'' . $company->db_password . '\';
+               ELSE
+                  ALTER USER ' . $company->db_user . ' WITH PASSWORD \'' . $company->db_password . '\';
+               END IF;
+            END
+            $do$');
 
         if (!$result) {
             throw new Exception('Can not create a database user');

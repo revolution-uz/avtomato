@@ -5,6 +5,7 @@ set -e
 echo 'Recreating database. Started.'
 docker exec -t avtomato-db su -c "psql -c \"DROP DATABASE IF EXISTS avtomato WITH (FORCE);\"" postgres
 docker exec -t avtomato-db su -c "psql -c \"DROP DATABASE IF EXISTS avtomato_test WITH (FORCE);\"" postgres
+docker exec -t avtomato-db su -c "psql -c \"DROP DATABASE IF EXISTS company_1 WITH (FORCE);\"" postgres
 docker exec -t avtomato-db su -c "psql -c \"CREATE DATABASE avtomato;\"" postgres
 docker exec -t avtomato-db su -c "psql -c \"CREATE DATABASE avtomato_test;\"" postgres
 echo 'Recreating database. Finished.'
