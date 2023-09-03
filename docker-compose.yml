@@ -1,11 +1,11 @@
 version: "3.8"
 services:
-    redis:
+    avtomato-redis:
         image: redis:alpine
-        container_name: ${APP_NAME}-redis
-    postgres:
+        container_name: avtomato-redis
+    avtomato-db:
         image: postgres:alpine3.18
-        container_name: ${APP_NAME}-postgres
+        container_name: avtomato-db
         volumes:
             - volume-postgres:/var/lib/postgresql/data
         environment:
@@ -16,32 +16,30 @@ services:
             - "5432:5432"
         networks:
             - app-network
-    nginx:
+    avtomato-nginx:
         image: nginx:alpine
-        container_name: ${APP_NAME}-nginx
+        container_name: avtomato-nginx
         restart: unless-stopped
         tty: true
         ports:
             - '80:80'
         volumes:
-            - ./:/app
+            - ./:/var/www/application
             - ./docker/nginx:/etc/nginx/conf.d/
         networks:
             - app-network
-    php-fpm:
+    avtomato-app:
         build:
             context: .
             dockerfile: docker/Dockerfile
-        image: ${APP_NAME}-php:8.1-fpm
-        container_name: ${APP_NAME}-php
-        command: sh -c "chown user -R /app && chmod 775 -R /app && php-fpm"
+        image: php
+        container_name: avtomato-app
+        extra_hosts:
+            - "internal.host:host-gateway"
         restart: unless-stopped
         tty: true
-        working_dir: /app
         volumes:
-            - ./:/app
-            - ./docker/php:/usr/local/etc/php/conf.d
-            - ./docker/php-fpm.d:/usr/local/etc/php-fpm.d
+            - ./:/var/www/application
         networks:
             - app-network
 networks:

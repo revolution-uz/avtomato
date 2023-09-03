@@ -1,25 +1,33 @@
-FROM php:8.2-fpm
+FROM php:8.2-fpm-alpine3.18
 
-USER root
+ENV PHP_FPM_MAX_CHILDREN=5
+ENV PHP_FPM_START_SERVERS=2
+ENV PHP_FPM_MIN_SPARE_SERVERS=1
+ENV PHP_FPM_MAX_SPARE_SERVERS=3
+ENV PHP_FPM_PROCESS_IDLE_TIMEOUT="10s"
 
-WORKDIR /app
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-RUN apt-get update
-RUN apt-get install -y libicu-dev zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev libpq-dev postgresql-client
-RUN docker-php-ext-install intl
-RUN docker-php-ext-install opcache
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd
-RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
-RUN docker-php-ext-install pdo pdo_pgsql pgsql
-RUN pecl install redis \
-    && docker-php-ext-enable redis
-RUN docker-php-ext-install bcmath
-RUN pecl install xdebug
-RUN docker-php-ext-enable xdebug
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions pdo_pgsql pgsql intl opcache redis soap sodium @composer zip gd amqp apcu http sockets pcntl pcov
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN apk --no-cache add supervisor curl bash gettext git nano postgresql14-client rsync openssh && \
+    rm -rf /var/cache/apk/*
 
+RUN apk add --update nodejs npm
 
-RUN groupadd -g 1000 user
-RUN useradd -u 1000 -ms /bin/bash -g user user
+RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+
+RUN addgroup -S deployer && adduser -S deployer -G deployer
+RUN mkdir -p /home/deployer/.composer && \
+    chown -R deployer:deployer /home/deployer
+USER deployer
+
+WORKDIR /var/www/application
+
+COPY . /var/www/application
+
+COPY ./docker/app/supervisor.conf /etc/supervisor/supervisord.conf
+COPY ./docker/app/php.ini  /usr/local/etc/php/conf.d/99_base.ini
+
+EXPOSE 9000
