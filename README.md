@@ -1,66 +1,74 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Avtomato
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Avtomato - project to help to automate business processes. It contains following functional:
 
-## About Laravel
+- Auto-change installment payments
+- Marketing tools
+- General administration panel based on [Laravel Nova](https://nova.laravel.com/).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Supported stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- php 8.2
+- nginx
+- postgresql
+- redis
+- supervisor
+- livewire 3
+- Nova 4
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Folders/files description
 
-## Learning Laravel
+Soon
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Requirements
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Git (for Windows users it needs to install and use **git bash** along with **git** or use any other bash implementation, it's needed to finish the installation process)
+- Docker and docker compose
+- Login for installation Laravel Nova. Request nova license key to continue installation (It will be requested on step 5 of the Installation process during installing composer packages). After installation set it key to .env file to NOVA_LICENSE_KEY variable.
+- For Windows users for better performance disable option "Use the WSL 2 based engine" in Docker Desktop settings. If required enable Hyper-V using PowerShell:
+  `Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Installation
 
-## Laravel Sponsors
+1. Clone current repository to your local machine
+2. Copy `.env.example` to `.env` and fill environment variables
+3. Run `docker-compose build` command to build image.
+4. Run `docker-compose up -d` (you need to be in the root path of the repository). If any of the following ports are busy docker-compose is not going to work, you will need to free them first: `APP_PORT` variable's port, 5050, 6379 and 5432.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+   Once _docker-compose_ is finished type **docker ps** to make sure the containers are running well. The result should be
 
-### Premium Partners
+    ```
+    CONTAINER ID   IMAGE                 COMMAND                  CREATED          STATUS         PORTS                    NAMES
+    d973084f45f5   nginx:alpine          "/docker-entrypoint.…"   8 minutes ago    Up 8 minutes   0.0.0.0:80->80/tcp       avtomato-nginx
+    f1bc06378a53   php                   "docker-php-entrypoi…"   10 minutes ago   Up 8 minutes   9000/tcp                 avtomato-app
+    026762db8004   postgres:alpine3.18   "docker-entrypoint.s…"   12 minutes ago   Up 8 minutes   0.0.0.0:5432->5432/tcp   avtomato-db
+    a901e2c1c692   redis:alpine          "docker-entrypoint.s…"   12 minutes ago   Up 8 minutes   6379/tcp                 avtomato-redis
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+5. Run `sh scripts/init.sh` (it will perform such steps as creating/migrating needed databases, installing dependencies, clear caches).
+   > Note: be careful, this command recreates database and you will lose all current data
+6. Edit `/etc/hosts` file and add following to end of file:
+    ```
+   127.0.0.1       avtomato.test
+   127.0.0.1       revo.avtomato.test
+   ```
+7. Open the link in your browser http://avtomato.test, it should show website. Go to admin-panel (main - http://avtomato.test/nova and for specific company - http://revo.avtomato.test/nova) and enter admin's email is `admin@admin.com` and password is `password`. For client panel go to http://revo.avtomato.test and enter username/password `admin/password`.
 
-## Contributing
+If the last step is successfully finished the installation process is done.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+### How to run tests
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Soon
 
-## Security Vulnerabilities
+## Linters
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+The project provide linters out of the box. Linters are usually executed in pre-push hooks, which means that no one can push any changes to a repo without all linters passing.
 
-## License
+Along with that all the linters can be run manually at any time by command `sh scripts/linter.sh`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Also, you can codesniffer fixable errors by PHPCBF by command `sh scripts/phpcs.sh`
+
+### How to enter to bash of docker container
+
+Run this command: ```docker-compose exec avtomato-app bash```
