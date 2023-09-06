@@ -64,10 +64,6 @@
                                 <span><i class="fas fa-check-circle"></i>{{__("website.about_us_advantage_3")}}</span>
                             </li>
                         </ul>
-                        <div class="about-bottom">
-                            <a href="about.html" class="btn btn--base me-3 mb-2">
-                                View More <i class="fas fa-arrow-right"></i></a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -222,9 +218,9 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="section-heading  text-center">
-                    <span class="subtitle">What We Do</span>
+                    <span class="subtitle">{{__("website.subtitle_our_services")}}</span>
                     <h2 class="section-heading__title">
-                        Our Creative Services
+                        {{__("website.our_services_title")}}
                         <span class="animate-shape center">
                             <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
@@ -237,108 +233,84 @@
             <div class="col-lg-6">
                 <div class="service">
                     <div class="service__icon">
-                        <i class="fas fa-headset"></i>                    </div>
+                        <i class="fas fa-headset"></i>
+                    </div>
                     <div class="service__content">
-                        <h3 class="title">                            Content Writing
-                        </h3>
-                        <p>                            Content writing is the process of writing, editing, and publishing content in a digital format. That content can include blog posts, video o...
-                        </p>
-
+                        <h3 class="title">{{__("website.service_1_title")}}</h3>
+                        <p>{{__("website.service_1_description")}}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 20.00</p>
-                            <a href="service/content-writing/6.html" class="btn btn--base"> Buy now <i class="fas fa-arrow-right"></i></a>
                         </div>
-
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="service">
                     <div class="service__icon">
-                        <i class="fas fa-landmark"></i>                    </div>
+                        <i class="fas fa-landmark"></i>
+                    </div>
                     <div class="service__content">
-                        <h3 class="title">                            Digital Marketing
-                        </h3>
-                        <p>                            Digital Marketing: A Comprehensive Guide for Beginners&quot; Digital marketing refers to the use of digital channels and platforms to promote pro...
-                        </p>
-
+                        <h3 class="title">{{__("website.service_2_title")}}</h3>
+                        <p>{{__("website.service_2_description")}}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 40.00</p>
-                            <a href="service/digital-marketing/5.html" class="btn btn--base"> Buy now <i class="fas fa-arrow-right"></i></a>
                         </div>
-
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="service">
                     <div class="service__icon">
-                        <i class="fas fa-thumbtack"></i>                    </div>
+                        <i class="fas fa-thumbtack"></i>
+                    </div>
                     <div class="service__content">
-                        <h3 class="title">                            Social Marketing
-                        </h3>
-                        <p>                            The Societal Marketing Concept puts Human welfare on top before profits and satisfying the wants.Societal Marketing emphasizes social respon...
-                        </p>
-
+                        <h3 class="title">{{__("website.service_3_title")}}</h3>
+                        <p>{{__("website.service_3_description")}}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 20.00</p>
-                            <a href="service/social-marketing/4.html" class="btn btn--base"> Buy now <i class="fas fa-arrow-right"></i></a>
                         </div>
-
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="service">
                     <div class="service__icon">
-                        <i class="fas fa-pen-fancy"></i>                    </div>
+                        <i class="fas fa-pen-fancy"></i>
+                    </div>
                     <div class="service__content">
-                        <h3 class="title">                            UI/UX Design
-                        </h3>
-                        <p>                            UI UX designers create the user interface for an app, website, or other interactive media. Their work includes collaborating with product ma...
-                        </p>
-
+                        <h3 class="title">{{__("website.service_4_title")}}</h3>
+                        <p>{{__("website.service_4_description")}}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 30.00</p>
-                            <a href="service/uiux-design/3.html" class="btn btn--base"> Buy now <i class="fas fa-arrow-right"></i></a>
                         </div>
-
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="service">
                     <div class="service__icon">
-                        <i class="fab fa-product-hunt"></i>                    </div>
+                        <i class="fab fa-product-hunt"></i>
+                    </div>
                     <div class="service__content">
-                        <h3 class="title">                            Product Managements
-                        </h3>
-                        <p>                            Product management is the business process of planning, developing, launching, and managing a product or service. It includes the entire lif...
-                        </p>
-
+                        <h3 class="title">{{__("website.service_5_title")}}</h3>
+                        <p>{{__("website.service_5_description")}}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 35.00</p>
-                            <a href="service/product-managements/2.html" class="btn btn--base"> Buy now <i class="fas fa-arrow-right"></i></a>
                         </div>
-
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="service">
                     <div class="service__icon">
-                        <i class="fas fa-mobile-alt"></i>                    </div>
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
                     <div class="service__content">
-                        <h3 class="title">                            Mobile Developments
-                        </h3>
-                        <p>                            Mobile development is constantly evolving, and staying on top of the latest trends is key to success in this industry. Some of the current t...
-                        </p>
-
+                        <h3 class="title">{{__("website.service_6_title")}}</h3>
+                        <p>{{__("website.service_6_description")}}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 40.00</p>
-                            <a href="service/mobile-developments/1.html" class="btn btn--base"> Buy now <i class="fas fa-arrow-right"></i></a>
                         </div>
-
                     </div>
                 </div>
             </div>
