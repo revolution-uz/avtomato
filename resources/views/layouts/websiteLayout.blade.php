@@ -134,7 +134,7 @@
                                     <i class='fas fa-sun sun-icon'></i>
                                 </div>
                             </li>
-                            <li><a class='btn btn--base' href="user/login.html">{{__("website.contact-us")}}</a></li>
+                            <li><a class='btn btn--base' href="user/login.html">{{__("website.button_contact_us")}}</a></li>
                             <li><i class="fas fa-bars sidebar-menu-show-hide"></i></li>
                         </ul>
                     </div>

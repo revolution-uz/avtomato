@@ -17,17 +17,17 @@
                 <div class="banner-left__content">
                     <span class="subtitle">A trusted Digital agency</span>
                     <h2 class="position-relative">
-                        WELCOME TO CREATIVE DIGITAL AGENCY
+                        {{__("website.main_header_text")}}
                         <span class="animate-shape">
                             <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
-                    <p>Transform your ideas into reality with our expert software development services. From concept to deployment, we deliver custom solutions that meet your unique business needs.</p>
+                    <p>{{__("website.main_description_text")}}</p>
                     <a href="plan.html" class="btn btn--base me-2 mb-2">
-                        Get Started <i class="fa-sharp fas fa-arrow-right"></i>
+                        {{__("website.button_get_started")}} <i class="fa-sharp fas fa-arrow-right"></i>
                     </a>
                     <a href="contact.html" class="btn btn--base outline mb-2">
-                        Contact Us <i class="fas fa-id-card"></i>
+                        {{__("website.button_contact_us")}} <i class="fas fa-id-card"></i>
                     </a>
                 </div>
             </div>
@@ -45,32 +45,28 @@
             <div class="col-lg-6 position-relative">
                 <div class="about-right-content">
                     <div class="section-heading mb-0">
-                        <span class="subtitle">About Us</span>
+                        <span class="subtitle">{{__("website.subtitle_about_us")}}</span>
                         <h2 class="section-heading__title">
-                            What&#039;s So Special About Agency?
+                            {{__("website.about_us_title")}}
                             <span class="animate-shape">
                                 <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                             </span>
                         </h2>
-                        <p class="section-heading__desc mb-3">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age. Generally just 10 nations have facilitated 70-75% of the worldwide telecom limit.
-
-                            Dispersed around the world, with expanding focus in the advanced age. Generally just 10 nations have facilitated 70-75%.</p>
-
-
+                        <p class="section-heading__desc mb-3">{{__("website.about_us_description")}}</p>
                         <ul class="about-service mb-4">
                             <li>
-                                <span><i class="fas fa-check-circle"></i>We Can Save Your Money.</span>
+                                <span><i class="fas fa-check-circle"></i>{{__("website.about_us_advantage_1")}}</span>
                             </li>
                             <li>
-                                <span><i class="fas fa-check-circle"></i>After Sales support.</span>
+                                <span><i class="fas fa-check-circle"></i>{{__("website.about_us_advantage_2")}}</span>
                             </li>
                             <li>
-                                <span><i class="fas fa-check-circle"></i>Clients Focused</span>
+                                <span><i class="fas fa-check-circle"></i>{{__("website.about_us_advantage_3")}}</span>
                             </li>
                         </ul>
                         <div class="about-bottom">
                             <a href="about.html" class="btn btn--base me-3 mb-2">
-                                View More <i class="fas fa-arrow-right"></i>                            </a>
+                                View More <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -201,13 +197,14 @@
                         <div class="about-contact d-flex align-items-center">
                             <i class="fas fa-users"></i>
                             <div class="ms-3">
-                                <h4>For Emergency</h4>
-                                <a href="tel:5657647672">5657647672</a>
+                                <h4>{{__("website.call_us")}}</h4>
+                                <a href="tel:+998933993300">+998(93)-399-33-00</a>
                             </div>
                         </div>
+
                         <div class="about-contact-top">
-                            <h4>15</h4>
-                            <span>Years Of Experience</span>
+                            <h4>8</h4>
+                            <span>{{__("website.team_years_of_experience")}}</span>
                         </div>
                     </div>
                 </div>
