@@ -6,6 +6,7 @@ use App\Enums\Main\AdminRole;
 use App\Helpers\UrlHelper;
 use App\Models\Company;
 use App\Nova\AdminResource;
+use App\Nova\Company\TariffsResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
@@ -45,6 +46,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     ])->collapsable()->icon('view-grid'),
                     MenuSection::make('Resources', [
                         MenuItem::resource(UserResource::class),
+                        MenuItem::resource(TariffsResource::class),
                     ])->collapsable(),
                 ];
             });
