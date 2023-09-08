@@ -15,7 +15,7 @@
         <div class="row gy-4 align-items-center justify-content-center text-center">
             <div class="col-xl-7 col-lg-7 col-md-10">
                 <div class="banner-left__content">
-                    <span class="subtitle">A trusted Digital agency</span>
+                    <span class="subtitle">{{__("website.main_header_subtitle_text")}}</span>
                     <h2 class="position-relative">
                         {{__("website.main_header_text")}}
                         <span class="animate-shape">
@@ -225,7 +225,7 @@
                             <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
-                    <p class="section-heading__desc">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age just 10 nations have facilitated .</p>
+                    <p class="section-heading__desc">{{__("website.our_services_description")}}</p>
                 </div>
             </div>
         </div>

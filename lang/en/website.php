@@ -8,6 +8,7 @@ return [
     "about" => "About",
     "contact" => "Contact",
     "button_contact_us" => "Contact us",
+    "main_header_subtitle_text" => "A trusted digital company",
     "main_header_text" => "Welcome to the world of business automation!",
     "main_description_text" =>
         "We turn your ideas into reality with the help of our experts. From concept to implementation, we provide customized solutions that meet the unique needs of your business.",
@@ -24,4 +25,26 @@ return [
         "Absolute trust: Your data is safe thanks to our impeccable reputation and dedication to building customer trust.",
     "team_years_of_experience" => "Years of Experience",
     "call_us" => "Call us",
+    "subtitle_our_services" => "What we do?",
+    "our_services_title" => "Our services",
+    "our_services_description" =>
+        "The services we provide to you significantly increase efficiency and automate your business. Forget problems with customer debts, let us solve this problem.",
+    "service_1_title" => "Payment Management",
+    "service_1_description" =>
+        "Effective control over urgent payments without unnecessary hassle.",
+    "service_2_title" => "Automatic Payment Collection",
+    "service_2_description" =>
+        "Fully automatic collection of all payments for your comfort.",
+    "service_3_title" => "Branch Management",
+    "service_3_description" =>
+        "Simple and reliable management of your branches and employees.",
+    "service_4_title" => "Mobile Management",
+    "service_4_description" =>
+        "Control all your operations through a convenient mobile application.",
+    "service_5_title" => "Analytics and Reporting",
+    "service_5_description" =>
+        "Get a variety of reports to better understand your business.",
+    "service_6_title" => "Auto contracts",
+    "service_6_description" =>
+        "Creating contracts has become easier and faster thanks to automation.",
 ];

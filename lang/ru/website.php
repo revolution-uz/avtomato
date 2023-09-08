@@ -8,6 +8,7 @@ return [
     "about" => "О нас",
     "contact" => "Контакт",
     "button_contact_us" => "Свяжитесь с нами",
+    "main_header_subtitle_text" => "Надежная цифровая компания",
     "main_header_text" => "Добро пожаловать в мир бизнес-автоматизации!",
     "main_description_text" =>
         "Мы превращаем ваши идеи в реальность с помощью наших экспертов. От концепции до внедрения мы предоставляем индивидуальные решения, отвечающие уникальным потребностям вашего бизнеса.",
@@ -26,6 +27,8 @@ return [
     "call_us" => "Позвоните нам",
     "subtitle_our_services" => "Что мы делаем?",
     "our_services_title" => "Наши сервисы",
+    "our_services_description" =>
+        "Biz sizga taqdim etayotgan xizmatlar biznes samaradorligini va avtomatlashtirishni sezilarli darajada yaxshilaydi. Mijozlarning qarzlari bilan bog'liq muammolarni unuting, keling, bu muammoni hal qilaylik.",
     "service_1_title" => "Управление Платежами",
     "service_1_description" =>
         "Эффективный контроль над срочными платежами без лишних хлопот.",
