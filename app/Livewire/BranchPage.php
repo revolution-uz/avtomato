@@ -57,6 +57,7 @@ class BranchPage extends Component
 
     public function createOrUpdate(): void
     {
+        // TODO check permissions to create/update branches
         $validatedData = $this->validate([
             'name' => 'required|string|min:3',
             'inn' => 'max:16',
@@ -96,6 +97,7 @@ class BranchPage extends Component
 
     public function delete($id): void
     {
+        // TODO check permissions to delete branches
         if($id) {
             Branch::query()->where('id', $id)->delete();
             session()->flash('success','Branch deleted successfully!');
@@ -104,6 +106,7 @@ class BranchPage extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
+        // TODO check permissions to view the list of branches
         $query = Branch::query();
 
         if ($this->term) {
