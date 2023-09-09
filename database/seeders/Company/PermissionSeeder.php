@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Company;
 
+use App\Enums\Company\UserRole;
 use App\Models\Company\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -13,13 +14,7 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create([
-            'name' => \App\Enums\Company\UserRole::OWNER,
-            'guard_name' => 'web'
-        ]);
-        Role::create([
-            'name' => \App\Enums\Company\UserRole::SALES_MANAGER,
-            'guard_name' => 'web'
-        ]);
+        Role::findOrCreate(UserRole::OWNER->value, 'web');
+        Role::findOrCreate(UserRole::OWNER->value, 'web');
     }
 }

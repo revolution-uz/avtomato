@@ -4,6 +4,7 @@ namespace App\Console\Commands\Migrations;
 
 use App\Console\CompanyOutputStyle;
 use App\Database\DatabaseConnector;
+use Database\Seeders\Company\CompanySeeder;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Console\Migrations\MigrateCommand;
 
@@ -71,12 +72,12 @@ class CompanyMigrateCommand extends MigrateCommand
                                 ]
                             );
 
-                        if ($this->option('seed') && ! $this->option('pretend')) {
-                            $this->call('db:seed', ['--force' => true]);
+                        if ($this->option('seed') && !$this->option('pretend')) {
+                            $this->call('db:seed', ['--force' => true, '--class' => CompanySeeder::class]);
                         }
                     }
                 );
-            }, true
+            }
         );
     }
 }

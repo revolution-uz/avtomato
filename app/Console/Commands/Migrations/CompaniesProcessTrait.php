@@ -26,13 +26,12 @@ trait CompaniesProcessTrait
 
     /**
      * @param  \Closure  $operation
-     * @param  bool  $onlyCreated
      * @param  bool  $withoutInfo
      * @return int Result === 0 Success, Result === 1 Failure
      *
      * @throws \Exception
      */
-    protected function companiesProcess(\Closure $operation, bool $onlyCreated = true, bool $withoutInfo = false): int
+    protected function companiesProcess(\Closure $operation, bool $withoutInfo = false): int
     {
         $companiesQuery = Company::on(DatabaseConnector::DB_CONNECTION_ADMIN);
         $companyIds = $this->option('companyIds');
@@ -43,14 +42,9 @@ trait CompaniesProcessTrait
             return 1;
         }
 
-        if ($companyIds) {
-            $companiesQuery->whereIn('id', explode(',', $companyIds));
-        } else {
-            if ($onlyCreated) {
-                $companiesQuery->onlyCreated();
-            }
-        }
-
+        $companiesQuery = $companyIds
+            ? Company::query()->whereIn('id', explode(',', $companyIds))
+            : Company::withoutCreated();
         $companies = $companiesQuery->get()->all();
 
         if (empty($companies)) {

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Database\DatabaseConnector;
 use App\Enums\Company\CompanyStatus;
 use Database\Factories\Company\CompanyFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $db_user
  * @property string $db_password
  * @property CompanyStatus $status
+ *
+ * The followings are the available model methods (scopes, relations):
+ * @method static static|Builder|\Illuminate\Database\Query\Builder withoutCreated()
  */
 class Company extends Model
 {
@@ -41,5 +45,14 @@ class Company extends Model
     protected static function newFactory(): CompanyFactory
     {
         return new CompanyFactory();
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder mixed
+     */
+    public function scopeWithoutCreated(Builder $query): Builder
+    {
+        return $query->where('status', '!=', CompanyStatus::CREATED);
     }
 }

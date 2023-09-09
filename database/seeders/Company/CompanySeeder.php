@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Company;
 
+use App\Enums\Company\UserRole;
 use App\Enums\Company\UserStatus;
 use App\Models\Company\User;
 use Illuminate\Database\Seeder;
@@ -14,9 +15,12 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(FeatureSeeder::class);
         $this->call(PermissionSeeder::class);
         // TODO remove before production
-        User::query()->create(
+        /** @var User $user */
+        $user = User::query()->firstOrCreate(
+            ['username' => 'admin'],
             [
                 'username' => 'admin',
                 'first_name' => 'Yura',
@@ -25,7 +29,9 @@ class CompanySeeder extends Seeder
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             ]
         );
-        User::query()->first()
-            ->assignRole(Role::query()->where('name', \App\Enums\Company\UserRole::OWNER)->first());
+
+        if (!$user->hasRole(UserRole::OWNER->value)) {
+            $user->assignRole(UserRole::OWNER->value);
+        }
     }
 }
