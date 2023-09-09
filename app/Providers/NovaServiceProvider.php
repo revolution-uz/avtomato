@@ -6,13 +6,13 @@ use App\Enums\Main\AdminRole;
 use App\Helpers\UrlHelper;
 use App\Models\Company;
 use App\Nova\AdminResource;
+use App\Nova\Company\FeaturesResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Menu\Menu;
-use Laravel\Nova\Menu\MenuGroup;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
@@ -45,6 +45,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     ])->collapsable()->icon('view-grid'),
                     MenuSection::make('Resources', [
                         MenuItem::resource(UserResource::class),
+                        MenuItem::resource(FeaturesResource::class),
                     ])->collapsable(),
                 ];
             });
