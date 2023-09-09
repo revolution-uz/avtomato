@@ -7,6 +7,7 @@ use App\Database\DatabaseHelper;
 use App\Enums\Company\CompanyStatus;
 use App\Models\Company;
 use Database\Seeders\Company\CompanySeeder;
+use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\PermissionSeeder;
 use Exception;
 use Illuminate\Console\Command;
@@ -79,6 +80,13 @@ class CreateCompanyCommand extends Command
             DatabaseConnector::setCompanyConnection($company->id);
 
             if (Artisan::call('db:seed', ['--class' => CompanySeeder::class, '--force' => true]) !== 0) {
+                throw new Exception(
+                    'Company seeder was executed with errors in the company ' .
+                    $companyId . json_encode(Artisan::output())
+                );
+            }
+
+            if (Artisan::call('db:seed', ['--class' => FeatureSeeder::class, '--force' => true]) !== 0) {
                 throw new Exception(
                     'Company seeder was executed with errors in the company ' .
                     $companyId . json_encode(Artisan::output())
