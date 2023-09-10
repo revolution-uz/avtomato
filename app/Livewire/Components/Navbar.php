@@ -19,6 +19,6 @@ class Navbar extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.components.navbar', ['tariffs' => Tariffs::query()->all()]);
+        return view('livewire.components.navbar', ['tariffs' => Tariffs::query()->get()]);
     }
 }
