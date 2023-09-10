@@ -17,6 +17,14 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $phone
  * @property UserStatus $status
  * @property string $avatar
+ * @property bool $is_dark_mode
+ * @property bool $is_vertical_menu
+ * @property bool $is_bordered_items
+ * @property bool $is_fixed_navbar
+ * @property bool $is_fixed_footer
+ * @property bool $is_fixed_menu
+ * @property bool $is_show_dropdown_on_hover
+ * @property string $language
  *
  * @property-read string $avatarUrl
  */
@@ -31,6 +39,14 @@ class User extends Authenticatable
         'phone',
         'status',
         'avatar',
+        'is_dark_mode',
+        'is_vertical_menu',
+        'is_bordered_items',
+        'is_fixed_navbar',
+        'is_fixed_footer',
+        'is_fixed_menu',
+        'is_show_dropdown_on_hover',
+        'language'
     ];
 
     protected $casts = [
