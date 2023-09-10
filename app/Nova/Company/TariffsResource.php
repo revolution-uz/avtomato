@@ -4,6 +4,7 @@ namespace App\Nova\Company;
 
 use App\Models\Company\Tariffs;
 use App\Nova\Resource;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -116,5 +117,15 @@ class TariffsResource extends Resource
     public function actions(NovaRequest $request): array
     {
         return [];
+    }
+
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToUpdate(Request $request)
+    {
+        return false;
     }
 }
