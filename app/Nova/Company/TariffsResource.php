@@ -4,9 +4,9 @@ namespace App\Nova\Company;
 
 use App\Models\Company\Tariffs;
 use App\Nova\Resource;
-use Illuminate\Validation\Rules;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -48,12 +48,29 @@ class TariffsResource extends Resource
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
-            Text::make('Is Annual', 'isAnnual')->filterable(),
-            Text::make('Percent', 'percent')->filterable(),
-            Text::make('Min amount', 'min_amount')->filterable(),
-            Text::make('Max amount', 'max_amount')->filterable(),
-            Text::make('Min initial fee', 'min_initial_fee')->filterable(),
-            Text::make('Max initial fee', 'max_initial_fee')->filterable(),
+            Boolean::make('Is Annual')
+                ->sortable()
+                ->rules('required'),
+            Number::make('Percent', 'percent')
+                ->sortable()
+                ->rules('required')
+                ->filterable(),
+            Number::make('Min amount', 'min_amount')
+                ->sortable()
+                ->rules('required')
+                ->filterable(),
+            Number::make('Max amount', 'max_amount')
+                ->sortable()
+                ->rules('required')
+                ->filterable(),
+            Number::make('Min initial fee', 'min_initial_fee')
+                ->sortable()
+                ->rules('required')
+                ->filterable(),
+            Number::make('Max initial fee', 'max_initial_fee')
+                ->sortable()
+                ->rules('required')
+                ->filterable(),
         ];
     }
 
