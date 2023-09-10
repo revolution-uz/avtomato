@@ -2,12 +2,12 @@
 
 namespace Database\Seeders\Company;
 
+use App\Clients\OilaKreditClient;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
 
 class LocationSeeder extends Seeder
 {
@@ -88,28 +88,15 @@ class LocationSeeder extends Seeder
         $regionsList = [];
         $districtsList = [];
         foreach (['uz' => 'oz', 'la' => 'uz', 'ru' => 'ru'] as $remoteLanguage => $localLanguage) {
-            $response = Http::withHeaders([
-                'Accept' => 'application/json, text/plain, */*',
-                'Accept-Language' => $remoteLanguage,
-                'Connection' => 'keep-alive',
-                'Origin' => 'https://oilakredit.uz',
-                'Referer' => 'https://oilakredit.uz/',
-                'Sec-Fetch-Dest' => 'empty',
-                'Sec-Fetch-Mode' => 'cors',
-                'Sec-Fetch-Site' => 'same-site',
-                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
-                'sec-ch-ua' => '"Not/A)Brand";v="99", "Google Chrome";v="115", "Chromium";v="115"',
-                'sec-ch-ua-mobile' => '?0',
-                'sec-ch-ua-platform' => '"macOS"',
-            ])->get('https://api.oilakredit.uz/web/v1/public/forms/application', ['locale' => $remoteLanguage])->json();
+            $response = OilaKreditClient::getRegionsAndDistricts($remoteLanguage);
 
-            foreach ($response['elements'][6]['children'][0]['data'] as $region) {
+            foreach ($response[0]['data'] as $region) {
                 $regionsList[$region['id']] = $regionsList[$region['id']] ?? [];
                 $regionsList[$region['id']]['id'] = $region['id'];
                 $regionsList[$region['id']]['name_' . $localLanguage] = $region['full_name'];
             }
 
-            foreach ($response['elements'][6]['children'][1]['data'] as $district) {
+            foreach ($response[1]['data'] as $district) {
                 $districtsList[$district['id']] = $districtsList[$district['id']] ?? [];
                 $districtsList[$district['id']]['id'] = $district['id'];
                 $districtsList[$district['id']]['region_id'] = $district['region_id'];
@@ -130,21 +117,8 @@ class LocationSeeder extends Seeder
         $mahallasList = [];
         foreach (array_keys($districtsList) as $districtId) {
             foreach (['uz' => 'oz', 'la' => 'uz', 'ru' => 'ru'] as $remoteLanguage => $localLanguage) {
-                $response = Http::withHeaders([
-                    'Accept' => 'application/json, text/plain, */*',
-                    'Accept-Language' => $remoteLanguage,
-                    'Connection' => 'keep-alive',
-                    'Origin' => 'https://oilakredit.uz',
-                    'Referer' => 'https://oilakredit.uz/',
-                    'Sec-Fetch-Dest' => 'empty',
-                    'Sec-Fetch-Mode' => 'cors',
-                    'Sec-Fetch-Site' => 'same-site',
-                    'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
-                    'sec-ch-ua' => '"Not/A)Brand";v="99", "Google Chrome";v="115", "Chromium";v="115"',
-                    'sec-ch-ua-mobile' => '?0',
-                    'sec-ch-ua-platform' => '"macOS"'
-                ])->get('https://api.oilakredit.uz/api/v1/public/lists/mahalla', ['locale' => $remoteLanguage, 'parent_id' => $districtId])->json();
-                foreach ($response['data'] as $mahalla) {
+                $response = OilaKreditClient::getMahallas($remoteLanguage, $districtId);
+                foreach ($response as $mahalla) {
                     $mahallasList[$mahalla['id']] = $mahallasList[$mahalla['id']] ?? [];
                     $mahallasList[$mahalla['id']]['id'] = $mahalla['id'];
                     $mahallasList[$mahalla['id']]['district_id'] = $mahalla['district_id'];
