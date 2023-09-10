@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tariffs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->boolean('isAnnual');
+            $table->boolean('is_annual');
             $table->double('percent');
             $table->integer('min_amount');
             $table->integer('max_amount');
