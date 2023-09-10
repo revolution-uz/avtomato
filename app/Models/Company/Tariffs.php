@@ -21,7 +21,7 @@ class Tariffs extends Model
 
     protected $fillable = [
         'name',
-        'isAnnual',
+        'is_annual',
         'percent',
         'min_amount',
         'max_amount',

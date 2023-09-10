@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Components;
 
+use App\Models\Company\Tariffs;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -18,6 +19,6 @@ class Navbar extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.components.navbar');
+        return view('livewire.components.navbar', ['tariffs' => Tariffs::query()->all()]);
     }
 }

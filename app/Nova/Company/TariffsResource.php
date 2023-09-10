@@ -32,7 +32,7 @@ class TariffsResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'isAnnual', 'percent', 'min_amount', 'max_amount', 'min_initial_fee', 'max_initial_fee'
+        'id', 'name', 'is_annual', 'percent', 'min_amount', 'max_amount', 'min_initial_fee', 'max_initial_fee'
     ];
 
     /**
