@@ -50,7 +50,7 @@ class CompanyRollbackCommand extends RollbackCommand
                         );
                     }
                 );
-            }, true
+            }
         );
     }
 

@@ -2,13 +2,12 @@
 
 namespace App\Nova\Company;
 
-use App\Models\Features;
+use App\Models\Company\Features;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class FeaturesResource extends Resource
 {

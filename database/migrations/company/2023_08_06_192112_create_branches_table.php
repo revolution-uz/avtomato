@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('inn');
-            $table->string('status', 55)->index();
             $table->timestamps();
             $table->softDeletes();
         });
