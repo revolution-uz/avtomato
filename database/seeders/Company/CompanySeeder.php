@@ -6,7 +6,6 @@ use App\Enums\Company\UserRole;
 use App\Enums\Company\UserStatus;
 use App\Models\Company\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class CompanySeeder extends Seeder
 {
@@ -15,6 +14,7 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(LocationSeeder::class);
         $this->call(FeatureSeeder::class);
         $this->call(PermissionSeeder::class);
         // TODO remove before production
