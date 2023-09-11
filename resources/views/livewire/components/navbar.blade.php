@@ -111,35 +111,35 @@ $navbarDetached = ($navbarDetached ?? '');
                                         <div class="dropdown-shortcuts-item col">
                                             <label for="inputTariffId" class="form-label">Tariff</label>
                                             <select wire:model="tariff_id" class="select2 form-select form-select-lg"
-                                                    id="inputTariffId" data-allow-clear="true">
+                                                    id="inputTariffId" data-allow-clear="true" required>
                                                 <option> Tanlang...</option>
                                                 @foreach($tariffs as $tariff)
-                                                <option> {{$tariff->name}}</option>
+                                                <option value="{{$tariff->id}}"> {{$tariff->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="dropdown-shortcuts-item col">
                                             <label for="amount" class="form-label">Amount</label>
-                                            <input type="text" class="form-control" id="amount" placeholder="Qiymat"
-                                                   aria-describedby="defaultFormControlHelp"/>
+                                            <input wire:model="amount" type="text" class="form-control" id="amount"
+                                                   placeholder="Qiymat" aria-describedby="defaultFormControlHelp"/>
                                         </div>
                                     </div>
                                     <div class="row overflow-visible g-0">
                                         <div class="dropdown-shortcuts-item col">
                                             <label for="initialAmount" class="form-label">Initial Amount</label>
-                                            <input type="text" class="form-control" id="initialAmount"
-                                                   placeholder="Dastlabki to'lov"
+                                            <input wire:model="initial_amount" type="text" class="form-control"
+                                                   id="initialAmount" placeholder="Dastlabki to'lov"
                                                    aria-describedby="defaultFormControlHelp"/>
                                         </div>
                                         <div class="dropdown-shortcuts-item col">
                                             <label for="period" class="form-label">Period</label>
-                                            <input type="text" class="form-control" id="period" placeholder="Davr"
-                                                   aria-describedby="defaultFormControlHelp"/>
+                                            <input wire:model="period" type="text" class="form-control" id="period"
+                                                   placeholder="Davr" aria-describedby="defaultFormControlHelp"/>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
                                         <div class="d-grid gap-2 col-lg-12 mx-auto">
-                                            <button type="submit" class="btn btn-info btn-lg">Calculate</button>
+                                            <button type="submit" class="btn btn-info btn-lg" data-bs-toggle="modal" data-bs-target="#calculatorModal">Calculate</button>
                                         </div>
                                     </div>
                                 </form>
