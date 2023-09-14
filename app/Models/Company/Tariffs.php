@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $name
- * @property boolean $isAnnual
+ * @property boolean $is_annual
  * @property double $percent
  * @property int $min_amount
  * @property int $max_amount

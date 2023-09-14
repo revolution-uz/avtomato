@@ -5,6 +5,7 @@ use App\Livewire\BranchPage;
 use App\Livewire\CalculatorPage;
 use App\Livewire\DashboardPage;
 use App\Livewire\LoginPage;
+use App\Livewire\TariffsPage;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,6 +25,7 @@ Route::multilingual('/login', LoginPage::class)->name('login');
 Route::middleware('auth')->group(function () {
     Route::multilingual('/', DashboardPage::class)->name('dashboard');
     Route::multilingual('/branches', BranchPage::class)->name('branch');
+    Route::multilingual('/tariffs', TariffsPage::class)->name('tariff');
     Route::multilingual('/calculator', CalculatorPage::class)->name('calculator');
 });
 
