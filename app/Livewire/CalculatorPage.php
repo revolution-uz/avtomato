@@ -23,14 +23,17 @@ class CalculatorPage extends Component
         $amount -= $initial_amount;
         $portion = $amount * $percent / 100;
         $calculated = [];
-        for ($i = 0; $i < $period; $i++)
+        $dateTime = time();
+        for ($i = 0; $i < $period; $i++) {
             $calculated[] = [
                 'id' => $i + 1,
-                'date' => $day . date('.m.Y', strtotime(date('d.m.Y')) + 31 * 86400),
+                'date' => date("d.m.Y", $dateTime),
                 'amount' => $amount / $period,
                 'portion' => $portion,
                 'monthly' => $amount / $period + $portion,
             ];
+            $dateTime = strtotime($day . date('.m.Y', strtotime(date('d.m.Y', $dateTime)) + 31 * 86400));
+        }
         return view('livewire.calculator', ['calculated' => $calculated]);
     }
 }
