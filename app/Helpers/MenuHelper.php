@@ -61,6 +61,11 @@ class MenuHelper
                 ),
             ],
         );
+        $menuItems[] = new MenuItem(
+            name: 'Tarifflar',
+            icon: 'menu-icon tf-icons ti ti-brand-tumblr',
+            url: '/tariffs',
+        );
 
         return $menuItems;
     }
