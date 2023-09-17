@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/login', [AuthController::class, 'login']);
+
+//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/profile/me', [ProfileController::class, 'me'])->name('user.me');
+    Route::post('/profile/revoke-device', [ProfileController::class, 'revokeDevice'])->name('user.revoke-device');
+    Route::get('/profile/devices', [ProfileController::class, 'devices'])->name('user.devices');
 });
