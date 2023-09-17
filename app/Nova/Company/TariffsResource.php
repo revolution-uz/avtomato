@@ -128,4 +128,14 @@ class TariffsResource extends Resource
     {
         return false;
     }
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToReplicate(Request $request)
+    {
+        return false;
+    }
 }
