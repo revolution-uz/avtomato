@@ -9,10 +9,9 @@ use Illuminate\Support\Facades\Hash;
 /**
  * @OA\Schema()
  *
- * @property string $phone
+ * @property string $username
  * @property string $password
  * @property string $device_name
- * @property string $device_ip
  */
 class LoginRequest extends FormRequest
 {
@@ -34,24 +33,23 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['bail', 'required', function ($attribute, $value, $fail) {
-                $user = User::query()->where('phone', $this->phone)->first();
+            'username' => ['bail', 'required', function ($attribute, $value, $fail) {
+                $user = User::query()->where('username', $this->username)->first();
                 if ($user === null) {
-                    $fail(__('Telefon raqam xato.'));
+                    $fail(__('Login xato.'));
                 }
             }],
             'password' => ['bail', 'required', function ($attribute, $value, $fail) {
-                $user = User::query()->where('phone', $this->phone)->first();
+                $user = User::query()->where('username', $this->username)->first();
                 if ($user === null) {
-                    $fail(__('Telefon raqam xato.'));
+                    $fail(__('Login raqam xato.'));
                     return;
                 }
                 if (!Hash::check($value, $user->password)) {
                     $fail(__('Parol xato.'));
                 }
             }],
-            'device_name' => 'nullable|string',
-            'device_ip' => 'nullable|string',
+            'device_name' => 'required|string',
         ];
     }
 }
