@@ -28,11 +28,11 @@
                 <tbody>
                 @foreach($calculated as $item)
                 <tr>
-                    <td>{{$item['id'];}}</td>
-                    <td>{{$item['date'];}}</td>
-                    <td>{{$item['amount'];}}</td>
-                    <td>{{$item['portion'];}}</td>
-                    <td>{{$item['monthly'];}}</td>
+                    <td>{{$item->id;}}</td>
+                    <td>{{date('d.m.Y', $item->date);}}</td>
+                    <td>{{$item->amount;}}</td>
+                    <td>{{$item->portion;}}</td>
+                    <td>{{$item->monthly;}}</td>
                 </tr>
                 @endforeach
                 </tbody>
