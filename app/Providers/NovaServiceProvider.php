@@ -7,6 +7,7 @@ use App\Helpers\UrlHelper;
 use App\Models\Company;
 use App\Nova\AdminResource;
 use App\Nova\Company\FeaturesResource;
+use App\Nova\Company\TariffsResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
@@ -46,6 +47,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuSection::make('Resources', [
                         MenuItem::resource(UserResource::class),
                         MenuItem::resource(FeaturesResource::class),
+                        MenuItem::resource(TariffsResource::class),
                     ])->collapsable(),
                 ];
             });
