@@ -26,7 +26,7 @@ class ApiResponse
         ], $statusCode);
     }
 
-    public static function error(mixed $data, int $statusCode = 500): JsonResponse
+    public static function error(mixed $data, int $statusCode = 200): JsonResponse
     {
         return response()->json([
             'success' => false,

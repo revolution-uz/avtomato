@@ -33,22 +33,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => ['bail', 'required', function ($attribute, $value, $fail) {
-                $user = User::query()->where('username', $this->username)->first();
-                if ($user === null) {
-                    $fail(__('Login xato.'));
-                }
-            }],
-            'password' => ['bail', 'required', function ($attribute, $value, $fail) {
-                $user = User::query()->where('username', $this->username)->first();
-                if ($user === null) {
-                    $fail(__('Login raqam xato.'));
-                    return;
-                }
-                if (!Hash::check($value, $user->password)) {
-                    $fail(__('Parol xato.'));
-                }
-            }],
+            'username' => ['bail', 'required'],
+            'password' => ['bail', 'required'],
             'device_name' => 'required|string',
         ];
     }

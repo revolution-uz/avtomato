@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\v1\AuthController;
-use App\Http\Controllers\Api\v1\ProfileController;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*

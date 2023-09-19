@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use     App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\LoginRequest;
 use App\Models\Company\User;
@@ -16,7 +16,7 @@ class AuthController extends Controller
     {
         $user = User::query()->where('username', $request->username)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return ApiResponse::error('Bad request', 401);
+            return ApiResponse::error('Login or password is wrong');
         }
         return ApiResponse::success(['access_token' => $user->createToken($request->device_name)->plainTextToken]);
     }
