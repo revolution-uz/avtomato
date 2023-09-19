@@ -29,7 +29,7 @@
                 @foreach($calculated as $item)
                 <tr>
                     <td>{{$item->id;}}</td>
-                    <td>{{date('d.m.Y', $item->date);}}</td>
+                    <td>{{$item->date}}</td>
                     <td>{{$item->amount;}}</td>
                     <td>{{$item->portion;}}</td>
                     <td>{{$item->monthly;}}</td>
