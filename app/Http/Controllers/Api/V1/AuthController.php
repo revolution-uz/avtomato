@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use     App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\LoginRequest;
 use App\Models\Company\User;
@@ -18,7 +18,7 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return ApiResponse::error('Login or password is wrong');
         }
-        return ApiResponse::success(['access_token' => $user->createToken("Android", $request->device_name, $request->ip(), now()->addDays(30))->plainTextToken]);
+        return ApiResponse::success(['access_token' => $user->createToken($user->first_name . '_' . now()->format("Y-m-d H:i:s"), $request->device_name, $request->ip())->plainTextToken]);
     }
 
     public function logout(): JsonResponse

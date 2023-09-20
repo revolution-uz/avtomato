@@ -91,7 +91,8 @@ class User extends Authenticatable
 
     public function createToken(string $device_type, string $device_name, string $ip, ?DateTimeInterface $expiresAt = null, array $abilities = ['*'])
     {
-
+        if ($expiresAt == null)
+            $expiresAt = now()->addDays(30);
         $token = $this->tokens()->create([
             'name' => $device_type,
             'device_name' => $device_name,
