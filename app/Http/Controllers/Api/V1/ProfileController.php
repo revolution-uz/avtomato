@@ -8,13 +8,18 @@ use App\Http\Requests\RevokeTokenRequest;
 use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
     public function me() {
-        return ApiResponse::success(PersonalAccessToken::findToken());
+        return ApiResponse::success(['user' =>  Auth::user()->toApiArray()]);
     }
-    public function revokeToken(RevokeTokenRequest $request): JsonResponse
+
+    public function devices() {
+        return ApiResponse::success(['devices' => Auth::user()->tokens()]);
+    }
+    public function revokeDevice(RevokeTokenRequest $request): JsonResponse
     {
         return ApiResponse::success($this->passportTokenService
             ->revokeAccessAndRefreshToken(tokenId: $request->validated('token')));

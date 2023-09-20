@@ -23,7 +23,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
-    Route::post('/profile/me', [ProfileController::class, 'me'])->name('user.me');
+    Route::get('/profile/me', [ProfileController::class, 'me'])->name('user.me');
     Route::post('/profile/revoke-device', [ProfileController::class, 'revokeDevice'])->name('user.revoke-device');
     Route::get('/profile/devices', [ProfileController::class, 'devices'])->name('user.devices');
 });

@@ -104,4 +104,22 @@ class User extends Authenticatable
 
         return new NewAccessToken($token, $token->getKey() . '|' . $plainTextToken);
     }
+    public function toApiArray() {
+        return [
+            'username' => $this->username,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'phone' => $this->phone,
+            'status' => $this->status,
+            'avatar' => $this->avatar,
+            'is_dark_mode' => $this->is_dark_mode,
+            'is_vertical_menu' => $this->is_vertical_menu,
+            'is_bordered_items' => $this->is_bordered_items,
+            'is_fixed_navbar' => $this->is_fixed_navbar,
+            'is_fixed_footer' => $this->is_fixed_footer,
+            'is_fixed_menu' => $this->is_fixed_menu,
+            'is_show_dropdown_on_hover' => $this->is_show_dropdown_on_hover,
+            'language' => $this->language,
+        ];
+    }
 }
