@@ -18,14 +18,13 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return ApiResponse::error('Login or password is wrong');
         }
-        return ApiResponse::success(['access_token' => $user->createToken($request->device_name)->plainTextToken]);
+        return ApiResponse::success(['access_token' => $user->createToken("Android", $request->device_name, $request->ip(), now()->addDays(30))->plainTextToken]);
     }
 
     public function logout(): JsonResponse
     {
-        $user = Auth::user();
         return ApiResponse::success(
-            Auth::user()->tokens()->where('id', $user->currentAccessToken()->id)->delete()
+            Auth::user()->tokens()->where('id', Auth::user()->currentAccessToken()->id)->delete()
         );
     }
 }
