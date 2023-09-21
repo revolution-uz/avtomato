@@ -18,7 +18,7 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return ApiResponse::error('Login or password is wrong');
         }
-        return ApiResponse::success(['access_token' => $user->createToken($user->first_name . '_' . now()->format("Y-m-d H:i:s"), $request->device_name, $request->ip())->plainTextToken]);
+        return ApiResponse::success($user->createToken($request->device_name, $request->ip())->plainTextToken);
     }
 
     public function logout(): JsonResponse

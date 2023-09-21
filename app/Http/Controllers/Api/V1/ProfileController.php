@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\RevokeDeviceRequest;
+use App\Http\Resources\Admin\UserInfoResource;
 use App\Http\Resources\DeviceInfoResource;
 use App\Models\Company\PersonalAccessToken;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +15,7 @@ class ProfileController extends Controller
 {
     public function me()
     {
-        return ApiResponse::success(['user' => Auth::user()->toApiArray()]);
+        return ApiResponse::success(UserInfoResource::make(Auth::user()));
     }
 
     public function devices()

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\TariffsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,4 +27,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/profile/me', [ProfileController::class, 'me'])->name('user.me');
     Route::post('/profile/revoke-device', [ProfileController::class, 'revokeDevice'])->name('user.revoke-device');
     Route::get('/profile/devices', [ProfileController::class, 'devices'])->name('user.devices');
+    Route::get('/tariffs', [TariffsController::class, 'index'])->name('tariffs.index');
+    Route::get('/tariffs/{id}', [TariffsController::class, 'getSingle'])->name('tariffs.get-single');
+    Route::post('/tariffs/create', [TariffsController::class, 'create'])->name('tariffs.create');
+    Route::post('/tariffs/{id}/update', [TariffsController::class, 'update'])->name('tariffs.update');
 });
