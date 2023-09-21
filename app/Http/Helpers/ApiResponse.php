@@ -13,16 +13,16 @@ use Illuminate\Http\JsonResponse;
 class ApiResponse
 {
     /**
-     * @param  mixed  $data
-     * @param  int  $statusCode
+     * @param mixed $data
+     * @param int $statusCode
      * @return JsonResponse
      */
     public static function success(mixed $data = null, int $statusCode = 200): JsonResponse
     {
         return response()->json([
             'success' => true,
-            'message' => is_string($data) ? $data : null,
-            'data' => is_string($data) ? null : $data,
+            'message' => null,
+            'data' => $data,
         ], $statusCode);
     }
 

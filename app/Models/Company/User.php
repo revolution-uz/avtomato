@@ -89,13 +89,12 @@ class User extends Authenticatable
         return $this->morphMany(PersonalAccessToken::class, 'tokenable');
     }
 
-    public function createToken(string $device_type, string $device_name, string $ip, ?DateTimeInterface $expiresAt = null, array $abilities = ['*'])
+    public function createToken(string $device_name, string $ip, ?DateTimeInterface $expiresAt = null, array $abilities = ['*'])
     {
         if ($expiresAt == null)
             $expiresAt = now()->addDays(30);
         $token = $this->tokens()->create([
-            'name' => $device_type,
-            'device_name' => $device_name,
+            'name' => $device_name,
             'device_ip' => $ip,
             'token' => hash('sha256', $plainTextToken = Str::random(40)),
             'abilities' => $abilities,
@@ -104,7 +103,9 @@ class User extends Authenticatable
 
         return new NewAccessToken($token, $token->getKey() . '|' . $plainTextToken);
     }
-    public function toApiArray() {
+
+    public function toApiArray()
+    {
         return [
             'username' => $this->username,
             'first_name' => $this->first_name,
