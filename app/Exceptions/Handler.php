@@ -2,7 +2,13 @@
 
 namespace App\Exceptions;
 
+use App\Http\Helpers\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +32,27 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * @param  $request
+     * @param Throwable $e
+     * @return JsonResponse|\Illuminate\Http\Response|Response
+     * @throws Throwable
+     */
+    public function render($request, Throwable $e): \Illuminate\Http\Response|JsonResponse|Response
+    {
+        if ($request->wantsJson() || $request->ajax() || $request->expectsJson() || $request->isJson()) {
+//            if ($e instanceof HttpException or $e instanceof UploadFileException) {
+//                return ApiResponse::error($e->getMessage());
+//            } else
+            if ($e instanceof AuthenticationException) {
+                return ApiResponse::error($e->getMessage(), Response::HTTP_UNAUTHORIZED);
+            } elseif ($e instanceof ValidationException) {
+                return ApiResponse::error($e->validator->getMessageBag()->first());
+            }
+        }
+
+        return parent::render($request, $e);
     }
 }

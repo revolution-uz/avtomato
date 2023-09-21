@@ -3,11 +3,14 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\UserStatus;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\NewAccessToken;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -70,7 +73,7 @@ class User extends Authenticatable
 
         $hasPermission = $this->hasDirectPermission($permission) || $this->hasPermissionViaRole($permission);
         if (($branch_id = session()->get('current_branch')) !== null) {
-            return  $permission->branch_id === $branch_id && $hasPermission;
+            return $permission->branch_id === $branch_id && $hasPermission;
         }
 
         return $hasPermission;
@@ -79,5 +82,45 @@ class User extends Authenticatable
     public function getAvatarUrlAttribute(): string
     {
         return Storage::url("avatar/$this->avatar");
+    }
+
+    public function tokens()
+    {
+        return $this->morphMany(PersonalAccessToken::class, 'tokenable');
+    }
+
+    public function createToken(string $device_name, string $ip, ?DateTimeInterface $expiresAt = null, array $abilities = ['*'])
+    {
+        if ($expiresAt == null)
+            $expiresAt = now()->addDays(30);
+        $token = $this->tokens()->create([
+            'name' => $device_name,
+            'device_ip' => $ip,
+            'token' => hash('sha256', $plainTextToken = Str::random(40)),
+            'abilities' => $abilities,
+            'expires_at' => $expiresAt->format("Y-m-d H:i:s"),
+        ]);
+
+        return new NewAccessToken($token, $token->getKey() . '|' . $plainTextToken);
+    }
+
+    public function toApiArray()
+    {
+        return [
+            'username' => $this->username,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'phone' => $this->phone,
+            'status' => $this->status,
+            'avatar' => $this->avatar,
+            'is_dark_mode' => $this->is_dark_mode,
+            'is_vertical_menu' => $this->is_vertical_menu,
+            'is_bordered_items' => $this->is_bordered_items,
+            'is_fixed_navbar' => $this->is_fixed_navbar,
+            'is_fixed_footer' => $this->is_fixed_footer,
+            'is_fixed_menu' => $this->is_fixed_menu,
+            'is_show_dropdown_on_hover' => $this->is_show_dropdown_on_hover,
+            'language' => $this->language,
+        ];
     }
 }

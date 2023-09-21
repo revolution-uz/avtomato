@@ -30,14 +30,18 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
 
             if (!app()->runningInConsole() && UrlHelper::isHasCompanySlugInCurrentHost()) {
+
+                Route::middleware('api')
+                    ->prefix('api')
+                    ->group(base_path('routes/client-api.php'));
                 Route::middleware('web')
                     ->group(base_path('routes/client-panel.php'));
             } else {
+                Route::middleware('api')
+                    ->prefix('api')
+                    ->group(base_path('routes/api.php'));
                 Route::middleware('web')
                     ->group(base_path('routes/website.php'));
             }
