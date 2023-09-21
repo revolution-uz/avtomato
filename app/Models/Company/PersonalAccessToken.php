@@ -13,7 +13,6 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
         'token',
         'abilities',
         'expires_at',
-        'device_name',
         'device_ip',
     ];
 }

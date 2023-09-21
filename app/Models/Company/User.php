@@ -89,38 +89,10 @@ class User extends Authenticatable
         return $this->morphMany(PersonalAccessToken::class, 'tokenable');
     }
 
-    public function createToken(string $device_name, string $ip, ?DateTimeInterface $expiresAt = null, array $abilities = ['*'])
+    public function createTokenWithDeviceName(string $device_name, string $ip)
     {
-        if ($expiresAt == null)
-            $expiresAt = now()->addDays(30);
-        $token = $this->tokens()->create([
-            'name' => $device_name,
-            'device_ip' => $ip,
-            'token' => hash('sha256', $plainTextToken = Str::random(40)),
-            'abilities' => $abilities,
-            'expires_at' => $expiresAt->format("Y-m-d H:i:s"),
-        ]);
-
-        return new NewAccessToken($token, $token->getKey() . '|' . $plainTextToken);
-    }
-
-    public function toApiArray()
-    {
-        return [
-            'username' => $this->username,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'phone' => $this->phone,
-            'status' => $this->status,
-            'avatar' => $this->avatar,
-            'is_dark_mode' => $this->is_dark_mode,
-            'is_vertical_menu' => $this->is_vertical_menu,
-            'is_bordered_items' => $this->is_bordered_items,
-            'is_fixed_navbar' => $this->is_fixed_navbar,
-            'is_fixed_footer' => $this->is_fixed_footer,
-            'is_fixed_menu' => $this->is_fixed_menu,
-            'is_show_dropdown_on_hover' => $this->is_show_dropdown_on_hover,
-            'language' => $this->language,
-        ];
+        $token = $this->createToken($device_name);
+        $token->accessToken->update(['device_ip' => $ip, 'expires_at' => now()->addDays(30)->format("Y-m-d H:i:s")]);
+        return $token->plainTextToken;
     }
 }
