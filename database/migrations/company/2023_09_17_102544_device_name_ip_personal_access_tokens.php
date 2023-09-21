@@ -14,7 +14,6 @@ return new class extends Migration {
     {
         Schema::table(self::TABLE, function (Blueprint $table) {
             $table->string('device_ip')->nullable();
-            $table->string('device_name')->nullable();
             $table->softDeletes();
         });
     }
@@ -25,7 +24,6 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropColumns(self::TABLE, 'device_ip');
-        Schema::dropColumns(self::TABLE, 'device_name');
         if (Schema::hasColumn(self::TABLE, 'deleted_at')) {
             Schema::dropColumns(self::TABLE, 'deleted_at');
         }
