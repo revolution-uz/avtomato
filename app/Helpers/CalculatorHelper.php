@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\DTOs\InstallmentGraphDTO;
 use App\Http\Requests\CalculatorRequest;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -9,7 +10,7 @@ use Carbon\CarbonPeriod;
 class CalculatorHelper
 {
 
-    private function prepareIntallmentGraph(CalculatorRequest $request)
+    public function prepareIntallmentGraph(CalculatorRequest $request)
     {
         $percent = $request->getTariff()->percent;
         $amount = $request->amount;
@@ -22,7 +23,7 @@ class CalculatorHelper
         $calculated = [];
         $i = 1;
         foreach ($periods as $period) {
-            $calculated[] = new IntallmentGraphDTO(
+            $calculated[] = new InstallmentGraphDTO(
                 $i,
                 $period->format("Y-m-d"),
                 $amount / $request->period,
@@ -33,4 +34,13 @@ class CalculatorHelper
         }
         return $calculated;
     }
+
+    public function prepareIntallmentGraphCSV(CalculatorRequest $request)
+    {
+        $data = [["ID", "Date", "Amount", "Portion", "Monthly"]];
+        foreach ($this->prepareIntallmentGraph($request) as $item)
+            $data[] = [$item->id,$item->date,$item->amount, $item->portion, $item->monthly];
+        return $data;
+    }
+
 }
