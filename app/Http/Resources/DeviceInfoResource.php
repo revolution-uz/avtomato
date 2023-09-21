@@ -24,10 +24,10 @@ class DeviceInfoResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id' => $this['id'],
-            'name' => $this['name'],
-            'device_name' => $this['device_name'],
-            'device_ip' => $this['device_ip'],
+            'id' => $this->id,
+            'name' => $this->name,
+            'device_name' => $this->device_name,
+            'device_ip' => $this->device_ip,
         ];
     }
 }
