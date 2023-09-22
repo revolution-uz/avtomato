@@ -13,7 +13,7 @@ class SettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        Settings::findOrCreate([
+        Settings::query()->firstOrCreate([
             'name' => 'partner_api_maintenance_mode'
         ], ['value' => 0, 'type' => SettingsType::BOOLEAN]);
         Settings::query()->firstOrCreate([
