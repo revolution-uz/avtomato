@@ -16,4 +16,40 @@ enum SettingsEnum: string
     {
         return [self::PARTNER_API_MAINTENANCE_MODE, self::PARTNER_APP_MIN_VERSION];
     }
+
+    public static function getType($type)
+    {
+        switch ($type) {
+            case self::PARTNER_API_MAINTENANCE_MODE:
+            case self::CLIENT_API_MAINTENANCE_MODE:
+            case self::PARTNER_PANEL_MAINTENANCE_MODE:
+            case self::WEBSITE_MAINTENANCE_MODE:
+                return SettingsType::BOOLEAN;
+            case self::PARTNER_APP_MIN_VERSION:
+            case self::CLIENT_APP_MIN_VERSION:
+                return SettingsType::INT;
+            case self::SMS_PROVIDER:
+                return SettingsType::STRING;
+            default:
+                return SettingsType::TEXT;
+        }
+    }
+
+    public static function getValue($type)
+    {
+        switch ($type) {
+            case self::PARTNER_API_MAINTENANCE_MODE:
+            case self::CLIENT_API_MAINTENANCE_MODE:
+            case self::PARTNER_PANEL_MAINTENANCE_MODE:
+            case self::WEBSITE_MAINTENANCE_MODE:
+                return 0;
+            case self::PARTNER_APP_MIN_VERSION:
+            case self::CLIENT_APP_MIN_VERSION:
+                return 1;
+            case self::SMS_PROVIDER:
+                return "sms-fly";
+            default:
+                return SettingsType::TEXT;
+        }
+    }
 }
