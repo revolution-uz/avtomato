@@ -31,7 +31,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/tariffs', [TariffsController::class, 'index'])->name('tariffs.index');
     Route::get('/tariffs/{id}', [TariffsController::class, 'getSingle'])->name('tariffs.get-single');
     Route::post('/tariffs/create', [TariffsController::class, 'create'])->name('tariffs.create');
-    Route::post('/tariffs/{id}/update', [TariffsController::class, 'update'])->name('tariffs.update');
+    Route::put('/tariffs/{id}/update', [TariffsController::class, 'update'])->name('tariffs.update');
+    Route::delete('/tariffs/{id}', [TariffsController::class, 'delete'])->name('tariffs.delete');
     Route::post('/installment/calculator', [InstallmentController::class, 'calculator'])->name('installment.calculator');
     Route::post('/installment/export-calculator/{type}', [InstallmentController::class, 'exportCalculator'])->name('installment.export-calculator');
 

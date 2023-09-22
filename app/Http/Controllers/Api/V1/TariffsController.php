@@ -50,4 +50,9 @@ class TariffsController extends Controller
             return ApiResponse::success(TariffsResource::make($model));
         return ApiResponse::error("Error on updating Tariffs");
     }
+
+    public function delete(Tariffs $tariffs): JsonResponse
+    {
+        return ApiResponse::success($tariffs->delete());
+    }
 }
