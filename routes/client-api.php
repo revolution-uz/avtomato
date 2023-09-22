@@ -29,10 +29,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/profile/revoke-device/{id}', [ProfileController::class, 'revokeDevice'])->name('user.revoke-device');
     Route::get('/profile/devices', [ProfileController::class, 'devices'])->name('user.devices');
     Route::get('/tariffs', [TariffsController::class, 'index'])->name('tariffs.index');
-    Route::get('/tariffs/{id}', [TariffsController::class, 'getSingle'])->name('tariffs.get-single');
+    Route::get('/tariffs/{id}', [TariffsController::class, 'get'])->name('tariffs.get-single');
     Route::post('/tariffs/create', [TariffsController::class, 'create'])->name('tariffs.create');
     Route::put('/tariffs/{id}/update', [TariffsController::class, 'update'])->name('tariffs.update');
-    Route::delete('/tariffs/{id}', [TariffsController::class, 'delete'])->name('tariffs.delete');
+    Route::delete('/tariffs/{id}/delete', [TariffsController::class, 'delete'])->name('tariffs.delete');
     Route::post('/installment/calculator', [InstallmentController::class, 'calculator'])->name('installment.calculator');
     Route::post('/installment/export-calculator/{type}', [InstallmentController::class, 'exportCalculator'])->name('installment.export-calculator');
 

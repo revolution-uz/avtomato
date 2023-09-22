@@ -16,7 +16,7 @@ class TariffsController extends Controller
         return ApiResponse::success(TariffsResource::collection(Tariffs::all()));
     }
 
-    public function getSingle(int $id): JsonResponse
+    public function get(int $id): JsonResponse
     {
         return ApiResponse::success(TariffsResource::make(Tariffs::find($id)));
     }
