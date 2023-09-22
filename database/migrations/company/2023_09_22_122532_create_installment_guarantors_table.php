@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('agreement_id');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('card_id')->nullable();
-            $table->boolean('autoCharge');
-            $table->boolean('anyCardCharge');
+            $table->boolean('auto_charge');
+            $table->boolean('any_card_charge');
             $table->string('status');
             $table->timestamps();
 

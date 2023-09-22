@@ -17,10 +17,10 @@ return new class extends Migration
             $table->unsignedBigInteger('branch_id');
             $table->unsignedBigInteger('tariff_id');
             $table->unsignedBigInteger('card_id')->nullable();
-            $table->boolean('smsNotify');
-            $table->boolean('autoCharge');
-            $table->boolean('anyCardCharge');
-            $table->boolean('isBlacklist');
+            $table->boolean('sms_notify');
+            $table->boolean('auto_charge');
+            $table->boolean('any_card_charge');
+            $table->boolean('is_blacklist');
             $table->string('status');
             $table->timestamps();
 

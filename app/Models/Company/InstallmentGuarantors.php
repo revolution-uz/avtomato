@@ -13,8 +13,8 @@ class InstallmentGuarantors extends Model
         'agreement_id',
         'customer_id',
         'card_id',
-        'autoCharge',
-        'anyCardCharge',
+        'auto_charge',
+        'any_card_charge',
         'status',
     ];
 }

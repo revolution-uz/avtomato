@@ -14,10 +14,10 @@ class Installments extends Model
         'branch_id',
         'tariff_id',
         'card_id',
-        'smsNotify',
-        'autoCharge',
-        'anyCardCharge',
-        'isBlacklist',
+        'sms_notify',
+        'auto_charge',
+        'any_card_charge',
+        'is_blacklist',
         'status',
     ];
 }
