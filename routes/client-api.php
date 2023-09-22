@@ -35,5 +35,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/tariffs/{id}/update', [TariffsController::class, 'update'])->name('tariffs.update');
     Route::post('/installment/calculator', [InstallmentController::class, 'calculator'])->name('installment.calculator');
     Route::post('/installment/export-calculator/{type}', [InstallmentController::class, 'exportCalculator'])->name('installment.export-calculator');
+    Route::get('/info', [InfoController::class, 'settings'])->name('info.settings');
+
 
 });
