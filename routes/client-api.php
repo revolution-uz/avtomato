@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\InfoController;
+use App\Http\Controllers\Api\V1\InstallmentController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\TariffsController;
 use Illuminate\Support\Facades\Route;
@@ -32,5 +33,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/tariffs/{id}', [TariffsController::class, 'getSingle'])->name('tariffs.get-single');
     Route::post('/tariffs/create', [TariffsController::class, 'create'])->name('tariffs.create');
     Route::post('/tariffs/{id}/update', [TariffsController::class, 'update'])->name('tariffs.update');
-    Route::get('info/settings', [InfoController::class, 'settings']);
+    Route::post('/installment/calculator', [InstallmentController::class, 'calculator'])->name('installment.calculator');
+    Route::post('/installment/export-calculator/{type}', [InstallmentController::class, 'exportCalculator'])->name('installment.export-calculator');
+
 });

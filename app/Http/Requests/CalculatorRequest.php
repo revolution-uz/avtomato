@@ -28,7 +28,7 @@ class CalculatorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tariff_id' => 'required', new Tariffs, 'exists:tariffs,id',
+            'tariff_id' => 'required|exists:tariffs,id',
             'amount' => 'required|numeric',
             'initial_amount' => 'required|numeric',
             'period' => 'required|int',
