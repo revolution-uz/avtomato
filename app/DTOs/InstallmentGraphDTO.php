@@ -2,9 +2,8 @@
 
 namespace App\DTOs;
 
-use Carbon\CarbonPeriod;
 
-class IntallmentGraphDTO
+class InstallmentGraphDTO
 {
     /**
      * @param int|null $id

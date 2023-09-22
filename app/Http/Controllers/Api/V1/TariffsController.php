@@ -4,14 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\RevokeDeviceRequest;
 use App\Http\Requests\TariffsRequest;
-use App\Http\Resources\DeviceInfoResource;
 use App\Http\Resources\TariffsResource;
-use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\Tariffs;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 class TariffsController extends Controller
 {
@@ -22,7 +18,7 @@ class TariffsController extends Controller
 
     public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(new TariffsResource(Tariffs::find($id)));
+        return ApiResponse::success(TariffsResource::make(Tariffs::find($id)));
     }
 
     public function create(TariffsRequest $request): JsonResponse
@@ -36,7 +32,7 @@ class TariffsController extends Controller
         $model->min_initial_fee = $request->min_initial_fee;
         $model->max_initial_fee = $request->max_initial_fee;
         if ($model->save())
-            return ApiResponse::success(new TariffsResource($model));
+            return ApiResponse::success(TariffsResource::make($model));
         return ApiResponse::error("Error on creating Tariffs");
     }
 
@@ -51,7 +47,7 @@ class TariffsController extends Controller
         $model->min_initial_fee = $request->min_initial_fee;
         $model->max_initial_fee = $request->max_initial_fee;
         if ($model->save())
-            return ApiResponse::success(new TariffsResource($model));
+            return ApiResponse::success(TariffsResource::make($model));
         return ApiResponse::error("Error on updating Tariffs");
     }
 }
