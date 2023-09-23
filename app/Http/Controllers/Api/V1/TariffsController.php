@@ -101,7 +101,7 @@ class TariffsController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/tariffs/create',
+        path: '/api/v1/tariffs',
         operationId: 'tariffsCreate',
         description: 'Tariffs create route',
         summary: 'Tariffs create route',
@@ -171,7 +171,7 @@ class TariffsController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/tariffs/{id}/update',
+        path: '/api/v1/tariffs/{id}',
         operationId: 'tariffsUpdate',
         description: 'Tariffs create route',
         summary: 'Tariffs create route',
@@ -248,7 +248,7 @@ class TariffsController extends Controller
         return ApiResponse::error("Error on updating Tariffs");
     }
     #[OA\Delete(
-        path: '/api/v1/tariffs/{id}/delete',
+        path: '/api/v1/tariffs/{id}',
         operationId: 'tariffsDelete',
         description: 'Tariffs delete route',
         summary: 'Tariffs delete route',
