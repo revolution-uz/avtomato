@@ -16,7 +16,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property int $max_initial_fee
  */
 
-class TariffsRequest extends FormRequest
+class TariffRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

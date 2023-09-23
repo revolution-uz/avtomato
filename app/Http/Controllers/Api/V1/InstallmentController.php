@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\CalculatorRequest;
 use App\Http\Resources\InstallmentPaymentResource;
-use App\Models\Company\Tariffs;
+use App\Models\Company\Tariff;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
@@ -116,7 +116,7 @@ class InstallmentController extends Controller
 
     private function prepareIntallmentGraph(CalculatorRequest $request)
     {
-        $tariff = Tariffs::query()->where('id', $request->tariff_id)->first();
+        $tariff = Tariff::query()->where('id', $request->tariff_id)->first();
         $amount = $request->amount;
         $amount -= $request->initial_amount;
         $portion = $amount * $tariff->percent / 100;
