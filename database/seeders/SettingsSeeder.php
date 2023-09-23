@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Enums\SettingsEnum;
-use App\Models\Company\Settings;
+use App\Enums\Main\SettingsEnum;
+use App\Models\Settings;
 use Illuminate\Database\Seeder;
 
 class SettingsSeeder extends Seeder
@@ -13,12 +13,12 @@ class SettingsSeeder extends Seeder
      */
     public function run(): void
     {
-
         foreach (SettingsEnum::cases() as $case) {
             Settings::query()->firstOrCreate([
                 'name' => $case->value
             ], [
-                'value' => SettingsEnum::getValue($case->value), 'type' => SettingsEnum::getType($case->value)
+                'value' => SettingsEnum::getDefaultValue($case->value),
+                'type' => SettingsEnum::getType($case->value)
             ]);
         }
     }

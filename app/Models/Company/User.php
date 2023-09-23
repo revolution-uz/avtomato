@@ -2,7 +2,7 @@
 
 namespace App\Models\Company;
 
-use App\Enums\Company\UserStatus;
+use App\Enums\Company\UserStatusEnum;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -18,7 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $first_name
  * @property string $last_name
  * @property string $phone
- * @property UserStatus $status
+ * @property UserStatusEnum $status
  * @property string $avatar
  * @property bool $is_dark_mode
  * @property bool $is_vertical_menu
@@ -53,7 +53,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'status' => UserStatus::class
+        'status' => UserStatusEnum::class
     ];
 
     /**

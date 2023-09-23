@@ -2,32 +2,33 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Company\PersonalAccessToken;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'DeviceInfoResource',
+    title: 'DeviceInfoResource',
+    properties: [
+        new OA\Property(property: 'id', type: 'int', example: '1'),
+        new OA\Property(property: 'name', type: 'string', example: 'iPhone 15 Pro Max'),
+        new OA\Property(property: 'device_ip', type: 'string', example: '192.168.0.1'),
+        new OA\Property(property: 'last_used_at', type: 'string', example: '2021-10-01 12:00:00'),
+    ],
+)]
 /**
- * @OA\Schema()
- *
- * @OA\Property(property="id", type="int", example=1)
- * @OA\Property(property="name", type="string", example="Someone_Date")
- * @OA\Property(property="device_name", type="string", example="Google Pixel 7")
- * @OA\Property(property="device_ip", type="string", example="127.0.0.1")
+ * use @mixin PersonalAccessToken
  */
 class DeviceInfoResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  Request  $request
-     * @return array
-     */
-    public function toArray($request): array
+    public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'device_name' => $this->device_name,
             'device_ip' => $this->device_ip,
+            'last_used_at' => $this->last_used_at,
         ];
     }
 }

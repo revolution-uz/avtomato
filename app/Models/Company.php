@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Database\DatabaseConnector;
-use App\Enums\Company\CompanyStatus;
+use App\Enums\Company\CompanyStatusEnum;
 use Database\Factories\Company\CompanyFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $subdomain
  * @property string $db_user
  * @property string $db_password
- * @property CompanyStatus $status
+ * @property CompanyStatusEnum $status
  *
  * The followings are the available model methods (scopes, relations):
  * @method static static|Builder|\Illuminate\Database\Query\Builder withoutCreated()
@@ -39,7 +39,7 @@ class Company extends Model
     ];
 
     protected $casts = [
-        'status' => CompanyStatus::class,
+        'status' => CompanyStatusEnum::class,
     ];
 
     protected static function newFactory(): CompanyFactory
@@ -53,6 +53,6 @@ class Company extends Model
      */
     public function scopeWithoutCreated(Builder $query): Builder
     {
-        return $query->where('status', '!=', CompanyStatus::CREATED);
+        return $query->where('status', '!=', CompanyStatusEnum::CREATED);
     }
 }

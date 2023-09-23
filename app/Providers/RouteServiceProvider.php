@@ -32,10 +32,9 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
 
             if (!app()->runningInConsole() && UrlHelper::isHasCompanySlugInCurrentHost()) {
-
                 Route::middleware('api')
-                    ->prefix('api')
-                    ->group(base_path('routes/client-api.php'));
+                    ->prefix('api/v1')
+                    ->group(base_path('routes/partner-api.php'));
             } else {
                 Route::middleware('api')
                     ->prefix('api')

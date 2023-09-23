@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Database\DatabaseConnector;
 use App\Database\DatabaseHelper;
-use App\Enums\Company\CompanyStatus;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use Database\Seeders\Company\CompanySeeder;
 use Database\Seeders\Company\FeatureSeeder;
@@ -45,7 +45,7 @@ class CreateCompanyCommand extends Command
         $companyId = $this->argument('company');
         /** @var Company $company */
         $company = Company::query()
-            ->where('status', CompanyStatus::CREATED)
+            ->where('status', CompanyStatusEnum::CREATED)
             ->where('id', $companyId)
             ->firstOrFail();
 
@@ -74,7 +74,7 @@ class CreateCompanyCommand extends Command
             }
 
             $company->update([
-                'status' => CompanyStatus::ACTIVE,
+                'status' => CompanyStatusEnum::ACTIVE,
             ]);
 
             DatabaseConnector::setCompanyConnection($company->id);

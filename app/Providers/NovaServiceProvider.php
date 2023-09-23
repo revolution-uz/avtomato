@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Enums\Main\AdminRole;
+use App\Enums\Main\AdminRoleEnum;
 use App\Helpers\UrlHelper;
 use App\Models\Company;
 use App\Nova\AdminResource;
@@ -71,7 +71,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         }
 
         Nova::userMenu(function (Request $request, Menu $menu) {
-            if ($request->user()->role === AdminRole::SUPER_ADMIN) {
+            if ($request->user()->role === AdminRoleEnum::SUPER_ADMIN) {
                 $menu->prepend(
                     MenuItem::link('Horizon dashboard', '/horizon')
                 );

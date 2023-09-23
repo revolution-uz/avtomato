@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Database\DatabaseConnector;
+use App\Enums\Main\SettingsEnum;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,12 +15,24 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Settings extends Model
 {
-    use HasFactory;
-
+    protected $connection = DatabaseConnector::DB_CONNECTION_ADMIN;
+    public static array $_cache = [];
     protected $fillable = [
         'name',
         'value',
         'type',
         'description',
     ];
+
+    public static function getConfig(SettingsEnum $settings): ?string
+    {
+        if (!self::$_cache) {
+            self::$_cache = self::query()
+                ->get()
+                ->pluck('value', 'name')
+                ->toArray();
+        }
+
+        return self::$_cache[$settings->value] ?? null;
+    }
 }

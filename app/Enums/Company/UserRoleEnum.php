@@ -2,7 +2,7 @@
 
 namespace App\Enums\Company;
 
-enum UserRole: string
+enum UserRoleEnum: string
 {
     case OWNER = 'owner';
     case SALES_MANAGER = 'sales_manager';

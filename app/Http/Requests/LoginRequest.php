@@ -2,13 +2,19 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Company\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'LoginRequest',
+    title: 'Request to sign in',
+    properties: [
+        new OA\Property(property: 'username', type: 'string', example: 'admin'),
+        new OA\Property(property: 'password', type: 'string', example: 'password'),
+        new OA\Property(property: 'device_name', type: 'string', example: 'iPhone 15 Pro Max'),
+    ],
+)]
 /**
- * @OA\Schema()
- *
  * @property string $username
  * @property string $password
  * @property string $device_name

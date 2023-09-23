@@ -1,27 +1,30 @@
 <?php
 
-namespace App\Http\Resources\Admin;
+namespace App\Http\Resources;
 
-use App\Enums\Company\UserStatus;
+use App\Enums\Company\UserStatusEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'UserInfoResource',
+    title: 'UserInfoResource',
+    properties: [
+        new OA\Property(property: 'username', type: 'string', example: 'admin'),
+        new OA\Property(property: 'first_name', type: 'string', example: 'Yura'),
+        new OA\Property(property: 'last_name', type: 'string', example: 'Umarov'),
+        new OA\Property(property: 'phone', type: 'string', example: '+998933993300'),
+        new OA\Property(property: 'status', type: 'int', example: '1'),
+        new OA\Property(property: 'avatar', type: 'string', example: 'https://i.pravatar.cc/300'),
+    ],
+)]
 /**
- * @OA\Schema()
- * @OA\Property(property="first_name", type="string", example="Furqat")
- * @OA\Property(property="last_name", type="string", example="Umarov")
- * @OA\Property(property="middle_name", type="string", example="Furqatovich")
- * @OA\Property(property="birth_date", type="string", example="2022-09-02")
- * @OA\Property(property="pinfl", type="string", example="12301203123")
- * @OA\Property(property="pass_data", type="string", example="AB 00000000")
- * @OA\Property(property="permanent_address", type="string", example="Toshkent")
- * @OA\Property(property="doc_type", type="string", example="Doc type")
- *
  * @property int $id
  * @property string $username
  * @property string $first_name
  * @property string $last_name
  * @property string $phone
- * @property UserStatus $status
+ * @property UserStatusEnum $status
  * @property string $avatar
  * @property bool $is_dark_mode
  * @property bool $is_vertical_menu
@@ -34,7 +37,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class UserInfoResource extends JsonResource
 {
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'username' => $this->username,
