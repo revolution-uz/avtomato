@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\TariffsRequest;
-use App\Http\Resources\TariffsResource;
+use App\Http\Requests\TariffRequest;
+use App\Http\Resources\TariffResource;
 use App\Models\Company\Tariff;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
@@ -55,7 +55,7 @@ class TariffsController extends Controller
     )]
     public function index(): JsonResponse
     {
-        return ApiResponse::success(TariffsResource::collection(Tariff::all()));
+        return ApiResponse::success(TariffResource::collection(Tariff::all()));
     }
 
     #[OA\Get(
@@ -97,7 +97,7 @@ class TariffsController extends Controller
     )]
     public function getSingle(Tariff $tariff): JsonResponse
     {
-        return ApiResponse::success(TariffsResource::make($tariff));
+        return ApiResponse::success(TariffResource::make($tariff));
     }
 
     #[OA\Post(
@@ -155,7 +155,7 @@ class TariffsController extends Controller
             ),
         ]
     )]
-    public function create(TariffsRequest $request): JsonResponse
+    public function create(TariffRequest $request): JsonResponse
     {
         $model = new Tariff();
         $model->name = $request->name;
@@ -166,7 +166,7 @@ class TariffsController extends Controller
         $model->min_initial_fee = $request->min_initial_fee;
         $model->max_initial_fee = $request->max_initial_fee;
         if ($model->save())
-            return ApiResponse::success(TariffsResource::make($model));
+            return ApiResponse::success(TariffResource::make($model));
         return ApiResponse::error("Error on creating Tariffs");
     }
 
@@ -233,7 +233,7 @@ class TariffsController extends Controller
             ),
         ]
     )]
-    public function update(Tariff $tariff, TariffsRequest $request): JsonResponse
+    public function update(Tariff $tariff, TariffRequest $request): JsonResponse
     {
         $tariff->name = $request->name;
         $tariff->is_annual = $request->is_annual;
@@ -243,7 +243,7 @@ class TariffsController extends Controller
         $tariff->min_initial_fee = $request->min_initial_fee;
         $tariff->max_initial_fee = $request->max_initial_fee;
         if ($tariff->save()) {
-            return ApiResponse::success(TariffsResource::make($tariff));
+            return ApiResponse::success(TariffResource::make($tariff));
         }
         return ApiResponse::error("Error on updating Tariffs");
     }
