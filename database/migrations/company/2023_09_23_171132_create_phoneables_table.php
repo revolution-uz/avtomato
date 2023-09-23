@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('phoneables', function (Blueprint $table) {
             $table->id();
+            $table->string('comment', 64)->nullable();
             $table->unsignedBigInteger('phone_id');
             $table->unsignedBigInteger('phoneable_id');
             $table->string('phoneable_type', 64); // customer, import_group, etc

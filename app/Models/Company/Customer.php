@@ -4,7 +4,7 @@ namespace App\Models\Company;
 
 use App\Enums\GenderEnum;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -24,18 +24,14 @@ use Illuminate\Support\Carbon;
  * @property string|null $middle_name
  * @property Carbon|null $birth_date
  * @property string|null $birth_place
- * @property string|null $address
  * @property GenderEnum|null $gender
- * @property int|null $region_id
- * @property int|null $district_id
  * @property string $created_at
  * @property string $updated_at
  * @property string|null $deleted_at
  *
- * @property Region|null $region
- * @property District|null $district
- * @property Mahalla|null $mahalla
  * @property Attachment[] $attachments
+ * @property Address[] $addresses
+ * @property Phone[] $phones
  */
 class Customer extends Model
 {
@@ -55,11 +51,7 @@ class Customer extends Model
         'middle_name',
         'birth_date',
         'birth_place',
-        'address',
         'gender',
-        'region_id',
-        'district_id',
-        'mahalla_id',
     ];
 
     protected $casts = [
@@ -69,21 +61,6 @@ class Customer extends Model
         'gender' => GenderEnum::class,
     ];
 
-    public function region(): BelongsTo
-    {
-        return $this->belongsTo(Region::class);
-    }
-
-    public function district(): BelongsTo
-    {
-        return $this->belongsTo(District::class);
-    }
-
-    public function mahalla(): BelongsTo
-    {
-        return $this->belongsTo(Mahalla::class);
-    }
-
     public function attachments(): MorphToMany
     {
         return $this->morphToMany(Attachment::class, 'attachmentable');
@@ -92,5 +69,10 @@ class Customer extends Model
     public function phones(): MorphToMany
     {
         return $this->morphToMany(Phone::class, 'phoneable');
+    }
+
+    public function addresses(): MorphMany
+    {
+        return $this->morphMany(Address::class, 'addressable');
     }
 }

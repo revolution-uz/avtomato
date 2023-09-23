@@ -26,18 +26,11 @@ return new class extends Migration
             $table->string('middle_name', 32)->nullable();
             $table->date('birth_date')->nullable();
             $table->string('birth_place', 32)->nullable();
-            $table->string('address', 128)->nullable();
             $table->boolean('gender')->nullable();
-            $table->integer('region_id')->nullable();
-            $table->integer('district_id')->nullable();
-            $table->integer('mahalla_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->unique(['passport_series', 'passport_number']);
-            $table->index('region_id');
-            $table->index('district_id');
-            $table->index('mahalla_id');
         });
     }
 
