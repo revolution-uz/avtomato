@@ -27,7 +27,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/tariffs', [TariffsController::class, 'index'])->name('tariffs.index');
         Route::get('/tariffs/{tariff}', [TariffsController::class, 'getSingle'])->name('tariffs.get-single');
         Route::post('/tariffs', [TariffsController::class, 'create'])->name('tariffs.create');
-        Route::post('/tariffs/{tariff}', [TariffsController::class, 'update'])->name('tariffs.update');
+        Route::put('/tariffs/{tariff}', [TariffsController::class, 'update'])->name('tariffs.update');
         Route::delete('/tariffs/{tariff}', [TariffsController::class, 'delete'])->name('tariffs.delete');
         Route::post('/installment/calculator', [InstallmentController::class, 'calculator'])->name('installment.calculator');
         Route::post('/installment/export-calculator/{type}', [InstallmentController::class, 'exportCalculator'])->name('installment.export-calculator');
