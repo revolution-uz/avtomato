@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('attachment_id');
             $table->unsignedBigInteger('attachmentable_id');
-            $table->string('attachmentable_type');
+            $table->string('attachmentable_type', 64);
             $table->timestamp('created_at')->nullable();
 
             $table->index('attachment_id');

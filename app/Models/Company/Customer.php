@@ -35,6 +35,7 @@ use Illuminate\Support\Carbon;
  * @property Region|null $region
  * @property District|null $district
  * @property Mahalla|null $mahalla
+ * @property Attachment[] $attachments
  */
 class Customer extends Model
 {
@@ -86,5 +87,10 @@ class Customer extends Model
     public function attachments(): MorphToMany
     {
         return $this->morphToMany(Attachment::class, 'attachmentable');
+    }
+
+    public function phones(): MorphToMany
+    {
+        return $this->morphToMany(Phone::class, 'phoneable');
     }
 }
