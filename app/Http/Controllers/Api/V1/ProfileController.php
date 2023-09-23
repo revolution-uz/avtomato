@@ -83,7 +83,7 @@ class ProfileController extends Controller
         return ApiResponse::success(DeviceInfoResource::collection(Auth::user()->tokens));
     }
 
-    #[OA\Post(
+    #[OA\Delete(
         path: '/api/v1/profile/revoke-device/{id}',
         operationId: 'profileRevokeDevice',
         description: 'Revoke device route',
@@ -98,7 +98,6 @@ class ProfileController extends Controller
             )
         ],
         responses: [
-
             new OA\Response(
                 response: '200',
                 description: 'Success',
@@ -106,7 +105,7 @@ class ProfileController extends Controller
                     example: [
                         'success' => true,
                         'message' => null,
-                        'data' => null
+                        'data' => true
                     ]
                 )
             ),
