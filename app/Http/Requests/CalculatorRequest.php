@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Company\Tariffs;
+use App\Models\Company\Tariff;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
@@ -36,11 +36,11 @@ class CalculatorRequest extends FormRequest
     }
 
     /**
-     * @return Builder|Tariffs|null
+     * @return Builder|Tariff|null
      */
     public function getTariff()
     {
-        return Tariffs::query()->where('id', $this->tariff_id)->first();
+        return Tariff::query()->where('id', $this->tariff_id)->first();
     }
 
     protected function failedValidation(Validator $validator)

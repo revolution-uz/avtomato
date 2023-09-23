@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $min_initial_fee
  * @property int $max_initial_fee
  */
-class Tariffs extends Model
+class Tariff extends Model
 {
     use HasFactory;
 

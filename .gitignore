@@ -6,6 +6,8 @@
 /public/vendor
 /storage/*.key
 /vendor
+/storage/api-docs
+/resources/views/vendor
 .env
 .env.backup
 .env.production
