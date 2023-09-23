@@ -22,7 +22,7 @@ Route::prefix('v1')->group(function () {
     Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
         Route::get('/profile/me', [ProfileController::class, 'me'])->name('user.me');
-        Route::post('/profile/revoke-device/{personalAccessToken}', [ProfileController::class, 'revokeDevice'])->name('user.revoke-device');
+        Route::delete('/profile/revoke-device/{personalAccessToken}', [ProfileController::class, 'revokeDevice'])->name('user.revoke-device');
         Route::get('/profile/devices', [ProfileController::class, 'devices'])->name('user.devices');
         Route::get('/tariffs', [TariffsController::class, 'index'])->name('tariffs.index');
         Route::get('/tariffs/{tariff}', [TariffsController::class, 'getSingle'])->name('tariffs.get-single');
