@@ -3,11 +3,14 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\UserStatus;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\NewAccessToken;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -70,7 +73,7 @@ class User extends Authenticatable
 
         $hasPermission = $this->hasDirectPermission($permission) || $this->hasPermissionViaRole($permission);
         if (($branch_id = session()->get('current_branch')) !== null) {
-            return  $permission->branch_id === $branch_id && $hasPermission;
+            return $permission->branch_id === $branch_id && $hasPermission;
         }
 
         return $hasPermission;
@@ -79,5 +82,17 @@ class User extends Authenticatable
     public function getAvatarUrlAttribute(): string
     {
         return Storage::url("avatar/$this->avatar");
+    }
+
+    public function tokens()
+    {
+        return $this->morphMany(PersonalAccessToken::class, 'tokenable');
+    }
+
+    public function createTokenWithDeviceName(string $device_name, string $ip)
+    {
+        $token = $this->createToken($device_name);
+        $token->accessToken->update(['device_ip' => $ip, 'expires_at' => now()->addDays(30)->format("Y-m-d H:i:s")]);
+        return $token->plainTextToken;
     }
 }
