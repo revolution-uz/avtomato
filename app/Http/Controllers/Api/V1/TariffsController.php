@@ -248,7 +248,7 @@ class TariffsController extends Controller
         return ApiResponse::error("Error on updating Tariffs");
     }
     #[OA\Delete(
-        path: '/api/v1/tariffs/{id}',
+        path: '/api/v1/tariffs/{id}/delete',
         operationId: 'tariffsDelete',
         description: 'Tariffs delete route',
         summary: 'Tariffs delete route',
