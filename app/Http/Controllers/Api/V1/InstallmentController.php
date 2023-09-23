@@ -72,7 +72,7 @@ class InstallmentController extends Controller
     )]
     public function calculator(CalculatorRequest $request): JsonResponse
     {
-        return ApiResponse::success($this->prepareIntallmentGraph($request));
+        return ApiResponse::success($this->prepareInstallmentGraph($request));
     }
 
     #[OA\Post(
@@ -100,7 +100,7 @@ class InstallmentController extends Controller
     public function exportCalculator(string $type, CalculatorRequest $request)
     {
         $data = [["ID", "Date", "Amount", "Portion", "Monthly"]];
-        foreach ($this->prepareIntallmentGraph($request) as $item)
+        foreach ($this->prepareInstallmentGraph($request) as $item)
             $data[] = [$item->id, $item->date, $item->amount, $item->portion, $item->monthly];
         $collection = collect($data);
         $csv = $collection->reduce(function ($carry, $row) {
@@ -114,7 +114,7 @@ class InstallmentController extends Controller
         return $response;
     }
 
-    private function prepareIntallmentGraph(CalculatorRequest $request)
+    private function prepareInstallmentGraph(CalculatorRequest $request)
     {
         $tariff = Tariff::query()->where('id', $request->tariff_id)->first();
         $amount = $request->amount;
