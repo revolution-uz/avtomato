@@ -2,7 +2,7 @@
 
 namespace App\Enums\Company;
 
-enum UserStatus: int
+enum UserStatusEnum: int
 {
     case ACTIVE = 1;
     case INACTIVE = 0;

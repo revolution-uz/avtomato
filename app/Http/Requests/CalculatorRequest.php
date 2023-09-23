@@ -4,10 +4,19 @@ namespace App\Http\Requests;
 
 use App\Models\Company\Tariff;
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'CalculatorRequest',
+    title: 'Request to sign in',
+    properties: [
+        new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
+        new OA\Property(property: 'amount', type: 'int', example: '300000'),
+        new OA\Property(property: 'initial_amount', type: 'int', example: '100000'),
+        new OA\Property(property: 'period', type: 'int', example: '12'),
+    ],
+)]
 /**
- * @OA\Schema()
- *
  * @property int $tariff_id
  * @property float $amount
  * @property float $initial_amount
@@ -15,12 +24,6 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class CalculatorRequest extends FormRequest
 {
-
-    /**
-     * @OA\Property(property="phone", type="string", example="998901112233")
-     *
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         return [

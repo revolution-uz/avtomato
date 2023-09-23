@@ -2,7 +2,7 @@
 
 namespace App\Enums\Company;
 
-enum FeaturesEnum: string
+enum FeatureEnum: string
 {
     case MULTI_BRANCH = 'multi_branch';
     case OWN_SMS_PROVIDER = 'own_sms_provider';

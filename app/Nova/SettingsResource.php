@@ -1,0 +1,148 @@
+<?php
+
+namespace App\Nova;
+
+use App\Enums\Main\SettingsTypeEnum;
+use App\Enums\Main\SmsProviderEnum;
+use App\Models\Settings;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+
+/**
+ * @mixin Settings
+ */
+class SettingsResource extends Resource
+{
+    /**
+     * The model the resource corresponds to.
+     *
+     * @var string|Settings
+     */
+    public static string|Settings $model = Settings::class;
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = 'name';
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array<int, string>
+     */
+    public static $search = [
+        'name',
+        'description',
+        'type',
+    ];
+
+    public static function authorizedToCreate(Request $request): bool
+    {
+        return false;
+    }
+
+    /**
+     * Get the fields displayed by the resource.
+     *
+     * @param Request $request
+     * @return array<int, Field>
+     */
+    public function fields(Request $request): array
+    {
+        $response = [
+            ID::make('Id')->sortable(),
+            Text::make('Name')->exceptOnForms(),
+            Text::make('Description')->exceptOnForms(),
+            Select::make('Type')->options(SettingsTypeEnum::getAllTypesForDropdown())->displayUsingLabels()->exceptOnForms(),
+        ];
+
+        $response[] = match ($this->type) {
+            SettingsTypeEnum::INT => Number::make('Value')->rules(['required', 'integer']),
+            SettingsTypeEnum::BOOLEAN => Boolean::make('Value')->rules(['required', 'boolean']),
+            SettingsTypeEnum::FLOAT => Number::make('Value')->rules(['required', 'decimal']),
+            SettingsTypeEnum::TEXT => Textarea::make('Value')->rules(['required', 'max:2014']),
+            SettingsTypeEnum::DATETIME => DateTime::make('Value')->rules(['required', 'datetime']),
+            SettingsTypeEnum::DATE => DateTime::make('Value')->rules(['required', 'date']),
+            SettingsTypeEnum::SMS_PROVIDER => Select::make('Value')->options(SmsProviderEnum::getAllProviderItemsForDropdown())
+                ->displayUsingLabels()->rules(['required']),
+            SettingsTypeEnum::STRING, null => Text::make('Value')->rules(['required', 'max:255']),
+        };
+
+        $response[] = DateTime::make('Updated at', 'updated_at')->exceptOnForms();
+
+        return $response;
+    }
+
+    /**
+     * Get the cards available for the request.
+     *
+     * @param Request $request
+     * @return array<object>
+     */
+    public function cards(Request $request): array
+    {
+        return [];
+    }
+
+    /**
+     * Get the filters available for the resource.
+     *
+     * @param Request $request
+     * @return array<object>
+     */
+    public function filters(Request $request): array
+    {
+        return [];
+    }
+
+    /**
+     * Get the lenses available for the resource.
+     *
+     * @param Request $request
+     * @return array<object>
+     */
+    public function lenses(Request $request): array
+    {
+        return [];
+    }
+
+    /**
+     * Get the actions available for the resource.
+     *
+     * @param Request $request
+     * @return array<object>
+     */
+    public function actions(Request $request): array
+    {
+        return [];
+    }
+
+    public function authorizedToDelete(Request $request): bool
+    {
+        return false;
+    }
+
+    public function authorizedToView(Request $request): bool
+    {
+        return false;
+    }
+
+    public function authorizedToForceDelete(Request $request): bool
+    {
+        return false;
+    }
+
+    public function authorizedToReplicate(Request $request): bool
+    {
+        return false;
+    }
+}

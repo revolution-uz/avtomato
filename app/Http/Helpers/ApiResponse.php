@@ -3,13 +3,17 @@
 namespace App\Http\Helpers;
 
 use Illuminate\Http\JsonResponse;
+use OpenApi\Attributes as OA;
 
-/**
- * @OA\Schema()
- * @OA\Property(property="success", type="boolean", example="true")
- * @OA\Property(property="message", type="boolean", example="OK")
- * @OA\Property(property="data", type="object", example="null")
- */
+#[OA\Schema(
+    schema: 'ApiResponse',
+    title: 'ApiResponse',
+    properties: [
+        new OA\Property(property: 'success', type: 'bool', example: 'true'),
+        new OA\Property(property: 'message', type: 'string', example: 'Error on something when success is false'),
+        new OA\Property(property: 'data', type: 'any', example: 'Any response data'),
+    ],
+)]
 class ApiResponse
 {
     /**
