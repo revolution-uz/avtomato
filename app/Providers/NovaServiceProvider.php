@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Enums\Main\AdminRole;
+use App\Enums\Main\AdminRoleEnum;
 use App\Helpers\UrlHelper;
 use App\Models\Company;
 use App\Nova\AdminResource;
@@ -11,6 +11,7 @@ use App\Nova\Company\TariffsResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
+use App\Nova\SettingsResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Menu\Menu;
@@ -63,6 +64,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuSection::make('Resources', [
                         MenuItem::resource(CompanyResource::class),
                         MenuItem::resource(AdminResource::class),
+                        MenuItem::resource(SettingsResource::class),
                     ])->collapsable(),
                 ];
             });
@@ -71,7 +73,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         }
 
         Nova::userMenu(function (Request $request, Menu $menu) {
-            if ($request->user()->role === AdminRole::SUPER_ADMIN) {
+            if ($request->user()->role === AdminRoleEnum::SUPER_ADMIN) {
                 $menu->prepend(
                     MenuItem::link('Horizon dashboard', '/horizon')
                 );

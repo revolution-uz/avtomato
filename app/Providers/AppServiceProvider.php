@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Database\DatabaseConnector;
-use App\Enums\Company\CompanyStatus;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Helpers\UrlHelper;
 use App\Models\Company;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
             /** @var Company|null $company */
             $company = Company::query()->where('subdomain', UrlHelper::getCompanySlugFromCurrentHost())->firstOrFail();
 
-            if ($company !== null && $company->status === CompanyStatus::ACTIVE) {
+            if ($company !== null && $company->status === CompanyStatusEnum::ACTIVE) {
                 try {
                     DatabaseConnector::setCompanyConnection($company->id);
                 } catch (\Exception $e) {

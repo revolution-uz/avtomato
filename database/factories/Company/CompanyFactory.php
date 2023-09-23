@@ -2,7 +2,7 @@
 
 namespace Database\Factories\Company;
 
-use App\Enums\Company\CompanyStatus;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,7 +21,7 @@ class CompanyFactory extends Factory
             'db_user' => $this->faker->word(),
             'db_name' => $this->faker->name(),
             'db_password' => \Str::random(),
-            'status' => CompanyStatus::NEW
+            'status' => CompanyStatusEnum::CREATED
         ];
     }
 }

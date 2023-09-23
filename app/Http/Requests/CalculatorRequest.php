@@ -2,16 +2,21 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Company\Tariffs;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Company\Tariff;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: 'CalculatorRequest',
+    title: 'Request to sign in',
+    properties: [
+        new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
+        new OA\Property(property: 'amount', type: 'int', example: '300000'),
+        new OA\Property(property: 'initial_amount', type: 'int', example: '100000'),
+        new OA\Property(property: 'period', type: 'int', example: '12'),
+    ],
+)]
 /**
- * @OA\Schema()
- *
  * @property int $tariff_id
  * @property float $amount
  * @property float $initial_amount
@@ -19,12 +24,6 @@ use Illuminate\Http\JsonResponse;
  */
 class CalculatorRequest extends FormRequest
 {
-
-    /**
-     * @OA\Property(property="phone", type="string", example="998901112233")
-     *
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         return [
@@ -33,20 +32,5 @@ class CalculatorRequest extends FormRequest
             'initial_amount' => 'required|numeric',
             'period' => 'required|int',
         ];
-    }
-
-    /**
-     * @return Builder|Tariffs|null
-     */
-    public function getTariff()
-    {
-        return Tariffs::query()->where('id', $this->tariff_id)->first();
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        $response = new JsonResponse(['errors' => $validator->errors()], 422);
-
-        throw new HttpResponseException($response);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Nova;
 
-use App\Enums\Company\CompanyStatus;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Status;
@@ -49,9 +49,9 @@ class CompanyResource extends Resource
             Text::make(__('nova.company.owner_phone'), 'owner_phone')->filterable(),
             Text::make(__('nova.company.owner_phone'), 'owner_phone')->filterable(),
             Status::make(__('nova.status'), 'status')->failedWhen([
-                CompanyStatus::INACTIVE->value
+                CompanyStatusEnum::INACTIVE->value
             ])->loadingWhen([
-                CompanyStatus::CREATED->value
+                CompanyStatusEnum::CREATED->value
             ])
         ];
     }
