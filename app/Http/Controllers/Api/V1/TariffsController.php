@@ -247,4 +247,36 @@ class TariffsController extends Controller
         }
         return ApiResponse::error("Error on updating Tariffs");
     }
+    #[OA\Delete(
+        path: '/api/v1/tariffs/{id}/delete',
+        operationId: 'tariffsDelete',
+        description: 'Tariffs delete route',
+        summary: 'Tariffs delete route',
+        tags: ['Tariffs'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Tariff ID',
+                in: 'path',
+                required: true
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: '200',
+                description: 'Success',
+                content: new OA\JsonContent(
+                    example: [
+                        'success' => true,
+                        'message' => null,
+                        'data' => true,
+                    ]
+                )
+            ),
+        ]
+    )]
+    public function delete(Tariff $tariffs): JsonResponse
+    {
+        return ApiResponse::success($tariffs->delete());
+    }
 }
