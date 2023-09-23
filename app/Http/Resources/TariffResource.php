@@ -20,7 +20,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @OA\Property(property="max_initial_fee", type="int", example="10000000")
  * use @mixin Tariff
  */
-class TariffsResource extends JsonResource
+class TariffResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
