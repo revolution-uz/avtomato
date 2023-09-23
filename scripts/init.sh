@@ -26,3 +26,7 @@ echo 'Seeding dummy data. Finished.'
 echo 'Clearing cache. Started.'
 docker exec -t avtomato-app php artisan optimize:clear
 echo 'Clearing cache. Finished.'
+
+echo 'Generating API documentation. Started.'
+docker exec -t avtomato-app php artisan l5-swagger:generate
+echo 'Generating API documentation. Finished.'
