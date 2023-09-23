@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\GenderEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -80,5 +81,10 @@ class Customer extends Model
     public function mahalla(): BelongsTo
     {
         return $this->belongsTo(Mahalla::class);
+    }
+
+    public function attachments(): MorphToMany
+    {
+        return $this->morphToMany(Attachment::class, 'attachmentable');
     }
 }
