@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Company\Tariffs;
+use App\Models\Company\Tariff;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,7 +18,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @OA\Property(property="max_amount", type="int", example="10000000")
  * @OA\Property(property="min_initial_fee", type="int", example="0")
  * @OA\Property(property="max_initial_fee", type="int", example="10000000")
- * use @mixin Tariffs
+ * use @mixin Tariff
  */
 class TariffsResource extends JsonResource
 {

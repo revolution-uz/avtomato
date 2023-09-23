@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Company\Tariff;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
