@@ -17,8 +17,8 @@ class SettingsSeeder extends Seeder
             Settings::query()->firstOrCreate([
                 'name' => $case->value
             ], [
-                'value' => SettingsEnum::getDefaultValue($case->value),
-                'type' => SettingsEnum::getType($case->value)
+                'value' => SettingsEnum::getDefaultValue($case),
+                'type' => SettingsEnum::getType($case)
             ]);
         }
     }

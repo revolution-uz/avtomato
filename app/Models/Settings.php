@@ -4,13 +4,14 @@ namespace App\Models;
 
 use App\Database\DatabaseConnector;
 use App\Enums\Main\SettingsEnum;
+use App\Enums\Main\SettingsTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $value
- * @property int $type
+ * @property SettingsTypeEnum|null $type
  * @property string $description
  */
 class Settings extends Model
@@ -22,6 +23,10 @@ class Settings extends Model
         'value',
         'type',
         'description',
+    ];
+
+    protected $casts = [
+        'type' => SettingsTypeEnum::class,
     ];
 
     public static function getConfig(SettingsEnum $settings): ?string

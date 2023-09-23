@@ -11,6 +11,7 @@ use App\Nova\Company\TariffsResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
+use App\Nova\SettingsResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Menu\Menu;
@@ -63,6 +64,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuSection::make('Resources', [
                         MenuItem::resource(CompanyResource::class),
                         MenuItem::resource(AdminResource::class),
+                        MenuItem::resource(SettingsResource::class),
                     ])->collapsable(),
                 ];
             });

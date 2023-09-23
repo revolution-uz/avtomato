@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 16);
+            $table->string('name', 32);
             $table->string('value', 1024);
             $table->integer('type');
             $table->string('description', 256)->nullable();

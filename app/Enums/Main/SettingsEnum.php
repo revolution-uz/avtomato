@@ -12,7 +12,7 @@ enum SettingsEnum: string
     case CLIENT_APP_MIN_VERSION = 'client_app_min_version';
     case SMS_PROVIDER = 'sms_provider';
 
-    public static function getType($type): SettingsTypeEnum
+    public static function getType(self $type): SettingsTypeEnum
     {
         return match ($type) {
             self::PARTNER_APP_MAINTENANCE_MODE, self::CLIENT_API_MAINTENANCE_MODE, self::PARTNER_WEB_MAINTENANCE_MODE, self::WEBSITE_MAINTENANCE_MODE => SettingsTypeEnum::BOOLEAN,
@@ -21,7 +21,7 @@ enum SettingsEnum: string
         };
     }
 
-    public static function getDefaultValue($type): string|int
+    public static function getDefaultValue(self $type): string|int
     {
         return match ($type) {
             self::PARTNER_APP_MAINTENANCE_MODE, self::CLIENT_API_MAINTENANCE_MODE, self::PARTNER_WEB_MAINTENANCE_MODE, self::WEBSITE_MAINTENANCE_MODE => 0,
