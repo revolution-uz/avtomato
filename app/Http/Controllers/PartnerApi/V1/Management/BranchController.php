@@ -7,13 +7,19 @@ use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
+use App\Helpers\Swagger\OpenApiPerPageParameter;
+use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSingleDataResponse;
+use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\Management\BranchesFilterRequest;
 use App\Http\Requests\Management\BranchRequest;
 use App\Http\Resources\Management\BranchResource;
 use App\Models\Company\Branch;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class BranchController extends Controller
@@ -24,14 +30,33 @@ class BranchController extends Controller
         tags: ['Branches'],
         parameters: [
             new OpenApiPageParameter(),
+            new OpenApiPerPageParameter(),
+            new OpenApiSearchParameter(),
+            new OpenApiSortParameter(),
         ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'BranchResource'),
         ]
     )]
-    public function index()
+    public function index(BranchesFilterRequest $request)
     {
-        return BranchResource::collection(Branch::query()->paginate())->additional(['success' => true]);
+        return BranchResource::collection(
+            Branch::query()
+                ->when(
+                    $request->search,
+                    fn(Builder $q) => $q
+                        ->where('name', 'ILIKE', '%' . $request->search . '%')
+                        ->where('address', 'ILIKE', '%' . $request->search . '%')
+                        ->where('inn', 'ILIKE', '%' . $request->search . '%')
+                )
+                ->when(
+                    $request->sort,
+                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
+                        : $q->orderBy($request->sort)
+                )
+                ->paginate($request->per_page)
+        )->additional(['success' => true]);
     }
 
     #[OA\Get(

@@ -11,7 +11,7 @@ class OpenApiPageParameter extends OA\Parameter
         parent::__construct(
             name: 'page',
             description: 'Page number',
-            in: 'path',
+            in: 'query',
             required: false
         );
     }
