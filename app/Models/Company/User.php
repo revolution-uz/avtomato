@@ -29,16 +29,19 @@ use Spatie\Permission\Traits\HasRoles;
  * @property bool $is_show_dropdown_on_hover
  * @property string $language
  *
- * @property-read string $avatarUrl
+ * @property-read string $avatar_url
  */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
+    public const AVATAR_FOLDER = 'avatar';
+
     protected $fillable = [
         'status',
         'first_name',
         'last_name',
+        'username',
         'phone',
         'status',
         'avatar',
@@ -81,7 +84,7 @@ class User extends Authenticatable
 
     public function getAvatarUrlAttribute(): string
     {
-        return Storage::url("avatar/$this->avatar");
+        return Storage::url(self::AVATAR_FOLDER . "/$this->avatar");
     }
 
     public function tokens()

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Enums\Company\UserStatusEnum;
+use App\Models\Company\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
@@ -18,23 +19,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'avatar', type: 'string', example: 'https://i.pravatar.cc/300'),
     ],
 )]
-/**
- * @property int $id
- * @property string $username
- * @property string $first_name
- * @property string $last_name
- * @property string $phone
- * @property UserStatusEnum $status
- * @property string $avatar
- * @property bool $is_dark_mode
- * @property bool $is_vertical_menu
- * @property bool $is_bordered_items
- * @property bool $is_fixed_navbar
- * @property bool $is_fixed_footer
- * @property bool $is_fixed_menu
- * @property bool $is_show_dropdown_on_hover
- * @property string $language
- */
+/** @mixin User */
 class UserInfoResource extends JsonResource
 {
     public function toArray($request): array
@@ -45,7 +30,7 @@ class UserInfoResource extends JsonResource
             'last_name' => $this->last_name,
             'phone' => $this->phone,
             'status' => $this->status,
-            'avatar' => $this->avatar,
+            'avatar' => $this->avatar_url,
             'is_dark_mode' => $this->is_dark_mode,
             'is_vertical_menu' => $this->is_vertical_menu,
             'is_bordered_items' => $this->is_bordered_items,

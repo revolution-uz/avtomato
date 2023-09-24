@@ -8,9 +8,12 @@ use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\PasswordRequest;
+use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\DeviceInfoResource;
 use App\Http\Resources\UserInfoResource;
 use App\Models\Company\PersonalAccessToken;
+use App\Models\Company\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use OpenApi\Attributes as OA;
@@ -63,5 +66,64 @@ class ProfileController extends Controller
     public function revokeDevice(PersonalAccessToken $personalAccessToken): JsonResponse
     {
         return ApiResponse::success($personalAccessToken->delete());
+    }
+
+    #[OA\Post(
+        path: '/api/v1/profile/me',
+        description: 'Profile me route',
+        requestBody: new OA\RequestBody(
+            description: 'Profile update request body',
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(ref: '#/components/schemas/ProfileRequest')
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'UserInfoResource'),
+        ],
+    )]
+    public function update(ProfileRequest $request)
+    {
+        if ($request->hasFile('avatar')) {
+            $photo = $request->file('avatar');
+            $file_name = $request->user()->id . '.' . $photo->extension();
+            $path = $photo->storeAs(User::AVATAR_FOLDER, $file_name, ['disk' => 'public']);
+        }
+
+        $data = $request->validated();
+        unset($data['avatar']);
+        if (isset($path)) {
+            $data['avatar'] = $path;
+        }
+
+        auth()->user()?->update($data);
+
+        return ApiResponse::success(UserInfoResource::make(auth()->user()));
+    }
+
+    #[OA\Post(
+        path: '/api/v1/profile/change-password',
+        description: 'Change password route',
+        requestBody: new OA\RequestBody(
+            description: 'Change password request body',
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/PasswordRequest'
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean')
+        ],
+    )]
+    public function changePassword(PasswordRequest $request)
+    {
+        $user = auth()->user();
+        $user->password = bcrypt($request->get('password'));
+        $user->save();
+
+        return ApiResponse::success(true);
     }
 }
