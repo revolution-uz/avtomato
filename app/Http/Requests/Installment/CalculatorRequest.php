@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Installment;
 
-use App\Models\Company\Tariff;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 

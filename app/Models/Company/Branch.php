@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Branch extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
