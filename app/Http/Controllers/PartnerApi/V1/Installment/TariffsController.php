@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
+use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
+use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\TariffRequest;
-use App\Http\Resources\TariffResource;
+use App\Http\Requests\Installment\TariffRequest;
+use App\Http\Resources\Installment\TariffResource;
 use App\Models\Company\Tariff;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Attributes as OA;
 
 class TariffsController extends Controller
@@ -20,13 +23,16 @@ class TariffsController extends Controller
         path: '/api/v1/installment/tariffs',
         description: 'Tariffs route',
         tags: ['Tariffs'],
+        parameters: [
+            new OpenApiPageParameter(),
+        ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'TariffResource'),
         ]
     )]
-    public function index(): JsonResponse
+    public function index(): AnonymousResourceCollection
     {
-        return ApiResponse::success(TariffResource::collection(Tariff::all()));
+        return TariffResource::collection(Tariff::query()->paginate())->additional(['success' => true]);
     }
 
     #[OA\Get(
@@ -34,12 +40,7 @@ class TariffsController extends Controller
         description: 'Tariffs get single route',
         tags: ['Tariffs'],
         parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'Tariff ID',
-                in: 'path',
-                required: true
-            ),
+            new OpenApiIdParameter(modelName: 'Tariff')
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'TariffResource'),
