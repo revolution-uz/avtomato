@@ -11,7 +11,7 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\PasswordRequest;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\DeviceInfoResource;
-use App\Http\Resources\UserInfoResource;
+use App\Http\Resources\ProfileResource;
 use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\User;
 use Illuminate\Http\JsonResponse;
@@ -25,12 +25,12 @@ class ProfileController extends Controller
         description: 'Profile me route',
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserInfoResource'),
+            new OpenApiJsonResponse(resourceName: 'ProfileResource'),
         ]
     )]
     public function me(): JsonResponse
     {
-        return ApiResponse::success(UserInfoResource::make(Auth::user()));
+        return ApiResponse::success(ProfileResource::make(Auth::user()));
     }
 
     #[OA\Get(
@@ -81,7 +81,7 @@ class ProfileController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserInfoResource'),
+            new OpenApiJsonResponse(resourceName: 'ProfileResource'),
         ],
     )]
     public function update(ProfileRequest $request)
@@ -100,7 +100,7 @@ class ProfileController extends Controller
 
         auth()->user()?->update($data);
 
-        return ApiResponse::success(UserInfoResource::make(auth()->user()));
+        return ApiResponse::success(ProfileResource::make(auth()->user()));
     }
 
     #[OA\Post(
