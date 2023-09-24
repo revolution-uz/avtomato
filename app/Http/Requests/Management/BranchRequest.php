@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Management;
 
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;

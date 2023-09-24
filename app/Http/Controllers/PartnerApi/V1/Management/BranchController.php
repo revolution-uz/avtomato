@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Management;
 
+use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
+use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\BranchRequest;
-use App\Http\Resources\BranchResource;
+use App\Http\Requests\Management\BranchRequest;
+use App\Http\Resources\Management\BranchResource;
 use App\Models\Company\Branch;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
@@ -20,13 +22,16 @@ class BranchController extends Controller
         path: '/api/v1/management/branches',
         description: 'Get branches list route',
         tags: ['Branches'],
+        parameters: [
+            new OpenApiPageParameter(),
+        ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'BranchResource'),
         ]
     )]
-    public function index(): JsonResponse
+    public function index()
     {
-        return ApiResponse::success(BranchResource::collection(Branch::all()));
+        return BranchResource::collection(Branch::query()->paginate())->additional(['success' => true]);
     }
 
     #[OA\Get(
@@ -34,21 +39,16 @@ class BranchController extends Controller
         description: 'Get single branch route',
         tags: ['Branches'],
         parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'Branch ID',
-                in: 'path',
-                required: true
-            ),
+            new OpenApiIdParameter(modelName: 'Branch'),
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'BranchResource'),
             new OpenApiNotFoundResponse(),
         ]
     )]
-    public function getSingle(Branch $branch): JsonResponse
+    public function getSingle(Branch $branch): BranchResource
     {
-        return ApiResponse::success(BranchResource::make($branch));
+        return (new BranchResource($branch))->additional(['success' => true]);
     }
 
     #[OA\Post(

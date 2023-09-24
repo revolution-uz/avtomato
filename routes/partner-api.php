@@ -45,10 +45,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // tariffs
         Route::prefix('branches')->group(function () {
             Route::get('/', [BranchController::class, 'index']);
-            Route::get('/{tariff}', [BranchController::class, 'getSingle']);
+            Route::get('/{branch}', [BranchController::class, 'getSingle']);
             Route::post('/', [BranchController::class, 'create']);
-            Route::put('/{tariff}', [BranchController::class, 'update']);
-            Route::delete('/{tariff}', [BranchController::class, 'delete']);
+            Route::put('/{branch}', [BranchController::class, 'update']);
+            Route::delete('/{branch}', [BranchController::class, 'delete']);
         });
     });
 
