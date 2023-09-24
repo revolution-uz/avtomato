@@ -61,9 +61,9 @@ class Customer extends Model
         'gender' => GenderEnum::class,
     ];
 
-    public function attachments(): MorphToMany
+    public function attachments(): MorphMany
     {
-        return $this->morphToMany(Attachment::class, 'attachmentable');
+        return $this->morphMany(Attachment::class, 'attachmentable');
     }
 
     public function phones(): MorphToMany

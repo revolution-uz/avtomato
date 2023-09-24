@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
-            $table->string('phone', 20)->unique();
+            $table->unsignedBigInteger('phone')->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
