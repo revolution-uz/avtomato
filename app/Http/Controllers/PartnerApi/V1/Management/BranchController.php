@@ -36,11 +36,13 @@ class BranchController extends Controller
             new OpenApiSortParameter(),
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'BranchResource'),
+            new OpenApiJsonArrayResponse(resourceName: 'BranchResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(BranchesFilterRequest $request)
     {
+        $sortables = ['id', 'name', 'address', 'inn', 'created_at', 'updated_at'];
+
         return BranchResource::collection(
             Branch::query()
                 ->when(
@@ -51,13 +53,13 @@ class BranchController extends Controller
                         ->where('inn', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
-                    $request->sort,
+                    $request->sort && in_array($request->sort, $sortables),
                     fn(Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true]);
+        )->additional(['success' => true, 'sortables' => $sortables]);
     }
 
     #[OA\Get(

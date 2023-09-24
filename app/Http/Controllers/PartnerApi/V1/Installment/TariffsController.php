@@ -37,11 +37,13 @@ class TariffsController extends Controller
             new OpenApiSortParameter(),
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'TariffResource'),
+            new OpenApiJsonArrayResponse(resourceName: 'TariffResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(TariffsFilterRequest $request): AnonymousResourceCollection
     {
+        $sortables = ['id', 'name', 'is_annual', 'percent']; // TODO add all fields, it's just for testing
+
         return TariffResource::collection(
             Tariff::query()
                 ->when(
@@ -49,13 +51,13 @@ class TariffsController extends Controller
                     fn(Builder $q) => $q->where('name', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
-                    $request->sort,
+                    $request->sort && in_array($request->sort, $sortables),
                     fn(Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true]);
+        )->additional(['success' => true, 'sortables' => $sortables]);
     }
 
     #[OA\Get(
