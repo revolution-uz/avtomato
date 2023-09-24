@@ -14,6 +14,7 @@ use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Installment\TariffRequest;
+use App\Http\Requests\Installment\TariffsDeleteRequest;
 use App\Http\Requests\Installment\TariffsFilterRequest;
 use App\Http\Resources\Installment\TariffResource;
 use App\Models\Company\Tariff;
@@ -132,24 +133,21 @@ class TariffsController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/tariffs/{id}',
+        path: '/api/v1/installment/tariffs',
         description: 'Tariffs delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Tariffs delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/TariffsDeleteRequest')
+        ),
         tags: ['Tariffs'],
-        parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'Tariff ID',
-                in: 'path',
-                required: true
-            ),
-        ],
         responses: [
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ]
     )]
-    public function delete(Tariff $tariff): JsonResponse
+    public function delete(TariffsDeleteRequest $request): JsonResponse
     {
-        $tariff->deleteOrFail();
+        Tariff::query()->whereIn('id', $request->ids)->delete();
 
         return ApiResponse::success(true);
     }

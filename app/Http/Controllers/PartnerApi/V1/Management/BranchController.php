@@ -13,6 +13,7 @@ use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\Management\BranchesDeleteRequest;
 use App\Http\Requests\Management\BranchesFilterRequest;
 use App\Http\Requests\Management\BranchRequest;
 use App\Http\Resources\Management\BranchResource;
@@ -134,24 +135,21 @@ class BranchController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/management/branches/{id}',
+        path: '/api/v1/management/branches',
         description: 'Delete branch route',
+        requestBody: new OA\RequestBody(
+            description: 'Branches delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/BranchesDeleteRequest')
+        ),
         tags: ['Branches'],
-        parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'Branch ID',
-                in: 'path',
-                required: true
-            ),
-        ],
         responses: [
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ]
     )]
-    public function delete(Branch $branch): JsonResponse
+    public function delete(BranchesDeleteRequest $request): JsonResponse
     {
-        $branch->deleteOrFail();
+        Branch::query()->whereIn('id', $request->ids)->delete();
 
         return ApiResponse::success(true);
     }
