@@ -4,6 +4,7 @@ use App\Http\Controllers\PartnerApi\V1\AuthController;
 use App\Http\Controllers\PartnerApi\V1\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
+use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
 use App\Http\Controllers\PartnerApi\V1\User\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::prefix('calculator')->group(function () {
             Route::post('/calculate', [CalculatorController::class, 'calculate'])->name('installment.calculator');
             Route::post('/export/{type}', [CalculatorController::class, 'export'])->name('installment.export-calculator');
+        });
+    });
+
+    // Management module (branches, users, roles, permissions and etc.)
+    Route::prefix('management')->group(function () {
+        // tariffs
+        Route::prefix('branches')->group(function () {
+            Route::get('/', [BranchController::class, 'index']);
+            Route::get('/{branch}', [BranchController::class, 'getSingle']);
+            Route::post('/', [BranchController::class, 'create']);
+            Route::put('/{branch}', [BranchController::class, 'update']);
+            Route::delete('/{branch}', [BranchController::class, 'delete']);
         });
     });
 
