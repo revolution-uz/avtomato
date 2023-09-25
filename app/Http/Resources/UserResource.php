@@ -33,7 +33,7 @@ class UserResource extends JsonResource
             'last_name' => $this->last_name,
             'phone' => $this->phones()->latest()->first()->phone ?? null,
             'status' => $this->status,
-            'avatar' => $this->avatar_url,
+            'avatar' => AttachmentResource::make($this->avatars()->latest()->first()),
             'template_theme' => $this->template_theme,
             'language' => $this->language,
         ];

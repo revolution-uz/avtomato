@@ -34,8 +34,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
-    public const AVATAR_FOLDER = 'avatar';
-
     protected $fillable = [
         'status',
         'first_name',
@@ -73,11 +71,6 @@ class User extends Authenticatable
         }
 
         return $hasPermission;
-    }
-
-    public function getAvatarUrlAttribute(): string
-    {
-        return Storage::url(self::AVATAR_FOLDER . "/$this->avatar");
     }
 
     public function tokens()
