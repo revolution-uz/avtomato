@@ -32,6 +32,7 @@ class ProfileResource extends JsonResource
             'phone' => $this->phone,
             'status' => $this->status,
             'avatar' => $this->avatar_url,
+            'template_theme' => $this->template_theme,
             'language' => $this->language,
         ];
     }

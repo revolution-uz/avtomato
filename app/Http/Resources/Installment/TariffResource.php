@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Installment;
 
 use App\Models\Company\Tariff;
 use Illuminate\Http\Request;

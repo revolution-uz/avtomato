@@ -10,10 +10,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\PasswordRequest;
 use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\UserThemeRequest;
 use App\Http\Resources\DeviceInfoResource;
+use App\Http\Resources\UserInfoResource;
+use App\Models\Company\Attachment;
 use App\Http\Resources\ProfileResource;
 use App\Models\Company\PersonalAccessToken;
-use App\Models\Company\User;
+use App\Models\Company\Phone;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use OpenApi\Attributes as OA;
@@ -68,15 +71,14 @@ class ProfileController extends Controller
         return ApiResponse::success($personalAccessToken->delete());
     }
 
-    #[OA\Post(
+    #[OA\Put(
         path: '/api/v1/profile/me',
         description: 'Profile me route',
         requestBody: new OA\RequestBody(
             description: 'Profile update request body',
             required: true,
-            content: new OA\MediaType(
-                mediaType: 'multipart/form-data',
-                schema: new OA\Schema(ref: '#/components/schemas/ProfileRequest')
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/ProfileRequest'
             ),
         ),
         tags: ['Profile'],
@@ -86,19 +88,17 @@ class ProfileController extends Controller
     )]
     public function update(ProfileRequest $request)
     {
-        if ($request->hasFile('avatar')) {
-            $photo = $request->file('avatar');
-            $file_name = $request->user()->id . '.' . $photo->extension();
-            $path = $photo->storeAs(User::AVATAR_FOLDER, $file_name, ['disk' => 'public']);
+        if ($request->avatar) {
+            $avatar = Attachment::whereId($request->avatar)->first();
+            auth()->user()?->avatars()->save($avatar);
         }
-
-        $data = $request->validated();
-        unset($data['avatar']);
-        if (isset($path)) {
-            $data['avatar'] = $path;
+        if ($request->phone) {
+            $phone = Phone::firstOrCreate(['phone' => $request->phone]);
+            auth()->user()?->phones()->save($phone);
         }
-
-        auth()->user()?->update($data);
+        $attributes = $request->validated();
+        unset($attributes['avatar'], $attributes['phone']);
+        auth()->user()?->update($attributes);
 
         return ApiResponse::success(ProfileResource::make(auth()->user()));
     }
@@ -123,6 +123,29 @@ class ProfileController extends Controller
         $user = auth()->user();
         $user->password = bcrypt($request->get('password'));
         $user->save();
+
+        return ApiResponse::success(true);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/profile/change-theme',
+        description: 'Change theme route',
+        requestBody: new OA\RequestBody(
+            description: 'Change theme request body',
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/UserThemeRequest'
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean')
+        ],
+    )]
+    public function changeTheme(UserThemeRequest $request)
+    {
+        $user = auth()->user();
+        $user?->update(['template_theme' => $request->getData(), 'language' => $request->language]);
 
         return ApiResponse::success(true);
     }
