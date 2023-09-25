@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('name', 128);
             $table->string('original_name', 64);
             $table->string('mime', 64);
-            $table->unsignedBigInteger('attachmentable_id');
-            $table->string('attachmentable_type', 64);
+            $table->unsignedBigInteger('attachmentable_id')->nullable();
+            $table->string('attachmentable_type', 64)->nullable();
 
             $table->timestamps();
             $table->softDeletes();

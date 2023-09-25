@@ -16,7 +16,7 @@ class OpenApiSingleDataResponse extends OA\Response
             content: new OA\JsonContent(
                 properties: [
                     new OA\Property(property: 'success', type: 'boolean', example: 'true'),
-                    new OA\Property(property: 'message', type: 'string', example: 'null'),
+                    new OA\Property(property: 'message', type: 'string', example: null),
                     new OA\Property(property: 'data', type: $type, example: $data),
                 ],
             )

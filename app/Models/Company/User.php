@@ -2,15 +2,14 @@
 
 namespace App\Models\Company;
 
+use App\DTOs\UserTemplateThemeDto;
 use App\Enums\Company\UserStatusEnum;
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
-use Laravel\Sanctum\NewAccessToken;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -20,40 +19,27 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $phone
  * @property UserStatusEnum $status
  * @property string $avatar
- * @property bool $is_dark_mode
- * @property bool $is_vertical_menu
- * @property bool $is_bordered_items
- * @property bool $is_fixed_navbar
- * @property bool $is_fixed_footer
- * @property bool $is_fixed_menu
- * @property bool $is_show_dropdown_on_hover
+ * @property UserTemplateThemeDto $template_theme
  * @property string $language
- *
- * @property-read string $avatarUrl
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     protected $fillable = [
         'status',
         'first_name',
         'last_name',
-        'phone',
+        'username',
         'status',
         'avatar',
-        'is_dark_mode',
-        'is_vertical_menu',
-        'is_bordered_items',
-        'is_fixed_navbar',
-        'is_fixed_footer',
-        'is_fixed_menu',
-        'is_show_dropdown_on_hover',
+        'template_theme',
         'language'
     ];
 
     protected $casts = [
-        'status' => UserStatusEnum::class
+        'status' => UserStatusEnum::class,
+        'template_theme' => UserTemplateThemeDto::class
     ];
 
     /**
@@ -79,11 +65,6 @@ class User extends Authenticatable
         return $hasPermission;
     }
 
-    public function getAvatarUrlAttribute(): string
-    {
-        return Storage::url("avatar/$this->avatar");
-    }
-
     public function tokens()
     {
         return $this->morphMany(PersonalAccessToken::class, 'tokenable');
@@ -94,5 +75,21 @@ class User extends Authenticatable
         $token = $this->createToken($device_name);
         $token->accessToken->update(['device_ip' => $ip, 'expires_at' => now()->addDays(30)->format("Y-m-d H:i:s")]);
         return $token->plainTextToken;
+    }
+
+    public function avatars()
+    {
+        return $this->morphMany(Attachment::class, 'attachmentable');
+    }
+
+    public function phones()
+    {
+        return $this->morphToMany(Phone::class, 'phoneable');
+    }
+
+    public function attachPhone(string $phone)
+    {
+        $model = Phone::firstOrCreate(['phone' => $phone]);
+        $this->phones()->sync([$model->id], false);
     }
 }
