@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('name', 128);
             $table->string('original_name', 64);
             $table->string('mime', 64);
-            $table->unsignedBigInteger('attachmentable_id');
-            $table->string('attachmentable_type', 64);
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->unsignedBigInteger('attachmentable_id')->nullable();
+            $table->string('attachmentable_type', 64)->nullable();
+
+            $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['attachmentable_id', 'attachmentable_type']);
         });

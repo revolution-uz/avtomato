@@ -3,8 +3,10 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\AttachmentTypeEnum;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Storage;
 
 /**
  * @property string $id
@@ -27,7 +29,11 @@ class Attachment extends Model
     use HasUuids;
     protected $dateFormat = 'U';
 
+    public const PATH = 'uploads';
+    public const THUMBNAIL_PATH = 'uploads/thumbnails';
+
     protected $fillable = [
+        'id',
         'type',
         'preview_path',
         'path',
@@ -43,5 +49,19 @@ class Attachment extends Model
     public function attachmentable()
     {
         return $this->morphTo();
+    }
+
+    public function link(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Storage::disk('public')->url($this->path)
+        );
+    }
+
+    public function previewLink(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Storage::disk('public')->url($this->preview_path)
+        );
     }
 }

@@ -2,7 +2,11 @@
 
 namespace App\Enums\Company;
 
+use App\Enums\EnumMethods;
+
 enum AttachmentTypeEnum: int
 {
-    case AVATAR = 0;
+    use EnumMethods;
+
+    case AVATAR = 1;
 }
