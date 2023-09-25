@@ -2,15 +2,13 @@
 
 namespace App\Models\Company;
 
+use App\DTOs\UserTemplateThemeDto;
 use App\Enums\Company\UserStatusEnum;
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
-use Laravel\Sanctum\NewAccessToken;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -42,21 +40,15 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'username',
-        'phone',
         'status',
         'avatar',
-        'is_dark_mode',
-        'is_vertical_menu',
-        'is_bordered_items',
-        'is_fixed_navbar',
-        'is_fixed_footer',
-        'is_fixed_menu',
-        'is_show_dropdown_on_hover',
+        'template_theme',
         'language'
     ];
 
     protected $casts = [
-        'status' => UserStatusEnum::class
+        'status' => UserStatusEnum::class,
+        'template_theme' => UserTemplateThemeDto::class
     ];
 
     /**
@@ -97,5 +89,15 @@ class User extends Authenticatable
         $token = $this->createToken($device_name);
         $token->accessToken->update(['device_ip' => $ip, 'expires_at' => now()->addDays(30)->format("Y-m-d H:i:s")]);
         return $token->plainTextToken;
+    }
+
+    public function avatars()
+    {
+        return $this->morphMany(Attachment::class, 'attachmentable');
+    }
+
+    public function phones()
+    {
+        return $this->morphToMany(Phone::class, 'phoneable');
     }
 }

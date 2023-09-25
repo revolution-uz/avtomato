@@ -26,7 +26,11 @@ class Attachment extends Model
 {
     use HasUuids;
 
+    public const PATH = 'uploads';
+    public const THUMBNAIL_PATH = 'uploads/thumbnails';
+
     protected $fillable = [
+        'id',
         'type',
         'preview_path',
         'path',

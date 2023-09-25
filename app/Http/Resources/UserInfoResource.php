@@ -31,13 +31,7 @@ class UserInfoResource extends JsonResource
             'phone' => $this->phone,
             'status' => $this->status,
             'avatar' => $this->avatar_url,
-            'is_dark_mode' => $this->is_dark_mode,
-            'is_vertical_menu' => $this->is_vertical_menu,
-            'is_bordered_items' => $this->is_bordered_items,
-            'is_fixed_navbar' => $this->is_fixed_navbar,
-            'is_fixed_footer' => $this->is_fixed_footer,
-            'is_fixed_menu' => $this->is_fixed_menu,
-            'is_show_dropdown_on_hover' => $this->is_show_dropdown_on_hover,
+            'template_theme' => $this->template_theme,
             'language' => $this->language,
         ];
     }
