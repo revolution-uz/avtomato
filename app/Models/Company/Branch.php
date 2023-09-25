@@ -3,7 +3,6 @@
 namespace App\Models\Company;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -18,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Branch extends Model
 {
     use SoftDeletes;
+    protected $dateFormat = 'U';
 
     protected $fillable = [
         'name',

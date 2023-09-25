@@ -16,6 +16,7 @@ use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
     use SoftDeletes;
+    protected $dateFormat = 'U';
 
     protected $fillable = [
         'name',

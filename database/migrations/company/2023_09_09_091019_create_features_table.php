@@ -12,7 +12,8 @@ return new class extends Migration {
             $table->string('name', 64)->index();
             $table->string('description')->nullable();
             $table->boolean('is_active');
-            $table->timestamps();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
         });
     }
 

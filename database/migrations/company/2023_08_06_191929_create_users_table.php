@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('avatar')->default('no-image.webp');
             $table->tinyInteger('status')->index();
-            $table->timestamps();
-            $table->softDeletes();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
+            $table->integer('deleted_at')->nullable();
         });
     }
 

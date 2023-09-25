@@ -21,7 +21,8 @@ class CreateFieldAttachmentsTable extends Migration
                 $table->string('draft_id')->index();
                 $table->string('attachment');
                 $table->string('disk');
-                $table->timestamps();
+                $table->integer('created_at')->nullable();
+                $table->integer('updated_at')->nullable();
             });
         }
 
@@ -34,7 +35,8 @@ class CreateFieldAttachmentsTable extends Migration
                 $table->string('attachment');
                 $table->string('disk');
                 $table->string('url')->index();
-                $table->timestamps();
+                $table->integer('created_at')->nullable();
+                $table->integer('updated_at')->nullable();
             });
         }
     }

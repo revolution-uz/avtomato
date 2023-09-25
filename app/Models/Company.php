@@ -27,6 +27,8 @@ class Company extends Model
     use HasFactory;
 
     protected $connection = DatabaseConnector::DB_CONNECTION_ADMIN;
+    protected $dateFormat = 'U';
+
     protected $fillable = [
         'name',
         'db_name',

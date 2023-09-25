@@ -10,6 +10,8 @@ class Features extends Model
 {
     use HasFactory;
 
+    protected $dateFormat = 'U';
+
     private static ?array $features = null;
 
     protected $fillable = [

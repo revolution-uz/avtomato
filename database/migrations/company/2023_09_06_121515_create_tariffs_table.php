@@ -20,8 +20,9 @@ return new class extends Migration
             $table->integer('max_amount');
             $table->integer('min_initial_fee');
             $table->integer('max_initial_fee');
-            $table->softDeletes();
-            $table->timestamps();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
+            $table->integer('deleted_at')->nullable();
         });
     }
 

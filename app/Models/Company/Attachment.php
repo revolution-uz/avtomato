@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
 class Attachment extends Model
 {
     use HasUuids;
+    protected $dateFormat = 'U';
 
     protected $fillable = [
         'type',

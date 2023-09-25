@@ -35,6 +35,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
+    protected $dateFormat = 'U';
+
     protected $fillable = [
         'status',
         'first_name',
