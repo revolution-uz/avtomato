@@ -2,12 +2,11 @@
 
 namespace App\Enums\Company;
 
+use App\Enums\EnumMethods;
+
 enum AttachmentTypeEnum: int
 {
-    case AVATAR = 1;
+    use EnumMethods;
 
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
+    case AVATAR = 1;
 }
