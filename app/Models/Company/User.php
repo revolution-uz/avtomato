@@ -19,16 +19,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $phone
  * @property UserStatusEnum $status
  * @property string $avatar
- * @property bool $is_dark_mode
- * @property bool $is_vertical_menu
- * @property bool $is_bordered_items
- * @property bool $is_fixed_navbar
- * @property bool $is_fixed_footer
- * @property bool $is_fixed_menu
- * @property bool $is_show_dropdown_on_hover
+ * @property UserTemplateThemeDto $template_theme
  * @property string $language
- *
- * @property-read string $avatar_url
  */
 class User extends Authenticatable
 {
