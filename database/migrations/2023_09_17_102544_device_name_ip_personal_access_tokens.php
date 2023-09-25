@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::table(self::TABLE, function (Blueprint $table) {
             $table->string('device_ip')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->softDeletes();
         });
     }
 

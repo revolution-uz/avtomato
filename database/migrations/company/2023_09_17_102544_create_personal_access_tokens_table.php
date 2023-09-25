@@ -16,10 +16,10 @@ return new class extends Migration {
             $table->string('name');
             $table->string('token', 64)->unique();
             $table->text('abilities')->nullable();
-            $table->integer('last_used_at')->nullable();
-            $table->integer('expires_at')->nullable();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
+            $table->timestamp('last_used_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 
