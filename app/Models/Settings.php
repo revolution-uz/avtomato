@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 class Settings extends Model
 {
     protected $connection = DatabaseConnector::DB_CONNECTION_ADMIN;
+    protected $dateFormat = 'U';
+
     public static array $_cache = [];
     protected $fillable = [
         'name',

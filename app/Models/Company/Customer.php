@@ -36,6 +36,7 @@ use Illuminate\Support\Carbon;
 class Customer extends Model
 {
     use SoftDeletes;
+    protected $dateFormat = 'U';
 
     protected $fillable = [
         'pinfl',

@@ -20,8 +20,9 @@ return new class extends Migration
             $table->integer('mahalla_id')->nullable();
             $table->unsignedBigInteger('addressable_id');
             $table->string('addressable_type', 64);
-            $table->timestamps();
-            $table->softDeletes();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
+            $table->integer('deleted_at')->nullable();
 
             $table->index('region_id');
             $table->index('district_id');

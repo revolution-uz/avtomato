@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('phone_id');
             $table->unsignedBigInteger('phoneable_id');
             $table->string('phoneable_type', 64); // customer, import_group, etc
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
 
             $table->index('phone_id');
             $table->index(['phoneable_id', 'phoneable_type']);

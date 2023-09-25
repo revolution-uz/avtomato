@@ -27,6 +27,7 @@ use Storage;
 class Attachment extends Model
 {
     use HasUuids;
+    protected $dateFormat = 'U';
 
     public const PATH = 'uploads';
     public const THUMBNAIL_PATH = 'uploads/thumbnails';

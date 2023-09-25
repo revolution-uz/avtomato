@@ -15,8 +15,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'name', type: 'string', example: '2-filial'),
         new OA\Property(property: 'address', type: 'string', example: 'Urganch shaxar'),
         new OA\Property(property: 'inn', type: 'string', example: '520212090'),
-        new OA\Property(property: 'created_at', type: 'string', example: '2021-10-01 12:00:00'),
-        new OA\Property(property: 'updated_at', type: 'string', example: '2021-10-01 12:00:00'),
+        new OA\Property(property: 'created_at', type: 'integer', example: 1695643479),
+        new OA\Property(property: 'updated_at', type: 'integer', example: 1695643479),
     ],
 )]
 /**

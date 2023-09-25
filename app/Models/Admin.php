@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Database\DatabaseConnector;
 use App\Enums\Main\AdminRoleEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +14,7 @@ class Admin extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $connection = DatabaseConnector::DB_CONNECTION_ADMIN;
+    protected $dateFormat = 'U';
 
     /**
      * The attributes that are mass assignable.

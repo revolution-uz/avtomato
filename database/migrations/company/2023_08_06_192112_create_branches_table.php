@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('inn');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
+            $table->integer('deleted_at')->nullable();
         });
     }
 

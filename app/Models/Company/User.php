@@ -26,6 +26,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
+    protected $dateFormat = 'U';
+
     protected $fillable = [
         'status',
         'first_name',

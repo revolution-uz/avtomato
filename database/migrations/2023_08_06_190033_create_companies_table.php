@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('db_name')->nullable();
             $table->string('db_password')->nullable();
             $table->tinyInteger('status')->index();
-            $table->timestamps();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
         });
     }
 

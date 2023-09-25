@@ -27,8 +27,9 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->string('birth_place', 32)->nullable();
             $table->boolean('gender')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
+            $table->integer('deleted_at')->nullable();
 
             $table->unique(['passport_series', 'passport_number']);
         });
