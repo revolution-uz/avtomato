@@ -7,6 +7,7 @@ use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
 use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
 use App\Http\Controllers\PartnerApi\V1\User\ProfileController;
+use App\Http\Controllers\PartnerApi\V1\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -61,6 +62,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/change-theme', 'changeTheme')->name('user.change-password');
         Route::get('/devices', 'devices')->name('user.devices');
         Route::delete('/revoke-device/{personalAccessToken}', 'revokeDevice')->name('user.revoke-device');
+    });
+
+    Route::prefix('users')->controller(UserController::class)->group(function () {
+        Route::get('/', 'index')->name('users.index');
+        Route::get('/{user}', 'getSingle')->name('users.get-single');
+        Route::post('/', 'create')->name('users.create');
+        Route::put('/{user}', 'update')->name('users.update');
+        Route::post('/{user}/change-password', 'changePassword')->name('users.get-single');
+        Route::delete('/{user}', 'delete')->name('users.delete');
     });
 
     Route::prefix('info')->controller(InfoController::class)->group(function () {

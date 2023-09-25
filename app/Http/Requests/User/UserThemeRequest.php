@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use App\DTOs\UserTemplateThemeDto;
 use Illuminate\Foundation\Http\FormRequest;
-use Spatie\LaravelData\WithData;
 use OpenApi\Attributes as OA;
+use Spatie\LaravelData\WithData;
 
 #[OA\Schema(
     schema: 'UserThemeRequest',

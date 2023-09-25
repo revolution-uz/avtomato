@@ -8,11 +8,11 @@ use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\PasswordRequest;
-use App\Http\Requests\ProfileRequest;
-use App\Http\Requests\UserThemeRequest;
+use App\Http\Requests\User\PasswordRequest;
+use App\Http\Requests\User\UserThemeRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\DeviceInfoResource;
-use App\Http\Resources\UserInfoResource;
+use App\Http\Resources\UserResource;
 use App\Models\Company\Attachment;
 use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\Phone;
@@ -27,12 +27,12 @@ class ProfileController extends Controller
         description: 'Profile me route',
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserInfoResource'),
+            new OpenApiJsonResponse(resourceName: 'UserResource'),
         ]
     )]
     public function me(): JsonResponse
     {
-        return ApiResponse::success(UserInfoResource::make(Auth::user()));
+        return ApiResponse::success(UserResource::make(Auth::user()));
     }
 
     #[OA\Get(
@@ -77,15 +77,15 @@ class ProfileController extends Controller
             description: 'Profile update request body',
             required: true,
             content: new OA\JsonContent(
-                ref: '#/components/schemas/ProfileRequest'
+                ref: '#/components/schemas/UserUpdateRequest'
             ),
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserInfoResource'),
+            new OpenApiJsonResponse(resourceName: 'UserResource'),
         ],
     )]
-    public function update(ProfileRequest $request)
+    public function update(UserUpdateRequest $request)
     {
         if ($request->avatar) {
             $avatar = Attachment::whereId($request->avatar)->first();
@@ -99,7 +99,7 @@ class ProfileController extends Controller
         unset($attributes['avatar'], $attributes['phone']);
         auth()->user()?->update($attributes);
 
-        return ApiResponse::success(UserInfoResource::make(auth()->user()));
+        return ApiResponse::success(UserResource::make(auth()->user()));
     }
 
     #[OA\Post(

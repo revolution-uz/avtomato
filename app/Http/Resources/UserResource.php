@@ -8,27 +8,30 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'UserInfoResource',
-    title: 'UserInfoResource',
+    schema: 'UserResource',
+    title: 'UserResource',
     properties: [
+        new OA\Property(property: 'id', type: 'int', example: 1),
         new OA\Property(property: 'username', type: 'string', example: 'admin'),
         new OA\Property(property: 'first_name', type: 'string', example: 'Yura'),
         new OA\Property(property: 'last_name', type: 'string', example: 'Umarov'),
         new OA\Property(property: 'phone', type: 'string', example: '+998933993300'),
         new OA\Property(property: 'status', type: 'int', example: '1'),
         new OA\Property(property: 'avatar', type: 'string', example: 'https://i.pravatar.cc/300'),
+        new OA\Property(property: 'language', type: 'string', example: 'ru'),
     ],
 )]
 /** @mixin User */
-class UserInfoResource extends JsonResource
+class UserResource extends JsonResource
 {
     public function toArray($request): array
     {
         return [
+            'id' => $this->id,
             'username' => $this->username,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
-            'phone' => $this->phone,
+            'phone' => $this->phones()->latest()->first()->phone ?? null,
             'status' => $this->status,
             'avatar' => $this->avatar_url,
             'template_theme' => $this->template_theme,
