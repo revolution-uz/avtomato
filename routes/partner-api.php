@@ -60,6 +60,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('/me', 'update')->name('user.update');
         Route::post('/change-password', 'changePassword')->name('user.change-password');
         Route::post('/change-theme', 'changeTheme')->name('user.change-password');
+        Route::post('/change-lang', 'changeLanguage')->name('user.change-language');
         Route::get('/devices', 'devices')->name('user.devices');
         Route::delete('/revoke-device/{personalAccessToken}', 'revokeDevice')->name('user.revoke-device');
     });
@@ -78,8 +79,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {
-        Route::post('/upload', 'upload')->name('info.settings');
-        Route::get('/{attachment}', 'getSingle')->name('info.settings');
+        Route::post('/upload', 'upload')->name('attachments.upload');
+        Route::get('/{attachment}', 'getFile')->name('attachments.file');
+        Route::get('/{attachment}/preview', 'getPreview')->name('attachments.preview');
     });
 
 

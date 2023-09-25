@@ -17,7 +17,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'last_name', type: 'string', example: 'Umarov'),
         new OA\Property(property: 'phone', type: 'string', example: '+998933993300'),
         new OA\Property(property: 'status', type: 'int', example: '1'),
-        new OA\Property(property: 'avatar', type: 'string', example: 'https://i.pravatar.cc/300'),
+        new OA\Property(property: 'avatar', ref: '#/components/schemas/AttachmentResource'),
+        new OA\Property(property: 'template_theme', ref: '#/components/schemas/UserThemeRequest'),
         new OA\Property(property: 'language', type: 'string', example: 'ru'),
     ],
 )]

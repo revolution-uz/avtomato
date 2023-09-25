@@ -29,8 +29,8 @@ class AttachmentResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->type,
-            'preview_path' => $this->preview_path,
-            'path' => $this->path,
+            'preview_link' => $this->preview_link,
+            'link' => $this->link,
             'name' => $this->name,
             'original_name' => $this->original_name,
             'mime' => $this->mime,

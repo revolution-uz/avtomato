@@ -37,8 +37,7 @@ class AttachmentController extends Controller
     public function upload(AttachmentRequest $request): JsonResponse
     {
         $photo = $request->file('file');
-        $uuid = (string) Str::orderedUuid();
-        $file_name = $uuid . '.' . $photo->extension();
+        $file_name =  uniqid() . '.' . $photo->extension();
         $path = $photo->storeAs(Attachment::PATH, $file_name, ['disk' => 'public']);
 
         //todo create thumb by different types of files
@@ -51,7 +50,6 @@ class AttachmentController extends Controller
         }
 
         $attachment = Attachment::create([
-            'id' => $uuid,
             'type' => $request->type,
             'path' => $path,
             'preview_path' => $previewPath,
@@ -71,11 +69,33 @@ class AttachmentController extends Controller
             new OpenApiIdParameter(modelName: 'Attachment')
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'AttachmentResource'),
+            new OA\Response(
+                response: '200',
+                description: 'File content',
+            ),
         ]
     )]
-    public function getSingle(Attachment $attachment)
+    public function getFile(Attachment $attachment)
     {
-        return ApiResponse::success(AttachmentResource::make($attachment));
+        return response()->file(Storage::disk('public')->get($attachment->path));
+    }
+
+    #[OA\Get(
+        path: '/api/v1/attachments/{id}/preview',
+        description: 'Preview of the attachment get route',
+        tags: ['Attachment'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Attachment')
+        ],
+        responses: [
+            new OA\Response(
+                response: '200',
+                description: 'File content',
+            ),
+        ]
+    )]
+    public function getPreview(Attachment $attachment)
+    {
+        return response()->file(Storage::disk('public')->get('public/' . $attachment->preview_path));
     }
 }

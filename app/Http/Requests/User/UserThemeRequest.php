@@ -37,7 +37,6 @@ use Spatie\LaravelData\WithData;
         new OA\Property(property: 'show_lock', type: 'boolean', example: true),
         new OA\Property(property: 'show_color_picker', type: 'boolean', example: true),
         new OA\Property(property: 'background', type: 'string', example: 'none'),
-        new OA\Property(property: 'language', type: 'string', example: 'ru'),
         new OA\Property(property: 'passcode', type: 'string', example: '1234'),
     ],
 )]

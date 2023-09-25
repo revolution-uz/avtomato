@@ -17,6 +17,7 @@ use App\Http\Requests\User\PasswordRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserFilterRequest;
 use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Resources\UserListResource;
 use App\Http\Resources\UserResource;
 use App\Models\Company\Attachment;
 use App\Models\Company\User;
@@ -39,14 +40,14 @@ class UserController extends Controller
             new OpenApiSortParameter(),
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'UserResource', withPagination: true, withSortables: true),
+            new OpenApiJsonArrayResponse(resourceName: 'UserListResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(UserFilterRequest $request): AnonymousResourceCollection
     {
         $sortables = ['id', 'username', 'first_name', 'last_name', 'created_at', 'updated_at'];
 
-        return UserResource::collection(
+        return UserListResource::collection(
             User::query()
                 ->when(
                     $request->search,
@@ -139,7 +140,7 @@ class UserController extends Controller
     public function update(User $user, UserUpdateRequest $request): JsonResponse
     {
         if ($request->avatar) {
-            $avatar = Attachment::whereId($request->avatar)->first();
+            $avatar = Attachment::whereId($request->avatar)->firstOrFail();
             $user->avatars()->save($avatar);
         }
         if ($request->phone) {
