@@ -18,9 +18,8 @@ class CreateNovaNotificationsTable extends Migration
             $table->string('type');
             $table->morphs('notifiable');
             $table->text('data');
-            $table->integer('read_at')->nullable();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
+            $table->timestamp('read_at')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -14,7 +14,7 @@ class AddFieldsToNovaNotificationsTable extends Migration
     public function up()
     {
         Schema::table('nova_notifications', function (Blueprint $table) {
-            $table->integer('deleted_at')->nullable();
+            $table->softDeletes();
         });
     }
 
