@@ -101,4 +101,10 @@ class User extends Authenticatable
     {
         return $this->morphToMany(Phone::class, 'phoneable');
     }
+
+    public function attachPhone(string $phone)
+    {
+        $model = Phone::firstOrCreate(['phone' => $phone]);
+        $this->phones()->sync([$model->id], false);
+    }
 }

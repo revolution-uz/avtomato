@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/{user}', 'getSingle')->name('users.get-single');
         Route::post('/', 'create')->name('users.create');
         Route::put('/{user}', 'update')->name('users.update');
+        Route::post('/{user}/change-password', 'changePassword')->name('users.get-single');
         Route::delete('/{user}', 'delete')->name('users.delete');
     });
 

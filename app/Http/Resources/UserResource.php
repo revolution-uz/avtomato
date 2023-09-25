@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
@@ -17,6 +18,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'phone', type: 'string', example: '+998933993300'),
         new OA\Property(property: 'status', type: 'int', example: '1'),
         new OA\Property(property: 'avatar', type: 'string', example: 'https://i.pravatar.cc/300'),
+        new OA\Property(property: 'language', type: 'string', example: 'ru'),
     ],
 )]
 /** @mixin User */
@@ -29,9 +31,11 @@ class UserResource extends JsonResource
             'username' => $this->username,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
-            'phone' => $this->phone,
+            'phone' => $this->phones()->latest()->first()->phone ?? null,
             'status' => $this->status,
             'avatar' => $this->avatar_url,
+            'template_theme' => $this->template_theme,
+            'language' => $this->language,
         ];
     }
 }
