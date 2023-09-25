@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name
  * @property string $inn
  * @property string $address
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property Carbon $deleted_at
+ * @property integer $created_at
+ * @property integer $updated_at
+ * @property integer $deleted_at
  */
 class Branch extends Model
 {
