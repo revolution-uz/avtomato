@@ -2,7 +2,7 @@
 
 namespace App\Nova\Company;
 
-use App\Models\Company\Tariffs;
+use App\Models\Company\Tariff;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
@@ -16,9 +16,9 @@ class TariffsResource extends Resource
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<Tariffs>
+     * @var class-string<Tariff>
      */
-    public static $model = Tariffs::class;
+    public static $model = Tariff::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

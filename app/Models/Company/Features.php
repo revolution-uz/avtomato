@@ -2,13 +2,15 @@
 
 namespace App\Models\Company;
 
-use App\Enums\Company\FeaturesEnum;
+use App\Enums\Company\FeatureEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Features extends Model
 {
     use HasFactory;
+
+    protected $dateFormat = 'U';
 
     private static ?array $features = null;
 
@@ -18,7 +20,7 @@ class Features extends Model
         'is_active',
     ];
 
-    public static function isFeatureActive(FeaturesEnum $feature) {
+    public static function isFeatureActive(FeatureEnum $feature) {
         if (!self::$features) {
             self::$features = self::query()->pluck('is_active', 'name')->toArray();
         }

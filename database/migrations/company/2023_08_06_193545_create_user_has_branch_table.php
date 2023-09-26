@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId(\App\Models\Company\User::class);
             $table->foreignId(\App\Models\Company\Branch::class);
-            $table->timestamps();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
         });
     }
 
