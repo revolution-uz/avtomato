@@ -51,7 +51,7 @@ class CustomerInfoByPassportDataResource extends JsonResource
             'middle_name' => $this->patronymic_name,
             'birth_date' => $this->birth_date->format('d-m-Y'),
             'birth_place' => $this->birth_place,
-            'gender' => $this->gender, // OilaKredit gender same as our
+            'gender' => GenderEnum::convertFromOilaKredit($this->gender)->value, // OilaKredit gender same as our
             'address' => new AddressInfoResource($this->resource),
         ];
     }

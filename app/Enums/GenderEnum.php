@@ -4,6 +4,11 @@ namespace App\Enums;
 
 enum GenderEnum: int
 {
-    case MALE = 1;
-    case FEMALE = 2;
+    case MALE = 0;
+    case FEMALE = 1;
+
+    public static function convertFromOilaKredit(int $oilaKreditGender): GenderEnum
+    {
+        return $oilaKreditGender === 1 ? self::MALE : self::FEMALE;
+    }
 }
