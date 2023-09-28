@@ -87,5 +87,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('customer')->controller(CustomerController::class)->group(function () {
         Route::post('/info-by-passport', 'infoByPassport');
+        Route::post('/create', 'create');
+        Route::get('/{customer}', 'getSingle');
     });
 });

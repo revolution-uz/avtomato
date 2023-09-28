@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\GenderEnum;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -30,12 +31,13 @@ use Illuminate\Support\Carbon;
  * @property string|null $deleted_at
  *
  * @property Attachment[] $attachments
- * @property Address[] $addresses
- * @property Phone[] $phones
+ * @property Address[]|Collection<int,Address> $addresses
+ * @property Phone[]|Collection<int,Phone> $phones
  */
 class Customer extends Model
 {
     use SoftDeletes;
+
     protected $dateFormat = 'U';
 
     protected $fillable = [
@@ -56,9 +58,9 @@ class Customer extends Model
     ];
 
     protected $casts = [
-        'passport_given_date' => 'date',
-        'passport_expiration_date' => 'date',
-        'birth_date' => 'date',
+        'passport_given_date' => 'date:d-m-Y',
+        'passport_expiration_date' => 'date:d-m-Y',
+        'birth_date' => 'date:d-m-Y',
         'gender' => GenderEnum::class,
     ];
 
@@ -69,7 +71,8 @@ class Customer extends Model
 
     public function phones(): MorphToMany
     {
-        return $this->morphToMany(Phone::class, 'phoneable');
+        return $this->morphToMany(Phone::class, 'phoneable')
+            ->withPivot(['id', 'type', 'comment', 'created_at', 'updated_at']);//->withTimestamps();
     }
 
     public function addresses(): MorphMany
