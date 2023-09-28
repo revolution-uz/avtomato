@@ -3,11 +3,14 @@
 namespace App\Nova\Company;
 
 use App\Models\Company\User;
+use App\Nova\Actions\ChangeUserPassword;
+use App\Nova\Actions\LoginAsUser;
 use App\Nova\Resource;
-use Illuminate\Validation\Rules;
-use Laravel\Nova\Fields\Gravatar;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -47,22 +50,39 @@ class UserResource extends Resource
         return [
             ID::make()->sortable(),
 
-            Gravatar::make()->maxWidth(50),
+            Avatar::make('avatar', 'avatar_preview_path')
+                ->rounded()
+                ->disableDownload()
+                ->maxWidth(50),
 
-            Text::make('Name')
+            Text::make('Username')
                 ->sortable()
-                ->rules('required', 'max:255'),
+                ->rules('required'),
 
-            Text::make('Email')
+            Text::make('First Name')
                 ->sortable()
-                ->rules('required', 'email', 'max:254')
-                ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
+                ->rules('required'),
 
-            Password::make('Password')
-                ->onlyOnForms()
-                ->creationRules('required', Rules\Password::defaults())
-                ->updateRules('nullable', Rules\Password::defaults()),
+            Text::make('Last Name')
+                ->sortable()
+                ->rules('required'),
+
+            Boolean::make('Status', 'status'),
+
+            Text::make('Phone')
+                ->sortable()
+                ->onlyOnDetail()
+                ->rules('required'),
+
+            Text::make('Language')
+                ->sortable()
+                ->onlyOnDetail()
+                ->rules('required'),
+
+            Code::make('Template Theme', 'template_theme')
+                ->json()
+                ->onlyOnDetail(),
+
         ];
     }
 
@@ -107,6 +127,29 @@ class UserResource extends Resource
      */
     public function actions(NovaRequest $request): array
     {
-        return [];
+        return [
+            (new LoginAsUser())->showInline(),
+            (new ChangeUserPassword())->showInline(),
+        ];
+    }
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToUpdate(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToReplicate(Request $request)
+    {
+        return false;
     }
 }
