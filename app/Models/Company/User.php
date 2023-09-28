@@ -4,11 +4,11 @@ namespace App\Models\Company;
 
 use App\DTOs\UserTemplateThemeDto;
 use App\Enums\Company\UserStatusEnum;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -87,6 +87,18 @@ class User extends Authenticatable
     public function phones()
     {
         return $this->morphToMany(Phone::class, 'phoneable');
+    }
+
+    public function avatarPreviewPath(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->avatar) {
+                    return $this->avatars()->latest()->first()?->preview_path;
+                }
+                return null;
+            }
+        );
     }
 
     public function attachPhone(string $phone)
