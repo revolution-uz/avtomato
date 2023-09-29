@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PartnerApi\V1\AttachmentController;
 use App\Http\Controllers\PartnerApi\V1\AuthController;
+use App\Http\Controllers\PartnerApi\V1\Customer\CustomerController;
 use App\Http\Controllers\PartnerApi\V1\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
@@ -84,5 +85,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/{attachment}/preview', 'getPreview')->name('attachments.preview');
     });
 
-
+    Route::prefix('customer')->controller(CustomerController::class)->group(function () {
+        Route::post('/info-by-passport', 'infoByPassport');
+        Route::post('/create', 'create');
+        Route::get('/{customer}', 'getSingle');
+    });
 });
