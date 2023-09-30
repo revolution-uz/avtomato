@@ -3,7 +3,7 @@
 use App\Http\Controllers\PartnerApi\V1\AttachmentController;
 use App\Http\Controllers\PartnerApi\V1\AuthController;
 use App\Http\Controllers\PartnerApi\V1\Customer\CustomerController;
-use App\Http\Controllers\PartnerApi\V1\InfoController;
+use App\Http\Controllers\PartnerApi\V1\Info\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
 use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
@@ -80,6 +80,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('info')->controller(InfoController::class)->group(function () {
         Route::get('/settings', 'settings')->name('info.settings');
+        Route::get('/regions', 'regions')->name('info.regions');
+        Route::get('/districts', 'districts')->name('info.districts');
+        Route::get('/mahallas', 'mahallas')->name('info.mahallas');
     });
 
     Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {

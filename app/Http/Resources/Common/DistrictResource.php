@@ -11,7 +11,8 @@ use OpenApi\Attributes as OA;
     schema: 'DistrictResource',
     title: 'DistrictResource',
     properties: [
-        new OA\Property(property: 'id', type: 'int', example: '1'),
+        new OA\Property(property: 'id', type: 'int', example: '12'),
+        new OA\Property(property: 'region_id', type: 'int', example: '1'),
         new OA\Property(property: 'name', type: 'string', example: 'Urganch shaxri'),
     ],
 )]
@@ -24,6 +25,7 @@ class DistrictResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'region_id' => $this->region_id,
             'name' => $this->{'name_' . app()->getLocale()},
         ];
     }
