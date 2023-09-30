@@ -33,7 +33,6 @@ return new class extends Migration {
             $table->index('customer_id');
             $table->index('branch_id');
             $table->index('tariff_id');
-            $table->index('card_id');
         });
     }
 
