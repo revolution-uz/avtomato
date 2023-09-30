@@ -5,6 +5,7 @@ use App\Http\Controllers\PartnerApi\V1\AuthController;
 use App\Http\Controllers\PartnerApi\V1\Customer\CustomerController;
 use App\Http\Controllers\PartnerApi\V1\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
+use App\Http\Controllers\PartnerApi\V1\Installment\InstallmentController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
 use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
 use App\Http\Controllers\PartnerApi\V1\User\ProfileController;
@@ -40,6 +41,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::prefix('calculator')->controller(CalculatorController::class)->group(function () {
             Route::post('/calculate', 'calculate')->name('installment.calculator');
             Route::post('/export/{type}', 'export')->name('installment.export-calculator');
+        });
+
+        // installments
+        Route::prefix('installment')->controller(InstallmentController::class)->group(function () {
+            Route::get('/', 'index')->name('installments.index');
+            Route::get('/{installment}', 'getSingle')->name('installments.get-single');
+            Route::post('/', 'create')->name('installments.create');
+            Route::put('/{installment}', 'update')->name('installments.update');
+            Route::delete('/', 'delete')->name('installments.delete');
         });
     });
 

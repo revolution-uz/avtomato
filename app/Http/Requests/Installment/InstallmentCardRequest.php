@@ -15,7 +15,7 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * @mixin InstallmentCard
+ * use @mixin InstallmentCard
  */
 class InstallmentCardRequest extends FormRequest
 {

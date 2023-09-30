@@ -22,7 +22,7 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * @mixin Installment
+ * use @mixin Installment
  */
 class InstallmentRequest extends FormRequest
 {
