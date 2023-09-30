@@ -3,14 +3,23 @@
 namespace Database\Seeders\Company;
 
 use App\Clients\OilaKreditClient;
+use App\Clients\OnlineMahallaClient;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 class LocationSeeder extends Seeder
 {
+    public function __construct(
+        private readonly OilaKreditClient $oilaKreditClient,
+        private readonly OnlineMahallaClient $onlineMahallaClient,
+    )
+    {
+    }
+
     public function run(): void
     {
         if (!File::exists(database_path('seeders/data/regions.csv'))
@@ -88,7 +97,11 @@ class LocationSeeder extends Seeder
         $regionsList = [];
         $districtsList = [];
         foreach (['uz' => 'oz', 'la' => 'uz', 'ru' => 'ru'] as $remoteLanguage => $localLanguage) {
-            $response = OilaKreditClient::getRegionsAndDistricts($remoteLanguage);
+            try {
+                $response = $this->oilaKreditClient->getRegionsAndDistricts($remoteLanguage);
+            } catch (Throwable) {
+                $response = $this->onlineMahallaClient->getRegionsAndDistricts($remoteLanguage);
+            }
 
             foreach ($response[0]['data'] as $region) {
                 $regionsList[$region['id']] = $regionsList[$region['id']] ?? [];
@@ -117,7 +130,12 @@ class LocationSeeder extends Seeder
         $mahallasList = [];
         foreach (array_keys($districtsList) as $districtId) {
             foreach (['uz' => 'oz', 'la' => 'uz', 'ru' => 'ru'] as $remoteLanguage => $localLanguage) {
-                $response = OilaKreditClient::getMahallas($remoteLanguage, $districtId);
+                try {
+                    $response = $this->oilaKreditClient->getMahallas($remoteLanguage, $districtId);
+                } catch (Throwable) {
+                    $response = $this->onlineMahallaClient->getMahallas($remoteLanguage, $districtId);
+                }
+
                 foreach ($response as $mahalla) {
                     $mahallasList[$mahalla['id']] = $mahallasList[$mahalla['id']] ?? [];
                     $mahallasList[$mahalla['id']]['id'] = $mahalla['id'];
