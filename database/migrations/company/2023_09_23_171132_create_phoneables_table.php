@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('phoneables', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('type');
             $table->string('comment', 64)->nullable();
             $table->unsignedBigInteger('phone_id');
             $table->unsignedBigInteger('phoneable_id');

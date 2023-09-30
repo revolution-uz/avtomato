@@ -31,8 +31,8 @@ class BranchResource extends JsonResource
             'name' => $this->name,
             'address' => $this->address,
             'inn' => $this->inn,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at ? (int)$this->created_at->format('U') : null,
+            'updated_at' => $this->updated_at ? (int)$this->updated_at->format('U') : null,
         ];
     }
 }

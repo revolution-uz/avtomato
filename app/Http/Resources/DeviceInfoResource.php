@@ -28,7 +28,7 @@ class DeviceInfoResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'device_ip' => $this->device_ip,
-            'last_used_at' => $this->last_used_at,
+            'last_used_at' => $this->last_used_at ? (int)$this->last_used_at->format('U') : null,
         ];
     }
 }
