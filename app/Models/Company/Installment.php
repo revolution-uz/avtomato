@@ -18,7 +18,6 @@ class Installment extends Model
         'customer_id',
         'branch_id',
         'tariff_id',
-        'card_id',
         'amount',
         'description',
         'sms_notify',

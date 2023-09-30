@@ -6,16 +6,18 @@ use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'TariffRequest',
-    title: 'Request to create or update a tariff',
+    schema: 'InstallmentRequest',
+    title: 'Request to create or update a installment',
     properties: [
-        new OA\Property(property: 'name', type: 'string', example: 'Tariff Name'),
-        new OA\Property(property: 'is_annual', type: 'boolean', example: 'true'),
-        new OA\Property(property: 'percent', type: 'double', example: '40'),
-        new OA\Property(property: 'min_amount', type: 'int', example: '0'),
-        new OA\Property(property: 'max_amount', type: 'int', example: '10000000'),
-        new OA\Property(property: 'min_initial_fee', type: 'int', example: '0'),
-        new OA\Property(property: 'max_initial_fee', type: 'int', example: '10000000'),
+        new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+        new OA\Property(property: 'branch_id', type: 'int', example: '1'),
+        new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
+        new OA\Property(property: 'amount', type: 'double', example: '2100000'),
+        new OA\Property(property: 'description', type: 'string', example: 'inside the order'),
+        new OA\Property(property: 'sms_notify', type: 'boolean', example: 'false'),
+        new OA\Property(property: 'auto_charge', type: 'boolean', example: 'true'),
+        new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
+        new OA\Property(property: 'starts_in', type: 'int', example: '16933424'),
     ],
 )]
 /**
@@ -32,13 +34,15 @@ class InstallmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:40',
-            'is_annual' => 'required|boolean',
-            'percent' => 'required|numeric',
-            'min_amount' => 'required|int',
-            'max_amount' => 'required|int',
-            'min_initial_fee' => 'required|int',
-            'max_initial_fee' => 'required|int',
+            'customer_id' => 'required|int',
+            'branch_id' => 'required|int',
+            'tariff_id' => 'required|int',
+            'amount' => 'required|numeric',
+            'description' => 'required|string',
+            'sms_notify' => 'required|boolean',
+            'auto_charge' => 'required|boolean',
+            'any_card_charge' => 'required|boolean',
+            'starts_in' => 'required|boolean',
         ];
     }
 }
