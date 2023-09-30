@@ -12,13 +12,14 @@ return new class extends Migration {
     {
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('customer_id');
             $table->string('pan');
             $table->string('number');
             $table->string('expiry');
             $table->integer('status');
             $table->decimal('balance');
-            $table->integer('myuzkard_id');
+            $table->unsignedBigInteger('myuzkard_id');
             $table->integer('created_at')->nullable();
             $table->integer('updated_at')->nullable();
             $table->integer('deleted_at')->nullable();

@@ -22,9 +22,11 @@ return new class extends Migration {
             $table->boolean('auto_charge');
             $table->boolean('any_card_charge');
             $table->boolean('is_blacklist');
-            $table->string('status');
+            $table->integer('status');
+            $table->integer('period');
             $table->string('myuzkard_id')->nullable();
             $table->integer('starts_in')->nullable();
+            $table->integer('next_pay_date')->nullable();
             $table->integer('created_at')->nullable();
             $table->integer('updated_at')->nullable();
             $table->integer('deleted_at')->nullable();
@@ -33,6 +35,7 @@ return new class extends Migration {
             $table->index('customer_id');
             $table->index('branch_id');
             $table->index('tariff_id');
+            $table->index('next_pay_date');
         });
     }
 

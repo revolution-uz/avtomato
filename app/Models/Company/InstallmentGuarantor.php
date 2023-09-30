@@ -16,9 +16,9 @@ class InstallmentGuarantor extends Model
     protected $fillable = [
         'installment_id',
         'customer_id',
-        'card_id',
         'auto_charge',
         'any_card_charge',
         'status',
+        'myuzkard_id',
     ];
 }

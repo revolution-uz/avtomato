@@ -25,5 +25,9 @@ class Installment extends Model
         'any_card_charge',
         'is_blacklist',
         'status',
+        'period',
+        'myuzkard_id',
+        'starts_in',
+        'next_pay_date',
     ];
 }

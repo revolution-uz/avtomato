@@ -15,7 +15,6 @@ return new class extends Migration
             $table->unsignedBigInteger('installment_id');
             $table->unsignedBigInteger('card_id');
 
-
             $table->index('installment_id');
         });
     }
