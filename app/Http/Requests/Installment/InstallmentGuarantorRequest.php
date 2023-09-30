@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Requests\Installment;
+
+use App\Models\Company\Installment;
+use App\Models\Company\InstallmentGuarantor;
+use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
+
+#[OA\Schema(
+    schema: 'InstallmentRequest',
+    title: 'Request to create or update a installment',
+    properties: [
+        new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+        new OA\Property(property: 'branch_id', type: 'int', example: '1'),
+        new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
+        new OA\Property(property: 'amount', type: 'double', example: '2100000'),
+        new OA\Property(property: 'description', type: 'string', example: 'inside the order'),
+        new OA\Property(property: 'sms_notify', type: 'boolean', example: 'false'),
+        new OA\Property(property: 'auto_charge', type: 'boolean', example: 'true'),
+        new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
+        new OA\Property(property: 'starts_in', type: 'int', example: '16933424'),
+    ],
+)]
+/**
+ * @mixin InstallmentGuarantor
+ */
+class InstallmentGuarantorRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return [
+            'installment_id' => 'required|exists:installments,id',
+            'customer_id' => 'required|exists:customers,id',
+            'auto_charge' => 'required|boolean',
+            'any_card_charge' => 'required|boolean',
+            'status' => 'required|int',
+        ];
+    }
+}

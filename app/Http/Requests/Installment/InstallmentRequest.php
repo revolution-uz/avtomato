@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Installment;
 
+use App\Models\Company\Installment;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -21,13 +22,7 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * @property string $name
- * @property boolean $is_annual
- * @property double $percent
- * @property int $min_amount
- * @property int $max_amount
- * @property int $min_initial_fee
- * @property int $max_initial_fee
+ * @mixin Installment
  */
 class InstallmentRequest extends FormRequest
 {
