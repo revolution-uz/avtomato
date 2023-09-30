@@ -12,7 +12,6 @@ use OpenApi\Attributes as OA;
     title: 'User create body',
     properties: [
         new OA\Property(property: 'username', type: 'string', example: 'admin'),
-        new OA\Property(property: 'phone', description: 'Send strongly in the format +998901234567', type: 'string', example: '+998901234567'),
         new OA\Property(property: 'first_name', type: 'string', example: 'Tom'),
         new OA\Property(property: 'last_name', type: 'string', example: 'Odell'),
         new OA\Property(property: 'status', type: 'int', enum: [1, 2], example: 1),
@@ -26,7 +25,6 @@ class UserCreateRequest extends FormRequest
     {
         return [
             'username' => 'required|string|max:50|unique:users,username',
-            'phone' => [new PhoneRule()],
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'status' => 'required|int|in:' . implode(',', UserStatusEnum::values()),

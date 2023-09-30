@@ -14,14 +14,18 @@ use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Requests\UserLangRequest;
 use App\Http\Resources\DeviceInfoResource;
 use App\Http\Resources\UserResource;
-use App\Models\Company\Attachment;
 use App\Models\Company\PersonalAccessToken;
+use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use OpenApi\Attributes as OA;
 
 class ProfileController extends Controller
 {
+    public function __construct(
+        protected UserService $userService
+    ) {}
+
     #[OA\Get(
         path: '/api/v1/profile/me',
         description: 'Profile me route',
@@ -33,6 +37,100 @@ class ProfileController extends Controller
     public function me(): JsonResponse
     {
         return ApiResponse::success(UserResource::make(Auth::user()));
+    }
+
+    #[OA\Put(
+        path: '/api/v1/profile/me',
+        description: 'Profile me route',
+        requestBody: new OA\RequestBody(
+            description: 'Profile update request body',
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/UserUpdateRequest'
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'UserResource'),
+        ],
+    )]
+    public function update(UserUpdateRequest $request)
+    {
+        if ($this->userService->updateDetails(auth()->user(), $request)) {
+            return ApiResponse::success(UserResource::make(auth()->user()));
+        }
+
+        return ApiResponse::error('User not updated');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/profile/change-password',
+        description: 'Change password route',
+        requestBody: new OA\RequestBody(
+            description: 'Change password request body',
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/PasswordRequest'
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean')
+        ],
+    )]
+    public function changePassword(PasswordRequest $request)
+    {
+        if ($this->userService->updatePassword(auth()->user(), $request)) {
+            return ApiResponse::success(true);
+        }
+
+        return ApiResponse::error('Password not updated');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/profile/change-theme',
+        description: 'Change theme route',
+        requestBody: new OA\RequestBody(
+            description: 'Change theme request body',
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/UserThemeRequest'
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'UserResource'),
+        ],
+    )]
+    public function changeTheme(UserThemeRequest $request)
+    {
+        if ($this->userService->updateTheme(auth()->user(), $request)) {
+            return ApiResponse::success(UserResource::make(auth()->user()));
+        }
+        return ApiResponse::error('Theme not updated');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/profile/change-lang',
+        description: 'Change language route',
+        requestBody: new OA\RequestBody(
+            description: 'Change language request body',
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/UserLangRequest'
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'UserResource'),
+        ],
+    )]
+    public function changeLanguage(UserLangRequest $request)
+    {
+        $user = auth()->user();
+        $user?->update(['language' => $request->language]);
+
+        return ApiResponse::success(UserResource::make($user));
     }
 
     #[OA\Get(
@@ -68,106 +166,5 @@ class ProfileController extends Controller
     public function revokeDevice(PersonalAccessToken $personalAccessToken): JsonResponse
     {
         return ApiResponse::success($personalAccessToken->delete());
-    }
-
-    #[OA\Put(
-        path: '/api/v1/profile/me',
-        description: 'Profile me route',
-        requestBody: new OA\RequestBody(
-            description: 'Profile update request body',
-            required: true,
-            content: new OA\JsonContent(
-                ref: '#/components/schemas/UserUpdateRequest'
-            ),
-        ),
-        tags: ['Profile'],
-        responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
-        ],
-    )]
-    public function update(UserUpdateRequest $request)
-    {
-        if ($request->avatar) {
-            $avatar = Attachment::whereId($request->avatar)->firstOrFail();
-            auth()->user()?->avatars()->save($avatar);
-        }
-        if ($request->phone) {
-            auth()->user()?->attachPhone($request->phone);
-        }
-        $attributes = $request->validated();
-        unset($attributes['avatar'], $attributes['phone']);
-        auth()->user()?->update($attributes);
-
-        return ApiResponse::success(UserResource::make(auth()->user()));
-    }
-
-    #[OA\Post(
-        path: '/api/v1/profile/change-password',
-        description: 'Change password route',
-        requestBody: new OA\RequestBody(
-            description: 'Change password request body',
-            required: true,
-            content: new OA\JsonContent(
-                ref: '#/components/schemas/PasswordRequest'
-            ),
-        ),
-        tags: ['Profile'],
-        responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean')
-        ],
-    )]
-    public function changePassword(PasswordRequest $request)
-    {
-        $user = auth()->user();
-        $user->password = bcrypt($request->get('password'));
-        $user->save();
-
-        return ApiResponse::success(true);
-    }
-
-    #[OA\Post(
-        path: '/api/v1/profile/change-theme',
-        description: 'Change theme route',
-        requestBody: new OA\RequestBody(
-            description: 'Change theme request body',
-            required: true,
-            content: new OA\JsonContent(
-                ref: '#/components/schemas/UserThemeRequest'
-            ),
-        ),
-        tags: ['Profile'],
-        responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
-        ],
-    )]
-    public function changeTheme(UserThemeRequest $request)
-    {
-        $user = auth()->user();
-        $user?->update(['template_theme' => $request->getData()]);
-
-        return ApiResponse::success(UserResource::make($user));
-    }
-
-    #[OA\Post(
-        path: '/api/v1/profile/change-lang',
-        description: 'Change language route',
-        requestBody: new OA\RequestBody(
-            description: 'Change language request body',
-            required: true,
-            content: new OA\JsonContent(
-                ref: '#/components/schemas/UserLangRequest'
-            ),
-        ),
-        tags: ['Profile'],
-        responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
-        ],
-    )]
-    public function changeLanguage(UserLangRequest $request)
-    {
-        $user = auth()->user();
-        $user?->update(['language' => $request->language]);
-
-        return ApiResponse::success(UserResource::make($user));
     }
 }

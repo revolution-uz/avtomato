@@ -16,19 +16,28 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\User\PasswordRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserFilterRequest;
+use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Resources\DeviceInfoResource;
 use App\Http\Resources\UserListResource;
 use App\Http\Resources\UserResource;
 use App\Models\Company\Attachment;
+use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\User;
+use App\Services\User\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class UserController extends Controller
 {
+    public function __construct(
+        protected UserService $userService
+    ) {}
+
     #[OA\Get(
         path: '/api/v1/users',
         description: 'Users route',
@@ -108,7 +117,6 @@ class UserController extends Controller
         $model->password = bcrypt($request->password);
 
         if ($model->save()) {
-            $model->attachPhone($request->phone);
             return ApiResponse::success(UserResource::make($model));
         }
 
@@ -139,16 +147,7 @@ class UserController extends Controller
     )]
     public function update(User $user, UserUpdateRequest $request): JsonResponse
     {
-        if ($request->avatar) {
-            $avatar = Attachment::whereId($request->avatar)->firstOrFail();
-            $user->avatars()->save($avatar);
-        }
-        if ($request->phone) {
-            $user->attachPhone($request->phone);
-        }
-        $attributes = $request->validated();
-        unset($attributes['avatar'], $attributes['phone']);
-        $user->update($attributes);
+        $this->userService->updateDetails($user, $request);
 
         return ApiResponse::success(UserResource::make($user));
     }
@@ -173,10 +172,36 @@ class UserController extends Controller
     )]
     public function changePassword(User $user, PasswordRequest $request)
     {
-        $user->password = bcrypt($request->get('password'));
-        $user->save();
+        if ($this->userService->updatePassword($user, $request)) {
+            return ApiResponse::success(UserResource::make($user));
+        }
+        return ApiResponse::error('Password not updated');
+    }
 
-        return ApiResponse::success(true);
+    #[OA\Post(
+        path: '/api/v1/users/{id}/change-theme',
+        description: 'Change theme route',
+        requestBody: new OA\RequestBody(
+            description: 'Change theme request body',
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/UserThemeRequest'
+            ),
+        ),
+        tags: ['Users'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'User')
+        ],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'UserResource'),
+        ],
+    )]
+    public function changeTheme(User $user, UserThemeRequest $request)
+    {
+        if ($this->userService->updateTheme($user, $request)) {
+            return ApiResponse::success(UserResource::make($user));
+        }
+        return ApiResponse::error('Theme not updated');
     }
 
     #[OA\Delete(
@@ -184,12 +209,7 @@ class UserController extends Controller
         description: 'Users delete route',
         tags: ['Users'],
         parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'User ID',
-                in: 'path',
-                required: true
-            ),
+            new OpenApiIdParameter(modelName: 'User')
         ],
         responses: [
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
@@ -200,5 +220,44 @@ class UserController extends Controller
         $user->deleteOrFail();
 
         return ApiResponse::success(true);
+    }
+
+
+    #[OA\Get(
+        path: '/api/v1/users/{id}/devices',
+        description: 'My devices route',
+        tags: ['Users'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'User')
+        ],
+        responses: [
+            new OpenApiJsonArrayResponse(resourceName: 'DeviceInfoResource'),
+        ]
+    )]
+    public function devices(User $user): JsonResponse
+    {
+        return ApiResponse::success(DeviceInfoResource::collection($user->tokens));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/users/revoke-device/{id}',
+        description: 'Revoke device route',
+        tags: ['Users'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Device id',
+                in: 'path',
+                required: true,
+            )
+        ],
+        responses: [
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiNotFoundResponse(),
+        ]
+    )]
+    public function revokeDevice(PersonalAccessToken $personalAccessToken): JsonResponse
+    {
+        return ApiResponse::success($personalAccessToken->delete());
     }
 }
