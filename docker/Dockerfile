@@ -11,7 +11,7 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions pdo_pgsql pgsql intl opcache redis soap sodium @composer zip gd amqp apcu http sockets pcntl pcov
 
-RUN apk --no-cache add supervisor curl bash gettext git nano postgresql14-client rsync openssh && \
+RUN apk --no-cache add curl bash gettext git nano postgresql14-client rsync openssh && \
     rm -rf /var/cache/apk/*
 
 RUN apk add --update nodejs npm
@@ -27,7 +27,6 @@ WORKDIR /var/www/application
 
 COPY . /var/www/application
 
-COPY ./docker/app/supervisor.conf /etc/supervisor/supervisord.conf
 COPY ./docker/app/php.ini  /usr/local/etc/php/conf.d/99_base.ini
 
 EXPOSE 9000

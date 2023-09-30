@@ -2,6 +2,7 @@
 
 namespace App\Clients;
 
+use App\Enums\ClientCodeEnum;
 use Illuminate\Support\Facades\Http;
 
 class OnlineMahallaClient extends BaseRealSoftClient
@@ -17,5 +18,10 @@ class OnlineMahallaClient extends BaseRealSoftClient
     public function getBaseUrl(): string
     {
         return config('clients.online_mahalla.base_url');
+    }
+
+    public function getClientCode(): ClientCodeEnum
+    {
+        return ClientCodeEnum::ONLINE_MAHALLA;
     }
 }

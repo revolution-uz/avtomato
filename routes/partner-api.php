@@ -7,6 +7,9 @@ use App\Http\Controllers\PartnerApi\V1\Info\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
 use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
+use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
+use App\Http\Controllers\PartnerApi\V1\Scoring\KatmInpsHistoryController;
+use App\Http\Controllers\PartnerApi\V1\Scoring\KatmPensionInfoController;
 use App\Http\Controllers\PartnerApi\V1\User\ProfileController;
 use App\Http\Controllers\PartnerApi\V1\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -95,5 +98,22 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/info-by-passport', 'infoByPassport');
         Route::post('/create', 'create');
         Route::get('/{customer}', 'getSingle');
+    });
+
+    Route::prefix('scoring')->group(function () {
+        Route::prefix('credit-history')->controller(KatmCreditHistoryController::class)->group(function () {
+            Route::post('/create', 'create');
+            Route::get('/', 'index');
+            Route::get('/{scoring}', 'read');
+        });
+        Route::prefix('inps-history')->controller(KatmInpsHistoryController::class)->group(function () {
+            Route::post('/create', 'create');
+            Route::get('/', 'index');
+            Route::get('/{scoring}', 'read');
+        });
+        Route::prefix('pension-info')->controller(KatmPensionInfoController::class)->group(function () {
+            Route::post('/create', 'create');
+            Route::get('/', 'index');
+        });
     });
 });
