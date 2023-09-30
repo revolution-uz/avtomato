@@ -4,13 +4,17 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class InstallmentGuarantors extends Model
+class InstallmentGuarantor extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
+    protected $dateFormat = 'U';
 
     protected $fillable = [
-        'agreement_id',
+        'installment_id',
         'customer_id',
         'card_id',
         'auto_charge',

@@ -13,17 +13,20 @@ return new class extends Migration
     {
         Schema::create('installment_guarantors', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('agreement_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('installment_id');
             $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('card_id')->nullable();
             $table->boolean('auto_charge');
             $table->boolean('any_card_charge');
             $table->string('status');
-            $table->timestamps();
+            $table->string('myuzkard_id')->nullable();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
+            $table->integer('deleted_at')->nullable();
 
-            //foreign keys
-            $table->foreign('agreement_id')->references('id')->on('installments');
-            $table->foreign('customer_id')->references('id')->on('customers');
+            $table->index('user_id');
+            $table->index('installment_id');
+            $table->index('customer_id');
         });
     }
 
