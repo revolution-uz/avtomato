@@ -57,13 +57,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // profile
     Route::prefix('profile')->controller(ProfileController::class)->group(function () {
-        Route::get('/me', 'me')->name('user.me');
-        Route::put('/me', 'update')->name('user.update');
-        Route::post('/change-password', 'changePassword')->name('user.change-password');
-        Route::post('/change-theme', 'changeTheme')->name('user.change-password');
-        Route::post('/change-lang', 'changeLanguage')->name('user.change-language');
-        Route::get('/devices', 'devices')->name('user.devices');
-        Route::delete('/revoke-device/{personalAccessToken}', 'revokeDevice')->name('user.revoke-device');
+        Route::get('/me', 'me')->name('profile.me');
+        Route::put('/me', 'update')->name('profile.update');
+        Route::post('/change-password', 'changePassword')->name('profile.change-password');
+        Route::post('/change-theme', 'changeTheme')->name('profile.change-password');
+        Route::post('/change-lang', 'changeLanguage')->name('profile.change-language');
+        Route::get('/devices', 'devices')->name('profile.devices');
+        Route::delete('/revoke-device/{personalAccessToken}', 'revokeDevice')->name('profile.revoke-device');
     });
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
@@ -72,6 +72,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/', 'create')->name('users.create');
         Route::put('/{user}', 'update')->name('users.update');
         Route::post('/{user}/change-password', 'changePassword')->name('users.get-single');
+        Route::post('/{user}/change-theme', 'changeTheme')->name('users.get-single');
+        Route::get('/{user}/devices', 'devices')->name('users.devices');
+        Route::delete('/revoke-device/{personalAccessToken}', 'revokeDevice')->name('users.revoke-device');
         Route::delete('/{user}', 'delete')->name('users.delete');
     });
 
