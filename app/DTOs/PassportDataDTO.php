@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOs\OilaKredit;
+namespace App\DTOs;
 
 use Illuminate\Support\Carbon;
 use Spatie\LaravelData\Attributes\WithCast;

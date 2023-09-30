@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Customer;
 
-use App\DTOs\OilaKredit\PassportDataDTO;
+use App\DTOs\PassportDataDTO;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
