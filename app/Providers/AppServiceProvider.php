@@ -30,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
 
             if ($company !== null && $company->status === CompanyStatusEnum::ACTIVE) {
                 try {
+                    $this->app->singleton('current_company', fn() => $company);
                     DatabaseConnector::setCompanyConnection($company->id);
                 } catch (\Exception $e) {
                     Log::error($e);

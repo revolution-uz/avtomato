@@ -2,6 +2,7 @@
 
 namespace App\Clients;
 
+use App\Enums\ClientCodeEnum;
 use Illuminate\Support\Facades\Http;
 
 class OilaKreditClient extends BaseRealSoftClient
@@ -17,5 +18,10 @@ class OilaKreditClient extends BaseRealSoftClient
     public function getBaseUrl(): string
     {
         return config('clients.oila_kredit.base_url');
+    }
+
+    public function getClientCode(): ClientCodeEnum
+    {
+        return ClientCodeEnum::OILA_KREDIT;
     }
 }

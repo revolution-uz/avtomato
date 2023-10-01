@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
-abstract class BaseRealSoftClient
+abstract class BaseRealSoftClient extends BaseClient
 {
     abstract public function getRegionsAndDistricts(string $language): array;
 
