@@ -3,12 +3,12 @@
  */
 import { round } from 'lodash-es'
 import {
-  isCatchedTabs as _isCatchedTabs,
   color,
   columnStyle,
   fixedHeader,
   foldSidebar,
   i18n,
+  isCatchedTabs as _isCatchedTabs,
   isFollow,
   layout,
   logo,
@@ -126,6 +126,37 @@ export const useSettingsStore = defineStore('settings', {
     getTitle: (state) => state.title,
   },
   actions: {
+    setTheme(userTheme: any) {
+      this.theme = {
+        ...this.theme,
+        ...userTheme,
+        menuWidth: userTheme.menu_width,
+        themeName: userTheme.theme_name,
+        columnStyle: userTheme.column_style,
+        isFollow: userTheme.is_follow,
+        fixedHeader: userTheme.fixed_header,
+        foldSidebar: userTheme.fold_sidebar,
+        showProgressBar: userTheme.show_progress_bar,
+        showFooter: userTheme.show_footer,
+        showTabs: userTheme.show_tabs,
+        tabsBarStyle: userTheme.tabs_bar_style,
+        showTabsIcon: userTheme.show_tabs_icon,
+        showLanguage: userTheme.show_language,
+        showRefresh: userTheme.show_refresh,
+        showTheme: userTheme.show_theme,
+        showSearch: userTheme.show_search,
+        showNotice: userTheme.show_notice,
+        showFullScreen: userTheme.show_full_screen,
+        showThemeSetting: userTheme.show_theme_setting,
+        showDark: userTheme.show_dark,
+        pageTransition: userTheme.page_transition,
+        showLock: userTheme.show_lock,
+        showColorPicker: userTheme.show_color_picker,
+      }
+      this.setCssVar()
+      this.updateTheme()
+      return this.theme
+    },
     updateState(obj: any) {
       Object.getOwnPropertyNames(obj).forEach((key) => {
         // @ts-ignore

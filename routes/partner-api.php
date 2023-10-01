@@ -27,6 +27,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('user.logout');
 
+Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {
+    Route::get('/{attachment}/preview', 'getPreview')->name('attachments.preview');
+});
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // installments module
     Route::prefix('installment')->group(function () {
@@ -88,16 +92,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/mahallas', 'mahallas')->name('info.mahallas');
     });
 
-    Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {
-        Route::post('/upload', 'upload')->name('attachments.upload');
-        Route::get('/{attachment}', 'getFile')->name('attachments.file');
-        Route::get('/{attachment}/preview', 'getPreview')->name('attachments.preview');
-    });
-
     Route::prefix('customer')->controller(CustomerController::class)->group(function () {
         Route::post('/info-by-passport', 'infoByPassport');
         Route::post('/create', 'create');
         Route::get('/{customer}', 'getSingle');
+    });
+
+    Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {
+        Route::post('/upload', 'upload')->name('attachments.upload');
+        Route::get('/{attachment}', 'getFile')->name('attachments.file');
     });
 
     Route::prefix('scoring')->group(function () {

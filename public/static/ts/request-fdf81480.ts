@@ -136,6 +136,7 @@ const handleData = async ({ config, data, status, statusText }: { config: any; d
 /**
  * @description axios initialization
  */
+
 const instance = axios.create({
   baseURL: `${import.meta.env.VITE_APP_BASE_URL}`,
   timeout,
