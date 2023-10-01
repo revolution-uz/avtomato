@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
@@ -36,7 +37,7 @@ use Illuminate\Support\Carbon;
  */
 class Customer extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, TenantConnection;
 
     protected $dateFormat = 'U';
 

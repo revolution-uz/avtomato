@@ -6,6 +6,7 @@ use Laravel\Nova\Http\Middleware\Authorize;
 use Laravel\Nova\Http\Middleware\BootTools;
 use Laravel\Nova\Http\Middleware\DispatchServingNovaEvent;
 use Laravel\Nova\Http\Middleware\HandleInertiaRequests;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 return [
 
@@ -99,6 +100,8 @@ return [
     */
 
     'middleware' => [
+        'universal',
+        InitializeTenancyByDomain::class,
         'web',
         HandleInertiaRequests::class,
         DispatchServingNovaEvent::class,
@@ -106,6 +109,8 @@ return [
     ],
 
     'api_middleware' => [
+        'universal',
+        InitializeTenancyByDomain::class,
         'nova',
         Authenticate::class,
         Authorize::class,
@@ -202,5 +207,4 @@ return [
         'started' => '/',
         'stopped' => '/',
     ],
-
 ];

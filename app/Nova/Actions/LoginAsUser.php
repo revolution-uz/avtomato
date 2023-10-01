@@ -2,7 +2,6 @@
 
 namespace App\Nova\Actions;
 
-use App\Database\DatabaseConnector;
 use App\Models\Company\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -30,7 +29,6 @@ class LoginAsUser extends Action
         $user = $models->first();
         try {
             $token = $user->createToken('Nova');
-            DatabaseConnector::setAdminConnection();
 
             return Action::openInNewTab(url('/') . '/#/login?token=' . substr($token->plainTextToken, strpos($token->plainTextToken, '|') + 1));
         } catch (Throwable $e) {

@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Phone extends Model
 {
+    use TenantConnection;
     protected $dateFormat = 'U';
 
     protected $fillable = [
