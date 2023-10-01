@@ -10,12 +10,24 @@ import { getToken, removeToken, setToken } from '/@/utils/token'
 import { isArray, isString } from '/@/utils/validate'
 import { gp } from '/@vab/plugins/vab'
 
+const emptyData: UserInterface = {
+  id: null,
+  username: null,
+  phone: null,
+  first_name: null,
+  last_name: null,
+  status: false,
+  password: null,
+  password_confirmation: null,
+}
+
 export const useUserStore = defineStore('user', {
   state: (): UserModuleType => ({
     token: getToken() as string,
     username: 'tourists',
     avatar: './static/svg/avatar.svg',
-    userInfo: {},
+    userInfo: emptyData,
+    userTemplateTheme: {},
   }),
   getters: {
     getToken: (state) => state.token,
@@ -35,7 +47,7 @@ export const useUserStore = defineStore('user', {
      * @description Set user info
      * @param info
      */
-    setUserInfo(info: object) {
+    setUserInfo(info: UserInterface) {
       this.userInfo = info
     },
     /**
@@ -51,6 +63,13 @@ export const useUserStore = defineStore('user', {
      */
     setAvatar(avatar: string) {
       this.avatar = avatar
+    },
+    /**
+     * @description Set Avatar
+     * @param them
+     */
+    setUserTemplateTheme(them: any) {
+      this.userTemplateTheme = { ...them }
     },
     /**
      * @description When logging in to intercept and release, set a virtual role
@@ -102,7 +121,7 @@ export const useUserStore = defineStore('user', {
      */
     async getUserInfo() {
       const { data } = await getUserInfo()
-      const { username, avatar, roles, permissions } = data
+      const { username, avatar, roles, permissions, template_theme } = data
       /**
        * Check whether the returned data is normal. If there are no corresponding parameters, the default username, avatar, Roles and Permissions will be used.
        * username {String}
@@ -131,6 +150,7 @@ export const useUserStore = defineStore('user', {
         if (roles) aclStore.setRole(roles)
         // If you do not use permissions permission control, you can delete the following code
         if (permissions) aclStore.setPermission(permissions)
+        if (template_theme) this.setUserTemplateTheme(template_theme)
       }
     },
     /**

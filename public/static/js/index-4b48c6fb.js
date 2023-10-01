@@ -1,0 +1,5 @@
+/*!  build: Vue Shop Vite 
+     copyright: https://vue-admin-beautiful.com/shop-vite  
+     time: 2023-10-01 12:09:31 
+ */
+import{_ as i}from"./index.vue_vue_type_style_index_0_lang-168a782c.js";import{_ as c}from"./dynamic-form-model.config-836e8770.js";import{d as f,e as d,G as p,o as u,c as b,i as e,k as n,j as r}from"./index-3cdf513a.js";import{U as w}from"./users-0c951df8.js";import h from"./index-30339dde.js";import"./index-262fa250.js";import"./index.vue_vue_type_script_setup_true_lang-1c9014d2.js";const U=f({__name:"index",setup(g){const s=d(),o=new w,a=o.fields;delete a.password,delete a.password_confirmation;const t=[{label:"My Information",name:"user_info"},{label:"Change Password",name:"change_password"}],m=[{label:"My devices",name:"user_info"}];return p(()=>{o.setFormData({...s.userInfo})}),(v,x)=>{const l=c,_=i;return u(),b("div",null,[e(_,{"el-tabs":t,"el-tabs-bottom":m,"form-data":r(s).userInfo},{"el-tab-user_info":n(()=>[e(l,{"form-model":r(o)},null,8,["form-model"])]),"el-tab-change_password":n(()=>[e(h,{endpoint:"profile/change-password"})]),_:1},8,["form-data"])])}}});export{U as default};

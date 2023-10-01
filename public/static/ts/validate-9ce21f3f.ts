@@ -1,3 +1,5 @@
+import { translate } from '/@/i18n'
+
 /**
  * @description Determine whether it is an external link
  * @param value
@@ -13,8 +15,10 @@ export const isExternal = (value: string) => {
  * @returns {boolean}
  */
 export const isPassword = (value: string) => {
-  return value.length >= 6
+  return value.length >= 8
 }
+
+export const confirmedValidator = (value: any, target: any) => value === target || 'The Confirm Password field confirmation does not match'
 
 /**
  * @description Determine whether it is a number
@@ -121,7 +125,7 @@ export const isPort = (value: string) => {
  * @returns {boolean}
  */
 export const isPhone = (value: string) => {
-  const reg = /^1[3456789]\d{9}$/
+  const reg = /^\+998(9[012345789]|6[125679]|7[01234569])[0-9]{7}$/
   return reg.test(value)
 }
 
@@ -205,4 +209,9 @@ export const isChinese = (value: string) => {
 export const isEnglish = (value: string) => {
   const reg = /^[a-zA-Z]+$/
   return reg.test(value)
+}
+
+export const isRequired = (rule: any, value: any, callback: any, errorMsg: string) => {
+  if ('' === value) callback(new Error(translate(errorMsg)))
+  else callback()
 }
