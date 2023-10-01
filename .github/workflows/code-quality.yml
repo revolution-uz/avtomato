@@ -61,5 +61,21 @@ jobs:
         env:
           DB_PORT: ${{ job.services.postgres.ports[5432] }}
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            User ${{github.actor}} in ${{ github.repository }} repository. 
+            Made ${{ github.event_name }}. 
+            Job ${{github.job}} URL - "${{ github.event.pull_request.title }} --> ${{ github.event.pull_request.html_url }}"
+            Commit message: ${{ github.event.commits[0].message }}  
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+
+  check-security:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Run security checks
         uses: symfonycorp/security-checker-action@v3
