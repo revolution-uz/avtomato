@@ -35,14 +35,14 @@ class UserService
     public function updatePassword(User $user, PasswordRequest $request): bool
     {
         return $user->update([
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
         ]);
     }
 
     public function updateTheme(User $user, UserThemeRequest $request): bool
     {
         return $user->update([
-            'template_theme' => $request->getData()
+            'template_theme' => $request->getData(),
         ]);
     }
 }

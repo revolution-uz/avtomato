@@ -12,22 +12,21 @@ use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 class KatmCreateRequestDTO extends BaseScoringRequest
 {
     public function __construct(
-        public string  $pinfl,
-        public string  $passport_series,
-        public string  $passport_number,
+        public string $pinfl,
+        public string $passport_series,
+        public string $passport_number,
         #[WithCast(DateTimeInterfaceCast::class, format: 'd-m-Y')]
-        public Carbon  $passport_given_date,
-        public string  $first_name,
-        public string  $last_name,
+        public Carbon $passport_given_date,
+        public string $first_name,
+        public string $last_name,
         public ?string $middle_name,
-        public string  $phone,
+        public string $phone,
         public ?string $extra_phone,
         #[WithCast(DateTimeInterfaceCast::class, format: 'd-m-Y')]
-        public Carbon  $birth_date,
-        public int     $region_id,
-        public int     $district_id,
-    )
-    {
+        public Carbon $birth_date,
+        public int $region_id,
+        public int $district_id,
+    ) {
     }
 
     public function toArray(): array

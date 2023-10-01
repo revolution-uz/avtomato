@@ -16,7 +16,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * Class ScoringRequest
- * @package App\Models\Company
+ *
  * @property int $id
  * @property int|null $ext_id
  * @property ScoringRequestStatusEnum $status
@@ -26,14 +26,14 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int|null $card_id
  * @property BaseScoringRequest $request
  * @property BaseScoringResponse|null $response
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
 class ScoringRequest extends Model
 {
-    use TenantConnection;
     use SoftDeletes;
+    use TenantConnection;
 
     protected $dateFormat = 'U';
 

@@ -52,7 +52,6 @@ class KatmClientDTO extends BaseScoringResponse
         public ?string $subject_id,
         #[WithCast(MarkNullIfEmptyArray::class)]
         public ?string $credit_start_date,
-    )
-    {
+    ) {
     }
 }

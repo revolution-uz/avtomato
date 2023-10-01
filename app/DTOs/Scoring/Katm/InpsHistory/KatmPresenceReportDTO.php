@@ -20,7 +20,6 @@ class KatmPresenceReportDTO extends BaseScoringResponse
         public string $num,
         public string $report_name,
         public string $presence,
-    )
-    {
+    ) {
     }
 }

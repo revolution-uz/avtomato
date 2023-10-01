@@ -11,10 +11,9 @@ use App\Http\Requests\AttachmentRequest;
 use App\Http\Resources\AttachmentResource;
 use App\Models\Company\Attachment;
 use Illuminate\Http\JsonResponse;
-use Image;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use OpenApi\Attributes as OA;
-use Storage;
-use Str;
 
 class AttachmentController extends Controller
 {
@@ -37,16 +36,18 @@ class AttachmentController extends Controller
     public function upload(AttachmentRequest $request): JsonResponse
     {
         $photo = $request->file('file');
-        $file_name =  uniqid() . '.' . $photo->extension();
+        $file_name = uniqid() . '.' . $photo->extension();
         $path = $photo->storeAs(Attachment::PATH, $file_name, ['disk' => 'public']);
 
         //todo create thumb by different types of files
         switch ((int) $request->type) {
             case AttachmentTypeEnum::AVATAR->value:
-                 $thumbnail = Image::make($photo)->resize(300, 300);
-                 $previewPath = Attachment::THUMBNAIL_PATH . '/' . $file_name;
-                 Storage::disk('public')->put($previewPath, $thumbnail->encode());
-                 break;
+                $thumbnail = Image::make($photo)->resize(300, 300);
+                $previewPath = Attachment::THUMBNAIL_PATH . '/' . $file_name;
+                Storage::disk('public')->put($previewPath, $thumbnail->encode());
+                break;
+            default:
+                $previewPath = null;
         }
 
         $attachment = Attachment::create([
@@ -66,7 +67,7 @@ class AttachmentController extends Controller
         description: 'Attachment get route',
         tags: ['Attachment'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'Attachment')
+            new OpenApiIdParameter(modelName: 'Attachment'),
         ],
         responses: [
             new OA\Response(
@@ -85,7 +86,7 @@ class AttachmentController extends Controller
         description: 'Preview of the attachment get route',
         tags: ['Attachment'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'Attachment')
+            new OpenApiIdParameter(modelName: 'Attachment'),
         ],
         responses: [
             new OA\Response(

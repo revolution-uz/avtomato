@@ -19,17 +19,17 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin Phone
+ * @property Phone $resource
  */
 class PhoneResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'phone' => $this->phone,
-            'id' => $this->pivot->id,
-            'type' => $this->pivot->type,
-            'comment' => $this->pivot->comment,
+            'phone' => $this->resource->phone,
+            'id' => $this->resource->pivot->id,
+            'type' => $this->resource->pivot->type,
+            'comment' => $this->resource->pivot->comment,
         ];
     }
 }

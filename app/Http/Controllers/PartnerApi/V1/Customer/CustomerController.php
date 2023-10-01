@@ -24,8 +24,7 @@ class CustomerController extends Controller
 {
     public function __construct(
         private readonly PassportInfoService $passportInfoService
-    )
-    {
+    ) {
     }
 
     #[OA\Post(
@@ -70,7 +69,7 @@ class CustomerController extends Controller
         DB::beginTransaction();
 
         try {
-            $customer = new Customer();
+            $customer = new Customer;
             $customer->pinfl = $request->pinfl;
             $customer->tin = $request->tin;
             $customer->passport_series = $request->passport_series;
@@ -112,11 +111,11 @@ class CustomerController extends Controller
         description: 'Get single customer record route',
         tags: ['Customers'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'Customer')
+            new OpenApiIdParameter(modelName: 'Customer'),
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'SingleCustomerResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function getSingle(Customer $customer): JsonResponse

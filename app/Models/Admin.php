@@ -11,7 +11,7 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
 class Admin extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, CentralConnection;
+    use CentralConnection, HasApiTokens, HasFactory, Notifiable;
 
     protected $dateFormat = 'U';
 
@@ -25,7 +25,7 @@ class Admin extends Authenticatable
         'phone',
         'email',
         'role',
-        'password'
+        'password',
     ];
 
     /**
@@ -45,6 +45,6 @@ class Admin extends Authenticatable
      */
     protected $casts = [
         'password' => 'hashed',
-        'role' => AdminRoleEnum::class
+        'role' => AdminRoleEnum::class,
     ];
 }

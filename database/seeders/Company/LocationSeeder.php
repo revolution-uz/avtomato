@@ -16,15 +16,14 @@ class LocationSeeder extends Seeder
     public function __construct(
         private readonly OilaKreditClient $oilaKreditClient,
         private readonly OnlineMahallaClient $onlineMahallaClient,
-    )
-    {
+    ) {
     }
 
     public function run(): void
     {
-        if (!File::exists(database_path('seeders/data/regions.csv'))
-            || !File::exists(database_path('seeders/data/districts.csv'))
-            || !File::exists(database_path('seeders/data/mahallas.csv'))) {
+        if (! File::exists(database_path('seeders/data/regions.csv'))
+            || ! File::exists(database_path('seeders/data/districts.csv'))
+            || ! File::exists(database_path('seeders/data/mahallas.csv'))) {
             $this->regenerateCsvFiles();
         }
 
@@ -35,8 +34,8 @@ class LocationSeeder extends Seeder
 
     private function createOrUpdateRegions(): void
     {
-        if (($handle = fopen(database_path('seeders/data/regions.csv'), "r")) !== FALSE) {
-            while (($row = fgetcsv($handle)) !== FALSE) {
+        if (($handle = fopen(database_path('seeders/data/regions.csv'), 'r')) !== false) {
+            while (($row = fgetcsv($handle)) !== false) {
                 Region::query()->updateOrCreate(
                     ['oilakredit_id' => $row[0]],
                     [
@@ -54,8 +53,8 @@ class LocationSeeder extends Seeder
     private function createOrUpdateDistricts(): void
     {
         $regionsMap = Region::query()->pluck('id', 'oilakredit_id')->toArray();
-        if (($handle = fopen(database_path('seeders/data/districts.csv'), "r")) !== FALSE) {
-            while (($row = fgetcsv($handle)) !== FALSE) {
+        if (($handle = fopen(database_path('seeders/data/districts.csv'), 'r')) !== false) {
+            while (($row = fgetcsv($handle)) !== false) {
                 District::query()->updateOrCreate(
                     ['oilakredit_id' => $row[0]],
                     [
@@ -74,8 +73,8 @@ class LocationSeeder extends Seeder
     private function createOrUpdateMahallas(): void
     {
         $districtsMap = District::query()->pluck('id', 'oilakredit_id')->toArray();
-        if (($handle = fopen(database_path('seeders/data/mahallas.csv'), "r")) !== FALSE) {
-            while (($row = fgetcsv($handle)) !== FALSE) {
+        if (($handle = fopen(database_path('seeders/data/mahallas.csv'), 'r')) !== false) {
+            while (($row = fgetcsv($handle)) !== false) {
                 Mahalla::query()->updateOrCreate(
                     ['oilakredit_id' => $row[0]],
                     [
@@ -117,12 +116,12 @@ class LocationSeeder extends Seeder
             }
         }
 
-        $regionsFile = fopen(database_path("seeders/data/regions.csv"), 'w');
+        $regionsFile = fopen(database_path('seeders/data/regions.csv'), 'w');
         foreach ($regionsList as $_ => $region) {
             fputcsv($regionsFile, [$region['id'], $region['name_uz'], $region['name_oz'], $region['name_ru']]);
         }
 
-        $districtsFile = fopen(database_path("seeders/data/districts.csv"), 'w');
+        $districtsFile = fopen(database_path('seeders/data/districts.csv'), 'w');
         foreach ($districtsList as $_ => $district) {
             fputcsv($districtsFile, [$district['id'], $district['region_id'], $district['name_uz'], $district['name_oz'], $district['name_ru']]);
         }
@@ -145,7 +144,7 @@ class LocationSeeder extends Seeder
             }
         }
 
-        $mahallasFile = fopen(database_path("seeders/data/mahallas.csv"), 'w');
+        $mahallasFile = fopen(database_path('seeders/data/mahallas.csv'), 'w');
         foreach ($mahallasList as $_ => $mahalla) {
             fputcsv($mahallasFile, [$mahalla['id'], $mahalla['district_id'], $mahalla['name_uz'], $mahalla['name_oz'], $mahalla['name_ru']]);
         }

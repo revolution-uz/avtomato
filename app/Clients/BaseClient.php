@@ -4,7 +4,7 @@ namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
 use App\Enums\ClientCodeEnum;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 abstract class BaseClient
 {

@@ -15,19 +15,19 @@
         <div class="row gy-4 align-items-center justify-content-center text-center">
             <div class="col-xl-7 col-lg-7 col-md-10">
                 <div class="banner-left__content">
-                    <span class="subtitle">{{__("website.main_header_subtitle_text")}}</span>
+                    <span class="subtitle">{{ __("website.main_header_subtitle_text") }}</span>
                     <h2 class="position-relative">
-                        {{__("website.main_header_text")}}
+                        {{ __("website.main_header_text") }}
                         <span class="animate-shape">
                             <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
-                    <p>{{__("website.main_description_text")}}</p>
+                    <p>{{ __("website.main_description_text") }}</p>
                     <a href="plan.html" class="btn btn--base me-2 mb-2">
-                        {{__("website.button_get_started")}} <i class="fa-sharp fas fa-arrow-right"></i>
+                        {{ __("website.button_get_started") }} <i class="fa-sharp fas fa-arrow-right"></i>
                     </a>
                     <a href="contact.html" class="btn btn--base outline mb-2">
-                        {{__("website.button_contact_us")}} <i class="fas fa-id-card"></i>
+                        {{ __("website.button_contact_us") }} <i class="fas fa-id-card"></i>
                     </a>
                 </div>
             </div>
@@ -45,23 +45,23 @@
             <div class="col-lg-6 position-relative">
                 <div class="about-right-content">
                     <div class="section-heading mb-0">
-                        <span class="subtitle">{{__("website.subtitle_about_us")}}</span>
+                        <span class="subtitle">{{ __("website.subtitle_about_us") }}</span>
                         <h2 class="section-heading__title">
-                            {{__("website.about_us_title")}}
+                            {{ __("website.about_us_title") }}
                             <span class="animate-shape">
                                 <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                             </span>
                         </h2>
-                        <p class="section-heading__desc mb-3">{{__("website.about_us_description")}}</p>
+                        <p class="section-heading__desc mb-3">{{ __("website.about_us_description") }}</p>
                         <ul class="about-service mb-4">
                             <li>
-                                <span><i class="fas fa-check-circle"></i>{{__("website.about_us_advantage_1")}}</span>
+                                <span><i class="fas fa-check-circle"></i>{{ __("website.about_us_advantage_1") }}</span>
                             </li>
                             <li>
-                                <span><i class="fas fa-check-circle"></i>{{__("website.about_us_advantage_2")}}</span>
+                                <span><i class="fas fa-check-circle"></i>{{ __("website.about_us_advantage_2") }}</span>
                             </li>
                             <li>
-                                <span><i class="fas fa-check-circle"></i>{{__("website.about_us_advantage_3")}}</span>
+                                <span><i class="fas fa-check-circle"></i>{{ __("website.about_us_advantage_3") }}</span>
                             </li>
                         </ul>
                     </div>
@@ -193,14 +193,14 @@
                         <div class="about-contact d-flex align-items-center">
                             <i class="fas fa-users"></i>
                             <div class="ms-3">
-                                <h4>{{__("website.call_us")}}</h4>
+                                <h4>{{ __("website.call_us") }}</h4>
                                 <a href="tel:+998933993300">+998(93)-399-33-00</a>
                             </div>
                         </div>
 
                         <div class="about-contact-top">
                             <h4>8</h4>
-                            <span>{{__("website.team_years_of_experience")}}</span>
+                            <span>{{ __("website.team_years_of_experience") }}</span>
                         </div>
                     </div>
                 </div>
@@ -218,14 +218,14 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="section-heading  text-center">
-                    <span class="subtitle">{{__("website.subtitle_our_services")}}</span>
+                    <span class="subtitle">{{ __("website.subtitle_our_services") }}</span>
                     <h2 class="section-heading__title">
-                        {{__("website.our_services_title")}}
+                        {{ __("website.our_services_title") }}
                         <span class="animate-shape center">
                             <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
-                    <p class="section-heading__desc">{{__("website.our_services_description")}}</p>
+                    <p class="section-heading__desc">{{ __("website.our_services_description") }}</p>
                 </div>
             </div>
         </div>
@@ -236,8 +236,8 @@
                         <i class="fas fa-headset"></i>
                     </div>
                     <div class="service__content">
-                        <h3 class="title">{{__("website.service_1_title")}}</h3>
-                        <p>{{__("website.service_1_description")}}</p>
+                        <h3 class="title">{{ __("website.service_1_title") }}</h3>
+                        <p>{{ __("website.service_1_description") }}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 20.00</p>
                         </div>
@@ -250,8 +250,8 @@
                         <i class="fas fa-landmark"></i>
                     </div>
                     <div class="service__content">
-                        <h3 class="title">{{__("website.service_2_title")}}</h3>
-                        <p>{{__("website.service_2_description")}}</p>
+                        <h3 class="title">{{ __("website.service_2_title") }}</h3>
+                        <p>{{ __("website.service_2_description") }}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 40.00</p>
                         </div>
@@ -264,8 +264,8 @@
                         <i class="fas fa-thumbtack"></i>
                     </div>
                     <div class="service__content">
-                        <h3 class="title">{{__("website.service_3_title")}}</h3>
-                        <p>{{__("website.service_3_description")}}</p>
+                        <h3 class="title">{{ __("website.service_3_title") }}</h3>
+                        <p>{{ __("website.service_3_description") }}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 20.00</p>
                         </div>
@@ -278,8 +278,8 @@
                         <i class="fas fa-pen-fancy"></i>
                     </div>
                     <div class="service__content">
-                        <h3 class="title">{{__("website.service_4_title")}}</h3>
-                        <p>{{__("website.service_4_description")}}</p>
+                        <h3 class="title">{{ __("website.service_4_title") }}</h3>
+                        <p>{{ __("website.service_4_description") }}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 30.00</p>
                         </div>
@@ -292,8 +292,8 @@
                         <i class="fab fa-product-hunt"></i>
                     </div>
                     <div class="service__content">
-                        <h3 class="title">{{__("website.service_5_title")}}</h3>
-                        <p>{{__("website.service_5_description")}}</p>
+                        <h3 class="title">{{ __("website.service_5_title") }}</h3>
+                        <p>{{ __("website.service_5_description") }}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 35.00</p>
                         </div>
@@ -306,8 +306,8 @@
                         <i class="fas fa-mobile-alt"></i>
                     </div>
                     <div class="service__content">
-                        <h3 class="title">{{__("website.service_6_title")}}</h3>
-                        <p>{{__("website.service_6_description")}}</p>
+                        <h3 class="title">{{ __("website.service_6_title") }}</h3>
+                        <p>{{ __("website.service_6_description") }}</p>
                         <div class="service-bottom-wrap d-flex justify-content-between align-items-center">
                             <p class="price-service">$ 40.00</p>
                         </div>

@@ -16,13 +16,12 @@ class KatmService
 {
     public function __construct(
         private readonly AsaxiyClient $asaxiyClient
-    )
-    {
+    ) {
     }
 
     public function createRequest(KatmCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
     {
-        $model = new ScoringRequest();
+        $model = new ScoringRequest;
         $model->type = $type;
         $model->request = $dto;
         $model->client_code = $this->asaxiyClient->getClientCode();

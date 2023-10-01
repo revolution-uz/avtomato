@@ -14,7 +14,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_oz
  * @property string $name_ru
  * @property string $name_en
- *
  * @property District $district
  */
 class Mahalla extends Model

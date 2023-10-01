@@ -17,9 +17,11 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
 class Settings extends Model
 {
     use CentralConnection;
-    protected $dateFormat = 'U';
 
     public static array $_cache = [];
+
+    protected $dateFormat = 'U';
+
     protected $fillable = [
         'name',
         'value',
@@ -33,7 +35,7 @@ class Settings extends Model
 
     public static function getConfig(SettingsEnum $settings): ?string
     {
-        if (!self::$_cache) {
+        if (! self::$_cache) {
             self::$_cache = self::query()
                 ->get()
                 ->pluck('value', 'name')

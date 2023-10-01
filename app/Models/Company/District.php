@@ -14,7 +14,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_oz
  * @property string $name_ru
  * @property string $name_en
- *
  * @property Region $region
  */
 class District extends Model

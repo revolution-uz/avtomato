@@ -21,19 +21,21 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'mime', description: 'Attachment mime', type: 'string', example: 'image/jpeg'),
     ],
 )]
-/** @mixin Attachment */
+/**
+ * @property Attachment $resource
+ */
 class AttachmentResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'type' => $this->type,
-            'preview_link' => $this->preview_link,
-            'link' => $this->link,
-            'name' => $this->name,
-            'original_name' => $this->original_name,
-            'mime' => $this->mime,
+            'id' => $this->resource->id,
+            'type' => $this->resource->type,
+            'preview_link' => $this->resource->preview_link,
+            'link' => $this->resource->link,
+            'name' => $this->resource->name,
+            'original_name' => $this->resource->original_name,
+            'mime' => $this->resource->mime,
         ];
     }
 }

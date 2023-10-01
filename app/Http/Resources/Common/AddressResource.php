@@ -22,21 +22,21 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin Address
+ * @property Address $resource
  */
 class AddressResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'address' => $this->address,
-            'region_id' => $this->region_id,
-            'district_id' => $this->district_id,
-            'mahalla_id' => $this->mahalla_id,
-            'region' => new RegionResource($this->region),
-            'district' => new RegionResource($this->district),
-            'mahalla' => new RegionResource($this->mahalla),
+            'id' => $this->resource->id,
+            'address' => $this->resource->address,
+            'region_id' => $this->resource->region_id,
+            'district_id' => $this->resource->district_id,
+            'mahalla_id' => $this->resource->mahalla_id,
+            'region' => new RegionResource($this->resource->region),
+            'district' => new RegionResource($this->resource->district),
+            'mahalla' => new RegionResource($this->resource->mahalla),
         ];
     }
 }

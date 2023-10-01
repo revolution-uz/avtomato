@@ -1,0 +1,19 @@
+name: Duster Lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request: # on a pull request to each of these branches
+    branches:
+      - master
+
+jobs:
+  duster:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Duster Lint"
+        uses: tighten/duster-action@v2
+        with:
+          args: lint

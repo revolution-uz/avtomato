@@ -11,9 +11,9 @@ class Features extends Model
 {
     use HasFactory, TenantConnection;
 
-    protected $dateFormat = 'U';
-
     private static ?array $features = null;
+
+    protected $dateFormat = 'U';
 
     protected $fillable = [
         'name',
@@ -21,8 +21,9 @@ class Features extends Model
         'is_active',
     ];
 
-    public static function isFeatureActive(FeatureEnum $feature) {
-        if (!self::$features) {
+    public static function isFeatureActive(FeatureEnum $feature)
+    {
+        if (! self::$features) {
             self::$features = self::query()->pluck('is_active', 'name')->toArray();
         }
 

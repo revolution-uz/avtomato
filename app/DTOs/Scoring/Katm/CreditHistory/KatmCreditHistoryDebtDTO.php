@@ -62,7 +62,6 @@ class KatmCreditHistoryDebtDTO extends BaseScoringResponse
         public float $delays_decommissioned_sum,
         public float $delays_decommissioned_pcnt_qty,
         public float $delays_decommissioned_pcnt_sum,
-    )
-    {
+    ) {
     }
 }

@@ -9,8 +9,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property string $name
- * @property boolean $is_annual
- * @property double $percent
+ * @property bool $is_annual
+ * @property float $percent
  * @property int $min_amount
  * @property int $max_amount
  * @property int $min_initial_fee
@@ -18,8 +18,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Tariff extends Model
 {
-    use TenantConnection;
     use SoftDeletes;
+    use TenantConnection;
 
     protected $dateFormat = 'U';
 

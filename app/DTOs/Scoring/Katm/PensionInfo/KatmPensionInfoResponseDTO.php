@@ -20,7 +20,6 @@ class KatmPensionInfoResponseDTO extends BaseScoringResponse
         public string $result,
         public string $sizePension,
         public string $comments,
-    )
-    {
+    ) {
     }
 }

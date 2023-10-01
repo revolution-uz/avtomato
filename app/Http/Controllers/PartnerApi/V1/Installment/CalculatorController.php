@@ -36,6 +36,37 @@ class CalculatorController extends Controller
         return ApiResponse::success($this->prepareInstallmentGraph($request));
     }
 
+    #[OA\Post(
+        path: '/api/v1/installment/calculator/export/csv',
+        description: 'Export installment calculator route',
+        requestBody: new OA\RequestBody(
+            description: 'Calculator request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/CalculatorRequest')
+        ),
+        tags: ['Installment'],
+        responses: [
+            new OA\Response(response: 200, description: 'Returned file', content: new OA\MediaType(mediaType: 'text/csv')),
+        ]
+    )]
+    public function export(string $type, CalculatorRequest $request)
+    {
+        $data = [['ID', 'Date', 'Amount', 'Portion', 'Monthly']];
+        foreach ($this->prepareInstallmentGraph($request) as $item) {
+            $data[] = [$item->id, $item->date, $item->amount, $item->portion, $item->monthly];
+        }
+        $collection = collect($data);
+        $csv = $collection->reduce(function ($carry, $row) {
+            return $carry . implode(',', $row) . PHP_EOL;
+        }, '');
+        $response = new Response($csv);
+
+        $response->header('Content-Type', 'text/csv');
+        $response->header('Content-Disposition', 'attachment; filename="calculator.csv"');
+
+        return $response;
+    }
+
     private function prepareInstallmentGraph(CalculatorRequest $request)
     {
         /** @var Tariff $tariff */
@@ -52,43 +83,14 @@ class CalculatorController extends Controller
         foreach ($periods as $period) {
             $calculated[] = new InstallmentPaymentResource(
                 $i,
-                $period->format("Y-m-d"),
+                $period->format('Y-m-d'),
                 $amount / $request->period,
                 $portion,
                 $amount / $request->period + $portion
             );
             $i++;
         }
+
         return $calculated;
-    }
-
-    #[OA\Post(
-        path: '/api/v1/installment/calculator/export/csv',
-        description: 'Export installment calculator route',
-        requestBody: new OA\RequestBody(
-            description: 'Calculator request body',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CalculatorRequest')
-        ),
-        tags: ['Installment'],
-        responses: [
-            new OA\Response(response: 200, description: 'Returned file', content: new OA\MediaType(mediaType: 'text/csv')),
-        ]
-    )]
-    public function export(string $type, CalculatorRequest $request)
-    {
-        $data = [["ID", "Date", "Amount", "Portion", "Monthly"]];
-        foreach ($this->prepareInstallmentGraph($request) as $item)
-            $data[] = [$item->id, $item->date, $item->amount, $item->portion, $item->monthly];
-        $collection = collect($data);
-        $csv = $collection->reduce(function ($carry, $row) {
-            return $carry . implode(',', $row) . PHP_EOL;
-        }, '');
-        $response = new Response($csv);
-
-        $response->header('Content-Type', 'text/csv');
-        $response->header('Content-Disposition', 'attachment; filename="calculator.csv"');
-
-        return $response;
     }
 }

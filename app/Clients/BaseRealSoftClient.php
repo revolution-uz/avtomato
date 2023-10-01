@@ -23,6 +23,34 @@ abstract class BaseRealSoftClient extends BaseClient
         return $response['data'];
     }
 
+    abstract public function getBaseUrl(): string;
+
+    /**
+     * @throws PassportDataNotFoundException
+     */
+    public function getDataByPassport(
+        string $passportSeries,
+        string $passportNumber,
+        Carbon $birthDate
+    ): PassportDataDTO {
+        $response = Http::withHeaders(array_merge($this->getHeaders(), ['Accept-Language' => app()->getLocale()]))
+            ->get(
+                $this->getBaseUrl() . '/api/v1/public/tax/passport',
+                [
+                    'locale' => app()->getLocale(),
+                    'series' => $passportSeries,
+                    'number' => $passportNumber,
+                    'birth_date' => $birthDate->format('Y-m-d'),
+                ]
+            )->json();
+
+        if (Arr::has($response, 'data.info.data')) {
+            return PassportDataDTO::from($response['data']['info']['data']);
+        }
+
+        throw new PassportDataNotFoundException;
+    }
+
     protected function getHeaders(): array
     {
         return [
@@ -38,34 +66,5 @@ abstract class BaseRealSoftClient extends BaseClient
             'Origin' => $this->getBaseUrl(),
             'Referer' => $this->getBaseUrl() . '/',
         ];
-    }
-
-    abstract public function getBaseUrl(): string;
-
-    /**
-     * @throws PassportDataNotFoundException
-     */
-    public function getDataByPassport(
-        string $passportSeries,
-        string $passportNumber,
-        Carbon $birthDate
-    ): PassportDataDTO
-    {
-        $response = Http::withHeaders(array_merge($this->getHeaders(), ['Accept-Language' => app()->getLocale()]))
-            ->get(
-                $this->getBaseUrl() . '/api/v1/public/tax/passport',
-                [
-                    'locale' => app()->getLocale(),
-                    'series' => $passportSeries,
-                    'number' => $passportNumber,
-                    'birth_date' => $birthDate->format('Y-m-d')
-                ]
-            )->json();
-
-        if (Arr::has($response, 'data.info.data')) {
-            return PassportDataDTO::from($response['data']['info']['data']);
-        }
-
-        throw new PassportDataNotFoundException();
     }
 }

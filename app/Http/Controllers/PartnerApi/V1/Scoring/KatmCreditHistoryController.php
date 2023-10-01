@@ -28,8 +28,7 @@ class KatmCreditHistoryController extends Controller
 {
     public function __construct(
         private readonly KatmService $katmService,
-    )
-    {
+    ) {
     }
 
     #[OA\Get(
@@ -37,10 +36,10 @@ class KatmCreditHistoryController extends Controller
         description: 'Get credit-history scoring requests list',
         tags: ['Scoring (Credit history)'],
         parameters: [
-            new OpenApiPageParameter(),
-            new OpenApiPerPageParameter(),
-            new OpenApiSearchParameter(),
-            new OpenApiSortParameter(),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+            new OpenApiSortParameter,
         ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'KatmCreditHistoryResource', withPagination: true, withSortables: true),
@@ -55,7 +54,7 @@ class KatmCreditHistoryController extends Controller
                 ->where('type', ScoringRequestTypeEnum::KATM_CREDIT_HISTORY)
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q
+                    fn (Builder $q) => $q
                         ->orWhere('request->pinfl', 'ILIKE', '%' . $request->search . '%')
                         ->orWhere('request->first_name', 'ILIKE', '%' . $request->search . '%')
                         ->orWhere('request->last_name', 'ILIKE', '%' . $request->search . '%')
@@ -65,7 +64,7 @@ class KatmCreditHistoryController extends Controller
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
@@ -108,7 +107,7 @@ class KatmCreditHistoryController extends Controller
     public function read(ScoringRequest $scoring)
     {
         if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::KATM_CREDIT_HISTORY) {
-            throw new ModelNotFoundException();
+            throw new ModelNotFoundException;
         }
 
         return ApiResponse::success(KatmCreditHistoryResource::make($scoring));

@@ -22,8 +22,6 @@ class SettingsResource extends Resource
 {
     /**
      * The model the resource corresponds to.
-     *
-     * @var string|Settings
      */
     public static string|Settings $model = Settings::class;
 
@@ -53,7 +51,6 @@ class SettingsResource extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param Request $request
      * @return array<int, Field>
      */
     public function fields(Request $request): array
@@ -85,7 +82,6 @@ class SettingsResource extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param Request $request
      * @return array<object>
      */
     public function cards(Request $request): array
@@ -96,7 +92,6 @@ class SettingsResource extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param Request $request
      * @return array<object>
      */
     public function filters(Request $request): array
@@ -107,7 +102,6 @@ class SettingsResource extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param Request $request
      * @return array<object>
      */
     public function lenses(Request $request): array
@@ -118,7 +112,6 @@ class SettingsResource extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param Request $request
      * @return array<object>
      */
     public function actions(Request $request): array

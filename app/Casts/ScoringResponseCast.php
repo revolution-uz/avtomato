@@ -23,7 +23,7 @@ class ScoringResponseCast implements CastsAttributes
             ScoringRequestTypeEnum::KATM_CREDIT_HISTORY->value => KatmCreditHistoryResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::KATM_INPS_HISTORY->value => KatmInpsHistoryResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::KATM_PENSION_INFO->value => KatmPensionInfoResponseDTO::from(json_decode($value, true)),
-            default => throw new InvalidArgumentException(),
+            default => throw new InvalidArgumentException,
         };
     }
 
@@ -33,6 +33,6 @@ class ScoringResponseCast implements CastsAttributes
             return json_encode($value->toArray());
         }
 
-        throw new InvalidArgumentException();
+        throw new InvalidArgumentException;
     }
 }

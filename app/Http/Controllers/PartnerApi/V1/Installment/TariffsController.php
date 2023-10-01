@@ -31,10 +31,10 @@ class TariffsController extends Controller
         description: 'Tariffs route',
         tags: ['Tariffs'],
         parameters: [
-            new OpenApiPageParameter(),
-            new OpenApiPerPageParameter(),
-            new OpenApiSearchParameter(),
-            new OpenApiSortParameter(),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+            new OpenApiSortParameter,
         ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'TariffResource', withPagination: true, withSortables: true),
@@ -48,11 +48,11 @@ class TariffsController extends Controller
             Tariff::query()
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q->where('name', 'ILIKE', '%' . $request->search . '%')
+                    fn (Builder $q) => $q->where('name', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
@@ -65,11 +65,11 @@ class TariffsController extends Controller
         description: 'Tariffs get single route',
         tags: ['Tariffs'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'Tariff')
+            new OpenApiIdParameter(modelName: 'Tariff'),
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'TariffResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function getSingle(Tariff $tariff): JsonResponse
@@ -92,13 +92,14 @@ class TariffsController extends Controller
     )]
     public function create(TariffRequest $request): JsonResponse
     {
-        $model = new Tariff();
+        $model = new Tariff;
         $model->fill($request->validated());
 
-        if ($model->save())
+        if ($model->save()) {
             return ApiResponse::success(TariffResource::make($model));
+        }
 
-        return ApiResponse::error("Error on creating Tariffs");
+        return ApiResponse::error('Error on creating Tariffs');
     }
 
     #[OA\Put(
@@ -120,7 +121,7 @@ class TariffsController extends Controller
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'TariffResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function update(Tariff $tariff, TariffRequest $request): JsonResponse
@@ -131,7 +132,7 @@ class TariffsController extends Controller
             return ApiResponse::success(TariffResource::make($tariff));
         }
 
-        return ApiResponse::error("Error on updating Tariffs");
+        return ApiResponse::error('Error on updating Tariffs');
     }
 
     #[OA\Delete(

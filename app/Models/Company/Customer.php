@@ -3,12 +3,12 @@
 namespace App\Models\Company;
 
 use App\Enums\GenderEnum;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -30,7 +30,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $created_at
  * @property string $updated_at
  * @property string|null $deleted_at
- *
  * @property Attachment[] $attachments
  * @property Address[]|Collection<int,Address> $addresses
  * @property Phone[]|Collection<int,Phone> $phones
@@ -73,7 +72,7 @@ class Customer extends Model
     public function phones(): MorphToMany
     {
         return $this->morphToMany(Phone::class, 'phoneable')
-            ->withPivot(['id', 'type', 'comment', 'created_at', 'updated_at']);//->withTimestamps();
+            ->withPivot(['id', 'type', 'comment', 'created_at', 'updated_at']); //->withTimestamps();
     }
 
     public function addresses(): MorphMany

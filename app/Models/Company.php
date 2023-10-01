@@ -18,7 +18,7 @@ use Stancl\Tenancy\Database\Models\Tenant;
  */
 class Company extends Tenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains, CentralConnection;
+    use CentralConnection, HasDatabase, HasDomains;
 
     protected $table = 'companies';
 
@@ -26,7 +26,7 @@ class Company extends Tenant implements TenantWithDatabase
         'name',
         'status',
         'owner_name',
-        'owner_phone'
+        'owner_phone',
     ];
 
     protected $casts = [
@@ -40,7 +40,7 @@ class Company extends Tenant implements TenantWithDatabase
             'name',
             'status',
             'owner_name',
-            'owner_phone'
+            'owner_phone',
         ];
     }
 

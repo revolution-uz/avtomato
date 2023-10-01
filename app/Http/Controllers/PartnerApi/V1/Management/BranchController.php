@@ -30,10 +30,10 @@ class BranchController extends Controller
         description: 'Get branches list route',
         tags: ['Branches'],
         parameters: [
-            new OpenApiPageParameter(),
-            new OpenApiPerPageParameter(),
-            new OpenApiSearchParameter(),
-            new OpenApiSortParameter(),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+            new OpenApiSortParameter,
         ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'BranchResource', withPagination: true, withSortables: true),
@@ -47,14 +47,14 @@ class BranchController extends Controller
             Branch::query()
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q
+                    fn (Builder $q) => $q
                         ->where('name', 'ILIKE', '%' . $request->search . '%')
                         ->where('address', 'ILIKE', '%' . $request->search . '%')
                         ->where('inn', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
@@ -71,7 +71,7 @@ class BranchController extends Controller
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'BranchResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function getSingle(Branch $branch): BranchResource
@@ -94,13 +94,14 @@ class BranchController extends Controller
     )]
     public function create(BranchRequest $request): JsonResponse
     {
-        $model = new Branch();
+        $model = new Branch;
         $model->fill($request->validated());
 
-        if ($model->save())
+        if ($model->save()) {
             return ApiResponse::success(BranchResource::make($model));
+        }
 
-        return ApiResponse::error("Error on creating a branch");
+        return ApiResponse::error('Error on creating a branch');
     }
 
     #[OA\Put(
@@ -122,7 +123,7 @@ class BranchController extends Controller
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'BranchResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function update(Branch $branch, BranchRequest $request): JsonResponse
@@ -133,7 +134,7 @@ class BranchController extends Controller
             return ApiResponse::success(BranchResource::make($branch));
         }
 
-        return ApiResponse::error("Error on updating a branch");
+        return ApiResponse::error('Error on updating a branch');
     }
 
     #[OA\Delete(

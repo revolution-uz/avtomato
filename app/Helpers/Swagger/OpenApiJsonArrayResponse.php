@@ -39,7 +39,7 @@ class OpenApiJsonArrayResponse extends OA\Response
                     new OA\Property(property: 'url', type: 'string', example: 'http://revo.avtomato.uz/api/v1/management/branches?page=1'),
                     new OA\Property(property: 'label', type: 'string', example: '1'),
                     new OA\Property(property: 'active', type: 'boolean', example: 'true'),
-                ], type: 'object'))
+                ], type: 'object')),
             ], type: 'object');
         }
 
