@@ -1,4 +1,4 @@
-name: Duster Lint
+name: Pipeline
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  duster:
+  pipeline:
     runs-on: ubuntu-latest
 
     services:
@@ -48,11 +48,10 @@ jobs:
           php artisan key:generate
       - name: Migrate database
         run: |
-          php artisan migrate:fresh --database=database_test --force
+          php artisan migrate:fresh --database=test --force
       - name: "Duster Lint"
-        uses: tighten/duster-action@v2
-        with:
-          args: lint
+        run: |
+          ./vendor/bin/duster lint
       - name: Run tests
         run: |
           ./vendor/bin/phpunit
