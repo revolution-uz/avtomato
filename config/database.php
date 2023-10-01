@@ -73,10 +73,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'schema' => 'public',
-            'sslmode' => 'prefer',
-            'options' => [
-                PDO::ATTR_EMULATE_PREPARES => true
-            ]
+            'sslmode' => 'disable',
         ],
     ],
 
