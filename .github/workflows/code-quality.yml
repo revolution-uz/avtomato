@@ -70,13 +70,12 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           format: markdown
           message: |
-            User **${{github.actor}}** created PR in `${{ github.repository }}` repository. 
-            
+            User **${{github.actor}}** created PR in `${{ github.repository }}` repository and it's ready to merge. 
             
             PR Name: ${{ github.event.pull_request.title }}
             
-            PR link: ${{ github.event.pull_request.html_url }}"
+            PR link: ${{ github.event.pull_request.html_url }}
             
-            Last commit message: *${{ github.event.commits[0].message }}*  
+            Last commit message: `${{ github.event.commits[0].message }}` 
             
             Last commit link: https://github.com/${{ github.repository }}/commit/${{github.sha}}
