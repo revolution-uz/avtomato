@@ -10,13 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      avtomato-db:
+      postgres:
         # Docker Hub image
         image: postgres
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: root
           POSTGRES_DB: avtomato_test
+        ports:
+          - 5432:5432
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -32,10 +34,12 @@ jobs:
           php-version: '8.2'
           extensions: iconv, simplexml, pdo, pgsql, pdo_pgsql
       - name: Cache composer dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v2
+        id: php-cache # use this to check for `cache-hit` (`steps.php-cache.outputs.cache-hit != 'true'`)
         with:
-          path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
+          path: ${{ steps.composercache.outputs.dir }}
+          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
       - name: "Install Composer dependencies"
         run: |
           composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
