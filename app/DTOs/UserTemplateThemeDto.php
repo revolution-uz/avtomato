@@ -26,12 +26,10 @@ class UserTemplateThemeDto extends Data
         public bool $show_search = true,
         public bool $show_notice = true,
         public bool $show_full_screen = true,
-        public bool $show_theme_setting = true,
         public bool $show_dark = true,
         public string $page_transition_style = '',
         public int $radius = 5,
         public bool $show_lock = true,
-        public bool $show_color_picker = true,
         public string $passcode = '',
     )
     {
