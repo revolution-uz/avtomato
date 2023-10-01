@@ -13,6 +13,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: iconv, simplexml
+      - name: "Install Composer dependencies"
+        run: composer install -n --prefer-dist
       - name: "Duster Lint"
         uses: tighten/duster-action@v2
         with:
