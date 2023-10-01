@@ -76,6 +76,6 @@ jobs:
             
             PR link: ${{ github.event.pull_request.html_url }}
             
-            Last commit message: `${{ github.event.commits[0].message }}` 
+            Last commit message: `${{ github.event.head_commit.message }}` 
             
             Last commit link: https://github.com/${{ github.repository }}/commit/${{github.sha}}
