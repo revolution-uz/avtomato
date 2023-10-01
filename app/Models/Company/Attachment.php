@@ -6,6 +6,7 @@ use App\Enums\Company\AttachmentTypeEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property string $id
@@ -26,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Attachment extends Model
 {
-    use HasUuids;
+    use HasUuids, TenantConnection;
     protected $dateFormat = 'U';
 
     public const PATH = 'uploads';

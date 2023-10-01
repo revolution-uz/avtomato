@@ -1,36 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateTenantsTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
     public function up(): void
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
+
+            // your custom columns may go here
             $table->string('name', 32);
             $table->string('owner_phone', 16);
             $table->string('owner_name', 32);
-            $table->string('subdomain', 16)->unique();
-            $table->string('db_user')->nullable();
-            $table->string('db_name')->nullable();
-            $table->string('db_password')->nullable();
-            $table->tinyInteger('status')->index();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
+            $table->boolean('is_active')->default(false);
+
+            $table->timestamps();
+            $table->json('data')->nullable();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
     public function down(): void
     {
         Schema::dropIfExists('companies');
     }
-};
+}

@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\Company\PhoneTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Phoneable extends Model
 {
+    use TenantConnection;
     protected $dateFormat = 'U';
 
     protected $fillable = [

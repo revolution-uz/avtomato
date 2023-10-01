@@ -3,6 +3,7 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * App\Models\Company\PersonalAccessToken
@@ -15,7 +16,7 @@ use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
  */
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
-    use SoftDeletes;
+    use SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'name',

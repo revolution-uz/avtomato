@@ -5,10 +5,11 @@ namespace App\Models\Company;
 use App\Enums\Company\FeatureEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 class Features extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantConnection;
 
     protected $dateFormat = 'U';
 

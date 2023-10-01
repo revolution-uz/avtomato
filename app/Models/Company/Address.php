@@ -6,6 +6,7 @@ use App\Enums\Company\AddressTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
@@ -23,7 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Address extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, TenantConnection;
     protected $dateFormat = 'U';
 
 
