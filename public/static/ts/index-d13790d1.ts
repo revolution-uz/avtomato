@@ -181,7 +181,7 @@ export function thirteenBitTimestamp(time: number) {
 }
 
 /**
- * @description Get random id
+ * @description Get random [id]
  * @param length
  * @returns {string}
  */
