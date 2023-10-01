@@ -34,12 +34,10 @@ jobs:
           php-version: '8.2'
           extensions: iconv, simplexml, pdo, pgsql, pdo_pgsql
       - name: Cache composer dependencies
-        uses: actions/cache@v2
-        id: php-cache # use this to check for `cache-hit` (`steps.php-cache.outputs.cache-hit != 'true'`)
+        uses: actions/cache@v1
         with:
-          path: ${{ steps.composercache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
       - name: "Install Composer dependencies"
         run: |
           composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
