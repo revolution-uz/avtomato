@@ -17,9 +17,7 @@ class BaseKatmScoringResource extends JsonResource
     public function toArray(Request $request): array
     {
         if ($this->status === ScoringRequestStatusEnum::WAITING) {
-            /** @var Company $currentCompany */
-            $currentCompany = app('current_company');
-            dispatch(new UpdateScoringRequestStatusJob($currentCompany->id, $this->id));
+            dispatch(new UpdateScoringRequestStatusJob($this->id));
         }
 
         return [

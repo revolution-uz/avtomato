@@ -12,6 +12,7 @@ use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * Class ScoringRequest
@@ -31,6 +32,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ScoringRequest extends Model
 {
+    use TenantConnection;
     use SoftDeletes;
 
     protected $dateFormat = 'U';

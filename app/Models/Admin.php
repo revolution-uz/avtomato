@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
-use App\Database\DatabaseConnector;
 use App\Enums\Main\AdminRoleEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
 class Admin extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, CentralConnection;
 
-    protected $connection = DatabaseConnector::DB_CONNECTION_ADMIN;
     protected $dateFormat = 'U';
 
     /**

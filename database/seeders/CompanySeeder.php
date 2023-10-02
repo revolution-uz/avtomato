@@ -1,10 +1,13 @@
 <?php
 
-namespace Database\Seeders\Company;
+namespace Database\Seeders;
 
 use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\User;
+use Database\Seeders\Company\FeatureSeeder;
+use Database\Seeders\Company\LocationSeeder;
+use Database\Seeders\Company\PermissionSeeder;
 use Illuminate\Database\Seeder;
 
 class CompanySeeder extends Seeder

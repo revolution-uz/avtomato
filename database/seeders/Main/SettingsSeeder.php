@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Main;
 
 use App\Enums\Main\SettingsEnum;
 use App\Models\Settings;

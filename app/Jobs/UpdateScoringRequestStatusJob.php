@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Clients\AsaxiyClient;
-use App\Database\DatabaseConnector;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
@@ -30,7 +29,7 @@ class UpdateScoringRequestStatusJob implements ShouldQueue, ShouldBeUnique
 
     private int $tries = 1;
 
-    public function __construct(private readonly int $companyId, private readonly int $scoringRequestId)
+    public function __construct(private readonly int $scoringRequestId)
     {
     }
 
@@ -40,8 +39,6 @@ class UpdateScoringRequestStatusJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle(): void
     {
-        DatabaseConnector::setCompanyConnection($this->companyId);
-
         /** @var ScoringRequest $scoringRequest */
         $scoringRequest = ScoringRequest::query()->findOrFail($this->scoringRequestId);
 
@@ -67,6 +64,13 @@ class UpdateScoringRequestStatusJob implements ShouldQueue, ShouldBeUnique
      */
     public function uniqueId(): string
     {
-        return 'update-scoring-request-status-' . $this->companyId . '-' . $this->scoringRequestId;
+        return 'update-scoring-request-status-' . $this->scoringRequestId;
+    }
+
+    public function tags(): array
+    {
+        return [
+            'tenant:' . tenant('id'),
+        ];
     }
 }
