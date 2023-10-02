@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Enums\Main\AdminRoleEnum;
 use App\Helpers\UrlHelper;
+use App\Models\Admin;
 use App\Models\Company;
 use App\Nova\AdminResource;
 use App\Nova\Company\FeaturesResource;
@@ -24,19 +25,15 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 {
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot(): void
     {
         parent::boot();
 
-        if (!app()->runningInConsole() && UrlHelper::isHasCompanySlugInCurrentHost()) {
-            Nova::mainMenu(function (Request $request, Menu $menu) {
+        Nova::mainMenu(function (Request $request, Menu $menu) {
+            if (tenancy()->initialized) {
                 /** @var Company $company */
-                $company = Company::query()
-                    ->where('subdomain', UrlHelper::getCompanySlugFromCurrentHost())
-                    ->firstOrFail();
+                $company = tenancy()->tenant;
 
                 return [
                     MenuItem::externalLink('BACK TO GLOBAL PANEL', UrlHelper::getAdminUrl())->openInNewTab(),
@@ -51,31 +48,32 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(TariffsResource::class),
                     ])->collapsable(),
                 ];
-            });
+            }
 
-            Nova::initialPath('/dashboards/main');
-        } else {
-            Nova::mainMenu(function (Request $request, Menu $menu) {
-                return [
-                    MenuSection::make('Dashboards', [
-                        MenuItem::dashboard(Main::class),
-                        // here will be another statistic dashboards
-                    ])->collapsable()->icon('view-grid'),
-                    MenuSection::make('Resources', [
-                        MenuItem::resource(CompanyResource::class),
-                        MenuItem::resource(AdminResource::class),
-                        MenuItem::resource(SettingsResource::class),
-                    ])->collapsable(),
-                ];
-            });
+            return [
+                MenuSection::make('Dashboards', [
+                    MenuItem::dashboard(Main::class),
+                    // here will be another statistic dashboards
+                ])->collapsable()->icon('view-grid'),
+                MenuSection::make('Resources', [
+                    MenuItem::resource(CompanyResource::class),
+                    MenuItem::resource(AdminResource::class),
+                    MenuItem::resource(SettingsResource::class),
+                ])->collapsable(),
+            ];
+        });
 
-            Nova::initialPath('/dashboards/main');
-        }
+        Nova::initialPath('/dashboards/main');
 
         Nova::userMenu(function (Request $request, Menu $menu) {
-            if ($request->user()->role === AdminRoleEnum::SUPER_ADMIN) {
-                $menu->prepend(
-                    MenuItem::link('Horizon dashboard', '/horizon')
+            /** @var Admin $admin */
+            $admin = $request->user();
+
+            if ($admin->role === AdminRoleEnum::SUPER_ADMIN) {
+                $menu->append([
+                    MenuItem::link('Horizon dashboard', '/horizon'),
+                    MenuItem::externalLink('Log viewer', '/nova/log-viewer')->openInNewTab(),
+                ]
                 );
             }
 
@@ -86,49 +84,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     }
 
     /**
-     * Register the Nova routes.
-     *
-     * @return void
-     */
-    protected function routes(): void
-    {
-        Nova::routes()
-                ->withAuthenticationRoutes()
-                ->register();
-    }
-
-    /**
-     * Register the Nova gate.
-     *
-     * This gate determines who can access Nova in non-local environments.
-     *
-     * @return void
-     */
-    protected function gate(): void
-    {
-        Gate::define('viewNova', function ($user) {
-            return in_array($user->email, [
-                //
-            ]);
-        });
-    }
-
-    /**
-     * Get the dashboards that should be listed in the Nova sidebar.
-     *
-     * @return array
-     */
-    protected function dashboards(): array
-    {
-        return [
-            new Main,
-        ];
-    }
-
-    /**
      * Get the tools that should be listed in the Nova sidebar.
-     *
-     * @return array
      */
     public function tools(): array
     {
@@ -143,5 +99,39 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register the Nova routes.
+     */
+    protected function routes(): void
+    {
+        Nova::routes()
+            ->withAuthenticationRoutes()
+            ->register();
+    }
+
+    /**
+     * Register the Nova gate.
+     *
+     * This gate determines who can access Nova in non-local environments.
+     */
+    protected function gate(): void
+    {
+        Gate::define('viewNova', function ($user) {
+            return in_array($user->email, [
+                //
+            ]);
+        });
+    }
+
+    /**
+     * Get the dashboards that should be listed in the Nova sidebar.
+     */
+    protected function dashboards(): array
+    {
+        return [
+            new Main,
+        ];
     }
 }

@@ -5,14 +5,15 @@ namespace App\Models\Company;
 use App\Enums\Company\FeatureEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 class Features extends Model
 {
-    use HasFactory;
-
-    protected $dateFormat = 'U';
+    use HasFactory, TenantConnection;
 
     private static ?array $features = null;
+
+    protected $dateFormat = 'U';
 
     protected $fillable = [
         'name',
@@ -20,8 +21,9 @@ class Features extends Model
         'is_active',
     ];
 
-    public static function isFeatureActive(FeatureEnum $feature) {
-        if (!self::$features) {
+    public static function isFeatureActive(FeatureEnum $feature)
+    {
+        if (! self::$features) {
             self::$features = self::query()->pluck('is_active', 'name')->toArray();
         }
 

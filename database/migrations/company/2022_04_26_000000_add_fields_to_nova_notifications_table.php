@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class AddFieldsToNovaNotificationsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::table('nova_notifications', function (Blueprint $table) {
@@ -18,11 +13,6 @@ class AddFieldsToNovaNotificationsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropColumns('nova_notifications', ['deleted_at']);

@@ -3,6 +3,8 @@ services:
     avtomato-redis:
         image: redis:alpine
         container_name: avtomato-redis
+        networks:
+            - app-network
     avtomato-db:
         image: postgres:alpine3.18
         container_name: avtomato-db
@@ -42,6 +44,18 @@ services:
             - ./:/var/www/application
         networks:
             - app-network
+    avtomato-horizon:
+        image: php
+        container_name: avtomato-horizon
+        command: php artisan horizon > /var/www/application/storage/logs/horizon.log
+        volumes:
+            - ./:/var/www/application
+        networks:
+            - app-network
+        depends_on:
+            - avtomato-app
+            - avtomato-db
+            - avtomato-redis
 networks:
     app-network:
         driver: bridge

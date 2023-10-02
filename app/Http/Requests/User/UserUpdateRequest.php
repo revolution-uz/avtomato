@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\User;
 
-use App\Rules\PhoneRule;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 

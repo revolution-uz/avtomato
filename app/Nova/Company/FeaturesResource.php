@@ -16,8 +16,13 @@ class FeaturesResource extends Resource
     public static $title = 'name';
 
     public static $search = [
-        'id', 'name'
+        'id', 'name',
     ];
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
 
     public function fields(Request $request): array
     {
@@ -58,11 +63,6 @@ class FeaturesResource extends Resource
     public function actions(Request $request): array
     {
         return [];
-    }
-
-    public static function authorizedToCreate(Request $request)
-    {
-        return false;
     }
 
     public function authorizedToDelete(Request $request)

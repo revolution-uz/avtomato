@@ -5,6 +5,7 @@ namespace Database\Factories\Company;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class CompanyFactory extends Factory
 {
@@ -13,15 +14,16 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->name();
+
         return [
             'name' => $name,
             'owner_phone' => $this->faker->phoneNumber(),
             'owner_name' => $this->faker->name(),
-            'subdomain' => \Str::slug($name),
+            'subdomain' => Str::slug($name),
             'db_user' => $this->faker->word(),
             'db_name' => $this->faker->name(),
-            'db_password' => \Str::random(),
-            'status' => CompanyStatusEnum::CREATED
+            'db_password' => Str::random(),
+            'status' => CompanyStatusEnum::CREATED,
         ];
     }
 }

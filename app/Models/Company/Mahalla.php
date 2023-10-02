@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
@@ -13,11 +14,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name_oz
  * @property string $name_ru
  * @property string $name_en
- *
  * @property District $district
  */
 class Mahalla extends Model
 {
+    use TenantConnection;
     public $timestamps = false;
 
     protected $fillable = [

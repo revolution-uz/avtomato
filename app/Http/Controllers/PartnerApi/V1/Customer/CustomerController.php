@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Customer;
 
-use App\Clients\OilaKreditClient;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
@@ -14,6 +13,7 @@ use App\Http\Resources\Customer\CustomerInfoByPassportDataResource;
 use App\Http\Resources\Customer\SingleCustomerResource;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
+use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -23,9 +23,8 @@ use Throwable;
 class CustomerController extends Controller
 {
     public function __construct(
-        private readonly OilaKreditClient $oilaKreditClient
-    )
-    {
+        private readonly PassportInfoService $passportInfoService
+    ) {
     }
 
     #[OA\Post(
@@ -43,13 +42,13 @@ class CustomerController extends Controller
     )]
     public function infoByPassport(GetCustomerInfoByPassportRequest $request)
     {
-        $oilaKreditInfo = $this->oilaKreditClient->getDataByPassport(
+        $passportData = $this->passportInfoService->getPassportData(
             passportSeries: $request->passport_series,
             passportNumber: $request->passport_number,
-            birthDate: Carbon::parse($request->birth_date)
+            birthData: Carbon::parse($request->birth_date)
         );
 
-        return ApiResponse::success($oilaKreditInfo ? new CustomerInfoByPassportDataResource($oilaKreditInfo) : null);
+        return ApiResponse::success($passportData ? new CustomerInfoByPassportDataResource($passportData) : null);
     }
 
     #[OA\Post(
@@ -70,7 +69,7 @@ class CustomerController extends Controller
         DB::beginTransaction();
 
         try {
-            $customer = new Customer();
+            $customer = new Customer;
             $customer->pinfl = $request->pinfl;
             $customer->tin = $request->tin;
             $customer->passport_series = $request->passport_series;
@@ -112,11 +111,11 @@ class CustomerController extends Controller
         description: 'Get single customer record route',
         tags: ['Customers'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'Customer')
+            new OpenApiIdParameter(modelName: 'Customer'),
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'SingleCustomerResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function getSingle(Customer $customer): JsonResponse

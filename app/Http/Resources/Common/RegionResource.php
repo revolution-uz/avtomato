@@ -16,15 +16,15 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin Region
+ * @property Region $resource
  */
 class RegionResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->{'name_' . app()->getLocale()},
+            'id' => $this->resource->id,
+            'name' => $this->resource->{'name_' . app()->getLocale()},
         ];
     }
 }

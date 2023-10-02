@@ -22,21 +22,21 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin Tariff
+ * @property Tariff $resource
  */
 class TariffResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'is_annual' => $this->is_annual,
-            'percent' => $this->percent,
-            'min_amount' => $this->min_amount,
-            'max_amount' => $this->max_amount,
-            'min_initial_fee' => $this->min_initial_fee,
-            'max_initial_fee' => $this->max_initial_fee,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+            'is_annual' => $this->resource->is_annual,
+            'percent' => $this->resource->percent,
+            'min_amount' => $this->resource->min_amount,
+            'max_amount' => $this->resource->max_amount,
+            'min_initial_fee' => $this->resource->min_initial_fee,
+            'max_initial_fee' => $this->resource->max_initial_fee,
         ];
     }
 }

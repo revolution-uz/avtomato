@@ -7,9 +7,9 @@ use App\Nova\Actions\ChangeUserPassword;
 use App\Nova\Actions\LoginAsUser;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
-use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -36,14 +36,16 @@ class UserResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'username', 'first_name', 'last_name', 'phone'
+        'id', 'username', 'first_name', 'last_name', 'phone',
     ];
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function fields(NovaRequest $request): array
     {
@@ -88,9 +90,6 @@ class UserResource extends Resource
 
     /**
      * Get the cards available for the request.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function cards(NovaRequest $request): array
     {
@@ -99,9 +98,6 @@ class UserResource extends Resource
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function filters(NovaRequest $request): array
     {
@@ -110,9 +106,6 @@ class UserResource extends Resource
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function lenses(NovaRequest $request): array
     {
@@ -121,21 +114,13 @@ class UserResource extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function actions(NovaRequest $request): array
     {
         return [
-            (new LoginAsUser())->showInline(),
-            (new ChangeUserPassword())->showInline(),
+            (new LoginAsUser)->showInline(),
+            (new ChangeUserPassword)->showInline(),
         ];
-    }
-
-    public static function authorizedToCreate(Request $request)
-    {
-        return false;
     }
 
     public function authorizedToDelete(Request $request)

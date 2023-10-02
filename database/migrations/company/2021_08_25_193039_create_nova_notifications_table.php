@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateNovaNotificationsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('nova_notifications', function (Blueprint $table) {
@@ -23,11 +18,6 @@ class CreateNovaNotificationsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('nova_notifications');

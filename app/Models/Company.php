@@ -2,59 +2,54 @@
 
 namespace App\Models;
 
-use App\Database\DatabaseConnector;
 use App\Enums\Company\CompanyStatusEnum;
-use Database\Factories\Company\CompanyFactory;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Contracts\TenantWithDatabase;
+use Stancl\Tenancy\Database\Concerns\CentralConnection;
+use Stancl\Tenancy\Database\Concerns\HasDatabase;
+use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Stancl\Tenancy\Database\Models\Tenant;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $owner_phone
  * @property string $owner_name
- * @property string $subdomain
- * @property string $db_user
- * @property string $db_password
  * @property CompanyStatusEnum $status
- *
- * The followings are the available model methods (scopes, relations):
- * @method static static|Builder|\Illuminate\Database\Query\Builder withoutCreated()
  */
-class Company extends Model
+class Company extends Tenant implements TenantWithDatabase
 {
-    use HasFactory;
+    use CentralConnection, HasDatabase, HasDomains;
 
-    protected $connection = DatabaseConnector::DB_CONNECTION_ADMIN;
-    protected $dateFormat = 'U';
+    protected $table = 'companies';
 
     protected $fillable = [
         'name',
-        'db_name',
         'status',
-        'subdomain',
-        'db_password',
-        'db_user',
         'owner_name',
-        'owner_phone'
+        'owner_phone',
     ];
 
     protected $casts = [
         'status' => CompanyStatusEnum::class,
     ];
 
-    protected static function newFactory(): CompanyFactory
+    public static function getCustomColumns(): array
     {
-        return new CompanyFactory();
+        return [
+            'id',
+            'name',
+            'status',
+            'owner_name',
+            'owner_phone',
+        ];
     }
 
     /**
-     * @param Builder $query
-     * @return Builder mixed
+     * By default, the migration uses string for the id column,and the model generates UUIDs
+     * when you don't supply an id during tenant creation.
      */
-    public function scopeWithoutCreated(Builder $query): Builder
+    public function getIncrementing(): bool
     {
-        return $query->where('status', '!=', CompanyStatusEnum::CREATED);
+        return true;
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Database\DatabaseConnector;
 use App\Enums\Main\SettingsEnum;
 use App\Enums\Main\SettingsTypeEnum;
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
 /**
  * @property int $id
@@ -16,10 +16,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Settings extends Model
 {
-    protected $connection = DatabaseConnector::DB_CONNECTION_ADMIN;
-    protected $dateFormat = 'U';
+    use CentralConnection;
 
     public static array $_cache = [];
+
+    protected $dateFormat = 'U';
+
     protected $fillable = [
         'name',
         'value',
@@ -33,7 +35,7 @@ class Settings extends Model
 
     public static function getConfig(SettingsEnum $settings): ?string
     {
-        if (!self::$_cache) {
+        if (! self::$_cache) {
             self::$_cache = self::query()
                 ->get()
                 ->pluck('value', 'name')

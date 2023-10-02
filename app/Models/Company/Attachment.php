@@ -6,7 +6,7 @@ use App\Enums\Company\AttachmentTypeEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Storage;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property string $id
@@ -21,16 +21,17 @@ use Storage;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- *
- * @property-read Model $attachmentable
+ * @property-read string $link
+ * @property-read string $preview_link
  */
 class Attachment extends Model
 {
-    use HasUuids;
-    protected $dateFormat = 'U';
+    use HasUuids, TenantConnection;
 
     public const PATH = 'uploads';
     public const THUMBNAIL_PATH = 'uploads/thumbnails';
+
+    protected $dateFormat = 'U';
 
     protected $fillable = [
         'id',
@@ -46,22 +47,17 @@ class Attachment extends Model
         'type' => AttachmentTypeEnum::class,
     ];
 
-    public function attachmentable()
-    {
-        return $this->morphTo();
-    }
-
     public function link(): Attribute
     {
         return Attribute::make(
-            get: fn() => Storage::disk('public')->url($this->path)
+            get: fn () => url("api/v1/attachments/{$this->id}")
         );
     }
 
     public function previewLink(): Attribute
     {
         return Attribute::make(
-            get: fn() => Storage::disk('public')->url($this->preview_path)
+            get: fn () => url("api/v1/attachments/{$this->id}/preview")
         );
     }
 }

@@ -1,0 +1,11 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+parameters:
+    paths:
+        - app
+    phpVersion: 80199
+    level: 4
+    ignoreErrors:
+    excludePaths:
+    - ./vendor
+    - ./app/Nova/Resource.php

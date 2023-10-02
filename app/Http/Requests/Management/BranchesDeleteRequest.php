@@ -21,7 +21,7 @@ class BranchesDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:branches,id'
+            'ids.*' => 'integer|exists:branches,id',
         ];
     }
 }

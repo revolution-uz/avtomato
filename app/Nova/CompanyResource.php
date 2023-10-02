@@ -2,10 +2,10 @@
 
 namespace App\Nova;
 
-use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Status;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -23,7 +23,7 @@ class CompanyResource extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -31,14 +31,11 @@ class CompanyResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'subdomain'
+        'id', 'name', 'owner_name', 'owner_phone',
     ];
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function fields(NovaRequest $request): array
     {
@@ -47,20 +44,13 @@ class CompanyResource extends Resource
             Text::make(__('nova.company.name'), 'name')->filterable(),
             Text::make(__('nova.company.owner_name'), 'owner_name')->filterable(),
             Text::make(__('nova.company.owner_phone'), 'owner_phone')->filterable(),
-            Text::make(__('nova.company.owner_phone'), 'owner_phone')->filterable(),
-            Status::make(__('nova.status'), 'status')->failedWhen([
-                CompanyStatusEnum::INACTIVE->value
-            ])->loadingWhen([
-                CompanyStatusEnum::CREATED->value
-            ])
+            Boolean::make(__('nova.status'), 'status')->filterable(),
+            HasMany::make('Domains', 'domains', DomainResource::class),
         ];
     }
 
     /**
      * Get the cards available for the request.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function cards(NovaRequest $request): array
     {
@@ -69,9 +59,6 @@ class CompanyResource extends Resource
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function filters(NovaRequest $request): array
     {
@@ -80,9 +67,6 @@ class CompanyResource extends Resource
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function lenses(NovaRequest $request): array
     {
@@ -91,9 +75,6 @@ class CompanyResource extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param NovaRequest $request
-     * @return array
      */
     public function actions(NovaRequest $request): array
     {

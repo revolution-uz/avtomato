@@ -30,12 +30,10 @@ use Spatie\LaravelData\WithData;
         new OA\Property(property: 'show_search', type: 'boolean', example: true),
         new OA\Property(property: 'show_notice', type: 'boolean', example: true),
         new OA\Property(property: 'show_full_screen', type: 'boolean', example: true),
-        new OA\Property(property: 'show_theme_setting', type: 'boolean', example: true),
         new OA\Property(property: 'show_dark', type: 'boolean', example: true),
         new OA\Property(property: 'page_transition_style', type: 'string', example: 'el-fade-in'),
         new OA\Property(property: 'radius', type: 'string', example: '25'),
         new OA\Property(property: 'show_lock', type: 'boolean', example: true),
-        new OA\Property(property: 'show_color_picker', type: 'boolean', example: true),
         new OA\Property(property: 'background', type: 'string', example: 'none'),
         new OA\Property(property: 'passcode', type: 'string', example: '1234'),
     ],
@@ -43,11 +41,6 @@ use Spatie\LaravelData\WithData;
 class UserThemeRequest extends FormRequest
 {
     use WithData;
-
-    protected function dataClass(): string
-    {
-        return UserTemplateThemeDto::class;
-    }
 
     public function rules(): array
     {
@@ -59,5 +52,10 @@ class UserThemeRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function dataClass(): string
+    {
+        return UserTemplateThemeDto::class;
     }
 }
