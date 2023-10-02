@@ -14,6 +14,7 @@ class InstallmentGuarantor extends Model
     protected $dateFormat = 'U';
 
     protected $fillable = [
+        'creator_id',
         'installment_id',
         'customer_id',
         'auto_charge',
@@ -21,4 +22,9 @@ class InstallmentGuarantor extends Model
         'status',
         'myuzkard_id',
     ];
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id');
+    }
 }

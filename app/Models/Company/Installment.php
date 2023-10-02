@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $user_id
+ * @property int $creator_id
  * @property int $customer_id
  * @property int $branch_id
  * @property int $tariff_id
@@ -35,7 +35,7 @@ class Installment extends Model
     protected $dateFormat = 'U';
 
     protected $fillable = [
-        'user_id',
+        'creator_id',
         'customer_id',
         'branch_id',
         'tariff_id',
@@ -51,4 +51,9 @@ class Installment extends Model
         'starts_in',
         'next_pay_date',
     ];
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id');
+    }
 }

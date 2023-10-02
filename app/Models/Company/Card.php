@@ -27,7 +27,7 @@ class Card extends Model
     protected $dateFormat = 'U';
 
     protected $fillable = [
-        'user_id',
+        'creator_id',
         'customer_id',
         'pan',
         'number',
@@ -36,4 +36,9 @@ class Card extends Model
         'balance',
         'myuzkard_id',
     ];
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id');
+    }
 }

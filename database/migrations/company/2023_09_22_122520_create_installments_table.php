@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('installments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('creator_id')->nullable();
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('branch_id');
             $table->unsignedBigInteger('tariff_id');
@@ -29,11 +29,11 @@ return new class extends Migration
             $table->integer('updated_at')->nullable();
             $table->integer('deleted_at')->nullable();
 
-            $table->index('user_id');
             $table->index('customer_id');
             $table->index('branch_id');
             $table->index('tariff_id');
             $table->index('next_pay_date');
+            $table->foreign('creator_id')->references('id')->on('users');
         });
     }
 
