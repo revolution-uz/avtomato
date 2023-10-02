@@ -26,26 +26,26 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin Installment
+ * @property Installment $resource
  */
 class InstallmentResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'customer_id' => $this->customer_id,
-            'branch_id' => $this->branch_id,
-            'tariff_id' => $this->tariff_id,
-            'amount' => $this->amount,
-            'description' => $this->description,
-            'sms_notify' => $this->sms_notify,
-            'auto_charge' => $this->auto_charge,
-            'any_card_charge' => $this->any_card_charge,
-            'starts_in' => $this->starts_in ? (int) $this->starts_in->format('U') : null,
-            'next_pay_date' => $this->next_pay_date ? (int) $this->next_pay_date->format('U') : null,
-            'created_at' => $this->created_at ? (int) $this->created_at->format('U') : null,
-            'updated_at' => $this->updated_at ? (int) $this->updated_at->format('U') : null,
+            'id' => $this->resource->id,
+            'customer_id' => $this->resource->customer_id,
+            'branch_id' => $this->resource->branch_id,
+            'tariff_id' => $this->resource->tariff_id,
+            'amount' => $this->resource->amount,
+            'description' => $this->resource->description,
+            'sms_notify' => $this->resource->sms_notify,
+            'auto_charge' => $this->resource->auto_charge,
+            'any_card_charge' => $this->resource->any_card_charge,
+            'starts_in' => $this->resource->starts_in ? (int)$this->resource->starts_in->format('U') : null,
+            'next_pay_date' => $this->resource->next_pay_date ? (int)$this->resource->next_pay_date->format('U') : null,
+            'created_at' => $this->resource->created_at ? (int)$this->resource->created_at->format('U') : null,
+            'updated_at' => $this->resource->updated_at ? (int)$this->resource->updated_at->format('U') : null,
         ];
     }
 }

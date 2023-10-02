@@ -17,20 +17,20 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin Card
+ * @property Card $resource
  */
 class CardResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'customer_id' => $this->customer_id,
-            'number' => $this->pan,
-            'expiry' => $this->expiry,
-            'balance' => $this->balance,
-            'created_at' => $this->created_at ? (int) $this->created_at->format('U') : null,
-            'updated_at' => $this->updated_at ? (int) $this->updated_at->format('U') : null,
+            'id' => $this->resource->id,
+            'customer_id' => $this->resource->customer_id,
+            'number' => $this->resource->pan,
+            'expiry' => $this->resource->expiry,
+            'balance' => $this->resource->balance,
+            'created_at' => $this->resource->created_at ? (int)$this->resource->created_at->format('U') : null,
+            'updated_at' => $this->resource->updated_at ? (int)$this->resource->updated_at->format('U') : null,
         ];
     }
 }
