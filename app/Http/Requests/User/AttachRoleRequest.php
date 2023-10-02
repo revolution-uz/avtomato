@@ -8,9 +8,8 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'AttachRoleRequest',
     title: 'Attach Role Request',
-    required: ['role_ids'],
     properties: [
-        new OA\Property(property: 'role_ids', type: 'array', items: new OA\Items(type: 'int', example: [1, 2])),
+        new OA\Property(property: 'role_id', type: 'int', example: 1),
     ],
 )]
 class AttachRoleRequest extends FormRequest
@@ -18,8 +17,7 @@ class AttachRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role_ids' => 'required|array',
-            'role_ids.*' => 'exists:roles,id',
+            'role_id' => 'required|int|exists:roles,id',
         ];
     }
 

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Enums\Company\UserStatusEnum;
+use App\Models\Company\Rbac\Role;
 use App\Models\Company\User;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\LocationSeeder;
@@ -30,11 +31,8 @@ class CompanySeeder extends Seeder
                 'last_name' => 'Sultonov',
                 'status' => UserStatusEnum::ACTIVE,
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                'role_id' => Role::where('name', UserRoleEnum::OWNER)->first()->id,
             ]
         );
-
-        if (! $user->hasRole(UserRoleEnum::OWNER->value)) {
-            $user->assignRole(UserRoleEnum::OWNER->value);
-        }
     }
 }

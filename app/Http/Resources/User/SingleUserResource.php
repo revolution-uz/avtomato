@@ -39,7 +39,7 @@ class SingleUserResource extends JsonResource
             'avatar' => AttachmentResource::make($this->resource->avatars()->latest()->first()),
             'template_theme' => $this->resource->template_theme,
             'language' => $this->resource->language,
-            'role' => RoleListResource::collection($this->roles)
+            'role' => RoleListResource::make($this->resource->role),
         ];
     }
 }

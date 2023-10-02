@@ -164,8 +164,8 @@ class ProfileController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function revokeDevice(PersonalAccessToken $personalAccessToken): JsonResponse
+    public function revokeDevice(int $id): JsonResponse
     {
-        return ApiResponse::success($personalAccessToken->delete());
+        return ApiResponse::success(PersonalAccessToken::findOrFail($id)->delete());
     }
 }

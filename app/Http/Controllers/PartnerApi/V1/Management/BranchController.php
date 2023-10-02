@@ -74,9 +74,9 @@ class BranchController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(Branch $branch): BranchResource
+    public function getSingle(int $id): JsonResponse
     {
-        return (new BranchResource($branch))->additional(['success' => true]);
+        return ApiResponse::success(BranchResource::make(Branch::firstOrFail($id)));
     }
 
     #[OA\Post(
@@ -126,8 +126,9 @@ class BranchController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(Branch $branch, BranchRequest $request): JsonResponse
+    public function update(int $id, BranchRequest $request): JsonResponse
     {
+        $branch = Branch::firstOrFail($id);
         $branch->fill($request->validated());
 
         if ($branch->save()) {

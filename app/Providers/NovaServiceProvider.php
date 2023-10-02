@@ -48,6 +48,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(UserResource::class),
                         MenuItem::resource(FeaturesResource::class),
                         MenuItem::resource(TariffsResource::class),
+                        MenuItem::resource(RoleResource::class),
+                        MenuItem::resource(PermissionResource::class),
                     ])->collapsable(),
                 ];
             }
@@ -61,8 +63,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(CompanyResource::class),
                     MenuItem::resource(AdminResource::class),
                     MenuItem::resource(SettingsResource::class),
-                    MenuItem::resource(RoleResource::class),
-                    MenuItem::resource(PermissionResource::class),
                 ])->collapsable(),
             ];
         });

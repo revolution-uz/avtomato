@@ -33,10 +33,10 @@ class RoleController extends Controller
         description: 'Get roles list route',
         tags: ['Roles'],
         parameters: [
-            new OpenApiPageParameter(),
-            new OpenApiPerPageParameter(),
-            new OpenApiSearchParameter(),
-            new OpenApiSortParameter(),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+            new OpenApiSortParameter,
         ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'RoleListResource', withPagination: true, withSortables: true),
@@ -50,12 +50,12 @@ class RoleController extends Controller
             Role::query()
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q
+                    fn (Builder $q) => $q
                         ->where('name', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
@@ -72,12 +72,12 @@ class RoleController extends Controller
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'SingleRoleResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(Role $role): JsonResponse
+    public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(SingleRoleResource::make($role));
+        return ApiResponse::success(SingleRoleResource::make(Role::findOrFail($id)));
     }
 
     #[OA\Post(
@@ -95,15 +95,16 @@ class RoleController extends Controller
     )]
     public function create(RoleRequest $request): JsonResponse
     {
-        $model = new Role();
-        $model->fill($request->validated() + ['guard_name' => 'web']);
+        $model = new Role;
+        $model->fill($request->validated());
 
         if ($model->save()) {
             $model->syncPermissions($request->permissions);
+
             return ApiResponse::success(SingleRoleResource::make($model));
         }
 
-        return ApiResponse::error("Error on creating a role");
+        return ApiResponse::error('Error on creating a role');
     }
 
     #[OA\Put(
@@ -120,19 +121,21 @@ class RoleController extends Controller
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'SingleRoleResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(Role $role, RoleRequest $request): JsonResponse
+    public function update(int $id, RoleRequest $request): JsonResponse
     {
+        $role = Role::findOrFail($id);
         $role->fill($request->validated());
 
         if ($role->save()) {
             $role->syncPermissions($request->permissions);
+
             return ApiResponse::success(SingleRoleResource::make($role));
         }
 
-        return ApiResponse::error("Error on updating a role");
+        return ApiResponse::error('Error on updating a role');
     }
 
     #[OA\Delete(

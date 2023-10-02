@@ -15,9 +15,16 @@ class RoleResource extends Resource
 
     public static $title = 'name';
 
+    public static $perPageViaRelationship = 20;
+
     public static $search = [
-        'id', 'name', 'guard_name'
+        'id', 'name', 'guard_name',
     ];
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
 
     public function fields(Request $request): array
     {
@@ -28,11 +35,7 @@ class RoleResource extends Resource
                 ->sortable()
                 ->rules('required'),
 
-            Text::make('Guard Name')
-                ->sortable()
-                ->rules('required'),
-
-            HasMany::make('Permissions', 'permissions', PermissionResource::class)
+            HasMany::make('Role Permissions', 'rolePermissions', RolePermissionResource::class),
         ];
     }
 
@@ -54,11 +57,6 @@ class RoleResource extends Resource
     public function actions(Request $request): array
     {
         return [];
-    }
-
-    public static function authorizedToCreate(Request $request)
-    {
-        return false;
     }
 
     public function authorizedToDelete(Request $request)

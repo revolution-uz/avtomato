@@ -92,9 +92,9 @@ class UserController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(User $user): JsonResponse
+    public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(SingleUserResource::make($user));
+        return ApiResponse::success(SingleUserResource::make(User::findOrFail($id)));
     }
 
     #[OA\Post(
@@ -145,8 +145,9 @@ class UserController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(User $user, UserUpdateRequest $request): JsonResponse
+    public function update(int $id, UserUpdateRequest $request): JsonResponse
     {
+        $user = User::findOrFail($id);
         $this->userService->updateDetails($user, $request);
 
         return ApiResponse::success(SingleUserResource::make($user));
@@ -170,8 +171,9 @@ class UserController extends Controller
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ],
     )]
-    public function changePassword(User $user, PasswordRequest $request)
+    public function changePassword(int $id, PasswordRequest $request)
     {
+        $user = User::findOrFail($id);
         if ($this->userService->updatePassword($user, $request)) {
             return ApiResponse::success(SingleUserResource::make($user));
         }
@@ -197,8 +199,9 @@ class UserController extends Controller
             new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
         ],
     )]
-    public function changeTheme(User $user, UserThemeRequest $request)
+    public function changeTheme(int $id, UserThemeRequest $request)
     {
+        $user = User::findOrFail($id);
         if ($this->userService->updateTheme($user, $request)) {
             return ApiResponse::success(SingleUserResource::make($user));
         }
@@ -217,9 +220,9 @@ class UserController extends Controller
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ]
     )]
-    public function delete(User $user): JsonResponse
+    public function delete(int $id): JsonResponse
     {
-        $user->deleteOrFail();
+        User::findOrFail($id)->deleteOrFail();
 
         return ApiResponse::success(true);
     }
@@ -235,8 +238,10 @@ class UserController extends Controller
             new OpenApiJsonArrayResponse(resourceName: 'DeviceInfoResource'),
         ]
     )]
-    public function devices(User $user): JsonResponse
+    public function devices(int $id): JsonResponse
     {
+        $user = User::findOrFail($id);
+
         return ApiResponse::success(DeviceInfoResource::collection($user->tokens));
     }
 
@@ -257,9 +262,9 @@ class UserController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function revokeDevice(PersonalAccessToken $personalAccessToken): JsonResponse
+    public function revokeDevice(int $id): JsonResponse
     {
-        return ApiResponse::success($personalAccessToken->delete());
+        return ApiResponse::success(PersonalAccessToken::findOrFail($id)->delete());
     }
 
     #[OA\Post(
@@ -274,16 +279,18 @@ class UserController extends Controller
         ),
         tags: ['Users'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'User')
+            new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
-    public function attachRole(User $user, AttachRoleRequest $request)
+    public function attachRole(int $id, AttachRoleRequest $request)
     {
-        $user->syncRoles($request->role_ids);
+        $user = User::findOrFail($id);
+        $user->update(['role_id' => $request->role_id]);
+
         return ApiResponse::success(true);
     }
 }

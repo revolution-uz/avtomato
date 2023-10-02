@@ -3,10 +3,8 @@
 namespace App\Nova\Company;
 
 use App\Models\Company\Rbac\Permission;
-use App\Models\Company\Rbac\PermissionGroup;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
@@ -18,8 +16,13 @@ class PermissionResource extends Resource
     public static $title = 'name';
 
     public static $search = [
-        'id', 'name', 'guard_name'
+        'id', 'name', 'guard_name',
     ];
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
 
     public function fields(Request $request): array
     {
@@ -28,11 +31,11 @@ class PermissionResource extends Resource
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required'),
-
-            Text::make('Label')
-                ->sortable()
                 ->rules('nullable'),
+
+            Text::make('Slug')
+                ->sortable()
+                ->rules('required'),
 
             Number::make('Feature Id')
                 ->sortable()
@@ -58,11 +61,6 @@ class PermissionResource extends Resource
     public function actions(Request $request): array
     {
         return [];
-    }
-
-    public static function authorizedToCreate(Request $request)
-    {
-        return false;
     }
 
     public function authorizedToDelete(Request $request)

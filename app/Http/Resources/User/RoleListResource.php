@@ -15,14 +15,14 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'name', type: 'string', example: 'owner'),
     ],
 )]
-/** @mixin Role */
+/** @property Role $resource */
 class RoleListResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
         ];
     }
 }

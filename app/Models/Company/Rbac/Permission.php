@@ -3,28 +3,34 @@
 namespace App\Models\Company\Rbac;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Permission extends \Spatie\Permission\Models\Permission
+/**
+ * @property-read string $name
+ * @property-read PermissionGroup $permissionGroup
+ */
+class Permission extends Model
 {
     protected $fillable = [
-        'name',
-        'label_uz',
-        'label_oz',
-        'label_ru',
-        'label_en',
+        'slug',
+        'name_uz',
+        'name_oz',
+        'name_ru',
+        'name_en',
         'permission_group_id',
         'guard_name',
     ];
 
-    public function permissionGroup()
+    public function permissionGroup(): BelongsTo
     {
         return $this->belongsTo(PermissionGroup::class);
     }
 
-    public function label(): Attribute
+    public function name(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->{"label_" . app()->getLocale()}
+            get: fn () => $this->{'name_' . app()->getLocale()}
         );
     }
 }

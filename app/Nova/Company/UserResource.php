@@ -11,10 +11,12 @@ use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
+/**
+ * @mixin User
+ */
 class UserResource extends Resource
 {
     /**
@@ -82,12 +84,16 @@ class UserResource extends Resource
                 ->onlyOnDetail()
                 ->rules('required'),
 
+            Text::make('Role', function () {
+                return $this->role->name;
+            })
+                ->sortable()
+                ->onlyOnDetail(),
+
             Code::make('Template Theme', 'template_theme')
                 ->json()
                 ->onlyOnDetail(),
 
-            MorphToMany::make('Roles', 'roles', RoleResource::class)
-                ->hideCreateRelationButton()
         ];
     }
 
