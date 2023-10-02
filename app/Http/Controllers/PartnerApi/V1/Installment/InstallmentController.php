@@ -13,16 +13,13 @@ use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\Installment\InstallmentCardRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
+use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
-use App\Http\Requests\Installment\TariffRequest;
-use App\Http\Requests\Installment\TariffsDeleteRequest;
-use App\Http\Requests\Installment\TariffsFilterRequest;
 use App\Http\Resources\Installment\InstallmentResource;
-use App\Http\Resources\Installment\TariffResource;
 use App\Models\Company\Installment;
-use App\Models\Company\Tariff;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -88,7 +85,7 @@ class InstallmentController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Installment create request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/Installment')
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentRequest')
         ),
         tags: ['Installments'],
         responses: [
@@ -156,6 +153,16 @@ class InstallmentController extends Controller
     {
         Installment::query()->whereIn('id', $request->ids)->delete();
 
+        return ApiResponse::success(true);
+    }
+
+    public function attachCard(InstallmentCardRequest $request): JsonResponse
+    {
+        return ApiResponse::success(true);
+    }
+
+    public function attachGuarantor(InstallmentGuarantorRequest $request): JsonResponse
+    {
         return ApiResponse::success(true);
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'Card',
+    schema: 'InstallmentCardRequest',
     title: 'Request to create or update a card',
     properties: [
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
