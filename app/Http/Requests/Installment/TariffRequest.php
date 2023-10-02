@@ -20,8 +20,8 @@ use OpenApi\Attributes as OA;
 )]
 /**
  * @property string $name
- * @property boolean $is_annual
- * @property double $percent
+ * @property bool $is_annual
+ * @property float $percent
  * @property int $min_amount
  * @property int $max_amount
  * @property int $min_initial_fee

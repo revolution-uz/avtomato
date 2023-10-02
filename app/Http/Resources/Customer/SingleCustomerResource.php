@@ -39,32 +39,32 @@ use OpenApi\Attributes\Items;
     ],
 )]
 /**
- * use @mixin Customer
+ * @property Customer $resource
  */
 class SingleCustomerResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'pinfl' => $this->pinfl,
-            'tin' => $this->tin,
-            'passport_series' => $this->passport_series,
-            'passport_number' => $this->passport_number,
-            'passport_given_date' => $this->passport_given_date->format('d-m-Y'),
-            'passport_expiration_date' => $this->passport_expiration_date->format('d-m-Y'),
-            'passport_given_place' => $this->passport_given_place,
-            'passport_citizenship' => $this->passport_citizenship,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'middle_name' => $this->middle_name,
-            'birth_date' => $this->birth_date->format('d-m-Y'),
-            'birth_place' => $this->birth_place,
-            'gender' => $this->gender,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'phones' => $this->phones->map(fn(Phone $phone) => new PhoneResource($phone)),
-            'addresses' => $this->addresses->map(fn(Address $address) => new AddressResource($address)),
+            'id' => $this->resource->id,
+            'pinfl' => $this->resource->pinfl,
+            'tin' => $this->resource->tin,
+            'passport_series' => $this->resource->passport_series,
+            'passport_number' => $this->resource->passport_number,
+            'passport_given_date' => $this->resource->passport_given_date->format('d-m-Y'),
+            'passport_expiration_date' => $this->resource->passport_expiration_date->format('d-m-Y'),
+            'passport_given_place' => $this->resource->passport_given_place,
+            'passport_citizenship' => $this->resource->passport_citizenship,
+            'first_name' => $this->resource->first_name,
+            'last_name' => $this->resource->last_name,
+            'middle_name' => $this->resource->middle_name,
+            'birth_date' => $this->resource->birth_date->format('d-m-Y'),
+            'birth_place' => $this->resource->birth_place,
+            'gender' => $this->resource->gender,
+            'created_at' => $this->resource->created_at,
+            'updated_at' => $this->resource->updated_at,
+            'phones' => $this->resource->phones->map(fn (Phone $phone) => new PhoneResource($phone)),
+            'addresses' => $this->resource->addresses->map(fn (Address $address) => new AddressResource($address)),
         ];
     }
 }

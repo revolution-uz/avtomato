@@ -21,14 +21,12 @@ use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\DeviceInfoResource;
 use App\Http\Resources\UserListResource;
 use App\Http\Resources\UserResource;
-use App\Models\Company\Attachment;
 use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\User;
 use App\Services\User\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -36,17 +34,18 @@ class UserController extends Controller
 {
     public function __construct(
         protected UserService $userService
-    ) {}
+    ) {
+    }
 
     #[OA\Get(
         path: '/api/v1/users',
         description: 'Users route',
         tags: ['Users'],
         parameters: [
-            new OpenApiPageParameter(),
-            new OpenApiPerPageParameter(),
-            new OpenApiSearchParameter(),
-            new OpenApiSortParameter(),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+            new OpenApiSortParameter,
         ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'UserListResource', withPagination: true, withSortables: true),
@@ -60,14 +59,14 @@ class UserController extends Controller
             User::query()
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q
+                    fn (Builder $q) => $q
                         ->where('username', 'ILIKE', '%' . $request->search . '%')
                         ->where('first_name', 'ILIKE', '%' . $request->search . '%')
                         ->where('last_name', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
@@ -89,7 +88,7 @@ class UserController extends Controller
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'UserResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function getSingle(User $user): JsonResponse
@@ -112,7 +111,7 @@ class UserController extends Controller
     )]
     public function create(UserCreateRequest $request): JsonResponse
     {
-        $model = new User();
+        $model = new User;
         $model->fill($request->validated());
         $model->password = bcrypt($request->password);
 
@@ -120,7 +119,7 @@ class UserController extends Controller
             return ApiResponse::success(UserResource::make($model));
         }
 
-        return ApiResponse::error("Error on creating user");
+        return ApiResponse::error('Error on creating user');
     }
 
     #[OA\Put(
@@ -142,7 +141,7 @@ class UserController extends Controller
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'UserResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function update(User $user, UserUpdateRequest $request): JsonResponse
@@ -164,10 +163,10 @@ class UserController extends Controller
         ),
         tags: ['Users'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'User')
+            new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean')
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ],
     )]
     public function changePassword(User $user, PasswordRequest $request)
@@ -175,6 +174,7 @@ class UserController extends Controller
         if ($this->userService->updatePassword($user, $request)) {
             return ApiResponse::success(UserResource::make($user));
         }
+
         return ApiResponse::error('Password not updated');
     }
 
@@ -190,7 +190,7 @@ class UserController extends Controller
         ),
         tags: ['Users'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'User')
+            new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'UserResource'),
@@ -201,6 +201,7 @@ class UserController extends Controller
         if ($this->userService->updateTheme($user, $request)) {
             return ApiResponse::success(UserResource::make($user));
         }
+
         return ApiResponse::error('Theme not updated');
     }
 
@@ -209,7 +210,7 @@ class UserController extends Controller
         description: 'Users delete route',
         tags: ['Users'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'User')
+            new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
@@ -222,13 +223,12 @@ class UserController extends Controller
         return ApiResponse::success(true);
     }
 
-
     #[OA\Get(
         path: '/api/v1/users/{id}/devices',
         description: 'My devices route',
         tags: ['Users'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'User')
+            new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'DeviceInfoResource'),
@@ -249,11 +249,11 @@ class UserController extends Controller
                 description: 'Device id',
                 in: 'path',
                 required: true,
-            )
+            ),
         ],
         responses: [
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function revokeDevice(PersonalAccessToken $personalAccessToken): JsonResponse

@@ -16,11 +16,6 @@ use OpenApi\Attributes as OA;
 )]
 class ApiResponse
 {
-    /**
-     * @param mixed $data
-     * @param int $statusCode
-     * @return JsonResponse
-     */
     public static function success(mixed $data = null, int $statusCode = 200): JsonResponse
     {
         return response()->json([

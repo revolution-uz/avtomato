@@ -3,7 +3,6 @@
 namespace Database\Seeders\Company;
 
 use App\Enums\Company\UserRoleEnum;
-use App\Models\Company\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 

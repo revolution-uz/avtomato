@@ -15,7 +15,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class UpdateScoringRequestStatusJob implements ShouldQueue, ShouldBeUnique
+class UpdateScoringRequestStatusJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -27,14 +27,11 @@ class UpdateScoringRequestStatusJob implements ShouldQueue, ShouldBeUnique
      */
     public int $uniqueFor = 10;
 
-    private int $tries = 1;
-
     public function __construct(private readonly int $scoringRequestId)
     {
     }
 
     /**
-     * @return void
      * @throws Exception
      */
     public function handle(): void
@@ -53,7 +50,7 @@ class UpdateScoringRequestStatusJob implements ShouldQueue, ShouldBeUnique
                     ]
                 )
             ) {
-                $katmService = new KatmService(new AsaxiyClient());
+                $katmService = new KatmService(new AsaxiyClient);
                 $katmService->syncRemoteStatus($scoringRequest);
             }
         }

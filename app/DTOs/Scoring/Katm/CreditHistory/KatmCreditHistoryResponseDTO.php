@@ -19,9 +19,8 @@ class KatmCreditHistoryResponseDTO extends BaseScoringResponse
 {
     public function __construct(
         public KatmCreditHistoryAdditionalInfoDTO $additional_info,
-        public KatmCreditHistoryScoreDTO          $score,
-        public KatmClientDTO                      $client,
-    )
-    {
+        public KatmCreditHistoryScoreDTO $score,
+        public KatmClientDTO $client,
+    ) {
     }
 }

@@ -6,11 +6,6 @@ class UrlHelper
 {
     /**
      * Build company Nova Admin url for given params
-     * @param string $companyId
-     * @param string|null $path
-     * @param array $query
-     * @param string|null $schema
-     * @return string
      */
     public static function getCompanyAdminUrl(
         string $companyId,
@@ -25,10 +20,6 @@ class UrlHelper
 
     /**
      * Build admins Nova Admin url for given params
-     * @param string|null $path
-     * @param array $query
-     * @param string|null $schema
-     * @return string
      */
     public static function getAdminUrl(
         string $path = null,
@@ -42,7 +33,6 @@ class UrlHelper
 
     /**
      * Build API url for given company
-     * @return string|null
      */
     public static function getApiUrl(): ?string
     {
@@ -53,7 +43,6 @@ class UrlHelper
 
     /**
      * Returns current request scheme
-     * @return string
      */
     public static function getCurrentScheme(): string
     {
@@ -64,7 +53,6 @@ class UrlHelper
     /**
      * Returns company slug from current subdomain name if matches
      * otherwise returns null (if subdomain doesn't match)
-     * @return string|null
      */
     public static function getCompanySlugFromCurrentHost(): ?string
     {
@@ -78,7 +66,6 @@ class UrlHelper
 
     /**
      * Returns first part of current host before first dot
-     * @return string|null
      */
     public static function getFirstSubdomainOfCurrentHost(): ?string
     {

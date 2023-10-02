@@ -17,7 +17,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $created_at
  * @property string $updated_at
  * @property string|null $deleted_at
- *
  * @property Region|null $region
  * @property District|null $district
  * @property Mahalla|null $mahalla
@@ -26,7 +25,6 @@ class Address extends Model
 {
     use SoftDeletes, TenantConnection;
     protected $dateFormat = 'U';
-
 
     protected $fillable = [
         'type',

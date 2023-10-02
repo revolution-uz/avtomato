@@ -18,11 +18,10 @@ use OpenApi\Attributes as OA;
 class KatmInpsHistoryResponseDTO extends BaseScoringResponse
 {
     public function __construct(
-        public KatmClientDTO        $client,
+        public KatmClientDTO $client,
         public KatmIncomesPeriodDTO $incomes_period,
         public KatmPresenceReportsDTO $presence_reports,
         // TODO incomes
-    )
-    {
+    ) {
     }
 }

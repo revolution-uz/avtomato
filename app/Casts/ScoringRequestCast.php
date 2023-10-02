@@ -21,7 +21,7 @@ class ScoringRequestCast implements CastsAttributes
             ScoringRequestTypeEnum::KATM_CREDIT_HISTORY->value,
             ScoringRequestTypeEnum::KATM_INPS_HISTORY->value,
             ScoringRequestTypeEnum::KATM_PENSION_INFO->value => KatmCreateRequestDTO::from(json_decode($value, true)),
-            default => throw new InvalidArgumentException(),
+            default => throw new InvalidArgumentException,
         };
     }
 
@@ -31,6 +31,6 @@ class ScoringRequestCast implements CastsAttributes
             return json_encode($value->toArray());
         }
 
-        throw new InvalidArgumentException();
+        throw new InvalidArgumentException;
     }
 }

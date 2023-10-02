@@ -25,8 +25,7 @@ class KatmPensionInfoController extends Controller
 {
     public function __construct(
         private readonly KatmService $katmService,
-    )
-    {
+    ) {
     }
 
     #[OA\Get(
@@ -34,10 +33,10 @@ class KatmPensionInfoController extends Controller
         description: 'Get pension info scoring requests list',
         tags: ['Scoring (Pension info)'],
         parameters: [
-            new OpenApiPageParameter(),
-            new OpenApiPerPageParameter(),
-            new OpenApiSearchParameter(),
-            new OpenApiSortParameter(),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+            new OpenApiSortParameter,
         ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'KatmPensionInfoResource', withPagination: true, withSortables: true),
@@ -52,7 +51,7 @@ class KatmPensionInfoController extends Controller
                 ->where('type', ScoringRequestTypeEnum::KATM_PENSION_INFO)
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q
+                    fn (Builder $q) => $q
                         ->orWhere('request->pinfl', 'ILIKE', '%' . $request->search . '%')
                         ->orWhere('request->first_name', 'ILIKE', '%' . $request->search . '%')
                         ->orWhere('request->last_name', 'ILIKE', '%' . $request->search . '%')
@@ -62,7 +61,7 @@ class KatmPensionInfoController extends Controller
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )

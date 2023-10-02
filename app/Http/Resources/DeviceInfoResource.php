@@ -18,17 +18,17 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin PersonalAccessToken
+ * @property PersonalAccessToken $resource
  */
 class DeviceInfoResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'device_ip' => $this->device_ip,
-            'last_used_at' => $this->last_used_at ? (int)$this->last_used_at->format('U') : null,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+            'device_ip' => $this->resource->device_ip,
+            'last_used_at' => $this->resource->last_used_at ? (int) $this->resource->last_used_at->format('U') : null,
         ];
     }
 }

@@ -18,16 +18,16 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin PassportDataDTO
+ * @property PassportDataDTO $resource
  */
 class AddressInfoResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'address' => $this->address,
-            'region_id' => $this->region_id,
-            'district_id' => $this->district_id,
+            'address' => $this->resource->address,
+            'region_id' => $this->resource->region_id,
+            'district_id' => $this->resource->district_id,
             'mahalla_id' => null,
         ];
     }

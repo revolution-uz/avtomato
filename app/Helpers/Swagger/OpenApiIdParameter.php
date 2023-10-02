@@ -3,6 +3,7 @@
 namespace App\Helpers\Swagger;
 
 use OpenApi\Attributes as OA;
+
 class OpenApiIdParameter extends OA\Parameter
 {
     public function __construct(string $modelName)

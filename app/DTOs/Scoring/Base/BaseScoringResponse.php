@@ -8,8 +8,8 @@ abstract class BaseScoringResponse extends Data
 {
     public static function fromXml(string $xml): self
     {
-        $xmlObject = simplexml_load_string(iconv("UTF-8", "windows-1251", $xml));
+        $xmlObject = simplexml_load_string(iconv('UTF-8', 'windows-1251', $xml));
 
-        return self::from(json_decode(json_encode($xmlObject), TRUE));
+        return self::from(json_decode(json_encode($xmlObject), true));
     }
 }

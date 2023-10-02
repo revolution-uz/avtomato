@@ -14,10 +14,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $phone_id
  * @property int $phoneable_id
  * @property string $phoneable_type
- * @property integer $created_at
- * @property integer $updated_at
- * @property integer $deleted_at
- *
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $deleted_at
  * @property Phone $phone
  */
 class Phoneable extends Model

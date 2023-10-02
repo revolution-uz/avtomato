@@ -10,9 +10,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name
  * @property string $inn
  * @property string $address
- * @property integer $created_at
- * @property integer $updated_at
- * @property integer $deleted_at
+ * @property int|null $created_at
+ * @property int|null $updated_at
+ * @property int|null $deleted_at
  */
 class Branch extends Model
 {
@@ -22,6 +22,6 @@ class Branch extends Model
     protected $fillable = [
         'name',
         'inn',
-        'address'
+        'address',
     ];
 }

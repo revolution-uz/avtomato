@@ -17,16 +17,16 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin Mahalla
+ * @property Mahalla $resource
  */
 class MahallaResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'district_id' => $this->district_id,
-            'name' => $this->{'name_' . app()->getLocale()},
+            'id' => $this->resource->id,
+            'district_id' => $this->resource->district_id,
+            'name' => $this->resource->{'name_' . app()->getLocale()},
         ];
     }
 }
