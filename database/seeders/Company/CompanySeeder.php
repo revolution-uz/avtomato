@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Company;
 
-use App\Enums\Company\UserRoleEnum;
+use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\User;
 use Illuminate\Database\Seeder;

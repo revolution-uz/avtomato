@@ -13,7 +13,7 @@ use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Requests\UserLangRequest;
 use App\Http\Resources\DeviceInfoResource;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\User\SingleUserResource;
 use App\Models\Company\PersonalAccessToken;
 use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
@@ -31,12 +31,12 @@ class ProfileController extends Controller
         description: 'Profile me route',
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
         ]
     )]
     public function me(): JsonResponse
     {
-        return ApiResponse::success(UserResource::make(Auth::user()));
+        return ApiResponse::success(SingleUserResource::make(Auth::user()));
     }
 
     #[OA\Put(
@@ -51,13 +51,13 @@ class ProfileController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function update(UserUpdateRequest $request)
     {
         if ($this->userService->updateDetails(auth()->user(), $request)) {
-            return ApiResponse::success(UserResource::make(auth()->user()));
+            return ApiResponse::success(SingleUserResource::make(auth()->user()));
         }
 
         return ApiResponse::error('User not updated');
@@ -99,13 +99,13 @@ class ProfileController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function changeTheme(UserThemeRequest $request)
     {
         if ($this->userService->updateTheme(auth()->user(), $request)) {
-            return ApiResponse::success(UserResource::make(auth()->user()));
+            return ApiResponse::success(SingleUserResource::make(auth()->user()));
         }
         return ApiResponse::error('Theme not updated');
     }
@@ -122,7 +122,7 @@ class ProfileController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function changeLanguage(UserLangRequest $request)
@@ -130,7 +130,7 @@ class ProfileController extends Controller
         $user = auth()->user();
         $user?->update(['language' => $request->language]);
 
-        return ApiResponse::success(UserResource::make($user));
+        return ApiResponse::success(SingleUserResource::make($user));
     }
 
     #[OA\Get(

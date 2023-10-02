@@ -11,6 +11,7 @@ use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmInpsHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmPensionInfoController;
 use App\Http\Controllers\PartnerApi\V1\User\ProfileController;
+use App\Http\Controllers\PartnerApi\V1\User\RoleController;
 use App\Http\Controllers\PartnerApi\V1\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -81,8 +82,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/{user}/change-password', 'changePassword')->name('users.get-single');
         Route::post('/{user}/change-theme', 'changeTheme')->name('users.get-single');
         Route::get('/{user}/devices', 'devices')->name('users.devices');
+        Route::post('/{user}/attach-role', 'attachRole')->name('users.attach-role');
         Route::delete('/revoke-device/{personalAccessToken}', 'revokeDevice')->name('users.revoke-device');
         Route::delete('/{user}', 'delete')->name('users.delete');
+    });
+
+    Route::prefix('roles')->controller(RoleController::class)->group(function () {
+        Route::get('/', 'index')->name('roles.index');
+        Route::get('/permissions', 'permissions')->name('roles.permissions');
+        Route::get('/{role}', 'getSingle')->name('roles.get-single');
+        Route::post('/', 'create')->name('roles.create');
+        Route::put('/{role}', 'update')->name('roles.update');
+        Route::delete('/', 'delete')->name('roles.delete');
     });
 
     Route::prefix('info')->controller(InfoController::class)->group(function () {

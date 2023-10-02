@@ -25,13 +25,31 @@ class CreatePermissionTables extends Migration
             throw new \Exception('Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         }
 
+        Schema::create('permission_groups', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('label_uz')->nullable();
+            $table->string('label_oz')->nullable();
+            $table->string('label_ru')->nullable();
+            $table->string('label_en')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->bigIncrements('id'); // permission id
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
+            $table->string('label_uz')->nullable();       // For MySQL 8.0 use string('name', 125);
+            $table->string('label_oz')->nullable();       // For MySQL 8.0 use string('name', 125);
+            $table->string('label_ru')->nullable();       // For MySQL 8.0 use string('name', 125);
+            $table->string('label_en')->nullable();       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
+            $table->integer('permission_group_id');
+            $table->integer('feature_id')->nullable();
+            $table->boolean('is_branch_related');
             $table->timestamps();
 
             $table->unique(['name', 'guard_name']);
+            $table->index('permission_group_id');
         });
 
         Schema::create($tableNames['roles'], function (Blueprint $table) use ($teams, $columnNames) {
@@ -42,7 +60,9 @@ class CreatePermissionTables extends Migration
             }
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
-            $table->timestamps();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
+            $table->integer('deleted_at')->nullable();
 
             if ($teams || config('permission.testing')) {
                 $table->unique([$columnNames['team_foreign_key'], 'name', 'guard_name']);
@@ -102,6 +122,7 @@ class CreatePermissionTables extends Migration
         });
 
         Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames) {
+            $table->id();
             $table->unsignedBigInteger(PermissionRegistrar::$pivotPermission);
             $table->unsignedBigInteger(PermissionRegistrar::$pivotRole);
 
@@ -115,7 +136,10 @@ class CreatePermissionTables extends Migration
                 ->on($tableNames['roles'])
                 ->onDelete('cascade');
 
-            $table->primary([PermissionRegistrar::$pivotPermission, PermissionRegistrar::$pivotRole], 'role_has_permissions_permission_id_role_id_primary');
+            $table->integer('branch_id')->nullable();
+
+            $table->unique([PermissionRegistrar::$pivotPermission, PermissionRegistrar::$pivotRole, 'branch_id'], 'role_has_permissions_permission_id_role_id_primary');
+            $table->index('branch_id');
         });
 
         app('cache')
@@ -141,5 +165,6 @@ class CreatePermissionTables extends Migration
         Schema::drop($tableNames['model_has_permissions']);
         Schema::drop($tableNames['roles']);
         Schema::drop($tableNames['permissions']);
+        Schema::drop($tableNames['permission_groups']);
     }
 }

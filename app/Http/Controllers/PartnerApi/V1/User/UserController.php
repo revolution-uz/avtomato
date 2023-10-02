@@ -13,22 +13,21 @@ use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\User\AttachRoleRequest;
 use App\Http\Requests\User\PasswordRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserFilterRequest;
 use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\DeviceInfoResource;
-use App\Http\Resources\UserListResource;
-use App\Http\Resources\UserResource;
-use App\Models\Company\Attachment;
+use App\Http\Resources\User\SingleUserResource;
+use App\Http\Resources\User\UserListResource;
 use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\User;
 use App\Services\User\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -88,13 +87,13 @@ class UserController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
             new OpenApiNotFoundResponse(),
         ]
     )]
     public function getSingle(User $user): JsonResponse
     {
-        return ApiResponse::success(UserResource::make($user));
+        return ApiResponse::success(SingleUserResource::make($user));
     }
 
     #[OA\Post(
@@ -107,7 +106,7 @@ class UserController extends Controller
         ),
         tags: ['Users'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
         ]
     )]
     public function create(UserCreateRequest $request): JsonResponse
@@ -117,7 +116,7 @@ class UserController extends Controller
         $model->password = bcrypt($request->password);
 
         if ($model->save()) {
-            return ApiResponse::success(UserResource::make($model));
+            return ApiResponse::success(SingleUserResource::make($model));
         }
 
         return ApiResponse::error("Error on creating user");
@@ -141,7 +140,7 @@ class UserController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
             new OpenApiNotFoundResponse(),
         ]
     )]
@@ -149,7 +148,7 @@ class UserController extends Controller
     {
         $this->userService->updateDetails($user, $request);
 
-        return ApiResponse::success(UserResource::make($user));
+        return ApiResponse::success(SingleUserResource::make($user));
     }
 
     #[OA\Post(
@@ -173,7 +172,7 @@ class UserController extends Controller
     public function changePassword(User $user, PasswordRequest $request)
     {
         if ($this->userService->updatePassword($user, $request)) {
-            return ApiResponse::success(UserResource::make($user));
+            return ApiResponse::success(SingleUserResource::make($user));
         }
         return ApiResponse::error('Password not updated');
     }
@@ -193,13 +192,13 @@ class UserController extends Controller
             new OpenApiIdParameter(modelName: 'User')
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'UserResource'),
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function changeTheme(User $user, UserThemeRequest $request)
     {
         if ($this->userService->updateTheme($user, $request)) {
-            return ApiResponse::success(UserResource::make($user));
+            return ApiResponse::success(SingleUserResource::make($user));
         }
         return ApiResponse::error('Theme not updated');
     }
@@ -259,5 +258,30 @@ class UserController extends Controller
     public function revokeDevice(PersonalAccessToken $personalAccessToken): JsonResponse
     {
         return ApiResponse::success($personalAccessToken->delete());
+    }
+
+    #[OA\Post(
+        path: '/api/v1/users/{id}/attach-role',
+        description: 'Revoke device route',
+        requestBody: new OA\RequestBody(
+            description: 'Attach role request body',
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/AttachRoleRequest'
+            ),
+        ),
+        tags: ['Users'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'User')
+        ],
+        responses: [
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiNotFoundResponse(),
+        ]
+    )]
+    public function attachRole(User $user, AttachRoleRequest $request)
+    {
+        $user->syncRoles($request->role_ids);
+        return ApiResponse::success(true);
     }
 }

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
-use App\Enums\Company\UserStatusEnum;
+use App\Http\Resources\AttachmentResource;
 use App\Models\Company\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'UserResource',
-    title: 'UserResource',
+    schema: 'SingleUserResource',
+    title: 'SingleUserResource',
     properties: [
         new OA\Property(property: 'id', type: 'int', example: 1),
         new OA\Property(property: 'username', type: 'string', example: 'admin'),
@@ -23,7 +23,7 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /** @mixin User */
-class UserResource extends JsonResource
+class SingleUserResource extends JsonResource
 {
     public function toArray($request): array
     {
@@ -37,6 +37,7 @@ class UserResource extends JsonResource
             'avatar' => AttachmentResource::make($this->avatars()->latest()->first()),
             'template_theme' => $this->template_theme,
             'language' => $this->language,
+            'role' => RoleListResource::collection($this->roles)
         ];
     }
 }
