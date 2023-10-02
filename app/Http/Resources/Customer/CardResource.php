@@ -29,8 +29,8 @@ class CardResource extends JsonResource
             'number' => $this->resource->pan,
             'expiry' => $this->resource->expiry,
             'balance' => $this->resource->balance,
-            'created_at' => $this->resource->created_at ? (int)$this->resource->created_at->format('U') : null,
-            'updated_at' => $this->resource->updated_at ? (int)$this->resource->updated_at->format('U') : null,
+            'created_at' => $this->resource->created_at ? (int) $this->resource->created_at->format('U') : null,
+            'updated_at' => $this->resource->updated_at ? (int) $this->resource->updated_at->format('U') : null,
         ];
     }
 }

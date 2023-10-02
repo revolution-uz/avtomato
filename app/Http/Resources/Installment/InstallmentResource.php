@@ -42,10 +42,10 @@ class InstallmentResource extends JsonResource
             'sms_notify' => $this->resource->sms_notify,
             'auto_charge' => $this->resource->auto_charge,
             'any_card_charge' => $this->resource->any_card_charge,
-            'starts_in' => $this->resource->starts_in ? (int)$this->resource->starts_in->format('U') : null,
-            'next_pay_date' => $this->resource->next_pay_date ? (int)$this->resource->next_pay_date->format('U') : null,
-            'created_at' => $this->resource->created_at ? (int)$this->resource->created_at->format('U') : null,
-            'updated_at' => $this->resource->updated_at ? (int)$this->resource->updated_at->format('U') : null,
+            'starts_in' => $this->resource->starts_in ? (int) $this->resource->starts_in->format('U') : null,
+            'next_pay_date' => $this->resource->next_pay_date ? (int) $this->resource->next_pay_date->format('U') : null,
+            'created_at' => $this->resource->created_at ? (int) $this->resource->created_at->format('U') : null,
+            'updated_at' => $this->resource->updated_at ? (int) $this->resource->updated_at->format('U') : null,
         ];
     }
 }
