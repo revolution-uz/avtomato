@@ -12,7 +12,7 @@ class FeatureSeeder extends Seeder
     {
         foreach (FeatureEnum::cases() as $case) {
             Features::query()->firstOrCreate([
-                'name' => $case->value
+                'name' => $case->value,
             ], [
                 'is_active' => false,
             ]);

@@ -20,19 +20,19 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin Branch
+ * @property Branch $resource
  */
 class BranchResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'address' => $this->address,
-            'inn' => $this->inn,
-            'created_at' => $this->created_at ? (int)$this->created_at->format('U') : null,
-            'updated_at' => $this->updated_at ? (int)$this->updated_at->format('U') : null,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+            'address' => $this->resource->address,
+            'inn' => $this->resource->inn,
+            'created_at' => $this->resource->created_at ? (int) $this->resource->created_at->format('U') : null,
+            'updated_at' => $this->resource->updated_at ? (int) $this->resource->updated_at->format('U') : null,
         ];
     }
 }

@@ -8,11 +8,6 @@ use Laravel\Nova\Util;
 
 class CreateActionEventsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('action_events', function (Blueprint $table) {
@@ -41,11 +36,6 @@ class CreateActionEventsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('action_events');

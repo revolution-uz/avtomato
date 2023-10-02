@@ -42,11 +42,6 @@ class UserThemeRequest extends FormRequest
 {
     use WithData;
 
-    protected function dataClass(): string
-    {
-        return UserTemplateThemeDto::class;
-    }
-
     public function rules(): array
     {
         return [
@@ -57,5 +52,10 @@ class UserThemeRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function dataClass(): string
+    {
+        return UserTemplateThemeDto::class;
     }
 }

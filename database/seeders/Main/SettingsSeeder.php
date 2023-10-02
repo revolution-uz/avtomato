@@ -15,10 +15,10 @@ class SettingsSeeder extends Seeder
     {
         foreach (SettingsEnum::cases() as $case) {
             Settings::query()->firstOrCreate([
-                'name' => $case->value
+                'name' => $case->value,
             ], [
                 'value' => SettingsEnum::getDefaultValue($case),
-                'type' => SettingsEnum::getType($case)
+                'type' => SettingsEnum::getType($case),
             ]);
         }
     }

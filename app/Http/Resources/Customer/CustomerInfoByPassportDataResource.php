@@ -30,27 +30,27 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * use @mixin PassportDataDTO
+ * @property PassportDataDTO $resource
  */
 class CustomerInfoByPassportDataResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'pinfl' => $this->pinfl,
-            'tin' => $this->tin,
-            'passport_series' => $this->series,
-            'passport_number' => $this->number,
-            'passport_given_date' => $this->given_date->format('d-m-Y'),
-            'passport_expiration_date' => $this->expiration_date->format('d-m-Y'),
-            'passport_given_place' => $this->given_place,
-            'passport_citizenship' => $this->citizenship,
-            'first_name' => $this->name,
-            'last_name' => $this->sur_name,
-            'middle_name' => $this->patronymic_name,
-            'birth_date' => $this->birth_date->format('d-m-Y'),
-            'birth_place' => $this->birth_place,
-            'gender' => GenderEnum::convertFromOilaKredit($this->gender)->value, // OilaKredit gender same as our
+            'pinfl' => $this->resource->pinfl,
+            'tin' => $this->resource->tin,
+            'passport_series' => $this->resource->series,
+            'passport_number' => $this->resource->number,
+            'passport_given_date' => $this->resource->given_date->format('d-m-Y'),
+            'passport_expiration_date' => $this->resource->expiration_date->format('d-m-Y'),
+            'passport_given_place' => $this->resource->given_place,
+            'passport_citizenship' => $this->resource->citizenship,
+            'first_name' => $this->resource->name,
+            'last_name' => $this->resource->sur_name,
+            'middle_name' => $this->resource->patronymic_name,
+            'birth_date' => $this->resource->birth_date->format('d-m-Y'),
+            'birth_place' => $this->resource->birth_place,
+            'gender' => GenderEnum::convertFromOilaKredit($this->resource->gender)->value, // OilaKredit gender same as our
             'address' => new AddressInfoResource($this->resource),
         ];
     }

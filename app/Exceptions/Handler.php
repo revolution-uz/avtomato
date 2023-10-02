@@ -9,7 +9,6 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
@@ -37,17 +36,14 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * @param  $request
-     * @param Throwable $e
-     * @return JsonResponse|\Illuminate\Http\Response|Response
      * @throws Throwable
      */
     public function render($request, Throwable $e): \Illuminate\Http\Response|JsonResponse|Response
     {
         if ($request->wantsJson() || $request->ajax() || $request->expectsJson() || $request->isJson()) {
-//            if ($e instanceof HttpException or $e instanceof UploadFileException) {
-//                return ApiResponse::error($e->getMessage());
-//            } else
+            //            if ($e instanceof HttpException or $e instanceof UploadFileException) {
+            //                return ApiResponse::error($e->getMessage());
+            //            } else
             if ($e instanceof AuthenticationException) {
                 return ApiResponse::error($e->getMessage(), Response::HTTP_UNAUTHORIZED);
             }
@@ -57,7 +53,7 @@ class Handler extends ExceptionHandler
             }
 
             if ($e instanceof ModelNotFoundException) {
-                return ApiResponse::error(__("Not found"), Response::HTTP_NOT_FOUND);
+                return ApiResponse::error(__('Not found'), Response::HTTP_NOT_FOUND);
             }
         }
 

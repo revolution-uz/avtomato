@@ -22,21 +22,23 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'language', type: 'string', example: 'ru'),
     ],
 )]
-/** @mixin User */
+/**
+ * @property User $resource
+ */
 class SingleUserResource extends JsonResource
 {
     public function toArray($request): array
     {
         return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'phone' => $this->phones()->latest()->first()->phone ?? null,
-            'status' => $this->status,
-            'avatar' => AttachmentResource::make($this->avatars()->latest()->first()),
-            'template_theme' => $this->template_theme,
-            'language' => $this->language,
+            'id' => $this->resource->id,
+            'username' => $this->resource->username,
+            'first_name' => $this->resource->first_name,
+            'last_name' => $this->resource->last_name,
+            'phone' => $this->resource->phones()->latest()->first()->phone ?? null,
+            'status' => $this->resource->status,
+            'avatar' => AttachmentResource::make($this->resource->avatars()->latest()->first()),
+            'template_theme' => $this->resource->template_theme,
+            'language' => $this->resource->language,
             'role' => RoleListResource::collection($this->roles)
         ];
     }

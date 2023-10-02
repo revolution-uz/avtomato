@@ -17,14 +17,14 @@ use App\Http\Resources\User\SingleUserResource;
 use App\Models\Company\PersonalAccessToken;
 use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use OpenApi\Attributes as OA;
 
 class ProfileController extends Controller
 {
     public function __construct(
         protected UserService $userService
-    ) {}
+    ) {
+    }
 
     #[OA\Get(
         path: '/api/v1/profile/me',
@@ -36,7 +36,7 @@ class ProfileController extends Controller
     )]
     public function me(): JsonResponse
     {
-        return ApiResponse::success(SingleUserResource::make(Auth::user()));
+        return ApiResponse::success(SingleUserResource::make(auth()->user()));
     }
 
     #[OA\Put(
@@ -75,7 +75,7 @@ class ProfileController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean')
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ],
     )]
     public function changePassword(PasswordRequest $request)
@@ -107,6 +107,7 @@ class ProfileController extends Controller
         if ($this->userService->updateTheme(auth()->user(), $request)) {
             return ApiResponse::success(SingleUserResource::make(auth()->user()));
         }
+
         return ApiResponse::error('Theme not updated');
     }
 
@@ -143,7 +144,7 @@ class ProfileController extends Controller
     )]
     public function devices(): JsonResponse
     {
-        return ApiResponse::success(DeviceInfoResource::collection(Auth::user()->tokens));
+        return ApiResponse::success(DeviceInfoResource::collection(auth()->user()->tokens));
     }
 
     #[OA\Delete(
@@ -156,11 +157,11 @@ class ProfileController extends Controller
                 description: 'Device id',
                 in: 'path',
                 required: true,
-            )
+            ),
         ],
         responses: [
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function revokeDevice(PersonalAccessToken $personalAccessToken): JsonResponse

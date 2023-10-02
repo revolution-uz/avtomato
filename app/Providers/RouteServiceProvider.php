@@ -31,9 +31,6 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * @return void
-     */
     public function map(): void
     {
         $this->mapApiRoutes();
@@ -51,7 +48,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::middleware('api')
             ->namespace($this->namespace)
-            ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class,])
+            ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
             ->prefix('api/v1')
             ->group(base_path('routes/partner-api.php'));
     }
@@ -67,7 +64,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::middleware('web')
             ->namespace($this->namespace)
-            ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class,])
+            ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
             ->group(base_path('routes/partner-panel.php'));
     }
 

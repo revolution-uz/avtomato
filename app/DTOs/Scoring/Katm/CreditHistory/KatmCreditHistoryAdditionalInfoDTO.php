@@ -22,8 +22,7 @@ class KatmCreditHistoryAdditionalInfoDTO extends BaseScoringResponse
         public KatmCreditHistoryDebtDTO $closed_debt,
         public float $average_monthly_payment,
         public array $notifications,
-    )
-    {
+    ) {
         $this->notifications = array_values($this->notifications);
     }
 }

@@ -21,7 +21,7 @@ class TariffsDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:tariffs,id'
+            'ids.*' => 'integer|exists:tariffs,id',
         ];
     }
 }

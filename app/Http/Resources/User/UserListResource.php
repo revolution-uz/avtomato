@@ -21,19 +21,21 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'avatar', ref: '#/components/schemas/AttachmentResource'),
     ],
 )]
-/** @mixin User */
+/**
+ * @property User $resource
+ */
 class UserListResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'phone' => $this->phones()->latest()->first()->phone ?? null,
-            'status' => $this->status,
-            'avatar' => AttachmentResource::make($this->avatars()->latest()->first()),
+            'id' => $this->resource->id,
+            'username' => $this->resource->username,
+            'first_name' => $this->resource->first_name,
+            'last_name' => $this->resource->last_name,
+            'phone' => $this->resource->phones()->latest()->first()->phone ?? null,
+            'status' => $this->resource->status,
+            'avatar' => AttachmentResource::make($this->resource->avatars()->latest()->first()),
         ];
     }
 }

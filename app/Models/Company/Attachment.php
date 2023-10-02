@@ -21,17 +21,17 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- *
  * @property-read string $link
  * @property-read string $preview_link
  */
 class Attachment extends Model
 {
     use HasUuids, TenantConnection;
-    protected $dateFormat = 'U';
 
     public const PATH = 'uploads';
     public const THUMBNAIL_PATH = 'uploads/thumbnails';
+
+    protected $dateFormat = 'U';
 
     protected $fillable = [
         'id',
@@ -50,14 +50,14 @@ class Attachment extends Model
     public function link(): Attribute
     {
         return Attribute::make(
-            get: fn() => url("api/v1/attachments/$this->id")
+            get: fn () => url("api/v1/attachments/{$this->id}")
         );
     }
 
     public function previewLink(): Attribute
     {
         return Attribute::make(
-            get: fn() => url("api/v1/attachments/$this->id/preview")
+            get: fn () => url("api/v1/attachments/{$this->id}/preview")
         );
     }
 }

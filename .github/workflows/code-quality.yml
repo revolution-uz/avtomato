@@ -1,0 +1,79 @@
+name: Pipeline
+
+on:
+  pull_request: # on a pull request to each of these branches
+    branches:
+      - master
+
+jobs:
+  check-code-quality:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: avtomato_test
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: iconv, simplexml, pdo, pgsql, pdo_pgsql
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+      - name: "Install Composer dependencies"
+        run: |
+          composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
+          composer install -n --prefer-dist
+      - name: Boot Laravel application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+      - name: Migrate database
+        run: |
+          php artisan migrate:fresh --database=test --force -v
+        env:
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: "Duster Lint"
+        run: |
+          ./vendor/bin/duster lint
+      - name: Run tests
+        run: |
+          ./vendor/bin/phpunit
+        env:
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: Run security checks
+        uses: symfonycorp/security-checker-action@v3
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            User **${{github.actor}}** created PR in `${{ github.repository }}` repository and it's ready to merge. 
+            
+            PR Name: ${{ github.event.pull_request.title }}
+            
+            PR link: ${{ github.event.pull_request.html_url }}
+            
+            Last commit link: https://github.com/${{ github.repository }}/commit/${{github.sha}}

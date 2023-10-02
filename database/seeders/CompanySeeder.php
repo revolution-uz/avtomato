@@ -33,7 +33,7 @@ class CompanySeeder extends Seeder
             ]
         );
 
-        if (!$user->hasRole(UserRoleEnum::OWNER->value)) {
+        if (! $user->hasRole(UserRoleEnum::OWNER->value)) {
             $user->assignRole(UserRoleEnum::OWNER->value);
         }
     }

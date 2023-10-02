@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateFieldAttachmentsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         if (Schema::hasTable('nova_pending_trix_attachments')) {
@@ -39,11 +34,6 @@ class CreateFieldAttachmentsTable extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('nova_pending_field_attachments');

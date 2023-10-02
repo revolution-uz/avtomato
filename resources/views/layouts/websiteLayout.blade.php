@@ -9,19 +9,19 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <link rel="shortcut icon" href="{{ asset('assets/images/general/favicon.png') }}" type="image/x-icon">
-    <link rel="apple-touch-icon" href="{{ asset('assets/images/general/logo.png')}}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/images/general/logo.png') }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Avtomato - Home">
 
     <meta itemprop="name" content="Avtomato - Home">
     <meta itemprop="description" content="">
-    <meta itemprop="image" content="{{ asset('assets/images/seo/64429bcdb16aa1682086861.jpg')}}">
+    <meta itemprop="image" content="{{ asset('assets/images/seo/64429bcdb16aa1682086861.jpg') }}">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Minstack Limited">
     <meta property="og:description" content="">
-    <meta property="og:image" content="{{ asset('assets/images/seo/64429bcdb16aa1682086861.jpg')}}">
+    <meta property="og:image" content="{{ asset('assets/images/seo/64429bcdb16aa1682086861.jpg') }}">
     <meta property="og:image:type" content="image/jpg">
     <meta property="og:image:width" content="1180">
     <meta property="og:image:height" content="600">
@@ -29,16 +29,16 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <!-- Bootstrap CSS -->
-    <link href="{{ asset('assets/common/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{ asset('assets/common/css/all.min.css')}}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('assets/common/css/line-awesome.min.css')}}">
+    <link href="{{ asset('assets/common/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/common/css/all.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/common/css/line-awesome.min.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/magnific-popup.css')}}">
-    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/custom-animation.css')}}">
-    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/slick.css')}}">
-    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/odometer.css')}}">
-    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/main.css')}}">
-    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/colorb974.css?color=fab700&amp;secondColor=fab700')}}">
+    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/custom-animation.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/slick.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/odometer.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/presets/themesTwo/css/colorb974.css?color=fab700&amp;secondColor=fab700') }}">
 </head>
 <body class="antialiased">
 <!--==================== Preloader Start ====================-->
@@ -115,12 +115,12 @@
 
                     <div class="menu-wrapper">
                         <ul class="main-menu">
-                            <li><a href="#" aria-current="page" class="">{{__('website.home')}}</a></li>
-                            <li><a href="#plan" aria-current="page" class="">{{__('website.plan')}}</a></li>
-                            <li><a href="#services" aria-current="page" class="">{{__('website.services')}}</a></li>
-                            <li><a href="#blog" aria-current="page" class="">{{__('website.blog')}}</a></li>
-                            <li><a href="#about" aria-current="page" class="">{{__('website.about')}}</a></li>
-                            <!-- <li><a href="contact.html" aria-current="page" class="">{{__('website.contact')}}</a></li> -->
+                            <li><a href="#" aria-current="page" class="">{{ __('website.home') }}</a></li>
+                            <li><a href="#plan" aria-current="page" class="">{{ __('website.plan') }}</a></li>
+                            <li><a href="#services" aria-current="page" class="">{{ __('website.services') }}</a></li>
+                            <li><a href="#blog" aria-current="page" class="">{{ __('website.blog') }}</a></li>
+                            <li><a href="#about" aria-current="page" class="">{{ __('website.about') }}</a></li>
+                            <!-- <li><a href="contact.html" aria-current="page" class="">{{ __('website.contact') }}</a></li> -->
                         </ul>
                     </div>
 
@@ -134,7 +134,7 @@
                                     <i class='fas fa-sun sun-icon'></i>
                                 </div>
                             </li>
-                            <li><a class='btn btn--base' href="user/login.html">{{__("website.button_contact_us")}}</a></li>
+                            <li><a class='btn btn--base' href="user/login.html">{{ __("website.button_contact_us") }}</a></li>
                             <li><i class="fas fa-bars sidebar-menu-show-hide"></i></li>
                         </ul>
                     </div>
@@ -165,19 +165,19 @@
 
 
         <li class="sidebar-menu-list__item ">
-            <a href="#" class="sidebar-menu-list__link">{{__("website.home")}}</a>
+            <a href="#" class="sidebar-menu-list__link">{{ __("website.home") }}</a>
         </li>
         <li class="sidebar-menu-list__item ">
-            <a href="#plan" class="sidebar-menu-list__link">{{__("website.plan")}}</a>
+            <a href="#plan" class="sidebar-menu-list__link">{{ __("website.plan") }}</a>
         </li>
         <li class="sidebar-menu-list__item ">
-            <a href="#services" class="sidebar-menu-list__link">{{__("website.services")}}</a>
+            <a href="#services" class="sidebar-menu-list__link">{{ __("website.services") }}</a>
         </li>
         <li class="sidebar-menu-list__item ">
-            <a href="#blog" class="sidebar-menu-list__link">{{__("website.blog")}}</a>
+            <a href="#blog" class="sidebar-menu-list__link">{{ __("website.blog") }}</a>
         </li>
         <li class="sidebar-menu-list__item ">
-            <a href="#about" class="sidebar-menu-list__link">{{__("website.about")}}</a>
+            <a href="#about" class="sidebar-menu-list__link">{{ __("website.about") }}</a>
         </li>
         <!-- <li class="sidebar-menu-list__item ">
             <a href="contact.html" class="sidebar-menu-list__link"> Contact</a>
@@ -194,7 +194,7 @@
 
 
 <!-- ==================== Footer Start Here ==================== -->
-<footer class="footer-area section-bg-light bg-img" style="background-image: url({{asset('assets/presets/themesTwo/images/footer-bg.jpg')}})">
+<footer class="footer-area section-bg-light bg-img" style="background-image: url({{ asset('assets/presets/themesTwo/images/footer-bg.jpg') }})">
     <span class="banner-effect-1"></span>
     <div class="pb-60 pt-80">
         <div class="container">
@@ -202,8 +202,8 @@
                 <div class="col-xl-4 col-sm-6">
                     <div class="footer-item">
                         <div class="footer-item__logo">
-                            <a href="https://preview.wstacks.com/finbiz" class="footer-logo-normal" id="footer-logo-normal"> <img src="{{asset('assets/images/general/logo_white.png')}}" alt="Laravel"></a>
-                            <a href="https://preview.wstacks.com/finbiz" class="footer-logo-dark hidden" id="footer-logo-dark"> <img src="{{asset('assets/images/general/logo_white.png')}}" alt="Laravel"></a>
+                            <a href="https://preview.wstacks.com/finbiz" class="footer-logo-normal" id="footer-logo-normal"> <img src="{{ asset('assets/images/general/logo_white.png') }}" alt="Laravel"></a>
+                            <a href="https://preview.wstacks.com/finbiz" class="footer-logo-dark hidden" id="footer-logo-dark"> <img src="{{ asset('assets/images/general/logo_white.png') }}" alt="Laravel"></a>
                         </div>
                         <p class="footer-item__desc mb-3">Let&#039;s make something great together. We are trusted by over 5000+ clients. Join them by using our services and grow your business.</p>
 
@@ -240,7 +240,7 @@
                         <h5 class="footer-item__title">Company Links</h5>
                         <ul class="footer-menu">
                             <li class="footer-menu__item"><a href="index.html" class="footer-menu__link">{{ __('website.home') }}</a></li>
-                            <li class="footer-menu__item"><a href="about.html" class="footer-menu__link">{{__("website.about")}}</a></li>
+                            <li class="footer-menu__item"><a href="about.html" class="footer-menu__link">{{ __("website.about") }}</a></li>
                             <li class="footer-menu__item"><a href="cookie-policy.html" class="footer-menu__link">Cookie Policy</a></li>
                             <li class="footer-menu__item"><a href="policy/terms-of-service/43.html" class="footer-menu__link">Terms of Service</a></li>
                             <li class="footer-menu__item"><a href="policy/privacy-policy/42.html" class="footer-menu__link">Privacy Policy</a></li>
@@ -251,9 +251,9 @@
                     <div class="footer-item">
                         <h5 class="footer-item__title">Important Link</h5>
                         <ul class="footer-menu">
-                            <li class="footer-menu__item"><a href="services.html" class="footer-menu__link">{{__("website.services")}}</a></li>
+                            <li class="footer-menu__item"><a href="services.html" class="footer-menu__link">{{ __("website.services") }}</a></li>
                             <!-- <li class="footer-menu__item"><a href="contact.html" class="footer-menu__link">Contact</a></li> -->
-                            <li class="footer-menu__item"><a href="plan.html" class="footer-menu__link">{{__("website.plan")}}</a></li>
+                            <li class="footer-menu__item"><a href="plan.html" class="footer-menu__link">{{ __("website.plan") }}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -307,16 +307,16 @@
 <!-- ==================== Footer End Here ==================== -->
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="{{asset('assets/common/js/jquery-3.7.0.min.js')}}"></script>
-<script src="{{asset('assets/common/js/bootstrap.bundle.min.js')}}"></script>
-<script src="{{asset('assets/presets/themesTwo/js/popper.min.js')}}"></script>
-<script src="{{asset('assets/presets/themesTwo/js/bootstrap.min.js')}}"></script>
-<script src="{{asset('assets/presets/themesTwo/js/slick.min.js')}}"></script>
-<script src="{{asset('assets/presets/themesTwo/js/moment.min.js')}}"></script>
-<script src="{{asset('assets/presets/themesTwo/js/jquery.appear.min.js')}}"></script>
-<script src="{{asset('assets/presets/themesTwo/js/jquery.magnific-popup.min.js')}}"></script>
-<script src="{{asset('assets/presets/themesTwo/js/odometer.min.js')}}"></script>
-<script src="{{asset('assets/presets/themesTwo/js/viewport.jquery.js')}}"></script>
-<script src="{{asset('assets/presets/themesTwo/js/main.js')}}"></script>
+<script src="{{ asset('assets/common/js/jquery-3.7.0.min.js') }}"></script>
+<script src="{{ asset('assets/common/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('assets/presets/themesTwo/js/popper.min.js') }}"></script>
+<script src="{{ asset('assets/presets/themesTwo/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/presets/themesTwo/js/slick.min.js') }}"></script>
+<script src="{{ asset('assets/presets/themesTwo/js/moment.min.js') }}"></script>
+<script src="{{ asset('assets/presets/themesTwo/js/jquery.appear.min.js') }}"></script>
+<script src="{{ asset('assets/presets/themesTwo/js/jquery.magnific-popup.min.js') }}"></script>
+<script src="{{ asset('assets/presets/themesTwo/js/odometer.min.js') }}"></script>
+<script src="{{ asset('assets/presets/themesTwo/js/viewport.jquery.js') }}"></script>
+<script src="{{ asset('assets/presets/themesTwo/js/main.js') }}"></script>
 </body>
 </html>

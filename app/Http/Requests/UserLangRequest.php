@@ -17,7 +17,7 @@ class UserLangRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'language' => 'required|string|max:2|in:ru,uz,oz,en'
+            'language' => 'required|string|max:2|in:ru,uz,oz,en',
         ];
     }
 
