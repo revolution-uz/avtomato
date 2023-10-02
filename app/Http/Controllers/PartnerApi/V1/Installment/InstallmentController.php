@@ -33,10 +33,10 @@ class InstallmentController extends Controller
         description: 'Installment route',
         tags: ['Installments'],
         parameters: [
-            new OpenApiPageParameter(),
-            new OpenApiPerPageParameter(),
-            new OpenApiSearchParameter(),
-            new OpenApiSortParameter(),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+            new OpenApiSortParameter,
         ],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'InstallmentResource', withPagination: true, withSortables: true),
@@ -50,11 +50,11 @@ class InstallmentController extends Controller
             Installment::query()
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q->where('id', $request->search)
+                    fn (Builder $q) => $q->where('id', $request->search)
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
@@ -67,11 +67,11 @@ class InstallmentController extends Controller
         description: 'Installment get single route',
         tags: ['Installments'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'Installment')
+            new OpenApiIdParameter(modelName: 'Installment'),
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'InstallmentResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function getSingle(Installment $installment): JsonResponse
@@ -94,13 +94,14 @@ class InstallmentController extends Controller
     )]
     public function create(InstallmentRequest $request): JsonResponse
     {
-        $model = new Installment();
+        $model = new Installment;
         $model->fill($request->validated());
 
-        if ($model->save())
+        if ($model->save()) {
             return ApiResponse::success(InstallmentResource::make($model));
+        }
 
-        return ApiResponse::error("Error on creating Installment");
+        return ApiResponse::error('Error on creating Installment');
     }
 
     #[OA\Put(
@@ -122,7 +123,7 @@ class InstallmentController extends Controller
         ],
         responses: [
             new OpenApiJsonResponse(resourceName: 'InstallmentResource'),
-            new OpenApiNotFoundResponse(),
+            new OpenApiNotFoundResponse,
         ]
     )]
     public function update(Installment $installment, InstallmentRequest $request): JsonResponse
@@ -133,7 +134,7 @@ class InstallmentController extends Controller
             return ApiResponse::success(InstallmentResource::make($installment));
         }
 
-        return ApiResponse::error("Error on updating Installment");
+        return ApiResponse::error('Error on updating Installment');
     }
 
     #[OA\Delete(

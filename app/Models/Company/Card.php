@@ -13,11 +13,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $number
  * @property string $expiry
  * @property int $status
- * @property double $balance
+ * @property float $balance
  * @property string $myuzkard_id
- * @property integer $created_at
- * @property integer $updated_at
- * @property integer $deleted_at
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $deleted_at
  */
 class Card extends Model
 {

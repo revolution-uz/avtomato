@@ -53,9 +53,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // installments
         Route::prefix('installment')->controller(InstallmentController::class)->group(function () {
             Route::get('/', 'index')->name('installments.index');
-            Route::get('/{installment}', 'getSingle')->name('installments.get-single');
+            Route::get('{installment}', 'getSingle')->name('installments.get-single');
             Route::post('/', 'create')->name('installments.create');
-            Route::put('/{installment}', 'update')->name('installments.update');
+            Route::put('{installment}', 'update')->name('installments.update');
             Route::delete('/', 'delete')->name('installments.delete');
         });
     });

@@ -21,7 +21,7 @@ class InstallmentsDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:installments,id'
+            'ids.*' => 'integer|exists:installments,id',
         ];
     }
 }

@@ -48,11 +48,11 @@ class CardController extends Controller
             Card::query()
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q->where('name', 'ILIKE', '%' . $request->search . '%')
+                    fn (Builder $q) => $q->where('name', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )

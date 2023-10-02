@@ -12,20 +12,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $customer_id
  * @property int $branch_id
  * @property int $tariff_id
- * @property double $amount
+ * @property float $amount
  * @property string $description
- * @property boolean $sms_notify
- * @property boolean $auto_charge
- * @property boolean $any_card_charge
- * @property boolean $is_blacklist
+ * @property bool $sms_notify
+ * @property bool $auto_charge
+ * @property bool $any_card_charge
+ * @property bool $is_blacklist
  * @property int $status
  * @property int $period
  * @property string $myuzkard_id
  * @property int $starts_in
  * @property int $next_pay_date
- * @property integer $created_at
- * @property integer $updated_at
- * @property integer $deleted_at
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $deleted_at
  */
 class Installment extends Model
 {
