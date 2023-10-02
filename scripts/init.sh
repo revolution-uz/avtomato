@@ -15,8 +15,8 @@ docker exec -t avtomato-app composer install
 echo 'Installing composer packages. Finished.'
 
 echo 'Migrating database. Started.'
-docker exec -t avtomato-app php artisan migrate --seed --force
-docker exec -t avtomato-app php artisan migrate --database=database_test --force
+docker exec -t avtomato-app php artisan migrate --force
+docker exec -t avtomato-app php artisan migrate --database=test --force
 echo 'Migrating database. Finished.'
 
 echo 'Seeding dummy data. Started.'

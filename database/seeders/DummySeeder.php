@@ -35,8 +35,7 @@ class DummySeeder extends Seeder
         $company->domains()->create(['domain' => 'revo.avtomato.uz']);
 
         $company->run(function() {
-            Company\User::create([
-                'username' => 'admin',
+            Company\User::updateOrCreate(['username' => 'admin'], [
                 'password' => '$2y$10$9XqGfZiI6vmVhzJqGV/9w.CoA0BAp71o53n3x6J061nTVNdSPpjoa', // admin@701
                 'status' => UserStatusEnum::ACTIVE,
             ]);
