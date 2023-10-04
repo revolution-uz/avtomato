@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Rbac;
 
 use App\Models\Company\Rbac\Role;
 use Illuminate\Http\Request;
@@ -24,9 +24,9 @@ class SingleRoleResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'name' => $this->resource->name,
-            'permissions' => $this->resource->mapRolePermissionByBranch(),
-            'created_at' => $this->resource->created_at ? (int) $this->resource->created_at->format('U') : null,
-            'updated_at' => $this->resource->updated_at ? (int) $this->resource->updated_at->format('U') : null,
+            'permissions' => $this->resource->mapAllPermissionByBranch(),
+            'created_at' => $this->resource->created_at?->format('U'),
+            'updated_at' => $this->resource->updated_at?->format('U'),
         ];
     }
 }

@@ -41,6 +41,7 @@ class User extends Authenticatable
         'avatar',
         'template_theme',
         'language',
+        'role_id',
     ];
 
     protected $casts = [

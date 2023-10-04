@@ -14,16 +14,12 @@ class PermissionGroup extends Model
 {
     protected $fillable = [
         'slug',
-        'name_uz',
-        'name_oz',
-        'name_ru',
-        'name_en',
     ];
 
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->{'name_' . app()->getLocale()}
+            get: fn () => __('permissions.' . $this->slug)
         );
     }
 

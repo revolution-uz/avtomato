@@ -3,6 +3,7 @@
 namespace App\Models\Company\Rbac;
 
 use App\DTOs\PermissionRequestDTO;
+use App\Models\Company\Branch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,7 +28,7 @@ class Role extends Model
         $this->permissions()->detach();
         $collection = PermissionRequestDTO::collection($permissions[0]);
         foreach ($collection as $permissionDto) {
-            $this->permissions()->attach($permissionDto->permission_ids, ['branch_id' => $permissionDto->branch_id]);
+            $this->permissions()->attach($permissionDto->permission_id, ['branch_id' => $permissionDto->branch_id]);
         }
     }
 
@@ -44,21 +45,62 @@ class Role extends Model
 
     public function mapRolePermissionByBranch(): array
     {
-        $permissions = $this->rolePermissions;
+        $rolePermissions = $this->rolePermissions;
+        $branches = Branch::all();
+        $permissionBranches = $this->rolePermissions()->get()->mapToGroups(function ($item, $key) {
+            return [$item['permission_id'] => $item['branch_id']];
+        })->toArray();
 
         $result = [];
-        foreach ($permissions as $permission) {
-            $branchId = $permission->branch_id;
-            $permissionId = $permission->permission_id;
+        foreach ($rolePermissions as $rolePermission) {
+            $result[$rolePermission->permission->slug] = [];
+            foreach ($branches as $branch) {
+                $result[$rolePermission->permission->slug]['branch_' . $branch->id] = in_array($branch->id, $permissionBranches[$rolePermission->permission_id] ?? [], true);
+            }
+            // Add All branch
+            $result[$rolePermission->permission->slug]['all'] = $rolePermission->branch_id === null;
+        }
 
-            if (! isset($result[$branchId])) {
-                $result[$branchId] = [
-                    'branch_id' => $branchId,
-                    'permission_ids' => [],
+        return $result;
+    }
+
+    public function mapAllPermissionByBranch()
+    {
+        $permissionBranches = $this->rolePermissions()->get()->mapToGroups(function ($item, $key) {
+            return [$item['permission_id'] => $item['branch_id']];
+        })->toArray();
+
+        $result = [];
+        $groups = PermissionGroup::all();
+        foreach ($groups as $group) {
+            $groupItem['id'] = $group->id;
+            $groupItem['slug'] = $group->slug;
+            $groupItem['name'] = $group->name;
+            $groupItem['permissions'] = [];
+            foreach ($group->permissions as $permission) {
+                $permissionItem['id'] = $permission->id;
+                $permissionItem['slug'] = $permission->slug;
+                $permissionItem['name'] = $permission->name;
+                $permissionItem['branches'] = [];
+                foreach (Branch::all() as $branch) {
+                    $branchItem['id'] = $branch->id;
+                    $branchItem['name'] = $branch->name;
+                    $branchItem['editable'] = $permission->is_branch_related;
+                    $branchItem['enabled'] = in_array($branch->id, $permissionBranches[$permission->id] ?? [], true);
+
+                    $permissionItem['branches'][] = $branchItem;
+                }
+                // Add All branch
+                $permissionItem['branches'][] = [
+                    'id' => null,
+                    'name' => 'All',
+                    'editable' => true,
+                    'enabled' => in_array(null, $permissionBranches[$permission->id] ?? [], true),
                 ];
+                $groupItem['permissions'][] = $permissionItem;
             }
 
-            $result[$branchId]['permission_ids'][] = $permissionId;
+            $result[] = $groupItem;
         }
 
         return $result;

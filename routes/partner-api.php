@@ -89,10 +89,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('roles')->controller(RoleController::class)->group(function () {
         Route::get('/', 'index')->name('roles.index');
-        Route::get('permissions', 'permissions')->name('roles.permissions');
         Route::get('{id}', 'getSingle')->name('roles.get-single');
         Route::post('/', 'create')->name('roles.create');
         Route::put('{id}', 'update')->name('roles.update');
+        Route::post('{id}/attach-permissions', 'attachPermissions')->name('roles.attach-permissions');
         Route::delete('/', 'delete')->name('roles.delete');
     });
 

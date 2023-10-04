@@ -8,7 +8,7 @@ class PermissionRequestDTO extends Data
 {
     public function __construct(
         public ?int $branch_id,
-        public array $permission_ids,
+        public int $permission_id,
     ) {
     }
 }

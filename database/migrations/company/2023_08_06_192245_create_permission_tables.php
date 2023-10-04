@@ -11,20 +11,14 @@ class CreatePermissionTables extends Migration
         Schema::create('permission_groups', function (Blueprint $table) {
             $table->id();
             $table->string('slug');
-            $table->string('name_uz')->nullable();
-            $table->string('name_oz')->nullable();
-            $table->string('name_ru')->nullable();
-            $table->string('name_en')->nullable();
             $table->timestamps();
+
+            $table->unique('slug');
         });
 
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
             $table->string('slug');
-            $table->string('name_uz')->nullable();
-            $table->string('name_oz')->nullable();
-            $table->string('name_ru')->nullable();
-            $table->string('name_en')->nullable();
             $table->integer('permission_group_id');
             $table->integer('feature_id')->nullable();
             $table->boolean('is_branch_related');
@@ -49,10 +43,11 @@ class CreatePermissionTables extends Migration
             $table->integer('role_id');
             $table->integer('permission_id');
             $table->integer('branch_id')->nullable();
-            $table->unique(['role_id', 'permission_id', 'branch_id']);
+
             $table->index('role_id');
             $table->index('permission_id');
             $table->index('branch_id');
+            $table->unique(['role_id', 'permission_id', 'branch_id']);
         });
 
         Schema::table('users', function (Blueprint $table) {

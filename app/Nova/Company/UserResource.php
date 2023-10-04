@@ -8,6 +8,7 @@ use App\Nova\Actions\LoginAsUser;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Avatar;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\ID;
@@ -84,11 +85,7 @@ class UserResource extends Resource
                 ->onlyOnDetail()
                 ->rules('required'),
 
-            Text::make('Role', function () {
-                return $this->role->name;
-            })
-                ->sortable()
-                ->onlyOnDetail(),
+            BelongsTo::make('Role', 'role', RoleResource::class),
 
             Code::make('Template Theme', 'template_theme')
                 ->json()

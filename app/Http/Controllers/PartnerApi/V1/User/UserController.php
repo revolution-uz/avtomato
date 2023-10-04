@@ -282,15 +282,17 @@ class UserController extends Controller
             new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
     public function attachRole(int $id, AttachRoleRequest $request)
     {
         $user = User::findOrFail($id);
-        $user->update(['role_id' => $request->role_id]);
+        if ($user->update(['role_id' => $request->role_id])) {
+            return ApiResponse::success(SingleUserResource::make($user));
+        }
 
-        return ApiResponse::success(true);
+        return ApiResponse::error('Role not attached');
     }
 }

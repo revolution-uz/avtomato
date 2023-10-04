@@ -13,13 +13,12 @@ use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\User\RoleRequest;
-use App\Http\Requests\User\RolesDeleteRequest;
-use App\Http\Requests\User\RolesFilterRequest;
-use App\Http\Resources\PermissionGroupResource;
-use App\Http\Resources\User\RoleListResource;
-use App\Http\Resources\User\SingleRoleResource;
-use App\Models\Company\Rbac\PermissionGroup;
+use App\Http\Requests\Rbac\RolePermissionRequest;
+use App\Http\Requests\Rbac\RoleRequest;
+use App\Http\Requests\Rbac\RolesDeleteRequest;
+use App\Http\Requests\Rbac\RolesFilterRequest;
+use App\Http\Resources\Rbac\RoleListResource;
+use App\Http\Resources\Rbac\SingleRoleResource;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -99,9 +98,7 @@ class RoleController extends Controller
         $model->fill($request->validated());
 
         if ($model->save()) {
-            $model->syncPermissions($request->permissions);
-
-            return ApiResponse::success(SingleRoleResource::make($model));
+            return ApiResponse::success(RoleListResource::make($model));
         }
 
         return ApiResponse::error('Error on creating a role');
@@ -130,12 +127,55 @@ class RoleController extends Controller
         $role->fill($request->validated());
 
         if ($role->save()) {
-            $role->syncPermissions($request->permissions);
 
-            return ApiResponse::success(SingleRoleResource::make($role));
+            return ApiResponse::success(RoleListResource::make($role));
         }
 
         return ApiResponse::error('Error on updating a role');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/roles/{id}/attach-permissions',
+        description: 'Attach permissions to role route',
+        requestBody: new OA\RequestBody(
+            description: 'Attach permissions to role request body',
+            required: true,
+            content: new OA\JsonContent(type: 'array', items: new OA\Items(ref: '#/components/schemas/RolePermissionRequest'))
+        ),
+        tags: ['Roles'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Role'),
+        ],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'SingleRoleResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function attachPermissions(int $id, RolePermissionRequest $request)
+    {
+        $role = Role::findOrFail($id);
+
+        $filtered = array_filter($request->validated(), fn ($item) => $item['enabled'] !== false);
+
+        // additional validation for permissions
+        $mapped = array_reduce(
+            $filtered,
+            static function ($carry, $item) {
+                $carry[$item['permission_id']][] = $item['branch_id'];
+
+                return $carry;
+            },
+            []
+        );
+        foreach ($mapped as $item) {
+            if (in_array(null, $item, true) && count($item) > 1) {
+                return ApiResponse::error('You can\'t attach permission to all branches and specific branch at the same time');
+            }
+        }
+
+        $role->syncPermissions($filtered);
+
+        return ApiResponse::success(SingleRoleResource::make($role));
     }
 
     #[OA\Delete(
@@ -156,18 +196,5 @@ class RoleController extends Controller
         Role::query()->whereIn('id', $request->ids)->delete();
 
         return ApiResponse::success(true);
-    }
-
-    #[OA\Get(
-        path: '/api/v1/roles/permissions',
-        description: 'Get permissions list route',
-        tags: ['Roles'],
-        responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
-        ]
-    )]
-    public function permissions()
-    {
-        return ApiResponse::success(PermissionGroupResource::collection(PermissionGroup::query()->get()));
     }
 }

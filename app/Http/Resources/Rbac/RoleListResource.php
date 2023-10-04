@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Rbac;
 
 use App\Models\Company\Rbac\Role;
 use Illuminate\Http\Request;
@@ -13,6 +13,8 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'int', example: 1),
         new OA\Property(property: 'name', type: 'string', example: 'owner'),
+        new OA\Property(property: 'created_at', type: 'string', example: '123456789'),
+        new OA\Property(property: 'updated_at', type: 'string', example: '123456789'),
     ],
 )]
 /** @property Role $resource */
@@ -23,6 +25,8 @@ class RoleListResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'name' => $this->resource->name,
+            'created_at' => $this->resource->created_at?->format('U'),
+            'updated_at' => $this->resource->updated_at?->format('U'),
         ];
     }
 }

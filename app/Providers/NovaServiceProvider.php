@@ -7,8 +7,8 @@ use App\Helpers\UrlHelper;
 use App\Models\Admin;
 use App\Models\Company;
 use App\Nova\AdminResource;
+use App\Nova\Company\BranchResource;
 use App\Nova\Company\FeaturesResource;
-use App\Nova\Company\PermissionResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\TariffsResource;
 use App\Nova\Company\UserResource;
@@ -47,9 +47,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuSection::make('Resources', [
                         MenuItem::resource(UserResource::class),
                         MenuItem::resource(FeaturesResource::class),
+                        MenuItem::resource(BranchResource::class),
                         MenuItem::resource(TariffsResource::class),
                         MenuItem::resource(RoleResource::class),
-                        MenuItem::resource(PermissionResource::class),
                     ])->collapsable(),
                 ];
             }

@@ -5,8 +5,8 @@ namespace App\Nova\Company;
 use App\Models\Company\Rbac\RolePermission;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
 
 /**
  * @mixin RolePermission
@@ -15,7 +15,7 @@ class RolePermissionResource extends Resource
 {
     public static $model = RolePermission::class;
 
-    public static $title = 'id';
+    public static $title = 'slug';
 
     public static $perPageViaRelationship = 20;
 
@@ -33,15 +33,11 @@ class RolePermissionResource extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Permission', function () {
-                return $this->permission->slug;
-            })
-                ->sortable(),
+            BelongsTo::make('Role', 'role', RoleResource::class),
 
-            Text::make('Branch', function () {
-                return $this->branch?->name;
-            })
-                ->sortable(),
+            BelongsTo::make('Permission', 'permission', PermissionResource::class),
+
+            BelongsTo::make('Branch', 'branch', BranchResource::class),
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\Company\Rbac;
 
+use App\Models\Company\Features;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,11 +15,8 @@ class Permission extends Model
 {
     protected $fillable = [
         'slug',
-        'name_uz',
-        'name_oz',
-        'name_ru',
-        'name_en',
         'permission_group_id',
+        'feature_id',
         'guard_name',
     ];
 
@@ -27,10 +25,15 @@ class Permission extends Model
         return $this->belongsTo(PermissionGroup::class);
     }
 
+    public function feature()
+    {
+        return $this->belongsTo(Features::class);
+    }
+
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->{'name_' . app()->getLocale()}
+            get: fn () => __('permissions.' . $this->slug)
         );
     }
 }
