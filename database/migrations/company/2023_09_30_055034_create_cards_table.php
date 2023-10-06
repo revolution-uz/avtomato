@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('creator_id')->nullable();
             $table->unsignedBigInteger('customer_id');
             $table->string('pan');
             $table->string('number');
@@ -23,7 +22,6 @@ return new class extends Migration
             $table->integer('deleted_at')->nullable();
 
             $table->index('customer_id');
-            $table->foreign('creator_id')->references('id')->on('users');
         });
     }
 

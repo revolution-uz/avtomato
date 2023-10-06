@@ -10,7 +10,7 @@ use OpenApi\Attributes as OA;
     schema: 'InstallmentCardRequest',
     title: 'Request to create or update a card',
     properties: [
-        new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+        new OA\Property(property: 'installment_id', type: 'int', example: '1'),
         new OA\Property(property: 'card_id', type: 'int', example: '1'),
     ],
 )]
@@ -22,8 +22,8 @@ class InstallmentCardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => 'required|exists:customers,id',
-            'cards' => 'required|exists:cards,id',
+            'installment_id' => 'required|exists:installments,id',
+            'card_id' => 'required|exists:cards,id',
         ];
     }
 }

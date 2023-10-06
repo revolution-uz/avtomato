@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('installment_guarantors', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('creator_id')->nullable();
             $table->unsignedBigInteger('installment_id');
             $table->unsignedBigInteger('customer_id');
             $table->boolean('auto_charge');
@@ -23,7 +22,6 @@ return new class extends Migration
 
             $table->index('installment_id');
             $table->index('customer_id');
-            $table->foreign('creator_id')->references('id')->on('users');
         });
     }
 

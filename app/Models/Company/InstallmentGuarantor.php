@@ -6,6 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int $id
+ * @property int $installment_id
+ * @property int $customer_id
+ * @property boolean $auto_charge
+ * @property boolean $any_card_charge
+ * @property int $status
+ * @property string $myuzkard_id
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $deleted_at
+ */
 class InstallmentGuarantor extends Model
 {
     use HasFactory;
@@ -14,7 +26,6 @@ class InstallmentGuarantor extends Model
     protected $dateFormat = 'U';
 
     protected $fillable = [
-        'creator_id',
         'installment_id',
         'customer_id',
         'auto_charge',
@@ -22,9 +33,4 @@ class InstallmentGuarantor extends Model
         'status',
         'myuzkard_id',
     ];
-
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'creator_id');
-    }
 }
