@@ -76,9 +76,9 @@ class AttachmentController extends Controller
             ),
         ]
     )]
-    public function getFile(Attachment $attachment)
+    public function getFile(int $id)
     {
-        return response()->file(storage_path('app/public/' . $attachment->path));
+        return response()->file(storage_path('app/public/' . Attachment::findOrFail($id)->path));
     }
 
     #[OA\Get(
@@ -95,8 +95,8 @@ class AttachmentController extends Controller
             ),
         ]
     )]
-    public function getPreview(Attachment $attachment)
+    public function getPreview(int $id)
     {
-        return response()->file(storage_path('app/public/' . $attachment->preview_path));
+        return response()->file(storage_path('app/public/' . Attachment::firstOrFail($id)->preview_path));
     }
 }
