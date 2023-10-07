@@ -16,7 +16,7 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: root
-          POSTGRES_DB: avtomato_test
+          POSTGRES_DB: avtomato
         ports:
           - 5432:5432
         # Set health checks to wait until postgres has started
