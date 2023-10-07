@@ -18,7 +18,7 @@ class CustomerControllerTest extends TestCase
         $customer = Customer::factory()->create();
 
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->get(route('customer.get-single', ['id' => $customer->id]));
+        $response = $this->actingAs($admin)->get(route('customer.get-single', ['id' => $customer->id]));
 
         $response->assertOk();
         $this->assertEquals($customer->first_name, $response->json('data.first_name'));
@@ -65,7 +65,7 @@ class CustomerControllerTest extends TestCase
         //
         //        $this->seedAddress();
         //        $admin = $this->createAdminUser();
-        //        $response = $this->actingAs($admin, 'web')->post(route('customer.create'), $request);
+        //        $response = $this->actingAs($admin)->post(route('customer.create'), $request);
         //
         //        $response->assertOk();
     }

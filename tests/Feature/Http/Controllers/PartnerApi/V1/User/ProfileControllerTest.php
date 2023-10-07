@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment\Http\Controllers\PartnerApi\V1\User;
 
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -15,7 +15,7 @@ class ProfileControllerTest extends TestCase
     public function me()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->get(route('profile.me'));
+        $response = $this->actingAs($admin)->get(route('profile.me'));
 
         $response->assertOk();
         $this->assertEquals($admin->id, $response->json('data.id'));
@@ -30,7 +30,7 @@ class ProfileControllerTest extends TestCase
     public function update()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->put(route('profile.update'), [
+        $response = $this->actingAs($admin)->put(route('profile.update'), [
             'first_name' => 'Updated First Name',
             'last_name' => 'Updated Last Name',
         ]);
@@ -47,7 +47,7 @@ class ProfileControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $newPassword = 'password';
-        $response = $this->actingAs($admin, 'web')->post(route('profile.change-password'), [
+        $response = $this->actingAs($admin)->post(route('profile.change-password'), [
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
@@ -63,7 +63,7 @@ class ProfileControllerTest extends TestCase
     public function changeTheme()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->post(route('profile.change-theme'), [
+        $response = $this->actingAs($admin)->post(route('profile.change-theme'), [
             'layout_name' => 'fixed',
         ]);
 
@@ -78,7 +78,7 @@ class ProfileControllerTest extends TestCase
     public function changeLanguage()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->post(route('profile.change-language'), [
+        $response = $this->actingAs($admin)->post(route('profile.change-language'), [
             'language' => 'uz',
         ]);
 
@@ -95,7 +95,7 @@ class ProfileControllerTest extends TestCase
         $admin = $this->createAdminUser();
         $admin->createTokenWithDeviceName('test', 'localhost');
 
-        $response = $this->actingAs($admin, 'web')->get(route('profile.devices'));
+        $response = $this->actingAs($admin)->get(route('profile.devices'));
 
         $response->assertOk();
         $this->assertCount(1, $response->json('data'));
@@ -110,7 +110,7 @@ class ProfileControllerTest extends TestCase
         $admin->createTokenWithDeviceName('test', 'localhost');
         $token = $admin->tokens()->first();
 
-        $response = $this->actingAs($admin, 'web')->delete(route('profile.revoke-device', ['id' => $token->id]));
+        $response = $this->actingAs($admin)->delete(route('profile.revoke-device', ['id' => $token->id]));
 
         $response->assertOk();
         $this->assertEmpty($admin->fresh()->tokens);

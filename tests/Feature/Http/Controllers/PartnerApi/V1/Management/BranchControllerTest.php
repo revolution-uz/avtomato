@@ -14,7 +14,7 @@ class BranchControllerTest extends TestCase
         Branch::factory(5)->create();
 
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->get(route('branches.index'));
+        $response = $this->actingAs($admin)->get(route('branches.index'));
 
         $response->assertOk();
         $this->assertNotEmpty($response->json('data'));
@@ -29,7 +29,7 @@ class BranchControllerTest extends TestCase
         $branch = Branch::factory()->create();
 
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->get(route('branches.get-single', ['id' => $branch->id]));
+        $response = $this->actingAs($admin)->get(route('branches.get-single', ['id' => $branch->id]));
 
         $response->assertOk();
         $this->assertNotEmpty($response->json('data'));
@@ -42,7 +42,7 @@ class BranchControllerTest extends TestCase
     public function create()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->post(route('branches.create'), [
+        $response = $this->actingAs($admin)->post(route('branches.create'), [
             'name' => 'Test Branch',
             'address' => 'Test Address',
             'inn' => '123456789',
@@ -63,7 +63,7 @@ class BranchControllerTest extends TestCase
         $branch = Branch::factory()->create();
 
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->put(route('branches.update', ['id' => $branch->id]), [
+        $response = $this->actingAs($admin)->put(route('branches.update', ['id' => $branch->id]), [
             'name' => 'Updated Branch',
             'address' => 'Updated Address',
             'inn' => '123456789',
@@ -83,7 +83,7 @@ class BranchControllerTest extends TestCase
     {
         $branch = Branch::factory()->create();
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->delete(route('branches.delete'), [
+        $response = $this->actingAs($admin)->delete(route('branches.delete'), [
             'ids' => [$branch->id],
         ]);
 

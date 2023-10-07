@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment\Http\Controllers\PartnerApi\V1\User;
 
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\User;
@@ -18,7 +18,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         User::factory(5)->create();
-        $response = $this->actingAs($admin, 'web')->get(route('users.index'));
+        $response = $this->actingAs($admin)->get(route('users.index'));
 
         $response->assertOk();
         $this->assertCount(6, $response->json('data'));
@@ -31,7 +31,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $response = $this->actingAs($admin, 'web')->get(route('users.get-single', ['id' => $user->id]));
+        $response = $this->actingAs($admin)->get(route('users.get-single', ['id' => $user->id]));
 
         $response->assertOk();
         $this->assertEquals($user->id, $response->json('data.id'));
@@ -46,7 +46,7 @@ class UserControllerTest extends TestCase
     public function create()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin, 'web')->post(route('users.create'), [
+        $response = $this->actingAs($admin)->post(route('users.create'), [
             'first_name' => 'Test First Name',
             'last_name' => 'Test Last Name',
             'username' => 'test_username',
@@ -74,7 +74,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $response = $this->actingAs($admin, 'web')->put(route('users.update', ['id' => $user->id]), [
+        $response = $this->actingAs($admin)->put(route('users.update', ['id' => $user->id]), [
             'first_name' => 'Updated First Name',
             'last_name' => 'Updated Last Name',
         ]);
@@ -92,7 +92,7 @@ class UserControllerTest extends TestCase
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
         $newPassword = 'password';
-        $response = $this->actingAs($admin, 'web')->post(route('users.change-password', ['id' => $user->id]), [
+        $response = $this->actingAs($admin)->post(route('users.change-password', ['id' => $user->id]), [
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
@@ -109,7 +109,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $response = $this->actingAs($admin, 'web')->post(route('users.change-theme', ['id' => $user->id]), [
+        $response = $this->actingAs($admin)->post(route('users.change-theme', ['id' => $user->id]), [
             'layout_name' => 'fixed',
         ]);
 
@@ -124,7 +124,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $response = $this->actingAs($admin, 'web')->delete(route('users.delete'), [
+        $response = $this->actingAs($admin)->delete(route('users.delete'), [
             'ids' => [$user->id],
         ]);
 
@@ -141,7 +141,7 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create();
         $user->createTokenWithDeviceName('test', 'localhost');
 
-        $response = $this->actingAs($admin, 'web')->get(route('users.devices', ['id' => $user->id]));
+        $response = $this->actingAs($admin)->get(route('users.devices', ['id' => $user->id]));
 
         $response->assertOk();
         $this->assertNotEmpty($response->json('data'));
@@ -159,7 +159,7 @@ class UserControllerTest extends TestCase
         $user->createTokenWithDeviceName('test', 'localhost');
         $token = $user->tokens()->first();
 
-        $response = $this->actingAs($admin, 'web')->delete(route('users.revoke-device', [
+        $response = $this->actingAs($admin)->delete(route('users.revoke-device', [
             'ids' => [$token->id],
         ]));
 
