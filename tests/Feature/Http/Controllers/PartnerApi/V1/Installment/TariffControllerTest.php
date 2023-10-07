@@ -100,11 +100,10 @@ class TariffControllerTest extends TestCase
         $tariff = Tariff::factory()->create();
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)->delete(route('tariffs.delete', [
-            'ids' => [$tariff->id]
+            'ids' => [$tariff->id],
         ]));
 
         $response->assertOk();
         $this->assertSoftDeleted($tariff);
     }
-
 }

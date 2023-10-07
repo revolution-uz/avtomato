@@ -8,6 +8,7 @@ use Tests\TestCase;
 class AuthControllerTest extends TestCase
 {
     protected $tenancy = true;
+
     /**
      * @test
      */

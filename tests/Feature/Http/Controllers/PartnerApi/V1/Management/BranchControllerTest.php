@@ -9,7 +9,10 @@ class BranchControllerTest extends TestCase
 {
     protected $tenancy = true;
 
-    public function testIndex()
+    /**
+     * @test
+     */
+    public function index()
     {
         Branch::factory(5)->create();
 
