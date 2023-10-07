@@ -4,8 +4,10 @@ namespace App\Models\Company;
 
 use App\DTOs\UserTemplateThemeDto;
 use App\Enums\Company\UserStatusEnum;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -39,6 +41,7 @@ class User extends Authenticatable
         'avatar',
         'template_theme',
         'language',
+        'role_id',
     ];
 
     protected $casts = [
@@ -67,6 +70,11 @@ class User extends Authenticatable
     public function phones(): MorphToMany
     {
         return $this->morphToMany(Phone::class, 'phoneable');
+    }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
     }
 
     public function avatarPreviewPath(): Attribute

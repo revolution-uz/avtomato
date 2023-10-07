@@ -118,8 +118,8 @@ class CustomerController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(Customer $customer): JsonResponse
+    public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(SingleCustomerResource::make($customer));
+        return ApiResponse::success(SingleCustomerResource::make(Customer::findOrFail($id)));
     }
 }

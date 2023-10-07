@@ -104,8 +104,9 @@ class KatmInpsHistoryController extends Controller
             new OpenApiJsonResponse(resourceName: 'KatmInpsHistoryResource'),
         ]
     )]
-    public function read(ScoringRequest $scoring)
+    public function read(int $id)
     {
+        $scoring = ScoringRequest::findOrFail($id);
         if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::KATM_INPS_HISTORY) {
             throw new ModelNotFoundException;
         }

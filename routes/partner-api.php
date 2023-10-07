@@ -11,6 +11,7 @@ use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmInpsHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmPensionInfoController;
 use App\Http\Controllers\PartnerApi\V1\User\ProfileController;
+use App\Http\Controllers\PartnerApi\V1\User\RoleController;
 use App\Http\Controllers\PartnerApi\V1\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +29,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('user.logout');
 
 Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {
-    Route::get('{attachment}/preview', 'getPreview')->name('attachments.preview');
+    Route::get('{id}/preview', 'getPreview')->name('attachments.preview');
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -37,9 +38,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // tariffs
         Route::prefix('tariffs')->controller(TariffsController::class)->group(function () {
             Route::get('/', 'index')->name('tariffs.index');
-            Route::get('{tariff}', 'getSingle')->name('tariffs.get-single');
+            Route::get('{id}', 'getSingle')->name('tariffs.get-single');
             Route::post('/', 'create')->name('tariffs.create');
-            Route::put('{tariff}', 'update')->name('tariffs.update');
+            Route::put('{id}', 'update')->name('tariffs.update');
             Route::delete('/', 'delete')->name('tariffs.delete');
         });
 
@@ -55,9 +56,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // branches
         Route::prefix('branches')->controller(BranchController::class)->group(function () {
             Route::get('/', 'index')->name('branches.index');
-            Route::get('{branch}', 'getSingle')->name('branches.get-single');
+            Route::get('{id}', 'getSingle')->name('branches.get-single');
             Route::post('/', 'create')->name('branches.create');
-            Route::put('{branch}', 'update')->name('branches.update');
+            Route::put('{id}', 'update')->name('branches.update');
             Route::delete('/', 'delete')->name('branches.delete');
         });
     });
@@ -75,14 +76,24 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
         Route::get('/', 'index')->name('users.index');
-        Route::get('{user}', 'getSingle')->name('users.get-single');
+        Route::get('{id}', 'getSingle')->name('users.get-single');
         Route::post('/', 'create')->name('users.create');
-        Route::put('{user}', 'update')->name('users.update');
-        Route::post('{user}/change-password', 'changePassword')->name('users.get-single');
-        Route::post('{user}/change-theme', 'changeTheme')->name('users.get-single');
-        Route::get('{user}/devices', 'devices')->name('users.devices');
-        Route::delete('revoke-device/{personalAccessToken}', 'revokeDevice')->name('users.revoke-device');
-        Route::delete('{user}', 'delete')->name('users.delete');
+        Route::put('{id}', 'update')->name('users.update');
+        Route::post('{id}/change-password', 'changePassword')->name('users.get-single');
+        Route::post('{id}/change-theme', 'changeTheme')->name('users.get-single');
+        Route::get('{id}/devices', 'devices')->name('users.devices');
+        Route::post('{id}/attach-role', 'attachRole')->name('users.attach-role');
+        Route::delete('revoke-device/{id}', 'revokeDevice')->name('users.revoke-device');
+        Route::delete('{id}', 'delete')->name('users.delete');
+    });
+
+    Route::prefix('roles')->controller(RoleController::class)->group(function () {
+        Route::get('/', 'index')->name('roles.index');
+        Route::get('{id}', 'getSingle')->name('roles.get-single');
+        Route::post('/', 'create')->name('roles.create');
+        Route::put('{id}', 'update')->name('roles.update');
+        Route::post('{id}/attach-permissions', 'attachPermissions')->name('roles.attach-permissions');
+        Route::delete('/', 'delete')->name('roles.delete');
     });
 
     Route::prefix('info')->controller(InfoController::class)->group(function () {
@@ -95,24 +106,24 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('customer')->controller(CustomerController::class)->group(function () {
         Route::post('info-by-passport', 'infoByPassport');
         Route::post('create', 'create');
-        Route::get('{customer}', 'getSingle');
+        Route::get('{id}', 'getSingle');
     });
 
     Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {
         Route::post('upload', 'upload')->name('attachments.upload');
-        Route::get('{attachment}', 'getFile')->name('attachments.file');
+        Route::get('{id}', 'getFile')->name('attachments.file');
     });
 
     Route::prefix('scoring')->group(function () {
         Route::prefix('credit-history')->controller(KatmCreditHistoryController::class)->group(function () {
             Route::post('create', 'create');
             Route::get('/', 'index');
-            Route::get('{scoring}', 'read');
+            Route::get('{id}', 'read');
         });
         Route::prefix('inps-history')->controller(KatmInpsHistoryController::class)->group(function () {
             Route::post('create', 'create');
             Route::get('/', 'index');
-            Route::get('{scoring}', 'read');
+            Route::get('{id}', 'read');
         });
         Route::prefix('pension-info')->controller(KatmPensionInfoController::class)->group(function () {
             Route::post('create', 'create');
