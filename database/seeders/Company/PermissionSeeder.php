@@ -18,7 +18,7 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::firstOrCreate(['name' => UserRoleEnum::OWNER->value]);
+        Role::firstOrCreate(['name' => UserRoleEnum::ADMIN->value]);
 
         try {
             DB::transaction(function () {
