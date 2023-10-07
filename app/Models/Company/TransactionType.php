@@ -12,7 +12,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en
- * @property boolean $is_system
+ * @property bool $is_system
  * @property int $created_at
  * @property int $updated_at
  */
