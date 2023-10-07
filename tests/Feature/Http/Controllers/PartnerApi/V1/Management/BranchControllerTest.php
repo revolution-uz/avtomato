@@ -3,7 +3,6 @@
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Management;
 
 use App\Models\Company\Branch;
-use App\Models\Company\User;
 use Tests\TestCase;
 
 class BranchControllerTest extends TestCase
@@ -14,30 +13,36 @@ class BranchControllerTest extends TestCase
     {
         Branch::factory(5)->create();
 
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user, 'web')->get(route('branches.index'));
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin, 'web')->get(route('branches.index'));
 
         $response->assertOk();
         $this->assertNotEmpty($response->json('data'));
         $this->assertCount(5, $response->json('data'));
     }
 
-    public function testSingle()
+    /**
+     * @test
+     */
+    public function single()
     {
         $branch = Branch::factory()->create();
 
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user, 'web')->get(route('branches.get-single', $branch->id));
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin, 'web')->get(route('branches.get-single', ['id' => $branch->id]));
 
         $response->assertOk();
         $this->assertNotEmpty($response->json('data'));
         $this->assertEquals($branch->id, $response->json('data.id'));
     }
 
-    public function testCreate()
+    /**
+     * @test
+     */
+    public function create()
     {
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user, 'web')->post(route('branches.create'), [
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin, 'web')->post(route('branches.create'), [
             'name' => 'Test Branch',
             'address' => 'Test Address',
             'inn' => '123456789',
@@ -50,12 +55,15 @@ class BranchControllerTest extends TestCase
         $this->assertEquals('123456789', $response->json('data.inn'));
     }
 
-    public function testUpdate()
+    /**
+     * @test
+     */
+    public function update()
     {
         $branch = Branch::factory()->create();
 
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user, 'web')->put(route('branches.update', $branch->id), [
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin, 'web')->put(route('branches.update', ['id' => $branch->id]), [
             'name' => 'Updated Branch',
             'address' => 'Updated Address',
             'inn' => '123456789',
@@ -68,12 +76,14 @@ class BranchControllerTest extends TestCase
         $this->assertEquals('123456789', $response->json('data.inn'));
     }
 
-    public function testDelete()
+    /**
+     * @test
+     */
+    public function remove()
     {
         $branch = Branch::factory()->create();
-
-        $user = User::factory()->create();
-        $response = $this->actingAs($user, 'web')->delete(route('branches.delete'), [
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin, 'web')->delete(route('branches.delete'), [
             'ids' => [$branch->id],
         ]);
 

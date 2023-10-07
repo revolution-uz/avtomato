@@ -16,7 +16,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Region extends Model
 {
-    use TenantConnection, HasFactory;
+    use HasFactory, TenantConnection;
     public $timestamps = false;
 
     protected $fillable = [

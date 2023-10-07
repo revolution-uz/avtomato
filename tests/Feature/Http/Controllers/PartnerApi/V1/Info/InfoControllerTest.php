@@ -11,42 +11,54 @@ class InfoControllerTest extends TestCase
 {
     protected $tenancy = true;
 
-    public function testSettings()
+    /**
+     * @test
+     */
+    public function settings()
     {
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user)
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin)
             ->get(route('info.settings'));
 
         $response->assertOk();
     }
 
-    public function testRegions()
+    /**
+     * @test
+     */
+    public function regions()
     {
         Region::factory()->count(10)->create();
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user)
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin)
             ->get(route('info.regions'));
 
         $response->assertOk();
         $this->assertCount(10, $response->json('data'));
     }
 
-    public function testDistricts()
+    /**
+     * @test
+     */
+    public function districts()
     {
         District::factory()->count(10)->create();
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user)
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin)
             ->get(route('info.districts'));
 
         $response->assertOk();
         $this->assertCount(10, $response->json('data'));
     }
 
-    public function testMahallas()
+    /**
+     * @test
+     */
+    public function mahallas()
     {
         Mahalla::factory()->count(10)->create();
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user)
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin)
             ->get(route('info.mahallas'));
 
         $response->assertOk();

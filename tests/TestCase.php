@@ -5,8 +5,10 @@ namespace Tests;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use App\Models\Company\Mahalla;
-use Artisan;
+use App\Models\Company\Rbac\Role;
+use Database\Seeders\Company\PermissionSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Testing\LoggedExceptionCollection;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -24,7 +26,7 @@ abstract class TestCase extends BaseTestCase
             $this->initializeTenancy();
             $this->withoutMiddleware([
                 InitializeTenancyByDomain::class,
-                PreventAccessFromCentralDomains::class
+                PreventAccessFromCentralDomains::class,
             ]);
         }
     }
@@ -41,18 +43,24 @@ abstract class TestCase extends BaseTestCase
         tenancy()->initialize($tenant);
 
         Artisan::call('tenants:migrate-fresh', [
-            '--tenants' => [$tenant->id]
+            '--tenants' => [$tenant->id],
         ]);
-        // todo uncomment after role merge
-//        Artisan::call('tenants:seed', [
-//            '--class' => 'PermissionSeeder',
-//            '--tenants' => [$tenant->id]
-//        ]);
+        Artisan::call('tenants:seed', [
+            '--class' => PermissionSeeder::class,
+            '--tenants' => [$tenant->id],
+        ]);
     }
 
     public function seedAddress()
     {
         Mahalla::factory()->count(1)->create();
+    }
+
+    public function createAdminUser()
+    {
+        return Company\User::factory()->create([
+            'role_id' => Role::getAdmin()->id,
+        ]);
     }
 
     protected function createTestResponse($response)
@@ -64,16 +72,5 @@ abstract class TestCase extends BaseTestCase
                     : new LoggedExceptionCollection
             );
         });
-    }
-
-    public function createAdminUser()
-    {
-        // todo uncomment after role merge
-//        $user = Company\User::factory()->create([
-//            'role_id' => true,
-//        ]);
-        $user = Company\User::factory()->create();
-
-        return $user;
     }
 }

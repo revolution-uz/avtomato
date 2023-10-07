@@ -76,7 +76,7 @@ class BranchController extends Controller
     )]
     public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(BranchResource::make(Branch::firstOrFail($id)));
+        return ApiResponse::success(BranchResource::make(Branch::findOrFail($id)));
     }
 
     #[OA\Post(
@@ -128,7 +128,7 @@ class BranchController extends Controller
     )]
     public function update(int $id, BranchRequest $request): JsonResponse
     {
-        $branch = Branch::firstOrFail($id);
+        $branch = Branch::findOrFail($id);
         $branch->fill($request->validated());
 
         if ($branch->save()) {

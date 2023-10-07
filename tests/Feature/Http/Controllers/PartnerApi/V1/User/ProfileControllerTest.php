@@ -2,93 +2,117 @@
 
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 
-use App\Models\Company\PersonalAccessToken;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class ProfileControllerTest extends TestCase
 {
     protected $tenancy = true;
 
-    public function testMe()
+    /**
+     * @test
+     */
+    public function me()
     {
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user, 'web')->get(route('profile.me'));
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin, 'web')->get(route('profile.me'));
 
         $response->assertOk();
-        $this->assertEquals($user->id, $response->json('data.id'));
-        $this->assertEquals($user->first_name, $response->json('data.first_name'));
-        $this->assertEquals($user->last_name, $response->json('data.last_name'));
-        $this->assertEquals($user->username, $response->json('data.username'));
+        $this->assertEquals($admin->id, $response->json('data.id'));
+        $this->assertEquals($admin->first_name, $response->json('data.first_name'));
+        $this->assertEquals($admin->last_name, $response->json('data.last_name'));
+        $this->assertEquals($admin->username, $response->json('data.username'));
     }
 
-    public function testUpdate()
+    /**
+     * @test
+     */
+    public function update()
     {
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user, 'web')->put(route('profile.update'), [
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin, 'web')->put(route('profile.update'), [
             'first_name' => 'Updated First Name',
             'last_name' => 'Updated Last Name',
         ]);
 
         $response->assertOk();
-        $this->assertEquals('Updated First Name', $response->json('data.first_name'));
-        $this->assertEquals('Updated Last Name', $response->json('data.last_name'));
+        $this->assertEquals('Updated First Name', $admin->first_name);
+        $this->assertEquals('Updated Last Name', $admin->last_name);
     }
 
-    public function testChangePassword()
+    /**
+     * @test
+     */
+    public function changePassword()
     {
-        $user = $this->createAdminUser();
+        $admin = $this->createAdminUser();
         $newPassword = 'password';
-        $response = $this->actingAs($user, 'web')->post(route('profile.change-password'), [
+        $response = $this->actingAs($admin, 'web')->post(route('profile.change-password'), [
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
 
         $response->assertOk();
         // todo fix this
-//        $this->assertTrue(Hash::check($newPassword, $user->fresh()->password));
+        //        $this->assertTrue(Hash::check($newPassword, $admin->password));
     }
 
-    public function testChangeTheme()
+    /**
+     * @test
+     */
+    public function changeTheme()
     {
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user, 'web')->post(route('profile.change-theme'), [
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin, 'web')->post(route('profile.change-theme'), [
             'layout_name' => 'fixed',
         ]);
 
         $response->assertOk();
         $this->assertEquals('fixed', $response->json('data.template_theme.layout_name'));
+        $this->assertEquals('fixed', $admin->fresh()->template_theme->layout_name);
     }
 
-    public function testChangeLanguage()
+    /**
+     * @test
+     */
+    public function changeLanguage()
     {
-        $user = $this->createAdminUser();
-        $response = $this->actingAs($user, 'web')->post(route('profile.change-language'), [
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin, 'web')->post(route('profile.change-language'), [
             'language' => 'uz',
         ]);
 
         $response->assertOk();
         $this->assertEquals('uz', $response->json('data.language'));
+        $this->assertEquals('uz', $admin->fresh()->language);
     }
 
-    public function testDevices()
+    /**
+     * @test
+     */
+    public function devices()
     {
-        $user = $this->createAdminUser();
-        $user->createTokenWithDeviceName('test', 'localhost');
+        $admin = $this->createAdminUser();
+        $admin->createTokenWithDeviceName('test', 'localhost');
 
-        $response = $this->actingAs($user, 'web')->get(route('profile.devices'));
+        $response = $this->actingAs($admin, 'web')->get(route('profile.devices'));
 
         $response->assertOk();
         $this->assertCount(1, $response->json('data'));
     }
 
-//    public function testRevokeDevice()
-//    {
-//        $user = $this->createAdminUser();
-//        $token = $user->createTokenWithDeviceName('test', 'localhost');
-//
-//        $response = $this->actingAs($user, 'web')->delete(route('profile.revoke-device', $token));
-//
-//        $response->assertOk();
-//        $this->assertCount(0, PersonalAccessToken::all());
-//    }
+    /**
+     * @test
+     */
+    public function revokeDevice()
+    {
+        $admin = $this->createAdminUser();
+        $admin->createTokenWithDeviceName('test', 'localhost');
+        $token = $admin->tokens()->first();
+
+        $response = $this->actingAs($admin, 'web')->delete(route('profile.revoke-device', ['id' => $token->id]));
+
+        $response->assertOk();
+        $this->assertEmpty($admin->fresh()->tokens);
+    }
 }

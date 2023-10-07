@@ -9,4 +9,10 @@ class TestResponse extends \Illuminate\Testing\TestResponse
         $this->assertStatus(200);
         $this->assertJsonFragment(['success' => true]);
     }
+
+    public function assertError()
+    {
+        $this->assertStatus(200);
+        $this->assertJsonFragment(['success' => false]);
+    }
 }

@@ -71,7 +71,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('change-theme', 'changeTheme')->name('profile.change-theme');
         Route::post('change-lang', 'changeLanguage')->name('profile.change-language');
         Route::get('devices', 'devices')->name('profile.devices');
-        Route::delete('revoke-device/{personalAccessToken}', 'revokeDevice')->name('profile.revoke-device');
+        Route::delete('revoke-device/{id}', 'revokeDevice')->name('profile.revoke-device');
     });
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
@@ -79,12 +79,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('{id}', 'getSingle')->name('users.get-single');
         Route::post('/', 'create')->name('users.create');
         Route::put('{id}', 'update')->name('users.update');
-        Route::post('{id}/change-password', 'changePassword')->name('users.get-single');
-        Route::post('{id}/change-theme', 'changeTheme')->name('users.get-single');
+        Route::post('{id}/change-password', 'changePassword')->name('users.change-password');
+        Route::post('{id}/change-theme', 'changeTheme')->name('users.change-theme');
         Route::get('{id}/devices', 'devices')->name('users.devices');
         Route::post('{id}/attach-role', 'attachRole')->name('users.attach-role');
-        Route::delete('revoke-device/{id}', 'revokeDevice')->name('users.revoke-device');
-        Route::delete('{id}', 'delete')->name('users.delete');
+        Route::delete('revoke-device', 'revokeDevice')->name('users.revoke-device');
+        Route::delete('/', 'delete')->name('users.delete');
     });
 
     Route::prefix('roles')->controller(RoleController::class)->group(function () {

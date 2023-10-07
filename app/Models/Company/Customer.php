@@ -37,7 +37,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Customer extends Model
 {
-    use SoftDeletes, TenantConnection, HasFactory;
+    use HasFactory, SoftDeletes, TenantConnection;
 
     protected $dateFormat = 'U';
 

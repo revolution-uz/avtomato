@@ -14,9 +14,11 @@ use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\User\AttachRoleRequest;
+use App\Http\Requests\User\DeviceRevokeRequest;
 use App\Http\Requests\User\PasswordRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserFilterRequest;
+use App\Http\Requests\User\UsersDeleteRequest;
 use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\DeviceInfoResource;
@@ -220,9 +222,9 @@ class UserController extends Controller
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ]
     )]
-    public function delete(int $id): JsonResponse
+    public function delete(UsersDeleteRequest $request): JsonResponse
     {
-        User::findOrFail($id)->deleteOrFail();
+        User::query()->whereIn('id', $request->ids)->delete();
 
         return ApiResponse::success(true);
     }
@@ -262,9 +264,11 @@ class UserController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function revokeDevice(int $id): JsonResponse
+    public function revokeDevice(DeviceRevokeRequest $request): JsonResponse
     {
-        return ApiResponse::success(PersonalAccessToken::findOrFail($id)->delete());
+        PersonalAccessToken::query()->whereIn('id', $request->ids)->delete();
+
+        return ApiResponse::success(true);
     }
 
     #[OA\Post(
