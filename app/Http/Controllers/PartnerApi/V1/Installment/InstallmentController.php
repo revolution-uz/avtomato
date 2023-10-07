@@ -54,11 +54,11 @@ class InstallmentController extends Controller
             Installment::query()
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q->where('id', $request->search)
+                    fn (Builder $q) => $q->where('id', $request->search)
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
@@ -202,6 +202,7 @@ class InstallmentController extends Controller
     public function detachCard(InstallmentCardRequest $request): JsonResponse
     {
         $installmentCard = InstallmentCard::query()->where('installment_id', $request->installment_id)->where('card_id', $request->card_id)->first();
+
         return ApiResponse::success($installmentCard->delete());
     }
 
