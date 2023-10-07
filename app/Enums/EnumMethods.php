@@ -8,4 +8,11 @@ trait EnumMethods
     {
         return array_column(self::cases(), 'value');
     }
+
+    public static function randomValue(): string
+    {
+        $values = self::values();
+
+        return $values[array_rand($values)];
+    }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\Company\Attachment;
 use App\Models\Company\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -35,7 +36,7 @@ class UserService
     public function updatePassword(User $user, PasswordRequest $request): bool
     {
         return $user->update([
-            'password' => bcrypt($request->password),
+            'password' => Hash::make('password'),
         ]);
     }
 

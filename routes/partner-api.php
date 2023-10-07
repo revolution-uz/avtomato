@@ -67,7 +67,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('me', 'me')->name('profile.me');
         Route::put('me', 'update')->name('profile.update');
         Route::post('change-password', 'changePassword')->name('profile.change-password');
-        Route::post('change-theme', 'changeTheme')->name('profile.change-password');
+        Route::post('change-theme', 'changeTheme')->name('profile.change-theme');
         Route::post('change-lang', 'changeLanguage')->name('profile.change-language');
         Route::get('devices', 'devices')->name('profile.devices');
         Route::delete('revoke-device/{personalAccessToken}', 'revokeDevice')->name('profile.revoke-device');
@@ -93,9 +93,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::prefix('customer')->controller(CustomerController::class)->group(function () {
-        Route::post('info-by-passport', 'infoByPassport');
-        Route::post('create', 'create');
-        Route::get('{customer}', 'getSingle');
+        Route::post('info-by-passport', 'infoByPassport')->name('customer.info-by-passport');
+        Route::post('create', 'create')->name('customer.create');
+        Route::get('{customer}', 'getSingle')->name('customer.get-single');
     });
 
     Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {
