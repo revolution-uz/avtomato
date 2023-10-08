@@ -14,6 +14,7 @@ use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\User\AttachRoleRequest;
+use App\Http\Requests\User\AvatarRequest;
 use App\Http\Requests\User\DeviceRevokeRequest;
 use App\Http\Requests\User\PasswordRequest;
 use App\Http\Requests\User\UserCreateRequest;
@@ -209,6 +210,32 @@ class UserController extends Controller
         }
 
         return ApiResponse::error('Theme not updated');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/profile/change-avatar',
+        description: 'Change avatar route',
+        requestBody: new OA\RequestBody(
+            description: 'Attachment upload body. Send as multipart/form-data',
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(ref: '#/components/schemas/AvatarRequest')
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+        ],
+    )]
+    public function uploadAvatar(int $id, AvatarRequest $request)
+    {
+        $user = User::findOrFail($id);
+        if ($this->userService->updateAvatar($user, $request)) {
+            return ApiResponse::success(SingleUserResource::make($user));
+        }
+
+        return ApiResponse::error('Avatar not updated');
     }
 
     #[OA\Delete(

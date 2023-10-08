@@ -49,7 +49,10 @@ class SingleUserResource extends JsonResource
             'last_name' => $this->resource->last_name,
             'phone' => $this->resource->phones()->latest()->first()->phone ?? null,
             'status' => $this->resource->status,
-            'avatar' => $this->resource->avatar,
+            'avatar' => [
+                'url' => $this->resource->avatar_url,
+                'url_preview' => $this->resource->avatar_preview_url,
+            ],
             'template_theme' => $this->resource->template_theme,
             'language' => $this->resource->language,
             'role' => RoleListResource::make($this->resource->role),
