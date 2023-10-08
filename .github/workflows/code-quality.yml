@@ -63,6 +63,9 @@ jobs:
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
       - name: Run security checks
         uses: symfonycorp/security-checker-action@v3
+      - name: Run swagger generate
+        run: |
+          php artisan l5-swagger:generate
       - name: send telegram message on push
         uses: appleboy/telegram-action@master
         with:

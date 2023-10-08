@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -15,7 +16,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Region extends Model
 {
-    use TenantConnection;
+    use HasFactory, TenantConnection;
     public $timestamps = false;
 
     protected $fillable = [

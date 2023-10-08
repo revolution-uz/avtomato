@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -18,7 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class District extends Model
 {
-    use TenantConnection;
+    use HasFactory, TenantConnection;
     public $timestamps = false;
 
     protected $fillable = [

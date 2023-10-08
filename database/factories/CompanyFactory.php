@@ -1,11 +1,10 @@
 <?php
 
-namespace Database\Factories\Company;
+namespace Database\Factories;
 
 use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class CompanyFactory extends Factory
 {
@@ -19,11 +18,7 @@ class CompanyFactory extends Factory
             'name' => $name,
             'owner_phone' => $this->faker->phoneNumber(),
             'owner_name' => $this->faker->name(),
-            'subdomain' => Str::slug($name),
-            'db_user' => $this->faker->word(),
-            'db_name' => $this->faker->name(),
-            'db_password' => Str::random(),
-            'status' => CompanyStatusEnum::CREATED,
+            'is_active' => CompanyStatusEnum::CREATED,
         ];
     }
 }

@@ -13,8 +13,6 @@ class Admin extends Authenticatable
 {
     use CentralConnection, HasApiTokens, HasFactory, Notifiable;
 
-    protected $dateFormat = 'U';
-
     /**
      * The attributes that are mass assignable.
      *

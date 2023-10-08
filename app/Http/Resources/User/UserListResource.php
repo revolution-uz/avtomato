@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
 use App\Models\Company\User;
 use Illuminate\Http\Request;
@@ -34,7 +34,7 @@ class UserListResource extends JsonResource
             'last_name' => $this->resource->last_name,
             'phone' => $this->resource->phones()->latest()->first()->phone ?? null,
             'status' => $this->resource->status,
-            'avatar' => AttachmentResource::make($this->resource->avatars()->latest()->first()),
+            'avatar' => $this->resource->avatar,
         ];
     }
 }

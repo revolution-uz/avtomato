@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -16,8 +17,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Branch extends Model
 {
-    use SoftDeletes, TenantConnection;
-    protected $dateFormat = 'U';
+    use HasFactory, SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'name',

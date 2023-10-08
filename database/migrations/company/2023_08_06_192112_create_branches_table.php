@@ -13,9 +13,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('inn');
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

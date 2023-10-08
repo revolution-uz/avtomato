@@ -72,9 +72,9 @@ class TariffsController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(Tariff $tariff): JsonResponse
+    public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(TariffResource::make($tariff));
+        return ApiResponse::success(TariffResource::make(Tariff::findOrFail($id)));
     }
 
     #[OA\Post(
@@ -124,8 +124,9 @@ class TariffsController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(Tariff $tariff, TariffRequest $request): JsonResponse
+    public function update(int $id, TariffRequest $request): JsonResponse
     {
+        $tariff = Tariff::findOrFail($id);
         $tariff->fill($request->validated());
 
         if ($tariff->save()) {

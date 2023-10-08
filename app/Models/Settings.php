@@ -20,8 +20,6 @@ class Settings extends Model
 
     public static array $_cache = [];
 
-    protected $dateFormat = 'U';
-
     protected $fillable = [
         'name',
         'value',
