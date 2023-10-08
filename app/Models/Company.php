@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Company\CompanyStatusEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
@@ -18,7 +19,7 @@ use Stancl\Tenancy\Database\Models\Tenant;
  */
 class Company extends Tenant implements TenantWithDatabase
 {
-    use CentralConnection, HasDatabase, HasDomains;
+    use CentralConnection, HasDatabase, HasDomains, HasFactory;
 
     protected $table = 'companies';
 

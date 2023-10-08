@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\User;
 
+use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
@@ -124,6 +125,9 @@ class RoleController extends Controller
     public function update(int $id, RoleRequest $request): JsonResponse
     {
         $role = Role::findOrFail($id);
+        if ($role->name === UserRoleEnum::ADMIN->value) {
+            return ApiResponse::error('You can\'t update admin role');
+        }
         $role->fill($request->validated());
 
         if ($role->save()) {

@@ -31,8 +31,6 @@ class Attachment extends Model
     public const PATH = 'uploads';
     public const THUMBNAIL_PATH = 'uploads/thumbnails';
 
-    protected $dateFormat = 'U';
-
     protected $fillable = [
         'id',
         'type',

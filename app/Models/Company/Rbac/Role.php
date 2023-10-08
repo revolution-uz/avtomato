@@ -3,7 +3,9 @@
 namespace App\Models\Company\Rbac;
 
 use App\DTOs\PermissionRequestDTO;
+use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Models\Company\Branch;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,13 +17,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Role extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
     ];
 
-    protected $dateFormat = 'U';
+    public static function getAdmin()
+    {
+        return self::query()->whereName(UserRoleEnum::ADMIN)->first();
+    }
 
     public function syncPermissions(...$permissions): void
     {

@@ -19,10 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('card_id')->nullable();
             $table->json('request');
             $table->json('response')->nullable();
-
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

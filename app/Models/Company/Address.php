@@ -24,7 +24,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class Address extends Model
 {
     use SoftDeletes, TenantConnection;
-    protected $dateFormat = 'U';
 
     protected $fillable = [
         'type',

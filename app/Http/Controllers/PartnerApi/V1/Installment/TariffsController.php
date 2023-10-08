@@ -74,7 +74,7 @@ class TariffsController extends Controller
     )]
     public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(TariffResource::make(Tariff::firstOrFail($id)));
+        return ApiResponse::success(TariffResource::make(Tariff::findOrFail($id)));
     }
 
     #[OA\Post(
@@ -126,7 +126,7 @@ class TariffsController extends Controller
     )]
     public function update(int $id, TariffRequest $request): JsonResponse
     {
-        $tariff = Tariff::firstOrFail($id);
+        $tariff = Tariff::findOrFail($id);
         $tariff->fill($request->validated());
 
         if ($tariff->save()) {

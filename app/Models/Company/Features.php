@@ -13,8 +13,6 @@ class Features extends Model
 
     private static ?array $features = null;
 
-    protected $dateFormat = 'U';
-
     protected $fillable = [
         'name',
         'description',

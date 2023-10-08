@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Rbac;
 
+use App\Models\Company\Rbac\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -21,7 +22,7 @@ class RolesDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:roles,id|not_in:1',
+            'ids.*' => 'integer|exists:roles,id|not_in:' . Role::getAdmin()->id,
         ];
     }
 
