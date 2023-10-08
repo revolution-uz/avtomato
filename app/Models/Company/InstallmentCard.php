@@ -15,7 +15,6 @@ class InstallmentCard extends Model
     use HasFactory;
     use TenantConnection;
 
-
     protected $fillable = [
         'installment_id',
         'card_id',

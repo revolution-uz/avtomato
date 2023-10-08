@@ -13,7 +13,6 @@ class InstallmentGraph extends Model
     use SoftDeletes;
     use TenantConnection;
 
-
     protected $dateFormat = 'U';
 
     protected $fillable = [
