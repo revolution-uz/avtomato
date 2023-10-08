@@ -35,7 +35,6 @@ class Installment extends Model
     protected $dateFormat = 'U';
 
     protected $fillable = [
-        'creator_id',
         'customer_id',
         'branch_id',
         'tariff_id',
@@ -51,9 +50,4 @@ class Installment extends Model
         'starts_in',
         'next_pay_date',
     ];
-
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'creator_id');
-    }
 }

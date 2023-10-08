@@ -11,6 +11,7 @@ use OpenApi\Attributes as OA;
     schema: 'InstallmentResource',
     title: 'Installment object',
     properties: [
+        new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'branch_id', type: 'int', example: '1'),
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),

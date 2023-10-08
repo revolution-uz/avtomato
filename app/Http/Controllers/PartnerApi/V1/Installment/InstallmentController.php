@@ -48,7 +48,7 @@ class InstallmentController extends Controller
     )]
     public function index(InstallmentFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'name', 'is_annual', 'percent']; // TODO add all fields, it's just for testing
+        $sortables = ['id', 'customer_id', 'tariff_id', 'amount']; // TODO add all fields, it's just for testing
 
         return InstallmentResource::collection(
             Installment::query()
@@ -110,9 +110,9 @@ class InstallmentController extends Controller
 
     #[OA\Put(
         path: '/api/v1/installment/installment/{id}',
-        description: 'Installment create route',
+        description: 'Installment update route',
         requestBody: new OA\RequestBody(
-            description: 'Installment create request body',
+            description: 'Installment update request body',
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/InstallmentRequest')
         ),
