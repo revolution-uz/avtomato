@@ -11,9 +11,8 @@ return new class extends Migration
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('phone')->unique();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

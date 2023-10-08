@@ -28,8 +28,8 @@ class CustomerFactory extends Factory
             'birth_date' => Carbon::now(),
             'birth_place' => $this->faker->city(),
             'gender' => array_rand(GenderEnum::cases()),
-            'created_at' => time(),
-            'updated_at' => time(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
     }
 }

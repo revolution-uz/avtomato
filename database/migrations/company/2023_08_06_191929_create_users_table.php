@@ -18,9 +18,8 @@ return new class extends Migration
             $table->json('template_theme')->nullable();
             $table->string('language')->nullable();
             $table->tinyInteger('status')->index();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

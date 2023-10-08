@@ -16,7 +16,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class Phone extends Model
 {
     use TenantConnection;
-    protected $dateFormat = 'U';
 
     protected $fillable = [
         'phone',

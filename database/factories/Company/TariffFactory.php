@@ -3,6 +3,7 @@
 namespace Database\Factories\Company;
 
 use App\Models\Company\Tariff;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TariffFactory extends Factory
@@ -19,8 +20,8 @@ class TariffFactory extends Factory
             'max_amount' => $this->faker->randomNumber(),
             'min_initial_fee' => $this->faker->randomNumber(),
             'max_initial_fee' => $this->faker->randomNumber(),
-            'created_at' => time(),
-            'updated_at' => time(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
     }
 }

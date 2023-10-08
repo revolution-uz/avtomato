@@ -6,8 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'BranchesDeleteRequest',
-    title: 'Request to delete branches',
+    schema: 'UsersDeleteRequest',
+    title: 'Users delete request by ids',
     properties: [
         new OA\Property(property: 'ids', type: 'array', items: new OA\Items(type: 'int'), example: '[1, 2, 3]'),
     ],

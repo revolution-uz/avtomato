@@ -30,8 +30,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, TenantConnection;
 
-    protected $dateFormat = 'U';
-
     protected $fillable = [
         'status',
         'first_name',
@@ -42,6 +40,7 @@ class User extends Authenticatable
         'template_theme',
         'language',
         'role_id',
+        'password',
     ];
 
     protected $casts = [

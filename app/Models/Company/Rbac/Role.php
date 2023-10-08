@@ -23,8 +23,6 @@ class Role extends Model
         'name',
     ];
 
-    protected $dateFormat = 'U';
-
     public static function getAdmin()
     {
         return self::query()->whereName(UserRoleEnum::ADMIN)->first();

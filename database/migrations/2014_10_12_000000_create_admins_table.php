@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('password');
             $table->tinyInteger('role')->index();
             $table->rememberToken();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
+            $table->timestamps();
         });
     }
 

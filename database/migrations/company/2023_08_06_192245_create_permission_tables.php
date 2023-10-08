@@ -31,9 +31,8 @@ class CreatePermissionTables extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id(); // role id
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
 
             $table->unique('name');
         });

@@ -14,8 +14,7 @@ return new class extends Migration
             $table->string('value', 1024);
             $table->integer('type');
             $table->string('description', 256)->nullable();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -39,8 +39,6 @@ class Customer extends Model
 {
     use HasFactory, SoftDeletes, TenantConnection;
 
-    protected $dateFormat = 'U';
-
     protected $fillable = [
         'pinfl',
         'tin',

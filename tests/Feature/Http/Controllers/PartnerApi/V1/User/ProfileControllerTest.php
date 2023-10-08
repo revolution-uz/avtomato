@@ -51,10 +51,9 @@ class ProfileControllerTest extends TestCase
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
-
+        $admin->refresh();
         $response->assertOk();
-        // todo fix this
-        //        $this->assertTrue(Hash::check($newPassword, $admin->password));
+        $this->assertTrue(Hash::check($newPassword, $admin->password));
     }
 
     /**

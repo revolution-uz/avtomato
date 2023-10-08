@@ -23,8 +23,6 @@ class Tariff extends Model
     use SoftDeletes;
     use TenantConnection;
 
-    protected $dateFormat = 'U';
-
     protected $fillable = [
         'name',
         'is_annual',
