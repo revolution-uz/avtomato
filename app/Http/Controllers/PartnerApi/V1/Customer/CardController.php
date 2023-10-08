@@ -42,7 +42,7 @@ class CardController extends Controller
     )]
     public function index(CardFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'name', 'is_annual', 'percent']; // TODO add all fields, it's just for testing
+        $sortables = ['id', 'pan', 'customer_id', 'balance']; // TODO add all fields, it's just for testing
 
         return CardResource::collection(
             Card::query()
