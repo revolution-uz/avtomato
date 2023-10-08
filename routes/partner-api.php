@@ -7,6 +7,8 @@ use App\Http\Controllers\PartnerApi\V1\Info\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
 use App\Http\Controllers\PartnerApi\V1\Installment\InstallmentController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
+use App\Http\Controllers\PartnerApi\V1\Installment\TransactionController;
+use App\Http\Controllers\PartnerApi\V1\Installment\TransactionTypeController;
 use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmInpsHistoryController;
@@ -63,6 +65,25 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::put('guarantor/{installmentGuarantor}', 'updateGuarantor')->name('installments.update-guarantor');
             Route::delete('guarantor/{installmentGuarantor}', 'detachGuarantor')->name('installments.detach-guarantor');
         });
+
+        // transactions
+        Route::prefix('transaction')->controller(TransactionController::class)->group(function () {
+            Route::get('/', 'index')->name('transactions.index');
+            Route::get('{transaction}', 'getSingle')->name('transactions.get-single');
+            Route::post('/', 'create')->name('transactions.create');
+            Route::put('{transaction}', 'update')->name('transactions.update');
+            Route::delete('/', 'delete')->name('transactions.delete');
+        });
+
+        // transaction_types
+        Route::prefix('transaction-type')->controller(TransactionTypeController::class)->group(function () {
+            Route::get('/', 'index')->name('transaction-types.index');
+            Route::get('{transactionType}', 'getSingle')->name('transaction-types.get-single');
+            Route::post('/', 'create')->name('transaction-types.create');
+            Route::put('{transactionType}', 'update')->name('transaction-types.update');
+            Route::delete('/', 'delete')->name('transaction-types.delete');
+        });
+
     });
 
     // Management module (branches, users, roles, permissions and etc.)

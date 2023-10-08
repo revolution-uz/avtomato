@@ -42,7 +42,7 @@ class TransactionController extends Controller
     )]
     public function index(TransactionFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'name', 'is_annual', 'percent']; // TODO add all fields, it's just for testing
+        $sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created']; // TODO add all fields, it's just for testing
 
         return TransactionResource::collection(
             Transaction::query()
