@@ -213,7 +213,7 @@ class UserController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/profile/change-avatar',
+        path: '/api/v1/users/{id}/change-avatar',
         description: 'Change avatar route',
         requestBody: new OA\RequestBody(
             description: 'Attachment upload body. Send as multipart/form-data',
