@@ -96,10 +96,9 @@ class UserControllerTest extends TestCase
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
-
+        $user->refresh();
         $response->assertOk();
-        // todo fix this
-        //        $this->assertTrue(Hash::check($newPassword, $user->fresh()->password));
+        $this->assertTrue(Hash::check($newPassword, $user->password));
     }
 
     /**
