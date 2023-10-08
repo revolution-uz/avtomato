@@ -20,7 +20,7 @@ class CreatePermissionTables extends Migration
             $table->id();
             $table->string('slug');
             $table->integer('permission_group_id');
-            $table->integer('feature_id')->nullable();
+            $table->integer('feature_id');
             $table->boolean('is_branch_related');
             $table->timestamps();
 

@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\User;
+use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\LocationSeeder;
 use Database\Seeders\Company\PermissionSeeder;
@@ -21,6 +22,7 @@ class CompanySeeder extends Seeder
         $this->call(LocationSeeder::class);
         $this->call(FeatureSeeder::class);
         $this->call(PermissionSeeder::class);
+        $this->call(AdminRoleSeeder::class);
         // TODO remove before production
         /** @var User $user */
         $user = User::query()->firstOrCreate(

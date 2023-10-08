@@ -28,7 +28,7 @@ class PermissionResource extends Resource
                 ->sortable()
                 ->rules('required'),
 
-            BelongsTo::make('Feature', 'feature', FeaturesResource::class),
+            BelongsTo::make('Feature', 'feature', FeatureResource::class),
         ];
     }
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
-class Features extends Model
+class Feature extends Model
 {
     use HasFactory, TenantConnection;
 
@@ -18,6 +18,11 @@ class Features extends Model
         'description',
         'is_active',
     ];
+
+    public static function findByName($name)
+    {
+        return self::query()->whereName($name)->first();
+    }
 
     public static function isFeatureActive(FeatureEnum $feature)
     {
