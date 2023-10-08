@@ -5,17 +5,24 @@ namespace App\Http\Controllers\PartnerApi\V1\Customer;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
+use App\Helpers\Swagger\OpenApiPageParameter;
+use App\Helpers\Swagger\OpenApiPerPageParameter;
+use App\Helpers\Swagger\OpenApiSearchParameter;
+use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Customer\CreateCustomerRequest;
+use App\Http\Requests\Customer\CustomersFilterRequest;
 use App\Http\Requests\Customer\GetCustomerInfoByPassportRequest;
 use App\Http\Resources\Customer\CustomerInfoByPassportDataResource;
+use App\Http\Resources\Customer\CustomerListItemResource;
 use App\Http\Resources\Customer\SingleCustomerResource;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
 use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use OpenApi\Attributes as OA;
 use Throwable;
@@ -128,15 +135,36 @@ class CustomerController extends Controller
         description: 'Get customers list route',
         tags: ['Customers'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'Customer'),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+            new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleCustomerResource'),
+            new OpenApiJsonResponse(resourceName: 'CustomerListItemResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function index(): JsonResponse
+    public function index(CustomersFilterRequest $request): AnonymousResourceCollection
     {
-        return ApiResponse::success(SingleCustomerResource::make(Customer::findOrFail($id)));
+        $sortables = ['id', 'pinfl', 'passport_series', 'first_name', 'last_name'];
+
+        return CustomerListItemResource::collection(
+            Customer::query()
+                ->when(
+                    $request->search,
+                    fn (Builder $q) => $q
+                        ->where('first_name', 'ILIKE', '%' . $request->search . '%')
+                        ->where('last_name', 'ILIKE', '%' . $request->search . '%')
+                        ->where('middle_name', 'ILIKE', '%' . $request->search . '%')
+                )
+                ->when(
+                    $request->sort && in_array($request->sort, $sortables),
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
+                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
+                        : $q->orderBy($request->sort)
+                )
+                ->paginate($request->per_page)
+        )->additional(['success' => true, 'sortables' => $sortables]);
     }
 }
