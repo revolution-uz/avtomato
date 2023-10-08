@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
@@ -22,6 +23,8 @@ class InstallmentGuarantor extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use TenantConnection;
+
 
     protected $dateFormat = 'U';
 
