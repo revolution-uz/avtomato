@@ -122,4 +122,21 @@ class CustomerController extends Controller
     {
         return ApiResponse::success(SingleCustomerResource::make(Customer::findOrFail($id)));
     }
+
+    #[OA\Get(
+        path: '/api/v1/customer',
+        description: 'Get customers list route',
+        tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer'),
+        ],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'SingleCustomerResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function index(): JsonResponse
+    {
+        return ApiResponse::success(SingleCustomerResource::make(Customer::findOrFail($id)));
+    }
 }

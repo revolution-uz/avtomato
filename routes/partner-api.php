@@ -106,6 +106,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('customer')->controller(CustomerController::class)->group(function () {
         Route::post('info-by-passport', 'infoByPassport')->name('customer.info-by-passport');
         Route::post('create', 'create')->name('customer.create');
+        Route::get('/', 'index')->name('customer.index');
         Route::get('{id}', 'getSingle')->name('customer.get-single');
     });
 
