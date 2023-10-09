@@ -21,9 +21,11 @@ use App\Models\Company\Customer;
 use App\Models\Company\Phone;
 use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 use Throwable;
 
