@@ -31,5 +31,6 @@ class DummySeeder extends Seeder
 
         $company->domains()->create(['domain' => 'revo.avtomato.test']);
         $company->domains()->create(['domain' => 'revo.avtomato.uz']);
+        $company->domains()->create(['domain' => 'revo']);
     }
 }

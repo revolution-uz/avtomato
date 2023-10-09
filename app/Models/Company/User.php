@@ -30,6 +30,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, TenantConnection;
 
+    public const AVATAR_PATH = 'avatars';
+    public const THUMBNAIL_PATH = 'avatars/thumbnails';
+
     protected $fillable = [
         'status',
         'first_name',
@@ -61,11 +64,6 @@ class User extends Authenticatable
         return $token->plainTextToken;
     }
 
-    public function avatars(): MorphMany
-    {
-        return $this->morphMany(Attachment::class, 'attachmentable');
-    }
-
     public function phones(): MorphToMany
     {
         return $this->morphToMany(Phone::class, 'phoneable');
@@ -76,12 +74,25 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function avatarPreviewPath(): Attribute
+    public function avatarUrl(): Attribute
     {
         return Attribute::make(
             get: function () {
                 if ($this->avatar) {
-                    return $this->avatars()->latest()->first()?->preview_path;
+                    return asset(User::AVATAR_PATH . '/' . $this->avatar);
+                }
+
+                return null;
+            }
+        );
+    }
+
+    public function avatarPreviewUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->avatar) {
+                    return asset(User::THUMBNAIL_PATH . '/' . $this->avatar);
                 }
 
                 return null;

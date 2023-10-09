@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment\Http\Controllers\PartnerApi\V1\Info;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Info;
 
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;

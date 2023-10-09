@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\PartnerApi\V1\AttachmentController;
 use App\Http\Controllers\PartnerApi\V1\AuthController;
 use App\Http\Controllers\PartnerApi\V1\Customer\CustomerController;
 use App\Http\Controllers\PartnerApi\V1\Info\InfoController;
@@ -27,10 +26,6 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('auth.logout');
-
-Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {
-    Route::get('{id}/preview', 'getPreview')->name('attachments.preview');
-});
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // installments module
@@ -70,6 +65,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('change-password', 'changePassword')->name('profile.change-password');
         Route::post('change-theme', 'changeTheme')->name('profile.change-theme');
         Route::post('change-lang', 'changeLanguage')->name('profile.change-language');
+        Route::post('change-avatar', 'uploadAvatar')->name('profile.change-avatar');
         Route::get('devices', 'devices')->name('profile.devices');
         Route::delete('revoke-device/{id}', 'revokeDevice')->name('profile.revoke-device');
     });
@@ -81,6 +77,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('{id}', 'update')->name('users.update');
         Route::post('{id}/change-password', 'changePassword')->name('users.change-password');
         Route::post('{id}/change-theme', 'changeTheme')->name('users.change-theme');
+        Route::post('{id}/change-avatar', 'uploadAvatar')->name('users.change-avatar');
         Route::get('{id}/devices', 'devices')->name('users.devices');
         Route::post('{id}/attach-role', 'attachRole')->name('users.attach-role');
         Route::delete('revoke-device', 'revokeDevice')->name('users.revoke-device');
@@ -107,11 +104,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('info-by-passport', 'infoByPassport')->name('customer.info-by-passport');
         Route::post('create', 'create')->name('customer.create');
         Route::get('{id}', 'getSingle')->name('customer.get-single');
-    });
-
-    Route::prefix('attachments')->controller(AttachmentController::class)->group(function () {
-        Route::post('upload', 'upload')->name('attachments.upload');
-        Route::get('{id}', 'getFile')->name('attachments.file');
     });
 
     Route::prefix('scoring')->group(function () {
