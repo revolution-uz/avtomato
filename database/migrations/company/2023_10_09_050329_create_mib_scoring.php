@@ -14,8 +14,7 @@ return new class extends Migration
             $table->double('amount');
             $table->double('ball')->nullable();
             $table->string('description')->nullable();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
+            $table->timestamps();
         });
     }
 
