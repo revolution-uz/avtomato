@@ -18,8 +18,9 @@ class KatmPensionInfoResponseDTO extends BaseScoringResponse
 {
     public function __construct(
         public string $result,
-        public string $sizePension,
+        public string|array $sizePension,
         public string $comments,
     ) {
+        $this->sizePension = is_array($this->sizePension) ? '0' : $this->sizePension;
     }
 }
