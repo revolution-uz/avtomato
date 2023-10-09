@@ -14,14 +14,14 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->boolean('auto_charge');
             $table->boolean('any_card_charge');
-            $table->integer('status');
+            $table->tinyInteger('status');
             $table->string('myuzkard_id')->nullable();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
 
             $table->index('installment_id');
             $table->index('customer_id');
+            $table->unique(['installment_id', 'customer_id', 'deleted_at']);
         });
     }
 

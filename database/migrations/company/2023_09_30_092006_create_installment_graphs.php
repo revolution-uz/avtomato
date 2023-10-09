@@ -14,10 +14,9 @@ return new class extends Migration
             $table->decimal('amount', 10);
             $table->decimal('paid_amount', 10);
             $table->integer('overdue_days')->default(0);
-            $table->integer('status');
-            $table->integer('starts_in')->nullable();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
+            $table->tinyInteger('status');
+            $table->timestamps();
+            $table->softDeletes();
             //indexes
             $table->index('installment_id');
         });

@@ -10,30 +10,27 @@ return new class extends Migration
     {
         Schema::create('installments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('creator_id')->nullable();
             $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('branch_id');
-            $table->unsignedBigInteger('tariff_id');
+            $table->unsignedBigInteger('branch_id')->nullable();
+            $table->unsignedBigInteger('tariff_id')->nullable();
             $table->decimal('amount', 12);
             $table->text('description')->nullable();
             $table->boolean('sms_notify');
             $table->boolean('auto_charge');
             $table->boolean('any_card_charge');
             $table->boolean('is_blacklist');
-            $table->integer('status');
+            $table->tinyInteger('status');
             $table->integer('period');
             $table->string('myuzkard_id')->nullable();
-            $table->integer('starts_in')->nullable();
-            $table->integer('next_pay_date')->nullable();
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->timestamp('starts_in')->nullable();
+            $table->timestamp('next_pay_date')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
 
             $table->index('customer_id');
             $table->index('branch_id');
             $table->index('tariff_id');
             $table->index('next_pay_date');
-            $table->foreign('creator_id')->references('id')->on('users');
         });
     }
 

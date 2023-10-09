@@ -2,8 +2,10 @@
 
 namespace App\Models\Company;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -13,15 +15,15 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_ru
  * @property string $name_en
  * @property bool $is_system
- * @property int $created_at
- * @property int $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class TransactionType extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     use TenantConnection;
-
-    protected $dateFormat = 'U';
 
     protected $fillable = [
         'name',
@@ -31,6 +33,7 @@ class TransactionType extends Model
         'is_system',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
 }

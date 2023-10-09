@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,7 +10,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
- * @property int $creator_id
  * @property int $customer_id
  * @property int $branch_id
  * @property int $tariff_id
@@ -22,19 +22,17 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $status
  * @property int $period
  * @property string $myuzkard_id
- * @property int $starts_in
- * @property int $next_pay_date
- * @property int $created_at
- * @property int $updated_at
- * @property int $deleted_at
+ * @property Carbon|null $starts_in
+ * @property Carbon|null $next_pay_date
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Installment extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use TenantConnection;
-
-    protected $dateFormat = 'U';
 
     protected $fillable = [
         'customer_id',

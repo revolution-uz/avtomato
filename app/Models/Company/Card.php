@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,17 +17,15 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $status
  * @property float $balance
  * @property string $myuzkard_id
- * @property int $created_at
- * @property int $updated_at
- * @property int $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Card extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use TenantConnection;
-
-    protected $dateFormat = 'U';
 
     protected $fillable = [
         'customer_id',

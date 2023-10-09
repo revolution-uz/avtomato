@@ -14,12 +14,11 @@ return new class extends Migration
             $table->string('pan');
             $table->string('number');
             $table->string('expiry');
-            $table->integer('status');
+            $table->tinyInteger('status');
             $table->decimal('balance');
             $table->unsignedBigInteger('myuzkard_id');
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
-            $table->integer('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
 
             $table->index('customer_id');
         });

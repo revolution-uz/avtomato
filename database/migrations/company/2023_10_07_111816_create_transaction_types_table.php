@@ -15,8 +15,8 @@ return new class extends Migration
             $table->string('name_ru');
             $table->string('name_en');
             $table->boolean('is_system');
-            $table->integer('created_at')->nullable();
-            $table->integer('updated_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

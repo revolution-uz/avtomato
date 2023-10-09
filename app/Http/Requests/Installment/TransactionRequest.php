@@ -25,15 +25,11 @@ class TransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'installment_id' => 'required|int',
             'customer_id' => 'required|int',
-            'branch_id' => 'required|int',
-            'tariff_id' => 'required|int',
+            'transaction_type_id' => 'required|int',
             'amount' => 'required|numeric',
-            'description' => 'required|string',
-            'sms_notify' => 'required|boolean',
-            'auto_charge' => 'required|boolean',
-            'any_card_charge' => 'required|boolean',
-            'starts_in' => 'required|boolean',
+            'on_created' => 'required|int',
         ];
     }
 }

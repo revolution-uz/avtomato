@@ -2,18 +2,25 @@
 
 namespace App\Models\Company;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
+/**
+ * @property int $installment_id
+ * @property float $amount
+ * @property float $paid_amount
+ * @property int $overdue_days
+ * @property int $status
+ * @property Carbon|null $starts_in
+ */
 class InstallmentGraph extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use TenantConnection;
-
-    protected $dateFormat = 'U';
 
     protected $fillable = [
         'installment_id',

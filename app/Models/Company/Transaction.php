@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -13,16 +14,14 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $card_id
  * @property int $transaction_type_id
  * @property float $amount
- * @property int $on_created
- * @property int $created_at
- * @property int $updated_at
+ * @property Carbon|null $on_created
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Transaction extends Model
 {
     use HasFactory;
     use TenantConnection;
-
-    protected $dateFormat = 'U';
 
     protected $fillable = [
         'installment_id',
