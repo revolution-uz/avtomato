@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment\Http\Controllers\PartnerApi\V1\User;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 
 use App\Models\Company\Branch;
 use App\Models\Company\Rbac\Role;

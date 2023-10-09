@@ -8,6 +8,7 @@ use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\User\AvatarRequest;
 use App\Http\Requests\User\PasswordRequest;
 use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
@@ -132,6 +133,31 @@ class ProfileController extends Controller
         $user?->update(['language' => $request->language]);
 
         return ApiResponse::success(SingleUserResource::make($user));
+    }
+
+    #[OA\Post(
+        path: '/api/v1/profile/change-avatar',
+        description: 'Change avatar route',
+        requestBody: new OA\RequestBody(
+            description: 'Attachment upload body. Send as multipart/form-data',
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(ref: '#/components/schemas/AvatarRequest')
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+        ],
+    )]
+    public function uploadAvatar(AvatarRequest $request)
+    {
+        if ($this->userService->updateAvatar(auth()->user(), $request)) {
+            return ApiResponse::success(SingleUserResource::make(auth()->user()));
+        }
+
+        return ApiResponse::error('Avatar not updated');
     }
 
     #[OA\Get(

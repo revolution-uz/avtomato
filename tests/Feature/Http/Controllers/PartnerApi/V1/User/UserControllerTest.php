@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment\Http\Controllers\PartnerApi\V1\User;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -114,6 +115,23 @@ class UserControllerTest extends TestCase
 
         $response->assertOk();
         $this->assertEquals('fixed', $user->fresh()->template_theme->layout_name);
+    }
+
+    /**
+     * @test
+     */
+    public function changeAvatar()
+    {
+        $admin = $this->createAdminUser();
+        $user = User::factory()->create();
+        $response = $this->actingAs($admin)->post(route('users.change-avatar', ['id' => $user->id]), [
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ]);
+
+        $response->assertOk();
+        $file_name = $user->fresh()->avatar;
+        $this->assertFileExists(storage_path('app/public/' . User::AVATAR_PATH . '/' . $file_name));
+        $this->assertFileExists(storage_path('app/public/' . User::THUMBNAIL_PATH . '/' . $file_name));
     }
 
     /**

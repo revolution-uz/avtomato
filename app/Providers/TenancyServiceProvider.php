@@ -7,10 +7,12 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
+use Stancl\Tenancy\Controllers\TenantAssetsController;
 use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -99,6 +101,7 @@ class TenancyServiceProvider extends ServiceProvider
     {
         $this->bootEvents();
 
+        TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
         $this->makeTenancyMiddlewareHighestPriority();
     }
 

@@ -1,7 +1,9 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment\Http\Controllers\PartnerApi\V1\User;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 
+use App\Models\Company\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -84,6 +86,22 @@ class ProfileControllerTest extends TestCase
         $response->assertOk();
         $this->assertEquals('uz', $response->json('data.language'));
         $this->assertEquals('uz', $admin->fresh()->language);
+    }
+
+    /**
+     * @test
+     */
+    public function changeAvatar()
+    {
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin)->post(route('profile.change-avatar'), [
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ]);
+
+        $response->assertOk();
+        $file_name = $admin->fresh()->avatar;
+        $this->assertFileExists(storage_path('app/public/' . User::AVATAR_PATH . '/' . $file_name));
+        $this->assertFileExists(storage_path('app/public/' . User::THUMBNAIL_PATH . '/' . $file_name));
     }
 
     /**
