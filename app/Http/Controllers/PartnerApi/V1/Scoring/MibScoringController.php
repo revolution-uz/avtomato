@@ -39,14 +39,14 @@ class MibScoringController extends Controller
             MibScoring::query()
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q
+                    fn (Builder $q) => $q
                         ->orWhere('request->id', $request->search)
                         ->orWhere('request->customer_id', $request->search)
                         ->orWhere('request->amount', $request->search)
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )

@@ -9,8 +9,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property int $customer_id
- * @property double $amount
- * @property double $ball
+ * @property float $amount
+ * @property float $ball
  * @property string $description
  */
 class MibScoring extends Model
