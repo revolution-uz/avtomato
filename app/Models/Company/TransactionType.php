@@ -31,9 +31,10 @@ class TransactionType extends Model
         'name_ru',
         'name_en',
         'is_system',
-        'created_at',
-        'updated_at',
-        'deleted_at',
     ];
 
+    public function getFrontName(): string
+    {
+        return $this->name ?? $this->${'name_' . app()->locale()};
+    }
 }

@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
-            $table->string('pan');
-            $table->string('number');
-            $table->string('expiry');
+            $table->string('pan', 16);
+            $table->string('number', 16);
+            $table->string('expiry', 4);
             $table->tinyInteger('status');
-            $table->decimal('balance');
+            $table->decimal('balance', 12);
             $table->unsignedBigInteger('myuzkard_id');
             $table->timestamps();
             $table->softDeletes();

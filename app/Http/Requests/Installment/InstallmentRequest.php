@@ -16,7 +16,6 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
         new OA\Property(property: 'description', type: 'string', example: 'inside the order'),
         new OA\Property(property: 'sms_notify', type: 'boolean', example: 'false'),
-        new OA\Property(property: 'auto_charge', type: 'boolean', example: 'true'),
         new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
         new OA\Property(property: 'starts_in', type: 'int', example: '16933424'),
     ],
@@ -35,7 +34,6 @@ class InstallmentRequest extends FormRequest
             'amount' => 'required|numeric',
             'description' => 'required|string',
             'sms_notify' => 'required|boolean',
-            'auto_charge' => 'required|boolean',
             'any_card_charge' => 'required|boolean',
             'starts_in' => 'required|boolean',
         ];

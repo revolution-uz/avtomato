@@ -14,7 +14,6 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'transaction_type_id', type: 'int', example: '100'),
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
-        new OA\Property(property: 'on_created', type: 'int', example: '16933424'),
     ],
 )]
 /**
@@ -29,7 +28,6 @@ class TransactionRequest extends FormRequest
             'customer_id' => 'required|int',
             'transaction_type_id' => 'required|int',
             'amount' => 'required|numeric',
-            'on_created' => 'required|int',
         ];
     }
 }

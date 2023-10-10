@@ -10,7 +10,6 @@ use OpenApi\Attributes as OA;
     schema: 'InstallmentGuarantorRequest',
     title: 'Request to create or update a installment guarantor',
     properties: [
-        new OA\Property(property: 'installment_id', type: 'int', example: '1'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'auto_charge', type: 'boolean', example: 'true'),
         new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
@@ -25,7 +24,6 @@ class InstallmentGuarantorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'installment_id' => 'required|exists:installments,id',
             'customer_id' => 'required|exists:customers,id',
             'auto_charge' => 'required|boolean',
             'any_card_charge' => 'required|boolean',

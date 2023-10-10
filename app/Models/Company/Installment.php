@@ -16,7 +16,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property float $amount
  * @property string $description
  * @property bool $sms_notify
- * @property bool $auto_charge
  * @property bool $any_card_charge
  * @property bool $is_blacklist
  * @property int $status
@@ -41,7 +40,6 @@ class Installment extends Model
         'amount',
         'description',
         'sms_notify',
-        'auto_charge',
         'any_card_charge',
         'is_blacklist',
         'status',

@@ -16,14 +16,13 @@ return new class extends Migration
             $table->decimal('amount', 12);
             $table->text('description')->nullable();
             $table->boolean('sms_notify');
-            $table->boolean('auto_charge');
             $table->boolean('any_card_charge');
             $table->boolean('is_blacklist');
             $table->tinyInteger('status');
-            $table->integer('period');
+            $table->tinyInteger('period');
             $table->string('myuzkard_id')->nullable();
-            $table->timestamp('starts_in')->nullable();
-            $table->timestamp('next_pay_date')->nullable();
+            $table->date('starts_in')->nullable();
+            $table->date('next_pay_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

@@ -18,7 +18,6 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
         new OA\Property(property: 'description', type: 'string', example: 'inside the order'),
         new OA\Property(property: 'sms_notify', type: 'boolean', example: 'false'),
-        new OA\Property(property: 'auto_charge', type: 'boolean', example: 'true'),
         new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
         new OA\Property(property: 'starts_in', type: 'int', example: '16933424'),
         new OA\Property(property: 'next_pay_date', type: 'int', example: '16933424'),
@@ -41,12 +40,11 @@ class InstallmentResource extends JsonResource
             'amount' => $this->resource->amount,
             'description' => $this->resource->description,
             'sms_notify' => $this->resource->sms_notify,
-            'auto_charge' => $this->resource->auto_charge,
             'any_card_charge' => $this->resource->any_card_charge,
-            'starts_in' => $this->resource->starts_in ? (int) $this->resource->starts_in->format('U') : null,
-            'next_pay_date' => $this->resource->next_pay_date ? (int) $this->resource->next_pay_date->format('U') : null,
-            'created_at' => $this->resource->created_at ? (int) $this->resource->created_at->format('U') : null,
-            'updated_at' => $this->resource->updated_at ? (int) $this->resource->updated_at->format('U') : null,
+            'starts_in' => $this->resource->starts_in->getTimestamp(),
+            'next_pay_date' => $this->resource->next_pay_date->getTimestamp(),
+            'created_at' => $this->resource->created_at->getTimestamp(),
+            'updated_at' => $this->resource->updated_at->getTimestamp(),
         ];
     }
 }

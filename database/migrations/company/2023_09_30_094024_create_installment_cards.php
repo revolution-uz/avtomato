@@ -11,10 +11,11 @@ return new class extends Migration
         Schema::create('installment_cards', function (Blueprint $table) {
             $table->unsignedBigInteger('installment_id');
             $table->unsignedBigInteger('card_id');
+            $table->boolean('auto_charge');
             $table->softDeletes();
 
             $table->index('installment_id');
-            $table->unique(['installment_id', 'card_id', 'deleted_at']);
+            $table->unique(['installment_id', 'card_id']);
         });
     }
 

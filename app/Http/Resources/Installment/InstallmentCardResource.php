@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'installment_id', type: 'int', example: '1'),
         new OA\Property(property: 'card_id', type: 'int', example: '1'),
+        new OA\Property(property: 'auto_charge', type: 'boolean', example: 'true'),
     ],
 )]
 /**
@@ -25,6 +26,7 @@ class InstallmentCardResource extends JsonResource
         return [
             'installment_id' => $this->resource->installment_id,
             'card_id' => $this->resource->card_id,
+            'auto_charge' => $this->resource->auto_charge,
         ];
     }
 }

@@ -17,7 +17,6 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'card_id', type: 'int', example: '1'),
         new OA\Property(property: 'transaction_type_id', type: 'int', example: '100'),
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
-        new OA\Property(property: 'on_created', type: 'int', example: '16933424'),
         new OA\Property(property: 'created_at', type: 'int', example: '16933424'),
         new OA\Property(property: 'updated_at', type: 'int', example: '16933424'),
     ],
@@ -36,9 +35,8 @@ class TransactionResource extends JsonResource
             'card_id' => $this->resource->card_id,
             'transaction_type_id' => $this->resource->transaction_type_id,
             'amount' => $this->resource->amount,
-            'on_created' => $this->resource->on_created ? (int) $this->resource->on_created->format('U') : null,
-            'created_at' => $this->resource->created_at ? (int) $this->resource->created_at->format('U') : null,
-            'updated_at' => $this->resource->updated_at ? (int) $this->resource->updated_at->format('U') : null,
+            'created_at' => $this->resource->created_at->getTimestamp(),
+            'updated_at' => $this->resource->updated_at->getTimestamp(),
         ];
     }
 }

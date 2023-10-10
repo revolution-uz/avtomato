@@ -11,12 +11,12 @@ return new class extends Migration
         Schema::create('installment_graphs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('installment_id');
-            $table->decimal('amount', 10);
-            $table->decimal('paid_amount', 10);
+            $table->decimal('amount', 12);
+            $table->decimal('paid_amount', 12);
             $table->integer('overdue_days')->default(0);
             $table->tinyInteger('status');
             $table->timestamps();
-            $table->softDeletes();
+
             //indexes
             $table->index('installment_id');
         });

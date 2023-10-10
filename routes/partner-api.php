@@ -55,11 +55,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('/', 'create')->name('installments.create');
             Route::put('{installment}', 'update')->name('installments.update');
             Route::delete('/', 'delete')->name('installments.delete');
-            Route::post('card', 'attachCard')->name('installments.attach-card');
-            Route::delete('card', 'detachCard')->name('installments.detach-card');
-            Route::post('guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
-            Route::put('guarantor/{installmentGuarantor}', 'updateGuarantor')->name('installments.update-guarantor');
-            Route::delete('guarantor/{installmentGuarantor}', 'detachGuarantor')->name('installments.detach-guarantor');
+        });
+
+        //installment card & guarantor
+        Route::prefix('')->controller(InstallmentController::class)->group(function () {
+            Route::post('{installment}/attach-card', 'attachCard')->name('installments.attach-card');
+            Route::delete('{installment}/detach-card', 'detachCard')->name('installments.detach-card');
+            Route::post('{installment}/attach-guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
+            Route::put('{installment}/update-guarantor', 'updateGuarantor')->name('installments.update-guarantor');
+            Route::delete('{installment}/detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
         });
 
         // transactions

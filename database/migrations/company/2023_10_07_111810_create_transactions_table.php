@@ -14,8 +14,8 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('card_id');
             $table->unsignedBigInteger('transaction_type_id');
-            $table->decimal('amount', 10);
-            $table->timestamp('on_created');
+            $table->unsignedBigInteger('myuzkard_id')->nullable();
+            $table->decimal('amount', 12);
             $table->timestamps();
         });
     }

@@ -11,6 +11,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $installment_id
  * @property int $card_id
+ * @property bool $auto_charge
  * @property Carbon|null $deleted_at
  */
 class InstallmentCard extends Model
@@ -22,5 +23,6 @@ class InstallmentCard extends Model
     protected $fillable = [
         'installment_id',
         'card_id',
+        'auto_charge',
     ];
 }
