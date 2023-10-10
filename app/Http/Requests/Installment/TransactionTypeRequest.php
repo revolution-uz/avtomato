@@ -10,9 +10,7 @@ use OpenApi\Attributes as OA;
     schema: 'TransactionTypeRequest',
     title: 'Request to create or update a TransactionType',
     properties: [
-        new OA\Property(property: 'name_uz', type: 'string', example: 'Naqd'),
-        new OA\Property(property: 'name_ru', type: 'string', example: 'Naqd'),
-        new OA\Property(property: 'name_en', type: 'string', example: 'Naqd'),
+        new OA\Property(property: 'name', type: 'string', example: 'Naqd'),
     ],
 )]
 /**
@@ -23,9 +21,7 @@ class TransactionTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name_uz' => 'required|string',
-            'name_ru' => 'required|string',
-            'name_en' => 'required|string',
+            'name' => 'required|string',
         ];
     }
 }
