@@ -95,7 +95,7 @@ class CardController extends Controller
         $model = new Card;
         $model->fill($request->validated());
 
-        if ($model->save()) {
+        if ($model->saveOrFail()) {
             return ApiResponse::success(CardResource::make($model));
         }
 
@@ -104,7 +104,7 @@ class CardController extends Controller
 
     #[OA\Put(
         path: '/api/v1/customer/card/{id}',
-        description: 'Card create route',
+        description: 'Card update route',
         requestBody: new OA\RequestBody(
             description: 'Card create request body',
             required: true,
@@ -128,7 +128,7 @@ class CardController extends Controller
     {
         $card->fill($request->validated());
 
-        if ($card->save()) {
+        if ($card->saveOrFail()) {
             return ApiResponse::success(CardResource::make($card));
         }
 

@@ -101,7 +101,7 @@ class InstallmentController extends Controller
         $model = new Installment;
         $model->fill($request->validated());
 
-        if ($model->save()) {
+        if ($model->saveOrFail()) {
             return ApiResponse::success(InstallmentResource::make($model));
         }
 
@@ -134,7 +134,7 @@ class InstallmentController extends Controller
     {
         $installment->fill($request->validated());
 
-        if ($installment->save()) {
+        if ($installment->saveOrFail()) {
             return ApiResponse::success(InstallmentResource::make($installment));
         }
 
