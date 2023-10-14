@@ -48,4 +48,9 @@ class Installment extends Model
         'starts_in',
         'next_pay_date',
     ];
+
+    protected $casts = [
+        'starts_in' => 'date:d-m-Y',
+        'next_pay_date' => 'date:d-m-Y',
+    ];
 }

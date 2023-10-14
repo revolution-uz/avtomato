@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Crypt;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -36,4 +37,9 @@ class Card extends Model
         'balance',
         'myuzkard_id',
     ];
+
+    public function setPan()
+    {
+        $this->pan = Crypt::encryptString($this->pan);
+    }
 }

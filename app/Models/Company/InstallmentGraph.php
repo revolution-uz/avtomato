@@ -28,4 +28,8 @@ class InstallmentGraph extends Model
         'status',
         'starts_in',
     ];
+
+    protected $casts = [
+        'starts_in' => 'date:d-m-Y',
+    ];
 }
