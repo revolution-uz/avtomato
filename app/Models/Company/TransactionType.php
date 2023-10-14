@@ -33,8 +33,8 @@ class TransactionType extends Model
         'is_system',
     ];
 
-    public function getFrontName(): string
-    {
-        return $this->name ?? $this->${'name_' . app()->locale()};
-    }
+    //    public function getFrontName(): string
+    //    {
+    //        return $this->name ?? $this->${'name_' . app()->locale()};
+    //    }
 }
