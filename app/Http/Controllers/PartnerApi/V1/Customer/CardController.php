@@ -72,9 +72,9 @@ class CardController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(Card $card): JsonResponse
+    public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(CardResource::make($card));
+        return ApiResponse::success(CardResource::make(Card::findOrFail($id)));
     }
 
     #[OA\Post(
@@ -124,8 +124,10 @@ class CardController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(Card $card, CardRequest $request): JsonResponse
+    public function update(int $id, CardRequest $request): JsonResponse
     {
+        $card = Card::findOrFail($id);
+
         $card->fill($request->validated());
 
         if ($card->saveOrFail()) {

@@ -79,9 +79,9 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(Installment $installment): JsonResponse
+    public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(InstallmentResource::make($installment));
+        return ApiResponse::success(InstallmentResource::make(Installment::findOrFail($id)));
     }
 
     #[OA\Post(
@@ -131,8 +131,9 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(Installment $installment, InstallmentRequest $request): JsonResponse
+    public function update(int $id, InstallmentRequest $request): JsonResponse
     {
+        $installment = Installment::findOrFail($id);
         $installment->fill($request->validated());
 
         if ($installment->saveOrFail()) {
@@ -175,11 +176,11 @@ class InstallmentController extends Controller
             new OpenApiJsonResponse(resourceName: 'InstallmentCardResource'),
         ]
     )]
-    public function attachCard(Installment $installment, InstallmentCardRequest $request): JsonResponse
+    public function attachCard(int $installmentId, InstallmentCardRequest $request): JsonResponse
     {
         $model = new InstallmentCard;
         $model->fill($request->validated());
-        $model->installment_id = $installment->id;
+        $model->installment_id = $installmentId;
 
         if ($model->saveOrFail()) {
             return ApiResponse::success(InstallmentCardResource::make($model));
@@ -201,9 +202,9 @@ class InstallmentController extends Controller
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ]
     )]
-    public function detachCard(Installment $installment, InstallmentCardRequest $request): JsonResponse
+    public function detachCard(int $installmentId, InstallmentCardRequest $request): JsonResponse
     {
-        $installmentCard = InstallmentCard::query()->where('installment_id', $installment->id)->where('card_id', $request->card_id)->first();
+        $installmentCard = InstallmentCard::query()->where('installment_id', $installmentId)->where('card_id', $request->card_id)->first();
 
         return ApiResponse::success($installmentCard->delete());
     }
@@ -221,11 +222,11 @@ class InstallmentController extends Controller
             new OpenApiJsonResponse(resourceName: 'InstallmentGuarantorResource'),
         ]
     )]
-    public function attachGuarantor(Installment $installment, InstallmentGuarantorRequest $request): JsonResponse
+    public function attachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): JsonResponse
     {
         $model = new InstallmentGuarantor;
         $model->fill($request->validated());
-        $model->installment_id = $installment->id;
+        $model->installment_id = $installmentId;
 
         if ($model->saveOrFail()) {
             return ApiResponse::success(InstallmentGuarantorResource::make($model));
@@ -256,9 +257,9 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function updateGuarantor(Installment $installment, InstallmentGuarantorRequest $request): JsonResponse
+    public function updateGuarantor(int $installmentId, InstallmentGuarantorRequest $request): JsonResponse
     {
-        $installmentGuarantor = InstallmentGuarantor::query()->where('installment_id', $installment->id)->where('customer_id', $request->customer_id)->first();
+        $installmentGuarantor = InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->first();
         $installmentGuarantor->fill($request->validated());
 
         if ($installmentGuarantor->saveOrFail()) {
@@ -284,13 +285,13 @@ class InstallmentController extends Controller
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ]
     )]
-    public function detachGuarantor(Installment $installment, InstallmentGuarantorRequest $request): JsonResponse
+    public function detachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): JsonResponse
     {
         //        deleting guarantor all attached cards
         $cardIds = Card::query()->where('customer_id', $request->customer_id)->pluck('id')->toArray();
-        InstallmentCard::query()->where('installment_id', $installment->id)->whereIn('card_id', $cardIds)->delete();
+        InstallmentCard::query()->where('installment_id', $installmentId)->whereIn('card_id', $cardIds)->delete();
         //        delete guarantor
-        InstallmentGuarantor::query()->where('installment_id', $installment->id)->where('customer_id', $request->customer_id)->delete();
+        InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->delete();
 
         return ApiResponse::success(true);
     }

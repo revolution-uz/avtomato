@@ -18,6 +18,7 @@ use App\Http\Requests\Installment\TransactionTypeRequest;
 use App\Http\Requests\Installment\TransactionTypesDeleteRequest;
 use App\Http\Resources\Installment\TransactionResource;
 use App\Http\Resources\Installment\TransactionTypeResource;
+use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -73,9 +74,9 @@ class TransactionTypeController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(TransactionType $transaction): JsonResponse
+    public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(TransactionTypeResource::make($transaction));
+        return ApiResponse::success(TransactionTypeResource::make(Transaction::findOrFail($id)));
     }
 
     #[OA\Post(
@@ -126,8 +127,9 @@ class TransactionTypeController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(TransactionType $transactionType, TransactionTypeRequest $request): JsonResponse
+    public function update(int $id, TransactionTypeRequest $request): JsonResponse
     {
+        $transactionType = TransactionType::findOrFail($id);
         $transactionType->fill($request->validated());
 
         if ($transactionType->save()) {

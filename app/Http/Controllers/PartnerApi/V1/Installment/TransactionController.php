@@ -72,9 +72,9 @@ class TransactionController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(Transaction $transaction): JsonResponse
+    public function getSingle(int $id): JsonResponse
     {
-        return ApiResponse::success(TransactionResource::make($transaction));
+        return ApiResponse::success(TransactionResource::make(Transaction::findOrFail($id)));
     }
 
     #[OA\Post(
@@ -124,8 +124,9 @@ class TransactionController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(Transaction $transaction, TransactionRequest $request): JsonResponse
+    public function update(int $id, TransactionRequest $request): JsonResponse
     {
+        $transaction = Transaction::findOrFail($id);
         $transaction->fill($request->validated());
 
         if ($transaction->save()) {

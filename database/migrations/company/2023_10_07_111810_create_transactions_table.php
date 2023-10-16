@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('installment_id');
             $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('card_id');
+            $table->unsignedBigInteger('card_id')->nullable();
             $table->unsignedBigInteger('transaction_type_id');
             $table->unsignedBigInteger('myuzkard_id')->nullable();
             $table->decimal('amount', 12);
