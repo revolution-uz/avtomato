@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Installment;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Models\Company\Installment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,6 +18,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
         new OA\Property(property: 'description', type: 'string', example: 'inside the order'),
+        new OA\Property(property: 'status', type: 'int', enum: [InstallmentStatusEnum::CANCELED, InstallmentStatusEnum::FROZEN, InstallmentStatusEnum::CREATED, InstallmentStatusEnum::RUNNING, InstallmentStatusEnum::FINISHED], example: 'inside the order'),
         new OA\Property(property: 'sms_notify', type: 'boolean', example: 'false'),
         new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
         new OA\Property(property: 'starts_in', type: 'int', example: '16933424'),

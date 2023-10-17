@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('sms_notify');
             $table->boolean('any_card_charge');
             $table->boolean('is_blacklist')->default(false);
-            $table->tinyInteger('status')->default(\App\Enums\Company\InstallmentStatusEnum::CREATED);
+            $table->tinyInteger('status');
             $table->tinyInteger('period');
             $table->string('myuzkard_id')->nullable();
             $table->date('starts_in')->nullable();

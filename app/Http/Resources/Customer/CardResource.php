@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Customer;
 
+use App\Enums\Company\CardStatusEnum;
 use App\Models\Company\Card;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -14,6 +15,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'number', type: 'string', example: '986011******4444'),
         new OA\Property(property: 'expiry', type: 'string', example: '2**9'),
+        new OA\Property(property: 'status', type: 'int', enum: [CardStatusEnum::BLOCKED, CardStatusEnum::INACTIVE, CardStatusEnum::ACTIVE], example: CardStatusEnum::ACTIVE),
+        new OA\Property(property: 'balance', type: 'double', example: '0'),
     ],
 )]
 /**
@@ -28,9 +31,10 @@ class CardResource extends JsonResource
             'customer_id' => $this->resource->customer_id,
             'number' => $this->resource->pan,
             'expiry' => $this->resource->expiry,
+            'status' => $this->resource->status,
             'balance' => $this->resource->balance,
-            'created_at' => $this->resource->created_at ? (int) $this->resource->created_at->format('U') : null,
-            'updated_at' => $this->resource->updated_at ? (int) $this->resource->updated_at->format('U') : null,
+            'created_at' => $this->resource->created_at->getTimestamp(),
+            'updated_at' => $this->resource->updated_at->getTimestamp(),
         ];
     }
 }

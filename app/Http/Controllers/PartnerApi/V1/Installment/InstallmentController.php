@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
@@ -101,6 +102,7 @@ class InstallmentController extends Controller
     {
         $model = new Installment;
         $model->fill($request->validated());
+        $model->status = InstallmentStatusEnum::CREATED;
 
         if ($model->saveOrFail()) {
             return ApiResponse::success(InstallmentResource::make($model));
