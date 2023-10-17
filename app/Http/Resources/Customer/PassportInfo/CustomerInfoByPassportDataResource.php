@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Customer;
+namespace App\Http\Resources\Customer\PassportInfo;
 
 use App\DTOs\PassportDataDTO;
 use App\Enums\GenderEnum;
@@ -51,7 +51,7 @@ class CustomerInfoByPassportDataResource extends JsonResource
             'birth_date' => $this->resource->birth_date->format('d-m-Y'),
             'birth_place' => $this->resource->birth_place,
             'gender' => GenderEnum::convertFromOilaKredit($this->resource->gender)->value, // OilaKredit gender same as our
-            'address' => new AddressInfoResource($this->resource),
+            'address' => new CustomerAddressByPassportDataResource($this->resource),
         ];
     }
 }
