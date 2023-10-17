@@ -38,11 +38,9 @@ class Card extends Model
         'myuzkard_id',
     ];
 
-    public function makePan()
+    public function setPan()
     {
-        if (is_int($this->number)) {
-            $this->pan = substr_replace($this->number, '******', 6, 6);
-            $this->number = Crypt::encryptString($this->number);
-        }
+        $this->pan = substr_replace($this->number, '******', 6, 6);
+        $this->number = Crypt::encryptString($this->number);
     }
 }

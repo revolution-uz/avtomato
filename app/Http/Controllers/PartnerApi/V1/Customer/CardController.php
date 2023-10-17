@@ -94,7 +94,7 @@ class CardController extends Controller
     {
         $card = new Card;
         $card->fill($request->validated());
-        $card->makePan();
+        $card->setPan();
 
         if ($card->saveOrFail()) {
             return ApiResponse::success(CardResource::make($card));
@@ -129,7 +129,7 @@ class CardController extends Controller
     {
         $card = Card::findOrFail($id);
         $card->fill($request->validated());
-        $card->makePan();
+        $card->setPan();
 
         if ($card->saveOrFail()) {
             return ApiResponse::success(CardResource::make($card));

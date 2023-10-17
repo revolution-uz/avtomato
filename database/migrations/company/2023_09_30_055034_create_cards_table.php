@@ -14,9 +14,9 @@ return new class extends Migration
             $table->string('pan', 16);
             $table->string('number', 1024);
             $table->string('expiry', 4);
-            $table->tinyInteger('status');
-            $table->decimal('balance', 12);
-            $table->unsignedBigInteger('myuzkard_id');
+            $table->tinyInteger('status')->default(\App\Enums\Company\CardStatusEnum::INACTIVE);
+            $table->decimal('balance', 12)->default(0);
+            $table->unsignedBigInteger('myuzkard_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
