@@ -4,7 +4,10 @@ use App\Http\Controllers\PartnerApi\V1\AuthController;
 use App\Http\Controllers\PartnerApi\V1\Customer\CustomerController;
 use App\Http\Controllers\PartnerApi\V1\Info\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
+use App\Http\Controllers\PartnerApi\V1\Installment\InstallmentController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
+use App\Http\Controllers\PartnerApi\V1\Installment\TransactionController;
+use App\Http\Controllers\PartnerApi\V1\Installment\TransactionTypeController;
 use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmInpsHistoryController;
@@ -44,6 +47,43 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('calculate', 'calculate')->name('installment.calculator');
             Route::post('export/{type}', 'export')->name('installment.export-calculator');
         });
+
+        // installments
+        Route::prefix('installment')->controller(InstallmentController::class)->group(function () {
+            Route::get('/', 'index')->name('installments.index');
+            Route::get('{installment}', 'getSingle')->name('installments.get-single');
+            Route::post('/', 'create')->name('installments.create');
+            Route::put('{installment}', 'update')->name('installments.update');
+            Route::delete('/', 'delete')->name('installments.delete');
+        });
+
+        //installment card & guarantor
+        Route::prefix('')->controller(InstallmentController::class)->group(function () {
+            Route::post('{installment}/attach-card', 'attachCard')->name('installments.attach-card');
+            Route::delete('{installment}/detach-card', 'detachCard')->name('installments.detach-card');
+            Route::post('{installment}/attach-guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
+            Route::put('{installment}/update-guarantor', 'updateGuarantor')->name('installments.update-guarantor');
+            Route::delete('{installment}/detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
+        });
+
+        // transactions
+        Route::prefix('transaction')->controller(TransactionController::class)->group(function () {
+            Route::get('/', 'index')->name('transactions.index');
+            Route::get('{transaction}', 'getSingle')->name('transactions.get-single');
+            Route::post('/', 'create')->name('transactions.create');
+            Route::put('{transaction}', 'update')->name('transactions.update');
+            Route::delete('/', 'delete')->name('transactions.delete');
+        });
+
+        // transaction_types
+        Route::prefix('transaction-type')->controller(TransactionTypeController::class)->group(function () {
+            Route::get('/', 'index')->name('transaction-types.index');
+            Route::get('{transactionType}', 'getSingle')->name('transaction-types.get-single');
+            Route::post('/', 'create')->name('transaction-types.create');
+            Route::put('{transactionType}', 'update')->name('transaction-types.update');
+            Route::delete('/', 'delete')->name('transaction-types.delete');
+        });
+
     });
 
     // Management module (branches, users, roles, permissions and etc.)

@@ -25,7 +25,7 @@ class CalculatorController extends Controller
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CalculatorRequest')
         ),
-        tags: ['Installment'],
+        tags: ['Calculator'],
         responses: [
             new OpenApiJsonArrayResponse(resourceName: 'InstallmentPaymentResource'),
             new OpenApiNotFoundResponse(message: 'Tariff not found'),
@@ -44,7 +44,7 @@ class CalculatorController extends Controller
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CalculatorRequest')
         ),
-        tags: ['Installment'],
+        tags: ['Calculator'],
         responses: [
             new OA\Response(response: 200, description: 'Returned file', content: new OA\MediaType(mediaType: 'text/csv')),
         ]
