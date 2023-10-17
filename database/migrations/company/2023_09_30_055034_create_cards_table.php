@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('customer_id');
             $table->string('pan', 16);
-            $table->string('number', 16);
+            $table->string('number', 1024);
             $table->string('expiry', 4);
             $table->tinyInteger('status');
             $table->decimal('balance', 12);

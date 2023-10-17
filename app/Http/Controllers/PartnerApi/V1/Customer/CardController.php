@@ -92,11 +92,12 @@ class CardController extends Controller
     )]
     public function create(CardRequest $request): JsonResponse
     {
-        $model = new Card;
-        $model->fill($request->validated());
+        $card = new Card;
+        $card->fill($request->validated());
+        $card->makePan();
 
-        if ($model->saveOrFail()) {
-            return ApiResponse::success(CardResource::make($model));
+        if ($card->saveOrFail()) {
+            return ApiResponse::success(CardResource::make($card));
         }
 
         return ApiResponse::error('Error on creating Card');
@@ -127,8 +128,8 @@ class CardController extends Controller
     public function update(int $id, CardRequest $request): JsonResponse
     {
         $card = Card::findOrFail($id);
-
         $card->fill($request->validated());
+        $card->makePan();
 
         if ($card->saveOrFail()) {
             return ApiResponse::success(CardResource::make($card));

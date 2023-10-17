@@ -11,7 +11,7 @@ class TransactionTypeSeeder extends Seeder
     public function run(): void
     {
         TransactionType::query()->firstOrCreate([
-            'id' => 1
+            'id' => 1,
         ], [
             'id' => 1,
             'name' => 'MyUzkard',
@@ -23,7 +23,7 @@ class TransactionTypeSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
         TransactionType::query()->firstOrCreate([
-            'id' => 2
+            'id' => 2,
         ], [
             'id' => 2,
             'name' => 'Naqd',
