@@ -26,7 +26,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'birth_date', type: 'string', example: '15-03-1995'),
         new OA\Property(property: 'birth_place', type: 'string', example: 'Urganch shaxri'),
         new OA\Property(property: 'gender', type: 'int', enum: [GenderEnum::MALE, GenderEnum::FEMALE], example: '1'),
-        new OA\Property(property: 'address', ref: '#/components/schemas/AddressInfoResource', type: 'object'),
+        new OA\Property(property: 'address', ref: '#/components/schemas/CustomerAddressByPassportDataResource', type: 'object'),
     ],
 )]
 /**
