@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests\Installment;
 
+use App\Enums\Company\FeatureEnum;
+use App\Models\Company\Features;
 use App\Models\Company\Installment;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\RequiredIf;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -29,7 +32,7 @@ class InstallmentRequest extends FormRequest
     {
         return [
             'customer_id' => 'required|int',
-            'branch_id' => 'required|int',
+            'branch_id' => ['required', [new RequiredIf(Features::isFeatureActive(FeatureEnum::MULTI_BRANCH))]],
             'tariff_id' => 'required|int',
             'amount' => 'required|numeric',
             'description' => 'required|string',
