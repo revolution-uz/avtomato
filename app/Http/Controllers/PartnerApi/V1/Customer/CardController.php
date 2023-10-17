@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Customer;
 
-use App\Enums\Company\CardStatusEnum;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
@@ -96,7 +95,6 @@ class CardController extends Controller
         $card = new Card;
         $card->fill($request->validated());
         $card->setPan();
-        $card->status = CardStatusEnum::INACTIVE;
 
         if ($card->saveOrFail()) {
             return ApiResponse::success(CardResource::make($card));
