@@ -10,6 +10,7 @@ class MibCreateRequestDTO extends BaseScoringRequest
         public string $pinfl,
         public string $phone,
     ) {
+        $this->phone = '+' . $this->phone;
     }
 
     public function toArray(): array
@@ -17,14 +18,6 @@ class MibCreateRequestDTO extends BaseScoringRequest
         return [
             'pinfl' => $this->pinfl,
             'phone' => $this->phone,
-        ];
-    }
-
-    public function convertToPlumRequest(): array
-    {
-        return [
-            'pinfl' => $this->pinfl,
-            'phone' => '+' . $this->phone,
         ];
     }
 }

@@ -17,11 +17,4 @@ class TaxCreateRequestDTO extends BaseScoringRequest
             'pinfl' => $this->pinfl,
         ];
     }
-
-    public function convertToPlumRequest(): array
-    {
-        return [
-            'pinfl' => $this->pinfl,
-        ];
-    }
 }

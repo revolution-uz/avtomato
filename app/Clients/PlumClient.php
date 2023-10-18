@@ -33,7 +33,7 @@ class PlumClient extends BaseClient
             status: $response->status(),
             response: $response->body(),
             duration: $response->transferStats?->getTransferTime(),
-            body: $data,
+            params: $data,
         ));
 
         return $response->json('result');
@@ -49,7 +49,7 @@ class PlumClient extends BaseClient
             status: $response->status(),
             response: $response->body(),
             duration: $response->transferStats?->getTransferTime(),
-            body: $data,
+            params: $data,
         ));
 
         return $response->json('result');
@@ -57,6 +57,6 @@ class PlumClient extends BaseClient
 
     protected function logRequest(HttpRequestLogDTO $request): void
     {
-        Log::channel('plum-client')->info(get_called_class(), $request->toArray());
+        Log::channel('plum-client')->info($request->url, $request->toArray());
     }
 }
