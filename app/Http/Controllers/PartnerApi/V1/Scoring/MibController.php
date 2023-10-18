@@ -31,7 +31,7 @@ class MibController extends Controller
     #[OA\Get(
         path: '/api/v1/scoring/mib',
         description: 'Get MIB requests list',
-        tags: ['Scoring (MIB)'],
+        tags: ['Scoring (MIB info)'],
         parameters: [
             new OpenApiPageParameter,
             new OpenApiPerPageParameter,
@@ -72,7 +72,7 @@ class MibController extends Controller
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CreateMibHistoryRequest')
         ),
-        tags: ['Scoring (MIB history)'],
+        tags: ['Scoring (MIB info)'],
         responses: [
             new OpenApiJsonResponse(resourceName: 'MibHistoryResource'),
         ]

@@ -31,7 +31,7 @@ class TaxController extends Controller
     #[OA\Get(
         path: '/api/v1/scoring/tax',
         description: 'Get TAX requests list',
-        tags: ['Scoring (TAX)'],
+        tags: ['Scoring (TAX info)'],
         parameters: [
             new OpenApiPageParameter,
             new OpenApiPerPageParameter,
@@ -71,7 +71,7 @@ class TaxController extends Controller
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CreateTaxHistoryRequest')
         ),
-        tags: ['Scoring (TAX history)'],
+        tags: ['Scoring (TAX info)'],
         responses: [
             new OpenApiJsonResponse(resourceName: 'TaxHistoryResource'),
         ]
