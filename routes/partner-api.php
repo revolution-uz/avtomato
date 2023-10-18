@@ -12,7 +12,7 @@ use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmInpsHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmPensionInfoController;
-use App\Http\Controllers\PartnerApi\V1\Scoring\MibScoringController;
+use App\Http\Controllers\PartnerApi\V1\Scoring\MibController;
 use App\Http\Controllers\PartnerApi\V1\User\ProfileController;
 use App\Http\Controllers\PartnerApi\V1\User\RoleController;
 use App\Http\Controllers\PartnerApi\V1\User\UserController;
@@ -163,7 +163,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('create', 'create');
             Route::get('/', 'index');
         });
-        Route::prefix('mib-scoring')->controller(MibScoringController::class)->group(function () {
+        Route::prefix('mib-scoring')->controller(MibController::class)->group(function () {
             Route::get('/', 'index');
         });
     });

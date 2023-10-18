@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property int $page
  * @property int $per_page
  */
-class MibScoringFilterRequest extends FormRequest
+class ScoringFilterRequest extends FormRequest
 {
     public function authorize(): bool
     {
