@@ -11,7 +11,7 @@ abstract class BaseScoringResponse extends Data
     {
         $xmlObject = simplexml_load_string(iconv('UTF-8', 'windows-1251', $xml));
 
-        return self::xmlToArray($xmlObject);
+        return self::from(self::xmlToArray($xmlObject));
         //        return self::from(json_decode(json_encode($xmlObject), true));
     }
 
