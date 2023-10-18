@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Customer;
+namespace App\Http\Resources\Customer\PassportInfo;
 
 use App\DTOs\PassportDataDTO;
 use App\Enums\GenderEnum;
@@ -26,7 +26,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'birth_date', type: 'string', example: '15-03-1995'),
         new OA\Property(property: 'birth_place', type: 'string', example: 'Urganch shaxri'),
         new OA\Property(property: 'gender', type: 'int', enum: [GenderEnum::MALE, GenderEnum::FEMALE], example: '1'),
-        new OA\Property(property: 'address', ref: '#/components/schemas/AddressInfoResource', type: 'object'),
+        new OA\Property(property: 'address', ref: '#/components/schemas/CustomerAddressByPassportDataResource', type: 'object'),
     ],
 )]
 /**
@@ -51,7 +51,7 @@ class CustomerInfoByPassportDataResource extends JsonResource
             'birth_date' => $this->resource->birth_date->format('d-m-Y'),
             'birth_place' => $this->resource->birth_place,
             'gender' => GenderEnum::convertFromOilaKredit($this->resource->gender)->value, // OilaKredit gender same as our
-            'address' => new AddressInfoResource($this->resource),
+            'address' => new CustomerAddressByPassportDataResource($this->resource),
         ];
     }
 }
