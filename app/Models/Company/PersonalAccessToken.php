@@ -16,6 +16,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property array $abilities
  * @property Carbon|null $last_used_at
  * @property string|null $device_ip
+ * @property string|null $device_type
+ * @property string|null $device_os
  */
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {

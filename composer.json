@@ -51,7 +51,7 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],
-        "post-install-cmd": [
+        "dev-post-install-cmd": [
             "cghooks add --ignore-lock"
         ],
         "post-update-cmd": [

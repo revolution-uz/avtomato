@@ -110,7 +110,7 @@ class ProfileControllerTest extends TestCase
     public function devices()
     {
         $admin = $this->createAdminUser();
-        $admin->createTokenWithDeviceName('test', 'localhost');
+        $admin->createTokenWithData('test');
 
         $response = $this->actingAs($admin)->get(route('profile.devices'));
 
@@ -124,7 +124,7 @@ class ProfileControllerTest extends TestCase
     public function revokeDevice()
     {
         $admin = $this->createAdminUser();
-        $admin->createTokenWithDeviceName('test', 'localhost');
+        $admin->createTokenWithData('test');
         $token = $admin->tokens()->first();
 
         $response = $this->actingAs($admin)->delete(route('profile.revoke-device', ['id' => $token->id]));

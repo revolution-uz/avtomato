@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Resources\Customer;
+namespace App\Http\Resources\Customer\PassportInfo;
 
 use App\DTOs\PassportDataDTO;
+use App\Models\Company\District;
+use App\Models\Company\Region;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'AddressInfoResource',
+    schema: 'CustomerAddressByPassportDataResource',
     title: 'Address info by passport data',
     properties: [
         new OA\Property(property: 'address', type: 'string', example: 'Urganch shahar Г. УРГЕНЧ ЮКОРИ-БОГ'),
@@ -20,14 +22,17 @@ use OpenApi\Attributes as OA;
 /**
  * @property PassportDataDTO $resource
  */
-class AddressInfoResource extends JsonResource
+class CustomerAddressByPassportDataResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $region = Region::where('oilakredit_id', $this->resource->region_id)->first();
+        $district = District::where('oilakredit_id', $this->resource->district_id)->first();
+
         return [
             'address' => $this->resource->address,
-            'region_id' => $this->resource->region_id,
-            'district_id' => $this->resource->district_id,
+            'region_id' => $region?->id,
+            'district_id' => $district?->id,
             'mahalla_id' => null,
         ];
     }

@@ -56,10 +56,10 @@ class User extends Authenticatable
         return $this->morphMany(PersonalAccessToken::class, 'tokenable');
     }
 
-    public function createTokenWithDeviceName(string $device_name, string $ip): string
+    public function createTokenWithData(string $deviceName, array $data = []): string
     {
-        $token = $this->createToken($device_name);
-        $token->accessToken->update(['device_ip' => $ip, 'expires_at' => now()->addDays(30)->format('Y-m-d H:i:s')]);
+        $token = $this->createToken($deviceName);
+        $token->accessToken->update([...$data, 'expires_at' => now()->addDays(30)->format('Y-m-d H:i:s')]);
 
         return $token->plainTextToken;
     }
