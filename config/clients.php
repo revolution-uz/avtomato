@@ -22,4 +22,14 @@ return [
     'oila_kredit' => [
         'base_url' => 'https://api.oilakredit.uz',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | MyUzkard Client
+    |--------------------------------------------------------------------------
+    */
+    'plum' => [
+        'base_url' => 'https://pay.myuzcard.uz/api',
+        'token' => env('PLUM_TOKEN', ''),
+    ],
 ];

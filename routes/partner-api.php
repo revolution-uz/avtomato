@@ -12,6 +12,8 @@ use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmInpsHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmPensionInfoController;
+use App\Http\Controllers\PartnerApi\V1\Scoring\MibController;
+use App\Http\Controllers\PartnerApi\V1\Scoring\TaxController;
 use App\Http\Controllers\PartnerApi\V1\User\ProfileController;
 use App\Http\Controllers\PartnerApi\V1\User\RoleController;
 use App\Http\Controllers\PartnerApi\V1\User\UserController;
@@ -161,6 +163,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::prefix('pension-info')->controller(KatmPensionInfoController::class)->group(function () {
             Route::post('create', 'create');
             Route::get('/', 'index');
+        });
+        Route::prefix('mib')->controller(MibController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::post('create', 'create');
+        });
+        Route::prefix('tax')->controller(TaxController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::post('create', 'create');
         });
     });
 });
