@@ -23,13 +23,13 @@ class PlumClient extends BaseClient
         return ClientCodeEnum::PLUM;
     }
 
-    public function scoringTax(array $data): ?array
+    public function scoringMib(array $data)
     {
         $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
-            ->get($this->baseUrl . '/Scoring/GetTaxDebtScore?' . http_build_query($data));
+            ->get($this->baseUrl . '/Scoring/GetEbDebtScore?' . http_build_query($data));
         $this->logRequest(new HttpRequestLogDTO(
             method: 'GET',
-            url: $this->baseUrl . '/Scoring/GetTaxDebtScore',
+            url: $this->baseUrl . '/Scoring/GetEbDebtScore',
             status: $response->status(),
             response: $response->body(),
             duration: $response->transferStats?->getTransferTime(),
@@ -39,13 +39,13 @@ class PlumClient extends BaseClient
         return $response->json('result');
     }
 
-    public function scoringMib(array $data): ?array
+    public function scoringTax(array $data)
     {
         $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
-            ->get($this->baseUrl . '/Scoring/GetEbDebtScore?' . http_build_query($data));
+            ->get($this->baseUrl . '/Scoring/GetTaxDebtScore?' . http_build_query($data));
         $this->logRequest(new HttpRequestLogDTO(
             method: 'GET',
-            url: $this->baseUrl . '/Scoring/GetEbDebtScore',
+            url: $this->baseUrl . '/Scoring/GetTaxDebtScore',
             status: $response->status(),
             response: $response->body(),
             duration: $response->transferStats?->getTransferTime(),

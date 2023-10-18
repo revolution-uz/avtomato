@@ -3,8 +3,8 @@
 namespace App\Services\Scoring;
 
 use App\Clients\PlumClient;
-use App\DTOs\Scoring\Katm\MibCreateRequestDTO;
-use App\DTOs\Scoring\Katm\TaxCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;

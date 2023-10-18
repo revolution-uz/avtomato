@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 
-use App\DTOs\Scoring\Katm\TaxCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
@@ -14,7 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\CreateTaxHistoryRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
-use App\Http\Resources\Scoring\TaxHistoryResource;
+use App\Http\Resources\Scoring\TaxHistoryResourceKatm;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\PlumService;
 use Illuminate\Database\Eloquent\Builder;
@@ -46,7 +46,7 @@ class TaxController extends Controller
     {
         $sortables = ['id', 'status', 'created_at'];
 
-        return TaxHistoryResource::collection(
+        return TaxHistoryResourceKatm::collection(
             ScoringRequest::query()
                 ->when(
                     $request->search,
@@ -81,6 +81,6 @@ class TaxController extends Controller
         $dto = TaxCreateRequestDTO::from($request->validated());
         $model = $this->plumService->scoringTax($dto, ScoringRequestTypeEnum::PLUM_TAX_INFO);
 
-        return ApiResponse::success(TaxHistoryResource::make($model));
+        return ApiResponse::success(TaxHistoryResourceKatm::make($model));
     }
 }

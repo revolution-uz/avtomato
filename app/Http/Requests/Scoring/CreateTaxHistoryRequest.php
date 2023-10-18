@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Scoring;
 
-use App\DTOs\Scoring\Katm\TaxCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 

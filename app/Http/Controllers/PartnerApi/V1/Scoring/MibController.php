@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 
-use App\DTOs\Scoring\Katm\MibCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
@@ -14,7 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\CreateMibHistoryRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
-use App\Http\Resources\Scoring\MibHistoryResource;
+use App\Http\Resources\Scoring\MibHistoryResourceKatm;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\PlumService;
 use Illuminate\Database\Eloquent\Builder;
@@ -46,7 +46,7 @@ class MibController extends Controller
     {
         $sortables = ['id', 'status', 'created_at'];
 
-        return MibHistoryResource::collection(
+        return MibHistoryResourceKatm::collection(
             ScoringRequest::query()
                 ->when(
                     $request->search,
@@ -82,6 +82,6 @@ class MibController extends Controller
         $dto = MibCreateRequestDTO::from($request->validated());
         $model = $this->plumService->scoringMib($dto, ScoringRequestTypeEnum::PLUM_MIB_INFO);
 
-        return ApiResponse::success(MibHistoryResource::make($model));
+        return ApiResponse::success(MibHistoryResourceKatm::make($model));
     }
 }

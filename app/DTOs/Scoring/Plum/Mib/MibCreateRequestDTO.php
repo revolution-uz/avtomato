@@ -1,13 +1,14 @@
 <?php
 
-namespace App\DTOs\Scoring\Katm;
+namespace App\DTOs\Scoring\Plum\Mib;
 
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 
-class TaxCreateRequestDTO extends BaseScoringRequest
+class MibCreateRequestDTO extends BaseScoringRequest
 {
     public function __construct(
-        public string $pinfl
+        public string $pinfl,
+        public string $phone,
     ) {
     }
 
@@ -15,6 +16,7 @@ class TaxCreateRequestDTO extends BaseScoringRequest
     {
         return [
             'pinfl' => $this->pinfl,
+            'phone' => $this->phone,
         ];
     }
 
@@ -22,6 +24,7 @@ class TaxCreateRequestDTO extends BaseScoringRequest
     {
         return [
             'pinfl' => $this->pinfl,
+            'phone' => '+' . $this->phone,
         ];
     }
 }

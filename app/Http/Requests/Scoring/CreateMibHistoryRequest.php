@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Scoring;
 
-use App\DTOs\Scoring\Katm\MibCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
