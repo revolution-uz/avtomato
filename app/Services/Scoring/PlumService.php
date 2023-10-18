@@ -13,8 +13,7 @@ class PlumService
 {
     public function __construct(
         private readonly PlumClient $plumClient
-    )
-    {
+    ) {
     }
 
     public function scoringMib(MibCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
