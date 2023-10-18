@@ -10,10 +10,10 @@ abstract class BaseScoringResponse extends Data
     public static function fromXml(string $xml)
     {
         $xmlObject = simplexml_load_string(iconv('UTF-8', 'windows-1251', $xml));
-        return self::xmlToArray($xmlObject);
-//        return self::from(json_decode(json_encode($xmlObject), true));
-    }
 
+        return self::xmlToArray($xmlObject);
+        //        return self::from(json_decode(json_encode($xmlObject), true));
+    }
 
     /**
      * Create plain PHP associative array from XML.
@@ -23,33 +23,35 @@ abstract class BaseScoringResponse extends Data
      *   $arrayData = xmlToArray($xmlNode);
      *   echo json_encode($arrayData);
      *
-     * @param SimpleXMLElement $xml The root node
-     * @param array $options Associative array of options
+     * @param  SimpleXMLElement  $xml The root node
+     * @param  array  $options Associative array of options
      * @return array
+     *
      * @link http://outlandishideas.co.uk/blog/2012/08/xml-to-json/ More info
+     *
      * @author Tamlyn Rhodes <http://tamlyn.org>
      * @license http://creativecommons.org/publicdomain/mark/1.0/ Public Domain
      */
-    public static function xmlToArray($xml, $options = array())
+    public static function xmlToArray($xml, $options = [])
     {
-        $defaults = array(
+        $defaults = [
             'namespaceRecursive' => false,  //setting to true will get xml doc namespaces recursively
             'removeNamespace' => false,     //set to true if you want to remove the namespace from resulting keys (recommend setting namespaceSeparator = '' when this is set to true)
             'namespaceSeparator' => ':',    //you may want this to be something other than a colon
             'attributePrefix' => '@',       //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array(),       //array of xml tag names which should always become arrays
+            'alwaysArray' => [],       //array of xml tag names which should always become arrays
             'autoArray' => true,            //only create arrays for tags which appear more than once
             'textContent' => '$',           //key used for the text content of elements
             'autoText' => true,             //skip textContent key if node has no attributes or child nodes
             'keySearch' => false,           //optional search and replace on tag and attribute names
-            'keyReplace' => false           //replace values for above search values (as passed to str_replace())
-        );
+            'keyReplace' => false,           //replace values for above search values (as passed to str_replace())
+        ];
         $options = array_merge($defaults, $options);
         $namespaces = $xml->getDocNamespaces($options['namespaceRecursive']);
         $namespaces[''] = null; //add base (empty) namespace
 
         //get attributes from all namespaces
-        $attributesArray = array();
+        $attributesArray = [];
         foreach ($namespaces as $prefix => $namespace) {
             if ($options['removeNamespace']) {
                 $prefix = '';
@@ -63,12 +65,12 @@ abstract class BaseScoringResponse extends Data
                 $attributeKey = $options['attributePrefix']
                     . ($prefix ? $prefix . $options['namespaceSeparator'] : '')
                     . $attributeName;
-                $attributesArray[$attributeKey] = (string)$attribute;
+                $attributesArray[$attributeKey] = (string) $attribute;
             }
         }
 
         //get child nodes from all namespaces
-        $tagsArray = array();
+        $tagsArray = [];
         foreach ($namespaces as $prefix => $namespace) {
             if ($options['removeNamespace']) {
                 $prefix = '';
@@ -91,12 +93,12 @@ abstract class BaseScoringResponse extends Data
                     $childTagName = $prefix . $options['namespaceSeparator'] . $childTagName;
                 }
 
-                if (!isset($tagsArray[$childTagName])) {
+                if (! isset($tagsArray[$childTagName])) {
                     //only entry with this key
                     //test if tags of this type should always be arrays, no matter the element count
                     $tagsArray[$childTagName] =
                         in_array($childTagName, $options['alwaysArray'], true) ||
-                        !$options['autoArray'] ? array($childProperties) : $childProperties;
+                        ! $options['autoArray'] ? [$childProperties] : $childProperties;
                 } elseif (
                     is_array($tagsArray[$childTagName]) &&
                     array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)
@@ -105,25 +107,25 @@ abstract class BaseScoringResponse extends Data
                     $tagsArray[$childTagName][] = $childProperties;
                 } else {
                     //key exists so convert to integer indexed array with previous value in position 0
-                    $tagsArray[$childTagName] = array($tagsArray[$childTagName], $childProperties);
+                    $tagsArray[$childTagName] = [$tagsArray[$childTagName], $childProperties];
                 }
             }
         }
 
         //get text content of node
-        $textContentArray = array();
-        $plainText = trim((string)$xml);
+        $textContentArray = [];
+        $plainText = trim((string) $xml);
         if ($plainText !== '') {
             $textContentArray[$options['textContent']] = $plainText;
         }
 
         //stick it all together
-        $propertiesArray = !$options['autoText'] || $attributesArray || $tagsArray || ($plainText === '')
+        $propertiesArray = ! $options['autoText'] || $attributesArray || $tagsArray || ($plainText === '')
             ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
 
         //return node as array
-        return array(
-            $xml->getName() => $propertiesArray
-        );
+        return [
+            $xml->getName() => $propertiesArray,
+        ];
     }
 }
