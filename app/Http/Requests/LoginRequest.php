@@ -11,13 +11,11 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'username', type: 'string', example: 'admin'),
         new OA\Property(property: 'password', type: 'string', example: 'password'),
-        new OA\Property(property: 'device_name', type: 'string', example: 'iPhone 15 Pro Max'),
     ],
 )]
 /**
  * @property string $username
  * @property string $password
- * @property string $device_name
  */
 class LoginRequest extends FormRequest
 {
@@ -36,7 +34,6 @@ class LoginRequest extends FormRequest
         return [
             'username' => ['bail', 'required'],
             'password' => ['bail', 'required'],
-            'device_name' => 'required|string',
         ];
     }
 }

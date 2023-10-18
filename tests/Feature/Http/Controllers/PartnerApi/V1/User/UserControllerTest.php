@@ -156,7 +156,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $user->createTokenWithDeviceName('test', 'localhost');
+        $user->createTokenWithData('test');
 
         $response = $this->actingAs($admin)->get(route('users.devices', ['id' => $user->id]));
 
@@ -173,7 +173,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $user->createTokenWithDeviceName('test', 'localhost');
+        $user->createTokenWithData('test');
         $token = $user->tokens()->first();
 
         $response = $this->actingAs($admin)->delete(route('users.revoke-device', [
