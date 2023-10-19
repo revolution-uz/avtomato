@@ -11,6 +11,7 @@ use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
@@ -25,6 +26,11 @@ class AuthController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/LoginRequest')
         ),
         tags: ['Auth'],
+        parameters: [
+            new OA\Parameter(name: 'Device-Name', in: 'header', required: true, example: 'Mozilla/5.0 (Linux; Android 10; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Mobile Safari/537.36'),
+            new OA\Parameter(name: 'Device-Type', in: 'header', required: true, example: 'Mobile'),
+            new OA\Parameter(name: 'Device-OS', in: 'header', required: true, example: 'Android'),
+        ],
         responses: [
             new OpenApiSingleDataResponse(data: '1|DoeKLT28Gj1fxDGC3zoIYH4ZVseZxXkfFSmYAnla', type: 'string'),
             new OpenApiErrorResponse(message: 'Login or password is wrong'),
@@ -37,7 +43,20 @@ class AuthController extends Controller
             return ApiResponse::error('Login or password is wrong');
         }
 
-        return ApiResponse::success($user->createTokenWithDeviceName($request->device_name, $request->ip()));
+        if (! $request->hasHeader('Device-Name') || ! $request->hasHeader('Device-Type') || ! $request->hasHeader('Device-OS')) {
+            return ApiResponse::error('Login or password is wrong');
+        }
+
+        return ApiResponse::success(
+            $user->createTokenWithData(
+                Str::substr($request->header('Device-Name'), 0, 255),
+                [
+                    'device_type' => Str::substr($request->header('Device-Type'), 0, 32),
+                    'device_os' => Str::substr($request->header('Device-OS'), 0, 32),
+                    'device_ip' => $request->ip(),
+                ]
+            )
+        );
     }
 
     #[OA\Post(

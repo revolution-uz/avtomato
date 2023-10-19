@@ -21,8 +21,7 @@ class AuthControllerTest extends TestCase
         $response = $this->post(route('auth.login'), [
             'username' => $user->username,
             'password' => 'password',
-            'device_name' => 'local',
-        ]);
+        ], ['Device-Name' => 'test', 'Device-OS' => 'android', 'Device-Type' => 'mobile']);
 
         $response->assertOk();
         $this->assertIsString($response->json('data'));

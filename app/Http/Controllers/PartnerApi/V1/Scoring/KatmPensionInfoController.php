@@ -12,8 +12,8 @@ use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\Management\BranchesFilterRequest;
 use App\Http\Requests\Scoring\CreateKatmCreditHistoryRequest;
+use App\Http\Requests\Scoring\KatmPensionInfoFilterRequest;
 use App\Http\Resources\Scoring\KatmPensionInfoResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\KatmService;
@@ -42,7 +42,7 @@ class KatmPensionInfoController extends Controller
             new OpenApiJsonArrayResponse(resourceName: 'KatmPensionInfoResource', withPagination: true, withSortables: true),
         ]
     )]
-    public function index(BranchesFilterRequest $request)
+    public function index(KatmPensionInfoFilterRequest $request)
     {
         $sortables = ['id', 'status', 'created_at'];
 
