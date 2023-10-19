@@ -8,8 +8,8 @@ use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\DataCollection;
 
 #[OA\Schema(
-    schema: 'KatmIncomesDTO',
-    title: 'KatmIncomesDTO',
+    schema: 'KatmPensionSizePensionDTO',
+    title: 'KatmPensionSizePensionDTO',
     properties: [
         new OA\Property(property: 'income', type: 'array', items: new OA\Items(ref: '#/components/schemas/KatmIncomeDTO')),
     ],
