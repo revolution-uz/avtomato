@@ -14,7 +14,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'installment_id', type: 'int', example: '1'),
         new OA\Property(property: 'installment', ref: '#/components/schemas/InstallmentResource'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
-        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerResource'),
+        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerListItemResource'),
         new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
     ],
 )]

@@ -14,7 +14,7 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
-        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerResource'),
+        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerListItemResource'),
         new OA\Property(property: 'branch_id', type: 'int', example: '1'),
         new OA\Property(property: 'branch', ref: '#/components/schemas/BranchResource', nullable: true),
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),

@@ -15,7 +15,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'installment_id', type: 'int', example: '1'),
         new OA\Property(property: 'installment', ref: '#/components/schemas/InstallmentResource'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
-        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerResource', nullable: true),
+        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerListItemResource', nullable: true),
         new OA\Property(property: 'card_id', type: 'int', example: '1'),
         new OA\Property(property: 'card', ref: '#/components/schemas/CardResource', nullable: true),
         new OA\Property(property: 'transaction_type_id', type: 'int', example: '100'),
