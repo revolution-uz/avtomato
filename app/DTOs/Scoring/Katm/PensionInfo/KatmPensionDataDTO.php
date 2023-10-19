@@ -6,8 +6,8 @@ use App\DTOs\Scoring\Base\BaseScoringResponse;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'KatmPensionRowDTO',
-    title: 'KatmPensionRowDTO',
+    schema: 'KatmPensionDataDTO',
+    title: 'KatmPensionDataDTO',
     properties: [
         new OA\Property(property: 'namelatin', type: 'string', example: 'Muhiba'),
         new OA\Property(property: 'address', type: 'string', example: 'BOBOATO1 12 12 12'),
