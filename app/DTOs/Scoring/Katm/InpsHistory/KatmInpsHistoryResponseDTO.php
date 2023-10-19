@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'client', ref: '#/components/schemas/KatmClientDTO'),
         new OA\Property(property: 'incomes_period', ref: '#/components/schemas/KatmIncomesPeriodDTO'),
         new OA\Property(property: 'presence_reports', ref: '#/components/schemas/KatmPresenceReportsDTO'),
+        new OA\Property(property: 'incomes', ref: '#/components/schemas/KatmIncomesDTO'),
     ],
 )]
 class KatmInpsHistoryResponseDTO extends BaseScoringResponse
@@ -21,7 +22,7 @@ class KatmInpsHistoryResponseDTO extends BaseScoringResponse
         public KatmClientDTO $client,
         public KatmIncomesPeriodDTO $incomes_period,
         public KatmPresenceReportsDTO $presence_reports,
-        // TODO incomes
+        public KatmIncomesDTO $incomes,
     ) {
     }
 }
