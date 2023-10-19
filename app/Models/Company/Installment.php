@@ -72,5 +72,4 @@ class Installment extends Model
     {
         return $this->belongsTo(Branch::class);
     }
-
 }

@@ -37,6 +37,4 @@ class InstallmentCard extends Model
     {
         return $this->belongsTo(Card::class);
     }
-
-
 }
