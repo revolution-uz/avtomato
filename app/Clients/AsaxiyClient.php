@@ -54,4 +54,36 @@ class AsaxiyClient extends BaseClient
 
         return $response->json('data');
     }
+
+    public function scoringMib(array $params)
+    {
+        $response = Http::withHeaders(['x-access-token' => $this->token])
+            ->get($this->baseUrl . '/katm/mib?' . http_build_query($params));
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'GET',
+            url: $this->baseUrl . '/katm/mib',
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            params: $params,
+        ));
+
+        return $response->json('result');
+    }
+
+    public function scoringTax(array $params)
+    {
+        $response = Http::withHeaders(['x-access-token' => $this->token])
+            ->get($this->baseUrl . '/katm/tax?' . http_build_query($params));
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'GET',
+            url: $this->baseUrl . '/katm/tax',
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            params: $params,
+        ));
+
+        return $response->json('result');
+    }
 }

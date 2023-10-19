@@ -2,7 +2,7 @@
 
 namespace App\Services\Scoring;
 
-use App\Clients\PlumClient;
+use App\Clients\AsaxiyClient;
 use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
@@ -12,7 +12,7 @@ use App\Models\Company\ScoringRequest;
 class PlumService
 {
     public function __construct(
-        private readonly PlumClient $plumClient
+        private readonly AsaxiyClient $plumClient
     ) {
     }
 
