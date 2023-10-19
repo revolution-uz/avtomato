@@ -13,9 +13,9 @@ return new class extends Migration
             $table->dropColumn('name');
 
             // Modify the 'name_uz', 'name_ru', and 'name_en' columns as required
-            $table->string('name_uz');
-            $table->string('name_ru');
-            $table->string('name_en');
+            $table->string('name_uz')->change();
+            $table->string('name_ru')->change();
+            $table->string('name_en')->change();
         });
     }
 
