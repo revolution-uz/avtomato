@@ -2,17 +2,19 @@
 
 namespace App\Services\Scoring;
 
-use App\Clients\AsaxiyClient;
+use App\Clients\PlumClient;
 use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibHistoryResponseDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Http\Resources\Scoring\TaxHistoryResource;
 use App\Models\Company\ScoringRequest;
 
 class PlumService
 {
     public function __construct(
-        private readonly AsaxiyClient $plumClient
+        private readonly PlumClient $plumClient
     ) {
     }
 
@@ -22,9 +24,12 @@ class PlumService
         $model->type = $type;
         $model->request = $dto;
         $model->client_code = $this->plumClient->getClientCode();
-        $model->response = $this->plumClient->scoringMib(
+        $model->status = ScoringRequestStatusEnum::WAITING;
+        $model->saveOrFail();
+        $model->response = MibHistoryResponseDTO::from($this->plumClient->scoringMib(
             $dto->toArray()
-        );
+        ));
+
         $model->status = ScoringRequestStatusEnum::SUCCESS;
         $model->saveOrFail();
 
@@ -37,9 +42,13 @@ class PlumService
         $model->type = $type;
         $model->request = $dto;
         $model->client_code = $this->plumClient->getClientCode();
-        $model->response = $this->plumClient->scoringTax(
+        $model->status = ScoringRequestStatusEnum::WAITING;
+        $model->saveOrFail();
+
+        $model->response = TaxHistoryResource::from($this->plumClient->scoringMib(
             $dto->toArray()
-        );
+        ));
+
         $model->status = ScoringRequestStatusEnum::SUCCESS;
         $model->saveOrFail();
 

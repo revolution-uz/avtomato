@@ -15,7 +15,7 @@ use OpenApi\Attributes as OA;
 class MibHistoryResponseDTO extends BaseScoringResponse
 {
     public function __construct(
-        public float $debtBal,
+        public int $debtBal,
     ) {
     }
 }
