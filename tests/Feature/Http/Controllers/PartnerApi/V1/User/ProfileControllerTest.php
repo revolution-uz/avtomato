@@ -1,7 +1,9 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment\Http\Controllers\PartnerApi\V1\User;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 
+use App\Models\Company\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -89,10 +91,26 @@ class ProfileControllerTest extends TestCase
     /**
      * @test
      */
+    public function changeAvatar()
+    {
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin)->post(route('profile.change-avatar'), [
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ]);
+
+        $response->assertOk();
+        $file_name = $admin->fresh()->avatar;
+        $this->assertFileExists(storage_path('app/public/' . User::AVATAR_PATH . '/' . $file_name));
+        $this->assertFileExists(storage_path('app/public/' . User::THUMBNAIL_PATH . '/' . $file_name));
+    }
+
+    /**
+     * @test
+     */
     public function devices()
     {
         $admin = $this->createAdminUser();
-        $admin->createTokenWithDeviceName('test', 'localhost');
+        $admin->createTokenWithData('test');
 
         $response = $this->actingAs($admin)->get(route('profile.devices'));
 
@@ -106,7 +124,7 @@ class ProfileControllerTest extends TestCase
     public function revokeDevice()
     {
         $admin = $this->createAdminUser();
-        $admin->createTokenWithDeviceName('test', 'localhost');
+        $admin->createTokenWithData('test');
         $token = $admin->tokens()->first();
 
         $response = $this->actingAs($admin)->delete(route('profile.revoke-device', ['id' => $token->id]));

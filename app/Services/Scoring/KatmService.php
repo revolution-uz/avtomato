@@ -58,6 +58,8 @@ class KatmService
                     ScoringRequestTypeEnum::KATM_CREDIT_HISTORY => KatmCreditHistoryResponseDTO::fromXml($response['data']),
                     ScoringRequestTypeEnum::KATM_INPS_HISTORY => KatmInpsHistoryResponseDTO::fromXml($response['data']),
                     ScoringRequestTypeEnum::KATM_PENSION_INFO => KatmPensionInfoResponseDTO::fromXml($response['data']),
+                    ScoringRequestTypeEnum::PLUM_MIB_INFO => ScoringRequestTypeEnum::PLUM_MIB_INFO,
+                    ScoringRequestTypeEnum::PLUM_TAX_INFO => ScoringRequestTypeEnum::PLUM_TAX_INFO,
                 };
                 $scoringRequest->saveOrFail();
             }
