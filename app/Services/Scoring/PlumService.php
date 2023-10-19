@@ -6,9 +6,9 @@ use App\Clients\PlumClient;
 use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Mib\MibHistoryResponseDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Tax\TaxHistoryResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\Http\Resources\Scoring\TaxHistoryResource;
 use App\Models\Company\ScoringRequest;
 
 class PlumService
@@ -45,7 +45,7 @@ class PlumService
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
 
-        $model->response = TaxHistoryResource::from($this->plumClient->scoringMib(
+        $model->response = TaxHistoryResponseDTO::from($this->plumClient->scoringMib(
             $dto->toArray()
         ));
 
