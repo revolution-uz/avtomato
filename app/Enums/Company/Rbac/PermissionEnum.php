@@ -58,7 +58,6 @@ enum PermissionEnum: string
     case CUSTOMER_CARDS_EDIT = 'customer_cards_edit';
     case CUSTOMER_CARDS_DELETE = 'customer_cards_delete';
 
-
     // Get static information
     case INFO_SETTINGS = 'info_settings';
     case INFO_REGIONS = 'info_regions';
@@ -155,6 +154,7 @@ enum PermissionEnum: string
             self::USER_CHANGE_ROLE->value,
             self::USER_DEVICES->value,
             self::USER_REVOKE_DEVICE->value,
+            self::USER_CHANGE_THEME->value,
 
             self::CUSTOMER_VIEW_ALL->value,
             self::CUSTOMER_VIEW->value,
@@ -218,9 +218,7 @@ enum PermissionEnum: string
 
             self::SCORING_TAX_INFO_VIEW_ALL->value,
             self::SCORING_TAX_INFO_VIEW->value,
-            self::SCORING_TAX_INFO_CREATE->value
-
-            => false,
+            self::SCORING_TAX_INFO_CREATE->value => false,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL->value,
@@ -238,9 +236,7 @@ enum PermissionEnum: string
             self::TRANSACTION_VIEW->value,
             self::TRANSACTION_CREATE->value,
             self::TRANSACTION_EDIT->value,
-            self::TRANSACTION_DELETE->value
-
-            => true,
+            self::TRANSACTION_DELETE->value => true,
 
             default => null
         };
@@ -302,7 +298,7 @@ enum PermissionEnum: string
                 self::INSTALLMENT_DETACH_CARD->value,
                 self::INSTALLMENT_ATTACH_GUARANTOR->value,
                 self::INSTALLMENT_UPDATE_GUARANTOR->value,
-                self::INSTALLMENT_DETACH_GUARANTOR->value
+                self::INSTALLMENT_DETACH_GUARANTOR->value,
             ],
             PermissionGroupEnum::TARIFF_MANAGEMENT->value => [
                 self::TARIFF_VIEW_ALL->value,

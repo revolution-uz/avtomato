@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $sms_notify
  * @property bool $any_card_charge
  * @property bool $is_blacklist
- * @property int $status
+ * @property InstallmentStatusEnum $status
  * @property int $period
  * @property string $myuzkard_id
  * @property Carbon|null $starts_in
@@ -52,5 +53,6 @@ class Installment extends Model
     protected $casts = [
         'starts_in' => 'date:d-m-Y',
         'next_pay_date' => 'date:d-m-Y',
+        'status' => InstallmentStatusEnum::class,
     ];
 }

@@ -14,7 +14,7 @@ class FeatureSeeder extends Seeder
             Feature::query()->firstOrCreate([
                 'name' => $case->value,
             ], [
-                'is_active' => false,
+                'is_active' => true,
             ]);
         }
     }

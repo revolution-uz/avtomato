@@ -4,11 +4,35 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Customer;
 
 use App\Enums\GenderEnum;
 use App\Models\Company\Customer;
+use App\Models\Company\User;
 use Tests\TestCase;
 
 class CustomerControllerTest extends TestCase
 {
     protected $tenancy = true;
+
+    /**
+     * @test
+     */
+    public function index()
+    {
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin)->get(route('customer.index'));
+
+        $response->assertOk();
+        $this->assertIsArray($response->json('data'));
+    }
+
+    /**
+     * @test
+     */
+    public function indexForbidden()
+    {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->get(route('customer.index'));
+
+        $response->assertForbidden();
+    }
 
     /**
      * @test

@@ -21,7 +21,7 @@ class CustomerFactory extends Factory
             'passport_given_date' => Carbon::now(),
             'passport_expiration_date' => Carbon::now(),
             'passport_given_place' => $this->faker->city(),
-            'passport_citizenship' => $this->faker->country(),
+            'passport_citizenship' => $this->faker->city(),
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'middle_name' => $this->faker->name(),

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
@@ -51,6 +53,7 @@ class InstallmentController extends Controller
     public function index(InstallmentFilterRequest $request): AnonymousResourceCollection
     {
         $sortables = ['id', 'customer_id', 'tariff_id', 'amount']; // TODO add all fields, it's just for testing
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW_ALL);
 
         return InstallmentResource::collection(
             Installment::query()
@@ -64,6 +67,7 @@ class InstallmentController extends Controller
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
+                ->when($branches, fn (Builder $q) => $q->whereIn('branch_id', $branches))
                 ->paginate($request->per_page)
         )->additional(['success' => true, 'sortables' => $sortables]);
     }

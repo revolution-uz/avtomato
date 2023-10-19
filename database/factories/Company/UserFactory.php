@@ -27,6 +27,7 @@ class UserFactory extends Factory
             'language' => $this->faker->word(),
             'username' => $this->faker->userName(),
             'password' => bcrypt($this->faker->password()),
+            'role_id' => null,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
