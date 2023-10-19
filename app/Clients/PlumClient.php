@@ -23,33 +23,33 @@ class PlumClient extends BaseClient
         return ClientCodeEnum::PLUM;
     }
 
-    public function scoringMib(array $data)
+    public function scoringMib(array $params)
     {
         $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
-            ->get($this->baseUrl . '/Scoring/GetEbDebtScore?' . http_build_query($data));
+            ->get($this->baseUrl . '/Scoring/GetEbDebtScore?' . http_build_query($params));
         $this->logRequest(new HttpRequestLogDTO(
             method: 'GET',
             url: $this->baseUrl . '/Scoring/GetEbDebtScore',
             status: $response->status(),
             response: $response->body(),
             duration: $response->transferStats?->getTransferTime(),
-            params: $data,
+            params: $params,
         ));
 
         return $response->json('result');
     }
 
-    public function scoringTax(array $data)
+    public function scoringTax(array $params)
     {
         $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
-            ->get($this->baseUrl . '/Scoring/GetTaxDebtScore?' . http_build_query($data));
+            ->get($this->baseUrl . '/Scoring/GetTaxDebtScore?' . http_build_query($params));
         $this->logRequest(new HttpRequestLogDTO(
             method: 'GET',
             url: $this->baseUrl . '/Scoring/GetTaxDebtScore',
             status: $response->status(),
             response: $response->body(),
             duration: $response->transferStats?->getTransferTime(),
-            params: $data,
+            params: $params,
         ));
 
         return $response->json('result');
