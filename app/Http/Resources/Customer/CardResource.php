@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
     title: 'Card object',
     properties: [
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerResource'),
         new OA\Property(property: 'number', type: 'string', example: '986011******4444'),
         new OA\Property(property: 'expiry', type: 'string', example: '2**9'),
         new OA\Property(property: 'status', type: 'int', enum: [CardStatusEnum::BLOCKED, CardStatusEnum::INACTIVE, CardStatusEnum::ACTIVE], example: CardStatusEnum::ACTIVE),
@@ -29,6 +30,7 @@ class CardResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'customer_id' => $this->resource->customer_id,
+            'customer' => $this->resource->customer,
             'number' => $this->resource->pan,
             'expiry' => $this->resource->expiry,
             'status' => $this->resource->status,

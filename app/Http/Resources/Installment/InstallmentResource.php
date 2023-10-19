@@ -14,8 +14,11 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerResource'),
         new OA\Property(property: 'branch_id', type: 'int', example: '1'),
+        new OA\Property(property: 'branch', ref: '#/components/schemas/BranchResource', nullable: true),
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
+        new OA\Property(property: 'tariff', ref: '#/components/schemas/TariffResource'),
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
         new OA\Property(property: 'description', type: 'string', example: 'inside the order'),
         new OA\Property(property: 'status', type: 'int', enum: [InstallmentStatusEnum::CANCELED, InstallmentStatusEnum::FROZEN, InstallmentStatusEnum::CREATED, InstallmentStatusEnum::RUNNING, InstallmentStatusEnum::FINISHED], example: 'inside the order'),
@@ -37,8 +40,11 @@ class InstallmentResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'customer_id' => $this->resource->customer_id,
+            'customer' => $this->resource->customer,
             'branch_id' => $this->resource->branch_id,
+            'branch' => $this->resource->branch,
             'tariff_id' => $this->resource->tariff_id,
+            'tariff' => $this->resource->tariff,
             'amount' => $this->resource->amount,
             'description' => $this->resource->description,
             'sms_notify' => $this->resource->sms_notify,

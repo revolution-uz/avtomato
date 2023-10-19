@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Crypt;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -12,6 +13,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property int $customer_id
+ * @property Customer $customer
  * @property string $pan
  * @property string $number
  * @property string $expiry
@@ -42,5 +44,10 @@ class Card extends Model
     {
         $this->pan = substr_replace($this->number, '******', 6, 6);
         $this->number = Crypt::encryptString($this->number);
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
     }
 }
