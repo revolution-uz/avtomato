@@ -20,7 +20,6 @@ use App\Http\Resources\Scoring\CardScoringResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\CardScoringService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
