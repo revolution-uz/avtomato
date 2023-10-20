@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 
 use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
-use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
@@ -20,7 +18,6 @@ use App\Http\Resources\Scoring\TaxHistoryResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\PlumService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -85,26 +82,5 @@ class TaxController extends Controller
         $model = $this->plumService->scoringTax($dto, ScoringRequestTypeEnum::PLUM_TAX_INFO);
 
         return ApiResponse::success(TaxHistoryResource::make($model));
-    }
-
-    #[OA\Get(
-        path: '/api/v1/scoring/tax/{id}',
-        description: 'Read single TAX history request',
-        tags: ['Scoring (TAX info)'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'ScoringRequest'),
-        ],
-        responses: [
-            new OpenApiJsonResponse(resourceName: 'TaxHistoryResource'),
-        ]
-    )]
-    public function read(int $id)
-    {
-        $scoring = ScoringRequest::findOrFail($id);
-        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::PLUM_TAX_INFO) {
-            throw new ModelNotFoundException;
-        }
-
-        return ApiResponse::success(TaxHistoryResource::make($scoring));
     }
 }
