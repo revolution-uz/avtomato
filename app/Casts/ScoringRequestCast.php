@@ -3,6 +3,7 @@
 namespace App\Casts;
 
 use App\DTOs\Scoring\Base\BaseScoringRequest;
+use App\DTOs\Scoring\Card\CardCreateRequestDTO;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
@@ -25,6 +26,8 @@ class ScoringRequestCast implements CastsAttributes
             ScoringRequestTypeEnum::KATM_PENSION_INFO->value => KatmCreateRequestDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::PLUM_MIB_INFO->value => MibCreateRequestDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::PLUM_TAX_INFO->value => TaxCreateRequestDTO::from(json_decode($value, true)),
+            ScoringRequestTypeEnum::HUMO->value,
+            ScoringRequestTypeEnum::UZKARD->value => CardCreateRequestDTO::from(json_decode($value, true)),
             default => throw new InvalidArgumentException,
         };
     }
