@@ -165,17 +165,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::prefix('pension-info')->controller(KatmPensionInfoController::class)->group(function () {
             Route::post('create', 'create');
             Route::get('/', 'index');
-            Route::get('{id}', 'read');
         });
         Route::prefix('mib')->controller(MibController::class)->group(function () {
             Route::get('/', 'index');
             Route::post('create', 'create');
-            Route::get('{id}', 'read');
         });
         Route::prefix('tax')->controller(TaxController::class)->group(function () {
             Route::get('/', 'index');
             Route::post('create', 'create');
-            Route::get('{id}', 'read');
         });
         Route::prefix('humo')->controller(HumoController::class)->group(function () {
             Route::get('/', 'index');

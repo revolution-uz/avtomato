@@ -11,12 +11,4 @@ class CardCreateRequestDTO extends BaseScoringRequest
         public string $expiry,
     ) {
     }
-
-    public function toArray(): array
-    {
-        return [
-            'number' => $this->number,
-            'expiry' => $this->expiry,
-        ];
-    }
 }

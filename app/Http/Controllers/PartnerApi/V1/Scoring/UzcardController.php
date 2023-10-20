@@ -101,10 +101,7 @@ class UzcardController extends Controller
     )]
     public function read(int $id)
     {
-        $scoring = ScoringRequest::findOrFail($id);
-        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::UZCARD) {
-            throw new ModelNotFoundException;
-        }
+        $scoring = ScoringRequest::query()->where('status', ScoringRequestStatusEnum::SUCCESS)->where('type', ScoringRequestTypeEnum::UZCARD)->where('id', $id)->firstOrFail();
 
         return ApiResponse::success(CardScoringResource::make($scoring));
     }

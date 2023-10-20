@@ -20,7 +20,6 @@ use App\Http\Resources\Scoring\CardScoringResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\CardScoringService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -28,7 +27,8 @@ class HumoController extends Controller
 {
     public function __construct(
         private readonly CardScoringService $scoringService,
-    ) {
+    )
+    {
     }
 
     #[OA\Get(
@@ -54,12 +54,12 @@ class HumoController extends Controller
                 ->where('type', ScoringRequestTypeEnum::HUMO)
                 ->when(
                     $request->search,
-                    fn (Builder $q) => $q
+                    fn(Builder $q) => $q
                         ->orWhere('request->number', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
+                    fn(Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
@@ -71,7 +71,7 @@ class HumoController extends Controller
         path: '/api/v1/scoring/humo/create',
         description: 'Create Humo scoring request',
         requestBody: new OA\RequestBody(
-            description: 'Create Uzkard scoring request body',
+            description: 'Create Humo scoring request body',
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CreateCardScoringRequest')
         ),
@@ -101,10 +101,7 @@ class HumoController extends Controller
     )]
     public function read(int $id)
     {
-        $scoring = ScoringRequest::findOrFail($id);
-        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::HUMO) {
-            throw new ModelNotFoundException;
-        }
+        $scoring = ScoringRequest::query()->where('status', ScoringRequestStatusEnum::SUCCESS)->where('type', ScoringRequestTypeEnum::HUMO)->where('id', $id)->firstOrFail();
 
         return ApiResponse::success(CardScoringResource::make($scoring));
     }
