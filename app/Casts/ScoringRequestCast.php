@@ -27,7 +27,7 @@ class ScoringRequestCast implements CastsAttributes
             ScoringRequestTypeEnum::PLUM_MIB_INFO->value => MibCreateRequestDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::PLUM_TAX_INFO->value => TaxCreateRequestDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::HUMO->value,
-            ScoringRequestTypeEnum::UZKARD->value => CardCreateRequestDTO::from(json_decode($value, true)),
+            ScoringRequestTypeEnum::UZCARD->value => CardCreateRequestDTO::from(json_decode($value, true)),
             default => throw new InvalidArgumentException,
         };
     }

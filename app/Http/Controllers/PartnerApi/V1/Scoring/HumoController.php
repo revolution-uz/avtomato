@@ -51,6 +51,7 @@ class HumoController extends Controller
 
         return CardScoringResource::collection(
             ScoringRequest::query()
+                ->where('type', ScoringRequestTypeEnum::HUMO)
                 ->when(
                     $request->search,
                     fn (Builder $q) => $q

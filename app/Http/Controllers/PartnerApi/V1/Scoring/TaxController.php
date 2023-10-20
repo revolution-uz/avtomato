@@ -48,6 +48,7 @@ class TaxController extends Controller
 
         return TaxHistoryResource::collection(
             ScoringRequest::query()
+                ->where('type', ScoringRequestTypeEnum::PLUM_TAX_INFO)
                 ->when(
                     $request->search,
                     fn (Builder $q) => $q

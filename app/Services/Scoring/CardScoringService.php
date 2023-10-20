@@ -39,16 +39,16 @@ class CardScoringService
         return $model;
     }
 
-    public function scoringUzkard(CardCreateRequestDTO $dto): ScoringRequest
+    public function scoringUzcard(CardCreateRequestDTO $dto): ScoringRequest
     {
         $model = new ScoringRequest;
-        $model->type = ScoringRequestTypeEnum::UZKARD;
+        $model->type = ScoringRequestTypeEnum::UZCARD;
         $model->request = $dto;
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
         try {
-            $model->response = CardScoringResponseDTO::fromUnired($this->asaxiyClient->scoringUzkard(
+            $model->response = CardScoringResponseDTO::fromUnired($this->asaxiyClient->scoringUzcard(
                 $dto->toArray()
             ));
             $model->status = ScoringRequestStatusEnum::SUCCESS;

@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
-class UzkardController extends Controller
+class UzcardController extends Controller
 {
     public function __construct(
         private readonly CardScoringService $scoringService,
@@ -32,9 +32,9 @@ class UzkardController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/v1/scoring/uzkard',
-        description: 'Get Uzkard requests list',
-        tags: ['Scoring (Uzkard)'],
+        path: '/api/v1/scoring/uzcard',
+        description: 'Get Uzcard requests list',
+        tags: ['Scoring (Uzcard)'],
         parameters: [
             new OpenApiPageParameter,
             new OpenApiPerPageParameter,
@@ -51,6 +51,7 @@ class UzkardController extends Controller
 
         return CardScoringResource::collection(
             ScoringRequest::query()
+                ->where('type', ScoringRequestTypeEnum::UZCARD)
                 ->when(
                     $request->search,
                     fn (Builder $q) => $q
@@ -67,14 +68,14 @@ class UzkardController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/scoring/uzkard/create',
-        description: 'Create Uzkard scoring request',
+        path: '/api/v1/scoring/uzcard/create',
+        description: 'Create Uzcard scoring request',
         requestBody: new OA\RequestBody(
-            description: 'Create Uzkard scoring request body',
+            description: 'Create uzcard scoring request body',
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CreateCardScoringRequest')
         ),
-        tags: ['Scoring (Uzkard)'],
+        tags: ['Scoring (Uzcard)'],
         responses: [
             new OpenApiJsonResponse(resourceName: 'CardScoringResource'),
         ]
@@ -82,15 +83,15 @@ class UzkardController extends Controller
     public function create(CreateCardScoringRequest $request)
     {
         $dto = CardCreateRequestDTO::from($request->validated());
-        $model = $this->scoringService->scoringUzkard($dto);
+        $model = $this->scoringService->scoringUzcard($dto);
 
         return ApiResponse::success(CardScoringResource::make($model));
     }
 
     #[OA\Get(
-        path: '/api/v1/scoring/uzkard/{id}',
-        description: 'Read single Uzkard scoring request',
-        tags: ['Scoring (Uzkard)'],
+        path: '/api/v1/scoring/uzcard/{id}',
+        description: 'Read single Uzcard scoring request',
+        tags: ['Scoring (Uzcard)'],
         parameters: [
             new OpenApiIdParameter(modelName: 'ScoringRequest'),
         ],
@@ -101,7 +102,7 @@ class UzkardController extends Controller
     public function read(int $id)
     {
         $scoring = ScoringRequest::findOrFail($id);
-        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::UZKARD) {
+        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::UZCARD) {
             throw new ModelNotFoundException;
         }
 

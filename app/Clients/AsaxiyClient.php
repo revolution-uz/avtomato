@@ -103,13 +103,13 @@ class AsaxiyClient extends BaseClient
         return $response->json('result');
     }
 
-    public function scoringUzkard(array $data)
+    public function scoringUzcard(array $data)
     {
         $response = Http::withHeaders(['x-access-token' => $this->token])
-            ->post($this->baseUrl . '/katm/uzkard', $data);
+            ->post($this->baseUrl . '/katm/uzcard', $data);
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',
-            url: $this->baseUrl . '/katm/uzkard',
+            url: $this->baseUrl . '/katm/uzcard',
             status: $response->status(),
             response: $response->body(),
             duration: $response->transferStats?->getTransferTime(),
