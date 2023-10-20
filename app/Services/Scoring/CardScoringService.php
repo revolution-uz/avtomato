@@ -24,7 +24,7 @@ class CardScoringService
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
-        $model->response = CardScoringResponseDTO::from($this->asaxiyClient->scoringHumo(
+        $model->response = CardScoringResponseDTO::fromUnired($this->asaxiyClient->scoringHumo(
             $dto->toArray()
         ));
 
@@ -43,7 +43,7 @@ class CardScoringService
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
 
-        $model->response = CardScoringResponseDTO::from($this->asaxiyClient->scoringUzkard(
+        $model->response = CardScoringResponseDTO::fromUnired($this->asaxiyClient->scoringUzkard(
             $dto->toArray()
         ));
 
