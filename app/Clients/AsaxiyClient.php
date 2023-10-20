@@ -86,4 +86,36 @@ class AsaxiyClient extends BaseClient
 
         return $response->json('result');
     }
+
+    public function scoringHumo(array $data)
+    {
+        $response = Http::withHeaders(['x-access-token' => $this->token])
+            ->post($this->baseUrl . '/katm/humo', $data);
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'POST',
+            url: $this->baseUrl . '/katm/humo',
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            body: $data,
+        ));
+
+        return $response->json('result');
+    }
+
+    public function scoringUzkard(array $data)
+    {
+        $response = Http::withHeaders(['x-access-token' => $this->token])
+            ->post($this->baseUrl . '/katm/uzkard', $data);
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'POST',
+            url: $this->baseUrl . '/katm/uzkard',
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            body: $data,
+        ));
+
+        return $response->json('result');
+    }
 }
