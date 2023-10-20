@@ -17,10 +17,10 @@ class CardScoringService
     ) {
     }
 
-    public function scoringHumo(CardCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
+    public function scoringHumo(CardCreateRequestDTO $dto): ScoringRequest
     {
         $model = new ScoringRequest;
-        $model->type = $type;
+        $model->type = ScoringRequestTypeEnum::HUMO;
         $model->request = $dto;
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
@@ -39,10 +39,10 @@ class CardScoringService
         return $model;
     }
 
-    public function scoringUzkard(CardCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
+    public function scoringUzkard(CardCreateRequestDTO $dto): ScoringRequest
     {
         $model = new ScoringRequest;
-        $model->type = $type;
+        $model->type = ScoringRequestTypeEnum::UZKARD;
         $model->request = $dto;
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;

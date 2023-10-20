@@ -82,7 +82,7 @@ class HumoController extends Controller
     public function create(CreateCardScoringRequest $request)
     {
         $dto = CardCreateRequestDTO::from($request->validated());
-        $model = $this->scoringService->scoringHumo($dto, ScoringRequestTypeEnum::HUMO);
+        $model = $this->scoringService->scoringHumo($dto);
 
         return ApiResponse::success(CardScoringResource::make($model));
     }

@@ -82,7 +82,7 @@ class UzkardController extends Controller
     public function create(CreateCardScoringRequest $request)
     {
         $dto = CardCreateRequestDTO::from($request->validated());
-        $model = $this->scoringService->scoringUzkard($dto, ScoringRequestTypeEnum::UZKARD);
+        $model = $this->scoringService->scoringUzkard($dto);
 
         return ApiResponse::success(CardScoringResource::make($model));
     }
