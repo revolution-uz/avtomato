@@ -12,6 +12,8 @@ enum ScoringRequestTypeEnum: int
     case KATM_PENSION_INFO = 3;
     case PLUM_MIB_INFO = 4;
     case PLUM_TAX_INFO = 5;
+    case HUMO = 6;
+    case UZCARD = 7;
 
     public function convertToAsaxiyFormat(): AsaxiyKatmTypeEnum
     {

@@ -3,6 +3,7 @@
 namespace App\Casts;
 
 use App\DTOs\Scoring\Base\BaseScoringResponse;
+use App\DTOs\Scoring\Card\CardScoringResponseDTO;
 use App\DTOs\Scoring\Katm\CreditHistory\KatmCreditHistoryResponseDTO;
 use App\DTOs\Scoring\Katm\InpsHistory\KatmInpsHistoryResponseDTO;
 use App\DTOs\Scoring\Katm\PensionInfo\KatmPensionInfoResponseDTO;
@@ -27,6 +28,8 @@ class ScoringResponseCast implements CastsAttributes
             ScoringRequestTypeEnum::KATM_PENSION_INFO->value => KatmPensionInfoResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::PLUM_MIB_INFO->value => MibHistoryResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::PLUM_TAX_INFO->value => TaxHistoryResponseDTO::from(json_decode($value, true)),
+            ScoringRequestTypeEnum::HUMO->value,
+            ScoringRequestTypeEnum::UZCARD->value => CardScoringResponseDTO::from(json_decode($value, true)),
             default => throw new InvalidArgumentException,
         };
     }
