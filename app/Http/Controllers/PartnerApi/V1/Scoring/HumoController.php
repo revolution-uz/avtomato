@@ -28,8 +28,7 @@ class HumoController extends Controller
 {
     public function __construct(
         private readonly CardScoringService $scoringService,
-    )
-    {
+    ) {
     }
 
     #[OA\Get(
@@ -54,12 +53,12 @@ class HumoController extends Controller
             ScoringRequest::query()
                 ->when(
                     $request->search,
-                    fn(Builder $q) => $q
+                    fn (Builder $q) => $q
                         ->orWhere('request->number', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn(Builder $q) => Str::startsWith($request->sort, '-')
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
