@@ -8,6 +8,7 @@ use App\DTOs\Scoring\Card\CardScoringResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
+use Exception;
 
 class CardScoringService
 {
@@ -24,12 +25,16 @@ class CardScoringService
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
-        $model->response = CardScoringResponseDTO::fromUnired($this->asaxiyClient->scoringHumo(
-            $dto->toArray()
-        ));
-
-        $model->status = ScoringRequestStatusEnum::SUCCESS;
-        $model->saveOrFail();
+        try {
+            $model->response = CardScoringResponseDTO::fromUnired($this->asaxiyClient->scoringHumo(
+                $dto->toArray()
+            ));
+            $model->status = ScoringRequestStatusEnum::SUCCESS;
+            $model->saveOrFail();
+        } catch (Exception $e) {
+            $model->status = ScoringRequestStatusEnum::FAILED;
+            $model->saveOrFail();
+        }
 
         return $model;
     }
@@ -42,13 +47,16 @@ class CardScoringService
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
-
-        $model->response = CardScoringResponseDTO::fromUnired($this->asaxiyClient->scoringUzkard(
-            $dto->toArray()
-        ));
-
-        $model->status = ScoringRequestStatusEnum::SUCCESS;
-        $model->saveOrFail();
+        try {
+            $model->response = CardScoringResponseDTO::fromUnired($this->asaxiyClient->scoringUzkard(
+                $dto->toArray()
+            ));
+            $model->status = ScoringRequestStatusEnum::SUCCESS;
+            $model->saveOrFail();
+        } catch (Exception $e) {
+            $model->status = ScoringRequestStatusEnum::FAILED;
+            $model->saveOrFail();
+        }
 
         return $model;
     }
