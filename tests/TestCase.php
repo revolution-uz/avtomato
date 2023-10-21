@@ -6,6 +6,8 @@ use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Rbac\Role;
+use Database\Seeders\Company\AdminRoleSeeder;
+use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\PermissionSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
@@ -46,9 +48,18 @@ abstract class TestCase extends BaseTestCase
             '--tenants' => [$tenant->id],
         ]);
         Artisan::call('tenants:seed', [
+            '--class' => FeatureSeeder::class,
+            '--tenants' => [$tenant->id],
+        ]);
+        Artisan::call('tenants:seed', [
             '--class' => PermissionSeeder::class,
             '--tenants' => [$tenant->id],
         ]);
+        Artisan::call('tenants:seed', [
+            '--class' => AdminRoleSeeder::class,
+            '--tenants' => [$tenant->id],
+        ]);
+
     }
 
     public function seedAddress()

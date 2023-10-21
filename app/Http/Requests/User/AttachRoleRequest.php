@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\User;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -23,6 +25,6 @@ class AttachRoleRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        return RbacHelper::checkPermission(PermissionEnum::USER_CHANGE_ROLE);
     }
 }

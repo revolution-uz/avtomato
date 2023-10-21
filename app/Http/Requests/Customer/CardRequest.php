@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests\Customer;
 
-use App\Models\Company\Card;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -15,9 +16,6 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'expiry', type: 'string', example: '2809', description: 'year+month 2809 instead of 09/28'),
     ],
 )]
-/**
- * @mixin Card
- */
 class CardRequest extends FormRequest
 {
     public function rules(): array
@@ -27,5 +25,12 @@ class CardRequest extends FormRequest
             'number' => 'required|string',
             'expiry' => 'required|string',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return $this->id ?
+            RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_EDIT) :
+            RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_CREATE);
     }
 }

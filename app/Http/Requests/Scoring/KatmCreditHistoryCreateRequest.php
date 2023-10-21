@@ -3,7 +3,10 @@
 namespace App\Http\Requests\Scoring;
 
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -27,11 +30,16 @@ use OpenApi\Attributes as OA;
 /**
  * @mixin KatmCreateRequestDTO
  */
-class CreateKatmCreditHistoryRequest extends FormRequest
+class KatmCreditHistoryCreateRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return match (Route::currentRouteName()) {
+            'credit-history.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_CREDIT_HISTORY_CREATE),
+            'inps-history.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_INPS_HISTORY_CREATE),
+            'pension-info.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_PENSION_INFO_CREATE),
+            default => false
+        };
     }
 
     public function rules(): array

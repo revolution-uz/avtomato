@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Customer;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -28,5 +30,10 @@ class GetCustomerInfoByPassportRequest extends FormRequest
             'passport_number' => 'required|string|max:7|min:7|regex:/^[0-9]+$/',
             'birth_date' => 'required|date',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_INFO_BY_PASSPORT);
     }
 }

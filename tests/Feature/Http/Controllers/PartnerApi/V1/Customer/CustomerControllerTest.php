@@ -13,6 +13,18 @@ class CustomerControllerTest extends TestCase
     /**
      * @test
      */
+    public function index()
+    {
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin)->get(route('customer.index'));
+
+        $response->assertOk();
+        $this->assertIsArray($response->json('data'));
+    }
+
+    /**
+     * @test
+     */
     public function single()
     {
         $customer = Customer::factory()->create();

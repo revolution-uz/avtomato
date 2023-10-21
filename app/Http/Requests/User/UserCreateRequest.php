@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\User;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\UserStatusEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -34,6 +36,6 @@ class UserCreateRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        return RbacHelper::checkPermission(PermissionEnum::USER_CREATE);
     }
 }

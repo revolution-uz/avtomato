@@ -2,7 +2,7 @@
 
 namespace App\Models\Company\Rbac;
 
-use App\Models\Company\Features;
+use App\Models\Company\Feature;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,7 +27,7 @@ class Permission extends Model
 
     public function feature()
     {
-        return $this->belongsTo(Features::class);
+        return $this->belongsTo(Feature::class);
     }
 
     public function name(): Attribute

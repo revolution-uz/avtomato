@@ -6,6 +6,7 @@ use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\Installment\CalculatorExportRequest;
 use App\Http\Requests\Installment\CalculatorRequest;
 use App\Http\Resources\Installment\InstallmentPaymentResource;
 use App\Models\Company\Tariff;
@@ -49,7 +50,7 @@ class CalculatorController extends Controller
             new OA\Response(response: 200, description: 'Returned file', content: new OA\MediaType(mediaType: 'text/csv')),
         ]
     )]
-    public function export(string $type, CalculatorRequest $request)
+    public function export(CalculatorExportRequest $request)
     {
         $data = [['ID', 'Date', 'Amount', 'Portion', 'Monthly']];
         foreach ($this->prepareInstallmentGraph($request) as $item) {

@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Scoring;
 
 use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -20,7 +22,7 @@ class CreateTaxHistoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return RbacHelper::checkPermission(PermissionEnum::SCORING_TAX_INFO_CREATE);
     }
 
     public function rules(): array

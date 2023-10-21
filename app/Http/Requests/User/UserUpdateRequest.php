@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\User;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -30,6 +33,10 @@ class UserUpdateRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        return match (Route::currentRouteName()) {
+            'profile.update' => RbacHelper::checkPermission(PermissionEnum::PROFILE_EDIT),
+            'users.update' => RbacHelper::checkPermission(PermissionEnum::USER_EDIT),
+            default => false
+        };
     }
 }

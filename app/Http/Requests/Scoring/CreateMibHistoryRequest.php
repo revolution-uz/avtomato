@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Scoring;
 
 use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -21,7 +23,7 @@ class CreateMibHistoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return RbacHelper::checkPermission(PermissionEnum::SCORING_MIB_INFO_CREATE);
     }
 
     public function rules(): array

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Management;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -18,7 +20,9 @@ class BranchRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->id
+            ? RbacHelper::checkPermission(PermissionEnum::BRANCH_EDIT)
+            : RbacHelper::checkPermission(PermissionEnum::BRANCH_CREATE);
     }
 
     public function rules(): array

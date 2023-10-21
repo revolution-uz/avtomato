@@ -14,6 +14,7 @@ use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\Scoring\CardScoringViewRequest;
 use App\Http\Requests\Scoring\CreateCardScoringRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
 use App\Http\Resources\Scoring\CardScoringResource;
@@ -98,7 +99,7 @@ class HumoController extends Controller
             new OpenApiJsonResponse(resourceName: 'CardScoringResource'),
         ]
     )]
-    public function read(int $id)
+    public function read(int $id, CardScoringViewRequest $request)
     {
         $scoring = ScoringRequest::query()->where('status', ScoringRequestStatusEnum::SUCCESS)->where('type', ScoringRequestTypeEnum::HUMO)->where('id', $id)->firstOrFail();
 

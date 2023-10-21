@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Rbac;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -16,7 +18,9 @@ class RoleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->id ?
+            RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_EDIT) :
+            RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_CREATE);
     }
 
     public function rules(): array

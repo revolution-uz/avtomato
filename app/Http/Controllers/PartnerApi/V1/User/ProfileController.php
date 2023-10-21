@@ -9,7 +9,10 @@ use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\User\AvatarRequest;
+use App\Http\Requests\User\DeviceRevokeRequest;
 use App\Http\Requests\User\PasswordRequest;
+use App\Http\Requests\User\ProfileMeRequest;
+use App\Http\Requests\User\UsersDevicesRequest;
 use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Requests\UserLangRequest;
@@ -35,7 +38,7 @@ class ProfileController extends Controller
             new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
         ]
     )]
-    public function me(): JsonResponse
+    public function me(ProfileMeRequest $request): JsonResponse
     {
         return ApiResponse::success(SingleUserResource::make(auth()->user()));
     }
@@ -168,7 +171,7 @@ class ProfileController extends Controller
             new OpenApiJsonArrayResponse(resourceName: 'DeviceInfoResource'),
         ]
     )]
-    public function devices(): JsonResponse
+    public function devices(UsersDevicesRequest $request): JsonResponse
     {
         return ApiResponse::success(DeviceInfoResource::collection(auth()->user()->tokens));
     }
@@ -190,8 +193,10 @@ class ProfileController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function revokeDevice(int $id): JsonResponse
+    public function revokeDevice(DeviceRevokeRequest $request): JsonResponse
     {
-        return ApiResponse::success(PersonalAccessToken::findOrFail($id)->delete());
+        PersonalAccessToken::query()->whereIn('id', $request->ids)->delete();
+
+        return ApiResponse::success(true);
     }
 }

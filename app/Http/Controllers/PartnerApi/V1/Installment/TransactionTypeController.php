@@ -16,9 +16,9 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Installment\TransactionTypeFilterRequest;
 use App\Http\Requests\Installment\TransactionTypeRequest;
 use App\Http\Requests\Installment\TransactionTypesDeleteRequest;
+use App\Http\Requests\Installment\TransactionTypeViewRequest;
 use App\Http\Resources\Installment\TransactionResource;
 use App\Http\Resources\Installment\TransactionTypeResource;
-use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -29,7 +29,7 @@ use OpenApi\Attributes as OA;
 class TransactionTypeController extends Controller
 {
     #[OA\Get(
-        path: '/api/v1/installment/transaction-type',
+        path: '/api/v1/transaction-type',
         description: 'TransactionType route',
         tags: ['TransactionTypes'],
         parameters: [
@@ -63,7 +63,7 @@ class TransactionTypeController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/v1/installment/transaction-type/{id}',
+        path: '/api/v1/transaction-type/{id}',
         description: 'TransactionType get single route',
         tags: ['TransactionTypes'],
         parameters: [
@@ -74,13 +74,13 @@ class TransactionTypeController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, TransactionTypeViewRequest $request): JsonResponse
     {
-        return ApiResponse::success(TransactionTypeResource::make(Transaction::findOrFail($id)));
+        return ApiResponse::success(TransactionTypeResource::make(TransactionType::findOrFail($id)));
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/transaction-type',
+        path: '/api/v1/transaction-type',
         description: 'TransactionType create route',
         requestBody: new OA\RequestBody(
             description: 'TransactionType create request body',
@@ -107,7 +107,7 @@ class TransactionTypeController extends Controller
     }
 
     #[OA\Put(
-        path: '/api/v1/installment/transaction-type/{id}',
+        path: '/api/v1/transaction-type/{id}',
         description: 'TransactionType update route',
         requestBody: new OA\RequestBody(
             description: 'TransactionType update request body',
@@ -142,7 +142,7 @@ class TransactionTypeController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/transaction-type',
+        path: '/api/v1/transaction-type',
         description: 'TransactionType delete route',
         requestBody: new OA\RequestBody(
             description: 'TransactionTypes delete request body',

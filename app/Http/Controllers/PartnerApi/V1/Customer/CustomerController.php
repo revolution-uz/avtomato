@@ -11,6 +11,7 @@ use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\Customer\CardViewRequest;
 use App\Http\Requests\Customer\CreateCustomerRequest;
 use App\Http\Requests\Customer\CustomersFilterRequest;
 use App\Http\Requests\Customer\GetCustomerInfoByPassportRequest;
@@ -127,7 +128,7 @@ class CustomerController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, CardViewRequest $request): JsonResponse
     {
         return ApiResponse::success(SingleCustomerResource::make(Customer::findOrFail($id)));
     }

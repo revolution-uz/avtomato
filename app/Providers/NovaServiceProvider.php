@@ -8,7 +8,7 @@ use App\Models\Admin;
 use App\Models\Company;
 use App\Nova\AdminResource;
 use App\Nova\Company\BranchResource;
-use App\Nova\Company\FeaturesResource;
+use App\Nova\Company\FeatureResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\TariffsResource;
 use App\Nova\Company\UserResource;
@@ -46,7 +46,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     ])->collapsable()->icon('view-grid'),
                     MenuSection::make('Resources', [
                         MenuItem::resource(UserResource::class),
-                        MenuItem::resource(FeaturesResource::class),
+                        MenuItem::resource(FeatureResource::class),
                         MenuItem::resource(BranchResource::class),
                         MenuItem::resource(TariffsResource::class),
                         MenuItem::resource(RoleResource::class),

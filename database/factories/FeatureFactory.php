@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Company\Features;
+use App\Models\Company\Feature;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
-class FeaturesFactory extends Factory
+class FeatureFactory extends Factory
 {
-    protected $model = Features::class;
+    protected $model = Feature::class;
 
     public function definition(): array
     {

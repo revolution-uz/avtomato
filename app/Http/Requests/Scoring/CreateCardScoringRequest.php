@@ -3,7 +3,10 @@
 namespace App\Http\Requests\Scoring;
 
 use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -21,7 +24,11 @@ class CreateCardScoringRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return match (Route::currentRouteName()) {
+            'humo.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_HUMO_CREATE),
+            'uzcard.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_UZCARD_CREATE),
+            default => false
+        };
     }
 
     public function rules(): array

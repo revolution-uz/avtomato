@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Installment;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use App\Models\Company\TransactionType;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
@@ -24,5 +26,12 @@ class TransactionTypeRequest extends FormRequest
         return [
             'name' => 'required|string',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return $this->id ?
+            RbacHelper::checkPermission(PermissionEnum::TRANSACTION_TYPE_EDIT) :
+            RbacHelper::checkPermission(PermissionEnum::TRANSACTION_TYPE_CREATE);
     }
 }

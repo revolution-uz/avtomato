@@ -127,7 +127,7 @@ class ProfileControllerTest extends TestCase
         $admin->createTokenWithData('test');
         $token = $admin->tokens()->first();
 
-        $response = $this->actingAs($admin)->delete(route('profile.revoke-device', ['id' => $token->id]));
+        $response = $this->actingAs($admin)->delete(route('profile.revoke-device'), ['ids' => [$token->id]]);
 
         $response->assertOk();
         $this->assertEmpty($admin->fresh()->tokens);

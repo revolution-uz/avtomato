@@ -2,12 +2,14 @@
 
 namespace App\Http\Requests\User;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use App\Http\Requests\BaseFilterRequest;
 
 class UserFilterRequest extends BaseFilterRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return RbacHelper::checkPermission(PermissionEnum::USER_VIEW_ALL);
     }
 }

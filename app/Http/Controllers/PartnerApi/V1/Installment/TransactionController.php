@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
@@ -16,6 +18,7 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Installment\TransactionFilterRequest;
 use App\Http\Requests\Installment\TransactionRequest;
 use App\Http\Requests\Installment\TransactionsDeleteRequest;
+use App\Http\Requests\Installment\TransactionViewRequest;
 use App\Http\Resources\Installment\TransactionResource;
 use App\Models\Company\Transaction;
 use Illuminate\Database\Eloquent\Builder;
@@ -43,6 +46,7 @@ class TransactionController extends Controller
     public function index(TransactionFilterRequest $request): AnonymousResourceCollection
     {
         $sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created']; // TODO add all fields, it's just for testing
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_VIEW_ALL);
 
         return TransactionResource::collection(
             Transaction::query()
@@ -56,6 +60,10 @@ class TransactionController extends Controller
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
+                ->when($branches,
+                    fn (Builder $q) => $q->whereHas('installment',
+                        fn (Builder $q) => $q->whereIn('branch_id', $branches)
+                    ))
                 ->paginate($request->per_page)
         )->additional(['success' => true, 'sortables' => $sortables]);
     }
@@ -72,7 +80,7 @@ class TransactionController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, TransactionViewRequest $request): JsonResponse
     {
         return ApiResponse::success(TransactionResource::make(Transaction::findOrFail($id)));
     }

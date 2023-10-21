@@ -14,8 +14,9 @@ use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\Management\BranchesFilterRequest;
-use App\Http\Requests\Scoring\CreateKatmCreditHistoryRequest;
+use App\Http\Requests\Scoring\KatmCreditHistoryCreateRequest;
+use App\Http\Requests\Scoring\KatmCreditHistoryFilterRequest;
+use App\Http\Requests\Scoring\KatmCreditHistoryViewRequest;
 use App\Http\Resources\Scoring\KatmInpsHistoryResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\KatmService;
@@ -45,7 +46,7 @@ class KatmInpsHistoryController extends Controller
             new OpenApiJsonArrayResponse(resourceName: 'KatmInpsHistoryResource', withPagination: true, withSortables: true),
         ]
     )]
-    public function index(BranchesFilterRequest $request)
+    public function index(KatmCreditHistoryFilterRequest $request)
     {
         $sortables = ['id', 'status', 'created_at'];
 
@@ -85,7 +86,7 @@ class KatmInpsHistoryController extends Controller
             new OpenApiJsonResponse(resourceName: 'KatmInpsHistoryResource'),
         ]
     )]
-    public function create(CreateKatmCreditHistoryRequest $request)
+    public function create(KatmCreditHistoryCreateRequest $request)
     {
         $dto = KatmCreateRequestDTO::from($request->validated());
         $model = $this->katmService->createRequest($dto, ScoringRequestTypeEnum::KATM_INPS_HISTORY);
@@ -104,7 +105,7 @@ class KatmInpsHistoryController extends Controller
             new OpenApiJsonResponse(resourceName: 'KatmInpsHistoryResource'),
         ]
     )]
-    public function read(int $id)
+    public function read(int $id, KatmCreditHistoryViewRequest $request)
     {
         $scoring = ScoringRequest::findOrFail($id);
         if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::KATM_INPS_HISTORY) {

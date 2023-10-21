@@ -3,7 +3,10 @@
 namespace App\Http\Requests\User;
 
 use App\DTOs\UserTemplateThemeDto;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
 use Spatie\LaravelData\WithData;
 
@@ -51,7 +54,11 @@ class UserThemeRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        return match (Route::currentRouteName()) {
+            'profile.change-theme' => RbacHelper::checkPermission(PermissionEnum::PROFILE_EDIT),
+            'users.change-theme' => RbacHelper::checkPermission(PermissionEnum::USER_EDIT),
+            default => false
+        };
     }
 
     protected function dataClass(): string

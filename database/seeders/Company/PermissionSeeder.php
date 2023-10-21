@@ -3,12 +3,11 @@
 namespace Database\Seeders\Company;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\PermissionGroup;
-use App\Models\Company\Rbac\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class PermissionSeeder extends Seeder
@@ -18,10 +17,9 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::firstOrCreate(['name' => UserRoleEnum::ADMIN->value]);
 
         try {
-            DB::transaction(function () {
+            DB::transaction(static function () {
                 foreach (PermissionEnum::list() as $group => $permissions) {
                     $permissionGroup = PermissionGroup::firstOrCreate([
                         'slug' => $group,
@@ -32,12 +30,14 @@ class PermissionSeeder extends Seeder
                             'slug' => $permission,
                             'permission_group_id' => $permissionGroup->id,
                             'is_branch_related' => PermissionEnum::getIsBranchRelated($permission),
+                            'feature_id' => PermissionEnum::getFeatureId($permission),
                         ]);
+
                     }
                 }
             });
         } catch (Throwable $e) {
-
+            Log::error($e->getMessage());
         }
     }
 }

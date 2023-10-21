@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\User;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -24,6 +27,10 @@ class AvatarRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        return match (Route::currentRouteName()) {
+            'profile.change-avatar' => RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_AVATAR),
+            'users.change-avatar' => RbacHelper::checkPermission(PermissionEnum::USER_CHANGE_AVATAR),
+            default => false
+        };
     }
 }

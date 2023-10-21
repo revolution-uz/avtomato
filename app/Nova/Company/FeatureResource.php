@@ -2,16 +2,16 @@
 
 namespace App\Nova\Company;
 
-use App\Models\Company\Features;
+use App\Models\Company\Feature;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 
-class FeaturesResource extends Resource
+class FeatureResource extends Resource
 {
-    public static $model = Features::class;
+    public static $model = Feature::class;
 
     public static $title = 'name';
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Installment;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -31,5 +33,10 @@ class CalculatorRequest extends FormRequest
             'initial_amount' => 'required|numeric',
             'period' => 'required|int',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::CALCULATE_INSTALLMENT);
     }
 }

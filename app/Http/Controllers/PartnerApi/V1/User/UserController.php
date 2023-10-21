@@ -20,8 +20,10 @@ use App\Http\Requests\User\PasswordRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserFilterRequest;
 use App\Http\Requests\User\UsersDeleteRequest;
+use App\Http\Requests\User\UsersDevicesRequest;
 use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Requests\User\UserViewRequest;
 use App\Http\Resources\DeviceInfoResource;
 use App\Http\Resources\User\SingleUserResource;
 use App\Http\Resources\User\UserListResource;
@@ -95,7 +97,7 @@ class UserController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, UserViewRequest $request): JsonResponse
     {
         return ApiResponse::success(SingleUserResource::make(User::findOrFail($id)));
     }
@@ -267,7 +269,7 @@ class UserController extends Controller
             new OpenApiJsonArrayResponse(resourceName: 'DeviceInfoResource'),
         ]
     )]
-    public function devices(int $id): JsonResponse
+    public function devices(int $id, UsersDevicesRequest $request): JsonResponse
     {
         $user = User::findOrFail($id);
 

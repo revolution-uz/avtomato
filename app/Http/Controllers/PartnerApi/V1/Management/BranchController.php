@@ -16,6 +16,7 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Management\BranchesDeleteRequest;
 use App\Http\Requests\Management\BranchesFilterRequest;
 use App\Http\Requests\Management\BranchRequest;
+use App\Http\Requests\Management\BranchViewRequest;
 use App\Http\Resources\Management\BranchResource;
 use App\Models\Company\Branch;
 use Illuminate\Database\Eloquent\Builder;
@@ -74,7 +75,7 @@ class BranchController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, BranchViewRequest $request): JsonResponse
     {
         return ApiResponse::success(BranchResource::make(Branch::findOrFail($id)));
     }

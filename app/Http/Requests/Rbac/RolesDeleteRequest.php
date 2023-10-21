@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Rbac;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
@@ -31,5 +33,10 @@ class RolesDeleteRequest extends FormRequest
         return parent::messages() + [
             'ids.*.not_in' => 'You cannot delete the owner role',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::ROLE_DELETE);
     }
 }

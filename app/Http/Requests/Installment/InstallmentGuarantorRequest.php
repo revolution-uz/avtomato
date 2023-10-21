@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests\Installment;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use App\Models\Company\InstallmentGuarantor;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -29,5 +32,15 @@ class InstallmentGuarantorRequest extends FormRequest
             'any_card_charge' => 'required|boolean',
             'status' => 'required|int',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return match (Route::currentRouteName()) {
+            'installments.attach-guarantor' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_ATTACH_GUARANTOR),
+            'installments.update-guarantor' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_UPDATE_GUARANTOR),
+            'installments.detach-guarantor' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_DETACH_GUARANTOR),
+            default => false
+        };
     }
 }
