@@ -12,10 +12,10 @@ use OpenApi\Attributes as OA;
     title: 'InstallmentGuarantor object',
     properties: [
         new OA\Property(property: 'installment_id', type: 'int', example: '1'),
+        new OA\Property(property: 'installment', ref: '#/components/schemas/InstallmentResource'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
-        new OA\Property(property: 'auto_charge', type: 'boolean', example: 'true'),
+        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerListItemResource'),
         new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
-        new OA\Property(property: 'status', type: 'int', example: '1'),
     ],
 )]
 /**
@@ -27,10 +27,10 @@ class InstallmentGuarantorResource extends JsonResource
     {
         return [
             'installment_id' => $this->resource->installment_id,
+            'installment' => $this->resource->installment,
             'customer_id' => $this->resource->customer_id,
-            'auto_charge' => $this->resource->auto_charge,
+            'customer' => $this->resource->customer,
             'any_card_charge' => $this->resource->any_card_charge,
-            'status' => $this->resource->status,
         ];
     }
 }

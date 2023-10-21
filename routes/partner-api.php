@@ -10,11 +10,13 @@ use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TransactionController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TransactionTypeController;
 use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
+use App\Http\Controllers\PartnerApi\V1\Scoring\HumoController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmInpsHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmPensionInfoController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\MibController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\TaxController;
+use App\Http\Controllers\PartnerApi\V1\Scoring\UzcardController;
 use App\Http\Controllers\PartnerApi\V1\User\ProfileController;
 use App\Http\Controllers\PartnerApi\V1\User\RoleController;
 use App\Http\Controllers\PartnerApi\V1\User\UserController;
@@ -177,6 +179,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::prefix('tax')->controller(TaxController::class)->group(function () {
             Route::get('/', 'index')->name('tax.index');
             Route::post('create', 'create')->name('tax.create');
+        });
+        Route::prefix('humo')->controller(HumoController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::post('create', 'create');
+            Route::get('{id}', 'read');
+        });
+        Route::prefix('uzcard')->controller(UzcardController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::post('create', 'create');
+            Route::get('{id}', 'read');
         });
     });
 });

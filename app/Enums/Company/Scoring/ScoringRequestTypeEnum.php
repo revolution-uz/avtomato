@@ -3,6 +3,7 @@
 namespace App\Enums\Company\Scoring;
 
 use App\Enums\External\AsaxiyKatmTypeEnum;
+use InvalidArgumentException;
 
 enum ScoringRequestTypeEnum: int
 {
@@ -11,6 +12,8 @@ enum ScoringRequestTypeEnum: int
     case KATM_PENSION_INFO = 3;
     case PLUM_MIB_INFO = 4;
     case PLUM_TAX_INFO = 5;
+    case HUMO = 6;
+    case UZCARD = 7;
 
     public function convertToAsaxiyFormat(): AsaxiyKatmTypeEnum
     {
@@ -18,8 +21,7 @@ enum ScoringRequestTypeEnum: int
             self::KATM_CREDIT_HISTORY => AsaxiyKatmTypeEnum::KATM_CREDIT_HISTORY,
             self::KATM_INPS_HISTORY => AsaxiyKatmTypeEnum::KATM_INPS_HISTORY,
             self::KATM_PENSION_INFO => AsaxiyKatmTypeEnum::KATM_PENSION_INFO,
-            self::PLUM_MIB_INFO => self::PLUM_MIB_INFO,
-            self::PLUM_TAX_INFO => self::PLUM_TAX_INFO,
+            default => throw new InvalidArgumentException,
         };
     }
 }

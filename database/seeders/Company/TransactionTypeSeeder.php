@@ -14,7 +14,6 @@ class TransactionTypeSeeder extends Seeder
             'id' => 1,
         ], [
             'id' => 1,
-            'name' => 'MyUzkard',
             'name_uz' => 'My Uzkard',
             'name_ru' => 'Мой Узкарт',
             'name_en' => 'My Uzcard',
@@ -26,7 +25,6 @@ class TransactionTypeSeeder extends Seeder
             'id' => 2,
         ], [
             'id' => 2,
-            'name' => 'Naqd',
             'name_uz' => 'Naqd',
             'name_ru' => 'Наличные',
             'name_en' => 'Cash',

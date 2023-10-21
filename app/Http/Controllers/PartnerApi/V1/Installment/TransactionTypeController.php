@@ -94,12 +94,13 @@ class TransactionTypeController extends Controller
     )]
     public function create(TransactionTypeRequest $request): JsonResponse
     {
-        $model = new TransactionType;
-        $model->fill($request->validated());
-        $model->is_system = false;
+        $transactionType = new TransactionType;
+        $transactionType->fill($request->validated());
+        $transactionType->setNames($request->name);
+        $transactionType->is_system = false;
 
-        if ($model->save()) {
-            return ApiResponse::success(TransactionTypeResource::make($model));
+        if ($transactionType->save()) {
+            return ApiResponse::success(TransactionTypeResource::make($transactionType));
         }
 
         return ApiResponse::error('Error on creating Installment');
@@ -131,6 +132,7 @@ class TransactionTypeController extends Controller
     {
         $transactionType = TransactionType::findOrFail($id);
         $transactionType->fill($request->validated());
+        $transactionType->setNames($request->name);
 
         if ($transactionType->save()) {
             return ApiResponse::success(TransactionResource::make($transactionType));

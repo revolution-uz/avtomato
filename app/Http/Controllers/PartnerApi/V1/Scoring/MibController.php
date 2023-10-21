@@ -48,6 +48,7 @@ class MibController extends Controller
 
         return MibHistoryResource::collection(
             ScoringRequest::query()
+                ->where('type', ScoringRequestTypeEnum::PLUM_MIB_INFO)
                 ->when(
                     $request->search,
                     fn (Builder $q) => $q
