@@ -13,7 +13,9 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'int', example: 1),
         new OA\Property(property: 'name', type: 'string', example: 'owner'),
-        new OA\Property(property: 'permissions', type: 'array', items: new OA\Items),
+        new OA\Property(property: 'permission_groups', type: 'array', items: new OA\Items),
+        new OA\Property(property: 'created_at', type: 'string', example: '1697561193'),
+        new OA\Property(property: 'updated_at', type: 'string', example: '1697561193'),
     ],
 )]
 /** @property Role $resource */
@@ -24,7 +26,7 @@ class SingleRoleResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'name' => $this->resource->name,
-            'permissions' => $this->resource->mapAllPermissionByBranch(),
+            'permission_groups' => $this->resource->mapAllPermissionByBranch(),
             'created_at' => $this->resource->created_at?->format('U'),
             'updated_at' => $this->resource->updated_at?->format('U'),
         ];
