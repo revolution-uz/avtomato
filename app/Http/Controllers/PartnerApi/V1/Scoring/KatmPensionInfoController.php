@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
+use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
@@ -12,12 +14,14 @@ use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\Scoring\CreateKatmCreditHistoryRequest;
-use App\Http\Requests\Scoring\KatmPensionInfoFilterRequest;
+use App\Http\Requests\Scoring\KatmCreditHistoryCreateRequest;
+use App\Http\Requests\Scoring\KatmCreditHistoryFilterRequest;
+use App\Http\Requests\Scoring\KatmCreditHistoryViewRequest;
 use App\Http\Resources\Scoring\KatmPensionInfoResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\KatmService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -42,7 +46,7 @@ class KatmPensionInfoController extends Controller
             new OpenApiJsonArrayResponse(resourceName: 'KatmPensionInfoResource', withPagination: true, withSortables: true),
         ]
     )]
-    public function index(KatmPensionInfoFilterRequest $request)
+    public function index(KatmCreditHistoryFilterRequest $request)
     {
         $sortables = ['id', 'status', 'created_at'];
 
@@ -82,11 +86,32 @@ class KatmPensionInfoController extends Controller
             new OpenApiJsonResponse(resourceName: 'KatmPensionInfoResource'),
         ]
     )]
-    public function create(CreateKatmCreditHistoryRequest $request)
+    public function create(KatmCreditHistoryCreateRequest $request)
     {
         $dto = KatmCreateRequestDTO::from($request->validated());
         $model = $this->katmService->createRequest($dto, ScoringRequestTypeEnum::KATM_PENSION_INFO);
 
         return ApiResponse::success(KatmPensionInfoResource::make($model));
+    }
+
+    #[OA\Get(
+        path: '/api/v1/scoring/pension-info/{id}',
+        description: 'Get pension info scoring request by id',
+        tags: ['Scoring (Pension info)'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'ScoringRequest'),
+        ],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'KatmPensionInfoResource'),
+        ]
+    )]
+    public function read(int $id, KatmCreditHistoryViewRequest $request)
+    {
+        $scoring = ScoringRequest::findOrFail($id);
+        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::KATM_INPS_HISTORY) {
+            throw new ModelNotFoundException;
+        }
+
+        return ApiResponse::success(KatmPensionInfoResource::make($scoring));
     }
 }

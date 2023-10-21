@@ -19,8 +19,9 @@ enum PermissionEnum: string
     case PROFILE_EDIT = 'profile_edit';
     case PROFILE_CHANGE_PASSWORD = 'profile_change_password';
     case PROFILE_CHANGE_LANGUAGE = 'profile_change_language';
-    case PROFILE_CHANGE_DEVICES = 'profile_change_devices';
-    case PROFILE_CHANGE_REVOKE_DEVICE = 'profile_change_revoke_device';
+    case PROFILE_CHANGE_AVATAR = 'profile_change_avatar';
+    case PROFILE_DEVICES = 'profile_devices';
+    case PROFILE_REVOKE_DEVICE = 'profile_revoke_device';
 
     // Manage Users
     case USER_VIEW_ALL = 'user_view_all';
@@ -29,6 +30,7 @@ enum PermissionEnum: string
     case USER_EDIT = 'user_edit';
     case USER_DELETE = 'user_delete';
     case USER_CHANGE_PASSWORD = 'user_change_password';
+    case USER_CHANGE_AVATAR = 'user_change_avatar';
     case USER_CHANGE_ROLE = 'user_change_role';
     case USER_DEVICES = 'user_devices';
     case USER_REVOKE_DEVICE = 'user_revoke_device';
@@ -142,8 +144,9 @@ enum PermissionEnum: string
             self::PROFILE_CHANGE_PASSWORD->value,
             self::PROFILE_CHANGE_THEME->value,
             self::PROFILE_CHANGE_LANGUAGE->value,
-            self::PROFILE_CHANGE_DEVICES->value,
-            self::PROFILE_CHANGE_REVOKE_DEVICE->value,
+            self::PROFILE_CHANGE_AVATAR->value,
+            self::PROFILE_DEVICES->value,
+            self::PROFILE_REVOKE_DEVICE->value,
 
             self::USER_VIEW_ALL->value,
             self::USER_VIEW->value,
@@ -151,6 +154,7 @@ enum PermissionEnum: string
             self::USER_EDIT->value,
             self::USER_DELETE->value,
             self::USER_CHANGE_PASSWORD->value,
+            self::USER_CHANGE_AVATAR->value,
             self::USER_CHANGE_ROLE->value,
             self::USER_DEVICES->value,
             self::USER_REVOKE_DEVICE->value,
@@ -252,6 +256,7 @@ enum PermissionEnum: string
                 self::USER_EDIT->value,
                 self::USER_DELETE->value,
                 self::USER_CHANGE_PASSWORD->value,
+                self::USER_CHANGE_AVATAR->value,
                 self::USER_CHANGE_ROLE->value,
                 self::USER_DEVICES->value,
                 self::USER_REVOKE_DEVICE->value,
@@ -358,8 +363,9 @@ enum PermissionEnum: string
                 self::PROFILE_EDIT->value,
                 self::PROFILE_CHANGE_PASSWORD->value,
                 self::PROFILE_CHANGE_LANGUAGE->value,
-                self::PROFILE_CHANGE_DEVICES->value,
-                self::PROFILE_CHANGE_REVOKE_DEVICE->value,
+                self::PROFILE_CHANGE_AVATAR->value,
+                self::PROFILE_DEVICES->value,
+                self::PROFILE_REVOKE_DEVICE->value,
                 self::PROFILE_CHANGE_THEME->value,
             ],
         ];
@@ -372,8 +378,9 @@ enum PermissionEnum: string
             self::PROFILE_EDIT->value,
             self::PROFILE_CHANGE_PASSWORD->value,
             self::PROFILE_CHANGE_LANGUAGE->value,
-            self::PROFILE_CHANGE_DEVICES->value,
-            self::PROFILE_CHANGE_REVOKE_DEVICE->value => Feature::findByName(FeatureEnum::PROFILE_EDIT->value)->id,
+            self::PROFILE_CHANGE_AVATAR->value,
+            self::PROFILE_DEVICES->value,
+            self::PROFILE_REVOKE_DEVICE->value => Feature::findByName(FeatureEnum::PROFILE_EDIT->value)->id,
 
             self::USER_VIEW_ALL->value,
             self::USER_VIEW->value,
@@ -381,6 +388,7 @@ enum PermissionEnum: string
             self::USER_EDIT->value,
             self::USER_DELETE->value,
             self::USER_CHANGE_PASSWORD->value,
+            self::USER_CHANGE_AVATAR->value,
             self::USER_CHANGE_ROLE->value,
             self::USER_DEVICES->value,
             self::USER_REVOKE_DEVICE->value, => Feature::findByName(FeatureEnum::USER_MANAGEMENT->value)->id,

@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\CardStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $pan
  * @property string $number
  * @property string $expiry
- * @property int $status
+ * @property CardStatusEnum $status
  * @property float $balance
  * @property string $myuzkard_id
  * @property Carbon|null $created_at
@@ -36,6 +37,10 @@ class Card extends Model
         'status',
         'balance',
         'myuzkard_id',
+    ];
+
+    protected $casts = [
+        'status' => CardStatusEnum::class,
     ];
 
     public function setPan()

@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests\Installment;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use App\Models\Company\InstallmentCard;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -25,5 +28,14 @@ class InstallmentCardRequest extends FormRequest
             'card_id' => 'required|exists:cards,id',
             'auto_charge' => 'required|boolean',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return match (Route::currentRouteName()) {
+            'installments.attach-card' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_ATTACH_CARD),
+            'installments.detach-card' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_DETACH_CARD),
+            default => false,
+        };
     }
 }

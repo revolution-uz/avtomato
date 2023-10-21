@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\User;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -23,5 +25,10 @@ class UsersDeleteRequest extends FormRequest
             'ids' => 'array',
             'ids.*' => 'integer|exists:users,id|not_in:' . auth()->id(),
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::USER_DELETE);
     }
 }

@@ -17,6 +17,7 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Customer\CardFilterRequest;
 use App\Http\Requests\Customer\CardRequest;
 use App\Http\Requests\Customer\CardsDeleteRequest;
+use App\Http\Requests\Customer\CardViewRequest;
 use App\Http\Resources\Customer\CardResource;
 use App\Models\Company\Card;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +29,7 @@ use OpenApi\Attributes as OA;
 class CardController extends Controller
 {
     #[OA\Get(
-        path: '/api/v1/customer/card',
+        path: '/api/v1/customer-card',
         description: 'Card route',
         tags: ['Cards'],
         parameters: [
@@ -62,7 +63,7 @@ class CardController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/v1/customer/card/{id}',
+        path: '/api/v1/customer-card/{id}',
         description: 'Card get single route',
         tags: ['Cards'],
         parameters: [
@@ -73,13 +74,13 @@ class CardController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, CardViewRequest $request): JsonResponse
     {
         return ApiResponse::success(CardResource::make(Card::findOrFail($id)));
     }
 
     #[OA\Post(
-        path: '/api/v1/customer/card',
+        path: '/api/v1/customer-card',
         description: 'Card create route',
         requestBody: new OA\RequestBody(
             description: 'Card create request body',
@@ -105,7 +106,7 @@ class CardController extends Controller
     }
 
     #[OA\Put(
-        path: '/api/v1/customer/card/{id}',
+        path: '/api/v1/customer-card/{id}',
         description: 'Card update route',
         requestBody: new OA\RequestBody(
             description: 'Card create request body',
@@ -140,7 +141,7 @@ class CardController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/customer/card',
+        path: '/api/v1/customer-card',
         description: 'Card delete route',
         requestBody: new OA\RequestBody(
             description: 'Card delete request body',

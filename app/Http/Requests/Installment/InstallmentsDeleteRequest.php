@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Installment;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -23,5 +25,10 @@ class InstallmentsDeleteRequest extends FormRequest
             'ids' => 'array',
             'ids.*' => 'integer|exists:installments,id',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_DELETE);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PartnerApi\V1\AuthController;
+use App\Http\Controllers\PartnerApi\V1\Customer\CardController;
 use App\Http\Controllers\PartnerApi\V1\Customer\CustomerController;
 use App\Http\Controllers\PartnerApi\V1\Info\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
@@ -46,43 +47,39 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         // calculator
         Route::prefix('calculator')->controller(CalculatorController::class)->group(function () {
-            Route::post('calculate', 'calculate')->name('installment.calculator');
-            Route::post('export/{type}', 'export')->name('installment.export-calculator');
+            Route::post('calculate', 'calculate')->name('calculator');
+            Route::post('export', 'export')->name('calculator.export');
         });
 
         // installments
         Route::prefix('installment')->controller(InstallmentController::class)->group(function () {
             Route::get('/', 'index')->name('installments.index');
-            Route::get('{installment}', 'getSingle')->name('installments.get-single');
             Route::post('/', 'create')->name('installments.create');
-            Route::put('{installment}', 'update')->name('installments.update');
             Route::delete('/', 'delete')->name('installments.delete');
-        });
-
-        //installment card & guarantor
-        Route::prefix('')->controller(InstallmentController::class)->group(function () {
-            Route::post('{installment}/attach-card', 'attachCard')->name('installments.attach-card');
-            Route::delete('{installment}/detach-card', 'detachCard')->name('installments.detach-card');
-            Route::post('{installment}/attach-guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
-            Route::put('{installment}/update-guarantor', 'updateGuarantor')->name('installments.update-guarantor');
-            Route::delete('{installment}/detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
+            Route::get('{id}', 'getSingle')->name('installments.get-single');
+            Route::put('{id}', 'update')->name('installments.update');
+            Route::post('{id}/attach-card', 'attachCard')->name('installments.attach-card');
+            Route::delete('{id}/detach-card', 'detachCard')->name('installments.detach-card');
+            Route::post('{id}/attach-guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
+            Route::put('{id}/update-guarantor', 'updateGuarantor')->name('installments.update-guarantor');
+            Route::delete('{id}/detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
         });
 
         // transactions
         Route::prefix('transaction')->controller(TransactionController::class)->group(function () {
             Route::get('/', 'index')->name('transactions.index');
-            Route::get('{transaction}', 'getSingle')->name('transactions.get-single');
+            Route::get('{id}', 'getSingle')->name('transactions.get-single');
             Route::post('/', 'create')->name('transactions.create');
-            Route::put('{transaction}', 'update')->name('transactions.update');
+            Route::put('{id}', 'update')->name('transactions.update');
             Route::delete('/', 'delete')->name('transactions.delete');
         });
 
         // transaction_types
         Route::prefix('transaction-type')->controller(TransactionTypeController::class)->group(function () {
             Route::get('/', 'index')->name('transaction-types.index');
-            Route::get('{transactionType}', 'getSingle')->name('transaction-types.get-single');
+            Route::get('{id}', 'getSingle')->name('transaction-types.get-single');
             Route::post('/', 'create')->name('transaction-types.create');
-            Route::put('{transactionType}', 'update')->name('transaction-types.update');
+            Route::put('{id}', 'update')->name('transaction-types.update');
             Route::delete('/', 'delete')->name('transaction-types.delete');
         });
 
@@ -109,7 +106,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('change-lang', 'changeLanguage')->name('profile.change-language');
         Route::post('change-avatar', 'uploadAvatar')->name('profile.change-avatar');
         Route::get('devices', 'devices')->name('profile.devices');
-        Route::delete('revoke-device/{id}', 'revokeDevice')->name('profile.revoke-device');
+        Route::delete('revoke-device', 'revokeDevice')->name('profile.revoke-device');
     });
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
@@ -149,28 +146,37 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('{id}', 'getSingle')->name('customer.get-single');
     });
 
+    Route::prefix('customer-card')->controller(CardController::class)->group(function () {
+        Route::get('/', 'index')->name('cards.index');
+        Route::get('{id}', 'getSingle')->name('cards.get-single');
+        Route::post('/', 'create')->name('cards.create');
+        Route::put('{id}', 'update')->name('cards.update');
+        Route::delete('/', 'delete')->name('cards.delete');
+    });
+
     Route::prefix('scoring')->group(function () {
         Route::prefix('credit-history')->controller(KatmCreditHistoryController::class)->group(function () {
-            Route::post('create', 'create');
-            Route::get('/', 'index');
-            Route::get('{id}', 'read');
+            Route::post('create', 'create')->name('credit-history.create');
+            Route::get('/', 'index')->name('credit-history.index');
+            Route::get('{id}', 'read')->name('credit-history.read');
         });
         Route::prefix('inps-history')->controller(KatmInpsHistoryController::class)->group(function () {
-            Route::post('create', 'create');
-            Route::get('/', 'index');
-            Route::get('{id}', 'read');
+            Route::post('create', 'create')->name('inps-history.create');
+            Route::get('/', 'index')->name('inps-history.index');
+            Route::get('{id}', 'read')->name('inps-history.read');
         });
         Route::prefix('pension-info')->controller(KatmPensionInfoController::class)->group(function () {
-            Route::post('create', 'create');
-            Route::get('/', 'index');
+            Route::post('create', 'create')->name('pension-info.create');
+            Route::get('/', 'index')->name('pension-info.index');
+            Route::get('{id}', 'read')->name('pension-info.read');
         });
         Route::prefix('mib')->controller(MibController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::post('create', 'create');
+            Route::get('/', 'index')->name('mib.index');
+            Route::post('create', 'create')->name('mib.create');
         });
         Route::prefix('tax')->controller(TaxController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::post('create', 'create');
+            Route::get('/', 'index')->name('tax.index');
+            Route::post('create', 'create')->name('tax.create');
         });
     });
 });

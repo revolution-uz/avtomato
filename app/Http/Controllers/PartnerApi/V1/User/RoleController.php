@@ -18,6 +18,7 @@ use App\Http\Requests\Rbac\RolePermissionRequest;
 use App\Http\Requests\Rbac\RoleRequest;
 use App\Http\Requests\Rbac\RolesDeleteRequest;
 use App\Http\Requests\Rbac\RolesFilterRequest;
+use App\Http\Requests\Rbac\RoleViewRequest;
 use App\Http\Resources\Rbac\RoleListResource;
 use App\Http\Resources\Rbac\SingleRoleResource;
 use App\Models\Company\Rbac\Role;
@@ -75,7 +76,7 @@ class RoleController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, RoleViewRequest $request): JsonResponse
     {
         return ApiResponse::success(SingleRoleResource::make(Role::findOrFail($id)));
     }

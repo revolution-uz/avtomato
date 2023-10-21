@@ -4,7 +4,9 @@ namespace App\Http\Requests\Customer;
 
 use App\Enums\Company\AddressTypeEnum;
 use App\Enums\Company\PhoneTypeEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\GenderEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -81,5 +83,10 @@ class CreateCustomerRequest extends FormRequest
             'addresses.*.mahalla_id' => 'nullable|int|exists:mahallas,id',
             // TODO attachments
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CREATE);
     }
 }

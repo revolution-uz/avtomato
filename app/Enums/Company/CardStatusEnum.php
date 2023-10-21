@@ -2,9 +2,12 @@
 
 namespace App\Enums\Company;
 
+use App\Enums\EnumMethods;
+
 enum CardStatusEnum: int
 {
-    public const BLOCKED = -1;
-    public const INACTIVE = 0;
-    public const ACTIVE = 1;
+    use EnumMethods;
+    case BLOCKED = -1;
+    case INACTIVE = 0;
+    case ACTIVE = 1;
 }

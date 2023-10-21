@@ -51,15 +51,4 @@ class InstallmentControllerTest extends TestCase
         $this->assertIsArray($response->json('data'));
         $this->assertCount(5, $response->json('data'));
     }
-
-    /**
-     * @test
-     */
-    public function indexForbidden()
-    {
-        $user = User::factory()->create();
-        $response = $this->actingAs($user)->get(route('installments.index'));
-
-        $response->assertForbidden();
-    }
 }

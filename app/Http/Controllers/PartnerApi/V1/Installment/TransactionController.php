@@ -16,6 +16,7 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Installment\TransactionFilterRequest;
 use App\Http\Requests\Installment\TransactionRequest;
 use App\Http\Requests\Installment\TransactionsDeleteRequest;
+use App\Http\Requests\Installment\TransactionViewRequest;
 use App\Http\Resources\Installment\TransactionResource;
 use App\Models\Company\Transaction;
 use Illuminate\Database\Eloquent\Builder;
@@ -72,7 +73,7 @@ class TransactionController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, TransactionViewRequest $request): JsonResponse
     {
         return ApiResponse::success(TransactionResource::make(Transaction::findOrFail($id)));
     }

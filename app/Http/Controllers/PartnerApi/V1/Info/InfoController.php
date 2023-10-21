@@ -6,6 +6,10 @@ use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\Info\InfoDistrictRequest;
+use App\Http\Requests\Info\InfoMahallaRequest;
+use App\Http\Requests\Info\InfoRegionsRequest;
+use App\Http\Requests\Info\InfoSettingsRequest;
 use App\Http\Resources\Common\DistrictResource;
 use App\Http\Resources\Common\MahallaResource;
 use App\Http\Resources\Common\RegionResource;
@@ -14,7 +18,6 @@ use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
 class InfoController extends Controller
@@ -27,7 +30,7 @@ class InfoController extends Controller
             new OpenApiJsonResponse(resourceName: 'SettingsResource'),
         ]
     )]
-    public function settings(): JsonResponse
+    public function settings(InfoSettingsRequest $request): JsonResponse
     {
         return ApiResponse::success(SettingsResource::make([]));
     }
@@ -40,7 +43,7 @@ class InfoController extends Controller
             new OpenApiJsonArrayResponse(resourceName: 'RegionResource'),
         ]
     )]
-    public function regions(): JsonResponse
+    public function regions(InfoRegionsRequest $request): JsonResponse
     {
         return ApiResponse::success(RegionResource::collection(Region::query()->get()));
     }
@@ -56,7 +59,7 @@ class InfoController extends Controller
             new OpenApiJsonArrayResponse(resourceName: 'DistrictResource'),
         ]
     )]
-    public function districts(Request $request): JsonResponse
+    public function districts(InfoDistrictRequest $request): JsonResponse
     {
         return ApiResponse::success(
             DistrictResource::collection(
@@ -78,7 +81,7 @@ class InfoController extends Controller
             new OpenApiJsonArrayResponse(resourceName: 'MahallaResource'),
         ]
     )]
-    public function mahallas(Request $request): JsonResponse
+    public function mahallas(InfoMahallaRequest $request): JsonResponse
     {
         return ApiResponse::success(
             MahallaResource::collection(

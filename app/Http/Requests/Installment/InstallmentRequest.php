@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Installment;
 
 use App\Enums\Company\FeatureEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use Illuminate\Foundation\Http\FormRequest;
@@ -40,5 +42,12 @@ class InstallmentRequest extends FormRequest
             'any_card_charge' => 'required|boolean',
             'starts_in' => 'required|boolean',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return $this->id ?
+            RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_EDIT) :
+            RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE);
     }
 }

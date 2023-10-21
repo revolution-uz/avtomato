@@ -21,6 +21,7 @@ use App\Http\Requests\Installment\InstallmentFilterRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentViewRequest;
 use App\Http\Resources\Installment\InstallmentCardResource;
 use App\Http\Resources\Installment\InstallmentGuarantorResource;
 use App\Http\Resources\Installment\InstallmentResource;
@@ -84,7 +85,7 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, InstallmentViewRequest $request): JsonResponse
     {
         return ApiResponse::success(InstallmentResource::make(Installment::findOrFail($id)));
     }

@@ -16,6 +16,7 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Installment\TariffRequest;
 use App\Http\Requests\Installment\TariffsDeleteRequest;
 use App\Http\Requests\Installment\TariffsFilterRequest;
+use App\Http\Requests\Installment\TariffViewRequest;
 use App\Http\Resources\Installment\TariffResource;
 use App\Models\Company\Tariff;
 use Illuminate\Database\Eloquent\Builder;
@@ -72,7 +73,7 @@ class TariffsController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id): JsonResponse
+    public function getSingle(int $id, TariffViewRequest $request): JsonResponse
     {
         return ApiResponse::success(TariffResource::make(Tariff::findOrFail($id)));
     }

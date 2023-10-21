@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Management;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -23,5 +25,10 @@ class BranchesDeleteRequest extends FormRequest
             'ids' => 'array',
             'ids.*' => 'integer|exists:branches,id',
         ];
+    }
+
+    public function authorize()
+    {
+        return RbacHelper::checkPermission(PermissionEnum::BRANCH_DELETE);
     }
 }
