@@ -181,14 +181,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('create', 'create')->name('tax.create');
         });
         Route::prefix('humo')->controller(HumoController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::post('create', 'create');
-            Route::get('{id}', 'read');
+            Route::get('/', 'index')->name('humo.index');
+            Route::post('create', 'create')->name('humo.create');
+            Route::get('{id}', 'read')->name('humo.read');
         });
         Route::prefix('uzcard')->controller(UzcardController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::post('create', 'create');
-            Route::get('{id}', 'read');
+            Route::get('/', 'index')->name('uzcard.index');
+            Route::post('create', 'create')->name('uzcard.create');
+            Route::get('{id}', 'read')->name('uzcard.read');
         });
     });
 });

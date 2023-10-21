@@ -20,6 +20,8 @@ class ScoringFilterRequest extends BaseFilterRequest
         return match (Route::currentRouteName()) {
             'mib.index' => RbacHelper::checkPermission(PermissionEnum::SCORING_MIB_INFO_VIEW_ALL),
             'tax.index' => RbacHelper::checkPermission(PermissionEnum::SCORING_TAX_INFO_VIEW_ALL),
+            'humo.index' => RbacHelper::checkPermission(PermissionEnum::SCORING_HUMO_VIEW_ALL),
+            'uzcard.index' => RbacHelper::checkPermission(PermissionEnum::SCORING_UZCARD_VIEW_ALL),
             default => false
         };
     }

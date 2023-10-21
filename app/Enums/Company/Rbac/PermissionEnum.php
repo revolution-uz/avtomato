@@ -135,6 +135,16 @@ enum PermissionEnum: string
     case SCORING_TAX_INFO_VIEW = 'scoring_tax_info_view';
     case SCORING_TAX_INFO_CREATE = 'scoring_tax_info_create';
 
+    // Scoring Humo
+    case SCORING_HUMO_VIEW_ALL = 'scoring_humo_view_all';
+    case SCORING_HUMO_VIEW = 'scoring_humo_view';
+    case SCORING_HUMO_CREATE = 'scoring_humo_create';
+
+    // Scoring Uzcard
+    case SCORING_UZCARD_VIEW_ALL = 'scoring_uzcard_view_all';
+    case SCORING_UZCARD_VIEW = 'scoring_uzcard_view';
+    case SCORING_UZCARD_CREATE = 'scoring_uzcard_create';
+
     public static function getIsBranchRelated($permission): bool
     {
         return match ($permission) {
@@ -222,7 +232,15 @@ enum PermissionEnum: string
 
             self::SCORING_TAX_INFO_VIEW_ALL->value,
             self::SCORING_TAX_INFO_VIEW->value,
-            self::SCORING_TAX_INFO_CREATE->value => false,
+            self::SCORING_TAX_INFO_CREATE->value,
+
+            self::SCORING_HUMO_VIEW_ALL->value,
+            self::SCORING_HUMO_VIEW->value,
+            self::SCORING_HUMO_CREATE->value,
+
+            self::SCORING_UZCARD_VIEW_ALL->value,
+            self::SCORING_UZCARD_VIEW->value,
+            self::SCORING_UZCARD_CREATE->value => false,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL->value,
@@ -358,6 +376,16 @@ enum PermissionEnum: string
                 self::SCORING_TAX_INFO_VIEW->value,
                 self::SCORING_TAX_INFO_CREATE->value,
             ],
+            PermissionGroupEnum::SCORING_HUMO->value => [
+                self::SCORING_HUMO_VIEW_ALL->value,
+                self::SCORING_HUMO_VIEW->value,
+                self::SCORING_HUMO_CREATE->value,
+            ],
+            PermissionGroupEnum::SCORING_UZCARD->value => [
+                self::SCORING_UZCARD_VIEW_ALL->value,
+                self::SCORING_UZCARD_VIEW->value,
+                self::SCORING_UZCARD_CREATE->value,
+            ],
             PermissionGroupEnum::PROFILE_EDIT->value => [
                 self::PROFILE_ME->value,
                 self::PROFILE_EDIT->value,
@@ -478,6 +506,14 @@ enum PermissionEnum: string
             self::SCORING_TAX_INFO_VIEW_ALL->value,
             self::SCORING_TAX_INFO_VIEW->value,
             self::SCORING_TAX_INFO_CREATE->value => Feature::findByName(FeatureEnum::SCORING_TAX_INFO->value)->id,
+
+            self::SCORING_HUMO_VIEW_ALL->value,
+            self::SCORING_HUMO_VIEW->value,
+            self::SCORING_HUMO_CREATE->value => Feature::findByName(FeatureEnum::SCORING_HUMO->value)->id,
+
+            self::SCORING_UZCARD_VIEW_ALL->value,
+            self::SCORING_UZCARD_VIEW->value,
+            self::SCORING_UZCARD_CREATE->value => Feature::findByName(FeatureEnum::SCORING_UZCARD->value)->id,
 
             default => null,
         };

@@ -13,7 +13,6 @@ class TransactionTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
             'name_uz' => $this->faker->name(),
             'name_ru' => $this->faker->name(),
             'name_en' => $this->faker->name(),

@@ -22,4 +22,6 @@ enum PermissionGroupEnum: string
     case SCORING_PENSION_INFO = 'scoring_personal_info';
     case SCORING_MIB_INFO = 'scoring_mib_info';
     case SCORING_TAX_INFO = 'scoring_tax_info';
+    case SCORING_HUMO = 'scoring_humo';
+    case SCORING_UZCARD = 'scoring_uzcard';
 }
