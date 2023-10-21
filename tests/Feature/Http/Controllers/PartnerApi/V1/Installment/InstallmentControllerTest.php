@@ -24,7 +24,7 @@ class InstallmentControllerTest extends TestCase
         $role = Role::factory()->create();
         $role->permissions()->attach(Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW_ALL)->first()->id, ['branch_id' => $branch1->id]);
         $admin = $this->createAdminUser();
-        Installment::factory()->create(['branch_id' => $branch1->id]);
+        Installment::factory(5)->create(['branch_id' => $branch1->id]);
         Installment::factory(4)->create(['branch_id' => $branch2->id]);
         $response = $this->actingAs($admin)->get(route('installments.index'));
 
