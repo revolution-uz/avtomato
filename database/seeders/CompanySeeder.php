@@ -10,6 +10,7 @@ use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\LocationSeeder;
 use Database\Seeders\Company\PermissionSeeder;
+use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Database\Seeder;
 
 class CompanySeeder extends Seeder
@@ -23,6 +24,7 @@ class CompanySeeder extends Seeder
         $this->call(FeatureSeeder::class);
         $this->call(PermissionSeeder::class);
         $this->call(AdminRoleSeeder::class);
+        $this->call(TransactionTypeSeeder::class);
         // TODO remove before production
         /** @var User $user */
         $user = User::query()->firstOrCreate(
