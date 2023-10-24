@@ -10,11 +10,4 @@ class TaxCreateRequestDTO extends BaseScoringRequest
         public string $pinfl
     ) {
     }
-
-    public function toArray(): array
-    {
-        return [
-            'pinfl' => $this->pinfl,
-        ];
-    }
 }
