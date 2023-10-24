@@ -12,12 +12,4 @@ class MibCreateRequestDTO extends BaseScoringRequest
     ) {
         $this->phone = '+' . $this->phone;
     }
-
-    public function toArray(): array
-    {
-        return [
-            'pinfl' => $this->pinfl,
-            'phone' => $this->phone,
-        ];
-    }
 }

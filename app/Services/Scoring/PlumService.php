@@ -45,7 +45,7 @@ class PlumService
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
 
-        $model->response = TaxHistoryResponseDTO::from($this->plumClient->scoringMib(
+        $model->response = TaxHistoryResponseDTO::from($this->plumClient->scoringTax(
             $dto->toArray()
         ));
 
