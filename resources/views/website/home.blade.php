@@ -5,7 +5,7 @@
 @section('content')
 <!--========================== Banner Section Start ==========================-->
 <!-- bg-img -->
-<section class="banner-section bg-img" style="background-image: url(assets/presets/themesTwo/images/banner-bg-3.jpg)">
+<section class="banner-section bg-img" style="background-image: url(website/presets/themesTwo/images/banner-bg-3.jpg)">
     <div class="round-shape-1 animate-y-axis"></div>
     <div class="octagon-shape-1 animate-zoom-inout"></div>
     <div class="star-shape-1 animate-zoom-fade"></div>
@@ -19,7 +19,7 @@
                     <h2 class="position-relative">
                         {{ __("website.main_header_text") }}
                         <span class="animate-shape">
-                            <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                            <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
                     <p>{{ __("website.main_description_text") }}</p>
@@ -49,7 +49,7 @@
                         <h2 class="section-heading__title">
                             {{ __("website.about_us_title") }}
                             <span class="animate-shape">
-                                <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                                <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                             </span>
                         </h2>
                         <p class="section-heading__desc mb-3">{{ __("website.about_us_description") }}</p>
@@ -187,8 +187,8 @@
                 </div>
                 <div class="about-thumb">
                     <div class="about-thumb__inner">
-                        <img class="img-2" src="assets/images/frontend/theme_two_about/6435247663b8f1681204342.jpg" alt="image">
-                        <img class="img-1" src="assets/images/frontend/theme_two_about/643524766c1151681204342.png" alt="image">
+                        <img class="img-2" src="website/images/frontend/theme_two_about/6435247663b8f1681204342.jpg" alt="image">
+                        <img class="img-1" src="website/images/frontend/theme_two_about/643524766c1151681204342.png" alt="image">
 
                         <div class="about-contact d-flex align-items-center">
                             <i class="fas fa-users"></i>
@@ -222,7 +222,7 @@
                     <h2 class="section-heading__title">
                         {{ __("website.our_services_title") }}
                         <span class="animate-shape center">
-                            <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                            <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
                     <p class="section-heading__desc">{{ __("website.our_services_description") }}</p>
@@ -329,7 +329,7 @@
                     <h2 class="section-heading__title">
                         Our Digital Agency Delivers Extraordinary Business Value.
                         <span class="animate-shape">
-                                <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                                <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                             </span>
                     </h2>
                     <p class="section-heading__desc mb-3">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age. Generally just 10 nations have facilitated 70-75% of the worldwide telecom limit.</p>
@@ -339,7 +339,7 @@
         <div class="row gy-4 ">
             <div class="col-lg-5">
                 <div class="why-choose-us__thumb">
-                    <img class="img-1" src="assets/images/frontend/theme_two_choose_us/643525f6166fc1681204726.png" alt="image">
+                    <img class="img-1" src="website/images/frontend/theme_two_choose_us/643525f6166fc1681204726.png" alt="image">
                     <div class="popup-vide-wrap">
                         <div class="video-main">
                             <div class="promo-video">
@@ -416,7 +416,7 @@
                     <h2 class="section-heading__title">
                         A Proven 10-Year History Of Success In Web Development Technology
                         <span class="animate-shape center">
-                            <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                            <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
                 </div>
@@ -478,7 +478,7 @@
                     <h2 class="section-heading__title">
                         Pricing We&#039;re Offering
                         <span class="animate-shape center">
-                            <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                            <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
                     <p class="section-heading__desc">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age just 10 nations have facilitated .</p>
@@ -637,7 +637,7 @@
                     <h2 class="section-heading__title">
                         Let’s See Our Best Work
                         <span class="animate-shape">
-                            <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                            <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
                     <p class="section-heading__desc mb-3">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age. Generally just 10 nations have facilitated 70-75% of the worldwide telecom limit.</p>
@@ -648,7 +648,7 @@
             <div class="col-lg-4 col-md-4">
                 <div class="Our-Project">
                     <a href="portfolio/web-development/1.html">
-                        <img class="img-1" src="assets/images/frontend/portfolioImage/64bfcd672a7c21690291559.jpg" alt="image">
+                        <img class="img-1" src="website/images/frontend/portfolioImage/64bfcd672a7c21690291559.jpg" alt="image">
                         <div class="content">
                             <h4>                                  Web Development
                             </h4>
@@ -662,7 +662,7 @@
             <div class="col-lg-4 col-md-4">
                 <div class="Our-Project">
                     <a href="portfolio/social-marketing/2.html">
-                        <img class="img-1" src="assets/images/frontend/portfolioImage/64bfcdac8d9691690291628.png" alt="image">
+                        <img class="img-1" src="website/images/frontend/portfolioImage/64bfcdac8d9691690291628.png" alt="image">
                         <div class="content">
                             <h4>                                  Social Marketing
                             </h4>
@@ -676,7 +676,7 @@
             <div class="col-lg-4 col-md-4">
                 <div class="Our-Project">
                     <a href="portfolio/content-writting/3.html">
-                        <img class="img-1" src="assets/images/frontend/portfolioImage/64bfce3ed2d171690291774.png" alt="image">
+                        <img class="img-1" src="website/images/frontend/portfolioImage/64bfce3ed2d171690291774.png" alt="image">
                         <div class="content">
                             <h4>                                  Content Writting
                             </h4>
@@ -690,7 +690,7 @@
             <div class="col-lg-4 col-md-4">
                 <div class="Our-Project">
                     <a href="portfolio/seo/5.html">
-                        <img class="img-1" src="assets/images/frontend/portfolioImage/64c0ba9cada171690352284.png" alt="image">
+                        <img class="img-1" src="website/images/frontend/portfolioImage/64c0ba9cada171690352284.png" alt="image">
                         <div class="content">
                             <h4>                                  SEO
                             </h4>
@@ -704,7 +704,7 @@
             <div class="col-lg-4 col-md-4">
                 <div class="Our-Project">
                     <a href="portfolio/app-development/6.html">
-                        <img class="img-1" src="assets/images/frontend/portfolioImage/64c0bafa0e7f81690352378.png" alt="image">
+                        <img class="img-1" src="website/images/frontend/portfolioImage/64c0bafa0e7f81690352378.png" alt="image">
                         <div class="content">
                             <h4>                                  App Development
                             </h4>
@@ -718,7 +718,7 @@
             <div class="col-lg-4 col-md-4">
                 <div class="Our-Project">
                     <a href="portfolio/uiux/7.html">
-                        <img class="img-1" src="assets/images/frontend/portfolioImage/64c0bb3d8ab2d1690352445.png" alt="image">
+                        <img class="img-1" src="website/images/frontend/portfolioImage/64c0bb3d8ab2d1690352445.png" alt="image">
                         <div class="content">
                             <h4>                                  UI/UX
                             </h4>
@@ -742,7 +742,7 @@
                     <span class="subtitle">Our Team Member</span>
                     <h2 class="section-heading__title">Meet Our Team
                         <span class="animate-shape center">
-                        <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                        <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                     </span>
                     </h2>
                     <p class="section-heading__desc">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age just 10 nations have facilitated .</p>
@@ -753,7 +753,7 @@
             <div class="col-lg-3 col-md-6">
                 <div class="team-item">
                     <div class="team-item__thumb">
-                        <img src="assets/images/frontend/team_member/64226f678a0ab1679978343.png" alt="team-img">
+                        <img src="website/images/frontend/team_member/64226f678a0ab1679978343.png" alt="team-img">
                     </div>
                     <div class="team-item__content-wrapper">
                         <div class="team-name">
@@ -782,7 +782,7 @@
             <div class="col-lg-3 col-md-6">
                 <div class="team-item">
                     <div class="team-item__thumb">
-                        <img src="assets/images/frontend/team_member/64226f1f3bffa1679978271.png" alt="team-img">
+                        <img src="website/images/frontend/team_member/64226f1f3bffa1679978271.png" alt="team-img">
                     </div>
                     <div class="team-item__content-wrapper">
                         <div class="team-name">
@@ -811,7 +811,7 @@
             <div class="col-lg-3 col-md-6">
                 <div class="team-item">
                     <div class="team-item__thumb">
-                        <img src="assets/images/frontend/team_member/64226ec84dddc1679978184.png" alt="team-img">
+                        <img src="website/images/frontend/team_member/64226ec84dddc1679978184.png" alt="team-img">
                     </div>
                     <div class="team-item__content-wrapper">
                         <div class="team-name">
@@ -840,7 +840,7 @@
             <div class="col-lg-3 col-md-6">
                 <div class="team-item">
                     <div class="team-item__thumb">
-                        <img src="assets/images/frontend/team_member/64226e6bb53f61679978091.png" alt="team-img">
+                        <img src="website/images/frontend/team_member/64226e6bb53f61679978091.png" alt="team-img">
                     </div>
                     <div class="team-item__content-wrapper">
                         <div class="team-name">
@@ -882,7 +882,7 @@
                     <h2 class="section-heading__title ">
                         What Clients Say About Us.
                         <span class="animate-shape center">
-                            <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                            <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                         </span>
                     </h2>
                     <p class="section-heading__desc mb-30">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age just 10 nations have facilitated .</p>
@@ -896,7 +896,7 @@
                         <div class="testimonial-item__quate"><i class="fas fa-quote-right"></i></div>
 
                         <div class="testimonial-item__thumb">
-                            <img src="assets/images/frontend/testimonial/6422790db661d1679980813.png" alt="testimonial img">
+                            <img src="website/images/frontend/testimonial/6422790db661d1679980813.png" alt="testimonial img">
                         </div>
 
                         <div class="testimonial-item__content">
@@ -931,7 +931,7 @@
                         <div class="testimonial-item__quate"><i class="fas fa-quote-right"></i></div>
 
                         <div class="testimonial-item__thumb">
-                            <img src="assets/images/frontend/testimonial/642279026ed641679980802.png" alt="testimonial img">
+                            <img src="website/images/frontend/testimonial/642279026ed641679980802.png" alt="testimonial img">
                         </div>
 
                         <div class="testimonial-item__content">
@@ -966,7 +966,7 @@
                         <div class="testimonial-item__quate"><i class="fas fa-quote-right"></i></div>
 
                         <div class="testimonial-item__thumb">
-                            <img src="assets/images/frontend/testimonial/642279331b63b1679980851.png" alt="testimonial img">
+                            <img src="website/images/frontend/testimonial/642279331b63b1679980851.png" alt="testimonial img">
                         </div>
 
                         <div class="testimonial-item__content">
@@ -1000,7 +1000,7 @@
                         <div class="testimonial-item__quate"><i class="fas fa-quote-right"></i></div>
 
                         <div class="testimonial-item__thumb">
-                            <img src="assets/images/frontend/testimonial/6422792c056da1679980844.png" alt="testimonial img">
+                            <img src="website/images/frontend/testimonial/6422792c056da1679980844.png" alt="testimonial img">
                         </div>
 
                         <div class="testimonial-item__content">
@@ -1044,7 +1044,7 @@
                         <h2 class="section-heading__title">
                             Subscribe Our Newsletter
                             <span class="animate-shape">
-                                    <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                                    <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                                 </span>
                         </h2>
                         <p class="section-heading__desc">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age just.</p>
@@ -1060,7 +1060,7 @@
             <div class="col-lg-5">
                 <div class="subscribe-right">
                     <div class="thumb">
-                        <img src="assets/images/frontend/subscribe/6422a391e4a451679991697.jpg" alt="subscribe image">
+                        <img src="website/images/frontend/subscribe/6422a391e4a451679991697.jpg" alt="subscribe image">
                     </div>
                 </div>
             </div>
@@ -1078,7 +1078,7 @@
                     <h2 class="section-heading__title ">
                         Frequently Asked Question.
                         <span class="animate-shape center">
-                          <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                          <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                       </span>
                     </h2>
                     <p class="section-heading__desc">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age just 10 nations have facilitated .</p>
@@ -1137,7 +1137,7 @@
             <div class="col-lg-6">
                 <div class="about-thumb">
                     <div class="about-thumb__inner">
-                        <img src="assets/images/frontend/faq/6435197486d9a1681201524.jpg" alt="image">
+                        <img src="website/images/frontend/faq/6435197486d9a1681201524.jpg" alt="image">
                     </div>
                 </div>
             </div>
@@ -1155,7 +1155,7 @@
                     <h2 class="section-heading__title">
                         Latest News
                         <span class="animate-shape center">
-                             <img src="assets/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
+                             <img src="website/presets/themesTwo/images/animate-shape.png" alt="Animate-shape">
                          </span>
                     </h2>
                     <p class="section-heading__desc mb-30">Data transfer capacity has generally been inconsistent dispersed around the world, with expanding focus in the advanced age just 10 nations have facilitated .</p>
@@ -1167,7 +1167,7 @@
                 <div class="blog-item">
                     <div class="blog-item__thumb">
                         <a href="blog/photoshop-create-path-from-image/96.html" class="blog-item__thumb-link">
-                            <img src="assets/images/frontend/blog/thumb_6422b254567971679995476.jpg" alt="blog-image">
+                            <img src="website/images/frontend/blog/thumb_6422b254567971679995476.jpg" alt="blog-image">
                         </a>
                     </div>
                     <div class="blog-item__content">
@@ -1185,7 +1185,7 @@
                 <div class="blog-item">
                     <div class="blog-item__thumb">
                         <a href="blog/color-match-perfectly-to-impress-your-customers/51.html" class="blog-item__thumb-link">
-                            <img src="assets/images/frontend/blog/thumb_6423d54ec0f671680069966.jpg" alt="blog-image">
+                            <img src="website/images/frontend/blog/thumb_6423d54ec0f671680069966.jpg" alt="blog-image">
                         </a>
                     </div>
                     <div class="blog-item__content">
@@ -1203,7 +1203,7 @@
                 <div class="blog-item">
                     <div class="blog-item__thumb">
                         <a href="blog/photoshop-create-path-from-image/26.html" class="blog-item__thumb-link">
-                            <img src="assets/images/frontend/blog/thumb_6422b22586f7a1679995429.jpg" alt="blog-image">
+                            <img src="website/images/frontend/blog/thumb_6422b22586f7a1679995429.jpg" alt="blog-image">
                         </a>
                     </div>
                     <div class="blog-item__content">
@@ -1226,25 +1226,25 @@
     <div class="container">
         <div class="client-logos client-slider">
             <a href="https://www.google.com/">
-                <img src="assets/images/frontend/brand/6422b4eadf40d1679996138.png" alt="brand-image">
+                <img src="website/images/frontend/brand/6422b4eadf40d1679996138.png" alt="brand-image">
             </a>
             <a href="https://www.google.com/">
-                <img src="assets/images/frontend/brand/6422b42528ada1679995941.png" alt="brand-image">
+                <img src="website/images/frontend/brand/6422b42528ada1679995941.png" alt="brand-image">
             </a>
             <a href="https://www.google.com/">
-                <img src="assets/images/frontend/brand/6422b412bef981679995922.png" alt="brand-image">
+                <img src="website/images/frontend/brand/6422b412bef981679995922.png" alt="brand-image">
             </a>
             <a href="https://www.google.com/">
-                <img src="assets/images/frontend/brand/6422b40d1aa2f1679995917.png" alt="brand-image">
+                <img src="website/images/frontend/brand/6422b40d1aa2f1679995917.png" alt="brand-image">
             </a>
             <a href="https://www.google.com/">
-                <img src="assets/images/frontend/brand/6422b4073bea91679995911.png" alt="brand-image">
+                <img src="website/images/frontend/brand/6422b4073bea91679995911.png" alt="brand-image">
             </a>
             <a href="https://www.google.com/">
-                <img src="assets/images/frontend/brand/6422b40140bc21679995905.png" alt="brand-image">
+                <img src="website/images/frontend/brand/6422b40140bc21679995905.png" alt="brand-image">
             </a>
             <a href="https://www.google.com/">
-                <img src="assets/images/frontend/brand/6422b3fa015c51679995898.png" alt="brand-image">
+                <img src="website/images/frontend/brand/6422b3fa015c51679995898.png" alt="brand-image">
             </a>
         </div>
     </div>

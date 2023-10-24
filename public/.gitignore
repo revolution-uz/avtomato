@@ -1,0 +1,7 @@
+assets/
+js/
+static/
+sw.js
+index.html
+workbox-*.*
+manifest.webmanifest
