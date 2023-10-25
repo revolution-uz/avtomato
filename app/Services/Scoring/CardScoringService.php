@@ -15,8 +15,7 @@ class CardScoringService
 {
     public function __construct(
         private readonly AsaxiyClient $asaxiyClient
-    )
-    {
+    ) {
     }
 
     public function scoringHumo(CardCreateRequestDTO $dto): ScoringRequest
