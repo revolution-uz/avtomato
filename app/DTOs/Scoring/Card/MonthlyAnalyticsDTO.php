@@ -14,7 +14,7 @@ use Spatie\LaravelData\DataCollection;
     schema: 'MonthlyAnalyticsDTO',
     title: 'MonthlyAnalyticsDTO',
     properties: [
-        new OA\Property(property: 'month', type: 'string', example: 'Jul-2023'),
+        new OA\Property(property: 'month', type: 'string', example: '2023-07-25T10:04:48+00:00'),
         new OA\Property(property: 'full_amount', type: 'int', example: '33244900'),
         new OA\Property(property: 'details', type: 'array', items: new OA\Items(ref: '#/components/schemas/DetailedAnalyticsInMonthDTO'), nullable: true),
     ],
