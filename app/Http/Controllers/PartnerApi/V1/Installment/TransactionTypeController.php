@@ -130,6 +130,10 @@ class TransactionTypeController extends Controller
     )]
     public function update(int $id, TransactionTypeRequest $request): JsonResponse
     {
+        if ($id < 100) {
+            return ApiResponse::error('Permission denied');
+        }
+
         $transactionType = TransactionType::findOrFail($id);
         $transactionType->fill($request->validated());
         $transactionType->setNames($request->name);
