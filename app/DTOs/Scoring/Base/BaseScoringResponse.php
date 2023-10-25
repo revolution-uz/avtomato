@@ -6,7 +6,7 @@ use Spatie\LaravelData\Data;
 
 abstract class BaseScoringResponse extends Data
 {
-    public static function fromXml(string $xml)
+    public static function parseFromXml(string $xml)
     {
         $xmlObject = simplexml_load_string(iconv('UTF-8', 'windows-1251', $xml));
 

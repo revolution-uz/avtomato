@@ -56,9 +56,9 @@ class KatmService
             if ($response['status_id'] === AsaxiyRequestStatusEnum::SUCCESS->value) {
                 $scoringRequest->status = ScoringRequestStatusEnum::SUCCESS;
                 $scoringRequest->response = match ($scoringRequest->type) {
-                    ScoringRequestTypeEnum::KATM_CREDIT_HISTORY => KatmCreditHistoryResponseDTO::fromXml($response['data']),
-                    ScoringRequestTypeEnum::KATM_INPS_HISTORY => KatmInpsHistoryResponseDTO::fromXml($response['data']),
-                    ScoringRequestTypeEnum::KATM_PENSION_INFO => KatmPensionInfoResponseDTO::fromXml($response['data']),
+                    ScoringRequestTypeEnum::KATM_CREDIT_HISTORY => KatmCreditHistoryResponseDTO::parseFromXml($response['data']),
+                    ScoringRequestTypeEnum::KATM_INPS_HISTORY => KatmInpsHistoryResponseDTO::parseFromXml($response['data']),
+                    ScoringRequestTypeEnum::KATM_PENSION_INFO => KatmPensionInfoResponseDTO::parseFromXml($response['data']),
                     default => throw new InvalidArgumentException,
                 };
                 $scoringRequest->saveOrFail();
