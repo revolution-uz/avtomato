@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Scoring;
 
-use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
@@ -17,9 +16,6 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'expiry', type: 'int', example: '2808'),
     ],
 )]
-/**
- * @mixin MibCreateRequestDTO
- */
 class CreateCardScoringRequest extends FormRequest
 {
     public function authorize(): bool

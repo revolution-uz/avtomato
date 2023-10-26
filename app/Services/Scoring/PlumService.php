@@ -3,10 +3,10 @@
 namespace App\Services\Scoring;
 
 use App\Clients\PlumClient;
-use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
-use App\DTOs\Scoring\Plum\Mib\MibHistoryResponseDTO;
-use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
-use App\DTOs\Scoring\Plum\Tax\TaxHistoryResponseDTO;
+use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibInfoResponseDTO;
+use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Tax\TaxInfoResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
@@ -18,7 +18,7 @@ class PlumService
     ) {
     }
 
-    public function scoringMib(MibCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
+    public function scoringMib(MibInfoCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
     {
         $model = new ScoringRequest;
         $model->type = $type;
@@ -26,7 +26,7 @@ class PlumService
         $model->client_code = $this->plumClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
-        $model->response = MibHistoryResponseDTO::from($this->plumClient->scoringMib(
+        $model->response = MibInfoResponseDTO::from($this->plumClient->scoringMib(
             $dto->toArray()
         ));
 
@@ -36,7 +36,7 @@ class PlumService
         return $model;
     }
 
-    public function scoringTax(TaxCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
+    public function scoringTax(TaxInfoCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
     {
         $model = new ScoringRequest;
         $model->type = $type;
@@ -45,7 +45,7 @@ class PlumService
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
 
-        $model->response = TaxHistoryResponseDTO::from($this->plumClient->scoringTax(
+        $model->response = TaxInfoResponseDTO::from($this->plumClient->scoringTax(
             $dto->toArray()
         ));
 

@@ -2,33 +2,35 @@
 
 namespace App\Http\Requests\Scoring;
 
-use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'CreateTaxHistoryRequest',
-    title: 'Request to create a request for Tax scoring history',
+    schema: 'CreateMibInfoRequest',
+    title: 'Request to create a request for Mib scoring history',
     properties: [
         new OA\Property(property: 'pinfl', type: 'int', example: '51008055970017'),
+        new OA\Property(property: 'phone', type: 'int', example: '998972538005'),
     ],
 )]
 /**
- * @mixin TaxCreateRequestDTO
+ * @mixin MibInfoCreateRequestDTO
  */
-class CreateTaxHistoryRequest extends FormRequest
+class CreateMibInfoRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::SCORING_TAX_INFO_CREATE);
+        return RbacHelper::checkPermission(PermissionEnum::SCORING_MIB_INFO_CREATE);
     }
 
     public function rules(): array
     {
         return [
             'pinfl' => 'required|integer|digits:14',
+            'phone' => 'required|int|digits:12',
         ];
     }
 }

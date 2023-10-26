@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 
-use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Helpers\Swagger\OpenApiIdParameter;
@@ -15,10 +15,10 @@ use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\Scoring\CreateMibHistoryRequest;
+use App\Http\Requests\Scoring\CreateMibInfoRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
 use App\Http\Requests\Scoring\ScoringRequestsDeleteRequest;
-use App\Http\Resources\Scoring\MibHistoryResource;
+use App\Http\Resources\Scoring\MibInfoResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\PlumService;
 use Illuminate\Database\Eloquent\Builder;
@@ -45,14 +45,14 @@ class MibController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'MibHistoryResource', withPagination: true, withSortables: true),
+            new OpenApiJsonArrayResponse(resourceName: 'MibInfoResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(ScoringFilterRequest $request)
     {
         $sortables = ['id', 'status', 'created_at'];
 
-        return MibHistoryResource::collection(
+        return MibInfoResource::collection(
             ScoringRequest::query()
                 ->where('type', ScoringRequestTypeEnum::PLUM_MIB_INFO)
                 ->when(
@@ -77,19 +77,19 @@ class MibController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Create MIB history request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CreateMibHistoryRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateMibInfoRequest')
         ),
         tags: ['Scoring (MIB info)'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'MibHistoryResource'),
+            new OpenApiJsonResponse(resourceName: 'MibInfoResource'),
         ]
     )]
-    public function create(CreateMibHistoryRequest $request)
+    public function create(CreateMibInfoRequest $request)
     {
-        $dto = MibCreateRequestDTO::from($request->validated());
+        $dto = MibInfoCreateRequestDTO::from($request->validated());
         $model = $this->plumService->scoringMib($dto, ScoringRequestTypeEnum::PLUM_MIB_INFO);
 
-        return ApiResponse::success(MibHistoryResource::make($model));
+        return ApiResponse::success(MibInfoResource::make($model));
     }
 
     #[OA\Get(
@@ -100,7 +100,7 @@ class MibController extends Controller
             new OpenApiIdParameter(modelName: 'ScoringRequest'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'MibHistoryResource'),
+            new OpenApiJsonResponse(resourceName: 'MibInfoResource'),
         ]
     )]
     public function read(int $id)
@@ -110,7 +110,7 @@ class MibController extends Controller
             throw new ModelNotFoundException;
         }
 
-        return ApiResponse::success(MibHistoryResource::make($scoring));
+        return ApiResponse::success(MibInfoResource::make($scoring));
     }
 
     #[OA\Delete(
