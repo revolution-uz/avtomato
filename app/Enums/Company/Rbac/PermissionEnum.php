@@ -57,6 +57,8 @@ enum PermissionEnum: string
     case CUSTOMER_CARDS_VIEW_ALL = 'customer_cards_view_all';
     case CUSTOMER_CARDS_VIEW = 'customer_cards_view';
     case CUSTOMER_CARDS_CREATE = 'customer_cards_create';
+    case CUSTOMER_CARDS_ATTACH = 'customer_cards_attach';
+    case CUSTOMER_CARDS_CONFIRM = 'customer_cards_confirm';
     case CUSTOMER_CARDS_EDIT = 'customer_cards_edit';
     case CUSTOMER_CARDS_DELETE = 'customer_cards_delete';
 

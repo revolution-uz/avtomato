@@ -14,12 +14,16 @@ use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Requests\Customer\AttachCustomerCardRequest;
 use App\Http\Requests\Customer\CardFilterRequest;
 use App\Http\Requests\Customer\CardRequest;
 use App\Http\Requests\Customer\CardsDeleteRequest;
 use App\Http\Requests\Customer\CardViewRequest;
+use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
+use App\Http\Resources\Customer\AttachCustomerCardResource;
 use App\Http\Resources\Customer\CardResource;
 use App\Models\Company\Card;
+use App\Services\Scoring\PlumService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -28,6 +32,11 @@ use OpenApi\Attributes as OA;
 
 class CardController extends Controller
 {
+    public function __construct(
+        private readonly PlumService $plumService,
+    ) {
+    }
+
     #[OA\Get(
         path: '/api/v1/customer-card',
         description: 'Card route',
@@ -158,5 +167,50 @@ class CardController extends Controller
         Card::query()->whereIn('id', $request->ids)->delete();
 
         return ApiResponse::success(true);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/customer-card/attach',
+        description: 'Card attach route',
+        requestBody: new OA\RequestBody(
+            description: 'Card attach request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/AttachCustomerCard')
+        ),
+        tags: ['Cards'],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'CardResource'),
+        ]
+    )]
+    public function attach(AttachCustomerCardRequest $request): JsonResponse
+    {
+        $card = Card::findOrFail($request->card_id);
+        $response = $this->plumService->attachCard($card, $request->phone);
+
+        return ApiResponse::success(AttachCustomerCardResource::make($response));
+    }
+
+    #[OA\Post(
+        path: '/api/v1/customer-card/confirm',
+        description: 'Card confirm route',
+        requestBody: new OA\RequestBody(
+            description: 'Card confirm request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/AttachCustomerCardRequest')
+        ),
+        tags: ['Cards'],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'CardResource'),
+        ]
+    )]
+    public function confirm(ConfirmCustomerCardRequest $request): JsonResponse
+    {
+        $card = Card::findOrFail($request->card_id);
+        $response = $this->plumService->confirmCard($card, $request->session, $request->otp);
+        if ($response === true) {
+            return ApiResponse::success(CardResource::make($card));
+        }
+
+        return ApiResponse::error($response);
     }
 }
