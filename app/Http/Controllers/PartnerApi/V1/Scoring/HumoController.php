@@ -11,16 +11,19 @@ use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
+use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\CardScoringViewRequest;
 use App\Http\Requests\Scoring\CreateCardScoringRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
+use App\Http\Requests\Scoring\ScoringRequestsDeleteRequest;
 use App\Http\Resources\Scoring\CardScoringResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\CardScoringService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -104,5 +107,25 @@ class HumoController extends Controller
         $scoring = ScoringRequest::query()->where('status', ScoringRequestStatusEnum::SUCCESS)->where('type', ScoringRequestTypeEnum::HUMO)->where('id', $id)->firstOrFail();
 
         return ApiResponse::success(CardScoringResource::make($scoring));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/scoring/humo',
+        description: 'Humo scoring delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Humo scoring delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/ScoringRequestsDeleteRequest')
+        ),
+        tags: ['Scoring (Humo)'],
+        responses: [
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+        ]
+    )]
+    public function delete(ScoringRequestsDeleteRequest $request): JsonResponse
+    {
+        ScoringRequest::query()->whereIn('id', $request->ids)->delete();
+
+        return ApiResponse::success(true);
     }
 }

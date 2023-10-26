@@ -11,17 +11,20 @@ use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
+use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\KatmCreditHistoryCreateRequest;
 use App\Http\Requests\Scoring\KatmCreditHistoryFilterRequest;
 use App\Http\Requests\Scoring\KatmCreditHistoryViewRequest;
+use App\Http\Requests\Scoring\ScoringRequestsDeleteRequest;
 use App\Http\Resources\Scoring\KatmInpsHistoryResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\KatmService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -113,5 +116,25 @@ class KatmInpsHistoryController extends Controller
         }
 
         return ApiResponse::success(KatmInpsHistoryResource::make($scoring));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/scoring/inps-history',
+        description: 'INPS history delete route',
+        requestBody: new OA\RequestBody(
+            description: 'INPS history delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/ScoringRequestsDeleteRequest')
+        ),
+        tags: ['Scoring (INPS history)'],
+        responses: [
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+        ]
+    )]
+    public function delete(ScoringRequestsDeleteRequest $request): JsonResponse
+    {
+        ScoringRequest::query()->whereIn('id', $request->ids)->delete();
+
+        return ApiResponse::success(true);
     }
 }

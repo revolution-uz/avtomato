@@ -114,36 +114,43 @@ enum PermissionEnum: string
     case SCORING_CREDIT_HISTORY_VIEW_ALL = 'scoring_credit_history_view_all';
     case SCORING_CREDIT_HISTORY_VIEW = 'scoring_credit_history_view';
     case SCORING_CREDIT_HISTORY_CREATE = 'scoring_credit_history_create';
+    case SCORING_CREDIT_HISTORY_DELETE = 'scoring_credit_history_delete';
 
     // Scoring inps history
     case SCORING_INPS_HISTORY_VIEW_ALL = 'scoring_inps_history_view_all';
     case SCORING_INPS_HISTORY_VIEW = 'scoring_inps_history_view';
     case SCORING_INPS_HISTORY_CREATE = 'scoring_inps_history_create';
+    case SCORING_INPS_HISTORY_DELETE = 'scoring_inps_history_delete';
 
     // Scoring pension info
     case SCORING_PENSION_INFO_VIEW_ALL = 'scoring_pension_info_view_all';
     case SCORING_PENSION_INFO_VIEW = 'scoring_pension_info_view';
     case SCORING_PENSION_INFO_CREATE = 'scoring_pension_info_create';
+    case SCORING_PENSION_INFO_DELETE = 'scoring_pension_info_delete';
 
     // Scoring MIB
     case SCORING_MIB_INFO_VIEW_ALL = 'scoring_mib_info_view_all';
     case SCORING_MIB_INFO_VIEW = 'scoring_mib_info_view';
     case SCORING_MIB_INFO_CREATE = 'scoring_mib_info_create';
+    case SCORING_MIB_INFO_DELETE = 'scoring_mib_info_delete';
 
     // Scoring TAX
     case SCORING_TAX_INFO_VIEW_ALL = 'scoring_tax_info_view_all';
     case SCORING_TAX_INFO_VIEW = 'scoring_tax_info_view';
     case SCORING_TAX_INFO_CREATE = 'scoring_tax_info_create';
+    case SCORING_TAX_INFO_DELETE = 'scoring_tax_info_delete';
 
     // Scoring Humo
     case SCORING_HUMO_VIEW_ALL = 'scoring_humo_view_all';
     case SCORING_HUMO_VIEW = 'scoring_humo_view';
     case SCORING_HUMO_CREATE = 'scoring_humo_create';
+    case SCORING_HUMO_DELETE = 'scoring_humo_delete';
 
     // Scoring Uzcard
     case SCORING_UZCARD_VIEW_ALL = 'scoring_uzcard_view_all';
     case SCORING_UZCARD_VIEW = 'scoring_uzcard_view';
     case SCORING_UZCARD_CREATE = 'scoring_uzcard_create';
+    case SCORING_UZCARD_DELETE = 'scoring_uzcard_delete';
 
     public static function getIsBranchRelated($permission): bool
     {

@@ -9,15 +9,18 @@ use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
+use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\CreateMibHistoryRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
+use App\Http\Requests\Scoring\ScoringRequestsDeleteRequest;
 use App\Http\Resources\Scoring\MibHistoryResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\PlumService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -84,5 +87,25 @@ class MibController extends Controller
         $model = $this->plumService->scoringMib($dto, ScoringRequestTypeEnum::PLUM_MIB_INFO);
 
         return ApiResponse::success(MibHistoryResource::make($model));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/scoring/mib',
+        description: 'Mib delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Mib delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/ScoringRequestsDeleteRequest')
+        ),
+        tags: ['Scoring (MIB info)'],
+        responses: [
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+        ]
+    )]
+    public function delete(ScoringRequestsDeleteRequest $request): JsonResponse
+    {
+        ScoringRequest::query()->whereIn('id', $request->ids)->delete();
+
+        return ApiResponse::success(true);
     }
 }
