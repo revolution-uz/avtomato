@@ -20,7 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $expiry
  * @property CardStatusEnum $status
  * @property float $balance
- * @property string $myuzkard_id
+ * @property string $plum_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -38,7 +38,7 @@ class Card extends Model
         'expiry',
         'status',
         'balance',
-        'myuzkard_id',
+        'plum_id',
     ];
 
     protected $casts = [

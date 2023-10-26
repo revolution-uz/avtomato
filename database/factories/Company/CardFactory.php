@@ -21,7 +21,7 @@ class CardFactory extends Factory
             'expiry' => $this->faker->randomDigit(),
             'status' => CardStatusEnum::randomValue(),
             'balance' => $this->faker->randomFloat(),
-            'myuzkard_id' => $this->faker->randomNumber(),
+            'plum_id' => $this->faker->randomNumber(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
