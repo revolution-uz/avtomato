@@ -2,8 +2,13 @@
 
 namespace App\Http\Resources\Scoring;
 
+use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
+use App\Http\Resources\Common\DistrictResource;
+use App\Http\Resources\Common\RegionResource;
 use App\Jobs\UpdateScoringRequestStatusJob;
+use App\Models\Company\District;
+use App\Models\Company\Region;
 use App\Models\Company\ScoringRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,7 +24,7 @@ class BaseKatmScoringResource extends JsonResource
             dispatch(new UpdateScoringRequestStatusJob($this->resource->id));
         }
 
-        return [
+        $response = [
             'id' => $this->resource->id,
             'status' => $this->resource->status->value,
             'request' => $this->resource->request->toArray(),
@@ -27,5 +32,26 @@ class BaseKatmScoringResource extends JsonResource
             'created_at' => $this->resource->created_at->getTimestamp(),
             'updated_at' => $this->resource->updated_at->getTimestamp(),
         ];
+
+        if ($this->resource->request instanceof KatmCreateRequestDTO) {
+            /*
+            $response['request'] = \Arr::map($this->resource->request->toArray(), fn($item) => [
+                ...$item,
+                $item['region'] = new RegionResource(Region::query()->find($item['region_id'])),
+                $item['district'] = new DistrictResource(District::query()->find($item['district_id'])),
+            ]);
+
+            it didn't work error:
+                  "message": "Only arrays and Traversables can be unpacked",
+                  "exception": "Error",
+                  "file": "/var/www/application/app/Http/Resources/Scoring/BaseKatmScoringResource.php",
+                  "line": 38,
+            */
+            $response['request']['region'] = new RegionResource(Region::query()->find($response['request']['region_id']));
+            $response['request']['district'] = new DistrictResource(District::query()->find($response['request']['district_id']));
+
+        }
+
+        return $response;
     }
 }
