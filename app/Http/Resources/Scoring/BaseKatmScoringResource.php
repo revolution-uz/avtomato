@@ -34,19 +34,6 @@ class BaseKatmScoringResource extends JsonResource
         ];
 
         if ($this->resource->request instanceof KatmCreateRequestDTO) {
-            /*
-            $response['request'] = \Arr::map($this->resource->request->toArray(), fn($item) => [
-                ...$item,
-                $item['region'] = new RegionResource(Region::query()->find($item['region_id'])),
-                $item['district'] = new DistrictResource(District::query()->find($item['district_id'])),
-            ]);
-
-            it didn't work error:
-                  "message": "Only arrays and Traversables can be unpacked",
-                  "exception": "Error",
-                  "file": "/var/www/application/app/Http/Resources/Scoring/BaseKatmScoringResource.php",
-                  "line": 38,
-            */
             $response['request']['region'] = new RegionResource(Region::query()->find($response['request']['region_id']));
             $response['request']['district'] = new DistrictResource(District::query()->find($response['request']['district_id']));
 
