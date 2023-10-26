@@ -161,34 +161,42 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('create', 'create')->name('credit-history.create');
             Route::get('/', 'index')->name('credit-history.index');
             Route::get('{id}', 'read')->name('credit-history.read');
+            Route::delete('/', 'delete')->name('credit-history.delete');
         });
         Route::prefix('inps-history')->controller(KatmInpsHistoryController::class)->group(function () {
             Route::post('create', 'create')->name('inps-history.create');
             Route::get('/', 'index')->name('inps-history.index');
             Route::get('{id}', 'read')->name('inps-history.read');
+            Route::delete('/', 'delete')->name('inps-history.delete');
         });
         Route::prefix('pension-info')->controller(KatmPensionInfoController::class)->group(function () {
             Route::post('create', 'create')->name('pension-info.create');
             Route::get('/', 'index')->name('pension-info.index');
             Route::get('{id}', 'read')->name('pension-info.read');
+            Route::delete('/', 'delete')->name('pension-info.delete');
+
         });
         Route::prefix('mib')->controller(MibController::class)->group(function () {
             Route::get('/', 'index')->name('mib.index');
             Route::post('create', 'create')->name('mib.create');
+            Route::delete('/', 'delete')->name('mib.delete');
         });
         Route::prefix('tax')->controller(TaxController::class)->group(function () {
             Route::get('/', 'index')->name('tax.index');
             Route::post('create', 'create')->name('tax.create');
+            Route::delete('/', 'delete')->name('tax.delete');
         });
         Route::prefix('humo')->controller(HumoController::class)->group(function () {
             Route::get('/', 'index')->name('humo.index');
             Route::post('create', 'create')->name('humo.create');
             Route::get('{id}', 'read')->name('humo.read');
+            Route::delete('/', 'delete')->name('humo.delete');
         });
         Route::prefix('uzcard')->controller(UzcardController::class)->group(function () {
             Route::get('/', 'index')->name('uzcard.index');
             Route::post('create', 'create')->name('uzcard.create');
             Route::get('{id}', 'read')->name('uzcard.read');
+            Route::delete('/', 'delete')->name('uzcard.delete');
         });
     });
 });
