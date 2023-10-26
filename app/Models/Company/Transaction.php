@@ -18,7 +18,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Card $card
  * @property int $transaction_type_id
  * @property TransactionType $transactionType
- * @property int $myuzkard_id
+ * @property int $plum_id
  * @property float $amount
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -33,7 +33,7 @@ class Transaction extends Model
         'customer_id',
         'card_id',
         'transaction_type_id',
-        'myuzkard_id',
+        'plum_id',
         'amount',
     ];
 

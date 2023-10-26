@@ -27,7 +27,7 @@ class InstallmentFactory extends Factory
             'is_blacklist' => $this->faker->boolean(),
             'status' => InstallmentStatusEnum::randomValue(),
             'period' => $this->faker->randomDigit(),
-            'myuzkard_id' => $this->faker->word(),
+            'plum_id' => $this->faker->word(),
             'starts_in' => Carbon::now(),
             'next_pay_date' => Carbon::now(),
             'created_at' => Carbon::now(),

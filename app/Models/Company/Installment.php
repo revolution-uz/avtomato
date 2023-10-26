@@ -25,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $is_blacklist
  * @property InstallmentStatusEnum $status
  * @property int $period
- * @property string $myuzkard_id
+ * @property string $plum_id
  * @property Carbon|null $starts_in
  * @property Carbon|null $next_pay_date
  * @property Carbon|null $created_at
@@ -49,7 +49,7 @@ class Installment extends Model
         'is_blacklist',
         'status',
         'period',
-        'myuzkard_id',
+        'plum_id',
         'starts_in',
         'next_pay_date',
     ];
