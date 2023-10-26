@@ -72,7 +72,6 @@ class PlumService
             'session' => $session,
             'otp' => $otp,
             'isTrusted' => true,
-            'cardName' => $card->customer->full_name(),
         ]);
 
         $_card = $response['card'] ?? [];
