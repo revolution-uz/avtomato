@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 
 use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
+use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
@@ -20,6 +22,7 @@ use App\Http\Resources\Scoring\MibHistoryResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\PlumService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -87,6 +90,27 @@ class MibController extends Controller
         $model = $this->plumService->scoringMib($dto, ScoringRequestTypeEnum::PLUM_MIB_INFO);
 
         return ApiResponse::success(MibHistoryResource::make($model));
+    }
+
+    #[OA\Get(
+        path: '/api/v1/scoring/mib/{id}',
+        description: 'Get MIB info scoring request by id',
+        tags: ['Scoring (MIB info)'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'ScoringRequest'),
+        ],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'MibHistoryResource'),
+        ]
+    )]
+    public function read(int $id)
+    {
+        $scoring = ScoringRequest::findOrFail($id);
+        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::PLUM_MIB_INFO) {
+            throw new ModelNotFoundException;
+        }
+
+        return ApiResponse::success(MibHistoryResource::make($scoring));
     }
 
     #[OA\Delete(

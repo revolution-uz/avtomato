@@ -179,11 +179,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::prefix('mib')->controller(MibController::class)->group(function () {
             Route::get('/', 'index')->name('mib.index');
             Route::post('create', 'create')->name('mib.create');
+            Route::get('{id}', 'read')->name('mib.read');
             Route::delete('/', 'delete')->name('mib.delete');
         });
         Route::prefix('tax')->controller(TaxController::class)->group(function () {
             Route::get('/', 'index')->name('tax.index');
             Route::post('create', 'create')->name('tax.create');
+            Route::get('{id}', 'read')->name('tax.read');
             Route::delete('/', 'delete')->name('tax.delete');
         });
         Route::prefix('humo')->controller(HumoController::class)->group(function () {
