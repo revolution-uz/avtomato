@@ -18,7 +18,7 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\CardScoringViewRequest;
 use App\Http\Requests\Scoring\CreateCardScoringRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
-use App\Http\Requests\Scoring\ScoringRequestsDeleteRequest;
+use App\Http\Requests\Scoring\ScoringRequestDeleteRequest;
 use App\Http\Resources\Scoring\CardScoringResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\CardScoringService;
@@ -122,7 +122,7 @@ class UzcardController extends Controller
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ]
     )]
-    public function delete(ScoringRequestsDeleteRequest $request): JsonResponse
+    public function delete(ScoringRequestDeleteRequest $request): JsonResponse
     {
         ScoringRequest::query()->whereIn('id', $request->ids)->delete();
 

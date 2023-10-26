@@ -17,8 +17,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\KatmCreditHistoryCreateRequest;
 use App\Http\Requests\Scoring\KatmCreditHistoryFilterRequest;
-use App\Http\Requests\Scoring\KatmCreditHistoryViewRequest;
-use App\Http\Requests\Scoring\ScoringRequestsDeleteRequest;
+use App\Http\Requests\Scoring\ScoringRequestDeleteRequest;
+use App\Http\Requests\Scoring\ScoringRequestViewRequest;
 use App\Http\Resources\Scoring\KatmCreditHistoryResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\KatmService;
@@ -108,7 +108,7 @@ class KatmCreditHistoryController extends Controller
             new OpenApiJsonResponse(resourceName: 'KatmCreditHistoryResource'),
         ]
     )]
-    public function read(int $id, KatmCreditHistoryViewRequest $request)
+    public function read(int $id, ScoringRequestViewRequest $request)
     {
         $scoring = ScoringRequest::findOrFail($id);
         if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::KATM_CREDIT_HISTORY) {
@@ -131,7 +131,7 @@ class KatmCreditHistoryController extends Controller
             new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
         ]
     )]
-    public function delete(ScoringRequestsDeleteRequest $request): JsonResponse
+    public function delete(ScoringRequestDeleteRequest $request): JsonResponse
     {
         ScoringRequest::query()->whereIn('id', $request->ids)->delete();
 

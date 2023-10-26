@@ -18,7 +18,7 @@ use OpenApi\Attributes as OA;
 /**
  * @property int[] $ids
  */
-class ScoringRequestsDeleteRequest extends FormRequest
+class ScoringRequestDeleteRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -37,7 +37,7 @@ class ScoringRequestsDeleteRequest extends FormRequest
             'mib.delete' => RbacHelper::checkPermission(PermissionEnum::SCORING_MIB_INFO_DELETE),
             'tax.delete' => RbacHelper::checkPermission(PermissionEnum::SCORING_TAX_INFO_DELETE),
             'humo.delete' => RbacHelper::checkPermission(PermissionEnum::SCORING_HUMO_DELETE),
-            'uzcard.delete' => RbacHelper::checkPermission(PermissionEnum::SCORING_UZCARD_CREATE),
+            'uzcard.delete' => RbacHelper::checkPermission(PermissionEnum::SCORING_UZCARD_DELETE),
             default => false
         };
     }
