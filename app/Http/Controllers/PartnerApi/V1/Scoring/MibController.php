@@ -88,7 +88,7 @@ class MibController extends Controller
     public function create(CreateMibInfoRequest $request)
     {
         $dto = MibInfoCreateRequestDTO::from($request->validated());
-        $model = $this->mibService->scoringMib($dto, ScoringRequestTypeEnum::PLUM_MIB_INFO);
+        $model = $this->mibService->scoringMib($dto);
 
         return ApiResponse::success(MibInfoResource::make($model));
     }
