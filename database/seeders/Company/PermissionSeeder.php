@@ -35,10 +35,13 @@ class PermissionSeeder extends Seeder
                             'feature_id' => PermissionEnum::getFeatureId($permission),
                         ]);
                     }
-                    Permission::query()->whereNotIn('slug', PermissionGroupEnum::getPermissionsByGroup($group))->delete();
+                    Permission::query()
+                        ->whereNotIn('slug', PermissionGroupEnum::getPermissionsByGroup($group))
+                        ->where('permission_group_id', $permissionGroup->id)
+                        ->delete();
                 }
 
-                PermissionGroup::query()->whereNotIn('slug', PermissionGroupEnum::cases())->delete();
+                PermissionGroup::query()->whereNotIn('slug', PermissionGroupEnum::values())->delete();
             });
         } catch (Throwable $e) {
             Log::error($e->getMessage());

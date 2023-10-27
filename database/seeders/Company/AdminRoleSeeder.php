@@ -17,7 +17,8 @@ class AdminRoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = Role::firstOrCreate(['name' => UserRoleEnum::ADMIN->value]);
+        /** @var Role $admin */
+        $admin = Role::query()->firstOrCreate(['name' => UserRoleEnum::ADMIN->value]);
 
         try {
             DB::transaction(static function () use ($admin) {
