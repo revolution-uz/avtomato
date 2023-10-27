@@ -23,7 +23,7 @@ use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
 use App\Http\Resources\Customer\AttachCustomerCardResource;
 use App\Http\Resources\Customer\CardResource;
 use App\Models\Company\Card;
-use App\Services\Scoring\PlumService;
+use App\Services\PlumService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
