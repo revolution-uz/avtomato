@@ -2,29 +2,36 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 
-use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
+use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiJsonArrayResponse;
 use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
+use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\Scoring\CreateTaxHistoryRequest;
+use App\Http\Requests\Scoring\CreateTaxInfoRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
-use App\Http\Resources\Scoring\TaxHistoryResource;
+use App\Http\Requests\Scoring\ScoringRequestDeleteRequest;
+use App\Http\Requests\Scoring\ScoringRequestViewRequest;
+use App\Http\Resources\Scoring\TaxInfoResource;
 use App\Models\Company\ScoringRequest;
-use App\Services\Scoring\PlumService;
+use App\Services\Scoring\TaxService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class TaxController extends Controller
 {
     public function __construct(
-        private readonly PlumService $plumService,
+        private readonly TaxService $taxService,
     ) {
     }
 
@@ -39,14 +46,14 @@ class TaxController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'TaxHistoryResource', withPagination: true, withSortables: true),
+            new OpenApiJsonArrayResponse(resourceName: 'TaxInfoResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(ScoringFilterRequest $request)
     {
         $sortables = ['id', 'status', 'created_at'];
 
-        return TaxHistoryResource::collection(
+        return TaxInfoResource::collection(
             ScoringRequest::query()
                 ->where('type', ScoringRequestTypeEnum::PLUM_TAX_INFO)
                 ->when(
@@ -70,18 +77,59 @@ class TaxController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Create TAX history request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CreateTaxHistoryRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateTaxInfoRequest')
         ),
         tags: ['Scoring (TAX info)'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'TaxHistoryResource'),
+            new OpenApiJsonResponse(resourceName: 'TaxInfoResource'),
         ]
     )]
-    public function create(CreateTaxHistoryRequest $request)
+    public function create(CreateTaxInfoRequest $request)
     {
-        $dto = TaxCreateRequestDTO::from($request->validated());
-        $model = $this->plumService->scoringTax($dto, ScoringRequestTypeEnum::PLUM_TAX_INFO);
+        $dto = TaxInfoCreateRequestDTO::from($request->validated());
+        $model = $this->taxService->scoringTax($dto);
 
-        return ApiResponse::success(TaxHistoryResource::make($model));
+        return ApiResponse::success(TaxInfoResource::make($model));
+    }
+
+    #[OA\Get(
+        path: '/api/v1/scoring/tax/{id}',
+        description: 'Get TAX info scoring request by id',
+        tags: ['Scoring (TAX info)'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'ScoringRequest'),
+        ],
+        responses: [
+            new OpenApiJsonResponse(resourceName: 'TaxInfoResource'),
+        ]
+    )]
+    public function read(int $id, ScoringRequestViewRequest $request)
+    {
+        $scoring = ScoringRequest::findOrFail($id);
+        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::PLUM_TAX_INFO) {
+            throw new ModelNotFoundException;
+        }
+
+        return ApiResponse::success(TaxInfoResource::make($scoring));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/scoring/tax',
+        description: 'Tax delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Tax delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/ScoringRequestsDeleteRequest')
+        ),
+        tags: ['Scoring (TAX info)'],
+        responses: [
+            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+        ]
+    )]
+    public function delete(ScoringRequestDeleteRequest $request): JsonResponse
+    {
+        ScoringRequest::query()->whereIn('id', $request->ids)->delete();
+
+        return ApiResponse::success(true);
     }
 }

@@ -4,7 +4,7 @@ namespace App\DTOs\Scoring\Plum\Mib;
 
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 
-class MibCreateRequestDTO extends BaseScoringRequest
+class MibInfoCreateRequestDTO extends BaseScoringRequest
 {
     public function __construct(
         public string $pinfl,
