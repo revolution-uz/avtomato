@@ -5,8 +5,8 @@ namespace App\Casts;
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 use App\DTOs\Scoring\Card\CardCreateRequestDTO;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
-use App\DTOs\Scoring\Plum\Mib\MibCreateRequestDTO;
-use App\DTOs\Scoring\Plum\Tax\TaxCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
@@ -24,8 +24,8 @@ class ScoringRequestCast implements CastsAttributes
             ScoringRequestTypeEnum::KATM_CREDIT_HISTORY->value,
             ScoringRequestTypeEnum::KATM_INPS_HISTORY->value,
             ScoringRequestTypeEnum::KATM_PENSION_INFO->value => KatmCreateRequestDTO::from(json_decode($value, true)),
-            ScoringRequestTypeEnum::PLUM_MIB_INFO->value => MibCreateRequestDTO::from(json_decode($value, true)),
-            ScoringRequestTypeEnum::PLUM_TAX_INFO->value => TaxCreateRequestDTO::from(json_decode($value, true)),
+            ScoringRequestTypeEnum::PLUM_MIB_INFO->value => MibInfoCreateRequestDTO::from(json_decode($value, true)),
+            ScoringRequestTypeEnum::PLUM_TAX_INFO->value => TaxInfoCreateRequestDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::HUMO->value,
             ScoringRequestTypeEnum::UZCARD->value => CardCreateRequestDTO::from(json_decode($value, true)),
             default => throw new InvalidArgumentException,

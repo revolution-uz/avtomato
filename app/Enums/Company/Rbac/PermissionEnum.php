@@ -114,36 +114,43 @@ enum PermissionEnum: string
     case SCORING_CREDIT_HISTORY_VIEW_ALL = 'scoring_credit_history_view_all';
     case SCORING_CREDIT_HISTORY_VIEW = 'scoring_credit_history_view';
     case SCORING_CREDIT_HISTORY_CREATE = 'scoring_credit_history_create';
+    case SCORING_CREDIT_HISTORY_DELETE = 'scoring_credit_history_delete';
 
     // Scoring inps history
     case SCORING_INPS_HISTORY_VIEW_ALL = 'scoring_inps_history_view_all';
     case SCORING_INPS_HISTORY_VIEW = 'scoring_inps_history_view';
     case SCORING_INPS_HISTORY_CREATE = 'scoring_inps_history_create';
+    case SCORING_INPS_HISTORY_DELETE = 'scoring_inps_history_delete';
 
     // Scoring pension info
     case SCORING_PENSION_INFO_VIEW_ALL = 'scoring_pension_info_view_all';
     case SCORING_PENSION_INFO_VIEW = 'scoring_pension_info_view';
     case SCORING_PENSION_INFO_CREATE = 'scoring_pension_info_create';
+    case SCORING_PENSION_INFO_DELETE = 'scoring_pension_info_delete';
 
     // Scoring MIB
     case SCORING_MIB_INFO_VIEW_ALL = 'scoring_mib_info_view_all';
     case SCORING_MIB_INFO_VIEW = 'scoring_mib_info_view';
     case SCORING_MIB_INFO_CREATE = 'scoring_mib_info_create';
+    case SCORING_MIB_INFO_DELETE = 'scoring_mib_info_delete';
 
     // Scoring TAX
     case SCORING_TAX_INFO_VIEW_ALL = 'scoring_tax_info_view_all';
     case SCORING_TAX_INFO_VIEW = 'scoring_tax_info_view';
     case SCORING_TAX_INFO_CREATE = 'scoring_tax_info_create';
+    case SCORING_TAX_INFO_DELETE = 'scoring_tax_info_delete';
 
     // Scoring Humo
     case SCORING_HUMO_VIEW_ALL = 'scoring_humo_view_all';
     case SCORING_HUMO_VIEW = 'scoring_humo_view';
     case SCORING_HUMO_CREATE = 'scoring_humo_create';
+    case SCORING_HUMO_DELETE = 'scoring_humo_delete';
 
     // Scoring Uzcard
     case SCORING_UZCARD_VIEW_ALL = 'scoring_uzcard_view_all';
     case SCORING_UZCARD_VIEW = 'scoring_uzcard_view';
     case SCORING_UZCARD_CREATE = 'scoring_uzcard_create';
+    case SCORING_UZCARD_DELETE = 'scoring_uzcard_delete';
 
     public static function getIsBranchRelated($permission): bool
     {
@@ -217,30 +224,37 @@ enum PermissionEnum: string
             self::SCORING_CREDIT_HISTORY_VIEW_ALL->value,
             self::SCORING_CREDIT_HISTORY_VIEW->value,
             self::SCORING_CREDIT_HISTORY_CREATE->value,
+            self::SCORING_CREDIT_HISTORY_DELETE->value,
 
             self::SCORING_INPS_HISTORY_VIEW_ALL->value,
             self::SCORING_INPS_HISTORY_VIEW->value,
             self::SCORING_INPS_HISTORY_CREATE->value,
+            self::SCORING_INPS_HISTORY_DELETE->value,
 
             self::SCORING_PENSION_INFO_VIEW_ALL->value,
             self::SCORING_PENSION_INFO_VIEW->value,
             self::SCORING_PENSION_INFO_CREATE->value,
+            self::SCORING_PENSION_INFO_DELETE->value,
 
             self::SCORING_MIB_INFO_VIEW_ALL->value,
             self::SCORING_MIB_INFO_VIEW->value,
             self::SCORING_MIB_INFO_CREATE->value,
+            self::SCORING_MIB_INFO_DELETE->value,
 
             self::SCORING_TAX_INFO_VIEW_ALL->value,
             self::SCORING_TAX_INFO_VIEW->value,
             self::SCORING_TAX_INFO_CREATE->value,
+            self::SCORING_TAX_INFO_DELETE->value,
 
             self::SCORING_HUMO_VIEW_ALL->value,
             self::SCORING_HUMO_VIEW->value,
             self::SCORING_HUMO_CREATE->value,
+            self::SCORING_HUMO_DELETE->value,
 
             self::SCORING_UZCARD_VIEW_ALL->value,
             self::SCORING_UZCARD_VIEW->value,
-            self::SCORING_UZCARD_CREATE->value => false,
+            self::SCORING_UZCARD_CREATE->value,
+            self::SCORING_UZCARD_DELETE->value => false,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL->value,
@@ -355,36 +369,43 @@ enum PermissionEnum: string
                 self::SCORING_CREDIT_HISTORY_VIEW_ALL->value,
                 self::SCORING_CREDIT_HISTORY_VIEW->value,
                 self::SCORING_CREDIT_HISTORY_CREATE->value,
+                self::SCORING_CREDIT_HISTORY_DELETE->value,
             ],
             PermissionGroupEnum::SCORING_INPS_HISTORY->value => [
                 self::SCORING_INPS_HISTORY_VIEW_ALL->value,
                 self::SCORING_INPS_HISTORY_VIEW->value,
                 self::SCORING_INPS_HISTORY_CREATE->value,
+                self::SCORING_INPS_HISTORY_DELETE->value,
             ],
             PermissionGroupEnum::SCORING_PENSION_INFO->value => [
                 self::SCORING_PENSION_INFO_VIEW_ALL->value,
                 self::SCORING_PENSION_INFO_VIEW->value,
                 self::SCORING_PENSION_INFO_CREATE->value,
+                self::SCORING_PENSION_INFO_DELETE->value,
             ],
             PermissionGroupEnum::SCORING_MIB_INFO->value => [
                 self::SCORING_MIB_INFO_VIEW_ALL->value,
                 self::SCORING_MIB_INFO_VIEW->value,
                 self::SCORING_MIB_INFO_CREATE->value,
+                self::SCORING_MIB_INFO_DELETE->value,
             ],
             PermissionGroupEnum::SCORING_TAX_INFO->value => [
                 self::SCORING_TAX_INFO_VIEW_ALL->value,
                 self::SCORING_TAX_INFO_VIEW->value,
                 self::SCORING_TAX_INFO_CREATE->value,
+                self::SCORING_TAX_INFO_DELETE->value,
             ],
             PermissionGroupEnum::SCORING_HUMO->value => [
                 self::SCORING_HUMO_VIEW_ALL->value,
                 self::SCORING_HUMO_VIEW->value,
                 self::SCORING_HUMO_CREATE->value,
+                self::SCORING_HUMO_DELETE->value,
             ],
             PermissionGroupEnum::SCORING_UZCARD->value => [
                 self::SCORING_UZCARD_VIEW_ALL->value,
                 self::SCORING_UZCARD_VIEW->value,
                 self::SCORING_UZCARD_CREATE->value,
+                self::SCORING_UZCARD_DELETE->value,
             ],
             PermissionGroupEnum::PROFILE_EDIT->value => [
                 self::PROFILE_ME->value,
@@ -489,31 +510,38 @@ enum PermissionEnum: string
 
             self::SCORING_CREDIT_HISTORY_VIEW_ALL->value,
             self::SCORING_CREDIT_HISTORY_VIEW->value,
-            self::SCORING_CREDIT_HISTORY_CREATE->value => Feature::findByName(FeatureEnum::SCORING_CREDIT_HISTORY->value)->id,
+            self::SCORING_CREDIT_HISTORY_CREATE->value,
+            self::SCORING_CREDIT_HISTORY_DELETE->value => Feature::findByName(FeatureEnum::SCORING_CREDIT_HISTORY->value)->id,
 
             self::SCORING_INPS_HISTORY_VIEW_ALL->value,
             self::SCORING_INPS_HISTORY_VIEW->value,
-            self::SCORING_INPS_HISTORY_CREATE->value => Feature::findByName(FeatureEnum::SCORING_INPS_HISTORY->value)->id,
+            self::SCORING_INPS_HISTORY_CREATE->value,
+            self::SCORING_INPS_HISTORY_DELETE->value => Feature::findByName(FeatureEnum::SCORING_INPS_HISTORY->value)->id,
 
             self::SCORING_PENSION_INFO_VIEW_ALL->value,
             self::SCORING_PENSION_INFO_VIEW->value,
-            self::SCORING_PENSION_INFO_CREATE->value => Feature::findByName(FeatureEnum::SCORING_PENSION_INFO->value)->id,
+            self::SCORING_PENSION_INFO_CREATE->value,
+            self::SCORING_PENSION_INFO_DELETE->value => Feature::findByName(FeatureEnum::SCORING_PENSION_INFO->value)->id,
 
             self::SCORING_MIB_INFO_VIEW_ALL->value,
             self::SCORING_MIB_INFO_VIEW->value,
-            self::SCORING_MIB_INFO_CREATE->value => Feature::findByName(FeatureEnum::SCORING_MIB_INFO->value)->id,
+            self::SCORING_MIB_INFO_CREATE->value,
+            self::SCORING_MIB_INFO_DELETE->value => Feature::findByName(FeatureEnum::SCORING_MIB_INFO->value)->id,
 
             self::SCORING_TAX_INFO_VIEW_ALL->value,
             self::SCORING_TAX_INFO_VIEW->value,
-            self::SCORING_TAX_INFO_CREATE->value => Feature::findByName(FeatureEnum::SCORING_TAX_INFO->value)->id,
+            self::SCORING_TAX_INFO_CREATE->value,
+            self::SCORING_TAX_INFO_DELETE->value => Feature::findByName(FeatureEnum::SCORING_TAX_INFO->value)->id,
 
             self::SCORING_HUMO_VIEW_ALL->value,
             self::SCORING_HUMO_VIEW->value,
-            self::SCORING_HUMO_CREATE->value => Feature::findByName(FeatureEnum::SCORING_HUMO->value)->id,
+            self::SCORING_HUMO_CREATE->value,
+            self::SCORING_HUMO_DELETE->value, => Feature::findByName(FeatureEnum::SCORING_HUMO->value)->id,
 
             self::SCORING_UZCARD_VIEW_ALL->value,
             self::SCORING_UZCARD_VIEW->value,
-            self::SCORING_UZCARD_CREATE->value => Feature::findByName(FeatureEnum::SCORING_UZCARD->value)->id,
+            self::SCORING_UZCARD_CREATE->value,
+            self::SCORING_UZCARD_DELETE->value => Feature::findByName(FeatureEnum::SCORING_UZCARD->value)->id,
 
             default => null,
         };
