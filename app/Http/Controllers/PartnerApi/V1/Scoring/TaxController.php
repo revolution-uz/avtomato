@@ -21,7 +21,7 @@ use App\Http\Requests\Scoring\ScoringRequestDeleteRequest;
 use App\Http\Requests\Scoring\ScoringRequestViewRequest;
 use App\Http\Resources\Scoring\TaxInfoResource;
 use App\Models\Company\ScoringRequest;
-use App\Services\Scoring\PlumService;
+use App\Services\Scoring\TaxService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -31,7 +31,7 @@ use OpenApi\Attributes as OA;
 class TaxController extends Controller
 {
     public function __construct(
-        private readonly PlumService $plumService,
+        private readonly TaxService $taxService,
     ) {
     }
 
@@ -87,7 +87,7 @@ class TaxController extends Controller
     public function create(CreateTaxInfoRequest $request)
     {
         $dto = TaxInfoCreateRequestDTO::from($request->validated());
-        $model = $this->plumService->scoringTax($dto, ScoringRequestTypeEnum::PLUM_TAX_INFO);
+        $model = $this->taxService->scoringTax($dto);
 
         return ApiResponse::success(TaxInfoResource::make($model));
     }

@@ -21,7 +21,7 @@ use App\Http\Requests\Scoring\ScoringRequestDeleteRequest;
 use App\Http\Requests\Scoring\ScoringRequestViewRequest;
 use App\Http\Resources\Scoring\MibInfoResource;
 use App\Models\Company\ScoringRequest;
-use App\Services\Scoring\PlumService;
+use App\Services\Scoring\MibService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -31,7 +31,7 @@ use OpenApi\Attributes as OA;
 class MibController extends Controller
 {
     public function __construct(
-        private readonly PlumService $plumService,
+        private readonly MibService $mibService,
     ) {
     }
 
@@ -88,7 +88,7 @@ class MibController extends Controller
     public function create(CreateMibInfoRequest $request)
     {
         $dto = MibInfoCreateRequestDTO::from($request->validated());
-        $model = $this->plumService->scoringMib($dto, ScoringRequestTypeEnum::PLUM_MIB_INFO);
+        $model = $this->mibService->scoringMib($dto, ScoringRequestTypeEnum::PLUM_MIB_INFO);
 
         return ApiResponse::success(MibInfoResource::make($model));
     }
