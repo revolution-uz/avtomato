@@ -5,8 +5,19 @@ namespace App\Models\Company;
 use App\Enums\Company\FeatureEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
+/**
+ * App\Models\Company\Feature
+ *
+ * @property int $id
+ * @property FeatureEnum $name
+ * @property string|null $description
+ * @property bool $is_active
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
 class Feature extends Model
 {
     use HasFactory, TenantConnection;
@@ -19,9 +30,17 @@ class Feature extends Model
         'is_active',
     ];
 
-    public static function findByName($name)
+    protected $casts = [
+        'is_active' => 'boolean',
+        'name' => FeatureEnum::class,
+    ];
+
+    public static function findByName($name): Feature
     {
-        return self::query()->whereName($name)->first();
+        /** @var self $feature */
+        $feature = self::query()->where('name', $name)->firstOrFail();
+
+        return $feature;
     }
 
     public static function isFeatureActive(FeatureEnum $feature)

@@ -2,6 +2,7 @@
 
 namespace App\Models\Company\Rbac;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Feature;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -20,12 +21,16 @@ class Permission extends Model
         'guard_name',
     ];
 
+    protected $casts = [
+        'slug' => PermissionEnum::class,
+    ];
+
     public function permissionGroup(): BelongsTo
     {
         return $this->belongsTo(PermissionGroup::class);
     }
 
-    public function feature()
+    public function feature(): BelongsTo
     {
         return $this->belongsTo(Feature::class);
     }

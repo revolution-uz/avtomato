@@ -54,7 +54,7 @@ class InstallmentController extends Controller
     public function index(InstallmentFilterRequest $request): AnonymousResourceCollection
     {
         $sortables = ['id', 'customer_id', 'tariff_id', 'amount']; // TODO add all fields, it's just for testing
-        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW_ALL);
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW);
 
         return InstallmentResource::collection(
             Installment::query()
