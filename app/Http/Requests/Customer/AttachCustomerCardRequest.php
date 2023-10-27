@@ -11,13 +11,10 @@ use OpenApi\Attributes as OA;
     schema: 'AttachCustomerCardRequest',
     title: 'Request to create or update a card',
     properties: [
-        new OA\Property(property: 'card_id', type: 'int', example: '1'),
         new OA\Property(property: 'phone', type: 'string', example: '+998901234567'),
     ],
 )]
-
 /**
- * @property int $card_id
  * @property string $phone
  */
 class AttachCustomerCardRequest extends FormRequest
@@ -25,7 +22,6 @@ class AttachCustomerCardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'card_id' => 'required|exists:cards,id',
             'phone' => 'required|string',
         ];
     }

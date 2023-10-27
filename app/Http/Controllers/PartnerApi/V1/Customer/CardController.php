@@ -170,7 +170,7 @@ class CardController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/customer-card/attach',
+        path: '/api/v1/customer-card/{id}/attach',
         description: 'Card attach route',
         requestBody: new OA\RequestBody(
             description: 'Card attach request body',
@@ -179,19 +179,19 @@ class CardController extends Controller
         ),
         tags: ['Cards'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'CardResource'),
+            new OpenApiJsonResponse(resourceName: 'AttachCustomerCardResource'),
         ]
     )]
-    public function attach(AttachCustomerCardRequest $request): JsonResponse
+    public function attach(int $id, AttachCustomerCardRequest $request): JsonResponse
     {
-        $card = Card::findOrFail($request->card_id);
+        $card = Card::findOrFail($id);
         $response = $this->plumService->attachCard($card, $request->phone);
 
         return ApiResponse::success(AttachCustomerCardResource::make($response));
     }
 
     #[OA\Post(
-        path: '/api/v1/customer-card/confirm',
+        path: '/api/v1/customer-card/{id}/confirm',
         description: 'Card confirm route',
         requestBody: new OA\RequestBody(
             description: 'Card confirm request body',
@@ -203,9 +203,9 @@ class CardController extends Controller
             new OpenApiJsonResponse(resourceName: 'CardResource'),
         ]
     )]
-    public function confirm(ConfirmCustomerCardRequest $request): JsonResponse
+    public function confirm(int $id, ConfirmCustomerCardRequest $request): JsonResponse
     {
-        $card = Card::findOrFail($request->card_id);
+        $card = Card::findOrFail($id);
         $response = $this->plumService->confirmCard($card, $request->session, $request->otp);
         if ($response === true) {
             return ApiResponse::success(CardResource::make($card));
