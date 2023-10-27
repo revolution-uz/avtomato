@@ -196,7 +196,7 @@ class CardController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Card confirm request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/AttachCustomerCardRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/ConfirmCustomerCardRequest')
         ),
         tags: ['Cards'],
         responses: [
