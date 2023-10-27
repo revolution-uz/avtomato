@@ -25,6 +25,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $avatar
  * @property UserTemplateThemeDto $template_theme
  * @property string $language
+ * @property-read string $avatar_url
+ * @property-read string $avatar_preview_url
+ * @property-read Role|null $role
  */
 class User extends Authenticatable
 {

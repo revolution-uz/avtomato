@@ -6,6 +6,11 @@ use App\Models\Company\Branch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property-read Permission $permission
+ * @property-read Role $role
+ * @property-read Branch|null $branch
+ */
 class RolePermission extends Model
 {
     public $timestamps = false;
