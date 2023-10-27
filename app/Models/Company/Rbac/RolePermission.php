@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $id
+ * @property int $permission_id
+ * @property int $role_id
+ * @property int|null $branch_id
  * @property-read Permission $permission
  * @property-read Role $role
  * @property-read Branch|null $branch
