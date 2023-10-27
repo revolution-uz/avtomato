@@ -3,11 +3,34 @@
 namespace App\Services\Scoring;
 
 use App\Clients\PlumClient;
+use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibInfoResponseDTO;
+use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
+use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Models\Company\ScoringRequest;
 
 class PlumService
 {
     public function __construct(
         private readonly PlumClient $plumClient
     ) {
+    }
+
+    public function scoringMib(MibInfoCreateRequestDTO $dto): ScoringRequest
+    {
+        $model = new ScoringRequest;
+        $model->type = ScoringRequestTypeEnum::PLUM_MIB_INFO;
+        $model->request = $dto;
+        $model->client_code = $this->plumClient->getClientCode();
+        $model->status = ScoringRequestStatusEnum::WAITING;
+        $model->saveOrFail();
+        $model->response = MibInfoResponseDTO::from($this->plumClient->scoringMib(
+            $dto->toArray()
+        ));
+
+        $model->status = ScoringRequestStatusEnum::SUCCESS;
+        $model->saveOrFail();
+
+        return $model;
     }
 }
