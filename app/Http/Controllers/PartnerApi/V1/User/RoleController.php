@@ -158,6 +158,7 @@ class RoleController extends Controller
     )]
     public function attachPermissions(int $id, RolePermissionRequest $request)
     {
+        /** @var Role $role */
         $role = Role::findOrFail($id);
 
         $filtered = array_filter($request->validated(), fn ($item) => $item['enabled'] !== false);

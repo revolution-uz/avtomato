@@ -2,11 +2,14 @@
 
 namespace App\Enums\Company\Rbac;
 
+use App\Enums\EnumMethods;
+
 enum PermissionGroupEnum: string
 {
+    use EnumMethods;
+
     case PROFILE_EDIT = 'profile_edit';
     case USER_MANAGEMENT = 'user_management';
-    case THEME_MANAGEMENT = 'theme_management';
     case CUSTOMER_MANAGEMENT = 'customer_management';
     case CUSTOMER_CARDS_MANAGEMENT = 'customer_cards_management';
     case GET_STATIC_INFORMATION = 'info_view';
@@ -24,4 +27,148 @@ enum PermissionGroupEnum: string
     case SCORING_TAX_INFO = 'scoring_tax_info';
     case SCORING_HUMO = 'scoring_humo';
     case SCORING_UZCARD = 'scoring_uzcard';
+
+    /**
+     * @return PermissionEnum[]
+     */
+    public static function getPermissionsByGroup(self $group): array
+    {
+        return match ($group) {
+            self::USER_MANAGEMENT => [
+                PermissionEnum::USER_VIEW_ALL,
+                PermissionEnum::USER_VIEW,
+                PermissionEnum::USER_CREATE,
+                PermissionEnum::USER_EDIT,
+                PermissionEnum::USER_DELETE,
+                PermissionEnum::USER_CHANGE_PASSWORD,
+                PermissionEnum::USER_CHANGE_AVATAR,
+                PermissionEnum::USER_CHANGE_ROLE,
+                PermissionEnum::USER_DEVICES,
+                PermissionEnum::USER_REVOKE_DEVICE,
+                PermissionEnum::USER_CHANGE_THEME,
+            ],
+            self::CUSTOMER_MANAGEMENT => [
+                PermissionEnum::CUSTOMER_VIEW_ALL,
+                PermissionEnum::CUSTOMER_VIEW,
+                PermissionEnum::CUSTOMER_CREATE,
+                PermissionEnum::CUSTOMER_INFO_BY_PASSPORT,
+            ],
+            self::CUSTOMER_CARDS_MANAGEMENT => [
+                PermissionEnum::CUSTOMER_CARDS_VIEW_ALL,
+                PermissionEnum::CUSTOMER_CARDS_VIEW,
+                PermissionEnum::CUSTOMER_CARDS_CREATE,
+                PermissionEnum::CUSTOMER_CARDS_EDIT,
+                PermissionEnum::CUSTOMER_CARDS_DELETE,
+            ],
+            self::ROLE_MANAGEMENT => [
+                PermissionEnum::ROLE_VIEW_ALL,
+                PermissionEnum::ROLE_VIEW,
+                PermissionEnum::ROLE_CREATE,
+                PermissionEnum::ROLE_EDIT,
+                PermissionEnum::ROLE_DELETE,
+                PermissionEnum::ROLE_PERMISSIONS,
+            ],
+            self::GET_STATIC_INFORMATION => [
+                PermissionEnum::INFO_SETTINGS,
+                PermissionEnum::INFO_REGIONS,
+                PermissionEnum::INFO_DISTRICTS,
+                PermissionEnum::INFO_MAHALLAS,
+            ],
+            self::CALCULATOR_INSTALLMENT => [
+                PermissionEnum::CALCULATE_INSTALLMENT,
+                PermissionEnum::CALCULATOR_EXPORT,
+            ],
+            self::INSTALLMENT_MANAGEMENT => [
+                PermissionEnum::INSTALLMENT_VIEW_ALL,
+                PermissionEnum::INSTALLMENT_VIEW,
+                PermissionEnum::INSTALLMENT_CREATE,
+                PermissionEnum::INSTALLMENT_EDIT,
+                PermissionEnum::INSTALLMENT_DELETE,
+                PermissionEnum::INSTALLMENT_ATTACH_CARD,
+                PermissionEnum::INSTALLMENT_DETACH_CARD,
+                PermissionEnum::INSTALLMENT_ATTACH_GUARANTOR,
+                PermissionEnum::INSTALLMENT_UPDATE_GUARANTOR,
+                PermissionEnum::INSTALLMENT_DETACH_GUARANTOR,
+            ],
+            self::TARIFF_MANAGEMENT => [
+                PermissionEnum::TARIFF_VIEW_ALL,
+                PermissionEnum::TARIFF_VIEW,
+                PermissionEnum::TARIFF_EDIT,
+                PermissionEnum::TARIFF_DELETE,
+                PermissionEnum::TARIFF_CREATE,
+            ],
+            self::TRANSACTION_MANAGEMENT => [
+                PermissionEnum::TRANSACTION_VIEW_ALL,
+                PermissionEnum::TRANSACTION_VIEW,
+                PermissionEnum::TRANSACTION_CREATE,
+                PermissionEnum::TRANSACTION_EDIT,
+                PermissionEnum::TRANSACTION_DELETE,
+            ],
+            self::TRANSACTION_TYPE_MANAGEMENT => [
+                PermissionEnum::TRANSACTION_TYPE_VIEW_ALL,
+                PermissionEnum::TRANSACTION_TYPE_VIEW,
+                PermissionEnum::TRANSACTION_TYPE_CREATE,
+                PermissionEnum::TRANSACTION_TYPE_EDIT,
+                PermissionEnum::TRANSACTION_TYPE_DELETE,
+            ],
+            self::BRANCH_MANAGEMENT => [
+                PermissionEnum::BRANCH_VIEW_ALL,
+                PermissionEnum::BRANCH_VIEW,
+                PermissionEnum::BRANCH_EDIT,
+                PermissionEnum::BRANCH_DELETE,
+                PermissionEnum::BRANCH_CREATE,
+            ],
+            self::SCORING_CREDIT_HISTORY => [
+                PermissionEnum::SCORING_CREDIT_HISTORY_VIEW_ALL,
+                PermissionEnum::SCORING_CREDIT_HISTORY_VIEW,
+                PermissionEnum::SCORING_CREDIT_HISTORY_CREATE,
+                PermissionEnum::SCORING_CREDIT_HISTORY_DELETE,
+            ],
+            self::SCORING_INPS_HISTORY => [
+                PermissionEnum::SCORING_INPS_HISTORY_VIEW_ALL,
+                PermissionEnum::SCORING_INPS_HISTORY_VIEW,
+                PermissionEnum::SCORING_INPS_HISTORY_CREATE,
+                PermissionEnum::SCORING_INPS_HISTORY_DELETE,
+            ],
+            self::SCORING_PENSION_INFO => [
+                PermissionEnum::SCORING_PENSION_INFO_VIEW_ALL,
+                PermissionEnum::SCORING_PENSION_INFO_VIEW,
+                PermissionEnum::SCORING_PENSION_INFO_CREATE,
+                PermissionEnum::SCORING_PENSION_INFO_DELETE,
+            ],
+            self::SCORING_MIB_INFO => [
+                PermissionEnum::SCORING_MIB_INFO_VIEW_ALL,
+                PermissionEnum::SCORING_MIB_INFO_VIEW,
+                PermissionEnum::SCORING_MIB_INFO_CREATE,
+                PermissionEnum::SCORING_MIB_INFO_DELETE,
+            ],
+            self::SCORING_TAX_INFO => [
+                PermissionEnum::SCORING_TAX_INFO_VIEW_ALL,
+                PermissionEnum::SCORING_TAX_INFO_VIEW,
+                PermissionEnum::SCORING_TAX_INFO_CREATE,
+                PermissionEnum::SCORING_TAX_INFO_DELETE,
+            ],
+            self::SCORING_HUMO => [
+                PermissionEnum::SCORING_HUMO_VIEW_ALL,
+                PermissionEnum::SCORING_HUMO_VIEW,
+                PermissionEnum::SCORING_HUMO_CREATE,
+                PermissionEnum::SCORING_HUMO_DELETE,
+            ],
+            self::SCORING_UZCARD => [
+                PermissionEnum::SCORING_UZCARD_VIEW_ALL,
+                PermissionEnum::SCORING_UZCARD_VIEW,
+                PermissionEnum::SCORING_UZCARD_CREATE,
+                PermissionEnum::SCORING_UZCARD_DELETE,
+            ],
+            self::PROFILE_EDIT => [
+                PermissionEnum::PROFILE_EDIT,
+                PermissionEnum::PROFILE_CHANGE_PASSWORD,
+                PermissionEnum::PROFILE_CHANGE_LANGUAGE,
+                PermissionEnum::PROFILE_CHANGE_AVATAR,
+                PermissionEnum::PROFILE_DEVICES,
+                PermissionEnum::PROFILE_REVOKE_DEVICE,
+                PermissionEnum::PROFILE_CHANGE_THEME,
+            ],
+        };
+    }
 }

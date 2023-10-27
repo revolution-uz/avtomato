@@ -2,11 +2,14 @@
 
 namespace App\Models\Company\Rbac;
 
+use App\Enums\Company\Rbac\PermissionGroupEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property-read int $id
+ * @property-read PermissionGroupEnum $slug
  * @property-read string $name
  * @property-read Permission[] $permissions
  */
@@ -16,10 +19,14 @@ class PermissionGroup extends Model
         'slug',
     ];
 
+    protected $casts = [
+        'slug' => PermissionGroupEnum::class,
+    ];
+
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => __('permissions.' . $this->slug)
+            get: fn () => __('permissions.' . $this->slug->value)
         );
     }
 

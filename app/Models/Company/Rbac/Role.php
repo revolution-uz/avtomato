@@ -23,9 +23,12 @@ class Role extends Model
         'name',
     ];
 
-    public static function getAdmin()
+    public static function getAdmin(): Role
     {
-        return self::query()->whereName(UserRoleEnum::ADMIN)->first();
+        /** @var self $adminRole */
+        $adminRole = self::query()->where('name', UserRoleEnum::ADMIN)->first();
+
+        return $adminRole;
     }
 
     public function syncPermissions(...$permissions): void
@@ -51,25 +54,22 @@ class Role extends Model
     public function mapRolePermissionByBranch(): array
     {
         $rolePermissions = $this->rolePermissions;
-        $branches = Branch::all();
-        $permissionBranches = $this->rolePermissions()->get()->mapToGroups(function ($item, $key) {
-            return [$item['permission_id'] => $item['branch_id']];
-        })->toArray();
-
         $result = [];
+
         foreach ($rolePermissions as $rolePermission) {
-            $result[$rolePermission->permission->slug] = [];
-            foreach ($branches as $branch) {
-                $result[$rolePermission->permission->slug]['branch_' . $branch->id] = in_array($branch->id, $permissionBranches[$rolePermission->permission_id] ?? [], true);
+            $result[$rolePermission->permission->slug->value] = $result[$rolePermission->permission->slug->value] ?? [];
+
+            if ($rolePermission->branch_id !== null) {
+                $result[$rolePermission->permission->slug->value]['branch_' . $rolePermission->branch_id] = true;
+            } else {
+                $result[$rolePermission->permission->slug->value]['all'] = true;
             }
-            // Add All branch
-            $result[$rolePermission->permission->slug]['all'] = $rolePermission->branch_id === null;
         }
 
         return $result;
     }
 
-    public function mapAllPermissionByBranch()
+    public function mapAllPermissionByBranch(): array
     {
         $permissionBranches = $this->rolePermissions()->get()->mapToGroups(function ($item, $key) {
             return [$item['permission_id'] => $item['branch_id']];

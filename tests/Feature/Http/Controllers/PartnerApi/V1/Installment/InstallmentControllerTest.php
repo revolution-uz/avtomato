@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Http\Controllers\PartnerApi\V1\Installment;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
@@ -22,7 +22,8 @@ class InstallmentControllerTest extends TestCase
         $branch1 = Branch::factory()->create();
         $branch2 = Branch::factory()->create();
         $role = Role::factory()->create();
-        $role->permissions()->attach(Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW_ALL)->first()->id, ['branch_id' => $branch1->id]);
+        $role->permissions()->attach(Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW)->first()->id, ['branch_id' => $branch1->id]);
+        $role->permissions()->attach(Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW_ALL)->first()->id);
         $admin = $this->createAdminUser();
         Installment::factory(5)->create(['branch_id' => $branch1->id]);
         Installment::factory(4)->create(['branch_id' => $branch2->id]);
@@ -41,7 +42,8 @@ class InstallmentControllerTest extends TestCase
         $branch1 = Branch::factory()->create();
         $branch2 = Branch::factory()->create();
         $role = Role::factory()->create();
-        $role->permissions()->attach(Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW_ALL)->first()->id, ['branch_id' => $branch1->id]);
+        $role->permissions()->attach(Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW_ALL)->first()->id);
+        $role->permissions()->attach(Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW)->first()->id, ['branch_id' => $branch1->id]);
         $user = User::factory()->create(['role_id' => $role->id]);
         Installment::factory(5)->create(['branch_id' => $branch1->id]);
         Installment::factory(4)->create(['branch_id' => $branch2->id]);
