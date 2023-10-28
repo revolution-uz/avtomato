@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Rbac\PermissionGroupEnum;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\PermissionGroup;
+use App\Models\Company\Rbac\RolePermission;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -39,8 +40,9 @@ class PermissionSeeder extends Seeder
                         ->where('permission_group_id', $permissionGroup->id)
                         ->delete();
                 }
-                Permission::query()->whereNotIn('permission_group_id', PermissionGroup::query()->pluck('id')->all())->delete();
                 PermissionGroup::query()->whereNotIn('slug', PermissionGroupEnum::cases())->delete();
+                Permission::query()->whereNotIn('permission_group_id', PermissionGroup::query()->pluck('id')->all())->delete();
+                RolePermission::query()->whereNotIn('permission_id', Permission::query()->pluck('id')->all())->delete();
             });
         } catch (Throwable $e) {
             Log::error($e->getMessage());
