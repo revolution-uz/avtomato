@@ -41,7 +41,7 @@ class PermissionSeeder extends Seeder
                         ->delete();
                 }
 
-                PermissionGroup::query()->whereNotIn('slug', PermissionGroupEnum::values())->delete();
+                PermissionGroup::query()->whereNotIn('slug', PermissionGroupEnum::cases())->delete();
             });
         } catch (Throwable $e) {
             Log::error($e->getMessage());
