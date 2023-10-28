@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Installment\TariffRequest;
 use App\Http\Requests\Installment\TariffsDeleteRequest;
 use App\Http\Requests\Installment\TariffsFilterRequest;
 use App\Http\Requests\Installment\TariffViewRequest;
 use App\Http\Resources\Installment\TariffResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\Tariff;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -38,7 +36,7 @@ class TariffsController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'TariffResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'TariffResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(TariffsFilterRequest $request): AnonymousResourceCollection
@@ -58,7 +56,7 @@ class TariffsController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Get(
@@ -69,13 +67,13 @@ class TariffsController extends Controller
             new OpenApiIdParameter(modelName: 'Tariff'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'TariffResource'),
+            new OpenApiDataResponse(resourceName: 'TariffResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, TariffViewRequest $request): JsonResponse
+    public function getSingle(int $id, TariffViewRequest $request): TariffResource
     {
-        return ApiResponse::success(TariffResource::make(Tariff::findOrFail($id)));
+        return new TariffResource(Tariff::findOrFail($id));
     }
 
     #[OA\Post(
@@ -88,19 +86,16 @@ class TariffsController extends Controller
         ),
         tags: ['Tariffs'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'TariffResource'),
+            new OpenApiDataResponse(resourceName: 'TariffResource', response: '201'),
         ]
     )]
-    public function create(TariffRequest $request): JsonResponse
+    public function create(TariffRequest $request): TariffResource
     {
         $model = new Tariff;
         $model->fill($request->validated());
+        $model->saveOrFail();
 
-        if ($model->save()) {
-            return ApiResponse::success(TariffResource::make($model));
-        }
-
-        return ApiResponse::error('Error on creating Tariffs');
+        return new TariffResource($model);
     }
 
     #[OA\Put(
@@ -121,20 +116,18 @@ class TariffsController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'TariffResource'),
+            new OpenApiDataResponse(resourceName: 'TariffResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, TariffRequest $request): JsonResponse
+    public function update(int $id, TariffRequest $request): TariffResource
     {
+        /** @var Tariff $tariff */
         $tariff = Tariff::findOrFail($id);
         $tariff->fill($request->validated());
+        $tariff->saveOrFail();
 
-        if ($tariff->save()) {
-            return ApiResponse::success(TariffResource::make($tariff));
-        }
-
-        return ApiResponse::error('Error on updating Tariffs');
+        return new TariffResource($tariff);
     }
 
     #[OA\Delete(
@@ -147,13 +140,13 @@ class TariffsController extends Controller
         ),
         tags: ['Tariffs'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function delete(TariffsDeleteRequest $request): JsonResponse
+    public function delete(TariffsDeleteRequest $request): StatusResource
     {
         Tariff::query()->whereIn('id', $request->ids)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }

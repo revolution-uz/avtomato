@@ -11,7 +11,6 @@ use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\PermissionSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Testing\LoggedExceptionCollection;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -72,16 +71,5 @@ abstract class TestCase extends BaseTestCase
         return Company\User::factory()->create([
             'role_id' => Role::getAdmin()->id,
         ]);
-    }
-
-    protected function createTestResponse($response)
-    {
-        return tap(TestResponse::fromBaseResponse($response), function ($response) {
-            $response->withExceptions(
-                $this->app->bound(LoggedExceptionCollection::class)
-                    ? $this->app->make(LoggedExceptionCollection::class)
-                    : new LoggedExceptionCollection
-            );
-        });
     }
 }

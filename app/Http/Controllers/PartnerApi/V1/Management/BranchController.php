@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Management;
 
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Management\BranchesDeleteRequest;
 use App\Http\Requests\Management\BranchesFilterRequest;
 use App\Http\Requests\Management\BranchRequest;
 use App\Http\Requests\Management\BranchViewRequest;
 use App\Http\Resources\Management\BranchResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\Branch;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -37,7 +35,7 @@ class BranchController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'BranchResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'BranchResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(BranchesFilterRequest $request)
@@ -60,7 +58,7 @@ class BranchController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Get(
@@ -71,13 +69,13 @@ class BranchController extends Controller
             new OpenApiIdParameter(modelName: 'Branch'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'BranchResource'),
+            new OpenApiDataResponse(resourceName: 'BranchResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, BranchViewRequest $request): JsonResponse
+    public function getSingle(int $id, BranchViewRequest $request): BranchResource
     {
-        return ApiResponse::success(BranchResource::make(Branch::findOrFail($id)));
+        return new BranchResource(Branch::findOrFail($id));
     }
 
     #[OA\Post(
@@ -90,19 +88,16 @@ class BranchController extends Controller
         ),
         tags: ['Branches'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'BranchResource'),
+            new OpenApiDataResponse(resourceName: 'BranchResource', response: '201'),
         ]
     )]
-    public function create(BranchRequest $request): JsonResponse
+    public function create(BranchRequest $request): BranchResource
     {
         $model = new Branch;
         $model->fill($request->validated());
+        $model->saveOrFail();
 
-        if ($model->save()) {
-            return ApiResponse::success(BranchResource::make($model));
-        }
-
-        return ApiResponse::error('Error on creating a branch');
+        return new BranchResource($model);
     }
 
     #[OA\Put(
@@ -123,20 +118,17 @@ class BranchController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'BranchResource'),
+            new OpenApiDataResponse(resourceName: 'BranchResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, BranchRequest $request): JsonResponse
+    public function update(int $id, BranchRequest $request): BranchResource
     {
         $branch = Branch::findOrFail($id);
         $branch->fill($request->validated());
+        $branch->saveOrFail();
 
-        if ($branch->save()) {
-            return ApiResponse::success(BranchResource::make($branch));
-        }
-
-        return ApiResponse::error('Error on updating a branch');
+        return new BranchResource($branch);
     }
 
     #[OA\Delete(
@@ -149,13 +141,13 @@ class BranchController extends Controller
         ),
         tags: ['Branches'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function delete(BranchesDeleteRequest $request): JsonResponse
+    public function delete(BranchesDeleteRequest $request): StatusResource
     {
         Branch::query()->whereIn('id', $request->ids)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }

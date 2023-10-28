@@ -30,12 +30,16 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * @property PassportDataDTO $resource
+ * @property PassportDataDTO|null $resource
  */
 class CustomerInfoByPassportDataResource extends JsonResource
 {
-    public function toArray(Request $request): array
+    public function toArray(Request $request): ?array
     {
+        if (! $this->resource) {
+            return null;
+        }
+
         return [
             'pinfl' => $this->resource->pinfl,
             'tin' => $this->resource->tin,

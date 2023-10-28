@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Info;
 
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Info\InfoDistrictRequest;
 use App\Http\Requests\Info\InfoMahallaRequest;
 use App\Http\Requests\Info\InfoRegionsRequest;
@@ -17,7 +16,7 @@ use App\Http\Resources\SettingsResource;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Attributes as OA;
 
 class InfoController extends Controller
@@ -27,12 +26,12 @@ class InfoController extends Controller
         description: 'Settings route',
         tags: ['Info'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SettingsResource'),
+            new OpenApiDataResponse(resourceName: 'SettingsResource'),
         ]
     )]
-    public function settings(InfoSettingsRequest $request): JsonResponse
+    public function settings(InfoSettingsRequest $request): SettingsResource
     {
-        return ApiResponse::success(SettingsResource::make([]));
+        return new SettingsResource([]);
     }
 
     #[OA\Get(
@@ -40,12 +39,12 @@ class InfoController extends Controller
         description: 'Regions list route',
         tags: ['Info'],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'RegionResource'),
+            new OpenApiArrayResponse(resourceName: 'RegionResource'),
         ]
     )]
-    public function regions(InfoRegionsRequest $request): JsonResponse
+    public function regions(InfoRegionsRequest $request): AnonymousResourceCollection
     {
-        return ApiResponse::success(RegionResource::collection(Region::query()->get()));
+        return RegionResource::collection(Region::query()->get());
     }
 
     #[OA\Get(
@@ -56,17 +55,15 @@ class InfoController extends Controller
             new OA\Parameter(name: 'region_id', description: 'Parent region id to filter', in: 'query', required: false),
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'DistrictResource'),
+            new OpenApiArrayResponse(resourceName: 'DistrictResource'),
         ]
     )]
-    public function districts(InfoDistrictRequest $request): JsonResponse
+    public function districts(InfoDistrictRequest $request): AnonymousResourceCollection
     {
-        return ApiResponse::success(
-            DistrictResource::collection(
-                District::query()
-                    ->when($request->get('region_id'), fn ($query) => $query->where('region_id', $request->get('region_id')))
-                    ->get()
-            )
+        return DistrictResource::collection(
+            District::query()
+                ->when($request->get('region_id'), fn ($query) => $query->where('region_id', $request->get('region_id')))
+                ->get()
         );
     }
 
@@ -78,17 +75,15 @@ class InfoController extends Controller
             new OA\Parameter(name: 'district_id', description: 'Parent district id to filter', in: 'query', required: false),
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'MahallaResource'),
+            new OpenApiArrayResponse(resourceName: 'MahallaResource'),
         ]
     )]
-    public function mahallas(InfoMahallaRequest $request): JsonResponse
+    public function mahallas(InfoMahallaRequest $request): AnonymousResourceCollection
     {
-        return ApiResponse::success(
-            MahallaResource::collection(
-                Mahalla::query()
-                    ->when($request->get('district_id'), fn ($query) => $query->where('district_id', $request->get('district_id')))
-                    ->get()
-            )
+        return MahallaResource::collection(
+            Mahalla::query()
+                ->when($request->get('district_id'), fn ($query) => $query->where('district_id', $request->get('district_id')))
+                ->get()
         );
     }
 }

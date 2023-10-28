@@ -17,7 +17,7 @@ class ProfileControllerTest extends TestCase
     public function me()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->get(route('profile.me'));
+        $response = $this->actingAs($admin)->getJson(route('profile.me'));
 
         $response->assertOk();
         $this->assertEquals($admin->id, $response->json('data.id'));
@@ -32,7 +32,7 @@ class ProfileControllerTest extends TestCase
     public function update()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->put(route('profile.update'), [
+        $response = $this->actingAs($admin)->putJson(route('profile.update'), [
             'first_name' => 'Updated First Name',
             'last_name' => 'Updated Last Name',
         ]);
@@ -49,7 +49,7 @@ class ProfileControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $newPassword = 'password';
-        $response = $this->actingAs($admin)->post(route('profile.change-password'), [
+        $response = $this->actingAs($admin)->postJson(route('profile.change-password'), [
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
@@ -64,7 +64,7 @@ class ProfileControllerTest extends TestCase
     public function changeTheme()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->post(route('profile.change-theme'), [
+        $response = $this->actingAs($admin)->postJson(route('profile.change-theme'), [
             'layout_name' => 'fixed',
         ]);
 
@@ -79,7 +79,7 @@ class ProfileControllerTest extends TestCase
     public function changeLanguage()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->post(route('profile.change-language'), [
+        $response = $this->actingAs($admin)->postJson(route('profile.change-language'), [
             'language' => 'uz',
         ]);
 
@@ -94,7 +94,7 @@ class ProfileControllerTest extends TestCase
     public function changeAvatar()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->post(route('profile.change-avatar'), [
+        $response = $this->actingAs($admin)->postJson(route('profile.change-avatar'), [
             'avatar' => UploadedFile::fake()->image('avatar.jpg'),
         ]);
 
@@ -112,7 +112,7 @@ class ProfileControllerTest extends TestCase
         $admin = $this->createAdminUser();
         $admin->createTokenWithData('test');
 
-        $response = $this->actingAs($admin)->get(route('profile.devices'));
+        $response = $this->actingAs($admin)->getJson(route('profile.devices'));
 
         $response->assertOk();
         $this->assertCount(1, $response->json('data'));
@@ -127,7 +127,7 @@ class ProfileControllerTest extends TestCase
         $admin->createTokenWithData('test');
         $token = $admin->tokens()->first();
 
-        $response = $this->actingAs($admin)->delete(route('profile.revoke-device'), ['ids' => [$token->id]]);
+        $response = $this->actingAs($admin)->deleteJson(route('profile.revoke-device'), ['ids' => [$token->id]]);
 
         $response->assertOk();
         $this->assertEmpty($admin->fresh()->tokens);

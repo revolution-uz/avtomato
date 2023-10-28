@@ -15,9 +15,8 @@ class OpenApiNotFoundResponse extends OA\Response
             description: 'Not found',
             content: new OA\JsonContent(
                 example: [
-                    'success' => true,
+                    'status' => 404,
                     'message' => $message ?? 'Not found',
-                    'data' => null,
                 ]
             )
         );

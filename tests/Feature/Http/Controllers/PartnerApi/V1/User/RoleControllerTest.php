@@ -17,7 +17,7 @@ class RoleControllerTest extends TestCase
     public function index()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->get(route('roles.index'));
+        $response = $this->actingAs($admin)->getJson(route('roles.index'));
 
         $response->assertOk();
         $this->assertCount(1, $response->json('data'));
@@ -30,7 +30,7 @@ class RoleControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $role = $admin->role;
-        $response = $this->actingAs($admin)->get(route('roles.get-single', ['id' => $role->id]));
+        $response = $this->actingAs($admin)->getJson(route('roles.get-single', ['id' => $role->id]));
 
         $response->assertOk();
         $this->assertEquals($role->id, $response->json('data.id'));
@@ -43,11 +43,11 @@ class RoleControllerTest extends TestCase
     public function create()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->post(route('roles.create'), [
+        $response = $this->actingAs($admin)->postJson(route('roles.create'), [
             'name' => 'Test Role',
         ]);
 
-        $response->assertOk();
+        $response->assertSuccessful();
         $this->assertDatabaseHas('roles', [
             'name' => 'Test Role',
         ]);
@@ -61,7 +61,7 @@ class RoleControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $role = Role::factory()->create();
-        $response = $this->actingAs($admin)->put(route('roles.update', ['id' => $role->id]), [
+        $response = $this->actingAs($admin)->putJson(route('roles.update', ['id' => $role->id]), [
             'name' => 'Updated Role',
         ]);
 
@@ -78,11 +78,11 @@ class RoleControllerTest extends TestCase
     public function restrictUpdatingAdmin()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->put(route('roles.update', ['id' => $admin->role->id]), [
+        $response = $this->actingAs($admin)->putJson(route('roles.update', ['id' => $admin->role->id]), [
             'name' => 'Updated Role',
         ]);
 
-        $response->assertError();
+        $response->assertForbidden();
         $this->assertEquals('You can\'t update admin role', $response->json('message'));
     }
 
@@ -94,7 +94,7 @@ class RoleControllerTest extends TestCase
         $admin = $this->createAdminUser();
         $role = Role::factory()->create();
         $branch = Branch::factory()->create();
-        $response = $this->actingAs($admin)->post(route('roles.attach-permissions', ['id' => $role->id]), [
+        $response = $this->actingAs($admin)->postJson(route('roles.attach-permissions', ['id' => $role->id]), [
             [
                 'permission_id' => 1,
                 'branch_id' => $branch->id,
@@ -123,7 +123,7 @@ class RoleControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $role = Role::factory()->create();
-        $response = $this->actingAs($admin)->delete(route('roles.delete', [
+        $response = $this->actingAs($admin)->deleteJson(route('roles.delete', [
             'ids' => [$role->id],
         ]));
 
@@ -140,7 +140,7 @@ class RoleControllerTest extends TestCase
 
         $admin = $this->createAdminUser();
         $this->expectException(ValidationException::class);
-        $this->actingAs($admin)->delete(route('roles.delete', [
+        $this->actingAs($admin)->deleteJson(route('roles.delete', [
             'ids' => [$admin->role->id],
         ]));
     }

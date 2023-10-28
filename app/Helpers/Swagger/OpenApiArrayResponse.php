@@ -6,13 +6,11 @@ use Attribute;
 use OpenApi\Attributes as OA;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
-class OpenApiJsonArrayResponse extends OA\Response
+class OpenApiArrayResponse extends OA\Response
 {
     public function __construct(string $resourceName, $description = null, $withPagination = false, $withSortables = false)
     {
         $properties = [
-            new OA\Property(property: 'success', type: 'boolean', example: 'true'),
-            new OA\Property(property: 'message', type: 'string', example: 'null'),
             new OA\Property(property: 'data', type: 'array', items: new OA\Items(ref: '#/components/schemas/' . $resourceName)),
         ];
 

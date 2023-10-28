@@ -2,14 +2,12 @@
 
 namespace App\Exceptions;
 
-use App\Http\Helpers\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -41,22 +39,74 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e): \Illuminate\Http\Response|JsonResponse|Response
     {
         if ($request->wantsJson() || $request->ajax() || $request->expectsJson() || $request->isJson()) {
-            //            if ($e instanceof HttpException or $e instanceof UploadFileException) {
-            //                return ApiResponse::error($e->getMessage());
-            //            } else
-            if ($e instanceof AuthenticationException) {
-                return ApiResponse::error($e->getMessage(), Response::HTTP_UNAUTHORIZED);
-            }
-
-            if ($e instanceof ValidationException) {
-                return ApiResponse::error($e->validator->getMessageBag()->first());
-            }
-
-            if ($e instanceof ModelNotFoundException) {
-                return ApiResponse::error(__('Not found'), Response::HTTP_NOT_FOUND);
-            }
+            return $this->handleApiException($request, $e);
         }
 
         return parent::render($request, $e);
+    }
+
+    private function handleApiException($request, Throwable $exception): Response
+    {
+        $exception = $this->prepareException($exception);
+
+        if ($exception instanceof HttpResponseException) {
+            return $exception->getResponse();
+        }
+
+        if ($exception instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $exception);
+        }
+
+        if ($exception instanceof ForbiddenException) {
+            return response()->json(['message' => $exception->getMessage()], 403);
+        }
+
+        if ($exception instanceof ValidationException) {
+            return $this->convertValidationExceptionToResponse($exception, $request);
+        }
+
+        return $this->customApiResponse($exception);
+    }
+
+    private function customApiResponse($exception): JsonResponse
+    {
+        if (method_exists($exception, 'getStatusCode')) {
+            $statusCode = $exception->getStatusCode();
+        } else {
+            $statusCode = 500;
+        }
+
+        $response = [];
+
+        switch ($statusCode) {
+            case 401:
+                $response['message'] = 'Unauthorized';
+                break;
+            case 403:
+                $response['message'] = 'Forbidden';
+                break;
+            case 404:
+                $response['message'] = 'Not Found';
+                break;
+            case 405:
+                $response['message'] = 'Method Not Allowed';
+                break;
+            case 422:
+                $response['message'] = $exception->original['message'];
+                $response['errors'] = $exception->original['errors'];
+                break;
+            default:
+                $response['message'] = ($statusCode == 500) ? 'Whoops, looks like something went wrong' : $exception->getMessage();
+                break;
+        }
+
+        if (config('app.debug')) {
+            $response['trace'] = $exception->getTrace();
+            $response['code'] = $exception->getCode();
+        }
+
+        $response['status'] = $statusCode;
+
+        return response()->json($response, $statusCode);
     }
 }

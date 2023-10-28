@@ -5,26 +5,24 @@ namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\CreateTaxInfoRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
 use App\Http\Requests\Scoring\ScoringRequestDeleteRequest;
 use App\Http\Requests\Scoring\ScoringRequestViewRequest;
 use App\Http\Resources\Scoring\TaxInfoResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\TaxService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -46,7 +44,7 @@ class TaxController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'TaxInfoResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'TaxInfoResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(ScoringFilterRequest $request)
@@ -68,7 +66,7 @@ class TaxController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Post(
@@ -81,7 +79,7 @@ class TaxController extends Controller
         ),
         tags: ['Scoring (TAX info)'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'TaxInfoResource'),
+            new OpenApiDataResponse(resourceName: 'TaxInfoResource'),
         ]
     )]
     public function create(CreateTaxInfoRequest $request)
@@ -89,7 +87,7 @@ class TaxController extends Controller
         $dto = TaxInfoCreateRequestDTO::from($request->validated());
         $model = $this->taxService->scoringTax($dto);
 
-        return ApiResponse::success(TaxInfoResource::make($model));
+        return new TaxInfoResource($model);
     }
 
     #[OA\Get(
@@ -100,7 +98,7 @@ class TaxController extends Controller
             new OpenApiIdParameter(modelName: 'ScoringRequest'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'TaxInfoResource'),
+            new OpenApiDataResponse(resourceName: 'TaxInfoResource'),
         ]
     )]
     public function read(int $id, ScoringRequestViewRequest $request)
@@ -110,7 +108,7 @@ class TaxController extends Controller
             throw new ModelNotFoundException;
         }
 
-        return ApiResponse::success(TaxInfoResource::make($scoring));
+        return new TaxInfoResource($scoring);
     }
 
     #[OA\Delete(
@@ -123,13 +121,13 @@ class TaxController extends Controller
         ),
         tags: ['Scoring (TAX info)'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function delete(ScoringRequestDeleteRequest $request): JsonResponse
+    public function delete(ScoringRequestDeleteRequest $request): StatusResource
     {
         ScoringRequest::query()->whereIn('id', $request->ids)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }

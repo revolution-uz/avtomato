@@ -5,26 +5,24 @@ namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\CreateMibInfoRequest;
 use App\Http\Requests\Scoring\ScoringFilterRequest;
 use App\Http\Requests\Scoring\ScoringRequestDeleteRequest;
 use App\Http\Requests\Scoring\ScoringRequestViewRequest;
 use App\Http\Resources\Scoring\MibInfoResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\MibService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -46,7 +44,7 @@ class MibController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'MibInfoResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'MibInfoResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(ScoringFilterRequest $request)
@@ -69,7 +67,7 @@ class MibController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Post(
@@ -82,7 +80,7 @@ class MibController extends Controller
         ),
         tags: ['Scoring (MIB info)'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'MibInfoResource'),
+            new OpenApiDataResponse(resourceName: 'MibInfoResource'),
         ]
     )]
     public function create(CreateMibInfoRequest $request)
@@ -90,7 +88,7 @@ class MibController extends Controller
         $dto = MibInfoCreateRequestDTO::from($request->validated());
         $model = $this->mibService->scoringMib($dto);
 
-        return ApiResponse::success(MibInfoResource::make($model));
+        return new MibInfoResource($model);
     }
 
     #[OA\Get(
@@ -101,7 +99,7 @@ class MibController extends Controller
             new OpenApiIdParameter(modelName: 'ScoringRequest'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'MibInfoResource'),
+            new OpenApiDataResponse(resourceName: 'MibInfoResource'),
         ]
     )]
     public function read(int $id, ScoringRequestViewRequest $request)
@@ -111,7 +109,7 @@ class MibController extends Controller
             throw new ModelNotFoundException;
         }
 
-        return ApiResponse::success(MibInfoResource::make($scoring));
+        return new MibInfoResource($scoring);
     }
 
     #[OA\Delete(
@@ -124,13 +122,13 @@ class MibController extends Controller
         ),
         tags: ['Scoring (MIB info)'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function delete(ScoringRequestDeleteRequest $request): JsonResponse
+    public function delete(ScoringRequestDeleteRequest $request): StatusResource
     {
         ScoringRequest::query()->whereIn('id', $request->ids)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }

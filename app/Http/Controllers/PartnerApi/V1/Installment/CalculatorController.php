@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
+use App\Helpers\Swagger\OpenApiArrayResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Installment\CalculatorExportRequest;
 use App\Http\Requests\Installment\CalculatorRequest;
 use App\Http\Resources\Installment\InstallmentPaymentResource;
 use App\Models\Company\Tariff;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 
@@ -28,13 +26,13 @@ class CalculatorController extends Controller
         ),
         tags: ['Calculator'],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'InstallmentPaymentResource'),
+            new OpenApiArrayResponse(resourceName: 'InstallmentPaymentResource'),
             new OpenApiNotFoundResponse(message: 'Tariff not found'),
         ]
     )]
-    public function calculate(CalculatorRequest $request): JsonResponse
+    public function calculate(CalculatorRequest $request): array
     {
-        return ApiResponse::success($this->prepareInstallmentGraph($request));
+        return $this->prepareInstallmentGraph($request);
     }
 
     #[OA\Post(

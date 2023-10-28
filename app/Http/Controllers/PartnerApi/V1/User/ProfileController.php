@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\User;
 
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\User\AvatarRequest;
 use App\Http\Requests\User\DeviceRevokeRequest;
 use App\Http\Requests\User\PasswordRequest;
@@ -17,10 +15,11 @@ use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Requests\UserLangRequest;
 use App\Http\Resources\DeviceInfoResource;
+use App\Http\Resources\StatusResource;
 use App\Http\Resources\User\SingleUserResource;
 use App\Models\Company\PersonalAccessToken;
 use App\Services\User\UserService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Attributes as OA;
 
 class ProfileController extends Controller
@@ -35,36 +34,12 @@ class ProfileController extends Controller
         description: 'Profile me route',
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
         ]
     )]
-    public function me(ProfileMeRequest $request): JsonResponse
+    public function me(ProfileMeRequest $request): SingleUserResource
     {
-        return ApiResponse::success(SingleUserResource::make(auth()->user()));
-    }
-
-    #[OA\Put(
-        path: '/api/v1/profile/me',
-        description: 'Profile me route',
-        requestBody: new OA\RequestBody(
-            description: 'Profile update request body',
-            required: true,
-            content: new OA\JsonContent(
-                ref: '#/components/schemas/UserUpdateRequest'
-            ),
-        ),
-        tags: ['Profile'],
-        responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
-        ],
-    )]
-    public function update(UserUpdateRequest $request)
-    {
-        if ($this->userService->updateDetails(auth()->user(), $request)) {
-            return ApiResponse::success(SingleUserResource::make(auth()->user()));
-        }
-
-        return ApiResponse::error('User not updated');
+        return new SingleUserResource(auth()->user());
     }
 
     #[OA\Post(
@@ -79,16 +54,14 @@ class ProfileController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ],
     )]
     public function changePassword(PasswordRequest $request)
     {
-        if ($this->userService->updatePassword(auth()->user(), $request)) {
-            return ApiResponse::success(true);
-        }
+        $this->userService->updatePassword(auth()->user(), $request);
 
-        return ApiResponse::error('Password not updated');
+        return new StatusResource(true);
     }
 
     #[OA\Post(
@@ -103,16 +76,12 @@ class ProfileController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function changeTheme(UserThemeRequest $request)
     {
-        if ($this->userService->updateTheme(auth()->user(), $request)) {
-            return ApiResponse::success(SingleUserResource::make(auth()->user()));
-        }
-
-        return ApiResponse::error('Theme not updated');
+        return new SingleUserResource($this->userService->updateTheme(auth()->user(), $request));
     }
 
     #[OA\Post(
@@ -127,7 +96,7 @@ class ProfileController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function changeLanguage(UserLangRequest $request)
@@ -135,7 +104,27 @@ class ProfileController extends Controller
         $user = auth()->user();
         $user?->update(['language' => $request->language]);
 
-        return ApiResponse::success(SingleUserResource::make($user));
+        return new SingleUserResource($user);
+    }
+
+    #[OA\Put(
+        path: '/api/v1/profile/me',
+        description: 'Profile me route',
+        requestBody: new OA\RequestBody(
+            description: 'Profile update request body',
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/UserUpdateRequest'
+            ),
+        ),
+        tags: ['Profile'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
+        ],
+    )]
+    public function update(UserUpdateRequest $request)
+    {
+        return new SingleUserResource($this->userService->updateDetails(auth()->user(), $request));
     }
 
     #[OA\Post(
@@ -151,16 +140,12 @@ class ProfileController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function uploadAvatar(AvatarRequest $request)
     {
-        if ($this->userService->updateAvatar(auth()->user(), $request)) {
-            return ApiResponse::success(SingleUserResource::make(auth()->user()));
-        }
-
-        return ApiResponse::error('Avatar not updated');
+        return new SingleUserResource($this->userService->updateAvatar(auth()->user(), $request));
     }
 
     #[OA\Get(
@@ -168,12 +153,12 @@ class ProfileController extends Controller
         description: 'My devices route',
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'DeviceInfoResource'),
+            new OpenApiArrayResponse(resourceName: 'DeviceInfoResource'),
         ]
     )]
-    public function devices(UsersDevicesRequest $request): JsonResponse
+    public function devices(UsersDevicesRequest $request): AnonymousResourceCollection
     {
-        return ApiResponse::success(DeviceInfoResource::collection(auth()->user()->tokens));
+        return DeviceInfoResource::collection(auth()->user()->tokens);
     }
 
     #[OA\Delete(
@@ -189,14 +174,14 @@ class ProfileController extends Controller
             ),
         ],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function revokeDevice(DeviceRevokeRequest $request): JsonResponse
+    public function revokeDevice(DeviceRevokeRequest $request): StatusResource
     {
         PersonalAccessToken::query()->whereIn('id', $request->ids)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }

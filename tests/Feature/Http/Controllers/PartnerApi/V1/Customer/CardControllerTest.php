@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Http\Controllers\PartnerApi\V1\Customer;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Customer;
 
 use App\Models\Company\Card;
 use Tests\TestCase;
@@ -15,7 +15,7 @@ class CardControllerTest extends TestCase
     public function index()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->get(route('cards.index'));
+        $response = $this->actingAs($admin)->getJson(route('cards.index'));
 
         $response->assertOk();
         $this->assertIsArray($response->json('data'));
@@ -29,7 +29,7 @@ class CardControllerTest extends TestCase
         $customer = Card::factory()->create();
 
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->get(route('cards.get-single', ['id' => $customer->id]));
+        $response = $this->actingAs($admin)->getJson(route('cards.get-single', ['id' => $customer->id]));
 
         $response->assertOk();
         $this->assertEquals($customer->id, $response->json('data.id'));
