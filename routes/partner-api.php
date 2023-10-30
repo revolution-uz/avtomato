@@ -154,7 +154,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/', 'create')->name('cards.create');
         Route::put('{id}', 'update')->name('cards.update');
         Route::delete('/', 'delete')->name('cards.delete');
-        Route::post('{id}/attach', 'attach')->name('cards.attach');
         Route::post('{id}/confirm', 'confirm')->name('cards.confirm');
     });
 

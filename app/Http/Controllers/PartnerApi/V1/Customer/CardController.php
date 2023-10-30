@@ -14,14 +14,13 @@ use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Requests\Customer\AttachCustomerCardRequest;
 use App\Http\Requests\Customer\CardFilterRequest;
 use App\Http\Requests\Customer\CardRequest;
 use App\Http\Requests\Customer\CardsDeleteRequest;
 use App\Http\Requests\Customer\CardViewRequest;
 use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
-use App\Http\Resources\Customer\AttachCustomerCardResource;
 use App\Http\Resources\Customer\CardResource;
+use App\Http\Resources\Customer\CreateAndAttachCardResource;
 use App\Models\Company\Card;
 use App\Services\PlumService;
 use Illuminate\Database\Eloquent\Builder;
@@ -53,13 +52,15 @@ class CardController extends Controller
     )]
     public function index(CardFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'pan', 'customer_id', 'balance']; // TODO add all fields, it's just for testing
+        $sortables = ['id', 'pan', 'phone', 'customer_id', 'balance']; // TODO add all fields, it's just for testing
 
         return CardResource::collection(
             Card::query()
                 ->when(
                     $request->search,
-                    fn (Builder $q) => $q->where('name', 'ILIKE', '%' . $request->search . '%')
+                    fn (Builder $q) => $q
+                        ->where('name', 'ILIKE', '%' . $request->search . '%')
+                        ->where('phone', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
@@ -106,9 +107,9 @@ class CardController extends Controller
         $card = new Card;
         $card->fill($request->validated());
         $card->setPan();
-        $card->status = CardStatusEnum::INACTIVE;
+        $card->status = CardStatusEnum::ACTIVE;
         if ($card->saveOrFail()) {
-            return ApiResponse::success(CardResource::make($card));
+            return ApiResponse::success(CreateAndAttachCardResource::make($card, $this->plumService->attachCard($card)));
         }
 
         return ApiResponse::error('Error on creating Card');
@@ -167,27 +168,6 @@ class CardController extends Controller
         Card::query()->whereIn('id', $request->ids)->delete();
 
         return ApiResponse::success(true);
-    }
-
-    #[OA\Post(
-        path: '/api/v1/customer-card/{id}/attach',
-        description: 'Card attach route',
-        requestBody: new OA\RequestBody(
-            description: 'Card attach request body',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/AttachCustomerCardRequest')
-        ),
-        tags: ['Cards'],
-        responses: [
-            new OpenApiJsonResponse(resourceName: 'AttachCustomerCardResource'),
-        ]
-    )]
-    public function attach(int $id, AttachCustomerCardRequest $request): JsonResponse
-    {
-        $card = Card::findOrFail($id);
-        $response = $this->plumService->attachCard($card, $request->phone);
-
-        return ApiResponse::success(AttachCustomerCardResource::make($response));
     }
 
     #[OA\Post(

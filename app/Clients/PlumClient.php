@@ -58,10 +58,16 @@ class PlumClient extends BaseClient
     /**
      * @return array|mixed
      */
-    public function attachCard(array $data)
+    public function attachCard($customer_id, $number, $expiry, $phone)
     {
+        $data = [
+            'userId' => $customer_id,
+            'cardNumber' => $number,
+            'expireDate' => $expiry,
+            'userPhone' => $phone,
+        ];
         $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
-            ->post($this->baseUrl . '/UserCard/createUserCard');
+            ->post($this->baseUrl . '/UserCard/createUserCard', $data);
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',
             url: $this->baseUrl . '/UserCard/createUserCard',
@@ -74,13 +80,15 @@ class PlumClient extends BaseClient
         return $response->json('result');
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function confirmCard(array $data)
+    public function confirmCard(int $session, string $otp)
     {
+        $data = [
+            'session' => $session,
+            'otp' => $otp,
+            'isTrusted' => true,
+        ];
         $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
-            ->post($this->baseUrl . '/UserCard/confirmUserCardCreate');
+            ->post($this->baseUrl . '/UserCard/confirmUserCardCreate', $data);
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',
             url: $this->baseUrl . '/UserCard/confirmUserCardCreate',

@@ -12,23 +12,19 @@ class PlumService
     ) {
     }
 
-    public function attachCard(Card $card, $phone)
+    public function attachCard(Card $card)
     {
-        return $this->plumClient->attachCard([
-            'userId' => $card->customer_id,
-            'cardNumber' => $card->number,
-            'expireDate' => $card->expiry,
-            'userPhone' => $phone,
-        ]);
+        return $this->plumClient->attachCard(
+            $card->customer_id,
+            $card->number,
+            $card->expiry,
+            $card->phone,
+        );
     }
 
     public function confirmCard(Card $card, $session, $otp)
     {
-        $response = $this->plumClient->confirmCard([
-            'session' => $session,
-            'otp' => $otp,
-            'isTrusted' => true,
-        ]);
+        $response = $this->plumClient->confirmCard($session, $otp);
 
         $_card = $response['card'] ?? [];
         $plum_id = $_card['id'] ?? null;
