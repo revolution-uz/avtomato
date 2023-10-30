@@ -19,7 +19,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         User::factory(5)->create();
-        $response = $this->actingAs($admin)->get(route('users.index'));
+        $response = $this->actingAs($admin)->getJson(route('users.index'));
 
         $response->assertOk();
         $this->assertCount(6, $response->json('data'));
@@ -32,7 +32,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $response = $this->actingAs($admin)->get(route('users.get-single', ['id' => $user->id]));
+        $response = $this->actingAs($admin)->getJson(route('users.get-single', ['id' => $user->id]));
 
         $response->assertOk();
         $this->assertEquals($user->id, $response->json('data.id'));
@@ -47,7 +47,7 @@ class UserControllerTest extends TestCase
     public function create()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->post(route('users.create'), [
+        $response = $this->actingAs($admin)->postJson(route('users.create'), [
             'first_name' => 'Test First Name',
             'last_name' => 'Test Last Name',
             'username' => 'test_username',
@@ -56,7 +56,7 @@ class UserControllerTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        $response->assertOk();
+        $response->assertSuccessful();
         $this->assertDatabaseHas('users', [
             'first_name' => 'Test First Name',
             'last_name' => 'Test Last Name',
@@ -75,7 +75,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $response = $this->actingAs($admin)->put(route('users.update', ['id' => $user->id]), [
+        $response = $this->actingAs($admin)->putJson(route('users.update', ['id' => $user->id]), [
             'first_name' => 'Updated First Name',
             'last_name' => 'Updated Last Name',
         ]);
@@ -93,7 +93,7 @@ class UserControllerTest extends TestCase
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
         $newPassword = 'password';
-        $response = $this->actingAs($admin)->post(route('users.change-password', ['id' => $user->id]), [
+        $response = $this->actingAs($admin)->postJson(route('users.change-password', ['id' => $user->id]), [
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
@@ -109,7 +109,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $response = $this->actingAs($admin)->post(route('users.change-theme', ['id' => $user->id]), [
+        $response = $this->actingAs($admin)->postJson(route('users.change-theme', ['id' => $user->id]), [
             'layout_name' => 'fixed',
         ]);
 
@@ -124,7 +124,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $response = $this->actingAs($admin)->post(route('users.change-avatar', ['id' => $user->id]), [
+        $response = $this->actingAs($admin)->postJson(route('users.change-avatar', ['id' => $user->id]), [
             'avatar' => UploadedFile::fake()->image('avatar.jpg'),
         ]);
 
@@ -141,7 +141,7 @@ class UserControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $user = User::factory()->create();
-        $response = $this->actingAs($admin)->delete(route('users.delete'), [
+        $response = $this->actingAs($admin)->deleteJson(route('users.delete'), [
             'ids' => [$user->id],
         ]);
 
@@ -158,7 +158,7 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create();
         $user->createTokenWithData('test');
 
-        $response = $this->actingAs($admin)->get(route('users.devices', ['id' => $user->id]));
+        $response = $this->actingAs($admin)->getJson(route('users.devices', ['id' => $user->id]));
 
         $response->assertOk();
         $this->assertNotEmpty($response->json('data'));
@@ -176,7 +176,7 @@ class UserControllerTest extends TestCase
         $user->createTokenWithData('test');
         $token = $user->tokens()->first();
 
-        $response = $this->actingAs($admin)->delete(route('users.revoke-device', [
+        $response = $this->actingAs($admin)->deleteJson(route('users.revoke-device', [
             'ids' => [$token->id],
         ]));
 

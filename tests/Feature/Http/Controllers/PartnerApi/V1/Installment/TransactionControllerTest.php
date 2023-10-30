@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Http\Controllers\PartnerApi\V1\Installment;
+namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
@@ -28,7 +28,7 @@ class TransactionControllerTest extends TestCase
         Transaction::factory(5)->create(['installment_id' => $installment1->id]);
         Transaction::factory(4)->create(['installment_id' => $installment2->id]);
 
-        $response = $this->actingAs($admin)->get(route('transactions.index'));
+        $response = $this->actingAs($admin)->getJson(route('transactions.index'));
 
         $response->assertOk();
         $this->assertIsArray($response->json('data'));
@@ -50,7 +50,7 @@ class TransactionControllerTest extends TestCase
         Transaction::factory(5)->create(['installment_id' => $installment1->id]);
         Transaction::factory(4)->create(['installment_id' => $installment2->id]);
 
-        $response = $this->actingAs($user)->get(route('transactions.index'));
+        $response = $this->actingAs($user)->getJson(route('transactions.index'));
 
         $response->assertOk();
         $this->assertIsArray($response->json('data'));
@@ -65,7 +65,7 @@ class TransactionControllerTest extends TestCase
         $customer = Transaction::factory()->create();
 
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->get(route('transactions.get-single', ['id' => $customer->id]));
+        $response = $this->actingAs($admin)->getJson(route('transactions.get-single', ['id' => $customer->id]));
 
         $response->assertOk();
         $this->assertEquals($customer->id, $response->json('data.id'));

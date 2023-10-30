@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\PartnerApi\V1;
 
-use App\Helpers\Swagger\OpenApiErrorResponse;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\LoginRequest;
+use App\Http\Resources\LoginResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\User;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -32,31 +32,41 @@ class AuthController extends Controller
             new OA\Parameter(name: 'Device-OS', in: 'header', required: true, example: 'Android'),
         ],
         responses: [
-            new OpenApiSingleDataResponse(data: '1|DoeKLT28Gj1fxDGC3zoIYH4ZVseZxXkfFSmYAnla', type: 'string'),
-            new OpenApiErrorResponse(message: 'Login or password is wrong'),
+            new OpenApiDataResponse('LoginResource'),
+            new OA\Response(
+                response: '401',
+                description: 'Error',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'message',
+                            type: 'string',
+                            example: 'Login or password is wrong'
+                        ),
+                    ],
+                )
+            ),
         ]
     )]
-    public function login(LoginRequest $request): JsonResponse
+    public function login(LoginRequest $request): LoginResource
     {
         $user = User::query()->where('username', $request->username)->first();
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return ApiResponse::error('Login or password is wrong');
+            throw new AuthenticationException('Login or password is wrong');
         }
 
         if (! $request->hasHeader('Device-Name') || ! $request->hasHeader('Device-Type') || ! $request->hasHeader('Device-OS')) {
-            return ApiResponse::error('Login or password is wrong');
+            throw new AuthenticationException('Login or password is wrong');
         }
 
-        return ApiResponse::success(
-            $user->createTokenWithData(
-                Str::substr($request->header('Device-Name'), 0, 255),
-                [
-                    'device_type' => Str::substr($request->header('Device-Type'), 0, 32),
-                    'device_os' => Str::substr($request->header('Device-OS'), 0, 32),
-                    'device_ip' => $request->ip(),
-                ]
-            )
-        );
+        return new LoginResource($user->createTokenWithData(
+            Str::substr($request->header('Device-Name'), 0, 255),
+            [
+                'device_type' => Str::substr($request->header('Device-Type'), 0, 32),
+                'device_os' => Str::substr($request->header('Device-OS'), 0, 32),
+                'device_ip' => $request->ip(),
+            ]
+        ));
     }
 
     #[OA\Post(
@@ -64,16 +74,14 @@ class AuthController extends Controller
         description: 'Logout route',
         tags: ['Auth'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'integer'),
+            new OpenApiDataResponse('StatusResource'),
         ]
     )]
-    public function logout(): JsonResponse
+    public function logout(): StatusResource
     {
         /** @var PersonalAccessToken $personalAccessToken */
         $personalAccessToken = auth()->user()->currentAccessToken();
 
-        return ApiResponse::success(
-            boolval(auth()->user()->tokens()->where('id', $personalAccessToken->id)->delete())
-        );
+        return new StatusResource(boolval(auth()->user()->tokens()->where('id', $personalAccessToken->id)->delete()));
     }
 }

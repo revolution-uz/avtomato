@@ -12,6 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * App\Models\Company\Rbac\Role
+ *
+ * @property int $id
+ * @property string $name
  * @property-read RolePermission[] $rolePermissions
  * @property-read Permission[] $permissions
  */

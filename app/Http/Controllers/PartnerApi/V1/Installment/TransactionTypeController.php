@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Installment\TransactionTypeFilterRequest;
 use App\Http\Requests\Installment\TransactionTypeRequest;
 use App\Http\Requests\Installment\TransactionTypesDeleteRequest;
 use App\Http\Requests\Installment\TransactionTypeViewRequest;
 use App\Http\Resources\Installment\TransactionResource;
 use App\Http\Resources\Installment\TransactionTypeResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -39,7 +37,7 @@ class TransactionTypeController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'TransactionTypeResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'TransactionTypeResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(TransactionTypeFilterRequest $request): AnonymousResourceCollection
@@ -59,7 +57,7 @@ class TransactionTypeController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Get(
@@ -70,13 +68,13 @@ class TransactionTypeController extends Controller
             new OpenApiIdParameter(modelName: 'TransactionType'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'TransactionTypeResource'),
+            new OpenApiDataResponse(resourceName: 'TransactionTypeResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, TransactionTypeViewRequest $request): JsonResponse
+    public function getSingle(int $id, TransactionTypeViewRequest $request): TransactionTypeResource
     {
-        return ApiResponse::success(TransactionTypeResource::make(TransactionType::findOrFail($id)));
+        return new TransactionTypeResource(TransactionType::findOrFail($id));
     }
 
     #[OA\Post(
@@ -89,21 +87,18 @@ class TransactionTypeController extends Controller
         ),
         tags: ['TransactionTypes'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'TransactionTypeResource'),
+            new OpenApiDataResponse(resourceName: 'TransactionTypeResource'),
         ]
     )]
-    public function create(TransactionTypeRequest $request): JsonResponse
+    public function create(TransactionTypeRequest $request): TransactionTypeResource
     {
         $transactionType = new TransactionType;
         $transactionType->fill($request->validated());
         $transactionType->setNames($request->name);
         $transactionType->is_system = false;
+        $transactionType->saveOrFail();
 
-        if ($transactionType->save()) {
-            return ApiResponse::success(TransactionTypeResource::make($transactionType));
-        }
-
-        return ApiResponse::error('Error on creating Installment');
+        return new TransactionTypeResource($transactionType);
     }
 
     #[OA\Put(
@@ -124,25 +119,23 @@ class TransactionTypeController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'TransactionTypeResource'),
+            new OpenApiDataResponse(resourceName: 'TransactionTypeResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, TransactionTypeRequest $request): JsonResponse
+    public function update(int $id, TransactionTypeRequest $request): TransactionResource
     {
         if ($id < 100) {
-            return ApiResponse::error('Permission denied');
+            abort(403, 'You can not edit system transaction types');
         }
 
+        /** @var TransactionType $transactionType */
         $transactionType = TransactionType::findOrFail($id);
         $transactionType->fill($request->validated());
         $transactionType->setNames($request->name);
+        $transactionType->saveOrFail();
 
-        if ($transactionType->save()) {
-            return ApiResponse::success(TransactionResource::make($transactionType));
-        }
-
-        return ApiResponse::error('Error on updating TransactionType');
+        return new TransactionResource($transactionType);
     }
 
     #[OA\Delete(
@@ -155,13 +148,13 @@ class TransactionTypeController extends Controller
         ),
         tags: ['TransactionTypes'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function delete(TransactionTypesDeleteRequest $request): JsonResponse
+    public function delete(TransactionTypesDeleteRequest $request): StatusResource
     {
         TransactionType::query()->whereIn('id', $request->ids)->where('id', '>', 99)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }

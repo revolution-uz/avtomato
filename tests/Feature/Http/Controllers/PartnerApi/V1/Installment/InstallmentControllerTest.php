@@ -27,7 +27,7 @@ class InstallmentControllerTest extends TestCase
         $admin = $this->createAdminUser();
         Installment::factory(5)->create(['branch_id' => $branch1->id]);
         Installment::factory(4)->create(['branch_id' => $branch2->id]);
-        $response = $this->actingAs($admin)->get(route('installments.index'));
+        $response = $this->actingAs($admin)->getJson(route('installments.index'));
 
         $response->assertOk();
         $this->assertIsArray($response->json('data'));
@@ -47,7 +47,7 @@ class InstallmentControllerTest extends TestCase
         $user = User::factory()->create(['role_id' => $role->id]);
         Installment::factory(5)->create(['branch_id' => $branch1->id]);
         Installment::factory(4)->create(['branch_id' => $branch2->id]);
-        $response = $this->actingAs($user)->get(route('installments.index'));
+        $response = $this->actingAs($user)->getJson(route('installments.index'));
 
         $response->assertOk();
         $this->assertIsArray($response->json('data'));

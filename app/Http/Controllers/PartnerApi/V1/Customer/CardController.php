@@ -3,25 +3,23 @@
 namespace App\Http\Controllers\PartnerApi\V1\Customer;
 
 use App\Enums\Company\CardStatusEnum;
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Customer\CardFilterRequest;
 use App\Http\Requests\Customer\CardRequest;
 use App\Http\Requests\Customer\CardsDeleteRequest;
 use App\Http\Requests\Customer\CardViewRequest;
 use App\Http\Resources\Customer\CardResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -39,7 +37,7 @@ class CardController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'CardResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'CardResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(CardFilterRequest $request): AnonymousResourceCollection
@@ -59,7 +57,7 @@ class CardController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Get(
@@ -70,13 +68,13 @@ class CardController extends Controller
             new OpenApiIdParameter(modelName: 'Card'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'CardResource'),
+            new OpenApiDataResponse(resourceName: 'CardResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, CardViewRequest $request): JsonResponse
+    public function getSingle(int $id, CardViewRequest $request): CardResource
     {
-        return ApiResponse::success(CardResource::make(Card::findOrFail($id)));
+        return new CardResource(Card::findOrFail($id));
     }
 
     #[OA\Post(
@@ -89,20 +87,18 @@ class CardController extends Controller
         ),
         tags: ['Cards'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'CardResource'),
+            new OpenApiDataResponse(resourceName: 'CardResource'),
         ]
     )]
-    public function create(CardRequest $request): JsonResponse
+    public function create(CardRequest $request): CardResource
     {
         $card = new Card;
         $card->fill($request->validated());
         $card->setPan();
         $card->status = CardStatusEnum::INACTIVE;
-        if ($card->saveOrFail()) {
-            return ApiResponse::success(CardResource::make($card));
-        }
+        $card->saveOrFail();
 
-        return ApiResponse::error('Error on creating Card');
+        return new CardResource($card);
     }
 
     #[OA\Put(
@@ -123,21 +119,18 @@ class CardController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'CardResource'),
+            new OpenApiDataResponse(resourceName: 'CardResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, CardRequest $request): JsonResponse
+    public function update(int $id, CardRequest $request): CardResource
     {
         $card = Card::findOrFail($id);
         $card->fill($request->validated());
         $card->setPan();
+        $card->saveOrFail();
 
-        if ($card->saveOrFail()) {
-            return ApiResponse::success(CardResource::make($card));
-        }
-
-        return ApiResponse::error('Error on updating Card');
+        return new CardResource($card);
     }
 
     #[OA\Delete(
@@ -150,13 +143,13 @@ class CardController extends Controller
         ),
         tags: ['Cards'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse('StatusResource'),
         ]
     )]
-    public function delete(CardsDeleteRequest $request): JsonResponse
+    public function delete(CardsDeleteRequest $request): StatusResource
     {
         Card::query()->whereIn('id', $request->ids)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }

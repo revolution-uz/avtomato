@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\User;
 
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\User\AttachRoleRequest;
 use App\Http\Requests\User\AvatarRequest;
 use App\Http\Requests\User\DeviceRevokeRequest;
@@ -25,13 +23,13 @@ use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Requests\User\UserViewRequest;
 use App\Http\Resources\DeviceInfoResource;
+use App\Http\Resources\StatusResource;
 use App\Http\Resources\User\SingleUserResource;
 use App\Http\Resources\User\UserListResource;
 use App\Models\Company\PersonalAccessToken;
 use App\Models\Company\User;
 use App\Services\User\UserService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -54,7 +52,7 @@ class UserController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'UserListResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'UserListResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(UserFilterRequest $request): AnonymousResourceCollection
@@ -77,7 +75,7 @@ class UserController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Get(
@@ -93,13 +91,13 @@ class UserController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, UserViewRequest $request): JsonResponse
+    public function getSingle(int $id, UserViewRequest $request): SingleUserResource
     {
-        return ApiResponse::success(SingleUserResource::make(User::findOrFail($id)));
+        return new SingleUserResource(User::findOrFail($id));
     }
 
     #[OA\Post(
@@ -112,20 +110,17 @@ class UserController extends Controller
         ),
         tags: ['Users'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource', response: '201'),
         ]
     )]
-    public function create(UserCreateRequest $request): JsonResponse
+    public function create(UserCreateRequest $request): SingleUserResource
     {
         $model = new User;
         $model->fill($request->validated());
         $model->password = bcrypt($request->password);
+        $model->saveOrFail();
 
-        if ($model->save()) {
-            return ApiResponse::success(SingleUserResource::make($model));
-        }
-
-        return ApiResponse::error('Error on creating user');
+        return new SingleUserResource($model);
     }
 
     #[OA\Put(
@@ -146,16 +141,16 @@ class UserController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, UserUpdateRequest $request): JsonResponse
+    public function update(int $id, UserUpdateRequest $request): SingleUserResource
     {
         $user = User::findOrFail($id);
         $this->userService->updateDetails($user, $request);
 
-        return ApiResponse::success(SingleUserResource::make($user));
+        return new SingleUserResource($user);
     }
 
     #[OA\Post(
@@ -173,17 +168,14 @@ class UserController extends Controller
             new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function changePassword(int $id, PasswordRequest $request)
     {
         $user = User::findOrFail($id);
-        if ($this->userService->updatePassword($user, $request)) {
-            return ApiResponse::success(SingleUserResource::make($user));
-        }
 
-        return ApiResponse::error('Password not updated');
+        return new SingleUserResource($this->userService->updatePassword($user, $request));
     }
 
     #[OA\Post(
@@ -201,17 +193,14 @@ class UserController extends Controller
             new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function changeTheme(int $id, UserThemeRequest $request)
     {
         $user = User::findOrFail($id);
-        if ($this->userService->updateTheme($user, $request)) {
-            return ApiResponse::success(SingleUserResource::make($user));
-        }
 
-        return ApiResponse::error('Theme not updated');
+        return new SingleUserResource($this->userService->updateTheme($user, $request));
     }
 
     #[OA\Post(
@@ -227,35 +216,14 @@ class UserController extends Controller
         ),
         tags: ['Profile'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
         ],
     )]
     public function uploadAvatar(int $id, AvatarRequest $request)
     {
         $user = User::findOrFail($id);
-        if ($this->userService->updateAvatar($user, $request)) {
-            return ApiResponse::success(SingleUserResource::make($user));
-        }
 
-        return ApiResponse::error('Avatar not updated');
-    }
-
-    #[OA\Delete(
-        path: '/api/v1/users/{id}',
-        description: 'Users delete route',
-        tags: ['Users'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'User'),
-        ],
-        responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
-        ]
-    )]
-    public function delete(UsersDeleteRequest $request): JsonResponse
-    {
-        User::query()->whereIn('id', $request->ids)->delete();
-
-        return ApiResponse::success(true);
+        return new SingleUserResource($this->userService->updateAvatar($user, $request));
     }
 
     #[OA\Get(
@@ -266,14 +234,14 @@ class UserController extends Controller
             new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'DeviceInfoResource'),
+            new OpenApiArrayResponse(resourceName: 'DeviceInfoResource'),
         ]
     )]
-    public function devices(int $id, UsersDevicesRequest $request): JsonResponse
+    public function devices(int $id, UsersDevicesRequest $request): AnonymousResourceCollection
     {
         $user = User::findOrFail($id);
 
-        return ApiResponse::success(DeviceInfoResource::collection($user->tokens));
+        return DeviceInfoResource::collection($user->tokens);
     }
 
     #[OA\Delete(
@@ -289,15 +257,33 @@ class UserController extends Controller
             ),
         ],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function revokeDevice(DeviceRevokeRequest $request): JsonResponse
+    public function revokeDevice(DeviceRevokeRequest $request): StatusResource
     {
         PersonalAccessToken::query()->whereIn('id', $request->ids)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/users/{id}',
+        description: 'Users delete route',
+        tags: ['Users'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'User'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function delete(UsersDeleteRequest $request): StatusResource
+    {
+        User::query()->whereIn('id', $request->ids)->delete();
+
+        return new StatusResource(true);
     }
 
     #[OA\Post(
@@ -315,17 +301,15 @@ class UserController extends Controller
             new OpenApiIdParameter(modelName: 'User'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleUserResource'),
+            new OpenApiDataResponse(resourceName: 'SingleUserResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
     public function attachRole(int $id, AttachRoleRequest $request)
     {
         $user = User::findOrFail($id);
-        if ($user->update(['role_id' => $request->role_id])) {
-            return ApiResponse::success(SingleUserResource::make($user));
-        }
+        $user->updateOrFail(['role_id' => $request->role_id]);
 
-        return ApiResponse::error('Role not attached');
+        return new SingleUserResource($user);
     }
 }

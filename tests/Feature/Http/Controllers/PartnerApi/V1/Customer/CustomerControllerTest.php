@@ -16,7 +16,7 @@ class CustomerControllerTest extends TestCase
     public function index()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->get(route('customer.index'));
+        $response = $this->actingAs($admin)->getJson(route('customer.index'));
 
         $response->assertOk();
         $this->assertIsArray($response->json('data'));
@@ -30,7 +30,7 @@ class CustomerControllerTest extends TestCase
         $customer = Customer::factory()->create();
 
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->get(route('customer.get-single', ['id' => $customer->id]));
+        $response = $this->actingAs($admin)->getJson(route('customer.get-single', ['id' => $customer->id]));
 
         $response->assertOk();
         $this->assertEquals($customer->first_name, $response->json('data.first_name'));
@@ -77,9 +77,9 @@ class CustomerControllerTest extends TestCase
 
         $this->seedAddress();
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->post(route('customer.create'), $request);
+        $response = $this->actingAs($admin)->postJson(route('customer.create'), $request);
 
-        $response->assertOk();
+        $response->assertSuccessful();
         $this->assertEquals($request['first_name'], $response->json('data.first_name'));
         $this->assertDatabaseHas('customers', ['pinfl' => $request['pinfl']]);
         $this->assertDatabaseHas('phones', ['phone' => $request['phones'][0]['phone']]);

@@ -18,12 +18,12 @@ class AuthControllerTest extends TestCase
             'username' => 'test',
             'password' => bcrypt('password'),
         ]);
-        $response = $this->post(route('auth.login'), [
+        $response = $this->postJson(route('auth.login'), [
             'username' => $user->username,
             'password' => 'password',
         ], ['Device-Name' => 'test', 'Device-OS' => 'android', 'Device-Type' => 'mobile']);
 
         $response->assertOk();
-        $this->assertIsString($response->json('data'));
+        $this->assertIsString($response->json('data.token'));
     }
 }

@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\PartnerApi\V1\User;
 
 use App\Enums\Company\Rbac\UserRoleEnum;
+use App\Exceptions\ForbiddenException;
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Rbac\RolePermissionRequest;
 use App\Http\Requests\Rbac\RoleRequest;
 use App\Http\Requests\Rbac\RolesDeleteRequest;
@@ -21,10 +20,11 @@ use App\Http\Requests\Rbac\RolesFilterRequest;
 use App\Http\Requests\Rbac\RoleViewRequest;
 use App\Http\Resources\Rbac\RoleListResource;
 use App\Http\Resources\Rbac\SingleRoleResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use OpenApi\Attributes as OA;
 
 class RoleController extends Controller
@@ -40,7 +40,7 @@ class RoleController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'RoleListResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'RoleListResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(RolesFilterRequest $request)
@@ -61,7 +61,7 @@ class RoleController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Get(
@@ -72,13 +72,13 @@ class RoleController extends Controller
             new OpenApiIdParameter(modelName: 'Role'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleRoleResource'),
+            new OpenApiDataResponse(resourceName: 'SingleRoleResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, RoleViewRequest $request): JsonResponse
+    public function getSingle(int $id, RoleViewRequest $request): SingleRoleResource
     {
-        return ApiResponse::success(SingleRoleResource::make(Role::findOrFail($id)));
+        return new SingleRoleResource(Role::findOrFail($id));
     }
 
     #[OA\Post(
@@ -91,19 +91,16 @@ class RoleController extends Controller
         ),
         tags: ['Roles'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleRoleResource'),
+            new OpenApiDataResponse(resourceName: 'SingleRoleResource', response: '201'),
         ]
     )]
-    public function create(RoleRequest $request): JsonResponse
+    public function create(RoleRequest $request): RoleListResource
     {
         $model = new Role;
         $model->fill($request->validated());
+        $model->saveOrFail();
 
-        if ($model->save()) {
-            return ApiResponse::success(RoleListResource::make($model));
-        }
-
-        return ApiResponse::error('Error on creating a role');
+        return new RoleListResource($model);
     }
 
     #[OA\Put(
@@ -119,24 +116,23 @@ class RoleController extends Controller
             new OpenApiIdParameter(modelName: 'Role'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleRoleResource'),
+            new OpenApiDataResponse(resourceName: 'SingleRoleResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, RoleRequest $request): JsonResponse
+    public function update(int $id, RoleRequest $request): RoleListResource
     {
+        /** @var Role $role */
         $role = Role::findOrFail($id);
+
         if ($role->name === UserRoleEnum::ADMIN->value) {
-            return ApiResponse::error('You can\'t update admin role');
+            throw new ForbiddenException('You can\'t update admin role');
         }
+
         $role->fill($request->validated());
+        $role->saveOrFail();
 
-        if ($role->save()) {
-
-            return ApiResponse::success(RoleListResource::make($role));
-        }
-
-        return ApiResponse::error('Error on updating a role');
+        return new RoleListResource($role);
     }
 
     #[OA\Post(
@@ -152,7 +148,7 @@ class RoleController extends Controller
             new OpenApiIdParameter(modelName: 'Role'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleRoleResource'),
+            new OpenApiDataResponse(resourceName: 'SingleRoleResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
@@ -175,13 +171,13 @@ class RoleController extends Controller
         );
         foreach ($mapped as $item) {
             if (in_array(null, $item, true) && count($item) > 1) {
-                return ApiResponse::error('You can\'t attach permission to all branches and specific branch at the same time');
+                throw ValidationException::withMessages(['permission_id' => 'You can\'t attach permission to all branches and specific branch at the same time']);
             }
         }
 
         $role->syncPermissions($filtered);
 
-        return ApiResponse::success(SingleRoleResource::make($role));
+        return new SingleRoleResource($role);
     }
 
     #[OA\Delete(
@@ -194,13 +190,13 @@ class RoleController extends Controller
         ),
         tags: ['Roles'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function delete(RolesDeleteRequest $request): JsonResponse
+    public function delete(RolesDeleteRequest $request): StatusResource
     {
         Role::query()->whereIn('id', $request->ids)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }
