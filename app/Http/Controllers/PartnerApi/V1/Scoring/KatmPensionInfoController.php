@@ -109,7 +109,7 @@ class KatmPensionInfoController extends Controller
     public function read(int $id, ScoringRequestViewRequest $request)
     {
         $scoring = ScoringRequest::findOrFail($id);
-        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::KATM_INPS_HISTORY) {
+        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::KATM_PENSION_INFO) {
             throw new ModelNotFoundException;
         }
 
