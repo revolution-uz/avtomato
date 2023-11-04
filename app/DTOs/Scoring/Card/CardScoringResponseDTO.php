@@ -22,7 +22,7 @@ class CardScoringResponseDTO extends BaseScoringResponse
     ) {
     }
 
-    public static function parseFromUnired($response)
+    public static function parseFromUnired($response): CardScoringResponseDTO
     {
         $report = [];
         foreach ($response as $month => $data) {

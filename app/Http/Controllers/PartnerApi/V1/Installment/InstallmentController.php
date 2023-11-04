@@ -5,17 +5,15 @@ namespace App\Http\Controllers\PartnerApi\V1\Installment;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Installment\InstallmentCardRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
@@ -25,12 +23,12 @@ use App\Http\Requests\Installment\InstallmentViewRequest;
 use App\Http\Resources\Installment\InstallmentCardResource;
 use App\Http\Resources\Installment\InstallmentGuarantorResource;
 use App\Http\Resources\Installment\InstallmentResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentCard;
 use App\Models\Company\InstallmentGuarantor;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -48,13 +46,13 @@ class InstallmentController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'InstallmentResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'InstallmentResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(InstallmentFilterRequest $request): AnonymousResourceCollection
     {
         $sortables = ['id', 'customer_id', 'tariff_id', 'amount']; // TODO add all fields, it's just for testing
-        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW_ALL);
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW);
 
         return InstallmentResource::collection(
             Installment::query()
@@ -70,7 +68,7 @@ class InstallmentController extends Controller
                 )
                 ->when($branches, fn (Builder $q) => $q->whereIn('branch_id', $branches))
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Get(
@@ -81,13 +79,13 @@ class InstallmentController extends Controller
             new OpenApiIdParameter(modelName: 'Installment'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'InstallmentResource'),
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, InstallmentViewRequest $request): JsonResponse
+    public function getSingle(int $id, InstallmentViewRequest $request): InstallmentResource
     {
-        return ApiResponse::success(InstallmentResource::make(Installment::findOrFail($id)));
+        return new InstallmentResource(Installment::findOrFail($id));
     }
 
     #[OA\Post(
@@ -100,20 +98,17 @@ class InstallmentController extends Controller
         ),
         tags: ['Installments'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'InstallmentResource'),
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
         ]
     )]
-    public function create(InstallmentRequest $request): JsonResponse
+    public function create(InstallmentRequest $request): InstallmentResource
     {
         $model = new Installment;
         $model->fill($request->validated());
         $model->status = InstallmentStatusEnum::CREATED;
+        $model->saveOrFail();
 
-        if ($model->saveOrFail()) {
-            return ApiResponse::success(InstallmentResource::make($model));
-        }
-
-        return ApiResponse::error('Error on creating Installment');
+        return new InstallmentResource($model);
     }
 
     #[OA\Put(
@@ -134,40 +129,17 @@ class InstallmentController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'InstallmentResource'),
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, InstallmentRequest $request): JsonResponse
+    public function update(int $id, InstallmentRequest $request): InstallmentResource
     {
         $installment = Installment::findOrFail($id);
         $installment->fill($request->validated());
+        $installment->saveOrFail();
 
-        if ($installment->saveOrFail()) {
-            return ApiResponse::success(InstallmentResource::make($installment));
-        }
-
-        return ApiResponse::error('Error on updating Installment');
-    }
-
-    #[OA\Delete(
-        path: '/api/v1/installment/installment',
-        description: 'Installment delete route',
-        requestBody: new OA\RequestBody(
-            description: 'Installments delete request body',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentsDeleteRequest')
-        ),
-        tags: ['Installments'],
-        responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
-        ]
-    )]
-    public function delete(InstallmentsDeleteRequest $request): JsonResponse
-    {
-        Installment::query()->whereIn('id', $request->ids)->delete();
-
-        return ApiResponse::success(true);
+        return new InstallmentResource($installment);
     }
 
     #[OA\Post(
@@ -180,20 +152,17 @@ class InstallmentController extends Controller
         ),
         tags: ['Installments'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'InstallmentCardResource'),
+            new OpenApiDataResponse(resourceName: 'InstallmentCardResource'),
         ]
     )]
-    public function attachCard(int $installmentId, InstallmentCardRequest $request): JsonResponse
+    public function attachCard(int $installmentId, InstallmentCardRequest $request): InstallmentCardResource
     {
         $model = new InstallmentCard;
         $model->fill($request->validated());
         $model->installment_id = $installmentId;
+        $model->saveOrFail();
 
-        if ($model->saveOrFail()) {
-            return ApiResponse::success(InstallmentCardResource::make($model));
-        }
-
-        return ApiResponse::error('Error on attaching card to Installment');
+        return new InstallmentCardResource($model);
     }
 
     #[OA\Delete(
@@ -206,14 +175,34 @@ class InstallmentController extends Controller
         ),
         tags: ['Installments'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function detachCard(int $installmentId, InstallmentCardRequest $request): JsonResponse
+    public function detachCard(int $installmentId, InstallmentCardRequest $request): StatusResource
     {
         $installmentCard = InstallmentCard::query()->where('installment_id', $installmentId)->where('card_id', $request->card_id)->first();
 
-        return ApiResponse::success($installmentCard->delete());
+        return new StatusResource($installmentCard->delete());
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/installment',
+        description: 'Installment delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Installments delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentsDeleteRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function delete(InstallmentsDeleteRequest $request): StatusResource
+    {
+        Installment::query()->whereIn('id', $request->ids)->delete();
+
+        return new StatusResource(true);
     }
 
     #[OA\Post(
@@ -226,20 +215,17 @@ class InstallmentController extends Controller
         ),
         tags: ['Installments'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'InstallmentGuarantorResource'),
+            new OpenApiDataResponse(resourceName: 'InstallmentGuarantorResource'),
         ]
     )]
-    public function attachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): JsonResponse
+    public function attachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): InstallmentGuarantorResource
     {
         $model = new InstallmentGuarantor;
         $model->fill($request->validated());
         $model->installment_id = $installmentId;
+        $model->saveOrFail();
 
-        if ($model->saveOrFail()) {
-            return ApiResponse::success(InstallmentGuarantorResource::make($model));
-        }
-
-        return ApiResponse::error('Error on attaching guarantor to Installment');
+        return new InstallmentGuarantorResource($model);
     }
 
     #[OA\Put(
@@ -260,20 +246,18 @@ class InstallmentController extends Controller
             ),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'InstallmentGuarantorResource'),
+            new OpenApiDataResponse(resourceName: 'InstallmentGuarantorResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function updateGuarantor(int $installmentId, InstallmentGuarantorRequest $request): JsonResponse
+    public function updateGuarantor(int $installmentId, InstallmentGuarantorRequest $request): InstallmentGuarantorResource
     {
         $installmentGuarantor = InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->first();
         $installmentGuarantor->fill($request->validated());
 
-        if ($installmentGuarantor->saveOrFail()) {
-            return ApiResponse::success(InstallmentGuarantorResource::make($installmentGuarantor));
-        }
+        $installmentGuarantor->saveOrFail();
 
-        return ApiResponse::error('Error on updating Installment');
+        return new InstallmentGuarantorResource($installmentGuarantor);
     }
 
     #[OA\Delete(
@@ -289,10 +273,10 @@ class InstallmentController extends Controller
             ),
         ],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function detachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): JsonResponse
+    public function detachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): StatusResource
     {
         //        deleting guarantor all attached cards
         $cardIds = Card::query()->where('customer_id', $request->customer_id)->pluck('id')->toArray();
@@ -300,6 +284,6 @@ class InstallmentController extends Controller
         //        delete guarantor
         InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }

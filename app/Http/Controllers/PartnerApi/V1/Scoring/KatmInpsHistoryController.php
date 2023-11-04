@@ -5,26 +5,24 @@ namespace App\Http\Controllers\PartnerApi\V1\Scoring;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonArrayResponse;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
-use App\Helpers\Swagger\OpenApiSingleDataResponse;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Scoring\KatmCreditHistoryCreateRequest;
 use App\Http\Requests\Scoring\KatmCreditHistoryFilterRequest;
 use App\Http\Requests\Scoring\ScoringRequestDeleteRequest;
 use App\Http\Requests\Scoring\ScoringRequestViewRequest;
 use App\Http\Resources\Scoring\KatmInpsHistoryResource;
+use App\Http\Resources\StatusResource;
 use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\KatmService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
@@ -46,7 +44,7 @@ class KatmInpsHistoryController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonArrayResponse(resourceName: 'KatmInpsHistoryResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'KatmInpsHistoryResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(KatmCreditHistoryFilterRequest $request)
@@ -73,7 +71,7 @@ class KatmInpsHistoryController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Post(
@@ -86,7 +84,7 @@ class KatmInpsHistoryController extends Controller
         ),
         tags: ['Scoring (INPS history)'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'KatmInpsHistoryResource'),
+            new OpenApiDataResponse(resourceName: 'KatmInpsHistoryResource'),
         ]
     )]
     public function create(KatmCreditHistoryCreateRequest $request)
@@ -94,7 +92,7 @@ class KatmInpsHistoryController extends Controller
         $dto = KatmCreateRequestDTO::from($request->validated());
         $model = $this->katmService->createRequest($dto, ScoringRequestTypeEnum::KATM_INPS_HISTORY);
 
-        return ApiResponse::success(KatmInpsHistoryResource::make($model));
+        return new KatmInpsHistoryResource($model);
     }
 
     #[OA\Get(
@@ -105,7 +103,7 @@ class KatmInpsHistoryController extends Controller
             new OpenApiIdParameter(modelName: 'ScoringRequest'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'KatmInpsHistoryResource'),
+            new OpenApiDataResponse(resourceName: 'KatmInpsHistoryResource'),
         ]
     )]
     public function read(int $id, ScoringRequestViewRequest $request)
@@ -115,7 +113,7 @@ class KatmInpsHistoryController extends Controller
             throw new ModelNotFoundException;
         }
 
-        return ApiResponse::success(KatmInpsHistoryResource::make($scoring));
+        return new KatmInpsHistoryResource($scoring);
     }
 
     #[OA\Delete(
@@ -128,13 +126,13 @@ class KatmInpsHistoryController extends Controller
         ),
         tags: ['Scoring (INPS history)'],
         responses: [
-            new OpenApiSingleDataResponse(data: 'true', type: 'boolean'),
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function delete(ScoringRequestDeleteRequest $request): JsonResponse
+    public function delete(ScoringRequestDeleteRequest $request): StatusResource
     {
         ScoringRequest::query()->whereIn('id', $request->ids)->delete();
 
-        return ApiResponse::success(true);
+        return new StatusResource(true);
     }
 }

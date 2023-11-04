@@ -18,7 +18,7 @@ class InfoControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)
-            ->get(route('info.settings'));
+            ->getJson(route('info.settings'));
 
         $response->assertOk();
     }
@@ -31,7 +31,7 @@ class InfoControllerTest extends TestCase
         Region::factory()->count(10)->create();
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)
-            ->get(route('info.regions'));
+            ->getJson(route('info.regions'));
 
         $response->assertOk();
         $this->assertCount(10, $response->json('data'));
@@ -45,7 +45,7 @@ class InfoControllerTest extends TestCase
         District::factory()->count(10)->create();
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)
-            ->get(route('info.districts'));
+            ->getJson(route('info.districts'));
 
         $response->assertOk();
         $this->assertCount(10, $response->json('data'));
@@ -59,7 +59,7 @@ class InfoControllerTest extends TestCase
         Mahalla::factory()->count(10)->create();
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)
-            ->get(route('info.mahallas'));
+            ->getJson(route('info.mahallas'));
 
         $response->assertOk();
         $this->assertCount(10, $response->json('data'));

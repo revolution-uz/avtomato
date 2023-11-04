@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Customer;
 
+use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
-use App\Helpers\Swagger\OpenApiJsonResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Http\Requests\Customer\CardViewRequest;
 use App\Http\Requests\Customer\CreateCustomerRequest;
 use App\Http\Requests\Customer\CustomersFilterRequest;
@@ -23,7 +22,6 @@ use App\Models\Company\Phone;
 use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -47,7 +45,7 @@ class CustomerController extends Controller
         ),
         tags: ['Customers'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'CustomerInfoByPassportDataResource', nullable: true),
+            new OpenApiDataResponse(resourceName: 'CustomerInfoByPassportDataResource', nullable: true),
         ]
     )]
     public function infoByPassport(GetCustomerInfoByPassportRequest $request)
@@ -58,7 +56,7 @@ class CustomerController extends Controller
             birthData: Carbon::parse($request->birth_date)
         );
 
-        return ApiResponse::success($passportData ? new CustomerInfoByPassportDataResource($passportData) : null);
+        return new CustomerInfoByPassportDataResource($passportData);
     }
 
     #[OA\Post(
@@ -71,7 +69,7 @@ class CustomerController extends Controller
         ),
         tags: ['Customers'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleCustomerResource'),
+            new OpenApiDataResponse(resourceName: 'SingleCustomerResource', response: '201'),
         ]
     )]
     public function create(CreateCustomerRequest $request)
@@ -108,11 +106,11 @@ class CustomerController extends Controller
 
             DB::commit();
 
-            return ApiResponse::success(new SingleCustomerResource($customer));
+            return new SingleCustomerResource($customer);
         } catch (Throwable $th) {
             DB::rollBack();
 
-            return ApiResponse::error($th->getMessage());
+            throw $th;
         }
     }
 
@@ -124,13 +122,13 @@ class CustomerController extends Controller
             new OpenApiIdParameter(modelName: 'Customer'),
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'SingleCustomerResource'),
+            new OpenApiDataResponse(resourceName: 'SingleCustomerResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, CardViewRequest $request): JsonResponse
+    public function getSingle(int $id, CardViewRequest $request): SingleCustomerResource
     {
-        return ApiResponse::success(SingleCustomerResource::make(Customer::findOrFail($id)));
+        return new SingleCustomerResource(Customer::findOrFail($id));
     }
 
     #[OA\Get(
@@ -144,7 +142,7 @@ class CustomerController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'CustomerListItemResource'),
+            new OpenApiDataResponse(resourceName: 'CustomerListItemResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
@@ -168,6 +166,6 @@ class CustomerController extends Controller
                         : $q->orderBy($request->sort)
                 )
                 ->paginate($request->per_page)
-        )->additional(['success' => true, 'sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]);
     }
 }

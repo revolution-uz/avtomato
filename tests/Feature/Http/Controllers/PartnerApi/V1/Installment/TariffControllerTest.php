@@ -16,7 +16,7 @@ class TariffControllerTest extends TestCase
     {
         Tariff::factory(5)->create();
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->get(route('tariffs.index'));
+        $response = $this->actingAs($admin)->getJson(route('tariffs.index'));
 
         $response->assertOk();
         $this->assertCount(5, $response->json('data'));
@@ -29,7 +29,7 @@ class TariffControllerTest extends TestCase
     {
         $tariff = Tariff::factory()->create();
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->get(route('tariffs.get-single', ['id' => $tariff->id]));
+        $response = $this->actingAs($admin)->getJson(route('tariffs.get-single', ['id' => $tariff->id]));
 
         $response->assertOk();
         $this->assertEquals($tariff->id, $response->json('data.id'));
@@ -41,7 +41,7 @@ class TariffControllerTest extends TestCase
     public function create()
     {
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->post(route('tariffs.create', [
+        $response = $this->actingAs($admin)->postJson(route('tariffs.create', [
             'name' => 'New tariff',
             'is_annual' => true,
             'percent' => 10,
@@ -51,7 +51,7 @@ class TariffControllerTest extends TestCase
             'max_initial_fee' => 1000,
         ]));
 
-        $response->assertOk();
+        $response->assertSuccessful();
         $this->assertDatabaseHas('tariffs', [
             'name' => 'New tariff',
             'is_annual' => true,
@@ -70,7 +70,7 @@ class TariffControllerTest extends TestCase
     {
         $tariff = Tariff::factory()->create();
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->put(route('tariffs.update', ['id' => $tariff->id]), [
+        $response = $this->actingAs($admin)->putJson(route('tariffs.update', ['id' => $tariff->id]), [
             'name' => 'Updated tariff',
             'is_annual' => true,
             'percent' => 10,
@@ -99,7 +99,7 @@ class TariffControllerTest extends TestCase
     {
         $tariff = Tariff::factory()->create();
         $admin = $this->createAdminUser();
-        $response = $this->actingAs($admin)->delete(route('tariffs.delete', [
+        $response = $this->actingAs($admin)->deleteJson(route('tariffs.delete', [
             'ids' => [$tariff->id],
         ]));
 

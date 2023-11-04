@@ -2,7 +2,9 @@
 
 namespace Database\Seeders\Company;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Rbac\UserRoleEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Database\Seeder;
@@ -17,13 +19,19 @@ class AdminRoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = Role::firstOrCreate(['name' => UserRoleEnum::ADMIN->value]);
+        /** @var Role $admin */
+        $admin = Role::query()->firstOrCreate(['name' => UserRoleEnum::ADMIN->value]);
 
         try {
             DB::transaction(static function () use ($admin) {
                 $permissions = Permission::all();
                 foreach ($permissions as $permission) {
                     $admin->permissions()->attach($permission->id);
+                    if (PermissionEnum::getIsBranchRelated($permission->slug)) {
+                        foreach (Branch::all() as $branch) {
+                            $admin->permissions()->attach($permission->id, ['branch_id' => $branch->id]);
+                        }
+                    }
                 }
             });
         } catch (Throwable $e) {

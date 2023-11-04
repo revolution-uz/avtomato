@@ -22,28 +22,33 @@ class UserService
         return User::create($attributes);
     }
 
-    public function updateDetails(User $user, UserUpdateRequest $request): bool
+    public function updateDetails(User $user, UserUpdateRequest $request): User
     {
         $attributes = $request->validated();
+        $user->updateOrFail($attributes);
 
-        return $user->update($attributes);
+        return $user;
     }
 
-    public function updatePassword(User $user, PasswordRequest $request): bool
+    public function updatePassword(User $user, PasswordRequest $request): User
     {
-        return $user->update([
+        $user->updateOrFail([
             'password' => Hash::make('password'),
         ]);
+
+        return $user;
     }
 
-    public function updateTheme(User $user, UserThemeRequest $request): bool
+    public function updateTheme(User $user, UserThemeRequest $request): User
     {
-        return $user->update([
+        $user->updateOrFail([
             'template_theme' => $request->getData(),
         ]);
+
+        return $user;
     }
 
-    public function updateAvatar(User $user, AvatarRequest $request)
+    public function updateAvatar(User $user, AvatarRequest $request): User
     {
         $photo = $request->file('avatar');
         $file_name = uniqid() . '.' . $photo->extension();
@@ -52,7 +57,8 @@ class UserService
         $thumbnail = Image::make($photo)->resize(300, 300);
         $previewPath = User::THUMBNAIL_PATH . '/' . $file_name;
         Storage::disk('public')->put($previewPath, $thumbnail->encode());
+        $user->updateOrFail(['avatar' => $file_name]);
 
-        return $user->update(['avatar' => $file_name]);
+        return $user;
     }
 }
