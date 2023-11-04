@@ -18,7 +18,6 @@ use App\Http\Requests\Customer\CardsDeleteRequest;
 use App\Http\Requests\Customer\CardViewRequest;
 use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
 use App\Http\Resources\Customer\CardResource;
-use App\Http\Resources\Customer\CreateAndAttachCardResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
 use App\Services\PlumService;
@@ -173,17 +172,14 @@ class CardController extends Controller
         ),
         tags: ['Cards'],
         responses: [
-            new OpenApiJsonResponse(resourceName: 'CardResource'),
+            new OpenApiDataResponse(resourceName: 'CardResource'),
         ]
     )]
-    public function confirm(int $id, ConfirmCustomerCardRequest $request): JsonResponse
+    public function confirm(int $id, ConfirmCustomerCardRequest $request): CardResource
     {
         $card = Card::findOrFail($id);
-        $response = $this->plumService->confirmCard($card, $request->session, $request->otp);
-        if ($response === true) {
-            return ApiResponse::success(CardResource::make($card));
-        }
+        $this->plumService->confirmCard($card, $request->session, $request->otp);
 
-        return ApiResponse::error($response);
+        return CardResource::make($card);
     }
 }
