@@ -55,6 +55,71 @@ class PlumClient extends BaseClient
         return $response->json('result');
     }
 
+    /**
+     * @return array|mixed
+     */
+    public function attachCard($customer_id, $number, $expiry, $phone)
+    {
+        $data = [
+            'userId' => $customer_id,
+            'cardNumber' => $number,
+            'expireDate' => $expiry,
+            'userPhone' => $phone,
+        ];
+        $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
+            ->post($this->baseUrl . '/UserCard/createUserCard', $data);
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'POST',
+            url: $this->baseUrl . '/UserCard/createUserCard',
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            body: $data,
+        ));
+
+        return $response->json('result');
+    }
+
+    public function confirmCard(int $session, string $otp)
+    {
+        $data = [
+            'session' => $session,
+            'otp' => $otp,
+            'isTrusted' => true,
+        ];
+        $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
+            ->post($this->baseUrl . '/UserCard/confirmUserCardCreate', $data);
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'POST',
+            url: $this->baseUrl . '/UserCard/confirmUserCardCreate',
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            body: $data,
+        ));
+
+        return $response->json('result');
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getCards(array $params)
+    {
+        $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
+            ->get($this->baseUrl . '/UserCard/confirmUserCardCreate?' . http_build_query($params));
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'GET',
+            url: $this->baseUrl . '/UserCard/getAllUserCards',
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            params: $params,
+        ));
+
+        return $response->json('result');
+    }
+
     protected function logRequest(HttpRequestLogDTO $request): void
     {
         Log::channel('plum-client')->info($request->url, $request->toArray());

@@ -81,6 +81,22 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'plum-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/plum-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'asaxiy-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/asaxiy-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

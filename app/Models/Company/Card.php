@@ -18,6 +18,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $pan
  * @property string $number
  * @property string $expiry
+ * @property string $phone
  * @property CardStatusEnum $status
  * @property float $balance
  * @property string $plum_id
@@ -36,6 +37,7 @@ class Card extends Model
         'pan',
         'number',
         'expiry',
+        'phone',
         'status',
         'balance',
         'plum_id',

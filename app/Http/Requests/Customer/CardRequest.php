@@ -14,6 +14,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'number', type: 'string', example: '9860111122224444'),
         new OA\Property(property: 'expiry', type: 'string', example: '2809', description: 'year+month 2809 instead of 09/28'),
+        new OA\Property(property: 'phone', type: 'string', example: '+998901234567'),
     ],
 )]
 class CardRequest extends FormRequest
@@ -24,6 +25,7 @@ class CardRequest extends FormRequest
             'customer_id' => 'required|exists:customers,id',
             'number' => 'required|string',
             'expiry' => 'required|string',
+            'phone' => ['required', 'regex:/^((\+998)|0)[-]?[0-9]{9}$/'],
         ];
     }
 
@@ -31,6 +33,7 @@ class CardRequest extends FormRequest
     {
         return $this->id ?
             RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_EDIT) :
-            RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_CREATE);
+            RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_CREATE) &&
+            RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_ATTACH);
     }
 }

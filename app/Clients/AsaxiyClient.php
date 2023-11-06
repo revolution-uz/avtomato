@@ -5,6 +5,7 @@ namespace App\Clients;
 use App\DTOs\HttpRequestLogDTO;
 use App\Enums\ClientCodeEnum;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AsaxiyClient extends BaseClient
 {
@@ -117,5 +118,10 @@ class AsaxiyClient extends BaseClient
         ));
 
         return $response->json('result');
+    }
+
+    protected function logRequest(HttpRequestLogDTO $request): void
+    {
+        Log::channel('asaxiy-client')->info($request->url, $request->toArray());
     }
 }

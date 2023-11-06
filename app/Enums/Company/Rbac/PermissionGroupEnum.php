@@ -58,6 +58,8 @@ enum PermissionGroupEnum: string
                 PermissionEnum::CUSTOMER_CARDS_VIEW,
                 PermissionEnum::CUSTOMER_CARDS_CREATE,
                 PermissionEnum::CUSTOMER_CARDS_EDIT,
+                PermissionEnum::CUSTOMER_CARDS_ATTACH,
+                PermissionEnum::CUSTOMER_CARDS_CONFIRM,
                 PermissionEnum::CUSTOMER_CARDS_DELETE,
             ],
             self::ROLE_MANAGEMENT => [

@@ -56,6 +56,8 @@ enum PermissionEnum: string
     case CUSTOMER_CARDS_VIEW_ALL = 'customer_cards_view_all';
     case CUSTOMER_CARDS_VIEW = 'customer_cards_view';
     case CUSTOMER_CARDS_CREATE = 'customer_cards_create';
+    case CUSTOMER_CARDS_ATTACH = 'customer_cards_attach';
+    case CUSTOMER_CARDS_CONFIRM = 'customer_cards_confirm';
     case CUSTOMER_CARDS_EDIT = 'customer_cards_edit';
     case CUSTOMER_CARDS_DELETE = 'customer_cards_delete';
 
@@ -184,6 +186,8 @@ enum PermissionEnum: string
             self::CUSTOMER_CARDS_VIEW,
             self::CUSTOMER_CARDS_CREATE,
             self::CUSTOMER_CARDS_EDIT,
+            self::CUSTOMER_CARDS_ATTACH,
+            self::CUSTOMER_CARDS_CONFIRM,
             self::CUSTOMER_CARDS_DELETE,
 
             self::ROLE_VIEW_ALL,
@@ -302,6 +306,8 @@ enum PermissionEnum: string
                 self::CUSTOMER_CARDS_VIEW->value,
                 self::CUSTOMER_CARDS_CREATE->value,
                 self::CUSTOMER_CARDS_EDIT->value,
+                self::CUSTOMER_CARDS_ATTACH->value,
+                self::CUSTOMER_CARDS_CONFIRM->value,
                 self::CUSTOMER_CARDS_DELETE->value,
             ],
             PermissionGroupEnum::ROLE_MANAGEMENT->value => [
@@ -456,6 +462,8 @@ enum PermissionEnum: string
             self::CUSTOMER_CARDS_VIEW,
             self::CUSTOMER_CARDS_CREATE,
             self::CUSTOMER_CARDS_EDIT,
+            self::CUSTOMER_CARDS_ATTACH,
+            self::CUSTOMER_CARDS_CONFIRM,
             self::CUSTOMER_CARDS_DELETE => Feature::findByName(FeatureEnum::CUSTOMER_CARDS_MANAGEMENT)->id,
 
             self::INFO_SETTINGS,
