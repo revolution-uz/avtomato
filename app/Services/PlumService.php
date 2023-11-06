@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Clients\PlumClient;
+use App\DTOs\Scoring\Card\CreateUserCardDTO;
 use App\Models\Company\Card;
 
 class PlumService
@@ -14,12 +15,12 @@ class PlumService
 
     public function attachCard(Card $card)
     {
-        return $this->plumClient->attachCard(
+        return CreateUserCardDTO::from($this->plumClient->attachCard(
             $card->customer_id,
             $card->number,
             $card->expiry,
             $card->phone,
-        );
+        ));
     }
 
     public function confirmCard(Card $card, $session, $otp)

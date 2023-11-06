@@ -17,6 +17,7 @@ use App\Http\Requests\Customer\CardRequest;
 use App\Http\Requests\Customer\CardsDeleteRequest;
 use App\Http\Requests\Customer\CardViewRequest;
 use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
+use App\Http\Resources\Customer\AttachCustomerCardResource;
 use App\Http\Resources\Customer\CardResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
@@ -96,10 +97,10 @@ class CardController extends Controller
         ),
         tags: ['Cards'],
         responses: [
-            new OpenApiDataResponse(resourceName: 'CardResource'),
+            new OpenApiDataResponse(resourceName: 'AttachCustomerCardResource'),
         ]
     )]
-    public function create(CardRequest $request): CardResource
+    public function create(CardRequest $request): AttachCustomerCardResource
     {
         $card = new Card;
         $card->fill($request->validated());
@@ -107,7 +108,7 @@ class CardController extends Controller
         $card->status = CardStatusEnum::INACTIVE;
         $card->saveOrFail();
 
-        return new CardResource($card);
+        return AttachCustomerCardResource::make($this->plumService->attachCard($card), new CardResource($card));
     }
 
     #[OA\Put(

@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Customer;
 
-use Illuminate\Http\Request;
+use App\DTOs\Scoring\Card\CreateUserCardDTO;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
@@ -10,17 +10,15 @@ use OpenApi\Attributes as OA;
     schema: 'AttachCustomerCardResource',
     title: 'AttachCustomerCardResource object',
     properties: [
-        new OA\Property(property: 'session', type: 'int', example: '1'),
-        new OA\Property(property: 'otpSentPhone', type: 'string', example: '99890*****01'),
+        new OA\Property(property: 'attachData', ref: '#/components/schemas/CreateUserCardDTO'),
+        new OA\Property(property: 'card', ref: '#/components/schemas/CardResource'),
     ],
 )]
 class AttachCustomerCardResource extends JsonResource
 {
-    public function toArray(Request $request): array
-    {
-        return [
-            'session' => $this->resource->session,
-            'otpSentPhone' => $this->resource->otpSentPhone,
-        ];
+    public function __construct(
+        public CreateUserCardDTO $attachData,
+        public CardResource $card,
+    ) {
     }
 }
