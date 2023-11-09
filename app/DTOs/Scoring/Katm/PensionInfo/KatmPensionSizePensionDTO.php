@@ -11,7 +11,7 @@ use Spatie\LaravelData\DataCollection;
     schema: 'KatmPensionSizePensionDTO',
     title: 'KatmPensionSizePensionDTO',
     properties: [
-        new OA\Property(property: 'data', ref: '#/components/schemas/KatmIncomeDTO'),
+        new OA\Property(property: 'data', ref: '#/components/schemas/KatmPensionDataDTO'),
         new OA\Property(property: 'row', type: 'array', items: new OA\Items(ref: '#/components/schemas/KatmPensionRowDTO')),
     ],
 )]
