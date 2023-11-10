@@ -4,6 +4,8 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -16,6 +18,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class MibScoring extends Model
 {
     use HasFactory;
+    use LogsActivity;
     use TenantConnection;
 
     protected $fillable = [
@@ -25,4 +28,9 @@ class MibScoring extends Model
         'description',
     ];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
+    }
 }

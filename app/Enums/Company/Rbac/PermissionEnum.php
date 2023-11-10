@@ -153,6 +153,10 @@ enum PermissionEnum: string
     case SCORING_UZCARD_CREATE = 'scoring_uzcard_create';
     case SCORING_UZCARD_DELETE = 'scoring_uzcard_delete';
 
+    // Activity log
+    case ACTIVITY_LOG_VIEW_ALL = 'activity_log_view_all';
+    case ACTIVITY_LOG_VIEW_OWN = 'activity_log_view_own';
+
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
         return match ($permission) {
@@ -257,6 +261,9 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_VIEW,
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE,
+
+            self::ACTIVITY_LOG_VIEW_ALL,
+            self::ACTIVITY_LOG_VIEW_OWN,
 
             self::INSTALLMENT_VIEW_ALL => false,
 
@@ -419,6 +426,10 @@ enum PermissionEnum: string
                 self::PROFILE_REVOKE_DEVICE->value,
                 self::PROFILE_CHANGE_THEME->value,
             ],
+            PermissionGroupEnum::ACTIVITY_LOG->value => [
+                self::ACTIVITY_LOG_VIEW_ALL->value,
+                self::ACTIVITY_LOG_VIEW_OWN->value,
+            ],
         ];
     }
 
@@ -545,6 +556,9 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_VIEW,
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE => Feature::findByName(FeatureEnum::SCORING_UZCARD)->id,
+
+            self::ACTIVITY_LOG_VIEW_ALL,
+            self::ACTIVITY_LOG_VIEW_OWN => Feature::findByName(FeatureEnum::ACTIVITY_LOG)->id,
         };
     }
 }

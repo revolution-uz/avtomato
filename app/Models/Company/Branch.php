@@ -5,6 +5,8 @@ namespace App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -17,11 +19,20 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Branch extends Model
 {
-    use HasFactory, SoftDeletes, TenantConnection;
+    use HasFactory;
+    use LogsActivity;
+    use SoftDeletes;
+    use TenantConnection;
 
     protected $fillable = [
         'name',
         'inn',
         'address',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
+    }
 }

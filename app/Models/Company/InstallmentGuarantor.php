@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -22,6 +24,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class InstallmentGuarantor extends Model
 {
+    use LogsActivity;
     use SoftDeletes;
     use TenantConnection;
 
@@ -31,6 +34,12 @@ class InstallmentGuarantor extends Model
         'any_card_charge',
         'plum_id',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
+    }
 
     public function installment(): BelongsTo
     {

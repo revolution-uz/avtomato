@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -26,6 +28,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class Transaction extends Model
 {
     use HasFactory;
+    use LogsActivity;
     use TenantConnection;
 
     protected $fillable = [
@@ -36,6 +39,12 @@ class Transaction extends Model
         'plum_id',
         'amount',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
+    }
 
     public function installment(): BelongsTo
     {
