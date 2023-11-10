@@ -14,11 +14,4 @@ class OwnLogsRequest extends BaseFilterRequest
     {
         return RbacHelper::checkPermission(PermissionEnum::ACTIVITY_LOG_VIEW_OWN);
     }
-
-    public function rules(): array
-    {
-        return parent::rules() + [
-            'user_id' => 'int|exists:users,id',
-        ];
-    }
 }
