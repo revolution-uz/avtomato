@@ -12,6 +12,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name
  * @property bool $is_annual
  * @property float $percent
+ * @property int $min_period
+ * @property int $max_period
  * @property int $min_amount
  * @property int $max_amount
  * @property int $min_initial_fee
@@ -27,6 +29,8 @@ class Tariff extends Model
         'name',
         'is_annual',
         'percent',
+        'min_period',
+        'max_period',
         'min_amount',
         'max_amount',
         'min_initial_fee',
