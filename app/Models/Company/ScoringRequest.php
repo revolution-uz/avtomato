@@ -12,6 +12,8 @@ use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -32,6 +34,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class ScoringRequest extends Model
 {
+    use LogsActivity;
     use SoftDeletes;
     use TenantConnection;
 
@@ -53,4 +56,10 @@ class ScoringRequest extends Model
         'request' => ScoringRequestCast::class,
         'response' => ScoringResponseCast::class,
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
+    }
 }

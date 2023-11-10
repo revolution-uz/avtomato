@@ -30,4 +30,5 @@ enum FeatureEnum: string
     case SCORING_UZCARD = 'scoring_uzcard';
     case MULTI_BRANCH = 'multi_branch';
     case OWN_SMS_PROVIDER = 'own_sms_provider';
+    case ACTIVITY_LOG = 'activity_log';
 }

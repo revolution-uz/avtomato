@@ -14,7 +14,7 @@ class FeatureSeeder extends Seeder
             Feature::query()->firstOrCreate([
                 'name' => $case->value,
             ], [
-                'is_active' => app()->runningUnitTests(),
+                'is_active' => app()->runningUnitTests() || app()->environment('local'),
             ]);
         }
     }
