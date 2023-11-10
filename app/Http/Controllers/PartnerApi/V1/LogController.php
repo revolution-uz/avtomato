@@ -35,7 +35,7 @@ class LogController extends Controller
             ),
         ],
         responses: [
-            new OpenApiArrayResponse(resourceName: 'RoleListResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'LogResource', withPagination: true, withSortables: true),
         ]
     )]
     public function index(LogFilterRequest $request)
@@ -76,7 +76,7 @@ class LogController extends Controller
             new OpenApiSortParameter,
         ],
         responses: [
-            new OpenApiArrayResponse(resourceName: 'RoleListResource', withPagination: true, withSortables: true),
+            new OpenApiArrayResponse(resourceName: 'LogResource', withPagination: true, withSortables: true),
         ]
     )]
     public function ownLogs(OwnLogsRequest $request)
