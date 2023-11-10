@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Installment;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\InstallmentTypeEnum;
 use App\Models\Company\Installment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,9 +20,11 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'branch', ref: '#/components/schemas/BranchResource', nullable: true),
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
         new OA\Property(property: 'tariff', ref: '#/components/schemas/TariffResource'),
+        new OA\Property(property: 'type', type: 'int', enum: [InstallmentTypeEnum::WITHOUT_CARD, InstallmentTypeEnum::WITH_CARD], example: InstallmentTypeEnum::WITHOUT_CARD),
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
+        new OA\Property(property: 'prepayment', type: 'double', example: '100000'),
         new OA\Property(property: 'description', type: 'string', example: 'inside the order'),
-        new OA\Property(property: 'status', type: 'int', enum: [InstallmentStatusEnum::CANCELED, InstallmentStatusEnum::FROZEN, InstallmentStatusEnum::CREATED, InstallmentStatusEnum::RUNNING, InstallmentStatusEnum::FINISHED], example: 'inside the order'),
+        new OA\Property(property: 'status', type: 'int', enum: [InstallmentStatusEnum::CANCELED, InstallmentStatusEnum::FROZEN, InstallmentStatusEnum::DRAFT, InstallmentStatusEnum::RUNNING, InstallmentStatusEnum::FINISHED], example: InstallmentStatusEnum::DRAFT),
         new OA\Property(property: 'sms_notify', type: 'boolean', example: 'false'),
         new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
         new OA\Property(property: 'starts_in', type: 'int', example: '16933424'),
@@ -46,9 +49,8 @@ class InstallmentResource extends JsonResource
             'tariff_id' => $this->resource->tariff_id,
             'tariff' => $this->resource->tariff,
             'amount' => $this->resource->amount,
+            'prepayment' => $this->resource->prepayment,
             'description' => $this->resource->description,
-            'sms_notify' => $this->resource->sms_notify,
-            'any_card_charge' => $this->resource->any_card_charge,
             'starts_in' => $this->resource->starts_in->getTimestamp(),
             'next_pay_date' => $this->resource->next_pay_date->getTimestamp(),
             'created_at' => $this->resource->created_at->getTimestamp(),

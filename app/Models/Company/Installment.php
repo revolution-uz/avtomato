@@ -17,8 +17,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $branch_id
  * @property Branch $branch
  * @property int $tariff_id
+ * @property int $type
  * @property Tariff $tariff
  * @property float $amount
+ * @property float $prepayment
  * @property string $description
  * @property bool $sms_notify
  * @property bool $any_card_charge
@@ -42,7 +44,9 @@ class Installment extends Model
         'customer_id',
         'branch_id',
         'tariff_id',
+        'type',
         'amount',
+        'prepayment',
         'description',
         'sms_notify',
         'any_card_charge',

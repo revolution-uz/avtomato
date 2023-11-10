@@ -3,6 +3,7 @@
 namespace Database\Factories\Company;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\InstallmentTypeEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
@@ -20,7 +21,9 @@ class InstallmentFactory extends Factory
             'customer_id' => Customer::factory(),
             'branch_id' => Branch::factory(),
             'tariff_id' => Tariff::factory(),
+            'type' => InstallmentTypeEnum::randomValue(),
             'amount' => $this->faker->randomFloat(),
+            'prepayment' => $this->faker->randomFloat(),
             'description' => $this->faker->text(),
             'sms_notify' => $this->faker->boolean(),
             'any_card_charge' => $this->faker->boolean(),

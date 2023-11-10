@@ -105,7 +105,7 @@ class InstallmentController extends Controller
     {
         $model = new Installment;
         $model->fill($request->validated());
-        $model->status = InstallmentStatusEnum::CREATED;
+        $model->status = InstallmentStatusEnum::DRAFT;
         $model->saveOrFail();
 
         return new InstallmentResource($model);
