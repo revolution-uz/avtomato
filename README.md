@@ -40,7 +40,7 @@ Soon
     ```
     CONTAINER ID   IMAGE                 COMMAND                  CREATED          STATUS         PORTS                    NAMES
     d973084f45f5   nginx:alpine          "/docker-entrypoint.…"   8 minutes ago    Up 8 minutes   0.0.0.0:80->80/tcp       avtomato-nginx
-    f1bc06378a53   php                   "docker-php-entrypoi…"   10 minutes ago   Up 8 minutes   9000/tcp                 avtomato-app
+    f1bc06378a53   php                   "docker-php-entrypoi…"   10 minutes ago   Up 8 minutes   9000/tcp                 avtomato
     026762db8004   postgres:alpine3.18   "docker-entrypoint.s…"   12 minutes ago   Up 8 minutes   0.0.0.0:5432->5432/tcp   avtomato-db
     a901e2c1c692   redis:alpine          "docker-entrypoint.s…"   12 minutes ago   Up 8 minutes   6379/tcp                 avtomato-redis
     ```
@@ -71,4 +71,4 @@ Also, you can codesniffer fixable errors by PHPCBF by command `sh scripts/phpcs.
 
 ### How to enter to bash of docker container
 
-Run this command: ```docker-compose exec avtomato-app bash```
+Run this command: ```docker-compose exec avtomato bash```

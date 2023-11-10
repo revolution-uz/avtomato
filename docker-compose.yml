@@ -30,12 +30,12 @@ services:
             - ./docker/nginx:/etc/nginx/conf.d/
         networks:
             - app-network
-    avtomato-app:
+    avtomato:
         build:
             context: .
             dockerfile: docker/Dockerfile
         image: php
-        container_name: avtomato-app
+        container_name: avtomato
         extra_hosts:
             - "internal.host:host-gateway"
         restart: unless-stopped
@@ -53,7 +53,7 @@ services:
         networks:
             - app-network
         depends_on:
-            - avtomato-app
+            - avtomato
             - avtomato-db
             - avtomato-redis
 networks:
