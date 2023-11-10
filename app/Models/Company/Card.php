@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Crypt;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -29,6 +31,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class Card extends Model
 {
     use HasFactory;
+    use LogsActivity;
     use SoftDeletes;
     use TenantConnection;
 
@@ -46,6 +49,12 @@ class Card extends Model
     protected $casts = [
         'status' => CardStatusEnum::class,
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
+    }
 
     public function setPan()
     {

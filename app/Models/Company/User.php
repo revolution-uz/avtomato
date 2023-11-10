@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -31,7 +33,12 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, TenantConnection;
+    use HasApiTokens;
+    use HasFactory;
+    use LogsActivity;
+    use Notifiable;
+    use SoftDeletes;
+    use TenantConnection;
 
     public const AVATAR_PATH = 'avatars';
     public const THUMBNAIL_PATH = 'avatars/thumbnails';
@@ -53,6 +60,12 @@ class User extends Authenticatable
         'status' => UserStatusEnum::class,
         'template_theme' => UserTemplateThemeDto::class,
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
+    }
 
     public function tokens(): MorphMany
     {
