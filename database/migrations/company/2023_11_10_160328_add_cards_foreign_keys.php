@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('cards', function (Blueprint $table) {
-            $table->foreign('customer_id')->cascadeOnDelete();
+            $table->foreign('customer_id')->references('id')->on('customers')->cascadeOnDelete();
         });
     }
 };

@@ -9,10 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('addresses', function (Blueprint $table) {
-            $table->foreign('region_id')->cascadeOnDelete();
-            $table->foreign('district_id')->cascadeOnDelete();
-            $table->foreign('mahalla_id')->cascadeOnDelete();
-            $table->foreign('addressable_id')->restrictOnDelete();
+            $table->foreign('region_id')->references('id')->on('regions')->restrictOnDelete();
+            $table->foreign('district_id')->references('id')->on('districts')->restrictOnDelete();
+            $table->foreign('mahalla_id')->references('id')->on('mahallas')->restrictOnDelete();
         });
     }
 };
