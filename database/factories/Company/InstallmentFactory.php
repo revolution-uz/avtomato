@@ -23,7 +23,7 @@ class InstallmentFactory extends Factory
             'tariff_id' => Tariff::factory(),
             'type' => InstallmentTypeEnum::randomValue(),
             'amount' => $this->faker->randomFloat(),
-            'prepayment' => $this->faker->randomFloat(),
+            'initial_fee' => $this->faker->randomFloat(),
             'description' => $this->faker->text(),
             'sms_notify' => $this->faker->boolean(),
             'any_card_charge' => $this->faker->boolean(),

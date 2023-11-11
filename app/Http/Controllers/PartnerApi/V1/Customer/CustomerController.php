@@ -148,7 +148,7 @@ class CustomerController extends Controller
     )]
     public function index(CustomersFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'pinfl', 'passport_series', 'first_name', 'last_name'];
+        $sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name'];
 
         return CustomerListItemResource::collection(
             Customer::query()
@@ -158,6 +158,8 @@ class CustomerController extends Controller
                         ->where('first_name', 'ILIKE', '%' . $request->search . '%')
                         ->where('last_name', 'ILIKE', '%' . $request->search . '%')
                         ->where('middle_name', 'ILIKE', '%' . $request->search . '%')
+                        ->where('passport_series', 'ILIKE', '%' . $request->search . '%')
+                        ->where('passport_number', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),

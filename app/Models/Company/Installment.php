@@ -22,7 +22,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $type
  * @property Tariff $tariff
  * @property float $amount
- * @property float $prepayment
+ * @property float $initial_fee
  * @property string $description
  * @property bool $sms_notify
  * @property bool $any_card_charge
@@ -49,7 +49,7 @@ class Installment extends Model
         'tariff_id',
         'type',
         'amount',
-        'prepayment',
+        'initial_fee',
         'description',
         'sms_notify',
         'any_card_charge',
