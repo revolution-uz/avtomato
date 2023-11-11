@@ -14,7 +14,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('card_id')->nullable();
             $table->unsignedBigInteger('transaction_type_id');
-            $table->unsignedBigInteger('myuzkard_id')->nullable();
+            $table->unsignedBigInteger('plum_id')->nullable();
             $table->decimal('amount', 12);
             $table->timestamps();
 

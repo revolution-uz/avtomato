@@ -13,7 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('installment_id');
             $table->unsignedBigInteger('customer_id');
             $table->boolean('any_card_charge');
-            $table->string('myuzkard_id')->nullable();
+            $table->string('plum_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

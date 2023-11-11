@@ -20,13 +20,15 @@ class CreatePermissionTables extends Migration
             $table->id();
             $table->string('slug');
             $table->integer('permission_group_id');
-            $table->integer('feature_id')->nullable();
+            $table->integer('feature_id');
             $table->boolean('is_branch_related');
             $table->timestamps();
 
             $table->unique('slug');
             $table->index('permission_group_id');
+
             $table->foreign('permission_group_id')->references('id')->on('permission_groups')->cascadeOnDelete();
+            $table->foreign('feature_id')->references('id')->on('features')->restrictOnDelete();
         });
 
         Schema::create('roles', function (Blueprint $table) {

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('expiry', 4);
             $table->tinyInteger('status');
             $table->decimal('balance', 12)->default(0);
-            $table->unsignedBigInteger('myuzkard_id')->nullable();
+            $table->unsignedBigInteger('plum_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

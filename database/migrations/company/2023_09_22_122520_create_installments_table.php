@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('is_blacklist')->default(false);
             $table->tinyInteger('status');
             $table->tinyInteger('period');
-            $table->string('myuzkard_id')->nullable();
+            $table->string('plum_id')->nullable();
             $table->date('starts_in')->nullable();
             $table->date('next_pay_date')->nullable();
             $table->timestamps();
