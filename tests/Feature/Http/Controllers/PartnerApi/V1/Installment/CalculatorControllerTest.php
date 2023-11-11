@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment;
 
-use App\Models\Company\Installment;
+use App\Models\Company\Tariff;
 use Tests\TestCase;
 
 class CalculatorControllerTest extends TestCase
@@ -14,7 +14,7 @@ class CalculatorControllerTest extends TestCase
      */
     public function calculate()
     {
-        $tariff = Installment::factory()->create();
+        $tariff = Tariff::factory()->create();
 
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)->postJson(route('calculator'), [
