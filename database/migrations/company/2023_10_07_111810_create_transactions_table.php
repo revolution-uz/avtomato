@@ -17,6 +17,11 @@ return new class extends Migration
             $table->unsignedBigInteger('myuzkard_id')->nullable();
             $table->decimal('amount', 12);
             $table->timestamps();
+
+            $table->foreign('customer_id')->references('id')->on('customers')->cascadeOnDelete();
+            $table->foreign('installment_id')->references('id')->on('installments')->cascadeOnDelete();
+            $table->foreign('card_id')->references('id')->on('cards')->restrictOnDelete();
+            $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->restrictOnDelete();
         });
     }
 

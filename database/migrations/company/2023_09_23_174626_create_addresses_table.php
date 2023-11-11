@@ -24,6 +24,10 @@ return new class extends Migration
             $table->index('district_id');
             $table->index('mahalla_id');
             $table->index(['addressable_id', 'addressable_type']);
+
+            $table->foreign('region_id')->references('id')->on('regions')->restrictOnDelete();
+            $table->foreign('district_id')->references('id')->on('districts')->restrictOnDelete();
+            $table->foreign('mahalla_id')->references('id')->on('mahallas')->restrictOnDelete();
         });
     }
 

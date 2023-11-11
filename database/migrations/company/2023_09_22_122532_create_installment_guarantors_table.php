@@ -20,6 +20,9 @@ return new class extends Migration
             $table->index('installment_id');
             $table->index('customer_id');
             $table->unique(['installment_id', 'customer_id']);
+
+            $table->foreign('installment_id')->references('id')->on('installments')->cascadeOnDelete();
+            $table->foreign('customer_id')->references('id')->on('customers')->restrictOnDelete();
         });
     }
 

@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::table('permissions', function (Blueprint $table) {
             $table->integer('feature_id')->change();
+            $table->foreign('feature_id')->references('id')->on('features')->restrictOnDelete();
         });
     }
 

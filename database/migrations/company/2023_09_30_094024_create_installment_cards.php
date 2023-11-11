@@ -16,6 +16,9 @@ return new class extends Migration
 
             $table->index('installment_id');
             $table->unique(['installment_id', 'card_id']);
+
+            $table->foreign('installment_id')->references('id')->on('installments')->cascadeOnDelete();
+            $table->foreign('card_id')->references('id')->on('cards')->restrictOnDelete();
         });
     }
 

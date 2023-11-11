@@ -30,6 +30,10 @@ return new class extends Migration
             $table->index('branch_id');
             $table->index('tariff_id');
             $table->index('next_pay_date');
+
+            $table->foreign('customer_id')->references('id')->on('customers')->cascadeOnDelete();
+            $table->foreign('branch_id')->references('id')->on('branches')->restrictOnDelete();
+            $table->foreign('tariff_id')->references('id')->on('tariffs')->restrictOnDelete();
         });
     }
 
