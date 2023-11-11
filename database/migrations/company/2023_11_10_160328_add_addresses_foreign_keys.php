@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::table('addresses', function (Blueprint $table) {
             $table->foreign('region_id')->cascadeOnDelete();
             $table->foreign('district_id')->cascadeOnDelete();
             $table->foreign('mahalla_id')->cascadeOnDelete();

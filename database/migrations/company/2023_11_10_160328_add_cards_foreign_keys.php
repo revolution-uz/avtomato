@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('cards', function (Blueprint $table) {
+        Schema::table('cards', function (Blueprint $table) {
             $table->foreign('customer_id')->cascadeOnDelete();
         });
     }

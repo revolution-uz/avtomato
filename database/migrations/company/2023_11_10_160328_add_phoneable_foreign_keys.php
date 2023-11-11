@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('phoneables', function (Blueprint $table) {
+        Schema::table('phoneables', function (Blueprint $table) {
             $table->foreign('phone_id')->cascadeOnDelete();
             $table->foreign('phoneable_id')->restrictOnDelete();
         });

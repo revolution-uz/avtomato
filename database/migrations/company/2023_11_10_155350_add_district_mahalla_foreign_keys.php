@@ -8,10 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('districts', function (Blueprint $table) {
+        Schema::table('districts', function (Blueprint $table) {
             $table->foreign('region_id')->cascadeOnDelete();
         });
-        Schema::create('mahallas', function (Blueprint $table) {
+        Schema::table('mahallas', function (Blueprint $table) {
             $table->foreign('district_id')->cascadeOnDelete();
         });
     }
