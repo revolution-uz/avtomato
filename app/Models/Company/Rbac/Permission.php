@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property PermissionEnum $slug
  * @property int $permission_group_id
  * @property int $feature_id
+ * @property bool $is_branch_related
  * @property-read string $name
  * @property-read PermissionGroup $permissionGroup
  */
@@ -42,7 +43,7 @@ class Permission extends Model
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => __('permissions.' . $this->slug->value)
+            get: fn() => __('permissions.' . $this->slug->value)
         );
     }
 }
