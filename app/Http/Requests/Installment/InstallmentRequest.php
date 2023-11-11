@@ -44,7 +44,7 @@ class InstallmentRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $tariff = Tariff::findOrFail($this->input('tariff_id'));
                     /** @var Tariff $tariff */
-                    if (! $tariff) {
+                    if ($tariff == null) {
                         $fail('Invalid tariff selected.');
 
                         return;
@@ -60,7 +60,7 @@ class InstallmentRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $tariff = Tariff::findOrFail($this->input('tariff_id'));
                     /** @var Tariff $tariff */
-                    if (! $tariff) {
+                    if ($tariff == null) {
                         $fail('Invalid tariff selected.');
 
                         return;
@@ -76,7 +76,7 @@ class InstallmentRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $tariff = Tariff::findOrFail($this->input('tariff_id'));
                     /** @var Tariff $tariff */
-                    if (! $tariff) {
+                    if ($tariff == null) {
                         $fail('Invalid tariff selected.');
 
                         return;
