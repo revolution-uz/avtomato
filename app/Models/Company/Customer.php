@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -37,7 +39,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Customer extends Model
 {
-    use HasFactory, SoftDeletes, TenantConnection;
+    use HasFactory, LogsActivity, SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'pinfl',
@@ -77,5 +79,11 @@ class Customer extends Model
     public function addresses(): MorphMany
     {
         return $this->morphMany(Address::class, 'addressable');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
     }
 }

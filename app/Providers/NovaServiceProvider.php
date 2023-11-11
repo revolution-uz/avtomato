@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Nova\AdminResource;
 use App\Nova\Company\BranchResource;
 use App\Nova\Company\FeatureResource;
+use App\Nova\Company\LogResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\TariffsResource;
 use App\Nova\Company\UserResource;
@@ -50,6 +51,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(BranchResource::class),
                         MenuItem::resource(TariffsResource::class),
                         MenuItem::resource(RoleResource::class),
+                        MenuItem::resource(LogResource::class),
                     ])->collapsable(),
                 ];
             }

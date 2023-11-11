@@ -27,6 +27,7 @@ enum PermissionGroupEnum: string
     case SCORING_TAX_INFO = 'scoring_tax_info';
     case SCORING_HUMO = 'scoring_humo';
     case SCORING_UZCARD = 'scoring_uzcard';
+    case ACTIVITY_LOG = 'activity_log';
 
     /**
      * @return PermissionEnum[]
@@ -170,6 +171,10 @@ enum PermissionGroupEnum: string
                 PermissionEnum::PROFILE_DEVICES,
                 PermissionEnum::PROFILE_REVOKE_DEVICE,
                 PermissionEnum::PROFILE_CHANGE_THEME,
+            ],
+            self::ACTIVITY_LOG => [
+                PermissionEnum::ACTIVITY_LOG_VIEW_ALL,
+                PermissionEnum::ACTIVITY_LOG_VIEW_OWN,
             ],
         };
     }

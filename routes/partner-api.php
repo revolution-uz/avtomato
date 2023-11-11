@@ -9,6 +9,7 @@ use App\Http\Controllers\PartnerApi\V1\Installment\InstallmentController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TransactionController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TransactionTypeController;
+use App\Http\Controllers\PartnerApi\V1\LogController;
 use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\HumoController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
@@ -201,5 +202,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('{id}', 'read')->name('uzcard.read');
             Route::delete('/', 'delete')->name('uzcard.delete');
         });
+    });
+
+    Route::prefix('log')->controller(LogController::class)->group(function () {
+        Route::get('/', 'index')->name('log.index');
+        Route::get('own', 'ownLogs')->name('log.own');
     });
 });
