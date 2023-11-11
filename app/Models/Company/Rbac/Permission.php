@@ -43,7 +43,7 @@ class Permission extends Model
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn() => __('permissions.' . $this->slug->value)
+            get: fn () => __('permissions.' . $this->slug->value)
         );
     }
 }
