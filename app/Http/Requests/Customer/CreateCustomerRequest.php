@@ -73,7 +73,7 @@ class CreateCustomerRequest extends FormRequest
             'phones.*' => 'array:phone,type,comment',
             'phones.*.phone' => 'distinct|required|int|digits_between:9,13',
             'phones.*.type' => 'required|int|in:' . implode(',', PhoneTypeEnum::values()),
-            'phones.*.comment' => 'string|max:64',
+            'phones.*.comment' => 'nullable|string|max:64',
             'addresses' => 'array',
             'addresses.*' => 'array:type,address,region_id,district_id,mahalla_id',
             'addresses.*.type' => 'required|int|in:' . implode(',', AddressTypeEnum::values()),
