@@ -19,6 +19,7 @@ return new class extends Migration
 
             $table->index('district_id');
             $table->index('oilakredit_id');
+            $table->foreign('district_id')->references('id')->on('districts')->cascadeOnDelete();
         });
     }
 

@@ -14,13 +14,16 @@ return new class extends Migration
             $table->string('pan', 16);
             $table->string('number', 1024);
             $table->string('expiry', 4);
+            $table->string('phone')->nullable();
             $table->tinyInteger('status');
             $table->decimal('balance', 12)->default(0);
-            $table->unsignedBigInteger('myuzkard_id')->nullable();
+            $table->unsignedBigInteger('plum_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('customer_id');
+
+            $table->foreign('customer_id')->references('id')->on('customers')->cascadeOnDelete();
         });
     }
 

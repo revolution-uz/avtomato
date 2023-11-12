@@ -19,6 +19,8 @@ return new class extends Migration
 
             $table->index('region_id');
             $table->index('oilakredit_id');
+
+            $table->foreign('region_id')->references('id')->on('regions')->cascadeOnDelete();
         });
     }
 

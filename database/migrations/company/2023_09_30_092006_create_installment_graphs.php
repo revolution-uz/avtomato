@@ -19,6 +19,8 @@ return new class extends Migration
 
             //indexes
             $table->index('installment_id');
+
+            $table->foreign('installment_id')->references('id')->on('installments')->cascadeOnDelete();
         });
     }
 
