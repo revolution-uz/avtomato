@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Helpers\Swagger\OpenApiArrayResponse;
@@ -105,7 +106,10 @@ class InstallmentController extends Controller
     {
         $model = new Installment;
         $model->fill($request->validated());
-        $model->status = InstallmentStatusEnum::CREATED;
+        $model->status = InstallmentStatusEnum::DRAFT;
+        $model->sms_notify = false;
+        $model->any_card_charge = false;
+        $model->type = InstallmentTypeEnum::WITHOUT_CARD;
         $model->saveOrFail();
 
         return new InstallmentResource($model);

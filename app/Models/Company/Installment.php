@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,8 +20,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $branch_id
  * @property Branch $branch
  * @property int $tariff_id
+ * @property InstallmentTypeEnum $type
  * @property Tariff $tariff
  * @property float $amount
+ * @property float $initial_fee
  * @property string $description
  * @property bool $sms_notify
  * @property bool $any_card_charge
@@ -45,7 +48,9 @@ class Installment extends Model
         'customer_id',
         'branch_id',
         'tariff_id',
+        'type',
         'amount',
+        'initial_fee',
         'description',
         'sms_notify',
         'any_card_charge',
@@ -61,6 +66,7 @@ class Installment extends Model
         'starts_in' => 'date:d-m-Y',
         'next_pay_date' => 'date:d-m-Y',
         'status' => InstallmentStatusEnum::class,
+        'type' => InstallmentTypeEnum::class,
     ];
 
     public function getActivitylogOptions(): LogOptions
