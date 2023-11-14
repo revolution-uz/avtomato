@@ -59,15 +59,15 @@ class InstallmentController extends Controller
             Installment::query()
                 ->when(
                     $request->search,
-                    fn (Builder $q) => $q->where('id', $request->search)
+                    fn(Builder $q) => $q->where('id', $request->search)
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
+                    fn(Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
-                ->when($branches, fn (Builder $q) => $q->whereIn('branch_id', $branches))
+                ->when($branches, fn(Builder $q) => $q->whereIn('branch_id', $branches))
                 ->paginate($request->per_page)
         )->additional(['sortables' => $sortables]);
     }
@@ -109,7 +109,7 @@ class InstallmentController extends Controller
         $model->status = InstallmentStatusEnum::DRAFT;
         $model->sms_notify = false;
         $model->any_card_charge = false;
-        $model->type = InstallmentTypeEnum::WITHOUT_CARD->value;
+        $model->type = InstallmentTypeEnum::WITHOUT_CARD;
         $model->saveOrFail();
 
         return new InstallmentResource($model);
