@@ -27,7 +27,9 @@ class InstallmentCardResource extends JsonResource
     {
         return [
             'installment_id' => $this->resource->installment_id,
+            'installment' => $this->resource->installment,
             'card_id' => $this->resource->card_id,
+            'card' => $this->resource->card,
             'auto_charge' => $this->resource->auto_charge,
         ];
     }

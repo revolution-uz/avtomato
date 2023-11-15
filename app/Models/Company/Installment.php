@@ -17,6 +17,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property int $customer_id
  * @property Customer $customer
+ * @property Card[] $cards
  * @property int $branch_id
  * @property Branch $branch
  * @property int $tariff_id
@@ -83,6 +84,11 @@ class Installment extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function cards()
+    {
+        return Card::query()->join('installment_cards', 'cards.id=install_cards.card_id')->where('installment_id', $this->id)->select('cards.*')->get();
     }
 
     public function branch(): BelongsTo
