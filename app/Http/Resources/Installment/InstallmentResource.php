@@ -5,6 +5,7 @@ namespace App\Http\Resources\Installment;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Http\Resources\Customer\CardResource;
+use App\Http\Resources\Customer\CustomerListItemResource;
 use App\Models\Company\Installment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,6 +19,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerListItemResource'),
         new OA\Property(property: 'cards', type: 'array', items: new OA\Items(ref: '#/components/schemas/CardResource')),
+        new OA\Property(property: 'guarantors', type: 'array', items: new OA\Items(ref: '#/components/schemas/CustomerListItemResource')),
         new OA\Property(property: 'branch_id', type: 'int', example: '1'),
         new OA\Property(property: 'branch', ref: '#/components/schemas/BranchResource', nullable: true),
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
@@ -47,6 +49,7 @@ class InstallmentResource extends JsonResource
             'customer_id' => $this->resource->customer_id,
             'customer' => $this->resource->customer,
             'cards' => CardResource::collection($this->resource->cards),
+            'guarantors' => CustomerListItemResource::collection($this->resource->guarantors),
             'branch_id' => $this->resource->branch_id,
             'branch' => $this->resource->branch,
             'tariff_id' => $this->resource->tariff_id,
