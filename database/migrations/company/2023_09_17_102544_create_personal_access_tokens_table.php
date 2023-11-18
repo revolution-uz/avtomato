@@ -17,6 +17,8 @@ return new class extends Migration
             $table->timestamp('last_used_at')->nullable();
             $table->string('device_ip')->nullable();
             $table->timestamp('expires_at')->nullable();
+            $table->string('device_type', 32)->nullable();
+            $table->string('device_os', 32)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

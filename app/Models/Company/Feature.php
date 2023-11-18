@@ -2,21 +2,28 @@
 
 namespace App\Models\Company;
 
-use App\Enums\Company\FeatureEnum;
+use App\Enums\FeatureEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * App\Models\Company\Feature
  *
- * @property int $id
- * @property FeatureEnum $name
- * @property string|null $description
+ * @property-read int $id
+ * @property-read FeatureEnum $name
+ * @property-read string|null $description
  * @property bool $is_active
+ * @property-read int $original_amount
+ * @property int|null $amount
+ * @property-read  array|null $original_data
+ * @property array|null $data
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Collection<Module> $modules
  */
 class Feature extends Model
 {
@@ -25,9 +32,9 @@ class Feature extends Model
     private static ?array $features = null;
 
     protected $fillable = [
-        'name',
-        'description',
         'is_active',
+        'amount',
+        'data',
     ];
 
     protected $casts = [
@@ -50,5 +57,15 @@ class Feature extends Model
         }
 
         return self::$features[$feature->value];
+    }
+
+    public function modules(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Module::class,
+            'modules_features',
+            'feature_id',
+            'module_id'
+        );
     }
 }

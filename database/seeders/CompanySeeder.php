@@ -9,6 +9,7 @@ use App\Models\Company\User;
 use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\LocationSeeder;
+use Database\Seeders\Company\ModuleSeeder;
 use Database\Seeders\Company\PermissionSeeder;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Database\Seeder;
@@ -21,6 +22,7 @@ class CompanySeeder extends Seeder
     public function run(): void
     {
         $this->call(LocationSeeder::class);
+        $this->call(ModuleSeeder::class);
         $this->call(FeatureSeeder::class);
         $this->call(PermissionSeeder::class);
         $this->call(AdminRoleSeeder::class);

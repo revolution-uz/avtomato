@@ -2,7 +2,7 @@
 
 namespace App\Enums\Company\Rbac;
 
-use App\Enums\Company\FeatureEnum;
+use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
 
 /**
