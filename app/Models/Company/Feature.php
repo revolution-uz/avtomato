@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\FeatureEnum;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -24,6 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<Module> $modules
+ * @property-read int $chargeable_amount
  */
 class Feature extends Model
 {
@@ -66,6 +68,13 @@ class Feature extends Model
             'modules_features',
             'feature_id',
             'module_id'
+        );
+    }
+
+    public function chargeableAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->amount !== null ? $this->amount : $this->original_amount
         );
     }
 }

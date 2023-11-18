@@ -4,6 +4,7 @@ namespace Database\Seeders\Company;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Rbac\PermissionGroupEnum;
+use App\Models\Company\Feature;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\PermissionGroup;
 use App\Models\Company\Rbac\RolePermission;
@@ -32,7 +33,7 @@ class PermissionSeeder extends Seeder
                         Permission::query()->firstOrCreate(['slug' => $permission], [
                             'permission_group_id' => $permissionGroup->id,
                             'is_branch_related' => PermissionEnum::getIsBranchRelated($permission),
-                            'feature_id' => PermissionEnum::getFeatureId($permission),
+                            'feature_id' => Feature::findByName(PermissionEnum::getFeature($permission))->id,
                         ]);
                     }
                     Permission::query()
