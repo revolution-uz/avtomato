@@ -15,7 +15,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Schema(
     schema: 'InstallmentRequest',
-    title: 'Request to create or update a installment',
+    title: 'Request to create an installment',
     properties: [
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'branch_id', type: 'int', example: '1'),
@@ -93,8 +93,6 @@ class InstallmentRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return $this->id ?
-            RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_EDIT) :
-            RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE);
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE);
     }
 }
