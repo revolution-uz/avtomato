@@ -19,8 +19,6 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerListItemResource'),
-        new OA\Property(property: 'cards', type: 'array', items: new OA\Items(ref: '#/components/schemas/CardResource')),
-        new OA\Property(property: 'guarantors', type: 'array', items: new OA\Items(ref: '#/components/schemas/CustomerListItemResource')),
         new OA\Property(property: 'branch_id', type: 'int', example: '1'),
         new OA\Property(property: 'branch', ref: '#/components/schemas/BranchResource', nullable: true),
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
@@ -36,6 +34,10 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'next_pay_date', type: 'int', example: '16933424'),
         new OA\Property(property: 'created_at', type: 'int', example: '16933424'),
         new OA\Property(property: 'updated_at', type: 'int', example: '16933424'),
+        new OA\Property(property: 'graphs', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentGraphResource')),
+        new OA\Property(property: 'cards', type: 'array', items: new OA\Items(ref: '#/components/schemas/CardResource')),
+        new OA\Property(property: 'guarantors', type: 'array', items: new OA\Items(ref: '#/components/schemas/CustomerListItemResource')),
+        new OA\Property(property: 'attachments', type: 'array', items: new OA\Items(ref: '#/components/schemas/AttachmentResource')),
     ],
 )]
 /**
