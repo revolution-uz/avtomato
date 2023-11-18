@@ -82,6 +82,9 @@ enum PermissionEnum: string
     case INSTALLMENT_ATTACH_GUARANTOR = 'installment_attach_guarantor';
     case INSTALLMENT_UPDATE_GUARANTOR = 'installment_update_guarantor';
     case INSTALLMENT_DETACH_GUARANTOR = 'installment_detach_guarantor';
+    case INSTALLMENT_CREATE_COMMENT = 'installment_create_comment';
+    case INSTALLMENT_UPDATE_COMMENT = 'installment_update_comment';
+    case INSTALLMENT_DELETE_COMMENT = 'installment_delete_comment';
 
     // Manage tariffs
     case TARIFF_VIEW_ALL = 'tariff_view_all';
@@ -278,6 +281,10 @@ enum PermissionEnum: string
             self::INSTALLMENT_UPDATE_GUARANTOR,
             self::INSTALLMENT_DETACH_GUARANTOR,
 
+            self::INSTALLMENT_CREATE_COMMENT,
+            self::INSTALLMENT_UPDATE_COMMENT,
+            self::INSTALLMENT_DELETE_COMMENT,
+
             self::TRANSACTION_VIEW_ALL,
             self::TRANSACTION_VIEW,
             self::TRANSACTION_CREATE,
@@ -346,6 +353,9 @@ enum PermissionEnum: string
                 self::INSTALLMENT_ATTACH_GUARANTOR->value,
                 self::INSTALLMENT_UPDATE_GUARANTOR->value,
                 self::INSTALLMENT_DETACH_GUARANTOR->value,
+                self::INSTALLMENT_CREATE_COMMENT->value,
+                self::INSTALLMENT_UPDATE_COMMENT->value,
+                self::INSTALLMENT_DELETE_COMMENT->value,
             ],
             PermissionGroupEnum::TARIFF_MANAGEMENT->value => [
                 self::TARIFF_VIEW_ALL->value,
@@ -497,6 +507,10 @@ enum PermissionEnum: string
             self::INSTALLMENT_ATTACH_GUARANTOR,
             self::INSTALLMENT_UPDATE_GUARANTOR,
             self::INSTALLMENT_DETACH_GUARANTOR => Feature::findByName(FeatureEnum::INSTALLMENT_GUARANTOR)->id,
+
+            self::INSTALLMENT_CREATE_COMMENT,
+            self::INSTALLMENT_UPDATE_COMMENT,
+            self::INSTALLMENT_DELETE_COMMENT => Feature::findByName(FeatureEnum::INSTALLMENT_COMMENT)->id,
 
             self::TARIFF_VIEW_ALL,
             self::TARIFF_VIEW,

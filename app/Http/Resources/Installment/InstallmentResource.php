@@ -38,6 +38,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'cards', type: 'array', items: new OA\Items(ref: '#/components/schemas/CardResource')),
         new OA\Property(property: 'guarantors', type: 'array', items: new OA\Items(ref: '#/components/schemas/CustomerListItemResource')),
         new OA\Property(property: 'attachments', type: 'array', items: new OA\Items(ref: '#/components/schemas/AttachmentResource')),
+        new OA\Property(property: 'comments', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentCommentListResource')),
     ],
 )]
 /**
@@ -55,6 +56,7 @@ class InstallmentResource extends JsonResource
             'guarantors' => CustomerListItemResource::collection($this->resource->guarantors),
             'graphs' => InstallmentGraphResource::collection($this->resource->graphs),
             'attachments' => AttachmentResource::collection($this->resource->attachments),
+            'comments' => InstallmentCommentListResource::collection($this->resource->comments),
             'branch_id' => $this->resource->branch_id,
             'branch' => $this->resource->branch,
             'tariff_id' => $this->resource->tariff_id,

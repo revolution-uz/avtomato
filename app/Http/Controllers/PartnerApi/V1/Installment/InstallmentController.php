@@ -16,6 +16,8 @@ use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Installment\InstallmentCardRequest;
+use App\Http\Requests\Installment\InstallmentCommentRequest;
+use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
@@ -24,12 +26,14 @@ use App\Http\Requests\Installment\InstallmentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Http\Requests\Installment\InstallmentViewRequest;
 use App\Http\Resources\Installment\InstallmentCardResource;
+use App\Http\Resources\Installment\InstallmentCommentListResource;
 use App\Http\Resources\Installment\InstallmentGuarantorResource;
 use App\Http\Resources\Installment\InstallmentResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentCard;
+use App\Models\Company\InstallmentComment;
 use App\Models\Company\InstallmentGuarantor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -292,6 +296,80 @@ class InstallmentController extends Controller
         InstallmentCard::query()->where('installment_id', $installmentId)->whereIn('card_id', $cardIds)->delete();
         //        delete guarantor
         InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->delete();
+
+        return new StatusResource(true);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/comment',
+        description: 'Installment create Installment comment route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment comment create request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCommentRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentCommentListResource'),
+        ]
+    )]
+    public function createComment(InstallmentCommentRequest $request): InstallmentCommentListResource
+    {
+        $model = new InstallmentComment;
+        $model->fill($request->validated());
+        $model->user_id = auth()->id();
+        $model->saveOrFail();
+
+        return new InstallmentCommentListResource($model);
+    }
+
+    #[OA\Put(
+        path: '/api/v1/installment/comment/{id}',
+        description: 'Installment update Installment comment route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment comment update request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCommentRequest')
+        ),
+        tags: ['Installments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Installment Comment ID',
+                in: 'path',
+                required: true
+            ),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentCommentListResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function updateComment(int $id, InstallmentCommentRequest $request): InstallmentCommentListResource
+    {
+        $installmentComment = InstallmentComment::findOrFail($id);
+        $installmentComment->fill($request->validated());
+        $installmentComment->saveOrFail();
+
+        return InstallmentCommentListResource::make($installmentComment);
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/comment',
+        description: 'Installment Comment delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment comments delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCommentsDeleteRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function deleteComment(InstallmentCommentsDeleteRequest $request): StatusResource
+    {
+        InstallmentComment::query()->whereIn('id', $request->ids)->delete();
 
         return new StatusResource(true);
     }

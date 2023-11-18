@@ -92,6 +92,9 @@ enum PermissionGroupEnum: string
                 PermissionEnum::INSTALLMENT_ATTACH_GUARANTOR,
                 PermissionEnum::INSTALLMENT_UPDATE_GUARANTOR,
                 PermissionEnum::INSTALLMENT_DETACH_GUARANTOR,
+                PermissionEnum::INSTALLMENT_CREATE_COMMENT,
+                PermissionEnum::INSTALLMENT_UPDATE_COMMENT,
+                PermissionEnum::INSTALLMENT_DELETE_COMMENT,
             ],
             self::TARIFF_MANAGEMENT => [
                 PermissionEnum::TARIFF_VIEW_ALL,
