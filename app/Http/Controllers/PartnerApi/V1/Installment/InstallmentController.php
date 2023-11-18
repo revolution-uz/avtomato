@@ -16,7 +16,7 @@ use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Installment\InstallmentCardRequest;
-use App\Http\Requests\Installment\InstallmentEditRequest;
+use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
@@ -122,7 +122,7 @@ class InstallmentController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Installment update request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentEditRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentUpdateRequest')
         ),
         tags: ['Installments'],
         parameters: [
@@ -138,7 +138,7 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, InstallmentEditRequest $request): InstallmentResource
+    public function update(int $id, InstallmentUpdateRequest $request): InstallmentResource
     {
         $installment = Installment::findOrFail($id);
         if ($installment->status == InstallmentStatusEnum::DRAFT) {
@@ -230,6 +230,7 @@ class InstallmentController extends Controller
         $model = new InstallmentGuarantor;
         $model->fill($request->validated());
         $model->installment_id = $installmentId;
+        $model->any_card_charge = false;
         $model->saveOrFail();
 
         return new InstallmentGuarantorResource($model);

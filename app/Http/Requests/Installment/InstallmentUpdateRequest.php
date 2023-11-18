@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'InstallmentEditRequest',
+    schema: 'InstallmentUpdateRequest',
     title: 'Request to update an installment',
     properties: [
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
@@ -24,7 +24,7 @@ use OpenApi\Attributes as OA;
 /**
  * use @mixin Installment
  */
-class InstallmentEditRequest extends FormRequest
+class InstallmentUpdateRequest extends FormRequest
 {
     public function rules(): array
     {
