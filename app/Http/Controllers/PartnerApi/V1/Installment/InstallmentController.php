@@ -16,11 +16,12 @@ use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Installment\InstallmentCardRequest;
-use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
+use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Http\Requests\Installment\InstallmentViewRequest;
 use App\Http\Resources\Installment\InstallmentCardResource;
 use App\Http\Resources\Installment\InstallmentGuarantorResource;
@@ -242,7 +243,7 @@ class InstallmentController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Installment guarantor update request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentGuarantorRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentGuarantorUpdateRequest')
         ),
         tags: ['Installments'],
         parameters: [
@@ -258,7 +259,7 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function updateGuarantor(int $installmentId, InstallmentGuarantorRequest $request): InstallmentGuarantorResource
+    public function updateGuarantor(int $installmentId, InstallmentGuarantorUpdateRequest $request): InstallmentGuarantorResource
     {
         $installmentGuarantor = InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->first();
         $installmentGuarantor->fill($request->validated());

@@ -11,12 +11,9 @@ use OpenApi\Attributes as OA;
 
 #[OA\Schema(
     schema: 'InstallmentGuarantorRequest',
-    title: 'Request to create or update a installment guarantor',
+    title: 'Request to attach or detach installment guarantor',
     properties: [
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
-        new OA\Property(property: 'auto_charge', type: 'boolean', example: 'true'),
-        new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
-        new OA\Property(property: 'status', type: 'int', example: '1'),
     ],
 )]
 /**
@@ -28,9 +25,6 @@ class InstallmentGuarantorRequest extends FormRequest
     {
         return [
             'customer_id' => 'required|exists:customers,id',
-            'auto_charge' => 'required|boolean',
-            'any_card_charge' => 'required|boolean',
-            'status' => 'required|int',
         ];
     }
 
@@ -38,7 +32,6 @@ class InstallmentGuarantorRequest extends FormRequest
     {
         return match (Route::currentRouteName()) {
             'installments.attach-guarantor' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_ATTACH_GUARANTOR),
-            'installments.update-guarantor' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_UPDATE_GUARANTOR),
             'installments.detach-guarantor' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_DETACH_GUARANTOR),
             default => false
         };
