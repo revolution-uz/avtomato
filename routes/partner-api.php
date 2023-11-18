@@ -147,7 +147,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('create', 'create')->name('customer.create');
         Route::get('/', 'index')->name('customer.index');
         Route::get('{id}', 'getSingle')->name('customer.get-single');
-        Route::get('by-passport', 'findByPassport')->name('customer.by-passport');
+        Route::post('by-passport', 'findByPassport')->name('customer.by-passport');
     });
 
     Route::prefix('customer-card')->controller(CardController::class)->group(function () {
