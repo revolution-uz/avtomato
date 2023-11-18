@@ -14,12 +14,12 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property int $user_id
  * @property int $installment_id
- * @property string $comment
- * @property User $user
- * @property Installment $installment
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property string $comment
+ * @property User $user
+ * @property Installment $installment
  */
 class InstallmentComment extends Model
 {

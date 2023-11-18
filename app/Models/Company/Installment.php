@@ -16,21 +16,14 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property int $customer_id
- * @property Customer $customer
- * @property Card[] $cards
- * @property Customer[] $guarantors
  * @property int $branch_id
- * @property Branch $branch
  * @property int $tariff_id
- * @property InstallmentTypeEnum $type
- * @property Tariff $tariff
  * @property float $amount
  * @property float $initial_fee
  * @property string $description
  * @property bool $sms_notify
  * @property bool $any_card_charge
  * @property bool $is_blacklist
- * @property InstallmentStatusEnum $status
  * @property int $period
  * @property string $plum_id
  * @property Carbon|null $starts_in
@@ -38,6 +31,16 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property InstallmentTypeEnum $type
+ * @property InstallmentStatusEnum $status
+ * @property Branch $branch
+ * @property Tariff $tariff
+ * @property Customer $customer
+ * @property Card[] $cards
+ * @property InstallmentGraph[] $graphs
+ * @property Attachment[] $attachments
+ * @property InstallmentComment[] $comments
+ * @property Customer[] $guarantors
  */
 class Installment extends Model
 {
@@ -95,6 +98,21 @@ class Installment extends Model
     public function guarantors()
     {
         return $this->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')->select('customers.*');
+    }
+
+    public function attachments()
+    {
+        return $this->morphToMany(Attachment::class, 'attachmentable');
+    }
+
+    public function comments()
+    {
+        return $this->belongsToMany(InstallmentComment::class);
+    }
+
+    public function graphs()
+    {
+        return $this->belongsToMany(InstallmentGraph::class);
     }
 
     public function branch(): BelongsTo

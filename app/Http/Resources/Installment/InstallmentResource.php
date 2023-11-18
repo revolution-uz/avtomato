@@ -4,6 +4,7 @@ namespace App\Http\Resources\Installment;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
+use App\Http\Resources\AttachmentResource;
 use App\Http\Resources\Customer\CardResource;
 use App\Http\Resources\Customer\CustomerListItemResource;
 use App\Models\Company\Installment;
@@ -50,6 +51,8 @@ class InstallmentResource extends JsonResource
             'customer' => $this->resource->customer,
             'cards' => CardResource::collection($this->resource->cards),
             'guarantors' => CustomerListItemResource::collection($this->resource->guarantors),
+            'graphs' => InstallmentGraphResource::collection($this->resource->graphs),
+            'attachments' => AttachmentResource::collection($this->resource->attachments),
             'branch_id' => $this->resource->branch_id,
             'branch' => $this->resource->branch,
             'tariff_id' => $this->resource->tariff_id,
