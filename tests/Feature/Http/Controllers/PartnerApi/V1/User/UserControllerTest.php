@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 
+use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\UserStatusEnum;
+use App\Models\Company\Attachment;
 use App\Models\Company\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
@@ -10,7 +12,7 @@ use Tests\TestCase;
 
 class UserControllerTest extends TestCase
 {
-    protected $tenancy = true;
+    protected bool $tenancy = true;
 
     /**
      * @test
@@ -127,11 +129,10 @@ class UserControllerTest extends TestCase
         $response = $this->actingAs($admin)->postJson(route('users.change-avatar', ['id' => $user->id]), [
             'avatar' => UploadedFile::fake()->image('avatar.jpg'),
         ]);
-
+        $user->refresh();
         $response->assertOk();
-        $file_name = $user->fresh()->avatar;
-        $this->assertFileExists(storage_path('app/public/' . User::AVATAR_PATH . '/' . $file_name));
-        $this->assertFileExists(storage_path('app/public/' . User::THUMBNAIL_PATH . '/' . $file_name));
+        $this->assertFileExists(storage_path('app/public/' . Attachment::UPLOADS_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $user->avatar->path));
+        $this->assertFileExists(storage_path('app/public/' . Attachment::PREVIEW_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $user->avatar->preview_path));
     }
 
     /**

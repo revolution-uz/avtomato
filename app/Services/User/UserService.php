@@ -2,15 +2,15 @@
 
 namespace App\Services\User;
 
+use App\Enums\Company\AttachmentTypeEnum;
 use App\Http\Requests\User\AvatarRequest;
 use App\Http\Requests\User\PasswordRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
+use App\Models\Company\Attachment;
 use App\Models\Company\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 class UserService
 {
@@ -50,14 +50,8 @@ class UserService
 
     public function updateAvatar(User $user, AvatarRequest $request): User
     {
-        $photo = $request->file('avatar');
-        $file_name = uniqid() . '.' . $photo->extension();
-        $photo->storeAs(User::AVATAR_PATH, $file_name, ['disk' => 'public']);
-
-        $thumbnail = Image::make($photo)->resize(300, 300);
-        $previewPath = User::THUMBNAIL_PATH . '/' . $file_name;
-        Storage::disk('public')->put($previewPath, $thumbnail->encode());
-        $user->updateOrFail(['avatar' => $file_name]);
+        Attachment::upload($request->file('avatar'), AttachmentTypeEnum::AVATAR, $user);
+        $user->refresh();
 
         return $user;
     }

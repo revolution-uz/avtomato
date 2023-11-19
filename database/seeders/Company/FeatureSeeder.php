@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Company;
 
-use App\Enums\Company\FeatureEnum;
+use App\Models\BaseFeature;
 use App\Models\Company\Feature;
 use Illuminate\Database\Seeder;
 
@@ -10,12 +10,32 @@ class FeatureSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (FeatureEnum::cases() as $case) {
-            Feature::query()->firstOrCreate([
-                'name' => $case->value,
-            ], [
-                'is_active' => app()->runningUnitTests() || app()->environment('local'),
-            ]);
+        /** @var BaseFeature $baseFeature */
+        foreach (BaseFeature::query()->get()->all() as $baseFeature) {
+            /** @var Feature|null $feature */
+            $feature = Feature::query()->find($baseFeature->id);
+
+            if (! $feature) {
+                $feature = Feature::query()->create([
+                    'id' => $baseFeature->id,
+                    'name' => $baseFeature->name,
+                    'description' => $baseFeature->description,
+                    'is_active' => app()->runningUnitTests() || $baseFeature->is_default_active,
+                    'original_amount' => $baseFeature->original_amount,
+                    'original_data' => $baseFeature->original_data,
+                ]);
+            } else {
+                $feature->update([
+                    'name' => $baseFeature->name,
+                    'description' => $baseFeature->description,
+                    'original_amount' => $baseFeature->original_amount,
+                    'original_data' => $baseFeature->original_data,
+                ]);
+            }
+
+            $feature->modules()->sync(
+                $baseFeature->modules()->pluck('base_modules.id')
+            );
         }
     }
 }

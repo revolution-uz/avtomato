@@ -14,7 +14,6 @@ return new class extends Migration
             $table->string('password');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('avatar')->default('no-image.webp');
             $table->json('template_theme')->nullable();
             $table->string('language')->nullable();
             $table->tinyInteger('status')->index();

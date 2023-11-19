@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class InfoControllerTest extends TestCase
 {
-    protected $tenancy = true;
+    protected bool $tenancy = true;
 
     /**
      * @test
