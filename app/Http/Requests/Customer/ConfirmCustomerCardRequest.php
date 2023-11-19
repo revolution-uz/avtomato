@@ -26,6 +26,7 @@ class ConfirmCustomerCardRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'card_id' => 'required|int|exists:cards,id',
             'session' => 'required|int',
             'otp' => 'required|string',
         ];
@@ -33,6 +34,6 @@ class ConfirmCustomerCardRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_CONFIRM);
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARD_EDIT);
     }
 }
