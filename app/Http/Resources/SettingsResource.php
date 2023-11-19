@@ -21,18 +21,20 @@ use OpenApi\Attributes as OA;
 )]
 class SettingsResource extends JsonResource
 {
-    public function __construct($resource, private readonly BalanceService $balanceService)
+    public function __construct($resource)
     {
         parent::__construct($resource);
     }
 
     public function toArray(Request $request): array
     {
+        $balanceService = new BalanceService;
+
         return [
             'app_maintenance_mode' => boolval(Settings::getConfig(SettingsEnum::PARTNER_APP_MAINTENANCE_MODE)),
             'web_maintenance_mode' => boolval(Settings::getConfig(SettingsEnum::PARTNER_WEB_MAINTENANCE_MODE)),
             'app_min_version' => intval(Settings::getConfig(SettingsEnum::PARTNER_APP_MIN_VERSION)),
-            'balance' => $this->balanceService->getBalance(),
+            'balance' => $balanceService->getBalance(),
         ];
     }
 }

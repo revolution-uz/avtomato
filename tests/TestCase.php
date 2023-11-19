@@ -8,20 +8,23 @@ use App\Models\Company\Mahalla;
 use App\Models\Company\Rbac\Role;
 use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\FeatureSeeder;
+use Database\Seeders\Company\ModuleSeeder;
 use Database\Seeders\Company\PermissionSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
-    protected $tenancy = false;
+    protected bool $tenancy = false;
 
     protected function setUp(): void
     {
         parent::setUp();
+        Artisan::call('db:seed');
 
         if ($this->tenancy) {
             $this->initializeTenancy();
@@ -32,7 +35,10 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
-    public function initializeTenancy()
+    /**
+     * @throws TenantCouldNotBeIdentifiedById
+     */
+    public function initializeTenancy(): void
     {
         $tenant = Company::first() ?? Company::factory()->create([
             'name' => 'Test Company',
@@ -44,6 +50,10 @@ abstract class TestCase extends BaseTestCase
         tenancy()->initialize($tenant);
 
         Artisan::call('tenants:migrate-fresh', [
+            '--tenants' => [$tenant->id],
+        ]);
+        Artisan::call('tenants:seed', [
+            '--class' => ModuleSeeder::class,
             '--tenants' => [$tenant->id],
         ]);
         Artisan::call('tenants:seed', [

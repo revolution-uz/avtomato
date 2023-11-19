@@ -22,7 +22,6 @@ class UserFactory extends Factory
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'status' => UserStatusEnum::ACTIVE,
-            'avatar' => $this->faker->word(),
             'template_theme' => [],
             'language' => $this->faker->word(),
             'username' => $this->faker->userName(),

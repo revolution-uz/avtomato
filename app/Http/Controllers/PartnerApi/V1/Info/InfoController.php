@@ -31,7 +31,7 @@ class InfoController extends Controller
     )]
     public function settings(InfoSettingsRequest $request): SettingsResource
     {
-        return SettingsResource::make();
+        return new SettingsResource([]);
     }
 
     #[OA\Get(

@@ -20,7 +20,7 @@ class FeatureSeeder extends Seeder
                     'id' => $baseFeature->id,
                     'name' => $baseFeature->name,
                     'description' => $baseFeature->description,
-                    'is_active' => $baseFeature->is_default_active,
+                    'is_active' => app()->runningUnitTests() || $baseFeature->is_default_active,
                     'original_amount' => $baseFeature->original_amount,
                     'original_data' => $baseFeature->original_data,
                 ]);
