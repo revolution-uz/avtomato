@@ -244,6 +244,7 @@ class CustomerControllerTest extends TestCase
     public function detachAddress()
     {
         $customer = Customer::factory()->create();
+        $this->seedAddress();
         $address = $customer->addresses()->create([
             'type' => 1,
             'address' => 'Test address',
