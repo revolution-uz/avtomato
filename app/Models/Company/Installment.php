@@ -141,7 +141,7 @@ class Installment extends Model
                 $installmentGraph = new InstallmentGraph;
                 $installmentGraph->installment_id = $this->id;
                 $installmentGraph->amount = $amount / $this->period + $portion;
-                $installmentGraph->starts_in = $period->timestamp;
+                $installmentGraph->starts_in = $period;
                 $installmentGraph->status = InstallmentStatusEnum::RUNNING;
                 $installmentGraph->save();
             }
