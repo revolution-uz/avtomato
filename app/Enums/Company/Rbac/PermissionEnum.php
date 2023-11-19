@@ -74,6 +74,10 @@ enum PermissionEnum: string
     // Manage installment
     case INSTALLMENT_VIEW_ALL = 'installment_view_all';
     case INSTALLMENT_VIEW = 'installment_view';
+    case INSTALLMENT_START = 'installment_start';
+    case INSTALLMENT_CANCEL = 'installment_cancel';
+    case INSTALLMENT_FREEZE = 'installment_freeze';
+    case INSTALLMENT_FINISH = 'installment_finish';
     case INSTALLMENT_CREATE = 'installment_create';
     case INSTALLMENT_EDIT = 'installment_edit';
     case INSTALLMENT_DELETE = 'installment_delete';
@@ -273,6 +277,10 @@ enum PermissionEnum: string
             // branch related
             self::INSTALLMENT_VIEW,
             self::INSTALLMENT_CREATE,
+            self::INSTALLMENT_START,
+            self::INSTALLMENT_CANCEL,
+            self::INSTALLMENT_FREEZE,
+            self::INSTALLMENT_FINISH,
             self::INSTALLMENT_EDIT,
             self::INSTALLMENT_DELETE,
             self::INSTALLMENT_ATTACH_CARD,
@@ -346,6 +354,10 @@ enum PermissionEnum: string
                 self::INSTALLMENT_VIEW_ALL->value,
                 self::INSTALLMENT_VIEW->value,
                 self::INSTALLMENT_CREATE->value,
+                self::INSTALLMENT_START->value,
+                self::INSTALLMENT_CANCEL->value,
+                self::INSTALLMENT_FREEZE->value,
+                self::INSTALLMENT_FINISH->value,
                 self::INSTALLMENT_EDIT->value,
                 self::INSTALLMENT_DELETE->value,
                 self::INSTALLMENT_ATTACH_CARD->value,
@@ -498,6 +510,10 @@ enum PermissionEnum: string
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
             self::INSTALLMENT_CREATE,
+            self::INSTALLMENT_START,
+            self::INSTALLMENT_CANCEL,
+            self::INSTALLMENT_FREEZE,
+            self::INSTALLMENT_FINISH,
             self::INSTALLMENT_EDIT,
             self::INSTALLMENT_DELETE => Feature::findByName(FeatureEnum::INSTALLMENT_MANAGEMENT)->id,
 
