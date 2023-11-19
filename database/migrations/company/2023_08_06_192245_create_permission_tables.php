@@ -20,12 +20,15 @@ class CreatePermissionTables extends Migration
             $table->id();
             $table->string('slug');
             $table->integer('permission_group_id');
-            $table->integer('feature_id')->nullable();
+            $table->integer('feature_id');
             $table->boolean('is_branch_related');
             $table->timestamps();
 
             $table->unique('slug');
             $table->index('permission_group_id');
+
+            $table->foreign('permission_group_id')->references('id')->on('permission_groups')->cascadeOnDelete();
+            $table->foreign('feature_id')->references('id')->on('features')->restrictOnDelete();
         });
 
         Schema::create('roles', function (Blueprint $table) {
@@ -47,10 +50,16 @@ class CreatePermissionTables extends Migration
             $table->index('permission_id');
             $table->index('branch_id');
             $table->unique(['role_id', 'permission_id', 'branch_id']);
+
+            $table->foreign('role_id')->references('id')->on('roles')->cascadeOnDelete();
+            $table->foreign('permission_id')->references('id')->on('permissions')->cascadeOnDelete();
+            $table->foreign('branch_id')->references('id')->on('branches')->restrictOnDelete();
+
         });
 
         Schema::table('users', function (Blueprint $table) {
             $table->integer('role_id')->nullable();
+            $table->foreign('role_id')->references('id')->on('roles')->restrictOnDelete();
         });
     }
 

@@ -154,6 +154,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('{id}/phone', 'detachPhone')->name('customer.detach-phone');
         Route::post('{id}/address', 'attachAddress')->name('customer.attach-address');
         Route::delete('{id}/address', 'detachAddress')->name('customer.detach-address');
+        Route::post('by-passport', 'findByPassport')->name('customer.by-passport');
     });
 
     Route::prefix('scoring')->group(function () {

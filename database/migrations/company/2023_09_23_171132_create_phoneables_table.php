@@ -19,6 +19,8 @@ return new class extends Migration
 
             $table->index('phone_id');
             $table->index(['phoneable_id', 'phoneable_type']);
+
+            $table->foreign('phone_id')->references('id')->on('phones')->cascadeOnDelete();
         });
     }
 

@@ -13,13 +13,16 @@ return new class extends Migration
             $table->unsignedBigInteger('installment_id');
             $table->unsignedBigInteger('customer_id');
             $table->boolean('any_card_charge');
-            $table->string('myuzkard_id')->nullable();
+            $table->string('plum_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('installment_id');
             $table->index('customer_id');
             $table->unique(['installment_id', 'customer_id']);
+
+            $table->foreign('installment_id')->references('id')->on('installments')->cascadeOnDelete();
+            $table->foreign('customer_id')->references('id')->on('customers')->restrictOnDelete();
         });
     }
 

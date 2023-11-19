@@ -4,6 +4,7 @@ namespace App\Http\Requests\Installment;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Tariff;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -14,6 +15,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'name', type: 'string', example: 'Tariff Name'),
         new OA\Property(property: 'is_annual', type: 'boolean', example: 'true'),
         new OA\Property(property: 'percent', type: 'double', example: '40'),
+        new OA\Property(property: 'min_period', type: 'int', example: '3'),
+        new OA\Property(property: 'max_period', type: 'int', example: '12'),
         new OA\Property(property: 'min_amount', type: 'int', example: '0'),
         new OA\Property(property: 'max_amount', type: 'int', example: '10000000'),
         new OA\Property(property: 'min_initial_fee', type: 'int', example: '0'),
@@ -21,13 +24,7 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * @property string $name
- * @property bool $is_annual
- * @property float $percent
- * @property int $min_amount
- * @property int $max_amount
- * @property int $min_initial_fee
- * @property int $max_initial_fee
+ * use @mixin Tariff
  */
 class TariffRequest extends FormRequest
 {
@@ -37,6 +34,8 @@ class TariffRequest extends FormRequest
             'name' => 'required|string|max:40',
             'is_annual' => 'required|boolean',
             'percent' => 'required|numeric',
+            'min_period' => 'required|int',
+            'max_period' => 'required|int',
             'min_amount' => 'required|int',
             'max_amount' => 'required|int',
             'min_initial_fee' => 'required|int',

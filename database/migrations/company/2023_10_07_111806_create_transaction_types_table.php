@@ -10,10 +10,9 @@ return new class extends Migration
     {
         Schema::create('transaction_types', function (Blueprint $table) {
             $table->id()->startingValue(100);
-            $table->string('name');
-            $table->string('name_uz')->nullable();
-            $table->string('name_ru')->nullable();
-            $table->string('name_en')->nullable();
+            $table->string('name_uz');
+            $table->string('name_ru');
+            $table->string('name_en');
             $table->boolean('is_system');
             $table->timestamps();
             $table->softDeletes();

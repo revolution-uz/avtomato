@@ -11,7 +11,7 @@ class PassportDataDTO extends Data
 {
     public function __construct(
         public int $pinfl,
-        public int $tin,
+        public ?int $tin,
         public string $series,
         public string $number,
         public string $sur_name,

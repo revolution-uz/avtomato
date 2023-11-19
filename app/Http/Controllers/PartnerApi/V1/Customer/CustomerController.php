@@ -17,6 +17,7 @@ use App\Http\Requests\Customer\CardRequest;
 use App\Http\Requests\Customer\CardsDeleteRequest;
 use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
 use App\Http\Requests\Customer\CreateCustomerRequest;
+use App\Http\Requests\Customer\CustomerByPassportRequest;
 use App\Http\Requests\Customer\CustomersFilterRequest;
 use App\Http\Requests\Customer\CustomerViewRequest;
 use App\Http\Requests\Customer\DetachAddressRequest;
@@ -67,7 +68,7 @@ class CustomerController extends Controller
     )]
     public function index(CustomersFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'pinfl', 'passport_series', 'first_name', 'last_name'];
+        $sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name'];
 
         return CustomerListItemResource::collection(
             Customer::query()
@@ -77,6 +78,8 @@ class CustomerController extends Controller
                         ->where('first_name', 'ILIKE', '%' . $request->search . '%')
                         ->where('last_name', 'ILIKE', '%' . $request->search . '%')
                         ->where('middle_name', 'ILIKE', '%' . $request->search . '%')
+                        ->where('passport_series', 'ILIKE', '%' . $request->search . '%')
+                        ->where('passport_number', 'ILIKE', '%' . $request->search . '%')
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
@@ -246,6 +249,34 @@ class CustomerController extends Controller
         $card->saveOrFail();
 
         return AttachCustomerCardResource::make($this->plumService->attachCard($card), new CardResource($card));
+    }
+
+    #[OA\Post(
+        path: '/api/v1/customer/by-passport',
+        description: 'Get single customer by passport info',
+        requestBody: new OA\RequestBody(
+            description: 'Request to find a customer by passport',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/CustomerByPassportRequest')
+        ),
+        tags: ['Customers'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'SingleCustomerResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function findByPassport(CustomerByPassportRequest $request): SingleCustomerResource
+    {
+        return new SingleCustomerResource(
+            Customer::query()
+                ->when($request->pinfl, fn (Builder $q) => $q->where('pinfl', $request->pinfl))
+                ->when(
+                    $request->passport_series,
+                    fn (Builder $q) => $q
+                        ->where('passport_series', $request->passport_series)
+                        ->where('passport_number', $request->passport_number)
+                )->firstOrFail()
+        );
     }
 
     #[OA\Delete(
