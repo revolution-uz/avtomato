@@ -134,14 +134,14 @@ class Installment extends Model
             $portion = $amount * $tariff->percent / 100;
 
             $currentDate = new Carbon;
-            $currentDate->timestamp = $this->starts_in->timestamp();
+            $currentDate->timestamp = $this->starts_in->timestamp;
             $periods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($this->period - 1));
 
             foreach ($periods as $period) {
                 $installmentGraph = new InstallmentGraph;
                 $installmentGraph->installment_id = $this->id;
                 $installmentGraph->amount = $amount / $this->period + $portion;
-                $installmentGraph->starts_in = $period;
+                $installmentGraph->starts_in = Carbon::make($period->timestamp);
                 $installmentGraph->status = InstallmentStatusEnum::RUNNING;
                 $installmentGraph->save();
             }
