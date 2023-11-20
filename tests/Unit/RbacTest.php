@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class RbacTest extends TestCase
 {
-    protected $tenancy = true;
+    protected bool $tenancy = true;
 
     /**
      * Tests all routes to check if they have rbac

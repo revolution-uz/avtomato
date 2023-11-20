@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Installment;
 
-use App\Enums\Company\FeatureEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Enums\FeatureEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -36,7 +36,7 @@ class InstallmentRequest extends FormRequest
     {
         return [
             'customer_id' => ['required', 'int', Rule::exists('customers', 'id')],
-            'branch_id' => ['required', [new RequiredIf(Feature::isFeatureActive(FeatureEnum::MULTI_BRANCH))]],
+            'branch_id' => ['required', [new RequiredIf(Feature::isFeatureActive(FeatureEnum::BRANCH_MANAGEMENT))]],
             'tariff_id' => ['required', 'int', Rule::exists('tariffs', 'id')],
             'period' => [
                 'required',

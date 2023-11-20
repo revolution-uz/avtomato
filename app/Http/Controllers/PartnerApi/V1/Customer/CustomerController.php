@@ -10,9 +10,10 @@ use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Customer\CardViewRequest;
 use App\Http\Requests\Customer\CreateCustomerRequest;
+use App\Http\Requests\Customer\CustomerByPassportRequest;
 use App\Http\Requests\Customer\CustomersFilterRequest;
+use App\Http\Requests\Customer\CustomerViewRequest;
 use App\Http\Requests\Customer\GetCustomerInfoByPassportRequest;
 use App\Http\Resources\Customer\CustomerListItemResource;
 use App\Http\Resources\Customer\PassportInfo\CustomerInfoByPassportDataResource;
@@ -126,9 +127,37 @@ class CustomerController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, CardViewRequest $request): SingleCustomerResource
+    public function getSingle(int $id, CustomerViewRequest $request): SingleCustomerResource
     {
         return new SingleCustomerResource(Customer::findOrFail($id));
+    }
+
+    #[OA\Post(
+        path: '/api/v1/customer/by-passport',
+        description: 'Get single customer by passport info',
+        requestBody: new OA\RequestBody(
+            description: 'Request to find a customer by passport',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/CustomerByPassportRequest')
+        ),
+        tags: ['Customers'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'SingleCustomerResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function findByPassport(CustomerByPassportRequest $request): SingleCustomerResource
+    {
+        return new SingleCustomerResource(
+            Customer::query()
+                ->when($request->pinfl, fn (Builder $q) => $q->where('pinfl', $request->pinfl))
+                ->when(
+                    $request->passport_series,
+                    fn (Builder $q) => $q
+                        ->where('passport_series', $request->passport_series)
+                        ->where('passport_number', $request->passport_number)
+                )->firstOrFail()
+        );
     }
 
     #[OA\Get(

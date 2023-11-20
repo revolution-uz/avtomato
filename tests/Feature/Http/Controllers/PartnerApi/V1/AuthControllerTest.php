@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {
-    protected $tenancy = true;
+    protected bool $tenancy = true;
 
     /**
      * @test

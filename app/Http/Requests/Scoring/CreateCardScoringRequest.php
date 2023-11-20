@@ -4,6 +4,7 @@ namespace App\Http\Requests\Scoring;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Services\User\BalanceService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
@@ -18,11 +19,13 @@ use OpenApi\Attributes as OA;
 )]
 class CreateCardScoringRequest extends FormRequest
 {
-    public function authorize(): bool
+    public function authorize(BalanceService $balanceService): bool
     {
         return match (Route::currentRouteName()) {
-            'humo.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_HUMO_CREATE),
-            'uzcard.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_UZCARD_CREATE),
+            'humo.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_HUMO_CREATE)
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_HUMO_CREATE)),
+            'uzcard.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_UZCARD_CREATE)
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_UZCARD_CREATE)),
             default => false
         };
     }

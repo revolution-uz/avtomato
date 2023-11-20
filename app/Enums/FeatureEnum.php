@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums\Company;
+namespace App\Enums;
 
 enum FeatureEnum: string
 {
@@ -29,7 +29,5 @@ enum FeatureEnum: string
     case SCORING_TAX_INFO = 'scoring_tax_info';
     case SCORING_HUMO = 'scoring_humo';
     case SCORING_UZCARD = 'scoring_uzcard';
-    case MULTI_BRANCH = 'multi_branch';
-    case OWN_SMS_PROVIDER = 'own_sms_provider';
     case ACTIVITY_LOG = 'activity_log';
 }

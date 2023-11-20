@@ -8,7 +8,7 @@ use Laravel\Nova\Util;
 
 class CreateActionEventsTable extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('action_events', function (Blueprint $table) {
             $table->id();
@@ -36,7 +36,7 @@ class CreateActionEventsTable extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('action_events');
     }

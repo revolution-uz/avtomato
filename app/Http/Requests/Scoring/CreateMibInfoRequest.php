@@ -5,6 +5,7 @@ namespace App\Http\Requests\Scoring;
 use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Services\User\BalanceService;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -21,9 +22,10 @@ use OpenApi\Attributes as OA;
  */
 class CreateMibInfoRequest extends FormRequest
 {
-    public function authorize(): bool
+    public function authorize(BalanceService $balanceService): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::SCORING_MIB_INFO_CREATE);
+        return RbacHelper::checkPermission(PermissionEnum::SCORING_MIB_INFO_CREATE)
+            && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_MIB_INFO_CREATE));
     }
 
     public function rules(): array

@@ -7,9 +7,12 @@ use App\Helpers\UrlHelper;
 use App\Models\Admin;
 use App\Models\Company;
 use App\Nova\AdminResource;
+use App\Nova\BaseFeatureResource;
+use App\Nova\BaseModuleResource;
 use App\Nova\Company\BranchResource;
 use App\Nova\Company\FeatureResource;
 use App\Nova\Company\LogResource;
+use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\TariffsResource;
 use App\Nova\Company\UserResource;
@@ -18,6 +21,7 @@ use App\Nova\Dashboards\Main;
 use App\Nova\SettingsResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Menu\Menu;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
@@ -47,6 +51,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     ])->collapsable()->icon('view-grid'),
                     MenuSection::make('Resources', [
                         MenuItem::resource(UserResource::class),
+                        MenuItem::resource(ModuleResource::class),
                         MenuItem::resource(FeatureResource::class),
                         MenuItem::resource(BranchResource::class),
                         MenuItem::resource(TariffsResource::class),
@@ -65,6 +70,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(CompanyResource::class),
                     MenuItem::resource(AdminResource::class),
                     MenuItem::resource(SettingsResource::class),
+                    MenuItem::resource(BaseModuleResource::class),
+                    MenuItem::resource(BaseFeatureResource::class),
                 ])->collapsable(),
             ];
         });
@@ -99,12 +106,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
-        //
+        Nova::report(
+            function ($exception) {
+                Log::error($exception);
+            }
+        );
     }
 
     /**

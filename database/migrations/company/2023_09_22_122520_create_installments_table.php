@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Company\InstallmentTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +14,9 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->unsignedBigInteger('tariff_id')->nullable();
+            $table->integer('type')->default(InstallmentTypeEnum::WITHOUT_CARD->value);
             $table->decimal('amount', 12);
+            $table->decimal('initial_fee', 12);
             $table->text('description')->nullable();
             $table->boolean('sms_notify');
             $table->boolean('any_card_charge');

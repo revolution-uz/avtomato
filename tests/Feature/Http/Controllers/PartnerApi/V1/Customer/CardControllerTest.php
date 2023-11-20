@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class CardControllerTest extends TestCase
 {
-    protected $tenancy = true;
+    protected bool $tenancy = true;
 
     /**
      * @test
