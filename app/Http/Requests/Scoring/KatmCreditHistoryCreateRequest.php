@@ -5,6 +5,7 @@ namespace App\Http\Requests\Scoring;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Services\User\BalanceService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
@@ -32,12 +33,15 @@ use OpenApi\Attributes as OA;
  */
 class KatmCreditHistoryCreateRequest extends FormRequest
 {
-    public function authorize(): bool
+    public function authorize(BalanceService $balanceService): bool
     {
         return match (Route::currentRouteName()) {
-            'credit-history.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_CREDIT_HISTORY_CREATE),
-            'inps-history.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_INPS_HISTORY_CREATE),
-            'pension-info.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_PENSION_INFO_CREATE),
+            'credit-history.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_CREDIT_HISTORY_CREATE)
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_CREDIT_HISTORY_CREATE)),
+            'inps-history.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_INPS_HISTORY_CREATE)
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_INPS_HISTORY_CREATE)),
+            'pension-info.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_PENSION_INFO_CREATE)
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_PENSION_INFO_CREATE)),
             default => false
         };
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User;
 
+use App\Http\Resources\AttachmentResource;
 use App\Http\Resources\Rbac\RoleListResource;
 use App\Models\Company\User;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -49,10 +50,7 @@ class SingleUserResource extends JsonResource
             'last_name' => $this->resource->last_name,
             'phone' => $this->resource->phones()->latest()->first()->phone ?? null,
             'status' => $this->resource->status,
-            'avatar' => [
-                'url' => $this->resource->avatar_url,
-                'url_preview' => $this->resource->avatar_preview_url,
-            ],
+            'avatar' => $this->resource->avatar ? new AttachmentResource($this->resource->avatar) : null,
             'template_theme' => $this->resource->template_theme,
             'language' => $this->resource->language,
             'role' => RoleListResource::make($this->resource->role),

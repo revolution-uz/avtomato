@@ -2,7 +2,7 @@
 
 namespace App\Enums\Company\Rbac;
 
-use App\Enums\Company\FeatureEnum;
+use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
 
 /**
@@ -413,7 +413,7 @@ enum PermissionEnum: string
         ];
     }
 
-    public static function getFeatureId(PermissionEnum $permission): int
+    public static function getFeature(PermissionEnum $permission): FeatureEnum
     {
         return match ($permission) {
             self::PROFILE_EDIT,
@@ -421,7 +421,7 @@ enum PermissionEnum: string
             self::PROFILE_CHANGE_LANGUAGE,
             self::PROFILE_CHANGE_AVATAR,
             self::PROFILE_DEVICES,
-            self::PROFILE_REVOKE_DEVICE => Feature::findByName(FeatureEnum::PROFILE_EDIT)->id,
+            self::PROFILE_REVOKE_DEVICE => FeatureEnum::PROFILE_EDIT,
 
             self::USER_VIEW_ALL,
             self::USER_VIEW,
@@ -432,107 +432,107 @@ enum PermissionEnum: string
             self::USER_CHANGE_AVATAR,
             self::USER_CHANGE_ROLE,
             self::USER_DEVICES,
-            self::USER_REVOKE_DEVICE, => Feature::findByName(FeatureEnum::USER_MANAGEMENT)->id,
+            self::USER_REVOKE_DEVICE, => FeatureEnum::USER_MANAGEMENT,
 
             self::USER_CHANGE_THEME,
-            self::PROFILE_CHANGE_THEME => Feature::findByName(FeatureEnum::THEME_MANAGEMENT)->id,
+            self::PROFILE_CHANGE_THEME => FeatureEnum::THEME_MANAGEMENT,
 
             self::ROLE_VIEW_ALL,
             self::ROLE_VIEW,
             self::ROLE_CREATE,
             self::ROLE_EDIT,
             self::ROLE_DELETE,
-            self::ROLE_PERMISSIONS => Feature::findByName(FeatureEnum::ROLE_MANAGEMENT)->id,
+            self::ROLE_PERMISSIONS => FeatureEnum::ROLE_MANAGEMENT,
 
             self::CUSTOMER_VIEW_ALL,
             self::CUSTOMER_VIEW,
             self::CUSTOMER_CREATE,
             self::CUSTOMER_EDIT,
             self::CUSTOMER_CARD_EDIT,
-            self::CUSTOMER_INFO_BY_PASSPORT => Feature::findByName(FeatureEnum::CUSTOMER_MANAGEMENT)->id,
+            self::CUSTOMER_INFO_BY_PASSPORT => FeatureEnum::CUSTOMER_MANAGEMENT,
 
             self::INFO_SETTINGS,
             self::INFO_REGIONS,
             self::INFO_DISTRICTS,
-            self::INFO_MAHALLAS => Feature::findByName(FeatureEnum::GET_STATIC_INFORMATION)->id,
+            self::INFO_MAHALLAS => FeatureEnum::GET_STATIC_INFORMATION,
 
             self::CALCULATE_INSTALLMENT,
-            self::CALCULATOR_EXPORT => Feature::findByName(FeatureEnum::CALCULATOR_INSTALLMENT)->id,
+            self::CALCULATOR_EXPORT => FeatureEnum::CALCULATOR_INSTALLMENT,
 
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_EDIT,
-            self::INSTALLMENT_DELETE => Feature::findByName(FeatureEnum::INSTALLMENT_MANAGEMENT)->id,
+            self::INSTALLMENT_DELETE => FeatureEnum::INSTALLMENT_MANAGEMENT,
 
             self::INSTALLMENT_ATTACH_CARD,
-            self::INSTALLMENT_DETACH_CARD => Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE)->id,
+            self::INSTALLMENT_DETACH_CARD => FeatureEnum::INSTALLMENT_AUTO_CHARGE,
 
             self::INSTALLMENT_ATTACH_GUARANTOR,
             self::INSTALLMENT_UPDATE_GUARANTOR,
-            self::INSTALLMENT_DETACH_GUARANTOR => Feature::findByName(FeatureEnum::INSTALLMENT_GUARANTOR)->id,
+            self::INSTALLMENT_DETACH_GUARANTOR => FeatureEnum::INSTALLMENT_GUARANTOR,
 
             self::TARIFF_VIEW_ALL,
             self::TARIFF_VIEW,
             self::TARIFF_EDIT,
             self::TARIFF_DELETE,
-            self::TARIFF_CREATE => Feature::findByName(FeatureEnum::TARIFF_MANAGEMENT)->id,
+            self::TARIFF_CREATE => FeatureEnum::TARIFF_MANAGEMENT,
 
             self::TRANSACTION_VIEW_ALL,
             self::TRANSACTION_VIEW,
             self::TRANSACTION_CREATE,
             self::TRANSACTION_EDIT,
-            self::TRANSACTION_DELETE => Feature::findByName(FeatureEnum::TRANSACTION_MANAGEMENT)->id,
+            self::TRANSACTION_DELETE => FeatureEnum::TRANSACTION_MANAGEMENT,
 
             self::TRANSACTION_TYPE_VIEW_ALL,
             self::TRANSACTION_TYPE_VIEW,
             self::TRANSACTION_TYPE_CREATE,
             self::TRANSACTION_TYPE_EDIT,
-            self::TRANSACTION_TYPE_DELETE => Feature::findByName(FeatureEnum::TRANSACTION_TYPE_MANAGEMENT)->id,
+            self::TRANSACTION_TYPE_DELETE => FeatureEnum::TRANSACTION_TYPE_MANAGEMENT,
 
             self::BRANCH_VIEW_ALL,
             self::BRANCH_VIEW,
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
-            self::BRANCH_CREATE => Feature::findByName(FeatureEnum::BRANCH_MANAGEMENT)->id,
+            self::BRANCH_CREATE => FeatureEnum::BRANCH_MANAGEMENT,
 
             self::SCORING_CREDIT_HISTORY_VIEW_ALL,
             self::SCORING_CREDIT_HISTORY_VIEW,
             self::SCORING_CREDIT_HISTORY_CREATE,
-            self::SCORING_CREDIT_HISTORY_DELETE => Feature::findByName(FeatureEnum::SCORING_CREDIT_HISTORY)->id,
+            self::SCORING_CREDIT_HISTORY_DELETE => FeatureEnum::SCORING_CREDIT_HISTORY,
 
             self::SCORING_INPS_HISTORY_VIEW_ALL,
             self::SCORING_INPS_HISTORY_VIEW,
             self::SCORING_INPS_HISTORY_CREATE,
-            self::SCORING_INPS_HISTORY_DELETE => Feature::findByName(FeatureEnum::SCORING_INPS_HISTORY)->id,
+            self::SCORING_INPS_HISTORY_DELETE => FeatureEnum::SCORING_INPS_HISTORY,
 
             self::SCORING_PENSION_INFO_VIEW_ALL,
             self::SCORING_PENSION_INFO_VIEW,
             self::SCORING_PENSION_INFO_CREATE,
-            self::SCORING_PENSION_INFO_DELETE => Feature::findByName(FeatureEnum::SCORING_PENSION_INFO)->id,
+            self::SCORING_PENSION_INFO_DELETE => FeatureEnum::SCORING_PENSION_INFO,
 
             self::SCORING_MIB_INFO_VIEW_ALL,
             self::SCORING_MIB_INFO_VIEW,
             self::SCORING_MIB_INFO_CREATE,
-            self::SCORING_MIB_INFO_DELETE => Feature::findByName(FeatureEnum::SCORING_MIB_INFO)->id,
+            self::SCORING_MIB_INFO_DELETE => FeatureEnum::SCORING_MIB_INFO,
 
             self::SCORING_TAX_INFO_VIEW_ALL,
             self::SCORING_TAX_INFO_VIEW,
             self::SCORING_TAX_INFO_CREATE,
-            self::SCORING_TAX_INFO_DELETE => Feature::findByName(FeatureEnum::SCORING_TAX_INFO)->id,
+            self::SCORING_TAX_INFO_DELETE => FeatureEnum::SCORING_TAX_INFO,
 
             self::SCORING_HUMO_VIEW_ALL,
             self::SCORING_HUMO_VIEW,
             self::SCORING_HUMO_CREATE,
-            self::SCORING_HUMO_DELETE, => Feature::findByName(FeatureEnum::SCORING_HUMO)->id,
+            self::SCORING_HUMO_DELETE, => FeatureEnum::SCORING_HUMO,
 
             self::SCORING_UZCARD_VIEW_ALL,
             self::SCORING_UZCARD_VIEW,
             self::SCORING_UZCARD_CREATE,
-            self::SCORING_UZCARD_DELETE => Feature::findByName(FeatureEnum::SCORING_UZCARD)->id,
+            self::SCORING_UZCARD_DELETE => FeatureEnum::SCORING_UZCARD,
 
             self::ACTIVITY_LOG_VIEW_ALL,
-            self::ACTIVITY_LOG_VIEW_OWN => Feature::findByName(FeatureEnum::ACTIVITY_LOG)->id,
+            self::ACTIVITY_LOG_VIEW_OWN => FeatureEnum::ACTIVITY_LOG,
         };
     }
 }

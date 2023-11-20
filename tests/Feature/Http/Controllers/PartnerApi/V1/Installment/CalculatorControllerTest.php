@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class CalculatorControllerTest extends TestCase
 {
-    protected $tenancy = true;
+    protected bool $tenancy = true;
 
     /**
      * @test

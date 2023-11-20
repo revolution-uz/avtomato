@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class TariffControllerTest extends TestCase
 {
-    protected $tenancy = true;
+    protected bool $tenancy = true;
 
     /**
      * @test

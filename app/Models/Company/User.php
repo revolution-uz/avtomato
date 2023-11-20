@@ -5,10 +5,10 @@ namespace App\Models\Company;
 use App\DTOs\UserTemplateThemeDto;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\Rbac\Role;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -24,11 +24,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $last_name
  * @property string $phone
  * @property UserStatusEnum $status
- * @property string $avatar
  * @property UserTemplateThemeDto $template_theme
  * @property string $language
- * @property-read string $avatar_url
- * @property-read string $avatar_preview_url
+ * @property-read Attachment|null $avatar
  * @property-read Role|null $role
  */
 class User extends Authenticatable
@@ -40,16 +38,12 @@ class User extends Authenticatable
     use SoftDeletes;
     use TenantConnection;
 
-    public const AVATAR_PATH = 'avatars';
-    public const THUMBNAIL_PATH = 'avatars/thumbnails';
-
     protected $fillable = [
         'status',
         'first_name',
         'last_name',
         'username',
         'status',
-        'avatar',
         'template_theme',
         'language',
         'role_id',
@@ -90,30 +84,9 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function avatarUrl(): Attribute
+    public function avatar(): MorphOne
     {
-        return Attribute::make(
-            get: function () {
-                if ($this->avatar) {
-                    return asset(User::AVATAR_PATH . '/' . $this->avatar);
-                }
-
-                return null;
-            }
-        );
-    }
-
-    public function avatarPreviewUrl(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                if ($this->avatar) {
-                    return asset(User::THUMBNAIL_PATH . '/' . $this->avatar);
-                }
-
-                return null;
-            }
-        );
+        return $this->morphOne(Attachment::class, 'attachmentable')->latestOfMany();
     }
 
     public function attachPhone(string $phone): void

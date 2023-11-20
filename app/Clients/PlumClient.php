@@ -58,7 +58,7 @@ class PlumClient extends BaseClient
     /**
      * @return array|mixed
      */
-    public function attachCard($customer_id, $number, $expiry, $phone)
+    public function attachCard($customer_id, $number, $expiry, $phone): mixed
     {
         $data = [
             'userId' => $customer_id,
@@ -80,7 +80,7 @@ class PlumClient extends BaseClient
         return $response->json('result');
     }
 
-    public function confirmCard(int $session, string $otp)
+    public function confirmCard(int $session, string $otp): mixed
     {
         $data = [
             'session' => $session,
@@ -104,7 +104,7 @@ class PlumClient extends BaseClient
     /**
      * @return array|mixed
      */
-    public function getCards(array $params)
+    public function getCards(array $params): mixed
     {
         $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
             ->get($this->baseUrl . '/UserCard/confirmUserCardCreate?' . http_build_query($params));

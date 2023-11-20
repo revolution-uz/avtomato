@@ -2,14 +2,15 @@
 
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 
-use App\Models\Company\User;
+use App\Enums\Company\AttachmentTypeEnum;
+use App\Models\Company\Attachment;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class ProfileControllerTest extends TestCase
 {
-    protected $tenancy = true;
+    protected bool $tenancy = true;
 
     /**
      * @test
@@ -99,9 +100,8 @@ class ProfileControllerTest extends TestCase
         ]);
 
         $response->assertOk();
-        $file_name = $admin->fresh()->avatar;
-        $this->assertFileExists(storage_path('app/public/' . User::AVATAR_PATH . '/' . $file_name));
-        $this->assertFileExists(storage_path('app/public/' . User::THUMBNAIL_PATH . '/' . $file_name));
+        $this->assertFileExists(storage_path('app/public/' . Attachment::UPLOADS_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $admin->fresh()->avatar->path));
+        $this->assertFileExists(storage_path('app/public/' . Attachment::PREVIEW_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $admin->fresh()->avatar->preview_path));
     }
 
     /**

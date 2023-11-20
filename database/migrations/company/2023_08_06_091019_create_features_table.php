@@ -13,8 +13,11 @@ return new class extends Migration
             $table->string('name', 64)->index();
             $table->string('description')->nullable();
             $table->boolean('is_active');
+            $table->integer('original_amount');
+            $table->integer('amount')->nullable();
+            $table->text('original_data')->nullable();
+            $table->text('data')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

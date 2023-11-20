@@ -44,7 +44,7 @@ class CompanyResource extends Resource
             Text::make(__('nova.company.name'), 'name')->filterable(),
             Text::make(__('nova.company.owner_name'), 'owner_name')->filterable(),
             Text::make(__('nova.company.owner_phone'), 'owner_phone')->filterable(),
-            Boolean::make(__('nova.status'), 'status')->filterable(),
+            Boolean::make(__('nova.status'), 'is_active')->filterable(),
             HasMany::make('Domains', 'domains', DomainResource::class),
         ];
     }
