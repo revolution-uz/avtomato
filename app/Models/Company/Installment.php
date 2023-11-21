@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;
@@ -39,7 +40,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Customer $customer
  * @property Card[] $cards
  * @property InstallmentGraph[] $graphs
- * @property Attachment[] $attachments
+ * @property Attachment[] $documents
+ * @property Attachment[] $images
  * @property InstallmentComment[] $comments
  * @property Customer[] $guarantors
  */
@@ -101,9 +103,14 @@ class Installment extends Model
         return $this->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')->select('customers.*');
     }
 
-    public function attachments()
+    public function documents()
     {
-        return $this->morphToMany(Attachment::class, 'attachmentable');
+        return $this->morphToMany(Attachment::class, 'attachmentable')->where('type', AttachmentTypeEnum::INSTALLMENT_DOCUMENT);
+    }
+
+    public function images()
+    {
+        return $this->morphToMany(Attachment::class, 'attachmentable')->where('type', AttachmentTypeEnum::INSTALLMENT_IMAGE);
     }
 
     public function comments()

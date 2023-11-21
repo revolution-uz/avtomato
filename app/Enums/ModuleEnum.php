@@ -30,6 +30,8 @@ enum ModuleEnum: string
             FeatureEnum::INSTALLMENT_AUTO_CHARGE,
             FeatureEnum::INSTALLMENT_GUARANTOR,
             FeatureEnum::INSTALLMENT_COMMENT,
+            FeatureEnum::INSTALLMENT_DOCUMENT,
+            FeatureEnum::INSTALLMENT_IMAGE,
             FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL,
             FeatureEnum::TARIFF_MANAGEMENT,
             FeatureEnum::TRANSACTION_MANAGEMENT,

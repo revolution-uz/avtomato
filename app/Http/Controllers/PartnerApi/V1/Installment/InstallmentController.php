@@ -4,7 +4,6 @@ namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
 use _PHPStan_c6b09fbdf\Symfony\Component\Finder\Exception\AccessDeniedException;
 use App\Enums\Company\InstallmentStatusEnum;
-use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Helpers\Swagger\OpenApiArrayResponse;
@@ -20,11 +19,15 @@ use App\Http\Requests\Installment\InstallmentCancelRequest;
 use App\Http\Requests\Installment\InstallmentCardRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentDocumentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
 use App\Http\Requests\Installment\InstallmentFinishRequest;
 use App\Http\Requests\Installment\InstallmentFreezeRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
+use App\Http\Requests\Installment\InstallmentImagesDeleteRequest;
+use App\Http\Requests\Installment\InstallmentImageUploadRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentStartRequest;
@@ -40,6 +43,7 @@ use App\Models\Company\Installment;
 use App\Models\Company\InstallmentCard;
 use App\Models\Company\InstallmentComment;
 use App\Models\Company\InstallmentGuarantor;
+use App\Services\Installment\InstallmentService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
@@ -47,6 +51,11 @@ use OpenApi\Attributes as OA;
 
 class InstallmentController extends Controller
 {
+    public function __construct(
+        protected InstallmentService $installmentService
+    ) {
+    }
+
     #[OA\Get(
         path: '/api/v1/installment/installment',
         description: 'Installment route',
@@ -199,15 +208,7 @@ class InstallmentController extends Controller
     )]
     public function create(InstallmentRequest $request): InstallmentResource
     {
-        $model = new Installment;
-        $model->fill($request->validated());
-        $model->status = InstallmentStatusEnum::DRAFT;
-        $model->sms_notify = false;
-        $model->any_card_charge = false;
-        $model->type = InstallmentTypeEnum::WITHOUT_CARD;
-        $model->saveOrFail();
-
-        return new InstallmentResource($model);
+        return new InstallmentResource($this->installmentService->create($request));
     }
 
     #[OA\Put(
@@ -234,13 +235,7 @@ class InstallmentController extends Controller
     )]
     public function update(int $id, InstallmentUpdateRequest $request): InstallmentResource
     {
-        $installment = Installment::findOrFail($id);
-        if ($installment->status == InstallmentStatusEnum::DRAFT) {
-            $installment->fill($request->validated());
-            $installment->saveOrFail();
-        }
-
-        return new InstallmentResource($installment);
+        return new InstallmentResource($this->installmentService->updateDetails(Installment::findOrFail($id), $request));
     }
 
     #[OA\Post(
@@ -459,6 +454,88 @@ class InstallmentController extends Controller
     public function deleteComment(InstallmentCommentsDeleteRequest $request): StatusResource
     {
         InstallmentComment::query()->whereIn('id', $request->ids)->delete();
+
+        return new StatusResource(true);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/{id}/document',
+        description: 'Upload document route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment Document upload body. Send as multipart/form-data',
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(ref: '#/components/schemas/InstallmentDocumentUploadRequest')
+            ),
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+        ],
+    )]
+    public function uploadDocument(int $id, InstallmentDocumentUploadRequest $request): InstallmentResource
+    {
+        return new InstallmentResource($this->installmentService->uploadAttachment(Installment::findOrFail($id), $request));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/document',
+        description: 'Installment Documents delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment documents delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentDocumentsDeleteRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function deleteDocuments(InstallmentDocumentsDeleteRequest $request): StatusResource
+    {
+        $this->installmentService->deleteAttachment($request->ids);
+
+        return new StatusResource(true);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/{id}/image',
+        description: 'Upload image route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment Image upload body. Send as multipart/form-data',
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(ref: '#/components/schemas/InstallmentImageUploadRequest')
+            ),
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+        ],
+    )]
+    public function uploadImage(int $id, InstallmentImageUploadRequest $request): InstallmentResource
+    {
+        return new InstallmentResource($this->installmentService->uploadImage(Installment::findOrFail($id), $request));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/image',
+        description: 'Installment Images delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment images delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentImagesDeleteRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function deleteImages(InstallmentImagesDeleteRequest $request): StatusResource
+    {
+        $this->installmentService->deleteAttachment($request->ids);
 
         return new StatusResource(true);
     }

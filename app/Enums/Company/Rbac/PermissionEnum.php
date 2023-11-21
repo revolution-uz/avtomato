@@ -83,6 +83,11 @@ enum PermissionEnum: string
     case INSTALLMENT_UPDATE_COMMENT = 'installment_update_comment';
     case INSTALLMENT_DELETE_COMMENT = 'installment_delete_comment';
 
+    case INSTALLMENT_UPLOAD_DOCUMENT = 'installment_upload_document';
+    case INSTALLMENT_UPLOAD_IMAGE = 'installment_upload_image';
+    case INSTALLMENT_DELETE_DOCUMENT = 'installment_delete_document';
+    case INSTALLMENT_DELETE_IMAGE = 'installment_delete_image';
+
     // Manage tariffs
     case TARIFF_VIEW_ALL = 'tariff_view_all';
     case TARIFF_VIEW = 'tariff_view';
@@ -280,6 +285,12 @@ enum PermissionEnum: string
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT,
 
+            self::INSTALLMENT_UPLOAD_IMAGE,
+            self::INSTALLMENT_DELETE_IMAGE,
+
+            self::INSTALLMENT_UPLOAD_DOCUMENT,
+            self::INSTALLMENT_DELETE_DOCUMENT,
+
             self::TRANSACTION_VIEW_ALL,
             self::TRANSACTION_VIEW,
             self::TRANSACTION_CREATE,
@@ -348,6 +359,10 @@ enum PermissionEnum: string
                 self::INSTALLMENT_CREATE_COMMENT->value,
                 self::INSTALLMENT_UPDATE_COMMENT->value,
                 self::INSTALLMENT_DELETE_COMMENT->value,
+                self::INSTALLMENT_UPLOAD_IMAGE->value,
+                self::INSTALLMENT_DELETE_IMAGE->value,
+                self::INSTALLMENT_UPLOAD_DOCUMENT->value,
+                self::INSTALLMENT_DELETE_DOCUMENT->value,
             ],
             PermissionGroupEnum::TARIFF_MANAGEMENT->value => [
                 self::TARIFF_VIEW_ALL->value,
@@ -501,6 +516,12 @@ enum PermissionEnum: string
             self::INSTALLMENT_CREATE_COMMENT,
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT => FeatureEnum::INSTALLMENT_COMMENT,
+
+            self::INSTALLMENT_UPLOAD_IMAGE,
+            self::INSTALLMENT_DELETE_IMAGE => FeatureEnum::INSTALLMENT_IMAGE,
+
+            self::INSTALLMENT_UPLOAD_DOCUMENT,
+            self::INSTALLMENT_DELETE_DOCUMENT => FeatureEnum::INSTALLMENT_DOCUMENT,
 
             self::TARIFF_VIEW_ALL,
             self::TARIFF_VIEW,

@@ -87,7 +87,7 @@ class InstallmentRequest extends FormRequest
                 },
             ],
             'description' => 'required|string',
-            'starts_in' => 'required|boolean',
+            'starts_in' => 'required|int',
         ];
     }
 
