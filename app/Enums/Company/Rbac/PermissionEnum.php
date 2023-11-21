@@ -526,7 +526,7 @@ enum PermissionEnum: string
 
             self::INSTALLMENT_CREATE_COMMENT,
             self::INSTALLMENT_UPDATE_COMMENT,
-            self::INSTALLMENT_DELETE_COMMENT => Feature::findByName(FeatureEnum::INSTALLMENT_COMMENT)->id,
+            self::INSTALLMENT_DELETE_COMMENT => FeatureEnum::INSTALLMENT_COMMENT,
 
             self::TARIFF_VIEW_ALL,
             self::TARIFF_VIEW,
