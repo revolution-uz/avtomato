@@ -6,7 +6,6 @@ use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -126,65 +125,5 @@ class Installment extends Model
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
-    }
-
-    public function start()
-    {
-        if ($this->status == InstallmentStatusEnum::FROZEN) {
-            return $this->changeStatus(InstallmentStatusEnum::RUNNING);
-        }
-        if ($this->changeStatus(InstallmentStatusEnum::RUNNING)) {
-            /** @var Tariff $tariff */
-            $tariff = Tariff::findOrFail($this->tariff_id);
-            $amount = $this->amount;
-            $amount -= $this->initial_fee;
-            $portion = $amount * $tariff->percent / 100;
-
-            $currentDate = new Carbon;
-            $currentDate->timestamp = $this->starts_in->timestamp;
-            $periods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($this->period - 1));
-
-            foreach ($periods as $period) {
-                $installmentGraph = new InstallmentGraph;
-                $installmentGraph->installment_id = $this->id;
-                $installmentGraph->amount = $amount / $this->period + $portion;
-                $installmentGraph->starts_in = Carbon::make($period->timestamp);
-                $installmentGraph->status = InstallmentStatusEnum::RUNNING;
-                $installmentGraph->save();
-            }
-        }
-
-        return false;
-    }
-
-    public function cancel()
-    {
-        return $this->changeStatus(InstallmentStatusEnum::CANCELED);
-    }
-
-    public function freeze()
-    {
-        return $this->changeStatus(InstallmentStatusEnum::FROZEN);
-    }
-
-    public function finish()
-    {
-        return $this->changeStatus(InstallmentStatusEnum::FINISHED);
-    }
-
-    private function changeStatus(InstallmentStatusEnum $statusEnum)
-    {
-        if ($this->canBe($statusEnum)) {
-            $this->status = $statusEnum;
-
-            return $this->save();
-        }
-
-        return false;
-    }
-
-    private function canBe(InstallmentStatusEnum $statusEnum)
-    {
-        return in_array($this->status, InstallmentStatusEnum::getStatusListByStatus($statusEnum));
     }
 }

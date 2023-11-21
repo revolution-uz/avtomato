@@ -107,90 +107,6 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{id}/start',
-        description: 'Installment start route',
-        tags: ['Installments'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'Installment'),
-        ],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
-            new OpenApiNotFoundResponse,
-        ]
-    )]
-    public function start(int $id, InstallmentStartRequest $request)
-    {
-        $installment = Installment::findOrFail($id);
-        if ($installment->start()) {
-            return new InstallmentResource($installment);
-        }
-        throw new AccessDeniedException('You cannot start this installment');
-    }
-
-    #[OA\Post(
-        path: '/api/v1/installment/{id}/cancel',
-        description: 'Installment cancel route',
-        tags: ['Installments'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'Installment'),
-        ],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
-            new OpenApiNotFoundResponse,
-        ]
-    )]
-    public function cancel(int $id, InstallmentCancelRequest $request)
-    {
-        $installment = Installment::findOrFail($id);
-        if ($installment->cancel()) {
-            return new InstallmentResource($installment);
-        }
-        throw new AccessDeniedException('You cannot cancel this installment');
-    }
-
-    #[OA\Post(
-        path: '/api/v1/installment/{id}/freeze',
-        description: 'Installment freeze route',
-        tags: ['Installments'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'Installment'),
-        ],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
-            new OpenApiNotFoundResponse,
-        ]
-    )]
-    public function freeze(int $id, InstallmentFreezeRequest $request)
-    {
-        $installment = Installment::findOrFail($id);
-        if ($installment->freeze()) {
-            return new InstallmentResource($installment);
-        }
-        throw new AccessDeniedException('You cannot cancel this installment');
-    }
-
-    #[OA\Post(
-        path: '/api/v1/installment/{id}/finish',
-        description: 'Installment finish route',
-        tags: ['Installments'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'Installment'),
-        ],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
-            new OpenApiNotFoundResponse,
-        ]
-    )]
-    public function finish(int $id, InstallmentFinishRequest $request)
-    {
-        $installment = Installment::findOrFail($id);
-        if ($installment->finish()) {
-            return new InstallmentResource($installment);
-        }
-        throw new AccessDeniedException('You cannot cancel this installment');
-    }
-
-    #[OA\Post(
         path: '/api/v1/installment/installment',
         description: 'Installment create route',
         requestBody: new OA\RequestBody(
@@ -236,6 +152,110 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
+        path: '/api/v1/installment/{id}/start',
+        description: 'Installment start route',
+        tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function start(int $id, InstallmentStartRequest $request)
+    {
+        $installment = Installment::findOrFail($id);
+        if ($this->installmentService->start($installment)) {
+            return new InstallmentResource($installment);
+        }
+        throw new AccessDeniedException('You cannot start this installment');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/{id}/cancel',
+        description: 'Installment cancel route',
+        tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function cancel(int $id, InstallmentCancelRequest $request)
+    {
+        $installment = Installment::findOrFail($id);
+        if ($this->installmentService->cancel($installment)) {
+            return new InstallmentResource($installment);
+        }
+        throw new AccessDeniedException('You cannot cancel this installment');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/{id}/freeze',
+        description: 'Installment freeze route',
+        tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function freeze(int $id, InstallmentFreezeRequest $request)
+    {
+        $installment = Installment::findOrFail($id);
+        if ($this->installmentService->freeze($installment)) {
+            return new InstallmentResource($installment);
+        }
+        throw new AccessDeniedException('You cannot cancel this installment');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/{id}/finish',
+        description: 'Installment finish route',
+        tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function finish(int $id, InstallmentFinishRequest $request)
+    {
+        $installment = Installment::findOrFail($id);
+        if ($this->installmentService->finish($installment)) {
+            return new InstallmentResource($installment);
+        }
+        throw new AccessDeniedException('You cannot cancel this installment');
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/installment',
+        description: 'Installment delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Installments delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentsDeleteRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function delete(InstallmentsDeleteRequest $request): StatusResource
+    {
+        $this->installmentService->deleteInstallments($request);
+
+        return new StatusResource(true);
+    }
+
+    #[OA\Post(
         path: '/api/v1/installment/{installmentId}/attach-card',
         description: 'Installment card attach card route',
         requestBody: new OA\RequestBody(
@@ -276,26 +296,6 @@ class InstallmentController extends Controller
         $installmentCard = InstallmentCard::query()->where('installment_id', $installmentId)->where('card_id', $request->card_id)->first();
 
         return new StatusResource($installmentCard->delete());
-    }
-
-    #[OA\Delete(
-        path: '/api/v1/installment/installment',
-        description: 'Installment delete route',
-        requestBody: new OA\RequestBody(
-            description: 'Installments delete request body',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentsDeleteRequest')
-        ),
-        tags: ['Installments'],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'StatusResource'),
-        ]
-    )]
-    public function delete(InstallmentsDeleteRequest $request): StatusResource
-    {
-        $this->installmentService->deleteInstallments($request);
-
-        return new StatusResource(true);
     }
 
     #[OA\Post(

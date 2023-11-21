@@ -19,7 +19,11 @@ use App\Models\Company\Card;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentCard;
 use App\Models\Company\InstallmentComment;
+use App\Models\Company\InstallmentGraph;
 use App\Models\Company\InstallmentGuarantor;
+use App\Models\Company\Tariff;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class InstallmentService
 {
@@ -117,5 +121,68 @@ class InstallmentService
     public function deleteComment(InstallmentCommentsDeleteRequest $request): void
     {
         InstallmentComment::query()->whereIn('id', $request->ids)->delete();
+    }
+
+    public function start(Installment $installment): bool
+    {
+
+        if ($installment->status == InstallmentStatusEnum::FROZEN) {
+            return $this->changeStatus($installment, InstallmentStatusEnum::RUNNING);
+        }
+        if ($this->changeStatus($installment, InstallmentStatusEnum::RUNNING)) {
+            /** @var Tariff $tariff */
+            $tariff = Tariff::findOrFail($installment->tariff_id);
+            $amount = $installment->amount;
+            $amount -= $installment->initial_fee;
+            $portion = $amount * $tariff->percent / 100;
+
+            $currentDate = new Carbon;
+            $currentDate->timestamp = $installment->starts_in->timestamp;
+            $periods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($installment->period - 1));
+
+            foreach ($periods as $period) {
+                $installmentGraph = new InstallmentGraph;
+                $installmentGraph->installment_id = $installment->id;
+                $installmentGraph->amount = $amount / $installment->period + $portion;
+                $installmentGraph->starts_in = Carbon::make($period->timestamp);
+                $installmentGraph->status = InstallmentStatusEnum::RUNNING;
+                $installmentGraph->save();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function cancel(Installment $installment)
+    {
+        return $this->changeStatus($installment, InstallmentStatusEnum::CANCELED);
+    }
+
+    public function freeze(Installment $installment)
+    {
+        return $this->changeStatus($installment, InstallmentStatusEnum::FROZEN);
+    }
+
+    public function finish(Installment $installment)
+    {
+        return $this->changeStatus($installment, InstallmentStatusEnum::FINISHED);
+    }
+
+    private function changeStatus(Installment $installment, InstallmentStatusEnum $statusEnum)
+    {
+        if ($this->possibleToConvertIntoStatus($installment, $statusEnum)) {
+            $installment->status = $statusEnum;
+
+            return $installment->save();
+        }
+
+        return false;
+    }
+
+    private function possibleToConvertIntoStatus(Installment $installment, InstallmentStatusEnum $statusEnum)
+    {
+        return in_array($installment->status, InstallmentStatusEnum::getStatusListByStatus($statusEnum));
     }
 }
