@@ -29,6 +29,6 @@ class CardsDeleteRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_DELETE);
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARD_EDIT);
     }
 }

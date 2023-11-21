@@ -3,6 +3,9 @@
 namespace App\Http\Requests\Customer;
 
 use App\Enums\Company\PhoneTypeEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
+use App\Rules\PhoneRule;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -25,9 +28,14 @@ class AttachPhoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => 'distinct|required|int|digits_between:9,13',
+            'phone' => ['distinct', 'required', 'int', new PhoneRule],
             'type' => 'required|int|in:' . implode(',', PhoneTypeEnum::values()),
             'comment' => 'string|max:64',
         ];
+    }
+
+    public function authorize(): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_EDIT);
     }
 }

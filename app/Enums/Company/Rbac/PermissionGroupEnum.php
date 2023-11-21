@@ -11,7 +11,6 @@ enum PermissionGroupEnum: string
     case PROFILE_EDIT = 'profile_edit';
     case USER_MANAGEMENT = 'user_management';
     case CUSTOMER_MANAGEMENT = 'customer_management';
-    case CUSTOMER_CARDS_MANAGEMENT = 'customer_cards_management';
     case GET_STATIC_INFORMATION = 'info_view';
     case CALCULATOR_INSTALLMENT = 'calculator_installment';
     case INSTALLMENT_MANAGEMENT = 'installment_management';
@@ -53,15 +52,8 @@ enum PermissionGroupEnum: string
                 PermissionEnum::CUSTOMER_VIEW,
                 PermissionEnum::CUSTOMER_CREATE,
                 PermissionEnum::CUSTOMER_INFO_BY_PASSPORT,
-            ],
-            self::CUSTOMER_CARDS_MANAGEMENT => [
-                PermissionEnum::CUSTOMER_CARDS_VIEW_ALL,
-                PermissionEnum::CUSTOMER_CARDS_VIEW,
-                PermissionEnum::CUSTOMER_CARDS_CREATE,
-                PermissionEnum::CUSTOMER_CARDS_EDIT,
-                PermissionEnum::CUSTOMER_CARDS_ATTACH,
-                PermissionEnum::CUSTOMER_CARDS_CONFIRM,
-                PermissionEnum::CUSTOMER_CARDS_DELETE,
+                PermissionEnum::CUSTOMER_EDIT,
+                PermissionEnum::CUSTOMER_CARD_EDIT,
             ],
             self::ROLE_MANAGEMENT => [
                 PermissionEnum::ROLE_VIEW_ALL,

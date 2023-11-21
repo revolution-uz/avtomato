@@ -49,17 +49,10 @@ enum PermissionEnum: string
     // Manage Customers
     case CUSTOMER_INFO_BY_PASSPORT = 'customer_info_by_passport';
     case CUSTOMER_CREATE = 'customer_create';
+    case CUSTOMER_EDIT = 'customer_edit';
     case CUSTOMER_VIEW_ALL = 'customer_view_all';
     case CUSTOMER_VIEW = 'customer_view';
-
-    // Manage Customer Cards
-    case CUSTOMER_CARDS_VIEW_ALL = 'customer_cards_view_all';
-    case CUSTOMER_CARDS_VIEW = 'customer_cards_view';
-    case CUSTOMER_CARDS_CREATE = 'customer_cards_create';
-    case CUSTOMER_CARDS_ATTACH = 'customer_cards_attach';
-    case CUSTOMER_CARDS_CONFIRM = 'customer_cards_confirm';
-    case CUSTOMER_CARDS_EDIT = 'customer_cards_edit';
-    case CUSTOMER_CARDS_DELETE = 'customer_cards_delete';
+    case CUSTOMER_CARD_EDIT = 'customer_card_edit';
 
     // Get static information
     case INFO_SETTINGS = 'info_settings';
@@ -192,14 +185,8 @@ enum PermissionEnum: string
             self::CUSTOMER_VIEW,
             self::CUSTOMER_CREATE,
             self::CUSTOMER_INFO_BY_PASSPORT,
-
-            self::CUSTOMER_CARDS_VIEW_ALL,
-            self::CUSTOMER_CARDS_VIEW,
-            self::CUSTOMER_CARDS_CREATE,
-            self::CUSTOMER_CARDS_EDIT,
-            self::CUSTOMER_CARDS_ATTACH,
-            self::CUSTOMER_CARDS_CONFIRM,
-            self::CUSTOMER_CARDS_DELETE,
+            self::CUSTOMER_EDIT,
+            self::CUSTOMER_CARD_EDIT,
 
             self::ROLE_VIEW_ALL,
             self::ROLE_VIEW,
@@ -322,15 +309,8 @@ enum PermissionEnum: string
                 self::CUSTOMER_VIEW->value,
                 self::CUSTOMER_CREATE->value,
                 self::CUSTOMER_INFO_BY_PASSPORT->value,
-            ],
-            PermissionGroupEnum::CUSTOMER_CARDS_MANAGEMENT->value => [
-                self::CUSTOMER_CARDS_VIEW_ALL->value,
-                self::CUSTOMER_CARDS_VIEW->value,
-                self::CUSTOMER_CARDS_CREATE->value,
-                self::CUSTOMER_CARDS_EDIT->value,
-                self::CUSTOMER_CARDS_ATTACH->value,
-                self::CUSTOMER_CARDS_CONFIRM->value,
-                self::CUSTOMER_CARDS_DELETE->value,
+                self::CUSTOMER_EDIT->value,
+                self::CUSTOMER_CARD_EDIT->value,
             ],
             PermissionGroupEnum::ROLE_MANAGEMENT->value => [
                 self::ROLE_VIEW_ALL->value,
@@ -489,15 +469,9 @@ enum PermissionEnum: string
             self::CUSTOMER_VIEW_ALL,
             self::CUSTOMER_VIEW,
             self::CUSTOMER_CREATE,
+            self::CUSTOMER_EDIT,
+            self::CUSTOMER_CARD_EDIT,
             self::CUSTOMER_INFO_BY_PASSPORT => FeatureEnum::CUSTOMER_MANAGEMENT,
-
-            self::CUSTOMER_CARDS_VIEW_ALL,
-            self::CUSTOMER_CARDS_VIEW,
-            self::CUSTOMER_CARDS_CREATE,
-            self::CUSTOMER_CARDS_EDIT,
-            self::CUSTOMER_CARDS_ATTACH,
-            self::CUSTOMER_CARDS_CONFIRM,
-            self::CUSTOMER_CARDS_DELETE => FeatureEnum::CUSTOMER_CARDS_MANAGEMENT,
 
             self::INFO_SETTINGS,
             self::INFO_REGIONS,

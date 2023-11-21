@@ -19,8 +19,8 @@ class RoleRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->id ?
-            RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_EDIT) :
-            RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARDS_CREATE);
+            RbacHelper::checkPermission(PermissionEnum::ROLE_EDIT) :
+            RbacHelper::checkPermission(PermissionEnum::ROLE_CREATE);
     }
 
     public function rules(): array
