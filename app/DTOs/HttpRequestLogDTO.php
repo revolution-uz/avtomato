@@ -11,7 +11,7 @@ class HttpRequestLogDTO extends Data
         public string $url,
         public int $status,
         public string $response,
-        public int $duration,
+        public ?int $duration,
         public ?array $params = null,
         public ?array $headers = null,
         public ?array $body = null,

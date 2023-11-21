@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\PartnerApi\V1\AuthController;
-use App\Http\Controllers\PartnerApi\V1\Customer\CardController;
 use App\Http\Controllers\PartnerApi\V1\Customer\CustomerController;
 use App\Http\Controllers\PartnerApi\V1\Info\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
@@ -144,19 +143,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('customer')->controller(CustomerController::class)->group(function () {
         Route::post('info-by-passport', 'infoByPassport')->name('customer.info-by-passport');
-        Route::post('create', 'create')->name('customer.create');
         Route::get('/', 'index')->name('customer.index');
+        Route::post('/', 'create')->name('customer.create');
+        Route::put('{id}', 'update')->name('customer.update');
         Route::get('{id}', 'getSingle')->name('customer.get-single');
+        Route::post('{id}/card', 'attachCard')->name('customer.attach-card');
+        Route::delete('{id}/card', 'detachCard')->name('customer.detach-card');
+        Route::post('{id}/confirm-card', 'confirmCard')->name('customer.confirm-card');
+        Route::post('{id}/phone', 'attachPhone')->name('customer.attach-phone');
+        Route::delete('{id}/phone', 'detachPhone')->name('customer.detach-phone');
+        Route::post('{id}/address', 'attachAddress')->name('customer.attach-address');
+        Route::delete('{id}/address', 'detachAddress')->name('customer.detach-address');
         Route::post('by-passport', 'findByPassport')->name('customer.by-passport');
-    });
-
-    Route::prefix('customer-card')->controller(CardController::class)->group(function () {
-        Route::get('/', 'index')->name('cards.index');
-        Route::get('{id}', 'getSingle')->name('cards.get-single');
-        Route::post('/', 'create')->name('cards.create');
-        Route::put('{id}', 'update')->name('cards.update');
-        Route::delete('/', 'delete')->name('cards.delete');
-        Route::post('{id}/confirm', 'confirm')->name('cards.confirm');
     });
 
     Route::prefix('scoring')->group(function () {
