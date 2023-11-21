@@ -492,7 +492,7 @@ class InstallmentController extends Controller
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function deleteDocuments(InstallmentDocumentsDeleteRequest $request): StatusResource
+    public function deleteDocument(InstallmentDocumentsDeleteRequest $request): StatusResource
     {
         $this->installmentService->deleteAttachment($request->ids);
 
@@ -533,7 +533,7 @@ class InstallmentController extends Controller
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function deleteImages(InstallmentImagesDeleteRequest $request): StatusResource
+    public function deleteImage(InstallmentImagesDeleteRequest $request): StatusResource
     {
         $this->installmentService->deleteAttachment($request->ids);
 

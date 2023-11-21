@@ -72,6 +72,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('comment', 'createComment')->name('installments.create-comment');
             Route::put('update-comment/{id}', 'updateComment')->name('installments.update-comment');
             Route::delete('comment', 'deleteComment')->name('installments.delete-comment');
+            Route::post('{id}/document', 'uploadDocument')->name('installments.upload-document');
+            Route::delete('document', 'deleteDocument')->name('installments.delete-document');
+            Route::post('{id}/image', 'uploadImage')->name('installments.upload-image');
+            Route::delete('document', 'deleteImage')->name('installments.delete-image');
         });
 
         // transactions
