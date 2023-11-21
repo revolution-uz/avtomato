@@ -6,7 +6,6 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\InstallmentGuarantor;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Route;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -30,10 +29,6 @@ class InstallmentGuarantorRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return match (Route::currentRouteName()) {
-            'installments.attach-guarantor' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_ATTACH_GUARANTOR),
-            'installments.detach-guarantor' => RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_DETACH_GUARANTOR),
-            default => false
-        };
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_ATTACH_GUARANTOR);
     }
 }

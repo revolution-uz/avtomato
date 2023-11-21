@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
 use _PHPStan_c6b09fbdf\Symfony\Component\Finder\Exception\AccessDeniedException;
-use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Helpers\Swagger\OpenApiArrayResponse;
@@ -24,6 +23,7 @@ use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
 use App\Http\Requests\Installment\InstallmentFinishRequest;
 use App\Http\Requests\Installment\InstallmentFreezeRequest;
+use App\Http\Requests\Installment\InstallmentGuarantorDetachRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
 use App\Http\Requests\Installment\InstallmentImagesDeleteRequest;
@@ -38,11 +38,8 @@ use App\Http\Resources\Installment\InstallmentCommentListResource;
 use App\Http\Resources\Installment\InstallmentGuarantorResource;
 use App\Http\Resources\Installment\InstallmentResource;
 use App\Http\Resources\StatusResource;
-use App\Models\Company\Card;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentCard;
-use App\Models\Company\InstallmentComment;
-use App\Models\Company\InstallmentGuarantor;
 use App\Services\Installment\InstallmentService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -262,7 +259,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/{installmentId}/detach-card',
+        path: '/api/v1/installment/{id}/detach-card',
         description: 'Installment detach Installment card route',
         requestBody: new OA\RequestBody(
             description: 'Installment card request body',
@@ -296,13 +293,13 @@ class InstallmentController extends Controller
     )]
     public function delete(InstallmentsDeleteRequest $request): StatusResource
     {
-        Installment::query()->whereIn('status', InstallmentStatusEnum::getStatusListByStatus())->whereIn('id', $request->ids)->delete();
+        $this->installmentService->deleteInstallments($request);
 
         return new StatusResource(true);
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{installmentId}/attach-guarantor',
+        path: '/api/v1/installment/{id}/attach-guarantor',
         description: 'Installment attache Installment guarantor route',
         requestBody: new OA\RequestBody(
             description: 'Installment guarantor attach request body',
@@ -314,19 +311,13 @@ class InstallmentController extends Controller
             new OpenApiDataResponse(resourceName: 'InstallmentGuarantorResource'),
         ]
     )]
-    public function attachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): InstallmentGuarantorResource
+    public function attachGuarantor(int $id, InstallmentGuarantorRequest $request): InstallmentGuarantorResource
     {
-        $model = new InstallmentGuarantor;
-        $model->fill($request->validated());
-        $model->installment_id = $installmentId;
-        $model->any_card_charge = false;
-        $model->saveOrFail();
-
-        return new InstallmentGuarantorResource($model);
+        return new InstallmentGuarantorResource($this->installmentService->attachGuarantor($id, $request));
     }
 
     #[OA\Put(
-        path: '/api/v1/installment/{installmentId}/update-guarantor',
+        path: '/api/v1/installment/update-guarantor/{id}',
         description: 'Installment guarantor update route',
         requestBody: new OA\RequestBody(
             description: 'Installment guarantor update request body',
@@ -347,18 +338,13 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function updateGuarantor(int $installmentId, InstallmentGuarantorUpdateRequest $request): InstallmentGuarantorResource
+    public function updateGuarantor(int $id, InstallmentGuarantorUpdateRequest $request): InstallmentGuarantorResource
     {
-        $installmentGuarantor = InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->first();
-        $installmentGuarantor->fill($request->validated());
-
-        $installmentGuarantor->saveOrFail();
-
-        return new InstallmentGuarantorResource($installmentGuarantor);
+        return new InstallmentGuarantorResource($this->installmentService->updateGuarantor($id, $request));
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/{installmentId}/detach-guarantor',
+        path: '/api/v1/installment/detach-guarantor/{id}',
         description: 'Installment guarantor detach route',
         tags: ['Installments'],
         parameters: [
@@ -373,19 +359,15 @@ class InstallmentController extends Controller
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function detachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): StatusResource
+    public function detachGuarantor(int $id, InstallmentGuarantorDetachRequest $request): StatusResource
     {
-        //        deleting guarantor all attached cards
-        $cardIds = Card::query()->where('customer_id', $request->customer_id)->pluck('id')->toArray();
-        InstallmentCard::query()->where('installment_id', $installmentId)->whereIn('card_id', $cardIds)->delete();
-        //        delete guarantor
-        InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->delete();
+        $this->installmentService->detachGuarantor($id);
 
         return new StatusResource(true);
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/comment',
+        path: '/api/v1/installment/{id}/comment',
         description: 'Installment create Installment comment route',
         requestBody: new OA\RequestBody(
             description: 'Installment comment create request body',
@@ -397,14 +379,9 @@ class InstallmentController extends Controller
             new OpenApiDataResponse(resourceName: 'InstallmentCommentListResource'),
         ]
     )]
-    public function createComment(InstallmentCommentRequest $request): InstallmentCommentListResource
+    public function createComment(int $id, InstallmentCommentRequest $request): InstallmentCommentListResource
     {
-        $installmentComment = new InstallmentComment;
-        $installmentComment->fill($request->validated());
-        $installmentComment->user_id = auth()->id();
-        $installmentComment->saveOrFail();
-
-        return new InstallmentCommentListResource($installmentComment);
+        return new InstallmentCommentListResource($this->installmentService->createComment($id, $request));
     }
 
     #[OA\Put(
@@ -431,11 +408,7 @@ class InstallmentController extends Controller
     )]
     public function updateComment(int $id, InstallmentCommentRequest $request): InstallmentCommentListResource
     {
-        $installmentComment = InstallmentComment::findOrFail($id);
-        $installmentComment->fill($request->validated());
-        $installmentComment->saveOrFail();
-
-        return new InstallmentCommentListResource($installmentComment);
+        return new InstallmentCommentListResource($this->installmentService->updateComment($id, $request));
     }
 
     #[OA\Delete(
@@ -453,7 +426,7 @@ class InstallmentController extends Controller
     )]
     public function deleteComment(InstallmentCommentsDeleteRequest $request): StatusResource
     {
-        InstallmentComment::query()->whereIn('id', $request->ids)->delete();
+        $this->installmentService->deleteComment($request);
 
         return new StatusResource(true);
     }

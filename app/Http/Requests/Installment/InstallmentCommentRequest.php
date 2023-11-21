@@ -13,7 +13,6 @@ use OpenApi\Attributes as OA;
     schema: 'InstallmentCommentRequest',
     title: 'Request to create or update installment comment',
     properties: [
-        new OA\Property(property: 'installment_id', type: 'int', example: '1'),
         new OA\Property(property: 'comment', type: 'string', example: "Qarzini 10 kun ichida to'lashga va'da berdi"),
     ],
 )]
@@ -25,7 +24,6 @@ class InstallmentCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'installment_id' => 'required|exists:installments,id',
             'comment' => 'required|string',
         ];
     }

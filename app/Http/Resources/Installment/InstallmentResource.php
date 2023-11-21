@@ -37,7 +37,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'graphs', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentGraphResource')),
         new OA\Property(property: 'cards', type: 'array', items: new OA\Items(ref: '#/components/schemas/CardResource')),
         new OA\Property(property: 'guarantors', type: 'array', items: new OA\Items(ref: '#/components/schemas/CustomerListItemResource')),
-        new OA\Property(property: 'attachments', type: 'array', items: new OA\Items(ref: '#/components/schemas/AttachmentResource')),
+        new OA\Property(property: 'documents', type: 'array', items: new OA\Items(ref: '#/components/schemas/AttachmentResource')),
+        new OA\Property(property: 'images', type: 'array', items: new OA\Items(ref: '#/components/schemas/AttachmentResource')),
         new OA\Property(property: 'comments', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentCommentListResource')),
     ],
 )]

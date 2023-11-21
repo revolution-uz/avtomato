@@ -67,8 +67,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('{id}/attach-card', 'attachCard')->name('installments.attach-card');
             Route::delete('{id}/detach-card', 'detachCard')->name('installments.detach-card');
             Route::post('{id}/attach-guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
-            Route::put('{id}/update-guarantor', 'updateGuarantor')->name('installments.update-guarantor');
-            Route::delete('{id}/detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
+            Route::put('update-guarantor/{id}', 'updateGuarantor')->name('installments.update-guarantor');
+            Route::delete('detach-guarantor/{id}', 'detachGuarantor')->name('installments.detach-guarantor');
             Route::post('comment', 'createComment')->name('installments.create-comment');
             Route::put('update-comment/{id}', 'updateComment')->name('installments.update-comment');
             Route::delete('comment', 'deleteComment')->name('installments.delete-comment');
