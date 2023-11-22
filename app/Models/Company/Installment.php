@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;
@@ -100,14 +101,14 @@ class Installment extends Model
         return $this->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')->select('customers.*');
     }
 
-    public function documents(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+    public function documents(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
-        return $this->morphToMany(Attachment::class, 'attachmentable');
+        return $this->morphOne(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_DOCUMENT);
     }
 
-    public function images(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+    public function images(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
-        return $this->morphToMany(Attachment::class, 'attachmentable');
+        return $this->morphOne(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_IMAGE);
     }
 
     public function comments(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
