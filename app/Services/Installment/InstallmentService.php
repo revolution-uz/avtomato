@@ -42,7 +42,9 @@ class InstallmentService
     public function updateDetails(Installment $installment, InstallmentUpdateRequest $request): Installment
     {
         if ($installment->status == InstallmentStatusEnum::DRAFT) {
-            $installment->updateOrFail($request->validated());
+            $attributes = $request->validated();
+            $attributes['starts_in'] = $request->starts_in->toDateString();
+            $installment->updateOrFail($attributes);
         }
 
         return $installment;

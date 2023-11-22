@@ -32,7 +32,7 @@ class InstallmentGraph extends Model
     ];
 
     protected $casts = [
-        'starts_in' => 'date:Y-m-d',
+        'starts_in' => 'date:d-m-Y',
         'status' => InstallmentStatusEnum::class,
     ];
 

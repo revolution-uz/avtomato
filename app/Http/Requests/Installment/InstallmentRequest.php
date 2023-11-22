@@ -24,7 +24,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
         new OA\Property(property: 'initial_fee', type: 'double', example: '100000'),
         new OA\Property(property: 'description', type: 'string', example: 'inside the order'),
-        new OA\Property(property: 'starts_in', type: 'int', example: '16933424'),
+        new OA\Property(property: 'starts_in', type: 'string', format: 'date', example: '01-12-2023'),
     ],
 )]
 /**
@@ -36,7 +36,7 @@ class InstallmentRequest extends FormRequest
     {
         return [
             'customer_id' => ['required', 'int', Rule::exists('customers', 'id')],
-            'branch_id' => ['required', [new RequiredIf(Feature::isFeatureActive(FeatureEnum::BRANCH_MANAGEMENT))]],
+            'branch_id' => [new RequiredIf(Feature::isFeatureActive(FeatureEnum::BRANCH_MANAGEMENT)), 'int'],
             'tariff_id' => ['required', 'int', Rule::exists('tariffs', 'id')],
             'period' => [
                 'required',
@@ -45,7 +45,7 @@ class InstallmentRequest extends FormRequest
                     $tariff = Tariff::findOrFail($this->input('tariff_id'));
                     /** @var Tariff $tariff */
                     if ($tariff == null) {
-                        $fail('Invalid tariff selected.');
+                        $fail('Invalid tariff is not found selected.');
 
                         return;
                     }
@@ -61,7 +61,7 @@ class InstallmentRequest extends FormRequest
                     $tariff = Tariff::findOrFail($this->input('tariff_id'));
                     /** @var Tariff $tariff */
                     if ($tariff == null) {
-                        $fail('Invalid tariff selected.');
+                        $fail('Invalid tariff is not found.');
 
                         return;
                     }
@@ -77,7 +77,7 @@ class InstallmentRequest extends FormRequest
                     $tariff = Tariff::findOrFail($this->input('tariff_id'));
                     /** @var Tariff $tariff */
                     if ($tariff == null) {
-                        $fail('Invalid tariff selected.');
+                        $fail('Invalid tariff is not found.');
 
                         return;
                     }
@@ -87,7 +87,7 @@ class InstallmentRequest extends FormRequest
                 },
             ],
             'description' => 'required|string',
-            'starts_in' => 'required|int',
+            'starts_in' => 'required|date',
         ];
     }
 
