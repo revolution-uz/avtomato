@@ -7,6 +7,7 @@ use App\Enums\Company\InstallmentTypeEnum;
 use App\Http\Resources\AttachmentResource;
 use App\Http\Resources\Customer\CardResource;
 use App\Http\Resources\Customer\CustomerListItemResource;
+use App\Http\Resources\Management\BranchResource;
 use App\Models\Company\Installment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -52,7 +53,7 @@ class InstallmentResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'customer_id' => $this->resource->customer_id,
-            'customer' => $this->resource->customer,
+            'customer' => new CustomerListItemResource($this->resource->customer),
             'graphs' => InstallmentGraphResource::collection($this->resource->graphs),
             'cards' => CardResource::collection($this->resource->cards),
             'guarantors' => CustomerListItemResource::collection($this->resource->guarantors),
@@ -60,14 +61,14 @@ class InstallmentResource extends JsonResource
             'images' => AttachmentResource::collection($this->resource->images),
             'comments' => InstallmentCommentListResource::collection($this->resource->comments),
             'branch_id' => $this->resource->branch_id,
-            'branch' => $this->resource->branch,
+            'branch' => new BranchResource($this->resource->branch),
             'tariff_id' => $this->resource->tariff_id,
-            'tariff' => $this->resource->tariff,
+            'tariff' => new TariffResource($this->resource->tariff),
             'amount' => $this->resource->amount,
             'initial_fee' => $this->resource->initial_fee,
             'description' => $this->resource->description,
             'starts_in' => $this->resource->starts_in->getTimestamp(),
-            'next_pay_date' => $this->resource->next_pay_date->getTimestamp(),
+            'next_pay_date' => $this->resource->next_pay_date ? $this->resource->next_pay_date->getTimestamp() : null,
             'created_at' => $this->resource->created_at->getTimestamp(),
             'updated_at' => $this->resource->updated_at->getTimestamp(),
         ];

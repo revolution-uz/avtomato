@@ -12,8 +12,8 @@ use OpenApi\Attributes as OA;
     title: 'InstallmentCommentListResource object',
     properties: [
         new OA\Property(property: 'installment_id', type: 'int', example: '1'),
-        new OA\Property(property: 'user_id', type: 'int', example: '1'),
-        new OA\Property(property: 'user', ref: '#/components/schemas/UserListResource'),
+        new OA\Property(property: 'creator_id', type: 'int', example: '1'),
+        new OA\Property(property: 'creator_name', type: 'string', example: 'Abrorjon Sobirov'),
         new OA\Property(property: 'comment', type: 'string', example: "Qarzini 10 kun ichida to'lashga va'da berdi"),
     ],
 )]
@@ -26,8 +26,8 @@ class InstallmentCommentListResource extends JsonResource
     {
         return [
             'installment_id' => $this->resource->installment_id,
-            'user_id' => $this->resource->user_id,
-            'user' => $this->resource->user,
+            'creator_id' => $this->resource->user_id,
+            'creator_name' => $this->resource->user->fullName(),
             'comment' => $this->resource->comment,
             'created_at' => $this->resource->created_at->getTimestamp(),
             'updated_at' => $this->resource->updated_at->getTimestamp(),

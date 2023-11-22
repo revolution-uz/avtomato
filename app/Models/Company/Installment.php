@@ -6,9 +6,12 @@ use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -41,7 +44,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property InstallmentGraph[] $graphs
  * @property Attachment[] $documents
  * @property Attachment[] $images
- * @property InstallmentComment[] $comments
+ * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
  * @property Customer[] $guarantors
  */
 class Installment extends Model
@@ -102,19 +105,24 @@ class Installment extends Model
         return $this->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')->select('customers.*');
     }
 
-    public function documents()
+    public function documents(): MorphMany
     {
-        return $this->morphOne(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_DOCUMENT);
+        return $this->morphMany(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_DOCUMENT);
     }
 
-    public function images()
+    public function images(): MorphMany
     {
-        return $this->morphOne(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_IMAGE);
+        return $this->morphMany(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_IMAGE);
     }
 
-    public function comments(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function comments(): HasMany
     {
-        return $this->belongsToMany(InstallmentComment::class);
+        return $this->hasMany(InstallmentComment::class, 'installment_id');
+    }
+
+    public function graphs(): HasMany
+    {
+        return $this->hasMany(InstallmentGraph::class, 'installment_id');
     }
 
     public function branch(): BelongsTo

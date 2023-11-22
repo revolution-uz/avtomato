@@ -367,6 +367,14 @@ class InstallmentController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCommentRequest')
         ),
         tags: ['Installments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Installment ID',
+                in: 'path',
+                required: true
+            ),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'InstallmentCommentListResource'),
         ]
