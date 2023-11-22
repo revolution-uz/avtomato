@@ -5,6 +5,7 @@ namespace App\Services\Installment;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
+use App\Http\Requests\Installment\InstallmentCardRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
@@ -71,6 +72,19 @@ class InstallmentService
     public function deleteAttachment(array $ids): void
     {
         Attachment::query()->whereIn('id', $ids)->delete();
+    }
+
+    public function attachCard(int $installmentId, InstallmentCardRequest $request): InstallmentCard
+    {
+        $attributes = $request->validated();
+        $attributes['installment_id'] = $installmentId;
+
+        return InstallmentCard::create($attributes);
+    }
+
+    public function detachCard(int $installmentId, InstallmentCardRequest $request): bool
+    {
+        return InstallmentCard::query()->where('installment_id', $installmentId)->where('card_id', $request->card_id)->delete();
     }
 
     public function attachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): InstallmentGuarantor

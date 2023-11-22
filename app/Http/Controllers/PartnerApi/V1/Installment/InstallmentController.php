@@ -39,7 +39,6 @@ use App\Http\Resources\Installment\InstallmentGuarantorResource;
 use App\Http\Resources\Installment\InstallmentResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Installment;
-use App\Models\Company\InstallmentCard;
 use App\Services\Installment\InstallmentService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -152,7 +151,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{id}/start',
+        path: '/api/v1/installment/installment/{id}/start',
         description: 'Installment start route',
         tags: ['Installments'],
         parameters: [
@@ -173,7 +172,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{id}/cancel',
+        path: '/api/v1/installment/installment/{id}/cancel',
         description: 'Installment cancel route',
         tags: ['Installments'],
         parameters: [
@@ -194,7 +193,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{id}/freeze',
+        path: '/api/v1/installment/installment/{id}/freeze',
         description: 'Installment freeze route',
         tags: ['Installments'],
         parameters: [
@@ -215,7 +214,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{id}/finish',
+        path: '/api/v1/installment/installment/{id}/finish',
         description: 'Installment finish route',
         tags: ['Installments'],
         parameters: [
@@ -256,7 +255,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{installmentId}/attach-card',
+        path: '/api/v1/installment/installment/{id}/attach-card',
         description: 'Installment card attach card route',
         requestBody: new OA\RequestBody(
             description: 'Installment card attach request body',
@@ -268,18 +267,13 @@ class InstallmentController extends Controller
             new OpenApiDataResponse(resourceName: 'InstallmentCardResource'),
         ]
     )]
-    public function attachCard(int $installmentId, InstallmentCardRequest $request): InstallmentCardResource
+    public function attachCard(int $id, InstallmentCardRequest $request): InstallmentCardResource
     {
-        $model = new InstallmentCard;
-        $model->fill($request->validated());
-        $model->installment_id = $installmentId;
-        $model->saveOrFail();
-
-        return new InstallmentCardResource($model);
+        return new InstallmentCardResource($this->installmentService->attachCard($id, $request));
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/{id}/detach-card',
+        path: '/api/v1/installment/installment/{id}/detach-card',
         description: 'Installment detach Installment card route',
         requestBody: new OA\RequestBody(
             description: 'Installment card request body',
@@ -291,15 +285,13 @@ class InstallmentController extends Controller
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function detachCard(int $installmentId, InstallmentCardRequest $request): StatusResource
+    public function detachCard(int $id, InstallmentCardRequest $request): StatusResource
     {
-        $installmentCard = InstallmentCard::query()->where('installment_id', $installmentId)->where('card_id', $request->card_id)->first();
-
-        return new StatusResource($installmentCard->delete());
+        return new StatusResource($this->installmentService->detachCard($id, $request));
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{id}/attach-guarantor',
+        path: '/api/v1/installment/installment/{id}/attach-guarantor',
         description: 'Installment attache Installment guarantor route',
         requestBody: new OA\RequestBody(
             description: 'Installment guarantor attach request body',
@@ -317,7 +309,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Put(
-        path: '/api/v1/installment/update-guarantor/{id}',
+        path: '/api/v1/installment/installment/update-guarantor/{id}',
         description: 'Installment guarantor update route',
         requestBody: new OA\RequestBody(
             description: 'Installment guarantor update request body',
@@ -344,7 +336,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/detach-guarantor/{id}',
+        path: '/api/v1/installment/installment/detach-guarantor/{id}',
         description: 'Installment guarantor detach route',
         tags: ['Installments'],
         parameters: [
@@ -367,7 +359,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{id}/comment',
+        path: '/api/v1/installment/installment/{id}/comment',
         description: 'Installment create Installment comment route',
         requestBody: new OA\RequestBody(
             description: 'Installment comment create request body',
@@ -385,7 +377,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Put(
-        path: '/api/v1/installment/comment/{id}',
+        path: '/api/v1/installment/installment/comment/{id}',
         description: 'Installment update Installment comment route',
         requestBody: new OA\RequestBody(
             description: 'Installment comment update request body',
@@ -412,7 +404,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/comment',
+        path: '/api/v1/installment/installment/comment',
         description: 'Installment Comment delete route',
         requestBody: new OA\RequestBody(
             description: 'Installment comments delete request body',
@@ -432,7 +424,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{id}/document',
+        path: '/api/v1/installment/installment/{id}/document',
         description: 'Upload document route',
         requestBody: new OA\RequestBody(
             description: 'Installment Document upload body. Send as multipart/form-data',
@@ -453,7 +445,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/document',
+        path: '/api/v1/installment/installment/document',
         description: 'Installment Documents delete route',
         requestBody: new OA\RequestBody(
             description: 'Installment documents delete request body',
@@ -473,7 +465,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{id}/image',
+        path: '/api/v1/installment/installment/{id}/image',
         description: 'Upload image route',
         requestBody: new OA\RequestBody(
             description: 'Installment Image upload body. Send as multipart/form-data',
@@ -494,7 +486,7 @@ class InstallmentController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/image',
+        path: '/api/v1/installment/installment/image',
         description: 'Installment Images delete route',
         requestBody: new OA\RequestBody(
             description: 'Installment images delete request body',

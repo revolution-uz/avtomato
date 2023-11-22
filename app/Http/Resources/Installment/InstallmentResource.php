@@ -53,6 +53,7 @@ class InstallmentResource extends JsonResource
             'id' => $this->resource->id,
             'customer_id' => $this->resource->customer_id,
             'customer' => $this->resource->customer,
+            'graphs' => InstallmentGraphResource::collection($this->resource->graphs),
             'cards' => CardResource::collection($this->resource->cards),
             'guarantors' => CustomerListItemResource::collection($this->resource->guarantors),
             'documents' => AttachmentResource::collection($this->resource->documents),

@@ -38,6 +38,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Tariff $tariff
  * @property Customer $customer
  * @property Card[] $cards
+ * @property InstallmentGraph[] $graphs
  * @property Attachment[] $documents
  * @property Attachment[] $images
  * @property InstallmentComment[] $comments
@@ -96,17 +97,17 @@ class Installment extends Model
         return $this->belongsToMany(Card::class, 'installment_cards', 'installment_id', 'card_id')->select('cards.*');
     }
 
-    public function guarantors(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function guarantors()
     {
         return $this->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')->select('customers.*');
     }
 
-    public function documents(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function documents()
     {
         return $this->morphOne(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_DOCUMENT);
     }
 
-    public function images(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function images()
     {
         return $this->morphOne(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_IMAGE);
     }
