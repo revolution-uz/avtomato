@@ -38,7 +38,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Tariff $tariff
  * @property Customer $customer
  * @property Card[] $cards
- * @property InstallmentGraph[] $graphs
  * @property Attachment[] $documents
  * @property Attachment[] $images
  * @property InstallmentComment[] $comments
@@ -115,11 +114,6 @@ class Installment extends Model
     public function comments()
     {
         return $this->belongsToMany(InstallmentComment::class);
-    }
-
-    public function graphs()
-    {
-        return $this->belongsToMany(InstallmentGraph::class);
     }
 
     public function branch(): BelongsTo
