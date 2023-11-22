@@ -2,7 +2,6 @@
 
 namespace App\Models\Company;
 
-use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;
@@ -91,27 +90,27 @@ class Installment extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function cards()
+    public function cards(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'installment_cards', 'installment_id', 'card_id')->select('cards.*');
     }
 
-    public function guarantors()
+    public function guarantors(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')->select('customers.*');
     }
 
-    public function documents()
+    public function documents(): \Illuminate\Database\Eloquent\Relations\MorphToMany
     {
-        return $this->morphToMany(Attachment::class, 'attachmentable')->where('type', AttachmentTypeEnum::INSTALLMENT_DOCUMENT);
+        return $this->morphToMany(Attachment::class, 'attachmentable');
     }
 
-    public function images()
+    public function images(): \Illuminate\Database\Eloquent\Relations\MorphToMany
     {
-        return $this->morphToMany(Attachment::class, 'attachmentable')->where('type', AttachmentTypeEnum::INSTALLMENT_IMAGE);
+        return $this->morphToMany(Attachment::class, 'attachmentable');
     }
 
-    public function comments()
+    public function comments(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(InstallmentComment::class);
     }
