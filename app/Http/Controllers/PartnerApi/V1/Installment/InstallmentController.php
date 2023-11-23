@@ -31,6 +31,7 @@ use App\Http\Requests\Installment\InstallmentImageUploadRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentStartRequest;
+use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Http\Requests\Installment\InstallmentViewRequest;
 use App\Http\Resources\Installment\InstallmentCardResource;
@@ -148,6 +149,33 @@ class InstallmentController extends Controller
     public function update(int $id, InstallmentUpdateRequest $request): InstallmentResource
     {
         return new InstallmentResource($this->installmentService->updateDetails(Installment::findOrFail($id), $request));
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/toggle-auto-charge',
+        description: 'Installment toggle route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment toggle request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentToggleRequest')
+        ),
+        tags: ['Installments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Installment ID',
+                in: 'path',
+                required: true
+            ),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function toggleAutoCharge(int $id, InstallmentToggleRequest $request): InstallmentResource
+    {
+        return new InstallmentResource($this->installmentService->toggleAutoCharge(Installment::findOrFail($id), $request));
     }
 
     #[OA\Post(

@@ -28,6 +28,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $sms_notify
  * @property bool $any_card_charge
  * @property bool $is_blacklist
+ * @property bool $withdrawn_auto_charge
  * @property int $period
  * @property string $plum_id
  * @property Carbon|null $starts_in
@@ -70,6 +71,7 @@ class Installment extends Model
         'plum_id',
         'starts_in',
         'next_pay_date',
+        'withdrawn_auto_charge',
     ];
 
     protected $casts = [

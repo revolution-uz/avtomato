@@ -5,6 +5,8 @@ namespace App\Services\Installment;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
+use App\Enums\FeatureEnum;
+use App\Exceptions\BalanceIsNotEnoughException;
 use App\Http\Requests\Installment\InstallmentCardRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
@@ -14,6 +16,7 @@ use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
 use App\Http\Requests\Installment\InstallmentImageUploadRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Models\Company\Attachment;
 use App\Models\Company\Card;
@@ -23,8 +26,10 @@ use App\Models\Company\InstallmentComment;
 use App\Models\Company\InstallmentGraph;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
+use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Throwable;
 
 class InstallmentService
 {
@@ -46,6 +51,27 @@ class InstallmentService
             $attributes['starts_in'] = $request->starts_in->toDateString();
             $installment->updateOrFail($attributes);
         }
+
+        return $installment;
+    }
+
+    /**
+     * @throws Throwable
+     * @throws BalanceIsNotEnoughException
+     */
+    public function toggleAutoCharge(Installment $installment, InstallmentToggleRequest $request): Installment
+    {
+        if ($request->auto_charge) {
+            $installment->type = InstallmentTypeEnum::WITH_CARD;
+            if (! $installment->withdrawn_auto_charge) {
+                $balanceService = new BalanceService;
+                $balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
+                $installment->withdrawn_auto_charge = true;
+            }
+        } else {
+            $installment->type = InstallmentTypeEnum::WITHOUT_CARD;
+        }
+        $installment->saveOrFail();
 
         return $installment;
     }
