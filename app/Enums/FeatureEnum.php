@@ -15,6 +15,9 @@ enum FeatureEnum: string
     case INSTALLMENT_SMS = 'installment_sms';
     case INSTALLMENT_AUTO_CHARGE = 'installment_auto_charge';
     case INSTALLMENT_GUARANTOR = 'installment_guarantor';
+    case INSTALLMENT_COMMENT = 'installment_comment';
+    case INSTALLMENT_DOCUMENT = 'installment_document';
+    case INSTALLMENT_IMAGE = 'installment_image';
     case INSTALLMENT_AUTO_CHARGE_BY_PINFL = 'installment_auto_charge_by_pinfl';
     case TARIFF_MANAGEMENT = 'tariff_management';
     case TRANSACTION_MANAGEMENT = 'transaction_management';

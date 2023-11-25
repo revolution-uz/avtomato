@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
-use App\Enums\Company\InstallmentStatusEnum;
-use App\Enums\Company\InstallmentTypeEnum;
+use _PHPStan_c6b09fbdf\Symfony\Component\Finder\Exception\AccessDeniedException;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Helpers\Swagger\OpenApiArrayResponse;
@@ -15,20 +14,33 @@ use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Installment\InstallmentCancelRequest;
 use App\Http\Requests\Installment\InstallmentCardRequest;
+use App\Http\Requests\Installment\InstallmentCommentRequest;
+use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentDocumentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
+use App\Http\Requests\Installment\InstallmentFinishRequest;
+use App\Http\Requests\Installment\InstallmentFreezeRequest;
+use App\Http\Requests\Installment\InstallmentGuarantorDetachRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
+use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
+use App\Http\Requests\Installment\InstallmentImagesDeleteRequest;
+use App\Http\Requests\Installment\InstallmentImageUploadRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentStartRequest;
+use App\Http\Requests\Installment\InstallmentToggleRequest;
+use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Http\Requests\Installment\InstallmentViewRequest;
 use App\Http\Resources\Installment\InstallmentCardResource;
+use App\Http\Resources\Installment\InstallmentCommentListResource;
 use App\Http\Resources\Installment\InstallmentGuarantorResource;
 use App\Http\Resources\Installment\InstallmentResource;
 use App\Http\Resources\StatusResource;
-use App\Models\Company\Card;
 use App\Models\Company\Installment;
-use App\Models\Company\InstallmentCard;
-use App\Models\Company\InstallmentGuarantor;
+use App\Services\Installment\InstallmentService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
@@ -36,6 +48,11 @@ use OpenApi\Attributes as OA;
 
 class InstallmentController extends Controller
 {
+    public function __construct(
+        protected InstallmentService $installmentService
+    ) {
+    }
+
     #[OA\Get(
         path: '/api/v1/installment/installment',
         description: 'Installment route',
@@ -104,15 +121,7 @@ class InstallmentController extends Controller
     )]
     public function create(InstallmentRequest $request): InstallmentResource
     {
-        $model = new Installment;
-        $model->fill($request->validated());
-        $model->status = InstallmentStatusEnum::DRAFT;
-        $model->sms_notify = false;
-        $model->any_card_charge = false;
-        $model->type = InstallmentTypeEnum::WITHOUT_CARD;
-        $model->saveOrFail();
-
-        return new InstallmentResource($model);
+        return new InstallmentResource($this->installmentService->create($request));
     }
 
     #[OA\Put(
@@ -121,7 +130,7 @@ class InstallmentController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Installment update request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentUpdateRequest')
         ),
         tags: ['Installments'],
         parameters: [
@@ -137,56 +146,120 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, InstallmentRequest $request): InstallmentResource
+    public function update(int $id, InstallmentUpdateRequest $request): InstallmentResource
     {
-        $installment = Installment::findOrFail($id);
-        $installment->fill($request->validated());
-        $installment->saveOrFail();
-
-        return new InstallmentResource($installment);
+        return new InstallmentResource($this->installmentService->updateDetails(Installment::findOrFail($id), $request));
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{installmentId}/attach-card',
-        description: 'Installment card attach card route',
+        path: '/api/v1/installment/installment/{id}/toggle-auto-charge',
+        description: 'Installment toggle route',
         requestBody: new OA\RequestBody(
-            description: 'Installment card attach request body',
+            description: 'Installment toggle request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentToggleRequest')
         ),
         tags: ['Installments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Installment ID',
+                in: 'path',
+                required: true
+            ),
+        ],
         responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentCardResource'),
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
         ]
     )]
-    public function attachCard(int $installmentId, InstallmentCardRequest $request): InstallmentCardResource
+    public function toggleAutoCharge(int $id, InstallmentToggleRequest $request): InstallmentResource
     {
-        $model = new InstallmentCard;
-        $model->fill($request->validated());
-        $model->installment_id = $installmentId;
-        $model->saveOrFail();
-
-        return new InstallmentCardResource($model);
+        return new InstallmentResource($this->installmentService->toggleAutoCharge(Installment::findOrFail($id), $request));
     }
 
-    #[OA\Delete(
-        path: '/api/v1/installment/{installmentId}/detach-card',
-        description: 'Installment detach Installment card route',
-        requestBody: new OA\RequestBody(
-            description: 'Installment card request body',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardRequest')
-        ),
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/start',
+        description: 'Installment start route',
         tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
         responses: [
-            new OpenApiDataResponse(resourceName: 'StatusResource'),
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
         ]
     )]
-    public function detachCard(int $installmentId, InstallmentCardRequest $request): StatusResource
+    public function start(int $id, InstallmentStartRequest $request)
     {
-        $installmentCard = InstallmentCard::query()->where('installment_id', $installmentId)->where('card_id', $request->card_id)->first();
+        $installment = Installment::findOrFail($id);
+        if ($this->installmentService->start($installment)) {
+            return new InstallmentResource($installment);
+        }
+        throw new AccessDeniedException('You cannot start this installment');
+    }
 
-        return new StatusResource($installmentCard->delete());
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/cancel',
+        description: 'Installment cancel route',
+        tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function cancel(int $id, InstallmentCancelRequest $request)
+    {
+        $installment = Installment::findOrFail($id);
+        if ($this->installmentService->cancel($installment)) {
+            return new InstallmentResource($installment);
+        }
+        throw new AccessDeniedException('You cannot cancel this installment');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/freeze',
+        description: 'Installment freeze route',
+        tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function freeze(int $id, InstallmentFreezeRequest $request)
+    {
+        $installment = Installment::findOrFail($id);
+        if ($this->installmentService->freeze($installment)) {
+            return new InstallmentResource($installment);
+        }
+        throw new AccessDeniedException('You cannot cancel this installment');
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/finish',
+        description: 'Installment finish route',
+        tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function finish(int $id, InstallmentFinishRequest $request)
+    {
+        $installment = Installment::findOrFail($id);
+        if ($this->installmentService->finish($installment)) {
+            return new InstallmentResource($installment);
+        }
+        throw new AccessDeniedException('You cannot cancel this installment');
     }
 
     #[OA\Delete(
@@ -204,13 +277,49 @@ class InstallmentController extends Controller
     )]
     public function delete(InstallmentsDeleteRequest $request): StatusResource
     {
-        Installment::query()->whereIn('id', $request->ids)->delete();
+        $this->installmentService->deleteInstallments($request);
 
         return new StatusResource(true);
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/{installmentId}/attach-guarantor',
+        path: '/api/v1/installment/installment/{id}/attach-card',
+        description: 'Installment card attach card route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment card attach request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentCardResource'),
+        ]
+    )]
+    public function attachCard(int $id, InstallmentCardRequest $request): InstallmentCardResource
+    {
+        return new InstallmentCardResource($this->installmentService->attachCard($id, $request));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/installment/{id}/detach-card',
+        description: 'Installment detach Installment card route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment card request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function detachCard(int $id, InstallmentCardRequest $request): StatusResource
+    {
+        return new StatusResource($this->installmentService->detachCard($id, $request));
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/attach-guarantor',
         description: 'Installment attache Installment guarantor route',
         requestBody: new OA\RequestBody(
             description: 'Installment guarantor attach request body',
@@ -222,23 +331,18 @@ class InstallmentController extends Controller
             new OpenApiDataResponse(resourceName: 'InstallmentGuarantorResource'),
         ]
     )]
-    public function attachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): InstallmentGuarantorResource
+    public function attachGuarantor(int $id, InstallmentGuarantorRequest $request): InstallmentGuarantorResource
     {
-        $model = new InstallmentGuarantor;
-        $model->fill($request->validated());
-        $model->installment_id = $installmentId;
-        $model->saveOrFail();
-
-        return new InstallmentGuarantorResource($model);
+        return new InstallmentGuarantorResource($this->installmentService->attachGuarantor($id, $request));
     }
 
     #[OA\Put(
-        path: '/api/v1/installment/{installmentId}/update-guarantor',
+        path: '/api/v1/installment/installment/update-guarantor/{id}',
         description: 'Installment guarantor update route',
         requestBody: new OA\RequestBody(
             description: 'Installment guarantor update request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentGuarantorRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentGuarantorUpdateRequest')
         ),
         tags: ['Installments'],
         parameters: [
@@ -254,18 +358,13 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function updateGuarantor(int $installmentId, InstallmentGuarantorRequest $request): InstallmentGuarantorResource
+    public function updateGuarantor(int $id, InstallmentGuarantorUpdateRequest $request): InstallmentGuarantorResource
     {
-        $installmentGuarantor = InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->first();
-        $installmentGuarantor->fill($request->validated());
-
-        $installmentGuarantor->saveOrFail();
-
-        return new InstallmentGuarantorResource($installmentGuarantor);
+        return new InstallmentGuarantorResource($this->installmentService->updateGuarantor($id, $request));
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/{installmentId}/detach-guarantor',
+        path: '/api/v1/installment/installment/detach-guarantor/{id}',
         description: 'Installment guarantor detach route',
         tags: ['Installments'],
         parameters: [
@@ -280,13 +379,164 @@ class InstallmentController extends Controller
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function detachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): StatusResource
+    public function detachGuarantor(int $id, InstallmentGuarantorDetachRequest $request): StatusResource
     {
-        //        deleting guarantor all attached cards
-        $cardIds = Card::query()->where('customer_id', $request->customer_id)->pluck('id')->toArray();
-        InstallmentCard::query()->where('installment_id', $installmentId)->whereIn('card_id', $cardIds)->delete();
-        //        delete guarantor
-        InstallmentGuarantor::query()->where('installment_id', $installmentId)->where('customer_id', $request->customer_id)->delete();
+        $this->installmentService->detachGuarantor($id);
+
+        return new StatusResource(true);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/comment',
+        description: 'Installment create Installment comment route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment comment create request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCommentRequest')
+        ),
+        tags: ['Installments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Installment ID',
+                in: 'path',
+                required: true
+            ),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentCommentListResource'),
+        ]
+    )]
+    public function createComment(int $id, InstallmentCommentRequest $request): InstallmentCommentListResource
+    {
+        return new InstallmentCommentListResource($this->installmentService->createComment($id, $request));
+    }
+
+    #[OA\Put(
+        path: '/api/v1/installment/installment/comment/{id}',
+        description: 'Installment update Installment comment route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment comment update request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCommentRequest')
+        ),
+        tags: ['Installments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Installment Comment ID',
+                in: 'path',
+                required: true
+            ),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentCommentListResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function updateComment(int $id, InstallmentCommentRequest $request): InstallmentCommentListResource
+    {
+        return new InstallmentCommentListResource($this->installmentService->updateComment($id, $request));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/installment/comment',
+        description: 'Installment Comment delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment comments delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCommentsDeleteRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function deleteComment(InstallmentCommentsDeleteRequest $request): StatusResource
+    {
+        $this->installmentService->deleteComment($request);
+
+        return new StatusResource(true);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/document',
+        description: 'Upload document route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment Document upload body. Send as multipart/form-data',
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(ref: '#/components/schemas/InstallmentDocumentUploadRequest')
+            ),
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+        ],
+    )]
+    public function uploadDocument(int $id, InstallmentDocumentUploadRequest $request): InstallmentResource
+    {
+        return new InstallmentResource($this->installmentService->uploadAttachment(Installment::findOrFail($id), $request));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/installment/document',
+        description: 'Installment Documents delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment documents delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentDocumentsDeleteRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function deleteDocument(InstallmentDocumentsDeleteRequest $request): StatusResource
+    {
+        $this->installmentService->deleteAttachment($request->ids);
+
+        return new StatusResource(true);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/image',
+        description: 'Upload image route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment Image upload body. Send as multipart/form-data',
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(ref: '#/components/schemas/InstallmentImageUploadRequest')
+            ),
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+        ],
+    )]
+    public function uploadImage(int $id, InstallmentImageUploadRequest $request): InstallmentResource
+    {
+        return new InstallmentResource($this->installmentService->uploadImage(Installment::findOrFail($id), $request));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/installment/image',
+        description: 'Installment Images delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment images delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentImagesDeleteRequest')
+        ),
+        tags: ['Installments'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function deleteImage(InstallmentImagesDeleteRequest $request): StatusResource
+    {
+        $this->installmentService->deleteAttachment($request->ids);
 
         return new StatusResource(true);
     }

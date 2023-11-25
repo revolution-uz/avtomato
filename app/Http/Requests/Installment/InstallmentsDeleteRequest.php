@@ -9,7 +9,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Schema(
     schema: 'InstallmentsDeleteRequest',
-    title: 'Request to delete tariffs',
+    title: 'Request to delete installments',
     properties: [
         new OA\Property(property: 'ids', type: 'array', items: new OA\Items(type: 'int'), example: '[1, 2, 3]'),
     ],

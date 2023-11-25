@@ -14,7 +14,6 @@ use OpenApi\Attributes as OA;
     title: 'Request to create or update a card',
     properties: [
         new OA\Property(property: 'card_id', type: 'int', example: '1'),
-        new OA\Property(property: 'auto_charge', type: 'boolean', example: 'true'),
     ],
 )]
 /**
@@ -26,7 +25,6 @@ class InstallmentCardRequest extends FormRequest
     {
         return [
             'card_id' => 'required|exists:cards,id',
-            'auto_charge' => 'required|boolean',
         ];
     }
 

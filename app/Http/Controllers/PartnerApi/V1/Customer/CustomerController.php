@@ -396,7 +396,7 @@ class CustomerController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Address delete request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/DetachPhoneRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/DetachAddressRequest')
         ),
         tags: ['Customers'],
         responses: [

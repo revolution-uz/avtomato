@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property float $amount
  * @property float $paid_amount
  * @property int $overdue_days
- * @property int $status
+ * @property InstallmentStatusEnum $status
+ * @property Installment $installment
  * @property Carbon|null $starts_in
  */
 class InstallmentGraph extends Model
@@ -31,5 +33,11 @@ class InstallmentGraph extends Model
 
     protected $casts = [
         'starts_in' => 'date:d-m-Y',
+        'status' => InstallmentStatusEnum::class,
     ];
+
+    public function installment()
+    {
+        return $this->belongsTo(Installment::class);
+    }
 }

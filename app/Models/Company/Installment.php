@@ -2,12 +2,16 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -16,19 +20,15 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property int $customer_id
- * @property Customer $customer
  * @property int $branch_id
- * @property Branch $branch
  * @property int $tariff_id
- * @property InstallmentTypeEnum $type
- * @property Tariff $tariff
  * @property float $amount
  * @property float $initial_fee
  * @property string $description
  * @property bool $sms_notify
  * @property bool $any_card_charge
  * @property bool $is_blacklist
- * @property InstallmentStatusEnum $status
+ * @property bool $withdrawn_auto_charge
  * @property int $period
  * @property string $plum_id
  * @property Carbon|null $starts_in
@@ -36,6 +36,17 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property InstallmentTypeEnum $type
+ * @property InstallmentStatusEnum $status
+ * @property Branch $branch
+ * @property Tariff $tariff
+ * @property Customer $customer
+ * @property Card[] $cards
+ * @property InstallmentGraph[] $graphs
+ * @property Attachment[] $documents
+ * @property Attachment[] $images
+ * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
+ * @property Customer[] $guarantors
  */
 class Installment extends Model
 {
@@ -60,6 +71,7 @@ class Installment extends Model
         'plum_id',
         'starts_in',
         'next_pay_date',
+        'withdrawn_auto_charge',
     ];
 
     protected $casts = [
@@ -83,6 +95,36 @@ class Installment extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function cards(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Card::class, 'installment_cards', 'installment_id', 'card_id')->select('cards.*');
+    }
+
+    public function guarantors()
+    {
+        return $this->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')->select('customers.*');
+    }
+
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_DOCUMENT);
+    }
+
+    public function images(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_IMAGE);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(InstallmentComment::class, 'installment_id');
+    }
+
+    public function graphs(): HasMany
+    {
+        return $this->hasMany(InstallmentGraph::class, 'installment_id');
     }
 
     public function branch(): BelongsTo

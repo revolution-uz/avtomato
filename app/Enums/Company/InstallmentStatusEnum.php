@@ -13,4 +13,16 @@ enum InstallmentStatusEnum: int
     case DRAFT = 0; // means just created and need to run
     case RUNNING = 1; // means active
     case FINISHED = 2; // means closed
+
+    public static function getStatusListByStatus(self $statusEnum = null)
+    {
+        return match ($statusEnum) {
+            self::CANCELED,
+            self::RUNNING => [self::FROZEN, self::DRAFT],
+            self::FROZEN => [self::RUNNING, self::FINISHED],
+            self::DRAFT => [],
+            self::FINISHED => [self::RUNNING],
+            default => [self::CANCELED, self::DRAFT],
+        };
+    }
 }

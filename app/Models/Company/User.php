@@ -94,4 +94,9 @@ class User extends Authenticatable
         $model = Phone::firstOrCreate(['phone' => $phone]);
         $this->phones()->sync([$model->id], false);
     }
+
+    public function fullName(): string
+    {
+        return $this->last_name . ' ' . $this->first_name;
+    }
 }
