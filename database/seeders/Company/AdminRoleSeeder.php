@@ -8,7 +8,6 @@ use App\Models\Company\Branch;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -23,17 +22,27 @@ class AdminRoleSeeder extends Seeder
         $admin = Role::query()->firstOrCreate(['name' => UserRoleEnum::ADMIN->value]);
 
         try {
-            DB::transaction(static function () use ($admin) {
-                $permissions = Permission::all();
-                foreach ($permissions as $permission) {
+            $permissions = Permission::all();
+            foreach ($permissions as $permission) {
+                if (
+                    ! $admin->permissions()->where('permission_id', $permission->id)->exists()
+                ) {
                     $admin->permissions()->attach($permission->id);
-                    if (PermissionEnum::getIsBranchRelated($permission->slug)) {
-                        foreach (Branch::all() as $branch) {
+                }
+
+                if (PermissionEnum::getIsBranchRelated($permission->slug)) {
+                    foreach (Branch::all() as $branch) {
+                        if (
+                            ! $admin->permissions()
+                                ->where('permission_id', $permission->id)
+                                ->where('branch_id', $branch->id)
+                                ->exists()
+                        ) {
                             $admin->permissions()->attach($permission->id, ['branch_id' => $branch->id]);
                         }
                     }
                 }
-            });
+            }
         } catch (Throwable $e) {
             Log::error($e->getMessage());
         }
