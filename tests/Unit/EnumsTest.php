@@ -19,7 +19,7 @@ class EnumsTest extends TestCase
         foreach (PermissionGroupEnum::cases() as $permissionGroupEnum) {
             $groupPermissions = PermissionGroupEnum::getPermissionsByGroup($permissionGroupEnum);
 
-            if (Arr::first($groupPermissions, fn(PermissionEnum $permission) => in_array($permission, $permissions))) {
+            if (Arr::first($groupPermissions, fn (PermissionEnum $permission) => in_array($permission, $permissions))) {
                 $this->fail($permissionGroupEnum->name . ' has duplicate permissions');
             }
 
