@@ -289,7 +289,7 @@ class InstallmentController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Installment card attach request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardAttachRequest')
         ),
         tags: ['Installments'],
         responses: [
@@ -368,16 +368,13 @@ class InstallmentController extends Controller
 
     #[OA\Delete(
         path: '/api/v1/installment/installment/detach-guarantor',
-        description: 'Installment guarantor detach route',
+        description: 'Installment guarantors detach route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment guarantors request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentGuarantorDetachRequest')
+        ),
         tags: ['Installments'],
-        parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'Installment Guarantor ID',
-                in: 'path',
-                required: true
-            ),
-        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
