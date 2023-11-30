@@ -7,10 +7,12 @@ use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
-use App\Http\Requests\Installment\InstallmentCardRequest;
+use App\Http\Requests\Installment\InstallmentCardAttachRequest;
+use App\Http\Requests\Installment\InstallmentCardDetachRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
+use App\Http\Requests\Installment\InstallmentGuarantorDetachRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
 use App\Http\Requests\Installment\InstallmentImageUploadRequest;
@@ -102,7 +104,7 @@ class InstallmentService
         Attachment::query()->whereIn('id', $ids)->delete();
     }
 
-    public function attachCard(int $installmentId, InstallmentCardRequest $request): InstallmentCard
+    public function attachCard(int $installmentId, InstallmentCardAttachRequest $request): InstallmentCard
     {
         $attributes = $request->validated();
         $attributes['installment_id'] = $installmentId;
@@ -110,9 +112,17 @@ class InstallmentService
         return InstallmentCard::create($attributes);
     }
 
-    public function detachCard(int $installmentId, InstallmentCardRequest $request): bool
+    public function detachCards(InstallmentCardDetachRequest $request): void
     {
-        return InstallmentCard::query()->where('installment_id', $installmentId)->where('card_id', $request->card_id)->delete();
+        foreach ($request->ids as $id) {
+            $this->detachCard($id);
+        }
+    }
+
+    public function detachCard(int $installmentCardId): void
+    {
+        $installmentCard = InstallmentCard::findOrFail($installmentCardId);
+        $installmentCard->delete();
     }
 
     public function attachGuarantor(int $installmentId, InstallmentGuarantorRequest $request): InstallmentGuarantor
@@ -127,9 +137,18 @@ class InstallmentService
     public function updateGuarantor(int $id, InstallmentGuarantorUpdateRequest $request): InstallmentGuarantor
     {
         $installmentGuarantor = InstallmentGuarantor::findOrFail($id);
-        $installmentGuarantor->updateOrFail($request->validated());
+        if ($installmentGuarantor->customer_id == $request->customer_id) {
+            $installmentGuarantor->updateOrFail($request->validated());
+        }
 
         return $installmentGuarantor;
+    }
+
+    public function detachGuarantors(InstallmentGuarantorDetachRequest $request)
+    {
+        foreach ($request->ids as $id) {
+            $this->detachGuarantor($id);
+        }
     }
 
     public function detachGuarantor(int $installmentGuarantorId): void
@@ -162,7 +181,10 @@ class InstallmentService
 
     public function deleteComment(InstallmentCommentsDeleteRequest $request): void
     {
-        InstallmentComment::query()->whereIn('id', $request->ids)->delete();
+        foreach ($request->ids as $id) {
+            $installmentComment = InstallmentComment::findOrFail($id);
+            $installmentComment->delete();
+        }
     }
 
     public function start(Installment $installment): bool

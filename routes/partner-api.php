@@ -65,10 +65,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('{id}/freeze', 'freeze')->name('installments.freeze');
             Route::post('{id}/finish', 'finish')->name('installments.finish');
             Route::post('{id}/attach-card', 'attachCard')->name('installments.attach-card');
-            Route::delete('{id}/detach-card', 'detachCard')->name('installments.detach-card');
+            Route::delete('detach-card', 'detachCard')->name('installments.detach-card');
             Route::post('{id}/attach-guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
             Route::put('update-guarantor/{id}', 'updateGuarantor')->name('installments.update-guarantor');
-            Route::delete('detach-guarantor/{id}', 'detachGuarantor')->name('installments.detach-guarantor');
+            Route::delete('detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
             Route::post('{id}/comment', 'createComment')->name('installments.create-comment');
             Route::put('update-comment/{id}', 'updateComment')->name('installments.update-comment');
             Route::delete('comment', 'deleteComment')->name('installments.delete-comment');
