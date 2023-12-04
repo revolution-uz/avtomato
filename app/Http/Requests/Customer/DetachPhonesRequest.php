@@ -9,23 +9,22 @@ use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'DetachPhoneRequest',
+    schema: 'DetachPhonesRequest',
     title: 'Request to detach a phone number from customer',
     properties: [
-        new OA\Property(property: 'phone', type: 'int', example: '998933993300'),
+        new OA\Property(property: 'phones', type: 'array', items: new OA\Items(type: 'int'), example: ['998933993300', '998901234567']),
     ],
 )]
 /**
- * @property int $phone
- * @property int $type
- * @property string|null $comment
+ * @property array $phones
  */
-class DetachPhoneRequest extends FormRequest
+class DetachPhonesRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'phone' => ['distinct', 'required', 'int', new PhoneRule],
+            'phones' => ['distinct', 'required', 'array'],
+            'phones.*' => ['int', new PhoneRule],
         ];
     }
 
