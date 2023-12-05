@@ -12,6 +12,7 @@ use OpenApi\Attributes as OA;
     schema: 'InstallmentGraphResource',
     title: 'InstallmentGraphResource object',
     properties: [
+        new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'installment_id', type: 'int', example: '1'),
         new OA\Property(property: 'amount', type: 'float', example: '12000'),
         new OA\Property(property: 'paid_amount', type: 'float', example: '0'),
@@ -28,6 +29,7 @@ class InstallmentGraphResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->resource->id,
             'installment_id' => $this->resource->installment_id,
             'amount' => $this->resource->amount,
             'paid_amount' => $this->resource->paid_amount,

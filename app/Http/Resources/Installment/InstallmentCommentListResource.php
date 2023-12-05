@@ -11,6 +11,7 @@ use OpenApi\Attributes as OA;
     schema: 'InstallmentCommentListResource',
     title: 'InstallmentCommentListResource object',
     properties: [
+        new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'installment_id', type: 'int', example: '1'),
         new OA\Property(property: 'creator_id', type: 'int', example: '1'),
         new OA\Property(property: 'creator_name', type: 'string', example: 'Abrorjon Sobirov'),
@@ -25,6 +26,7 @@ class InstallmentCommentListResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->resource->id,
             'installment_id' => $this->resource->installment_id,
             'creator_id' => $this->resource->user_id,
             'creator_name' => $this->resource->user->fullName(),

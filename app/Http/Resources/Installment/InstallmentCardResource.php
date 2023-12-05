@@ -11,6 +11,7 @@ use OpenApi\Attributes as OA;
     schema: 'InstallmentCardResource',
     title: 'InstallmentCard object',
     properties: [
+        new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'installment_id', type: 'int', example: '1'),
         new OA\Property(property: 'installment', ref: '#/components/schemas/InstallmentResource'),
         new OA\Property(property: 'card_id', type: 'int', example: '1'),
@@ -26,6 +27,7 @@ class InstallmentCardResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->resource->id,
             'installment_id' => $this->resource->installment_id,
             'installment' => $this->resource->installment,
             'card_id' => $this->resource->card_id,
