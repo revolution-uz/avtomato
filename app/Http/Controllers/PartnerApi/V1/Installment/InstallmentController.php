@@ -15,7 +15,8 @@ use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Installment\InstallmentCancelRequest;
-use App\Http\Requests\Installment\InstallmentCardRequest;
+use App\Http\Requests\Installment\InstallmentCardAttachRequest;
+use App\Http\Requests\Installment\InstallmentCardDetachRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentsDeleteRequest;
@@ -288,34 +289,36 @@ class InstallmentController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Installment card attach request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardAttachRequest')
         ),
         tags: ['Installments'],
         responses: [
             new OpenApiDataResponse(resourceName: 'InstallmentCardResource'),
         ]
     )]
-    public function attachCard(int $id, InstallmentCardRequest $request): InstallmentCardResource
+    public function attachCard(int $id, InstallmentCardAttachRequest $request): InstallmentCardResource
     {
         return new InstallmentCardResource($this->installmentService->attachCard($id, $request));
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/installment/{id}/detach-card',
+        path: '/api/v1/installment/installment/detach-card',
         description: 'Installment detach Installment card route',
         requestBody: new OA\RequestBody(
             description: 'Installment card request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardDetachRequest')
         ),
         tags: ['Installments'],
         responses: [
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function detachCard(int $id, InstallmentCardRequest $request): StatusResource
+    public function detachCard(InstallmentCardDetachRequest $request): StatusResource
     {
-        return new StatusResource($this->installmentService->detachCard($id, $request));
+        $this->installmentService->detachCards($request);
+
+        return new StatusResource(true);
     }
 
     #[OA\Post(
@@ -364,24 +367,21 @@ class InstallmentController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/installment/installment/detach-guarantor/{id}',
-        description: 'Installment guarantor detach route',
+        path: '/api/v1/installment/installment/detach-guarantor',
+        description: 'Installment guarantors detach route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment guarantors request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentGuarantorDetachRequest')
+        ),
         tags: ['Installments'],
-        parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'Installment Guarantor ID',
-                in: 'path',
-                required: true
-            ),
-        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function detachGuarantor(int $id, InstallmentGuarantorDetachRequest $request): StatusResource
+    public function detachGuarantor(InstallmentGuarantorDetachRequest $request): StatusResource
     {
-        $this->installmentService->detachGuarantor($id);
+        $this->installmentService->detachGuarantors($request);
 
         return new StatusResource(true);
     }

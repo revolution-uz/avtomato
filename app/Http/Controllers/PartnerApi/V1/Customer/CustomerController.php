@@ -21,7 +21,7 @@ use App\Http\Requests\Customer\CustomerByPassportRequest;
 use App\Http\Requests\Customer\CustomersFilterRequest;
 use App\Http\Requests\Customer\CustomerViewRequest;
 use App\Http\Requests\Customer\DetachAddressRequest;
-use App\Http\Requests\Customer\DetachPhoneRequest;
+use App\Http\Requests\Customer\DetachPhonesRequest;
 use App\Http\Requests\Customer\GetCustomerInfoByPassportRequest;
 use App\Http\Requests\Customer\UpdateCustomerRequest;
 use App\Http\Resources\Customer\AttachCustomerCardResource;
@@ -354,17 +354,19 @@ class CustomerController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Phone delete request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/DetachPhoneRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/DetachPhonesRequest')
         ),
         tags: ['Customers'],
         responses: [
             new OpenApiDataResponse('StatusResource'),
         ]
     )]
-    public function detachPhone(int $id, DetachPhoneRequest $request): StatusResource
+    public function detachPhone(int $id, DetachPhonesRequest $request): StatusResource
     {
         $customer = Customer::findOrFail($id);
-        $customer->phones()->detach($request->phone);
+        foreach ($request->phones as $phone) {
+            $customer->phones()->detach($phone);
+        }
 
         return new StatusResource(true);
     }
