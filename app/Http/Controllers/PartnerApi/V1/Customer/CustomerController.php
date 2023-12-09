@@ -235,6 +235,9 @@ class CustomerController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/CardRequest')
         ),
         tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'AttachCustomerCardResource'),
         ]
