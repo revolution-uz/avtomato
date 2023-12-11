@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $is_branch_related
  * @property-read string $name
  * @property-read PermissionGroup $permissionGroup
+ * @property-read Feature|null $feature
  */
 class Permission extends Model
 {

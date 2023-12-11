@@ -71,6 +71,10 @@ class Role extends Model
         $result = [];
 
         foreach ($rolePermissions as $rolePermission) {
+            if ($rolePermission->permission->feature?->is_active === false) {
+                continue;
+            }
+
             $result[$rolePermission->permission->slug->value] = $result[$rolePermission->permission->slug->value] ?? [];
 
             if ($rolePermission->branch_id !== null) {
