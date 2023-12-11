@@ -176,7 +176,7 @@ class CustomerController extends Controller
         requestBody: new OA\RequestBody(
             description: 'Request to create a customer',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CreateCustomerRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateCustomerRequest')
         ),
         tags: ['Customers'],
         parameters: [
