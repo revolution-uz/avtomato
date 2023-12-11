@@ -21,6 +21,8 @@ class InstallmentCard extends Model
     use SoftDeletes;
     use TenantConnection;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'installment_id',
         'card_id',
