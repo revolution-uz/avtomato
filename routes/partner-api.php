@@ -70,7 +70,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::put('update-guarantor/{id}', 'updateGuarantor')->name('installments.update-guarantor');
             Route::delete('detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
             Route::post('{id}/comment', 'createComment')->name('installments.create-comment');
-            Route::put('update-comment/{id}', 'updateComment')->name('installments.update-comment');
+            Route::put('comment/{id}', 'updateComment')->name('installments.update-comment');
             Route::delete('comment', 'deleteComment')->name('installments.delete-comment');
             Route::post('{id}/document', 'uploadDocument')->name('installments.upload-document');
             Route::delete('document', 'deleteDocument')->name('installments.delete-document');
