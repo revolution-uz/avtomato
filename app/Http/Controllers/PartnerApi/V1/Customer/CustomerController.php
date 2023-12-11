@@ -291,6 +291,9 @@ class CustomerController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/CardsDeleteRequest')
         ),
         tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer'),
+        ],
         responses: [
             new OpenApiDataResponse('StatusResource'),
         ]
@@ -314,6 +317,9 @@ class CustomerController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/ConfirmCustomerCardRequest')
         ),
         tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'CardResource'),
         ]
@@ -337,6 +343,9 @@ class CustomerController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/AttachPhoneRequest')
         ),
         tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'AttachCustomerCardResource'),
         ]
@@ -360,6 +369,9 @@ class CustomerController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/DetachPhonesRequest')
         ),
         tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer'),
+        ],
         responses: [
             new OpenApiDataResponse('StatusResource'),
         ]
@@ -383,6 +395,9 @@ class CustomerController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/AttachAddressRequest')
         ),
         tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'AttachCustomerCardResource'),
         ]
@@ -404,6 +419,9 @@ class CustomerController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/DetachAddressRequest')
         ),
         tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer'),
+        ],
         responses: [
             new OpenApiDataResponse('StatusResource'),
         ]
