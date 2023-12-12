@@ -159,7 +159,7 @@ class CustomerControllerTest extends TestCase
         $request = [
             'number' => '1234567890123456',
             'expiry' => '2301',
-            'phone' => '+998901234567',
+            'phone' => '998901234567',
         ];
 
         $admin = $this->createAdminUser();
@@ -269,7 +269,7 @@ class CustomerControllerTest extends TestCase
         $customer = Customer::factory()->create();
 
         $request = [
-            'phone' => '+998901234567',
+            'phone' => '998901234567',
             'type' => 1,
             'comment' => 'Test comment',
         ];
