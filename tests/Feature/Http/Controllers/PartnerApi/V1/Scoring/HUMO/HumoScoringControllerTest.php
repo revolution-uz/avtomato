@@ -33,7 +33,7 @@ class HumoScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/humo.create.json', 201);
+        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json', 201);
 
         $request = [
             'number' => 9860082443467252,
@@ -58,7 +58,7 @@ class HumoScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/humo.create.json');
+        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json');
 
         $response = $this->actingAs($admin)->postJson('/api/v1/scoring/humo/create', [
             'number' => 986008244346722,
@@ -76,7 +76,7 @@ class HumoScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/humo.create.json', 201);
+        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json', 201);
 
         $request = [
             'number' => 9860082443467252,
@@ -84,7 +84,6 @@ class HumoScoringControllerTest extends TestCase
         ];
 
         $this->actingAs($admin)->postJson('/api/v1/scoring/humo/create', $request);
-
         $newScoringRequest = ScoringRequest::query()
             ->where('type', ScoringRequestTypeEnum::HUMO)
             ->where('id', 1)
@@ -103,7 +102,7 @@ class HumoScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/humo.create.json', 201);
+        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json', 201);
 
         $request = [
             'number' => 9860082443467252,
