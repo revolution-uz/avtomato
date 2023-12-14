@@ -33,7 +33,7 @@ class HumoScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json', 201);
+        PlumFaker::fakeResponse('https://api.abrand.uz/katm/humo', '../JSON-for-testing/card-scoring-create-response.json', 201);
 
         $request = [
             'number' => 9860082443467252,
@@ -58,7 +58,7 @@ class HumoScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json');
+        PlumFaker::fakeResponse('https://api.abrand.uz/katm/humo', '../JSON-for-testing/card-scoring-create-response.json');
 
         $response = $this->actingAs($admin)->postJson('/api/v1/scoring/humo/create', [
             'number' => 986008244346722,
@@ -76,7 +76,7 @@ class HumoScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json', 201);
+        PlumFaker::fakeResponse('https://api.abrand.uz/partner/katm/humo', '../JSON-for-testing/card-scoring-create-response.json', 201);
 
         $request = [
             'number' => 9860082443467252,
@@ -84,13 +84,13 @@ class HumoScoringControllerTest extends TestCase
         ];
 
         $this->actingAs($admin)->postJson('/api/v1/scoring/humo/create', $request);
+
         $newScoringRequest = ScoringRequest::query()
             ->where('type', ScoringRequestTypeEnum::HUMO)
             ->where('id', 1)
             ->firstOrFail();
 
         $response = $this->actingAs($admin)->getJson(route('humo.read', ['id' => $newScoringRequest->id]));
-
         $response->assertOk();
         $this->assertEquals($newScoringRequest->request->number, $response->json('data')['request']['number']);
     }
@@ -102,7 +102,7 @@ class HumoScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json', 201);
+        PlumFaker::fakeResponse('https://api.abrand.uz/katm/humo', '../JSON-for-testing/card-scoring-create-response.json', 201);
 
         $request = [
             'number' => 9860082443467252,

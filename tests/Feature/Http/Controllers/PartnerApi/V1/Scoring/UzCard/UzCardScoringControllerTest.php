@@ -33,7 +33,7 @@ class UzCardScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json', 201);
+        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/card-scoring-create-response.json', 201);
 
         $request = [
             'number' => 8600312938450000,
@@ -58,7 +58,7 @@ class UzCardScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json');
+        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/card-scoring-create-response.json');
 
         $response = $this->actingAs($admin)->postJson('/api/v1/scoring/uzcard/create', [
             'number' => 860031293845000,
@@ -76,7 +76,7 @@ class UzCardScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json', 201);
+        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/card-scoring-create-response.json', 201);
 
         $request = [
             'number' => 8600312938450000,
@@ -101,7 +101,7 @@ class UzCardScoringControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/scoring.create.json', 200);
+        PlumFaker::fakeResponse('https://api.abrand.uz*', '../JSON-for-testing/card-scoring-create-response.json', 200);
 
         $request = [
             'number' => 8600312938450000,
