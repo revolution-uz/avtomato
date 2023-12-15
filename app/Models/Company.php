@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Company\CompanyStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Event;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
@@ -43,6 +44,15 @@ class Company extends Tenant implements TenantWithDatabase
             'owner_name',
             'owner_phone',
         ];
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($company) {
+            Event::dispatch('company.created', $company);
+        });
     }
 
     /**
