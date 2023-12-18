@@ -48,7 +48,7 @@ class LogController extends Controller
     public function index(LogFilterRequest $request)
     {
         $sortables = ['id', 'created_at'];
-        $logData = LogResource::collection(
+        $logData = collect(LogResource::collection(
             ActivityLog::query()
                 ->with(['causer'])
                 ->when(
@@ -69,7 +69,7 @@ class LogController extends Controller
                 )
                 ->select(['id', 'causer_type', 'causer_id', 'subject_type', 'description', 'subject_id', 'properties', 'event'])
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $sortables]));
 
         $logData->each(function ($log) {
             $log->description = self::LogMessageBuilder($log->subject_type, $log->subject_id, $log->event->value);
