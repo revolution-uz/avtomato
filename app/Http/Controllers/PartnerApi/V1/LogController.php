@@ -38,7 +38,7 @@ class LogController extends Controller
             new OpenApiArrayResponse(resourceName: 'LogResource', withPagination: true, withSortables: true),
         ]
     )]
-    public static function LogMessageBuilder($modelName, $modelId, $event)
+    public static function logMessageBuilder($modelName, $modelId, $event)
     {
         $modelName = trans('models.' . $modelName);
 
