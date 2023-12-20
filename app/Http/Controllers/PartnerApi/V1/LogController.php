@@ -38,17 +38,11 @@ class LogController extends Controller
             new OpenApiArrayResponse(resourceName: 'LogResource', withPagination: true, withSortables: true),
         ]
     )]
-    public static function logMessageBuilder($modelName, $modelId, $event)
-    {
-        $modelName = trans('models.' . $modelName);
-
-        return trans('logging.' . $event, ['entity' => $modelName, 'id' => $modelId]);
-    }
-
     public function index(LogFilterRequest $request)
     {
         $sortables = ['id', 'created_at'];
-        $logData = collect(LogResource::collection(
+
+        return LogResource::collection(
             ActivityLog::query()
                 ->with(['causer'])
                 ->when(
@@ -67,21 +61,8 @@ class LogController extends Controller
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
-                ->select(['id', 'causer_type', 'causer_id', 'subject_type', 'description', 'subject_id', 'properties', 'event'])
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]));
-
-        $logData->each(function ($log) {
-            $log->description = self::LogMessageBuilder($log->subject_type, $log->subject_id, $log->event->value);
-        });
-
-        return $logData->map(function ($item) {
-            return [
-                'id' => $item['id'],
-                'description' => $item->description,
-                'causer' => $item['causer'],
-            ];
-        });
+        )->additional(['sortables' => $sortables]);
     }
 
     #[OA\Get(
