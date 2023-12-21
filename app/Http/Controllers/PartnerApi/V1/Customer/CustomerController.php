@@ -172,9 +172,9 @@ class CustomerController extends Controller
 
     #[OA\Put(
         path: '/api/v1/customer/{id}',
-        description: 'Create a customer',
+        description: 'Update a customer',
         requestBody: new OA\RequestBody(
-            description: 'Request to create a customer',
+            description: 'Request to update a customer',
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateCustomerRequest')
         ),
@@ -242,14 +242,13 @@ class CustomerController extends Controller
             new OpenApiDataResponse(resourceName: 'AttachCustomerCardResource'),
         ]
     )]
-    public function attachCard(int $id, CardRequest $request): AttachCustomerCardResource
+    public function attachCard(int $id, CardRequest $request)
     {
         $card = new Card;
         $card->fill($request->validated());
         $card->setPan();
         $card->status = CardStatusEnum::INACTIVE;
         $card->customer_id = $id;
-        $card->saveOrFail();
 
         return AttachCustomerCardResource::make($this->plumService->attachCard($card), new CardResource($card));
     }
