@@ -250,6 +250,7 @@ class CustomerController extends Controller
         $card->status = CardStatusEnum::INACTIVE;
         $card->customer_id = $id;
         $card->saveOrFail();
+
         return AttachCustomerCardResource::make($this->plumService->attachCard($card), new CardResource($card));
     }
 
