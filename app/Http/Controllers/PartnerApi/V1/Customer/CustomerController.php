@@ -242,14 +242,14 @@ class CustomerController extends Controller
             new OpenApiDataResponse(resourceName: 'AttachCustomerCardResource'),
         ]
     )]
-    public function attachCard(int $id, CardRequest $request)
+    public function attachCard(int $id, CardRequest $request): AttachCustomerCardResource
     {
         $card = new Card;
         $card->fill($request->validated());
         $card->setPan();
         $card->status = CardStatusEnum::INACTIVE;
         $card->customer_id = $id;
-
+        $card->saveOrFail();
         return AttachCustomerCardResource::make($this->plumService->attachCard($card), new CardResource($card));
     }
 
