@@ -94,6 +94,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         });
 
         Nova::withoutNotificationCenter();
+        Nova::withBreadcrumbs();
     }
 
     /**
