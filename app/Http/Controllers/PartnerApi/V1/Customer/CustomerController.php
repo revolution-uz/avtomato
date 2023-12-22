@@ -172,9 +172,9 @@ class CustomerController extends Controller
 
     #[OA\Put(
         path: '/api/v1/customer/{id}',
-        description: 'Create a customer',
+        description: 'Update a customer',
         requestBody: new OA\RequestBody(
-            description: 'Request to create a customer',
+            description: 'Request to update a customer',
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateCustomerRequest')
         ),
