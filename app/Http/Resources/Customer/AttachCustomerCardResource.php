@@ -21,4 +21,12 @@ class AttachCustomerCardResource extends JsonResource
         public CardResource $card,
     ) {
     }
+
+    public function toArray($request): array
+    {
+        return [
+            'attachData' => $this->attachData,
+            'card' => $this->card,
+        ];
+    }
 }
