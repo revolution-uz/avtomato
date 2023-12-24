@@ -85,7 +85,7 @@ class InstallmentService
 
     public function uploadAttachment(Installment $installment, InstallmentDocumentUploadRequest $request): Installment
     {
-        Attachment::upload($request->file('file'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $installment);
+        Attachment::upload($request->file('file'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $installment, $request->name);
         $installment->refresh();
 
         return $installment;
