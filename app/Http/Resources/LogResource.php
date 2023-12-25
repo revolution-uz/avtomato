@@ -40,6 +40,7 @@ class LogResource extends JsonResource
                 return UserListResource::make($this->resource->causer);
             }),
             'properties' => $this->resource->properties,
+            'created_at' => $this->resource->created_at,
             'description' => self::logMessageBuilder($this->resource->subject_type, $this->resource->subject_id, $this->resource->event->value),
         ];
     }
