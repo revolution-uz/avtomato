@@ -93,7 +93,7 @@ class InstallmentService
 
     public function uploadImage(Installment $installment, InstallmentImageUploadRequest $request): Installment
     {
-        Attachment::upload($request->file('file'), AttachmentTypeEnum::INSTALLMENT_IMAGE, $installment);
+        Attachment::upload($request->file('file'), AttachmentTypeEnum::INSTALLMENT_IMAGE, $installment, $request->name);
         $installment->refresh();
 
         return $installment;
