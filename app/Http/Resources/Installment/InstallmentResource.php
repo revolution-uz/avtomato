@@ -41,6 +41,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'documents', type: 'array', items: new OA\Items(ref: '#/components/schemas/AttachmentResource')),
         new OA\Property(property: 'images', type: 'array', items: new OA\Items(ref: '#/components/schemas/AttachmentResource')),
         new OA\Property(property: 'comments', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentCommentListResource')),
+        new OA\Property(property: 'transactions', type: 'array', items: new OA\Items(ref: '#/components/schemas/TransactionResource')),
     ],
 )]
 /**
@@ -60,6 +61,7 @@ class InstallmentResource extends JsonResource
             'documents' => AttachmentResource::collection($this->resource->documents),
             'images' => AttachmentResource::collection($this->resource->images),
             'comments' => InstallmentCommentListResource::collection($this->resource->comments),
+            'transactions' => TransactionResource::collection($this->resource->transactions),
             'branch_id' => $this->resource->branch_id,
             'branch' => new BranchResource($this->resource->branch),
             'tariff_id' => $this->resource->tariff_id,
