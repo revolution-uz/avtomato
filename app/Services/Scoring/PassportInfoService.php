@@ -7,6 +7,7 @@ use App\Clients\OnlineMahallaClient;
 use App\DTOs\PassportDataDTO;
 use App\Exceptions\PassportDataNotFoundException;
 use Carbon\Carbon;
+use Throwable;
 
 class PassportInfoService
 {
@@ -20,7 +21,7 @@ class PassportInfoService
     {
         try {
             return $this->oilaKreditClient->getDataByPassport($passportSeries, $passportNumber, $birthData);
-        } catch (PassportDataNotFoundException) {
+        } catch (PassportDataNotFoundException|Throwable) {
         }
 
         try {
