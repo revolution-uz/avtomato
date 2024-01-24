@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -47,6 +48,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Attachment[] $images
  * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
  * @property Customer[] $guarantors
+ * @property Transaction[] $transactions
  */
 class Installment extends Model
 {
@@ -97,7 +99,7 @@ class Installment extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function cards(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function cards(): BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'installment_cards', 'installment_id', 'card_id')->select('cards.*');
     }
@@ -110,6 +112,11 @@ class Installment extends Model
     public function documents(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_DOCUMENT);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'installment_id');
     }
 
     public function images(): MorphMany

@@ -37,8 +37,8 @@ class CardResource extends JsonResource
             'phone' => $this->resource->phone,
             'status' => $this->resource->status,
             'balance' => $this->resource->balance,
-            'created_at' => $this->resource->created_at ? $this->resource->created_at->getTimestamp() : null,
-            'updated_at' => $this->resource->updated_at ? $this->resource->updated_at->getTimestamp() : null,
+            'created_at' => $this->resource->created_at?->getTimestamp(),
+            'updated_at' => $this->resource->updated_at?->getTimestamp(),
         ];
     }
 }
