@@ -6,8 +6,8 @@ use OpenApi\Attributes as OA;
 use Spatie\LaravelData\Data;
 
 #[OA\Schema(
-    schema: 'FundBalanceResponseDTO',
-    title: 'FundBalanceResponseDTO',
+    schema: 'ConfirmPaymentFundBalanceResponseDTO',
+    title: 'ConfirmPaymentFundBalanceResponseDTO',
     properties: [
         new OA\Property(property: 'transactionId', type: 'int', example: '148'),
         new OA\Property(property: 'utrno', type: 'string', example: '008493505042'),
