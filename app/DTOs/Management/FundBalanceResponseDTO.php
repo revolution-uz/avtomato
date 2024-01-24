@@ -21,10 +21,6 @@ class FundBalanceResponseDTO extends Data
         public int $transactionId,
         public string $otpSentPhone
     ) {
-        return [
-            'session' => $session,
-            'transactionId' => $transactionId,
-            'otpSentPhone' => $this->otpSentPhone,
-        ];
+
     }
 }

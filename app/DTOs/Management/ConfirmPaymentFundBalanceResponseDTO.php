@@ -29,14 +29,6 @@ class ConfirmPaymentFundBalanceResponseDTO extends Data
         public string $cardNumber,
         public string $date,
     ) {
-        return [
-            'transactionId' => $transactionId,
-            'responseCode' => $transactionId,
-            'utrno' => $utrno,
-            'terminalId' => $terminalId,
-            'merchantId' => $merchantId,
-            'cardNumber' => $cardNumber,
-            'date' => $date,
-        ];
+
     }
 }
