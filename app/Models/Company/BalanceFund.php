@@ -27,6 +27,8 @@ class BalanceFund extends Model
         'amount',
         'phone_number',
         'plum_transaction_id',
+        'plum_session',
+        'extraId',
         'plum_utrno',
         'plum_response_code',
         'terminal_id',

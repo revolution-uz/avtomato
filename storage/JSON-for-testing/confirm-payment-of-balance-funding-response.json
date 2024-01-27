@@ -1,0 +1,12 @@
+{
+  "result": {
+    "transactionId": 148,
+    "utrno": "008493505042",
+    "responseCode": 0,
+    "terminalId": "92403966",
+    "merchantId": "90485446",
+    "cardNumber": "860049******6572",
+    "date": "2020-04-24T15:28:42.442126"
+  },
+  "error": null
+}

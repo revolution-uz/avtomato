@@ -2,6 +2,7 @@
 
 namespace Tests\Fakers;
 
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 
 class PlumFaker
@@ -31,7 +32,7 @@ class PlumFaker
         ]);
     }
 
-    public static function get_info_by_passport($name)
+    public static function get_info_by_passport($name): void
     {
         Http::fake([
             'https://api.oilakredit.uz/*' => Http::response([
@@ -69,5 +70,16 @@ class PlumFaker
         Http::fake([
             $url => Http::response(json_decode(file_get_contents(storage_path($jsonPath)), true), $status),
         ]);
+    }
+
+    public static function fakeResponseWithoutURL($jsonPath, $status, $method): void
+    {
+        Http::fake(function (Request $request) use ($jsonPath, $status, $method) {
+            if ($method == $request->method()) {
+                return Http::response(json_decode(file_get_contents(storage_path($jsonPath)), true), $status);
+            } else {
+                return false;
+            }
+        });
     }
 }

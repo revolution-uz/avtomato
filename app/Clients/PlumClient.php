@@ -4,8 +4,11 @@ namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
 use App\Enums\ClientCodeEnum;
+use App\Models\Company\BalanceFund;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Tests\Fakers\PlumFaker;
 
 class PlumClient extends BaseClient
 {
@@ -118,6 +121,76 @@ class PlumClient extends BaseClient
         ));
 
         return $response->json('result');
+    }
+
+    public function payment($data)
+    {
+        $extraId = Str::uuid();
+        $data['extraId'] = $extraId;
+        PlumFaker::fakeResponseWithoutURL('../JSON-for-testing/balance-funding-response.json', 200, 'POST');
+
+        $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
+            ->post($this->baseUrl . '/Payment/paymentWithoutRegistration', $data);
+
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'POST',
+            url: $this->baseUrl . '/Payment/paymentWithoutRegistration',
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            body: $data,
+        ));
+
+        if (! $response->json('error')) {
+            $fundBalance = $response->json('result');
+            $fundBalance['amount'] = $data['amount'];
+
+            BalanceFund::query()->create([
+                'amount' => $fundBalance['amount'],
+                'plum_session' => $fundBalance['session'],
+                'extraId' => $extraId,
+                'phone_number' => $fundBalance['otpSentPhone'],
+                'plum_transaction_id' => $fundBalance['transactionId'],
+            ]);
+
+            return $fundBalance;
+        } else {
+            return false;
+        }
+    }
+
+    public function confirmPayment($data)
+    {
+        PlumFaker::fakeResponseWithoutURL('../JSON-for-testing/confirm-payment-of-balance-funding-response.json', 200, 'POST');
+
+        $response = Http::withHeaders(['Authorization' => 'Basic ' . $this->token])
+            ->post($this->baseUrl . '/Payment/confirmPayment', $data);
+        if (! $response->json('error')) {
+            $confirmPayment = $response->json('result');
+
+            BalanceFund::query()->where('plum_transaction_id', $confirmPayment['transactionId'])
+                ->firstOrFail()
+                ->update([
+                    'plum_utrno' => $confirmPayment['utrno'],
+                    'plum_response_code' => $confirmPayment['responseCode'],
+                    'terminal_id' => $confirmPayment['terminalId'],
+                    'merchant_id' => $confirmPayment['merchantId'],
+                    'card_number' => $confirmPayment['cardNumber'],
+                ]);
+
+            $this->logRequest(new HttpRequestLogDTO(
+                method: 'POST',
+                url: $this->baseUrl . '/Payment/confirmPayment',
+                status: $response->status(),
+                response: $response->body(),
+                duration: $response->transferStats?->getTransferTime(),
+                body: $data,
+            ));
+
+            return $response->json('result');
+        } else {
+            return false;
+        }
     }
 
     protected function logRequest(HttpRequestLogDTO $request): void

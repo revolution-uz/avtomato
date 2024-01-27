@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Clients\PlumClient;
+use App\DTOs\Management\ConfirmPaymentFundBalanceResponseDTO;
+use App\DTOs\Management\FundBalanceResponseDTO;
 use App\DTOs\Scoring\Card\CreateUserCardDTO;
 use App\Models\Company\Card;
 use Illuminate\Support\Facades\Crypt;
@@ -37,6 +39,16 @@ class PlumService
         }
 
         return false;
+    }
+
+    public function fundBalance($data): FundBalanceResponseDTO
+    {
+        return FundBalanceResponseDTO::from($this->plumClient->payment($data));
+    }
+
+    public function confirmPayment($data): ConfirmPaymentFundBalanceResponseDTO
+    {
+        return ConfirmPaymentFundBalanceResponseDTO::from($this->plumClient->confirmPayment($data));
     }
 
     public function getCards($customer_id)
