@@ -6,6 +6,7 @@ use App\Enums\GenderEnum;
 use App\Http\Resources\Common\AddressResource;
 use App\Http\Resources\Common\PhoneResource;
 use App\Models\Company\Address;
+use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
 use Illuminate\Http\Request;
@@ -34,6 +35,7 @@ use OpenApi\Attributes\Items;
         new OA\Property(property: 'gender', type: 'int', enum: [GenderEnum::MALE, GenderEnum::FEMALE], example: '1'),
         new OA\Property(property: 'created_at', type: 'string', format: 'date-time', example: '2021-08-31T12:00:00+05:00'),
         new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', example: '2021-08-31T12:00:00+05:00'),
+        new OA\Property(property: 'cards', type: 'array', items: new Items(ref: '#/components/schemas/CardResource')),
         new OA\Property(property: 'phones', type: 'array', items: new Items(ref: '#/components/schemas/PhoneResource')),
         new OA\Property(property: 'addresses', type: 'array', items: new Items(ref: '#/components/schemas/AddressResource')),
     ],
@@ -63,6 +65,7 @@ class SingleCustomerResource extends JsonResource
             'gender' => $this->resource->gender,
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
+            'cards' => $this->resource->cards->map(fn (Card $card) => new CardResource($card)),
             'phones' => $this->resource->phones->map(fn (Phone $phone) => new PhoneResource($phone)),
             'addresses' => $this->resource->addresses->map(fn (Address $address) => new AddressResource($address)),
         ];
