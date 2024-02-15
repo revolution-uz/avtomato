@@ -29,6 +29,6 @@ class UsersDeleteRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::USER_DELETE);
+        return RbacHelper::checkPermission(PermissionEnum::ADMIN_DELETE);
     }
 }

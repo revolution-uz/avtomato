@@ -29,7 +29,7 @@ class PasswordRequest extends FormRequest
     {
         return match (Route::currentRouteName()) {
             'profile.change-password' => RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_PASSWORD),
-            'users.change-password' => RbacHelper::checkPermission(PermissionEnum::USER_CHANGE_PASSWORD),
+            'users.change-password' => RbacHelper::checkPermission(PermissionEnum::ADMIN_CHANGE_PASSWORD),
             default => false
         };
     }

@@ -56,7 +56,7 @@ class UserThemeRequest extends FormRequest
     {
         return match (Route::currentRouteName()) {
             'profile.change-theme' => RbacHelper::checkPermission(PermissionEnum::PROFILE_EDIT),
-            'users.change-theme' => RbacHelper::checkPermission(PermissionEnum::USER_EDIT),
+            'users.change-theme' => RbacHelper::checkPermission(PermissionEnum::ADMIN_EDIT),
             default => false
         };
     }

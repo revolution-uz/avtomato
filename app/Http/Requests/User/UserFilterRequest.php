@@ -10,6 +10,6 @@ class UserFilterRequest extends BaseFilterRequest
 {
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::USER_VIEW_ALL);
+        return RbacHelper::checkPermission(PermissionEnum::ADMIN_VIEW_ALL);
     }
 }

@@ -22,21 +22,21 @@ enum PermissionEnum: string
     case PROFILE_DEVICES = 'profile_devices';
     case PROFILE_REVOKE_DEVICE = 'profile_revoke_device';
 
-    // Manage Users
-    case USER_VIEW_ALL = 'user_view_all';
-    case USER_VIEW = 'user_view';
-    case USER_CREATE = 'user_create';
-    case USER_EDIT = 'user_edit';
-    case USER_DELETE = 'user_delete';
-    case USER_CHANGE_PASSWORD = 'user_change_password';
-    case USER_CHANGE_AVATAR = 'user_change_avatar';
-    case USER_CHANGE_ROLE = 'user_change_role';
-    case USER_DEVICES = 'user_devices';
-    case USER_REVOKE_DEVICE = 'user_revoke_device';
+    // Manage Admins
+    case ADMIN_VIEW_ALL = 'admin_view_all';
+    case ADMIN_VIEW = 'admin_view';
+    case ADMIN_CREATE = 'admin_create';
+    case ADMIN_EDIT = 'admin_edit';
+    case ADMIN_DELETE = 'admin_delete';
+    case ADMIN_CHANGE_PASSWORD = 'admin_change_password';
+    case ADMIN_CHANGE_AVATAR = 'admin_change_avatar';
+    case ADMIN_CHANGE_ROLE = 'admin_change_role';
+    case ADMIN_DEVICES = 'admin_devices';
+    case ADMIN_REVOKE_DEVICE = 'admin_revoke_device';
 
     // Manage Themes
     case PROFILE_CHANGE_THEME = 'profile_change_theme';
-    case USER_CHANGE_THEME = 'user_change_theme';
+    case ADMIN_CHANGE_THEME = 'admin_change_theme';
 
     // MANAGE ROLES
     case ROLE_VIEW_ALL = 'role_view_all';
@@ -174,17 +174,17 @@ enum PermissionEnum: string
             self::PROFILE_DEVICES,
             self::PROFILE_REVOKE_DEVICE,
 
-            self::USER_VIEW_ALL,
-            self::USER_VIEW,
-            self::USER_CREATE,
-            self::USER_EDIT,
-            self::USER_DELETE,
-            self::USER_CHANGE_PASSWORD,
-            self::USER_CHANGE_AVATAR,
-            self::USER_CHANGE_ROLE,
-            self::USER_DEVICES,
-            self::USER_REVOKE_DEVICE,
-            self::USER_CHANGE_THEME,
+            self::ADMIN_VIEW_ALL,
+            self::ADMIN_VIEW,
+            self::ADMIN_CREATE,
+            self::ADMIN_EDIT,
+            self::ADMIN_DELETE,
+            self::ADMIN_CHANGE_PASSWORD,
+            self::ADMIN_CHANGE_AVATAR,
+            self::ADMIN_CHANGE_ROLE,
+            self::ADMIN_DEVICES,
+            self::ADMIN_REVOKE_DEVICE,
+            self::ADMIN_CHANGE_THEME,
 
             self::CUSTOMER_VIEW_ALL,
             self::CUSTOMER_VIEW,
@@ -302,18 +302,18 @@ enum PermissionEnum: string
     public static function list(): array
     {
         return [
-            PermissionGroupEnum::USER_MANAGEMENT->value => [
-                self::USER_VIEW_ALL->value,
-                self::USER_VIEW->value,
-                self::USER_CREATE->value,
-                self::USER_EDIT->value,
-                self::USER_DELETE->value,
-                self::USER_CHANGE_PASSWORD->value,
-                self::USER_CHANGE_AVATAR->value,
-                self::USER_CHANGE_ROLE->value,
-                self::USER_DEVICES->value,
-                self::USER_REVOKE_DEVICE->value,
-                self::USER_CHANGE_THEME->value,
+            PermissionGroupEnum::ADMIN_MANAGEMENT->value => [
+                self::ADMIN_VIEW_ALL->value,
+                self::ADMIN_VIEW->value,
+                self::ADMIN_CREATE->value,
+                self::ADMIN_EDIT->value,
+                self::ADMIN_DELETE->value,
+                self::ADMIN_CHANGE_PASSWORD->value,
+                self::ADMIN_CHANGE_AVATAR->value,
+                self::ADMIN_CHANGE_ROLE->value,
+                self::ADMIN_DEVICES->value,
+                self::ADMIN_REVOKE_DEVICE->value,
+                self::ADMIN_CHANGE_THEME->value,
             ],
             PermissionGroupEnum::CUSTOMER_MANAGEMENT->value => [
                 self::CUSTOMER_VIEW_ALL->value,
@@ -460,18 +460,18 @@ enum PermissionEnum: string
             self::PROFILE_DEVICES,
             self::PROFILE_REVOKE_DEVICE => FeatureEnum::PROFILE_EDIT,
 
-            self::USER_VIEW_ALL,
-            self::USER_VIEW,
-            self::USER_CREATE,
-            self::USER_EDIT,
-            self::USER_DELETE,
-            self::USER_CHANGE_PASSWORD,
-            self::USER_CHANGE_AVATAR,
-            self::USER_CHANGE_ROLE,
-            self::USER_DEVICES,
-            self::USER_REVOKE_DEVICE, => FeatureEnum::USER_MANAGEMENT,
+            self::ADMIN_VIEW_ALL,
+            self::ADMIN_VIEW,
+            self::ADMIN_CREATE,
+            self::ADMIN_EDIT,
+            self::ADMIN_DELETE,
+            self::ADMIN_CHANGE_PASSWORD,
+            self::ADMIN_CHANGE_AVATAR,
+            self::ADMIN_CHANGE_ROLE,
+            self::ADMIN_DEVICES,
+            self::ADMIN_REVOKE_DEVICE, => FeatureEnum::USER_MANAGEMENT,
 
-            self::USER_CHANGE_THEME,
+            self::ADMIN_CHANGE_THEME,
             self::PROFILE_CHANGE_THEME => FeatureEnum::THEME_MANAGEMENT,
 
             self::ROLE_VIEW_ALL,

@@ -36,6 +36,6 @@ class UserCreateRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::USER_CREATE);
+        return RbacHelper::checkPermission(PermissionEnum::ADMIN_CREATE);
     }
 }

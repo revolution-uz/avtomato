@@ -9,7 +9,7 @@ enum PermissionGroupEnum: string
     use EnumMethods;
 
     case PROFILE_EDIT = 'profile_edit';
-    case USER_MANAGEMENT = 'user_management';
+    case ADMIN_MANAGEMENT = 'admin_management';
     case CUSTOMER_MANAGEMENT = 'customer_management';
     case GET_STATIC_INFORMATION = 'info_view';
     case CALCULATOR_INSTALLMENT = 'calculator_installment';
@@ -34,18 +34,18 @@ enum PermissionGroupEnum: string
     public static function getPermissionsByGroup(self $group): array
     {
         return match ($group) {
-            self::USER_MANAGEMENT => [
-                PermissionEnum::USER_VIEW_ALL,
-                PermissionEnum::USER_VIEW,
-                PermissionEnum::USER_CREATE,
-                PermissionEnum::USER_EDIT,
-                PermissionEnum::USER_DELETE,
-                PermissionEnum::USER_CHANGE_PASSWORD,
-                PermissionEnum::USER_CHANGE_AVATAR,
-                PermissionEnum::USER_CHANGE_ROLE,
-                PermissionEnum::USER_DEVICES,
-                PermissionEnum::USER_REVOKE_DEVICE,
-                PermissionEnum::USER_CHANGE_THEME,
+            self::ADMIN_MANAGEMENT => [
+                PermissionEnum::ADMIN_VIEW_ALL,
+                PermissionEnum::ADMIN_VIEW,
+                PermissionEnum::ADMIN_CREATE,
+                PermissionEnum::ADMIN_EDIT,
+                PermissionEnum::ADMIN_DELETE,
+                PermissionEnum::ADMIN_CHANGE_PASSWORD,
+                PermissionEnum::ADMIN_CHANGE_AVATAR,
+                PermissionEnum::ADMIN_CHANGE_ROLE,
+                PermissionEnum::ADMIN_DEVICES,
+                PermissionEnum::ADMIN_REVOKE_DEVICE,
+                PermissionEnum::ADMIN_CHANGE_THEME,
             ],
             self::CUSTOMER_MANAGEMENT => [
                 PermissionEnum::CUSTOMER_VIEW_ALL,

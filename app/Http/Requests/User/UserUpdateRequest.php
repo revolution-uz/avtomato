@@ -35,7 +35,7 @@ class UserUpdateRequest extends FormRequest
     {
         return match (Route::currentRouteName()) {
             'profile.update' => RbacHelper::checkPermission(PermissionEnum::PROFILE_EDIT),
-            'users.update' => RbacHelper::checkPermission(PermissionEnum::USER_EDIT),
+            'users.update' => RbacHelper::checkPermission(PermissionEnum::ADMIN_EDIT),
             default => false
         };
     }

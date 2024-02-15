@@ -13,7 +13,7 @@ class UsersDevicesRequest extends FormRequest
     {
         return match (Route::currentRouteName()) {
             'profile.devices' => RbacHelper::checkPermission(PermissionEnum::PROFILE_DEVICES),
-            'users.devices' => RbacHelper::checkPermission(PermissionEnum::USER_DEVICES),
+            'users.devices' => RbacHelper::checkPermission(PermissionEnum::ADMIN_DEVICES),
             default => false
         };
     }

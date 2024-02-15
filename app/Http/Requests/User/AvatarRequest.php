@@ -29,7 +29,7 @@ class AvatarRequest extends FormRequest
     {
         return match (Route::currentRouteName()) {
             'profile.change-avatar' => RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_AVATAR),
-            'users.change-avatar' => RbacHelper::checkPermission(PermissionEnum::USER_CHANGE_AVATAR),
+            'users.change-avatar' => RbacHelper::checkPermission(PermissionEnum::ADMIN_CHANGE_AVATAR),
             default => false
         };
     }

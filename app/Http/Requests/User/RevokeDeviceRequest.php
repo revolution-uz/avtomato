@@ -13,7 +13,7 @@ class RevokeDeviceRequest extends FormRequest
     {
         return match (Route::currentRouteName()) {
             'profile.revoke-device' => RbacHelper::checkPermission(PermissionEnum::PROFILE_REVOKE_DEVICE),
-            'users.revoke-device' => RbacHelper::checkPermission(PermissionEnum::USER_DEVICES),
+            'users.revoke-device' => RbacHelper::checkPermission(PermissionEnum::ADMIN_DEVICES),
             default => false
         };
     }

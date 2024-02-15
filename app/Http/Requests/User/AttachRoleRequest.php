@@ -25,6 +25,6 @@ class AttachRoleRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::USER_CHANGE_ROLE);
+        return RbacHelper::checkPermission(PermissionEnum::ADMIN_CHANGE_ROLE);
     }
 }
