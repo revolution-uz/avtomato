@@ -158,7 +158,7 @@ class ProfileController extends Controller
     )]
     public function devices(UsersDevicesRequest $request): AnonymousResourceCollection
     {
-        return DeviceInfoResource::collection(auth()->user()->tokens);
+        return DeviceInfoResource::collection(auth()->user()->tokens()->paginate());
     }
 
     #[OA\Delete(
