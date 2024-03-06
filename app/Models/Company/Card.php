@@ -45,7 +45,7 @@ class Card extends Model
         'status',
         'balance',
         'plum_id',
-        'owner'
+        'owner',
     ];
 
     protected $casts = [

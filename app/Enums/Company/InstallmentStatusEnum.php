@@ -14,7 +14,7 @@ enum InstallmentStatusEnum: int
     case RUNNING = 1; // means active
     case FINISHED = 2; // means closed
 
-    public static function getStatusListByStatus(self $statusEnum = null)
+    public static function getStatusListByStatus(?self $statusEnum = null)
     {
         return match ($statusEnum) {
             self::CANCELED,
