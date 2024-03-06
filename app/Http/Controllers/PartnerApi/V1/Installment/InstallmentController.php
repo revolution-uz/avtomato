@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
-use _PHPStan_c6b09fbdf\Symfony\Component\Finder\Exception\AccessDeniedException;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Helpers\Swagger\OpenApiArrayResponse;
@@ -46,6 +45,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class InstallmentController extends Controller
 {
