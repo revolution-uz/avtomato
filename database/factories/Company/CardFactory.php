@@ -22,6 +22,7 @@ class CardFactory extends Factory
             'status' => CardStatusEnum::randomValue(),
             'balance' => $this->faker->randomFloat(),
             'plum_id' => $this->faker->randomNumber(),
+            'owner' => $this->faker->word(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

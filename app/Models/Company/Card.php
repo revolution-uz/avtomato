@@ -19,6 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Customer $customer
  * @property string $pan
  * @property string $number
+ * @property string $owner
  * @property string $expiry
  * @property string $phone
  * @property CardStatusEnum $status
@@ -44,6 +45,7 @@ class Card extends Model
         'status',
         'balance',
         'plum_id',
+        'owner',
     ];
 
     protected $casts = [
