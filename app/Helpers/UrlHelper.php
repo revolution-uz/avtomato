@@ -9,9 +9,9 @@ class UrlHelper
      */
     public static function getCompanyAdminUrl(
         string $companyId,
-        ?string $path = null,
+        string $path = null,
         array $query = [],
-        ?string $schema = null
+        string $schema = null
     ): string {
         $host = self::addSubdomainToUrl($companyId, config('app.url'));
 
@@ -22,9 +22,9 @@ class UrlHelper
      * Build admins Nova Admin url for given params
      */
     public static function getAdminUrl(
-        ?string $path = null,
+        string $path = null,
         array $query = [],
-        ?string $schema = null
+        string $schema = null
     ): string {
         $host = config('app.url');
 
@@ -83,9 +83,9 @@ class UrlHelper
 
     public static function buildUrl(
         string $host,
-        ?string $path = null,
+        string $path = null,
         array $query = [],
-        ?string $schema = null
+        string $schema = null
     ): string {
         $url = rtrim($host, '/');
 
