@@ -162,17 +162,14 @@ class ProfileController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/profile/revoke-device/{id}',
+        path: '/api/v1/profile/revoke-device',
         description: 'Revoke device route',
+        requestBody: new OA\RequestBody(
+            description: 'Revoke device request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/DeviceRevokeRequest')
+        ),
         tags: ['Profile'],
-        parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'Device id',
-                in: 'path',
-                required: true,
-            ),
-        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'StatusResource'),
             new OpenApiNotFoundResponse,
