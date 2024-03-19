@@ -6,7 +6,6 @@ use App\DTOs\HttpRequestLogDTO;
 use App\Enums\ClientCodeEnum;
 use App\Models\Company\BalanceFund;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Tests\Fakers\PlumFaker;
 
@@ -19,6 +18,7 @@ class PlumClient extends BaseClient
     {
         $this->baseUrl = config('clients.plum.base_url');
         $this->token = config('clients.plum.token');
+        $this->channel = 'plum-client';
     }
 
     public function getClientCode(): ClientCodeEnum
@@ -191,10 +191,5 @@ class PlumClient extends BaseClient
         } else {
             return false;
         }
-    }
-
-    protected function logRequest(HttpRequestLogDTO $request): void
-    {
-        Log::channel('plum-client')->info($request->url, $request->toArray());
     }
 }

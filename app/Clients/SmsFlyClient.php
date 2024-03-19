@@ -6,7 +6,6 @@ use App\DTOs\HttpRequestLogDTO;
 use App\DTOs\Sms\SendMessageDTO;
 use App\Enums\ClientCodeEnum;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class SmsFlyClient extends BaseClient
 {
@@ -17,6 +16,7 @@ class SmsFlyClient extends BaseClient
     {
         $this->baseUrl = config('clients.sms_fly.base_url');
         $this->token = config('clients.sms_fly.token');
+        $this->channel = 'sms-fly-client';
     }
 
     public function getClientCode(): ClientCodeEnum
@@ -27,11 +27,6 @@ class SmsFlyClient extends BaseClient
     public function send(SendMessageDTO $messageDTO)
     {
         return $this->request($messageDTO->toArray());
-    }
-
-    protected function logRequest(HttpRequestLogDTO $request): void
-    {
-        Log::channel('sms-fly-client')->info($request->url, $request->toArray());
     }
 
     private function request(array $data, $method = '/send')
