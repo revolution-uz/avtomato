@@ -9,7 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('roles', function (Blueprint $table) {
-            $table->string('name', 125)->change();
+            $table->string('name')->unique(false)->change();
+            $table->unique(['deleted_at', 'name']);
         });
     }
 
