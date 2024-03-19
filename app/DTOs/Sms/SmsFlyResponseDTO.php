@@ -16,7 +16,6 @@ class SmsFlyResponseDTO extends BaseScoringRequest
 {
     public function __construct(
         public string $message,
-    )
-    {
+    ) {
     }
 }

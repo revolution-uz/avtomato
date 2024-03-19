@@ -10,13 +10,11 @@ class SmsService
 {
     public function __construct(
         private readonly SmsFlyClient $smsFlyClient
-    )
-    {
+    ) {
     }
 
     public function send(SendMessageDTO $messageDTO)
     {
         return SmsFlyResponseDTO::from($this->smsFlyClient->send($messageDTO));
     }
-
 }

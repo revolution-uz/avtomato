@@ -29,6 +29,11 @@ class SmsFlyClient extends BaseClient
         return $this->request($messageDTO->toArray());
     }
 
+    protected function logRequest(HttpRequestLogDTO $request): void
+    {
+        Log::channel('sms-fly-client')->info($request->url, $request->toArray());
+    }
+
     private function request(array $data, $method = '/send')
     {
         $data['key'] = $this->token;
@@ -46,11 +51,5 @@ class SmsFlyClient extends BaseClient
 
         return $response->json('result');
 
-    }
-
-
-    protected function logRequest(HttpRequestLogDTO $request): void
-    {
-        Log::channel('sms-fly-client')->info($request->url, $request->toArray());
     }
 }

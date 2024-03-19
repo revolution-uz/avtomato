@@ -16,9 +16,8 @@ use OpenApi\Attributes as OA;
 class SendMessageDTO extends BaseScoringRequest
 {
     public function __construct(
-        public int    $phone,
+        public int $phone,
         public string $message,
-    )
-    {
+    ) {
     }
 }
