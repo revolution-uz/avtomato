@@ -52,7 +52,7 @@ Soon
    127.0.0.1       avtomato.test
    127.0.0.1       revo.avtomato.test
    ```
-7. Open the link in your browser http://avtomato.test, it should show website. Go to admin-panel (main - http://avtomato.test/nova and for specific company - http://revo.avtomato.test/nova) and enter admin's email is `admin@admin.com` and password is `password`. For client panel go to http://revo.avtomato.test and enter username/password `admin/password`.
+7. Open the link in your browser http://avtomato.test, it should show website. Go to admin-panel (main - http://avtomato.test/nova and for specific company - http://revo.avtomato.test/nova) and enter admin's email is `admin@admin.com` and password is `admin@701`. For client panel go to http://revo.avtomato.test and enter username/password `admin/password`.
 
 If the last step is successfully finished the installation process is done.
 
