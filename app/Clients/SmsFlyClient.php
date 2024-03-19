@@ -36,9 +36,9 @@ class SmsFlyClient extends BaseClient
 
     private function request(array $data, $method = '/send')
     {
-        $data['key'] = $this->token;
+
         $response = Http::withHeaders(['Content-Type' => 'application/json'])
-            ->post($this->baseUrl . $method, $data);
+            ->post($this->baseUrl . $method, array_merge($data, ['key' => $this->token]));
 
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',
