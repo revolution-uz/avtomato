@@ -28,12 +28,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- *
- * @method static Card find(int $id)
- * @method static Card findOrFail(int $id)
- * @method static Card first()
- * @method static Card firstOrFail()
- * @method Card saveOrFail(array $options = [])
  */
 class Card extends Model
 {

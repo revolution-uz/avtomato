@@ -4,7 +4,6 @@ namespace App\Models\Company;
 
 use App\Enums\GenderEnum;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,17 +34,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $created_at
  * @property string $updated_at
  * @property string|null $deleted_at
- * @property-read Attachment[] $attachments
- * @property-read Address[]|Collection<int,Address> $addresses
- * @property-read Phone[]|Collection<int,Phone> $phones
- * @property-read Card[]|Collection<int,Phone> $cards
- *
- * @method static Builder|static query()
- * @method static Customer find(int $id)
- * @method static Customer findOrFail(int $id)
- * @method static Customer first()
- * @method static Customer firstOrFail()
- * @method Customer saveOrFail(array $array =[])
+ * @property Attachment[] $attachments
+ * @property Address[]|Collection<int,Address> $addresses
+ * @property Phone[]|Collection<int,Phone> $phones
+ * @property Card[]|Collection<int,Phone> $cards
  */
 class Customer extends Model
 {
