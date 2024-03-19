@@ -60,7 +60,7 @@ class RoleController extends Controller
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
-                ->paginate($request->per_page)
+                ->paginate($request->per_page, page: $request->page)
         )->additional(['sortables' => $sortables]);
     }
 

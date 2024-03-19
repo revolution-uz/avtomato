@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
+use Throwable;
 
 class UserController extends Controller
 {
@@ -100,6 +101,9 @@ class UserController extends Controller
         return new SingleUserResource(User::findOrFail($id));
     }
 
+    /**
+     * @throws Throwable
+     */
     #[OA\Post(
         path: '/api/v1/users',
         description: 'Users create route',
@@ -241,7 +245,10 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return DeviceInfoResource::collection($user->tokens()->paginate());
+        return DeviceInfoResource::collection($user->tokens()->paginate(
+            $request->per_page,
+            page: $request->page
+        ));
     }
 
     #[OA\Delete(
@@ -286,6 +293,11 @@ class UserController extends Controller
         return new StatusResource(true);
     }
 
+    /**
+     * @return SingleUserResource
+     *
+     * @throws Throwable
+     */
     #[OA\Post(
         path: '/api/v1/users/{id}/attach-role',
         description: 'Revoke device route',
