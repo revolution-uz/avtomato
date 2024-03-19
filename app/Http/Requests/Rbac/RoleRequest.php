@@ -5,8 +5,12 @@ namespace App\Http\Requests\Rbac;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
+/**
+ * @property string $name
+ */
 #[OA\Schema(
     schema: 'RoleRequest',
     title: 'Request to create or update a role',
@@ -26,7 +30,14 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:roles,name' . ($this->id ? ',' . $this->id : ''),
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('roles', 'name')
+                    ->withoutTrashed()
+                    ->ignore($this->id),
+            ],
         ];
     }
 }
