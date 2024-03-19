@@ -26,17 +26,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property UserStatusEnum $status
  * @property UserTemplateThemeDto $template_theme
  * @property string $language
- * @property int $role_id
- * @property string $password
  * @property-read Attachment|null $avatar
  * @property-read Role|null $role
- *
- * @method static User find(int $id)
- * @method static User findOrFail(int $id)
- * @method static User first()
- * @method static User firstOrFail()
- * @method User saveOrFail(array $data = [])
- * @method User updateOrFail(array $data = [], array $options = [])
  */
 class User extends Authenticatable
 {
