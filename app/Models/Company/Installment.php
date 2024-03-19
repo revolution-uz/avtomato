@@ -104,7 +104,7 @@ class Installment extends Model
         return $this->belongsToMany(Card::class, 'installment_cards', 'installment_id', 'card_id')->select('cards.*');
     }
 
-    public function guarantors()
+    public function guarantors(): BelongsToMany
     {
         return $this->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')->select('customers.*');
     }
@@ -136,6 +136,6 @@ class Installment extends Model
 
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }

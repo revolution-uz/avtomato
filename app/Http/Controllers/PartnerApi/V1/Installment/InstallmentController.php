@@ -75,6 +75,7 @@ class InstallmentController extends Controller
 
         return InstallmentResource::collection(
             Installment::query()
+                ->with(['customer', 'branch', 'tariff', 'graphs', 'cards', 'guarantors', 'documents', 'images', 'comments', 'transactions'])
                 ->when(
                     $request->search,
                     fn (Builder $q) => $q->where('id', $request->search)
