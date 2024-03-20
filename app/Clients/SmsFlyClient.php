@@ -48,9 +48,10 @@ class SmsFlyClient extends BaseClient
         if (isset($responseBody['success'])) {
             return $responseBody;
         }
+
         return [
             'success' => false,
-            'reason' => $responseBody['message'] ?? "Internal Server Error",
+            'reason' => $responseBody['message'] ?? "Avtomato didn't get error message",
             'resultCode' => $responseBody['status'] ?? 500,
         ];
 

@@ -17,10 +17,9 @@ use OpenApi\Attributes as OA;
 class SmsFlyResponseDTO extends BaseScoringRequest
 {
     public function __construct(
-        public bool   $success,
+        public bool $success,
         public string $reason,
-        public int    $resultCode
-    )
-    {
+        public int $resultCode
+    ) {
     }
 }
