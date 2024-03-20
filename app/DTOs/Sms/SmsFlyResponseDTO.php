@@ -9,13 +9,18 @@ use OpenApi\Attributes as OA;
     schema: 'SmsFlyResponseDTO',
     title: 'Sms Fly response dto',
     properties: [
-        new OA\Property(property: 'message', type: 'string', example: 'Muvaffaqiyatli yetib bordi'),
+        new OA\Property(property: 'success', type: 'bool', example: 'true'),
+        new OA\Property(property: 'reason', type: 'string', example: 'SUCCESS'),
+        new OA\Property(property: 'resultCode', type: 'int', example: '0'),
     ],
 )]
 class SmsFlyResponseDTO extends BaseScoringRequest
 {
     public function __construct(
-        public string $message,
-    ) {
+        public bool   $success,
+        public string $reason,
+        public int    $resultCode
+    )
+    {
     }
 }

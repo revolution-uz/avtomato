@@ -4,6 +4,7 @@ namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
 use App\DTOs\Sms\SendMessageDTO;
+use App\DTOs\Sms\SmsFlyResponseDTO;
 use App\Enums\ClientCodeEnum;
 use Illuminate\Support\Facades\Http;
 
@@ -24,9 +25,9 @@ class SmsFlyClient extends BaseClient
         return ClientCodeEnum::SMS_FLY;
     }
 
-    public function send(SendMessageDTO $messageDTO)
+    public function send(SendMessageDTO $messageDTO): SmsFlyResponseDTO
     {
-        return $this->request($messageDTO->toArray());
+        return SmsFlyResponseDTO::from($this->request($messageDTO->toArray()));
     }
 
     private function request(array $data, $method = '/send')
@@ -43,8 +44,15 @@ class SmsFlyClient extends BaseClient
             duration: $response->transferStats?->getTransferTime(),
             body: $data,
         ));
-
-        return $response->json('result');
+        $responseBody = json_decode($response->body(), true);
+        if (isset($responseBody['success'])) {
+            return $responseBody;
+        }
+        return [
+            'success' => false,
+            'reason' => $responseBody['message'] ?? "Internal Server Error",
+            'resultCode' => $responseBody['status'] ?? 500,
+        ];
 
     }
 }
