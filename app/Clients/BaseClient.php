@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Log;
 
 abstract class BaseClient
 {
+    protected string $channel = 'http-client';
+
     abstract public function getClientCode(): ClientCodeEnum;
 
     protected function logRequest(HttpRequestLogDTO $request): void
     {
-        Log::channel('http-client')->info(get_called_class(), $request->toArray());
+        Log::channel($this->channel)->info(get_called_class(), $request->toArray());
     }
 }

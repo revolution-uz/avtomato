@@ -5,7 +5,6 @@ namespace App\Clients;
 use App\DTOs\HttpRequestLogDTO;
 use App\Enums\ClientCodeEnum;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class AsaxiyClient extends BaseClient
 {
@@ -16,6 +15,7 @@ class AsaxiyClient extends BaseClient
     {
         $this->baseUrl = config('clients.asaxiy.base_url');
         $this->token = config('clients.asaxiy.token');
+        $this->channel = 'asaxiy-client';
     }
 
     public function getClientCode(): ClientCodeEnum
@@ -118,10 +118,5 @@ class AsaxiyClient extends BaseClient
         ));
 
         return $response->json('result');
-    }
-
-    protected function logRequest(HttpRequestLogDTO $request): void
-    {
-        Log::channel('asaxiy-client')->info($request->url, $request->toArray());
     }
 }
