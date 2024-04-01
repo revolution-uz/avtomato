@@ -11,6 +11,7 @@ use OpenApi\Attributes as OA;
     schema: 'ConfirmCustomerCardRequest',
     title: 'Request to confirm a card',
     properties: [
+        new OA\Property(property: 'card_id', type: 'int', example: '1'),
         new OA\Property(property: 'session', type: 'int', example: '1'),
         new OA\Property(property: 'otp', type: 'string', example: '123456'),
     ],
