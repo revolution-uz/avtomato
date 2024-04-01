@@ -33,6 +33,7 @@ use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
+use App\Services\CustomerService;
 use App\Services\PlumService;
 use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
@@ -47,7 +48,8 @@ class CustomerController extends Controller
 {
     public function __construct(
         private readonly PassportInfoService $passportInfoService,
-        private readonly PlumService $plumService
+        private readonly PlumService $plumService,
+        private readonly CustomerService $customerService
     ) {
     }
 
@@ -115,6 +117,11 @@ class CustomerController extends Controller
         return new CustomerInfoByPassportDataResource($passportData);
     }
 
+    /**
+     * @return SingleCustomerResource
+     *
+     * @throws Throwable
+     */
     #[OA\Post(
         path: '/api/v1/customer',
         description: 'Create a customer',
@@ -133,23 +140,7 @@ class CustomerController extends Controller
         DB::beginTransaction();
 
         try {
-            $customer = new Customer;
-            $customer->pinfl = $request->pinfl;
-            $customer->tin = $request->tin;
-            $customer->passport_series = $request->passport_series;
-            $customer->passport_number = $request->passport_number;
-            $customer->passport_given_date = Carbon::parse($request->passport_given_date);
-            $customer->passport_expiration_date = Carbon::parse($request->passport_expiration_date);
-            $customer->passport_given_place = $request->passport_given_place;
-            $customer->passport_citizenship = $request->passport_citizenship;
-            $customer->first_name = $request->first_name;
-            $customer->last_name = $request->last_name;
-            $customer->middle_name = $request->middle_name;
-            $customer->birth_date = Carbon::parse($request->birth_date);
-            $customer->birth_place = $request->birth_place;
-            $customer->gender = $request->gender;
-
-            $customer->saveOrFail();
+            $customer = $this->customerService->saveCustomer($request);
 
             foreach ($request->phones as $phoneInput) {
                 /** @var Phone $phone */
@@ -170,6 +161,11 @@ class CustomerController extends Controller
         }
     }
 
+    /**
+     * @return SingleCustomerResource
+     *
+     * @throws Throwable
+     */
     #[OA\Put(
         path: '/api/v1/customer/{id}',
         description: 'Update a customer',
@@ -188,23 +184,7 @@ class CustomerController extends Controller
     )]
     public function update(int $id, UpdateCustomerRequest $request)
     {
-        $customer = Customer::findOrFail($id);
-        $customer->pinfl = $request->pinfl;
-        $customer->tin = $request->tin;
-        $customer->passport_series = $request->passport_series;
-        $customer->passport_number = $request->passport_number;
-        $customer->passport_given_date = Carbon::parse($request->passport_given_date);
-        $customer->passport_expiration_date = Carbon::parse($request->passport_expiration_date);
-        $customer->passport_given_place = $request->passport_given_place;
-        $customer->passport_citizenship = $request->passport_citizenship;
-        $customer->first_name = $request->first_name;
-        $customer->last_name = $request->last_name;
-        $customer->middle_name = $request->middle_name;
-        $customer->birth_date = Carbon::parse($request->birth_date);
-        $customer->birth_place = $request->birth_place;
-        $customer->gender = $request->gender;
-
-        $customer->saveOrFail();
+        $customer = $this->customerService->saveCustomer($request, $id);
 
         return new SingleCustomerResource($customer);
     }
@@ -226,6 +206,9 @@ class CustomerController extends Controller
         return new SingleCustomerResource(Customer::findOrFail($id));
     }
 
+    /**
+     * @throws Throwable
+     */
     #[OA\Post(
         path: '/api/v1/customer/{id}/card',
         description: 'Card attach route',
@@ -326,6 +309,7 @@ class CustomerController extends Controller
     )]
     public function confirmCard(int $id, ConfirmCustomerCardRequest $request): CardResource
     {
+        /** @var Card $card */
         $card = Card::query()
             ->where('customer_id', $id)
             ->findOrFail($request->card_id);
@@ -353,6 +337,7 @@ class CustomerController extends Controller
     public function attachPhone(int $id, AttachPhoneRequest $request): SingleCustomerResource
     {
         $customer = Customer::findOrFail($id);
+        /** @var Phone $phone */
         $phone = Phone::query()->firstOrCreate(['phone' => $request->phone]);
 
         $customer->phones()->attach($phone->id, ['type' => $request->type, 'comment' => $request->comment]);
@@ -380,7 +365,9 @@ class CustomerController extends Controller
     {
         $customer = Customer::findOrFail($id);
         foreach ($request->phones as $phone) {
-            $customer->phones()->detach($phone);
+            /** @var Phone $phone */
+            $phone = Phone::query()->findOrFail(['phone' => $phone]);
+            $customer->phones()->detach($phone->id);
         }
 
         return new StatusResource(true);

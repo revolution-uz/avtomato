@@ -7,6 +7,14 @@ use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
+/**
+ * Request to create or update a branch
+ *
+ * @property string $name
+ * @property string $address
+ * @property string $inn
+ * @property int|null $id
+ */
 #[OA\Schema(
     schema: 'BranchRequest',
     title: 'Request to create or update a branch',

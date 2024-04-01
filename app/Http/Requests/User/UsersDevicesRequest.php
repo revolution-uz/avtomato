@@ -7,6 +7,12 @@ use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
 
+/**
+ * Class UsersDevicesRequest
+ *
+ * @property int $page
+ * @property int $per_page
+ * / */
 class UsersDevicesRequest extends FormRequest
 {
     public function authorize(): bool

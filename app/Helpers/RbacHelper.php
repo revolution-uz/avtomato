@@ -12,9 +12,9 @@ class RbacHelper
         return RolePermission::query()
             ->join('permissions', 'role_permissions.permission_id', '=', 'permissions.id')
             ->join('features', 'permissions.feature_id', '=', 'features.id')
-            ->where('slug', $permission)
-            ->where('is_active', true)
-            ->where('role_id', auth()->user()->role_id)
+            ->where('permissions.slug', $permission)
+            ->where('features.is_active', true)
+            ->where('role_permissions.role_id', auth()->user()->role_id)
             ->exists();
     }
 
