@@ -241,7 +241,10 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return DeviceInfoResource::collection($user->tokens()->paginate());
+        return DeviceInfoResource::collection($user->tokens()->paginate(
+            $request->per_page,
+            page: $request->page
+        ));
     }
 
     #[OA\Delete(

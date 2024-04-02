@@ -5,6 +5,7 @@ namespace App\Http\Requests\Customer;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -31,9 +32,24 @@ class CustomerByPassportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pinfl' => 'integer|digits:14|required_without:passport_series,passport_number',
-            'passport_series' => 'string|max:2|min:2|required_without:pinfl|regex:/^[A-Z]+$/',
-            'passport_number' => 'string|max:7|min:7|regex:/^[0-9]+$/|required_without:pinfl',
+            'pinfl' => [
+                'string',
+                'size:14',
+                'regex:/^[0-9]+$/',
+                Rule::requiredIf(empty($this->passport_series) && empty($this->passport_number)),
+            ],
+            'passport_series' => [
+                'string',
+                'size:2',
+                'regex:/^[A-Z]+$/',
+                Rule::requiredIf(empty($this->pinfl)),
+            ],
+            'passport_number' => [
+                'string',
+                'size:7',
+                'regex:/^[0-9]+$/',
+                Rule::requiredIf(empty($this->pinfl)),
+            ],
         ];
     }
 }

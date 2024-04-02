@@ -8,6 +8,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\GenderEnum;
 use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -55,32 +56,132 @@ class CreateCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pinfl' => 'required|integer|digits:14',
-            'tin' => 'nullable|integer|digits:9',
-            'passport_series' => 'required|string|max:2|min:2',
-            'passport_number' => 'required|string|max:7|min:7|regex:/^[0-9]+$/',
-            'passport_given_date' => 'required|date',
-            'passport_expiration_date' => 'required|date',
-            'passport_given_place' => 'nullable|string|max:128',
-            'passport_citizenship' => 'nullable|string|max:32',
-            'first_name' => 'required|string|max:32',
-            'last_name' => 'required|string|max:32',
-            'middle_name' => 'nullable|string|max:32',
-            'birth_date' => 'required|date',
-            'birth_place' => 'nullable|string|max:32',
-            'gender' => 'required|int|in:' . implode(',', GenderEnum::values()),
-            'phones' => 'array',
+            'pinfl' => [
+                'required',
+                'integer',
+                'digits:14',
+                'regex:/^[0-9]+$/',
+                Rule::unique('customers', 'pinfl'),
+            ],
+            'tin' => [
+                'nullable',
+                'integer',
+                'digits:9',
+                'regex:/^[0-9]+$/',
+                Rule::unique('customers', 'tin'),
+            ],
+            'passport_series' => [
+                'required',
+                'string',
+                'size:2',
+                'regex:/^[A-Z]+$/',
+            ],
+            'passport_number' => [
+                'required',
+                'string',
+                'size:7',
+                'regex:/^[0-9]+$/',
+                Rule::unique('customers', 'passport_number')
+                    ->where('passport_series', $this->passport_series),
+            ],
+            'passport_given_date' => [
+                'required',
+                'date',
+            ],
+            'passport_expiration_date' => [
+                'required',
+                'date',
+            ],
+            'passport_given_place' => [
+                'nullable',
+                'string',
+                'max:128',
+            ],
+            'passport_citizenship' => [
+                'nullable',
+                'string',
+                'max:32',
+            ],
+            'first_name' => [
+                'required',
+                'string',
+                'max:32',
+            ],
+            'last_name' => [
+                'required',
+                'string',
+                'max:32',
+            ],
+            'middle_name' => [
+                'nullable',
+                'string',
+                'max:32',
+            ],
+            'birth_date' => [
+                'required',
+                'date',
+            ],
+            'birth_place' => [
+                'nullable',
+                'string',
+                'max:32',
+            ],
+            'gender' => [
+                'required',
+                'integer',
+                Rule::in(GenderEnum::values()),
+            ],
+            'phones' => [
+                'nullable',
+                'array',
+            ],
             'phones.*' => 'array:phone,type,comment',
-            'phones.*.phone' => 'distinct|required|int|digits_between:9,13',
-            'phones.*.type' => 'required|int|in:' . implode(',', PhoneTypeEnum::values()),
-            'phones.*.comment' => 'nullable|string|max:64',
-            'addresses' => 'array',
+            'phones.*.phone' => [
+                'required',
+                'integer',
+                'digits_between:9,13',
+                'regex:/^[0-9]+$/',
+            ],
+            'phones.*.type' => [
+                'required',
+                'integer',
+                Rule::in(PhoneTypeEnum::values()),
+            ],
+            'phones.*.comment' => [
+                'nullable',
+                'string',
+                'max:128',
+            ],
+            'addresses' => [
+                'nullable',
+                'array',
+            ],
             'addresses.*' => 'array:type,address,region_id,district_id,mahalla_id',
-            'addresses.*.type' => 'required|int|in:' . implode(',', AddressTypeEnum::values()),
-            'addresses.*.address' => 'required|string|max:128',
-            'addresses.*.region_id' => 'nullable|int|exists:regions,id',
-            'addresses.*.district_id' => 'nullable|int|exists:districts,id',
-            'addresses.*.mahalla_id' => 'nullable|int|exists:mahallas,id',
+            'addresses.*.type' => [
+                'required',
+                'integer',
+                Rule::in(AddressTypeEnum::values()),
+            ],
+            'addresses.*.address' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'addresses.*.region_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('regions', 'id'),
+            ],
+            'addresses.*.district_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('districts', 'id'),
+            ],
+            'addresses.*.mahalla_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('mahallas', 'id'),
+            ],
             // TODO attachments
         ];
     }

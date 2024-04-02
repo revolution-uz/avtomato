@@ -10,6 +10,7 @@ class InstallmentFilterRequest extends BaseFilterRequest
 {
     public function authorize(): bool
     {
+
         return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_VIEW_ALL);
     }
 }
