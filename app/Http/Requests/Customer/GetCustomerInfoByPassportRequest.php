@@ -26,9 +26,23 @@ class GetCustomerInfoByPassportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'passport_series' => 'required|string|max:2|min:2',
-            'passport_number' => 'required|string|max:7|min:7|regex:/^[0-9]+$/',
-            'birth_date' => 'required|date',
+            'passport_series' => [
+                'required',
+                'string',
+                'size:2',
+                'regex:/^[A-Z]+$/',
+            ],
+            'passport_number' => [
+                'required',
+                'string',
+                'size:7',
+                'regex:/^[0-9]+$/',
+            ],
+            'birth_date' => [
+                'required',
+                'date',
+                'date_format:d-m-Y',
+            ],
         ];
     }
 
