@@ -366,7 +366,7 @@ class CustomerController extends Controller
         $customer = Customer::findOrFail($id);
         foreach ($request->phones as $phone) {
             /** @var Phone $phone */
-            $phone = Phone::query()->findOrFail(['phone' => $phone]);
+            $phone = Phone::query()->where('phone', $phone)->firstOrFail();
             $customer->phones()->detach($phone->id);
         }
 

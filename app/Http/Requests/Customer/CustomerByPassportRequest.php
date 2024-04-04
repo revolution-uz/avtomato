@@ -33,18 +33,21 @@ class CustomerByPassportRequest extends FormRequest
     {
         return [
             'pinfl' => [
+                'nullable',
                 'string',
                 'size:14',
                 'regex:/^[0-9]+$/',
                 Rule::requiredIf(empty($this->passport_series) && empty($this->passport_number)),
             ],
             'passport_series' => [
+                'nullable',
                 'string',
                 'size:2',
                 'regex:/^[A-Z]+$/',
                 Rule::requiredIf(empty($this->pinfl)),
             ],
             'passport_number' => [
+                'nullable',
                 'string',
                 'size:7',
                 'regex:/^[0-9]+$/',
