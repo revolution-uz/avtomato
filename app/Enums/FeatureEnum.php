@@ -37,14 +37,14 @@ enum FeatureEnum: string
     case ATMOS_OTP_PAY = 'atmos_otp_pay';
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
 
-    public function getData(): array
+    public static function getData($case): array
     {
-        return match ($this) {
+        return match ($case) {
             self::ATMOS_OTP_PAY => [
                 'is_default_active' => false,
                 'original_amount' => 0,
                 'original_data' => [
-                    'store_id' => env('ATMOS_STORE_ID', 1622),
+                    'store_id' => config('clients.atmos.revolution.store_id'),
                     'username' => 'example',
                     'password' => 'example',
                     'token' => 'example',
@@ -62,7 +62,7 @@ enum FeatureEnum: string
                 ],
             ],
             default => [
-                'is_default_active' => ModuleEnum::getModuleForFeature($this) === ModuleEnum::cases(),
+                'is_default_active' => ModuleEnum::getModuleForFeature($case) === ModuleEnum::cases(),
                 'original_amount' => 0,
             ]
         };
