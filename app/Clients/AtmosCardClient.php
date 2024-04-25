@@ -3,7 +3,6 @@
 namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
-use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
 use Illuminate\Support\Facades\Http;
@@ -16,12 +15,7 @@ class AtmosCardClient extends BaseAtmosClient
     {
         $this->baseUrl = config('clients.atmos.card.base_url');
         $this->setToken();
-        $this->channel = 'atmos-client';
-    }
-
-    public function getClientCode(): ClientCodeEnum
-    {
-        return ClientCodeEnum::ATMOS;
+        $this->channel = 'atmos-card-client';
     }
 
     public function setRevolutionToken(): void

@@ -13,11 +13,6 @@ class BaseAtmosClient extends BaseClient
     protected string $baseUrl;
     protected string $token;
 
-    public function __construct()
-    {
-        $this->channel = 'atmos-client';
-    }
-
     public function getClientCode(): ClientCodeEnum
     {
         return ClientCodeEnum::ATMOS;
