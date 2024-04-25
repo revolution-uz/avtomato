@@ -52,7 +52,7 @@ enum FeatureEnum: string
                 ],
             ];
         }
-        if ($case == self::ATMOS_OTP_PAY) {
+        if ($case == self::ATMOS_PINFL_PAY) {
             return [
                 'is_default_active' => false,
                 'original_amount' => 0,
