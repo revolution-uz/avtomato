@@ -47,7 +47,9 @@ enum ModuleEnum: string
             FeatureEnum::PROFILE_EDIT,
             FeatureEnum::THEME_MANAGEMENT,
             FeatureEnum::GET_STATIC_INFORMATION,
-            FeatureEnum::ACTIVITY_LOG => self::cases(),
+            FeatureEnum::ACTIVITY_LOG,
+            FeatureEnum::ATMOS_OTP_PAY,
+            FeatureEnum::ATMOS_PINFL_PAY => self::cases(),
         };
     }
 }
