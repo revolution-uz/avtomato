@@ -2,8 +2,6 @@
 
 namespace App\Enums;
 
-use Carbon\Carbon;
-
 enum FeatureEnum: string
 {
     case PROFILE_EDIT = 'profile_edit';
@@ -36,38 +34,4 @@ enum FeatureEnum: string
     case ACTIVITY_LOG = 'activity_log';
     case ATMOS_OTP_PAY = 'atmos_otp_pay';
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
-
-    public static function getData($case): array
-    {
-        if ($case == self::ATMOS_OTP_PAY) {
-            return [
-                'is_default_active' => false,
-                'original_amount' => 0,
-                'original_data' => [
-                    'store_id' => config('clients.atmos.revolution.store_id'),
-                    'username' => 'example',
-                    'password' => 'example',
-                    'token' => 'example',
-                    'expires_in' => Carbon::now(),
-                ],
-            ];
-        }
-        if ($case == self::ATMOS_PINFL_PAY) {
-            return [
-                'is_default_active' => false,
-                'original_amount' => 0,
-                'original_data' => [
-                    'username' => 'example',
-                    'password' => 'example',
-                    'token' => 'example',
-                    'expires_in' => Carbon::now(),
-                ],
-            ];
-        }
-
-        return [
-            'is_default_active' => ModuleEnum::getModuleForFeature($case) === ModuleEnum::cases(),
-            'original_amount' => 0,
-        ];
-    }
 }
