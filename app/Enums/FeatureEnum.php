@@ -39,8 +39,8 @@ enum FeatureEnum: string
 
     public static function getData($case): array
     {
-        return match ($case) {
-            self::ATMOS_OTP_PAY => [
+        if ($case == self::ATMOS_OTP_PAY) {
+            return [
                 'is_default_active' => false,
                 'original_amount' => 0,
                 'original_data' => [
@@ -50,8 +50,10 @@ enum FeatureEnum: string
                     'token' => 'example',
                     'expires_in' => Carbon::now(),
                 ],
-            ],
-            self::ATMOS_PINFL_PAY => [
+            ];
+        }
+        if ($case == self::ATMOS_OTP_PAY) {
+            return [
                 'is_default_active' => false,
                 'original_amount' => 0,
                 'original_data' => [
@@ -60,11 +62,11 @@ enum FeatureEnum: string
                     'token' => 'example',
                     'expires_in' => Carbon::now(),
                 ],
-            ],
-            default => [
-                'is_default_active' => ModuleEnum::getModuleForFeature($case) === ModuleEnum::cases(),
-                'original_amount' => 0,
-            ]
-        };
+            ];
+        }
+        return [
+            'is_default_active' => ModuleEnum::getModuleForFeature($case) === ModuleEnum::cases(),
+            'original_amount' => 0,
+        ];
     }
 }
