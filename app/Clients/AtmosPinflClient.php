@@ -5,7 +5,6 @@ namespace App\Clients;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
-use Illuminate\Support\Facades\Http;
 
 class AtmosPinflClient extends BaseAtmosClient
 {
@@ -17,7 +16,7 @@ class AtmosPinflClient extends BaseAtmosClient
     public function __construct()
     {
         $this->baseUrl = config('clients.atmos.pinfl.base_url');
-        $this->setToken();
+        $this->activateToken(Feature::findByName(FeatureEnum::ATMOS_PINFL_PAY->value));
         $this->channel = 'atmos-pinfl-client';
     }
 
@@ -52,12 +51,8 @@ class AtmosPinflClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::PAYMENT_CREATE, $data);
+        return $this->makeRequest(self::PAYMENT_CREATE, $data)->json('payload', []);
 
-        $this->logAtmosRequest(self::PAYMENT_CREATE, $response, $data);
-
-        return $response->json('payload');
     }
 
     public function payConfirmWithPinfl(string $ext_id, int $transaction_id): mixed
@@ -68,12 +63,7 @@ class AtmosPinflClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::PAYMENT_CONFIRM, $data);
-
-        $this->logAtmosRequest(self::PAYMENT_CONFIRM, $response, $data);
-
-        return $response->json('payload');
+        return $this->makeRequest(self::PAYMENT_CONFIRM, $data)->json('payload', []);
     }
 
     public function payCheckWithPinfl(string $ext_id, string $pinfl, string $passer, string $pasnum, string $contract_number, int $amount): mixed
@@ -88,12 +78,7 @@ class AtmosPinflClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::PAYMENT_CHECK, $data);
-
-        $this->logAtmosRequest(self::PAYMENT_CHECK, $response, $data);
-
-        return $response->json('payload');
+        return $this->makeRequest(self::PAYMENT_CHECK, $data)->json('payload', []);
     }
 
     public function payCancelWithPinfl(string $ext_id, int $transaction_id): mixed
@@ -104,17 +89,7 @@ class AtmosPinflClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::PAYMENT_CANCEL, $data);
-
-        $this->logAtmosRequest(self::PAYMENT_CANCEL, $response, $data);
-
-        return $response->json('payload');
-    }
-
-    private function setToken(): void
-    {
-        $this->activateToken(Feature::findByName(FeatureEnum::ATMOS_PINFL_PAY->value));
+        return $this->makeRequest(self::PAYMENT_CANCEL, $data)->json('payload', []);
     }
     /**
      * ------------- PINFL Payment module end --------------

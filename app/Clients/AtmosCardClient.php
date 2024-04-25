@@ -5,7 +5,6 @@ namespace App\Clients;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
-use Illuminate\Support\Facades\Http;
 
 class AtmosCardClient extends BaseAtmosClient
 {
@@ -21,12 +20,10 @@ class AtmosCardClient extends BaseAtmosClient
     const PAYMENT_CANCEL = '/merchant/pay/reverse';
     const PAYMENT_GET = '/merchant/pay/get';
 
-    private int $store_id;
-
     public function __construct()
     {
         $this->baseUrl = config('clients.atmos.card.base_url');
-        $this->setToken();
+        $this->activateToken(Feature::findByName(FeatureEnum::ATMOS_CARD_PAY->value));
         $this->channel = 'atmos-card-client';
     }
 
@@ -54,12 +51,8 @@ class AtmosCardClient extends BaseAtmosClient
             'expiry' => $expiry,
             'lang' => app()->getLocale(),
         ];
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::CARD_BIND_INIT, $data);
 
-        $this->logAtmosRequest(self::CARD_BIND_INIT, $response, $data);
-
-        return $response->json('result', []);
+        return $this->makeRequest(self::CARD_BIND_INIT, $data)->json('result', []);
     }
 
     public function confirmCard(int $transaction_id, string $otp): mixed
@@ -70,12 +63,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::CARD_BIND_CONFIRM, $data);
-
-        $this->logAtmosRequest(self::CARD_BIND_CONFIRM, $response, $data);
-
-        return $response->json('result', []);
+        return $this->makeRequest(self::CARD_BIND_CONFIRM, $data)->json('result', []);
     }
 
     public function getCardInfo(string $token): mixed
@@ -85,12 +73,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::CARD_CHECK, $data);
-
-        $this->logAtmosRequest(self::CARD_CHECK, $response, $data);
-
-        return $response->json('card', []);
+        return $this->makeRequest(self::CARD_CHECK, $data)->json('card', []);
     }
 
     public function getCards(int $page = 0, int $pageSize = 100): mixed
@@ -101,12 +84,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::CARD_LIST, $data);
-
-        $this->logAtmosRequest(self::CARD_LIST, $response, $data);
-
-        return $response->json('card_list', []);
+        return $this->makeRequest(self::CARD_LIST, $data)->json('card_list', []);
     }
 
     public function removeCard(string $token): mixed
@@ -116,12 +94,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::CARD_REMOVE, $data);
-
-        $this->logAtmosRequest(self::CARD_REMOVE, $response, $data);
-
-        return $response->json('result', []);
+        return $this->makeRequest(self::CARD_REMOVE, $data)->json('result', []);
     }
 
     /**
@@ -142,12 +115,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::PAYMENT_CREATE, $data);
-
-        $this->logAtmosRequest(self::PAYMENT_CREATE, $response, $data);
-
-        return $response->json('result');
+        return $this->makeRequest(self::PAYMENT_CREATE, $data)->json('result', []);
     }
 
     public function payPreApply(string $card_token, int $transaction_id): mixed
@@ -159,12 +127,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::PAYMENT_PRE_CONFIRM, $data);
-
-        $this->logAtmosRequest(self::PAYMENT_PRE_CONFIRM, $response, $data);
-
-        return $response->json('result');
+        return $this->makeRequest(self::PAYMENT_PRE_CONFIRM, $data)->json('result', []);
     }
 
     public function payApplyOfd(int $transaction_id): mixed
@@ -175,12 +138,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::PAYMENT_CONFIRM, $data);
-
-        $this->logAtmosRequest(self::PAYMENT_CONFIRM, $response, $data);
-
-        return $response->json('result');
+        return $this->makeRequest(self::PAYMENT_CONFIRM, $data)->json('result', []);
     }
 
     public function payGet(int $transaction_id): mixed
@@ -191,12 +149,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::PAYMENT_GET, $data);
-
-        $this->logAtmosRequest(self::PAYMENT_GET, $response, $data);
-
-        return $response->json('result');
+        return $this->makeRequest(self::PAYMENT_GET, $data)->json('result', []);
     }
 
     public function payReverse(int $transaction_id, string $reason = 'Wrong payment', int $hold_amount = 0): mixed
@@ -209,21 +162,8 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . self::PAYMENT_CANCEL, $data);
-
-        $this->logAtmosRequest(self::PAYMENT_CANCEL, $response, $data);
-
-        return $response->json('result');
+        return $this->makeRequest(self::PAYMENT_CANCEL, $data)->json('result', []);
     }
-
-    private function setToken(): void
-    {
-        $feature = Feature::findByName(FeatureEnum::ATMOS_CARD_PAY->value);
-        $this->store_id = $feature->data['store_id'] ?? null;
-        $this->activateToken($feature);
-    }
-
     /**
      * ------------- Card Payment module end --------------
      */
