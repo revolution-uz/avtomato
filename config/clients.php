@@ -41,7 +41,7 @@ return [
     'atmos' => [
         'card' => [
             'base_url' => 'https://partner.atmos.uz',
-            'store_id' => env('ATMOS_CARD_STORE_ID', 1622),
+            'store_id' => env('ATMOS_CARD_STORE_ID'),
             'username' => env('ATMOS_CARD_USERNAME', ''),
             'password' => env('ATMOS_CARD_PASSWORD', ''),
         ],

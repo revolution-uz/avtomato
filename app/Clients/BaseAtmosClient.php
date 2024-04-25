@@ -3,20 +3,14 @@
 namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
-use App\Enums\ClientCodeEnum;
 use App\Models\Company\Feature;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
-class BaseAtmosClient extends BaseClient
+abstract class BaseAtmosClient extends BaseClient
 {
     protected string $baseUrl;
     protected string $token;
-
-    public function getClientCode(): ClientCodeEnum
-    {
-        return ClientCodeEnum::ATMOS;
-    }
 
     public function getToken($username, $password)
     {
@@ -52,5 +46,17 @@ class BaseAtmosClient extends BaseClient
         $feature->data['token'] = $this->token;
         $feature->data['expires_in'] = $expires_in;
         $feature->saveOrFail();
+    }
+
+    protected function logAtmosRequest($path, $response, $data): void
+    {
+        parent::logRequest(new HttpRequestLogDTO(
+            method: 'POST',
+            url: $this->baseUrl . $path,
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            body: $data,
+        ));
     }
 }

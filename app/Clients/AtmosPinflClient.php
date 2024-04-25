@@ -2,18 +2,28 @@
 
 namespace App\Clients;
 
-use App\DTOs\HttpRequestLogDTO;
+use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
 use Illuminate\Support\Facades\Http;
 
 class AtmosPinflClient extends BaseAtmosClient
 {
+    const PAYMENT_CREATE = '/ppa/transaction/create';
+    const PAYMENT_CONFIRM = '/ppa/transaction/confirm';
+    const PAYMENT_CHECK = '/ppa/transaction/check';
+    const PAYMENT_CANCEL = '/ppa/transaction/cancel';
+
     public function __construct()
     {
         $this->baseUrl = config('clients.atmos.pinfl.base_url');
         $this->setToken();
         $this->channel = 'atmos-pinfl-client';
+    }
+
+    public function getClientCode(): ClientCodeEnum
+    {
+        return ClientCodeEnum::ATMOS_PINFL_PAY;
     }
 
     public function setRevolutionToken(): void
@@ -43,15 +53,9 @@ class AtmosPinflClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/ppa/transaction/create', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/ppa/transaction/create',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::PAYMENT_CREATE, $data);
+
+        $this->logAtmosRequest(self::PAYMENT_CREATE, $response, $data);
 
         return $response->json('payload');
     }
@@ -65,15 +69,9 @@ class AtmosPinflClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/ppa/transaction/confirm', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/ppa/transaction/confirm',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::PAYMENT_CONFIRM, $data);
+
+        $this->logAtmosRequest(self::PAYMENT_CONFIRM, $response, $data);
 
         return $response->json('payload');
     }
@@ -91,15 +89,9 @@ class AtmosPinflClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/ppa/transaction/check', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/ppa/transaction/check',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::PAYMENT_CHECK, $data);
+
+        $this->logAtmosRequest(self::PAYMENT_CHECK, $response, $data);
 
         return $response->json('payload');
     }
@@ -113,15 +105,9 @@ class AtmosPinflClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/ppa/transaction/cancel', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/ppa/transaction/cancel',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::PAYMENT_CANCEL, $data);
+
+        $this->logAtmosRequest(self::PAYMENT_CANCEL, $response, $data);
 
         return $response->json('payload');
     }

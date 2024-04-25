@@ -2,13 +2,25 @@
 
 namespace App\Clients;
 
-use App\DTOs\HttpRequestLogDTO;
+use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
 use Illuminate\Support\Facades\Http;
 
 class AtmosCardClient extends BaseAtmosClient
 {
+    const CARD_BIND_INIT = '/bind-card/init';
+    const CARD_BIND_CONFIRM = '/bind-card/confirm';
+    const CARD_CHECK = '/card/1/check-card-token';
+    const CARD_LIST = '/list-cards';
+    const CARD_REMOVE = '/remove-card';
+
+    const PAYMENT_CREATE = '/merchant/pay/create';
+    const PAYMENT_PRE_CONFIRM = '/merchant/pay/pre-apply';
+    const PAYMENT_CONFIRM = '/merchant/pay/apply-ofd';
+    const PAYMENT_CANCEL = '/merchant/pay/reverse';
+    const PAYMENT_GET = '/merchant/pay/get';
+
     private int $store_id;
 
     public function __construct()
@@ -16,6 +28,11 @@ class AtmosCardClient extends BaseAtmosClient
         $this->baseUrl = config('clients.atmos.card.base_url');
         $this->setToken();
         $this->channel = 'atmos-card-client';
+    }
+
+    public function getClientCode(): ClientCodeEnum
+    {
+        return ClientCodeEnum::ATMOS_CARD_PAY;
     }
 
     public function setRevolutionToken(): void
@@ -38,16 +55,9 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/bind-card/init', $data);
+            ->post($this->baseUrl . self::CARD_BIND_INIT, $data);
 
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/bind-card/init',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+        $this->logAtmosRequest(self::CARD_BIND_INIT, $response, $data);
 
         return $response->json('result', []);
     }
@@ -61,15 +71,9 @@ class AtmosCardClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/bind-card/confirm', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/bind-card/confirm',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::CARD_BIND_CONFIRM, $data);
+
+        $this->logAtmosRequest(self::CARD_BIND_CONFIRM, $response, $data);
 
         return $response->json('result', []);
     }
@@ -82,15 +86,9 @@ class AtmosCardClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/card/1/check-card-token', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/card/1/check-card-token',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::CARD_CHECK, $data);
+
+        $this->logAtmosRequest(self::CARD_CHECK, $response, $data);
 
         return $response->json('card', []);
     }
@@ -104,15 +102,9 @@ class AtmosCardClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/list-cards', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/list-cards',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::CARD_LIST, $data);
+
+        $this->logAtmosRequest(self::CARD_LIST, $response, $data);
 
         return $response->json('card_list', []);
     }
@@ -125,15 +117,9 @@ class AtmosCardClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/remove-card', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/remove-card',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::CARD_REMOVE, $data);
+
+        $this->logAtmosRequest(self::CARD_REMOVE, $response, $data);
 
         return $response->json('result', []);
     }
@@ -157,15 +143,9 @@ class AtmosCardClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/merchant/pay/create', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/merchant/pay/create',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::PAYMENT_CREATE, $data);
+
+        $this->logAtmosRequest(self::PAYMENT_CREATE, $response, $data);
 
         return $response->json('result');
     }
@@ -180,15 +160,9 @@ class AtmosCardClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/merchant/pay/pre-apply', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/merchant/pay/pre-apply',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::PAYMENT_PRE_CONFIRM, $data);
+
+        $this->logAtmosRequest(self::PAYMENT_PRE_CONFIRM, $response, $data);
 
         return $response->json('result');
     }
@@ -202,15 +176,9 @@ class AtmosCardClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/merchant/pay/apply-ofd', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/merchant/pay/apply-ofd',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::PAYMENT_CONFIRM, $data);
+
+        $this->logAtmosRequest(self::PAYMENT_CONFIRM, $response, $data);
 
         return $response->json('result');
     }
@@ -224,15 +192,9 @@ class AtmosCardClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/merchant/pay/get', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/merchant/pay/get',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::PAYMENT_GET, $data);
+
+        $this->logAtmosRequest(self::PAYMENT_GET, $response, $data);
 
         return $response->json('result');
     }
@@ -248,15 +210,9 @@ class AtmosCardClient extends BaseAtmosClient
         ];
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->baseUrl . '/merchant/pay/reverse', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . '/merchant/pay/reverse',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
+            ->post($this->baseUrl . self::PAYMENT_CANCEL, $data);
+
+        $this->logAtmosRequest(self::PAYMENT_CANCEL, $response, $data);
 
         return $response->json('result');
     }
