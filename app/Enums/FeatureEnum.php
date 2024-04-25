@@ -64,6 +64,7 @@ enum FeatureEnum: string
                 ],
             ];
         }
+
         return [
             'is_default_active' => ModuleEnum::getModuleForFeature($case) === ModuleEnum::cases(),
             'original_amount' => 0,
