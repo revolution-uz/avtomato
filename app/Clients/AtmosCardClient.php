@@ -6,26 +6,16 @@ use App\DTOs\HttpRequestLogDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
-class AtmosClient extends BaseClient
+class AtmosCardClient extends BaseAtmosClient
 {
-    private string $baseUrl;
-    private string $gwUrl;
-
-    private string $token;
     private int $store_id;
 
-    public function __construct(FeatureEnum $account_type = null)
+    public function __construct()
     {
-        $this->baseUrl = config('clients.atmos.base_url');
-        $this->gwUrl = config('clients.atmos.gw_url');
-        if ($account_type == null) {
-            $this->setRevolutionToken();
-        } else {
-            $this->setAndActivateToken($account_type);
-        }
+        $this->baseUrl = config('clients.atmos.card.base_url');
+        $this->setToken();
         $this->channel = 'atmos-client';
     }
 
@@ -34,23 +24,13 @@ class AtmosClient extends BaseClient
         return ClientCodeEnum::ATMOS;
     }
 
-    public function activateAccount($basUrl, $username, $password)
+    public function setRevolutionToken(): void
     {
-        $response = Http::withHeaders([
-            'Authorization' => 'Basic ' . base64_encode($username . ':' . $password),
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ])
-            ->get($basUrl . '/token?grant_type=client_credentials');
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $basUrl . '/token?grant_type=client_credentials',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            params: [],
-        ));
-
-        return $response->json();
+        $this->store_id = config('clients.atmos.card.store_id');
+        $username = config('clients.atmos.card.username');
+        $password = config('clients.atmos.card.password');
+        $response = $this->getToken($username, $password);
+        $this->token = $response['access_token'] ?? null;
     }
 
     /**
@@ -287,145 +267,14 @@ class AtmosClient extends BaseClient
         return $response->json('result');
     }
 
+    private function setToken(): void
+    {
+        $feature = Feature::findByName(FeatureEnum::ATMOS_CARD_PAY->value);
+        $this->store_id = $feature->data['store_id'] ?? null;
+        $this->activateToken($feature);
+    }
+
     /**
      * ------------- Card Payment module end --------------
-     */
-
-    /**
-     * ------------- PINFL Payment module begin --------------
-     */
-    public function payWithPinfl(string $ext_id, string $first_name, string $last_name, string $middle_name, string $pinfl, string $passer, string $pasnum, string $contract_number, int $amount): mixed
-    {
-        $data = [
-            'ext_id' => $ext_id,
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'middle_name' => $middle_name,
-            'pinfl' => $pinfl,
-            'passport_series' => $passer,
-            'passport_number' => $pasnum,
-            'contract_number' => $contract_number,
-            'amount' => $amount,
-            'lang' => app()->getLocale(),
-        ];
-
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->gwUrl . '/ppa/transaction/create', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->gwUrl . '/ppa/transaction/create',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
-
-        return $response->json('payload');
-    }
-
-    public function payConfirmWithPinfl(string $ext_id, int $transaction_id): mixed
-    {
-        $data = [
-            'ext_id' => $ext_id,
-            'transaction_id' => $transaction_id,
-            'lang' => app()->getLocale(),
-        ];
-
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->gwUrl . '/ppa/transaction/confirm', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->gwUrl . '/ppa/transaction/confirm',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
-
-        return $response->json('payload');
-    }
-
-    public function payCheckWithPinfl(string $ext_id, string $pinfl, string $passer, string $pasnum, string $contract_number, int $amount): mixed
-    {
-        $data = [
-            'ext_id' => $ext_id,
-            'pinfl' => $pinfl,
-            'passport_series' => $passer,
-            'passport_number' => $pasnum,
-            'contract_number' => $contract_number,
-            'amount' => $amount,
-            'lang' => app()->getLocale(),
-        ];
-
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->gwUrl . '/ppa/transaction/check', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->gwUrl . '/ppa/transaction/check',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
-
-        return $response->json('payload');
-    }
-
-    public function payCancelWithPinfl(string $ext_id, int $transaction_id): mixed
-    {
-        $data = [
-            'ext_id' => $ext_id,
-            'transaction_id' => $transaction_id,
-            'lang' => app()->getLocale(),
-        ];
-
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->post($this->gwUrl . '/ppa/transaction/cancel', $data);
-        $this->logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->gwUrl . '/ppa/transaction/cancel',
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
-
-        return $response->json('payload');
-    }
-
-    private function setRevolutionToken(): void
-    {
-        $this->store_id = config('clients.atmos.revolution.store_id');
-        $username = config('clients.atmos.revolution.username');
-        $password = config('clients.atmos.revolution.password');
-        $response = $this->activateAccount($this->baseUrl, $username, $password);
-        $this->token = $response['access_token'] ?? null;
-    }
-
-    private function setAndActivateToken($account_type): void
-    {
-        $feature = Feature::findByName($account_type);
-        $this->store_id = $feature->data['store_id'] ?? null;
-        $username = $feature->data['username'] ?? null;
-        $password = $feature->data['password'] ?? null;
-        $expires_in = $feature->data['expires_in'] ?? 0;
-        $this->token = $feature->data['token'] ?? null;
-        if ($expires_in > Carbon::now() && $this->token) {
-            return;
-        }
-        $baseUrl = $this->baseUrl;
-        if ($account_type == FeatureEnum::ATMOS_PINFL_PAY) {
-            $baseUrl = $this->gwUrl;
-        }
-        $response = $this->activateAccount($baseUrl, $username, $password);
-        $this->token = $response['access_token'] ?? null;
-        $expires_in = ($response['expires_in'] ?? 0) + Carbon::now();
-        $feature->data['token'] = $this->token;
-        $feature->data['expires_in'] = $expires_in;
-        $feature->saveOrFail();
-    }
-
-    /**
-     * ------------- PINFL Payment module end --------------
      */
 }

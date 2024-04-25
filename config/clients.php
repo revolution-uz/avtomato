@@ -39,12 +39,16 @@ return [
     |--------------------------------------------------------------------------
     */
     'atmos' => [
-        'base_url' => 'https://partner.atmos.uz',
-        'gw_url' => 'https://apigw.atmos.uz',
-        'revolution' => [
-            'store_id' => env('ATMOS_STORE_ID', 1622),
-            'username' => env('ATMOS_USERNAME', ''),
-            'password' => env('ATMOS_PASSWORD', ''),
+        'card' => [
+            'base_url' => 'https://partner.atmos.uz',
+            'store_id' => env('ATMOS_CARD_STORE_ID', 1622),
+            'username' => env('ATMOS_CARD_USERNAME', ''),
+            'password' => env('ATMOS_CARD_PASSWORD', ''),
+        ],
+        'pinfl' => [
+            'base_url' => 'https://apigw.atmos.uz',
+            'username' => env('ATMOS_PINFL_USERNAME', ''),
+            'password' => env('ATMOS_PINFL_PASSWORD', ''),
         ],
     ],
 
