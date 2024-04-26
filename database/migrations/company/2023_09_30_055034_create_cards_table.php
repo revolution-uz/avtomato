@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('expiry', 4);
             $table->string('phone')->nullable();
             $table->tinyInteger('status');
-            $table->tinyInteger('client_code')->default(\App\Enums\ClientCodeEnum::ATMOS_CARD_PAY->value);
+            $table->tinyInteger('client_code');
             $table->decimal('balance', 12)->default(0);
             $table->string('external_id')->nullable();
             $table->timestamps();
