@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('balance_fund', function (Blueprint $table) {
+        Schema::table('balance_funds', function (Blueprint $table) {
             $table->renameColumn('plum_transaction_id', 'external_transaction_id');
             $table->string('external_transaction_id')->change();
         });
@@ -16,7 +16,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('balance_fund', function (Blueprint $table) {
+        Schema::table('balance_funds', function (Blueprint $table) {
             $table->renameColumn('external_transaction_id', 'plum_transaction_id');
             $table->bigInteger('external_transaction_id')->change();
         });
