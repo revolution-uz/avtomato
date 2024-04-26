@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\ClientCodeEnum;
 use App\Enums\Company\CardStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $expiry
  * @property string $phone
  * @property CardStatusEnum $status
+ * @property ClientCodeEnum $client_code
  * @property float $balance
  * @property string $external_id
  * @property Carbon|null $created_at
@@ -53,11 +55,13 @@ class Card extends Model
         'status',
         'balance',
         'external_id',
+        'client_code',
         'owner',
     ];
 
     protected $casts = [
         'status' => CardStatusEnum::class,
+        'client_code' => ClientCodeEnum::class,
     ];
 
     public function getActivitylogOptions(): LogOptions
