@@ -14,7 +14,8 @@ class AtmosCardService
 {
     public function __construct(
         private readonly AtmosCardClient $atmosCardClient
-    ) {
+    )
+    {
     }
 
     public function attachCard(Card $card)
@@ -36,15 +37,5 @@ class AtmosCardService
         }
 
         return false;
-    }
-
-    public function fundBalance($data): FundBalanceResponseDTO
-    {
-        return FundBalanceResponseDTO::from($this->atmosCardClient->payment($data));
-    }
-
-    public function confirmPayment($data): ConfirmPaymentFundBalanceResponseDTO
-    {
-        return ConfirmPaymentFundBalanceResponseDTO::from($this->atmosCardClient->confirmPayment($data));
     }
 }
