@@ -114,7 +114,7 @@ class AtmosCardClient extends BaseAtmosClient
         $data = [
             'store_id' => $this->store_id,
             'account' => $createPayRequestDTO->account,
-            'amount' => (int)$createPayRequestDTO->amount * 100, // tiyin
+            'amount' => (int) $createPayRequestDTO->amount * 100, // tiyin
             'details' => $createPayRequestDTO->details,
             'debit-available-amount' => true,
             'lang' => app()->getLocale(),
