@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Customer;
 
-use App\Enums\ClientCodeEnum;
 use App\Enums\GenderEnum;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
@@ -179,7 +178,6 @@ class CustomerControllerTest extends TestCase
         $card = Card::factory()->create([
             'customer_id' => $customer->id,
             'external_id' => null,
-            'client_code' => ClientCodeEnum::ATMOS_CARD_PAY->value,
         ]);
 
         $admin = $this->createAdminUser();
@@ -199,7 +197,6 @@ class CustomerControllerTest extends TestCase
         $card = Card::factory()->create([
             'customer_id' => $customer->id,
             'external_id' => null,
-            'client_code' => ClientCodeEnum::ATMOS_CARD_PAY->value,
         ]);
 
         $card_id = '1234567890';
