@@ -78,7 +78,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::CARD_CHECK, $data)->json('card', []);
+        return $this->makeRequest(self::CARD_CHECK, $data)->json();
     }
 
     public function getCards(int $page = 0, int $pageSize = 100): mixed
@@ -89,7 +89,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::CARD_LIST, $data)->json('card_list', []);
+        return $this->makeRequest(self::CARD_LIST, $data)->json();
     }
 
     public function removeCard(string $token): mixed
@@ -99,7 +99,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::CARD_REMOVE, $data)->json('result', []);
+        return $this->makeRequest(self::CARD_REMOVE, $data)->json();
     }
 
     /**
@@ -114,13 +114,13 @@ class AtmosCardClient extends BaseAtmosClient
         $data = [
             'store_id' => $this->store_id,
             'account' => $createPayRequestDTO->account,
-            'amount' => (int) $createPayRequestDTO->amount * 100, // tiyin
+            'amount' => (int)$createPayRequestDTO->amount * 100, // tiyin
             'details' => $createPayRequestDTO->details,
             'debit-available-amount' => true,
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::PAYMENT_CREATE, $data)->json('result', []);
+        return $this->makeRequest(self::PAYMENT_CREATE, $data)->json();
     }
 
     public function payPreApply(AtmosPreConfirmPayRequestDTO $preConfirmPayRequestDTO): mixed
@@ -132,7 +132,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::PAYMENT_PRE_CONFIRM, $data)->json('result', []);
+        return $this->makeRequest(self::PAYMENT_PRE_CONFIRM, $data)->json();
     }
 
     public function payApplyOfd(AtmosConfirmPayRequestDTO $confirmPayRequestDTO): mixed
@@ -143,7 +143,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::PAYMENT_CONFIRM, $data)->json('result', []);
+        return $this->makeRequest(self::PAYMENT_CONFIRM, $data)->json();
     }
 
     public function payGet(int $transaction_id): mixed
@@ -154,7 +154,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::PAYMENT_GET, $data)->json('result', []);
+        return $this->makeRequest(self::PAYMENT_GET, $data)->json();
     }
 
     public function payReverse(int $transaction_id, string $reason = 'Wrong payment', int $hold_amount = 0): mixed
@@ -167,7 +167,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::PAYMENT_CANCEL, $data)->json('result', []);
+        return $this->makeRequest(self::PAYMENT_CANCEL, $data)->json();
     }
     /**
      * ------------- Card Payment module end --------------
