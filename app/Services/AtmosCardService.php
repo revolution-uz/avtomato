@@ -3,10 +3,17 @@
 namespace App\Services;
 
 use App\Clients\AtmosCardClient;
-use App\DTOs\Scoring\Card\Atmos\AtmosConfirmUserCardDTO;
-use App\DTOs\Scoring\Card\Atmos\AtmosCreateUserCardDTO;
-use App\Models\Company\Card;
-use Illuminate\Support\Facades\Crypt;
+use App\DTOs\Atmos\Card\AtmosAttachCardRequestDTO;
+use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
+use App\DTOs\Atmos\Card\AtmosConfirmCardRequestDTO;
+use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
+use App\DTOs\Atmos\CardPay\AtmosConfirmPayRequestDTO;
+use App\DTOs\Atmos\CardPay\AtmosCreatePayRequestDTO;
+use App\DTOs\Atmos\CardPay\AtmosCreatePayResponseDTO;
+use App\DTOs\Atmos\CardPay\AtmosPreConfirmPayRequestDTO;
+use App\DTOs\Atmos\CardPay\AtmosPreConfirmPayResponseDTO;
+use App\DTOs\Management\BalanceFundConfirmDTO;
+use App\Models\Company\BalanceFund;
 
 class AtmosCardService
 {
@@ -15,24 +22,55 @@ class AtmosCardService
     ) {
     }
 
-    public function attachCard(Card $card)
+    public function attachCard(AtmosAttachCardRequestDTO $attachCardRequestDTO): AtmosAttachCardResponseDTO
     {
-        return AtmosCreateUserCardDTO::from($this->atmosCardClient->attachCard(
-            Crypt::decryptString($card->number),
-            $card->expiry,
-        ));
+        return AtmosAttachCardResponseDTO::from($this->atmosCardClient->attachCard($attachCardRequestDTO));
     }
 
-    public function confirmCard(Card $card, $transaction_id, $otp)
+    public function confirmCard(AtmosConfirmCardRequestDTO $confirmCardRequestDTO): AtmosConfirmCardResponseDTO
     {
-        $confirmedCard = AtmosConfirmUserCardDTO::from($this->atmosCardClient->confirmCard($transaction_id, $otp));
-        if ($confirmedCard->result->isSucces()) {
-            $card->external_id = $confirmedCard->data->card_token;
-            $card->owner = $confirmedCard->data->card_holder;
+        return AtmosConfirmCardResponseDTO::from($this->atmosCardClient->confirmCard($confirmCardRequestDTO));
+    }
 
-            return $card->saveOrFail();
+    public function createPayment(AtmosCreatePayRequestDTO $createPayRequestDTO): AtmosCreatePayResponseDTO
+    {
+        return AtmosCreatePayResponseDTO::from($this->atmosCardClient->payCreate($createPayRequestDTO));
+    }
+
+    public function preConfirmPayment(AtmosPreConfirmPayRequestDTO $preConfirmPayRequestDTO): AtmosPreConfirmPayResponseDTO
+    {
+        return AtmosPreConfirmPayResponseDTO::from($this->atmosCardClient->payPreApply($preConfirmPayRequestDTO));
+    }
+
+    public function confirmPayment(AtmosConfirmPayRequestDTO $confirmPayRequestDTO): AtmosCreatePayResponseDTO
+    {
+        return AtmosCreatePayResponseDTO::from($this->atmosCardClient->payApplyOfd($confirmPayRequestDTO));
+    }
+
+    public function fundBalance(BalanceFundConfirmDTO $balanceFundConfirmDTO): mixed
+    {
+        $confirmCardResponseDTO = $this->confirmCard(AtmosConfirmCardRequestDTO::from(['transaction_id' => $balanceFundConfirmDTO->transaction_id, 'otp' => $balanceFundConfirmDTO->otp]));
+        if ($confirmCardResponseDTO->result->isSucces()) {
+            $createPayResponseDTO = $this->createPayment(new AtmosCreatePayRequestDTO('Fill balance', $balanceFundConfirmDTO->amount, 'User is going to fill his own balance'));
+            if ($createPayResponseDTO->result->isSucces()) {
+                $preConfirmPayResponseDTO = $this->preConfirmPayment(new AtmosPreConfirmPayRequestDTO($confirmCardResponseDTO->data->card_token, $createPayResponseDTO->transaction_id));
+                if ($preConfirmPayResponseDTO->result->isSucces()) {
+                    $confirmPayResponseDTO = $this->confirmPayment(new AtmosConfirmPayRequestDTO($createPayResponseDTO->transaction_id));
+                    if ($confirmPayResponseDTO->result->isSucces()) {
+                        $balanceFund = new BalanceFund;
+                        $balanceFund->amount = $balanceFundConfirmDTO->amount;
+                        $balanceFund->card_number = $balanceFundConfirmDTO->card_number;
+                        $balanceFund->phone_number = $balanceFundConfirmDTO->phone_number;
+                        $balanceFund->external_transaction_id = $confirmPayResponseDTO->store_transaction->success_trans_id;
+                        $balanceFund->terminal_id = $confirmPayResponseDTO->store_transaction->terminal_id;
+                        if ($balanceFund->saveOrFail()) {
+                            return $balanceFund;
+                        }
+                    }
+                }
+            }
         }
 
-        return false;
+        return [];
     }
 }

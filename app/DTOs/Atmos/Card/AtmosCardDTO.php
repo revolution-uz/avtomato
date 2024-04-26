@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOs\Scoring\Card\Atmos;
+namespace App\DTOs\Atmos\Card;
 
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 use OpenApi\Attributes as OA;

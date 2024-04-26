@@ -1,19 +1,20 @@
 <?php
 
-namespace App\DTOs\Scoring\Card\Atmos;
+namespace App\DTOs\Atmos\Card;
 
+use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'AtmosConfirmUserCardDTO',
-    title: 'PlumTech response to create card request',
+    schema: 'AtmosConfirmCardResponseDTO',
+    title: 'Atmos confirm card response DTO',
     properties: [
         new OA\Property(property: 'result', ref: '#/components/schemas/AtmosResultDTO'),
         new OA\Property(property: 'data', ref: '#/components/schemas/AtmosCardDTO'),
     ],
 )]
-class AtmosConfirmUserCardDTO extends BaseScoringRequest
+class AtmosConfirmCardResponseDTO extends BaseScoringRequest
 {
     public function __construct(
         public AtmosResultDTO $result,

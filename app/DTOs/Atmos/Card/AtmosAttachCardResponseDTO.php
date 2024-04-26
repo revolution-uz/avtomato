@@ -1,7 +1,8 @@
 <?php
 
-namespace App\DTOs\Scoring\Card\Atmos;
+namespace App\DTOs\Atmos\Card;
 
+use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 use OpenApi\Attributes as OA;
 
@@ -14,7 +15,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'phone', type: 'string', example: '+998941234567'),
     ],
 )]
-class AtmosCreateUserCardDTO extends BaseScoringRequest
+class AtmosAttachCardResponseDTO extends BaseScoringRequest
 {
     public function __construct(
         public AtmosResultDTO $result,
