@@ -178,6 +178,8 @@ class CustomerControllerTest extends TestCase
         $customer = Customer::factory()->create();
         $card = Card::factory()->create([
             'customer_id' => $customer->id,
+            'external_id' => null,
+            'client_code' => ClientCodeEnum::ATMOS_CARD_PAY->value,
         ]);
 
         $admin = $this->createAdminUser();
