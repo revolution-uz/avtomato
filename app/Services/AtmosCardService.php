@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Clients\AtmosCardClient;
-use App\DTOs\Management\ConfirmPaymentFundBalanceResponseDTO;
-use App\DTOs\Management\FundBalanceResponseDTO;
 use App\DTOs\Scoring\Card\Atmos\AtmosConfirmUserCardDTO;
 use App\DTOs\Scoring\Card\Atmos\AtmosCreateUserCardDTO;
 use App\Models\Company\Card;
@@ -14,8 +12,7 @@ class AtmosCardService
 {
     public function __construct(
         private readonly AtmosCardClient $atmosCardClient
-    )
-    {
+    ) {
     }
 
     public function attachCard(Card $card)
