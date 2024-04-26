@@ -52,7 +52,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::CARD_BIND_INIT, $data)->json('result', []);
+        return $this->makeRequest(self::CARD_BIND_INIT, $data)->json();
     }
 
     public function confirmCard(int $transaction_id, string $otp): mixed
@@ -63,7 +63,7 @@ class AtmosCardClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::CARD_BIND_CONFIRM, $data)->json('result', []);
+        return $this->makeRequest(self::CARD_BIND_CONFIRM, $data)->json();
     }
 
     public function getCardInfo(string $token): mixed

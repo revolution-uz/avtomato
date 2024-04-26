@@ -34,7 +34,7 @@ class PlumService
         $plum_id = $_card['id'] ?? null;
         $owner = $_card['owner'] ?? null;
         if ($plum_id) {
-            $card->plum_id = $plum_id;
+            $card->external_id = $plum_id;
             $card->owner = $owner;
 
             return $card->saveOrFail();
