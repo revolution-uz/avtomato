@@ -2,7 +2,6 @@
 
 namespace App\Services\User;
 
-use App\Enums\External\PlumTransactionResponseCodes;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Models\Company\BalanceCharge;
@@ -42,8 +41,6 @@ class BalanceService
 
     public function getBalance(): int
     {
-        return BalanceFund::query()
-            ->where('plum_response_code', PlumTransactionResponseCodes::SUCCESS)
-            ->sum('amount') - BalanceCharge::query()->sum('amount');
+        return BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
     }
 }
