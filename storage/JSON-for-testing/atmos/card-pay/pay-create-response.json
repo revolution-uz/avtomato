@@ -1,0 +1,37 @@
+{
+  "result": {
+    "code": "OK",
+    "description": "Нет ошибок"
+  },
+  "transaction_id": 111111,
+  "store_transaction": {
+    "success_trans_id": null,
+    "trans_id": 222222,
+    "store": {
+      "id": 0,
+      "name": "Store name",
+      "desc": "",
+      "logo": null,
+      "ga_id": null
+    },
+    "terminal_id": "00000000",
+    "account": "000000000",
+    "amount": 5000000,
+    "confirmed": false,
+    "prepay_time": null,
+    "confirm_time": null,
+    "label": {
+      "type_id": 64,
+      "label_ru": "Номер инвойса",
+      "label_uz": "Invoys raqami",
+      "label_en": "Number of Invoice"
+    },
+    "details": null,
+    "commission_value": "0",
+    "commission_type": "0",
+    "total": 5000000,
+    "card_id": null,
+    "status_code": null,
+    "status_message": null
+  }
+}

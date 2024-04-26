@@ -112,6 +112,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         // subscriptions
         Route::prefix('subscription')->controller(SubscriptionController::class)->group(function () {
+            Route::get('/', 'index')->name('subscription.index');
             Route::post('fund-balance', 'fundBalance')->name('subscription.fund-balance');
             Route::post('confirm-payment', 'confirmPayment')->name('subscription.confirm-payment');
         });
