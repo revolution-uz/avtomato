@@ -32,4 +32,6 @@ enum FeatureEnum: string
     case SCORING_HUMO = 'scoring_humo';
     case SCORING_UZCARD = 'scoring_uzcard';
     case ACTIVITY_LOG = 'activity_log';
+    case ATMOS_CARD_PAY = 'atmos_card_pay';
+    case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
 }

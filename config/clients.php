@@ -35,6 +35,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Atmos Client
+    |--------------------------------------------------------------------------
+    */
+    'atmos' => [
+        'card' => [
+            'base_url' => 'https://partner.atmos.uz',
+            'store_id' => env('ATMOS_CARD_STORE_ID'),
+            'username' => env('ATMOS_CARD_USERNAME', ''),
+            'password' => env('ATMOS_CARD_PASSWORD', ''),
+        ],
+        'pinfl' => [
+            'base_url' => 'https://apigw.atmos.uz',
+            'username' => env('ATMOS_PINFL_USERNAME', ''),
+            'password' => env('ATMOS_PINFL_PASSWORD', ''),
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Sms Fly Client
     |--------------------------------------------------------------------------
     */

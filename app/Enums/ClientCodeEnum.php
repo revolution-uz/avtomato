@@ -9,5 +9,7 @@ enum ClientCodeEnum: int
     case ONLINE_MAHALLA = 2;
     case PLUM = 3;
     case SMS_FLY = 4;
+    case ATMOS_CARD_PAY = 5;
+    case ATMOS_PINFL_PAY = 6;
 
 }

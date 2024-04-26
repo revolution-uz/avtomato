@@ -20,7 +20,6 @@ class BaseFeatureSeeder extends Seeder
                 'is_default_active' => ModuleEnum::getModuleForFeature($case) === ModuleEnum::cases(),
                 'original_amount' => 0,
             ]);
-
             $feature->modules()->sync(
                 BaseModule::query()->whereIn('name', ModuleEnum::getModuleForFeature($case))->pluck('id')
             );
