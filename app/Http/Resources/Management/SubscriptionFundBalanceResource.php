@@ -10,11 +10,10 @@ use OpenApi\Attributes as OA;
     schema: 'SubscriptionFundBalanceResource',
     title: 'SubscriptionFundBalanceResource',
     properties: [
-        new OA\Property(property: 'session_id', type: 'int', example: '178'),
-        new OA\Property(property: 'otpSentPhone', type: 'string', example: '+998999661999'),
+        new OA\Property(property: 'transaction_id', type: 'int', example: '178'),
+        new OA\Property(property: 'phone', type: 'string', example: '+998999661999'),
     ],
 )]
-
 class SubscriptionFundBalanceResource extends JsonResource
 {
     /**
@@ -25,8 +24,8 @@ class SubscriptionFundBalanceResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'session_id' => $this->resource->session,
-            'otpSentPhone' => $this->resource->otpSentPhone,
+            'transaction_id' => $this->resource->transaction_id,
+            'phone' => $this->resource->phone,
         ];
     }
 }

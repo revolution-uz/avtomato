@@ -2,17 +2,17 @@
 
 namespace App\Clients;
 
+use App\DTOs\Atmos\AtmosCredentialsDTO;
 use App\DTOs\HttpRequestLogDTO;
 use App\Models\Company\Feature;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
 abstract class BaseAtmosClient extends BaseClient
 {
-    protected string $baseUrl;
-    protected string $token;
-    protected int $store_id;
+    protected ?string $baseUrl;
+    protected ?string $token;
+    protected ?int $store_id;
 
     public function getToken($username, $password)
     {
@@ -35,19 +35,17 @@ abstract class BaseAtmosClient extends BaseClient
 
     protected function activateToken(Feature $feature): void
     {
-        $username = $feature->data['username'] ?? null;
-        $password = $feature->data['password'] ?? null;
-        $expires_in = $feature->data['expires_in'] ?? 0;
-        $this->token = $feature->data['token'] ?? null;
-        $this->store_id = $feature->data['store_is'] ?? null;
-        if ($expires_in > Carbon::now() && $this->token) {
+        $credentials = new AtmosCredentialsDTO($feature->data['username'] ?? null, $feature->data['password'] ?? null, $feature->data['store_id'] ?? null, $feature->data['expires_in'] ?? null, $feature->data['access_token'] ?? null);
+        if ($credentials->expires_in > time()) {
             return;
         }
-        $response = $this->getToken($username, $password);
-        $this->token = $response['access_token'] ?? null;
-        $expires_in = ($response['expires_in'] ?? 0) + Carbon::now();
-        $feature->data['token'] = $this->token;
-        $feature->data['expires_in'] = $expires_in;
+        $response = $this->getToken($credentials->username, $credentials->password);
+        $credentials->access_token = $response['access_token'] ?? null;
+        $credentials->expires_in = $response['expires_in'] ?? 0;
+        $this->store_id = $credentials->store_id;
+        $this->token = $credentials->access_token;
+        $credentials->expires_in += time();
+        $feature->data = $credentials->toArray();
         $feature->saveOrFail();
     }
 
@@ -66,17 +64,5 @@ abstract class BaseAtmosClient extends BaseClient
         ));
 
         return $response;
-    }
-
-    protected function logAtmosRequest($path, $response, $data): void
-    {
-        parent::logRequest(new HttpRequestLogDTO(
-            method: 'POST',
-            url: $this->baseUrl . $path,
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
     }
 }

@@ -177,6 +177,7 @@ class CustomerControllerTest extends TestCase
         $customer = Customer::factory()->create();
         $card = Card::factory()->create([
             'customer_id' => $customer->id,
+            'external_id' => null,
         ]);
 
         $admin = $this->createAdminUser();
@@ -195,7 +196,7 @@ class CustomerControllerTest extends TestCase
         $customer = Customer::factory()->create();
         $card = Card::factory()->create([
             'customer_id' => $customer->id,
-            'plum_id' => null,
+            'external_id' => null,
         ]);
 
         $card_id = '1234567890';
@@ -211,7 +212,7 @@ class CustomerControllerTest extends TestCase
         $response = $this->actingAs($admin)->postJson(route('customer.confirm-card', ['id' => $customer->id]), $request);
 
         $response->assertSuccessful();
-        $this->assertDatabaseHas('cards', ['plum_id' => $card_id]);
+        $this->assertDatabaseHas('cards', ['external_id' => $card_id]);
     }
 
     /**

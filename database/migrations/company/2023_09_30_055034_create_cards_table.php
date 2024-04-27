@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->tinyInteger('status');
             $table->decimal('balance', 12)->default(0);
-            $table->unsignedBigInteger('plum_id')->nullable();
+            $table->string('external_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

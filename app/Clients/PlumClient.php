@@ -147,8 +147,6 @@ class PlumClient extends BaseClient
 
             BalanceFund::query()->create([
                 'amount' => $fundBalance['amount'],
-                'plum_session' => $fundBalance['session'],
-                'extraId' => $extraId,
                 'phone_number' => $fundBalance['otpSentPhone'],
                 'plum_transaction_id' => $fundBalance['transactionId'],
             ]);
@@ -171,8 +169,6 @@ class PlumClient extends BaseClient
             BalanceFund::query()->where('plum_transaction_id', $confirmPayment['transactionId'])
                 ->firstOrFail()
                 ->update([
-                    'plum_utrno' => $confirmPayment['utrno'],
-                    'plum_response_code' => $confirmPayment['responseCode'],
                     'terminal_id' => $confirmPayment['terminalId'],
                     'merchant_id' => $confirmPayment['merchantId'],
                     'card_number' => $confirmPayment['cardNumber'],

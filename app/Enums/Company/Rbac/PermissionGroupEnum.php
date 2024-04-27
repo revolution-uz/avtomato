@@ -9,6 +9,7 @@ enum PermissionGroupEnum: string
     use EnumMethods;
 
     case PROFILE_EDIT = 'profile_edit';
+    case BALANCE_FUND = 'balance_fund';
     case ADMIN_MANAGEMENT = 'admin_management';
     case CUSTOMER_MANAGEMENT = 'customer_management';
     case GET_STATIC_INFORMATION = 'info_view';
@@ -174,6 +175,13 @@ enum PermissionGroupEnum: string
                 PermissionEnum::PROFILE_DEVICES,
                 PermissionEnum::PROFILE_REVOKE_DEVICE,
                 PermissionEnum::PROFILE_CHANGE_THEME,
+            ],
+            self::BALANCE_FUND => [
+                PermissionEnum::BALANCE_FUND_VIEW_ALL,
+                PermissionEnum::BALANCE_FUND_VIEW,
+                PermissionEnum::BALANCE_FUND_CONFIRM,
+                PermissionEnum::BALANCE_FUND_DELETE,
+                PermissionEnum::BALANCE_FUND_CREATE,
             ],
             self::ACTIVITY_LOG => [
                 PermissionEnum::ACTIVITY_LOG_VIEW_ALL,

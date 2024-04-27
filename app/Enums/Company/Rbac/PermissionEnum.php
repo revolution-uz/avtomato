@@ -22,6 +22,13 @@ enum PermissionEnum: string
     case PROFILE_DEVICES = 'profile_devices';
     case PROFILE_REVOKE_DEVICE = 'profile_revoke_device';
 
+    // Manage tariffs
+    case BALANCE_FUND_VIEW_ALL = 'balance_fund_view_all';
+    case BALANCE_FUND_VIEW = 'balance_fund_view';
+    case BALANCE_FUND_DELETE = 'balance_fund_delete';
+    case BALANCE_FUND_CREATE = 'balance_fund_create';
+    case BALANCE_FUND_CONFIRM = 'balance_fund_confirm';
+
     // Manage Admins
     case ADMIN_VIEW_ALL = 'admin_view_all';
     case ADMIN_VIEW = 'admin_view';
@@ -173,6 +180,12 @@ enum PermissionEnum: string
             self::PROFILE_CHANGE_AVATAR,
             self::PROFILE_DEVICES,
             self::PROFILE_REVOKE_DEVICE,
+
+            self::BALANCE_FUND_VIEW_ALL,
+            self::BALANCE_FUND_VIEW,
+            self::BALANCE_FUND_CONFIRM,
+            self::BALANCE_FUND_DELETE,
+            self::BALANCE_FUND_CREATE,
 
             self::ADMIN_VIEW_ALL,
             self::ADMIN_VIEW,
@@ -443,6 +456,13 @@ enum PermissionEnum: string
                 self::PROFILE_REVOKE_DEVICE->value,
                 self::PROFILE_CHANGE_THEME->value,
             ],
+            PermissionGroupEnum::BALANCE_FUND->value => [
+                self::BALANCE_FUND_VIEW_ALL->value,
+                self::BALANCE_FUND_VIEW->value,
+                self::BALANCE_FUND_CONFIRM->value,
+                self::BALANCE_FUND_DELETE->value,
+                self::BALANCE_FUND_CREATE->value,
+            ],
             PermissionGroupEnum::ACTIVITY_LOG->value => [
                 self::ACTIVITY_LOG_VIEW_ALL->value,
                 self::ACTIVITY_LOG_VIEW_OWN->value,
@@ -459,6 +479,12 @@ enum PermissionEnum: string
             self::PROFILE_CHANGE_AVATAR,
             self::PROFILE_DEVICES,
             self::PROFILE_REVOKE_DEVICE => FeatureEnum::PROFILE_EDIT,
+
+            self::BALANCE_FUND_VIEW_ALL,
+            self::BALANCE_FUND_VIEW,
+            self::BALANCE_FUND_CONFIRM,
+            self::BALANCE_FUND_DELETE,
+            self::BALANCE_FUND_CREATE => FeatureEnum::BALANCE_FUND,
 
             self::ADMIN_VIEW_ALL,
             self::ADMIN_VIEW,

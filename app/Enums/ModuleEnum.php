@@ -47,6 +47,7 @@ enum ModuleEnum: string
             FeatureEnum::SCORING_HUMO,
             FeatureEnum::SCORING_UZCARD => [self::SCORING],
             FeatureEnum::PROFILE_EDIT,
+            FeatureEnum::BALANCE_FUND,
             FeatureEnum::THEME_MANAGEMENT,
             FeatureEnum::GET_STATIC_INFORMATION,
             FeatureEnum::ACTIVITY_LOG => self::cases(),

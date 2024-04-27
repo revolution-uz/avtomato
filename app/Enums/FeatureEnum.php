@@ -5,6 +5,7 @@ namespace App\Enums;
 enum FeatureEnum: string
 {
     case PROFILE_EDIT = 'profile_edit';
+    case BALANCE_FUND = 'balance_fund';
     case USER_MANAGEMENT = 'user_management';
     case THEME_MANAGEMENT = 'theme_management';
     case CUSTOMER_MANAGEMENT = 'customer_management';

@@ -25,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $phone
  * @property CardStatusEnum $status
  * @property float $balance
- * @property string $plum_id
+ * @property string $external_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -52,7 +52,7 @@ class Card extends Model
         'phone',
         'status',
         'balance',
-        'plum_id',
+        'external_id',
         'owner',
     ];
 
