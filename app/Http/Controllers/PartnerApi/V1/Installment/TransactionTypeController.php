@@ -48,7 +48,13 @@ class TransactionTypeController extends Controller
             TransactionType::query()
                 ->when(
                     $request->search,
-                    fn (Builder $q) => $q->where('id', $request->search)
+                    fn (Builder $q) => $q->when(
+                        filter_var($request->search, FILTER_VALIDATE_INT),
+                        fn (Builder $q) => $q->where('id', $request->search)
+                    )
+                        ->orWhere('name_uz', 'ilike', "%{$request->search}%")
+                        ->orWhere('name_ru', 'ilike', "%{$request->search}%")
+                        ->orWhere('name_en', 'ilike', "%{$request->search}%")
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
