@@ -9,8 +9,8 @@ use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TransactionController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TransactionTypeController;
 use App\Http\Controllers\PartnerApi\V1\LogController;
+use App\Http\Controllers\PartnerApi\V1\Management\BalanceController;
 use App\Http\Controllers\PartnerApi\V1\Management\BranchController;
-use App\Http\Controllers\PartnerApi\V1\Management\SubscriptionController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\HumoController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmCreditHistoryController;
 use App\Http\Controllers\PartnerApi\V1\Scoring\KatmInpsHistoryController;
@@ -111,10 +111,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         });
 
         // subscriptions
-        Route::prefix('subscription')->controller(SubscriptionController::class)->group(function () {
-            Route::get('/', 'index')->name('subscription.index');
-            Route::post('fund-balance', 'fundBalance')->name('subscription.fund-balance');
-            Route::post('confirm-payment', 'confirmPayment')->name('subscription.confirm-payment');
+        Route::prefix('balance')->controller(BalanceController::class)->group(function () {
+            Route::get('/', 'index')->name('balance.index');
+            Route::post('fill', 'fill')->name('balance.fill');
+            Route::post('confirm-payment', 'confirmPayment')->name('balance.confirm-payment');
         });
     });
 

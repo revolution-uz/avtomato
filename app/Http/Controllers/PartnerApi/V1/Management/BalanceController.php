@@ -24,7 +24,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
-class SubscriptionController extends Controller
+class BalanceController extends Controller
 {
     public function __construct(
         private readonly AtmosCardService $atmosCardService
@@ -32,7 +32,7 @@ class SubscriptionController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/v1/subscription',
+        path: '/api/v1/balance/index',
         description: 'Subscription route',
         tags: ['Subscription'],
         parameters: [
@@ -69,7 +69,7 @@ class SubscriptionController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/subscription/fund-balance',
+        path: '/api/v1/balance/fill',
         description: 'Funding customer balance',
         requestBody: new OA\RequestBody(
             description: 'Funding balance request body',
@@ -82,7 +82,7 @@ class SubscriptionController extends Controller
             new OpenApiDataResponse(resourceName: 'SubscriptionFundBalanceResource'),
         ]
     )]
-    public function fundBalance(BalanceFundRequest $request): SubscriptionFundBalanceResource|SubscriptionFundBalanceErrorResource
+    public function fill(BalanceFundRequest $request): SubscriptionFundBalanceResource|SubscriptionFundBalanceErrorResource
     {
         $response = $this->atmosCardService->attachCard(AtmosAttachCardRequestDTO::from($request->toArray()));
 
@@ -94,7 +94,7 @@ class SubscriptionController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/subscription/confirm-payment',
+        path: '/api/v1/balance/confirm-payment',
         description: 'Confirming payment of funding user balance',
         requestBody: new OA\RequestBody(
             description: 'User payment request body',
