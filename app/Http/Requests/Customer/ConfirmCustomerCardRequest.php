@@ -12,14 +12,13 @@ use OpenApi\Attributes as OA;
     title: 'Request to confirm a card',
     properties: [
         new OA\Property(property: 'card_id', type: 'int', example: '1'),
-        new OA\Property(property: 'session', type: 'int', example: '1'),
+        new OA\Property(property: 'transaction_id', type: 'int', example: '1'),
         new OA\Property(property: 'otp', type: 'string', example: '123456'),
     ],
 )]
-
 /**
  * @property int $card_id
- * @property int $session
+ * @property int $transaction_id
  * @property string $otp
  */
 class ConfirmCustomerCardRequest extends FormRequest
@@ -28,7 +27,7 @@ class ConfirmCustomerCardRequest extends FormRequest
     {
         return [
             'card_id' => 'required|int|exists:cards,id',
-            'session' => 'required|int',
+            'transaction_id' => 'required|int',
             'otp' => 'required|string',
         ];
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Customer;
 
+use App\DTOs\Atmos\Card\AtmosAttachCardRequestDTO;
+use App\DTOs\Atmos\Card\AtmosConfirmCardRequestDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
@@ -27,14 +29,15 @@ use App\Http\Requests\Customer\UpdateCustomerRequest;
 use App\Http\Resources\Customer\AttachCustomerCardResource;
 use App\Http\Resources\Customer\CardResource;
 use App\Http\Resources\Customer\CustomerListItemResource;
+use App\Http\Resources\Customer\ErrorConfirmCardResource;
 use App\Http\Resources\Customer\PassportInfo\CustomerInfoByPassportDataResource;
 use App\Http\Resources\Customer\SingleCustomerResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
+use App\Services\AtmosCardService;
 use App\Services\CustomerService;
-use App\Services\PlumService;
 use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -48,7 +51,7 @@ class CustomerController extends Controller
 {
     public function __construct(
         private readonly PassportInfoService $passportInfoService,
-        private readonly PlumService $plumService,
+        private readonly AtmosCardService $atmosCardService,
         private readonly CustomerService $customerService
     ) {
     }
@@ -234,7 +237,7 @@ class CustomerController extends Controller
         $card->customer_id = $id;
         $card->saveOrFail();
 
-        return AttachCustomerCardResource::make($this->plumService->attachCard($card), new CardResource($card));
+        return AttachCustomerCardResource::make($this->atmosCardService->attachCard(new AtmosAttachCardRequestDTO($card->number, $card->expiry)), new CardResource($card));
     }
 
     #[OA\Post(
@@ -304,18 +307,28 @@ class CustomerController extends Controller
             new OpenApiIdParameter(modelName: 'Customer'),
         ],
         responses: [
-            new OpenApiDataResponse(resourceName: 'CardResource'),
+            new OpenApiDataResponse(resourceName: 'CardResource|ErrorConfirmCardResource'),
         ]
     )]
-    public function confirmCard(int $id, ConfirmCustomerCardRequest $request): CardResource
+    public function confirmCard(int $id, ConfirmCustomerCardRequest $request): CardResource|ErrorConfirmCardResource
     {
         /** @var Card $card */
         $card = Card::query()
             ->where('customer_id', $id)
             ->findOrFail($request->card_id);
-        $this->plumService->confirmCard($card, $request->session, $request->otp);
 
-        return CardResource::make($card);
+        $atmosConfirmCardDto = $this->atmosCardService->confirmCard(AtmosConfirmCardRequestDTO::from($request));
+        if ($atmosConfirmCardDto->result->isSucces()) {
+            $card->external_id = $atmosConfirmCardDto->data->card_token;
+            $card->balance = $atmosConfirmCardDto->data->balance;
+            $card->owner = $atmosConfirmCardDto->data->card_holder;
+            $card->phone = $atmosConfirmCardDto->data->phone;
+            $card->saveOrFail();
+
+            return CardResource::make($card);
+        }
+
+        return ErrorConfirmCardResource::make($atmosConfirmCardDto->result, CardResource::make($card));
     }
 
     #[OA\Post(
