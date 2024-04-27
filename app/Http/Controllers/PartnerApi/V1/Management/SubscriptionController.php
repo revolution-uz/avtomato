@@ -99,7 +99,7 @@ class SubscriptionController extends Controller
         requestBody: new OA\RequestBody(
             description: 'User payment request body',
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/ConfirmSubscriptionPaymentRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/BalanceFundConfirmRequest')
         ),
         tags: ['Subscription'],
 
