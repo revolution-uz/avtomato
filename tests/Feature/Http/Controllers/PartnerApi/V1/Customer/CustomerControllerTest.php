@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Customer;
 use App\Enums\GenderEnum;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
+use Tests\Fakers\AtmosFaker;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
 
@@ -154,12 +155,11 @@ class CustomerControllerTest extends TestCase
     public function attachCard()
     {
         $customer = Customer::factory()->create();
-        PlumFaker::attachUzcard();
+        AtmosFaker::attachCard();
 
         $request = [
             'number' => '1234567890123456',
             'expiry' => '2301',
-            'phone' => '998901234567',
         ];
 
         $admin = $this->createAdminUser();
@@ -200,11 +200,11 @@ class CustomerControllerTest extends TestCase
         ]);
 
         $card_id = '1234567890';
-        PlumFaker::confirmCard($card_id);
+        AtmosFaker::confirmCard();
 
         $request = [
             'card_id' => $card->id,
-            'session' => 12345,
+            'transaction_id' => 12345,
             'otp' => '123456',
         ];
 

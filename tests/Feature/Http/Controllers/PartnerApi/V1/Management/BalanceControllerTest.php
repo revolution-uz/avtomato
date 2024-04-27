@@ -31,7 +31,7 @@ class BalanceControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        AtmosFaker::fakeResponse('https://partner.atmos.uz/bind-card/init', '../JSON-for-testing/atmos/bind-card-init.json', 200);
+        AtmosFaker::attachCard();
 
         $request = [
             'card_number' => 9860082443467252,
@@ -52,7 +52,7 @@ class BalanceControllerTest extends TestCase
     {
         $admin = $this->createAdminUser();
 
-        AtmosFaker::fakeResponse('https://partner.atmos.uz/bind-card/confirm', '../JSON-for-testing/atmos/bind-card-confirm.json', 200);
+        AtmosFaker::confirmCard();
 
         $request = [
             'transaction_id' => 1,
