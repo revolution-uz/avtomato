@@ -102,7 +102,7 @@ class TenancyServiceProvider extends ServiceProvider
     {
         $this->bootEvents();
 
-        TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
+        //TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
         $this->makeTenancyMiddlewareHighestPriority();
     }
 
