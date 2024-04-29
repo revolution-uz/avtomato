@@ -30,7 +30,7 @@ class BalanceControllerTest extends TestCase
     public function fill(): void
     {
         $admin = $this->createAdminUser();
-
+        AtmosFaker::getToken();
         AtmosFaker::attachCard();
 
         $request = [
@@ -51,7 +51,7 @@ class BalanceControllerTest extends TestCase
     public function confirmPayment(): void
     {
         $admin = $this->createAdminUser();
-
+        AtmosFaker::getToken();
         AtmosFaker::confirmCard();
         AtmosFaker::createPayment();
         AtmosFaker::preConfirmPayment();

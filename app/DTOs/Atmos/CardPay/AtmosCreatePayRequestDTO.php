@@ -18,7 +18,7 @@ class AtmosCreatePayRequestDTO extends BaseScoringRequest
 {
     public function __construct(
         public string $account,
-        public string $amount,
+        public int $amount,
         public string $details,
     ) {
     }

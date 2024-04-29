@@ -42,12 +42,12 @@ class AtmosStoreTransactionDTO extends BaseScoringRequest
         public ?int $confirm_time,
         public AtmosLabelDTO $label,
         public ?string $details,
-        public ?string $commission_value,
-        public ?string $commission_type,
-        public ?int $total,
-        public ?int $card_id,
-        public ?int $status_code,
-        public ?string $status_message,
+        public $commission_value = null,
+        public $commission_type = null,
+        public $total = null,
+        public $card_id = null,
+        public $status_code = null,
+        public $status_message = null,
     ) {
     }
 }

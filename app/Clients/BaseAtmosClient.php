@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
 
 abstract class BaseAtmosClient extends BaseClient
 {
+    const GET_TOKEN_PATH = '/token';
+
     protected ?string $baseUrl;
     protected ?string $token;
     protected ?int $store_id;
@@ -19,7 +21,7 @@ abstract class BaseAtmosClient extends BaseClient
         $response = Http::withHeaders([
             'Authorization' => 'Basic ' . base64_encode($username . ':' . $password),
             'Content-Type' => 'application/x-www-form-urlencoded',
-        ])->get($this->baseUrl . '/token?grant_type=client_credentials');
+        ])->get($this->baseUrl . self::GET_TOKEN_PATH . '?grant_type=client_credentials');
 
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',

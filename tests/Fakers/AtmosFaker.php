@@ -9,6 +9,11 @@ class AtmosFaker
 {
     const PARTNER_URL = 'https://partner.atmos.uz';
 
+    public static function getToken()
+    {
+        AtmosFaker::fakeResponse(self::PARTNER_URL . AtmosCardClient::GET_TOKEN_PATH, '../JSON-for-testing/atmos/get-token-response.json', 200);
+    }
+
     public static function attachCard()
     {
         AtmosFaker::fakeResponse(self::PARTNER_URL . AtmosCardClient::CARD_BIND_INIT, '../JSON-for-testing/atmos/card/bind-card-init.json', 200);

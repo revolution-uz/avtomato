@@ -155,6 +155,7 @@ class CustomerControllerTest extends TestCase
     public function attachCard()
     {
         $customer = Customer::factory()->create();
+        AtmosFaker::getToken();
         AtmosFaker::attachCard();
 
         $request = [
@@ -200,6 +201,7 @@ class CustomerControllerTest extends TestCase
         ]);
 
         $card_id = '1234567890';
+        AtmosFaker::getToken();
         AtmosFaker::confirmCard();
 
         $request = [
