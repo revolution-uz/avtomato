@@ -67,6 +67,6 @@ class BalanceControllerTest extends TestCase
 
         $response = $this->actingAs($admin)->postJson(route('balance.confirm-payment'), $request);
 
-        //        $response->assertSuccessful();
+        $response->assertSuccessful();
     }
 }
