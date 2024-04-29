@@ -11,7 +11,9 @@ use Spatie\LaravelData\Data;
     properties: [
         new OA\Property(property: 'transaction_id', type: 'int', example: '153'),
         new OA\Property(property: 'amount', type: 'int', example: '1000000'),
-        new OA\Property(property: 'otpSentPhone', type: 'string', example: '99891*****97'),
+        new OA\Property(property: 'otp', type: 'string', example: '121323'),
+        new OA\Property(property: 'number', type: 'string', example: '8600123456784321'),
+        new OA\Property(property: 'phone', type: 'string', example: '+998991234567'),
     ],
 )]
 class BalanceFundConfirmDTO extends Data
@@ -20,8 +22,8 @@ class BalanceFundConfirmDTO extends Data
         public int $transaction_id,
         public int $amount,
         public string $otp,
-        public string $card_number,
-        public string $phone_number,
+        public string $number,
+        public string $phone,
     ) {
 
     }

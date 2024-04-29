@@ -307,7 +307,8 @@ class CustomerController extends Controller
             new OpenApiIdParameter(modelName: 'Customer'),
         ],
         responses: [
-            new OpenApiDataResponse(resourceName: 'CardResource|ErrorConfirmCardResource'),
+            new OpenApiDataResponse(resourceName: 'CardResource'),
+            new OpenApiDataResponse(resourceName: 'ErrorConfirmCardResource', response: 401),
         ]
     )]
     public function confirmCard(int $id, ConfirmCustomerCardRequest $request): CardResource|ErrorConfirmCardResource
@@ -317,7 +318,7 @@ class CustomerController extends Controller
             ->where('customer_id', $id)
             ->findOrFail($request->card_id);
 
-        $atmosConfirmCardDto = $this->atmosCardService->confirmCard(AtmosConfirmCardRequestDTO::from($request));
+        $atmosConfirmCardDto = $this->atmosCardService->confirmCard(new AtmosConfirmCardRequestDTO($request->transaction_id, $request->otp));
         if ($atmosConfirmCardDto->result->isSucces()) {
             $card->external_id = $atmosConfirmCardDto->data->card_token;
             $card->balance = $atmosConfirmCardDto->data->balance;

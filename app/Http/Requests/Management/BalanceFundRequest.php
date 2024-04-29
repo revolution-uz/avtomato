@@ -11,20 +11,20 @@ use OpenApi\Attributes as OA;
     schema: 'BalanceFundRequest',
     title: 'Request to fund balance in installment',
     properties: [
-        new OA\Property(property: 'card_number', type: 'string', example: '8600312912345678'),
+        new OA\Property(property: 'number', type: 'string', example: '8600312912345678'),
         new OA\Property(property: 'expiry', type: 'string', example: '2407'),
     ],
 )]
 /**
- * @property string cardNumber
- * @property string expireDate
+ * @property string number
+ * @property string expiry
  */
 class BalanceFundRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'card_number' => 'required|string',
+            'number' => 'required|string',
             'expiry' => 'required|string',
         ];
     }

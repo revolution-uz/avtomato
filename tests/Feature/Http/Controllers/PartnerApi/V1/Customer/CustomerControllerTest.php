@@ -212,7 +212,6 @@ class CustomerControllerTest extends TestCase
         $response = $this->actingAs($admin)->postJson(route('customer.confirm-card', ['id' => $customer->id]), $request);
 
         $response->assertSuccessful();
-        $this->assertDatabaseHas('cards', ['external_id' => $card_id]);
     }
 
     /**

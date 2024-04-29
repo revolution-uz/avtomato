@@ -31,23 +31,23 @@ use OpenApi\Attributes as OA;
 class AtmosStoreTransactionDTO extends BaseScoringRequest
 {
     public function __construct(
-        public int $success_trans_id,
-        public int $trans_id,
+        public ?int $success_trans_id,
+        public ?int $trans_id,
         public AtmosStoreDTO $store,
-        public string $terminal_id,
-        public string $account,
-        public int $amount,
-        public bool $confirmed,
-        public int $prepay_time,
-        public int $confirm_time,
+        public ?string $terminal_id,
+        public ?string $account,
+        public ?int $amount,
+        public ?bool $confirmed,
+        public ?int $prepay_time,
+        public ?int $confirm_time,
         public AtmosLabelDTO $label,
-        public string $details,
-        public string $commission_value,
-        public string $commission_type,
-        public int $total,
-        public int $card_id,
-        public int $status_code,
-        public string $status_message,
+        public ?string $details,
+        public ?string $commission_value,
+        public ?string $commission_type,
+        public ?int $total,
+        public ?int $card_id,
+        public ?int $status_code,
+        public ?string $status_message,
     ) {
     }
 }

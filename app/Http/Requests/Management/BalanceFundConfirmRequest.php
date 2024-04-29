@@ -14,8 +14,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'transaction_id', type: 'int', example: '1'),
         new OA\Property(property: 'amount', type: 'int', example: '1'),
         new OA\Property(property: 'otp', type: 'string', example: '123456'),
-        new OA\Property(property: 'card_number', type: 'string', example: '8600123456784321'),
-        new OA\Property(property: 'phone_number', type: 'string', example: '+998991234567'),
+        new OA\Property(property: 'number', type: 'string', example: '8600123456784321'),
+        new OA\Property(property: 'phone', type: 'string', example: '+998991234567'),
     ],
 )]
 /**
@@ -30,8 +30,8 @@ class BalanceFundConfirmRequest extends FormRequest
             'transaction_id' => 'required|int',
             'amount' => 'required|int',
             'otp' => 'required|string',
-            'card_number' => 'required|string',
-            'phone_number' => 'required|string',
+            'number' => 'required|string',
+            'phone' => 'required|string',
         ];
     }
 
