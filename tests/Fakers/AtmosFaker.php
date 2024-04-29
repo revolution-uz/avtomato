@@ -11,38 +11,38 @@ class AtmosFaker
 
     public static function getToken()
     {
-        AtmosFaker::fakeResponse(self::PARTNER_URL . AtmosCardClient::GET_TOKEN_URI, '../JSON-for-testing/atmos/get-token-response.json', 200);
+        self::fakeResponse(AtmosCardClient::GET_TOKEN_URI, '../JSON-for-testing/atmos/get-token-response.json');
     }
 
     public static function attachCard()
     {
-        AtmosFaker::fakeResponse(self::PARTNER_URL . AtmosCardClient::CARD_BIND_INIT, '../JSON-for-testing/atmos/card/bind-card-init.json', 200);
+        self::fakeResponse(AtmosCardClient::CARD_BIND_INIT, '../JSON-for-testing/atmos/card/bind-card-init.json');
     }
 
     public static function confirmCard()
     {
-        self::fakeResponse(self::PARTNER_URL . AtmosCardClient::CARD_BIND_CONFIRM, '../JSON-for-testing/atmos/card/bind-card-confirm.json', 200);
+        self::fakeResponse(AtmosCardClient::CARD_BIND_CONFIRM, '../JSON-for-testing/atmos/card/bind-card-confirm.json');
     }
 
     public static function createPayment()
     {
-        self::fakeResponse(self::PARTNER_URL . AtmosCardClient::PAYMENT_CREATE, '../JSON-for-testing/atmos/card-pay/pay-create-response.json', 200);
+        self::fakeResponse(AtmosCardClient::PAYMENT_CREATE, '../JSON-for-testing/atmos/card-pay/pay-create-response.json');
     }
 
     public static function preConfirmPayment()
     {
-        self::fakeResponse(self::PARTNER_URL . AtmosCardClient::PAYMENT_PRE_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-pre-confirm-response.json', 200);
+        self::fakeResponse(AtmosCardClient::PAYMENT_PRE_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-pre-confirm-response.json');
     }
 
     public static function confirmPayment()
     {
-        self::fakeResponse(self::PARTNER_URL . AtmosCardClient::PAYMENT_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-confirm-response.json', 200);
+        self::fakeResponse(AtmosCardClient::PAYMENT_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-confirm-response.json');
     }
 
-    public static function fakeResponse(string $url, string $jsonPath, $status = 200): void
+    public static function fakeResponse(string $path, string $jsonPath, $status = 200): void
     {
         Http::fake([
-            $url => Http::response(json_decode(file_get_contents(storage_path($jsonPath)), true), $status),
+            self::PARTNER_URL . $path => Http::response(json_decode(file_get_contents(storage_path($jsonPath)), true), $status),
         ]);
     }
 }

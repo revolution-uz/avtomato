@@ -30,9 +30,6 @@ class RbacTest extends TestCase
 
         /** @var RouteCollection $routes */
         foreach ($routes->getRoutes() as $route) {
-            if (str_contains($route->uri, 'subscription')) {
-                continue;
-            }
             if (str_starts_with($route->uri, 'api/v1') && ! in_array($route->uri, $skip_routes, true)) {
 
                 $parameters = [];
