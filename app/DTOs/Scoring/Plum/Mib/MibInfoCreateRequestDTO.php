@@ -10,6 +10,8 @@ class MibInfoCreateRequestDTO extends BaseScoringRequest
         public string $pinfl,
         public string $phone,
     ) {
-        $this->phone = '+' . $this->phone;
+        if (! str_contains($this->phone, '+')) {
+            $this->phone = '+' . $this->phone;
+        }
     }
 }
