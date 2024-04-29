@@ -41,6 +41,11 @@ abstract class BaseAtmosClient extends BaseClient
             return;
         }
         $credentials = new AtmosCredentialsDTO($feature->data['username'] ?? null, $feature->data['password'] ?? null, $feature->data['store_id'] ?? null, $feature->data['expires_in'] ?? null, $feature->data['access_token'] ?? null);
+
+        if (! $credentials->username) {
+            return;
+        }
+
         if ($credentials->expires_in > time()) {
             return;
         }
