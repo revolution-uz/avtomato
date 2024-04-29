@@ -11,7 +11,7 @@ class AtmosFaker
 
     public static function getToken()
     {
-        AtmosFaker::fakeResponse(self::PARTNER_URL . AtmosCardClient::GET_TOKEN_PATH, '../JSON-for-testing/atmos/get-token-response.json', 200);
+        AtmosFaker::fakeResponse(self::PARTNER_URL . AtmosCardClient::GET_TOKEN_URI, '../JSON-for-testing/atmos/get-token-response.json', 200);
     }
 
     public static function attachCard()
