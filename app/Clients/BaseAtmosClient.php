@@ -13,8 +13,8 @@ abstract class BaseAtmosClient extends BaseClient
     const GET_TOKEN_URI = '/token?grant_type=client_credentials';
 
     protected ?string $baseUrl;
-    protected ?string $token;
-    protected ?int $store_id;
+    protected ?string $token = null;
+    protected ?int $store_id = null;
 
     public function getToken($username, $password)
     {
