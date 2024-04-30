@@ -6,7 +6,7 @@
   "card_list": [
     {
       "card_id": 1579076,
-      "card_token": "<card-token>",
+      "card_token": "card-token",
       "pan": "986009******1840",
       "expiry": "2505"
     }

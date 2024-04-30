@@ -10,20 +10,22 @@ use Illuminate\Support\Facades\Http;
 
 abstract class BaseAtmosClient extends BaseClient
 {
+    const GET_TOKEN_URI = '/token?grant_type=client_credentials';
+
     protected ?string $baseUrl;
-    protected ?string $token;
-    protected ?int $store_id;
+    protected ?string $token = null;
+    protected ?int $store_id = null;
 
     public function getToken($username, $password)
     {
         $response = Http::withHeaders([
             'Authorization' => 'Basic ' . base64_encode($username . ':' . $password),
             'Content-Type' => 'application/x-www-form-urlencoded',
-        ])->get($this->baseUrl . '/token?grant_type=client_credentials');
+        ])->get($this->baseUrl . self::GET_TOKEN_URI);
 
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',
-            url: $this->baseUrl . '/token?grant_type=client_credentials',
+            url: $this->baseUrl . self::GET_TOKEN_URI,
             status: $response->status(),
             response: $response->body(),
             duration: $response->transferStats?->getTransferTime(),
@@ -35,7 +37,15 @@ abstract class BaseAtmosClient extends BaseClient
 
     protected function activateToken(Feature $feature): void
     {
+        if (! $feature->is_active) {
+            return;
+        }
         $credentials = new AtmosCredentialsDTO($feature->data['username'] ?? null, $feature->data['password'] ?? null, $feature->data['store_id'] ?? null, $feature->data['expires_in'] ?? null, $feature->data['access_token'] ?? null);
+
+        if (! $credentials->username) {
+            return;
+        }
+
         if ($credentials->expires_in > time()) {
             return;
         }

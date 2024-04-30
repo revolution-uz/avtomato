@@ -10,6 +10,6 @@
     "card_holder": "TEST",
     "balance": 1000000000,
     "phone": "998989999999",
-    "card_token": "<card-token>"
+    "card_token": "card-token"
   }
 }

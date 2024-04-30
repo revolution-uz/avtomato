@@ -59,8 +59,8 @@ class AtmosCardService
                     if ($confirmPayResponseDTO->result->isSucces()) {
                         $balanceFund = new BalanceFund;
                         $balanceFund->amount = $balanceFundConfirmDTO->amount;
-                        $balanceFund->card_number = $balanceFundConfirmDTO->card_number;
-                        $balanceFund->phone_number = $balanceFundConfirmDTO->phone_number;
+                        $balanceFund->card_number = $balanceFundConfirmDTO->number;
+                        $balanceFund->phone_number = $balanceFundConfirmDTO->phone;
                         $balanceFund->external_transaction_id = $confirmPayResponseDTO->store_transaction->success_trans_id;
                         $balanceFund->terminal_id = $confirmPayResponseDTO->store_transaction->terminal_id;
                         if ($balanceFund->saveOrFail()) {
@@ -71,6 +71,6 @@ class AtmosCardService
             }
         }
 
-        return [];
+        return null;
     }
 }

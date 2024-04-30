@@ -5,7 +5,7 @@
   },
   "transaction_id": 111111,
   "store_transaction": {
-    "success_trans_id": null,
+    "success_trans_id": 1,
     "trans_id": 222222,
     "store": {
       "id": 0,

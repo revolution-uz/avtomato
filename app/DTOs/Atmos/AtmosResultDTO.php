@@ -16,8 +16,8 @@ use OpenApi\Attributes as OA;
 class AtmosResultDTO extends BaseScoringRequest
 {
     public function __construct(
-        public string $code,
-        public string $description,
+        public ?string $code,
+        public ?string $description,
     ) {
     }
 

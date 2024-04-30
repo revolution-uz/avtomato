@@ -7,14 +7,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'SubscriptionFundBalanceResource',
-    title: 'SubscriptionFundBalanceResource',
+    schema: 'BalanceFillingResource',
+    title: 'BalanceFillingResource',
     properties: [
         new OA\Property(property: 'transaction_id', type: 'int', example: '178'),
         new OA\Property(property: 'phone', type: 'string', example: '+998999661999'),
     ],
 )]
-class SubscriptionFundBalanceResource extends JsonResource
+class BalanceFillingResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

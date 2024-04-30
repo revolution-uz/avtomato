@@ -7,13 +7,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'SubscriptionFundBalanceErrorResource',
-    title: 'SubscriptionFundBalanceErrorResource',
+    schema: 'BalanceFillingErrorResource',
+    title: 'BalanceFillingErrorResource',
     properties: [
         new OA\Property(property: 'message', type: 'string', example: 'Something went wrong'),
     ],
 )]
-class SubscriptionFundBalanceErrorResource extends JsonResource
+class BalanceFillingErrorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

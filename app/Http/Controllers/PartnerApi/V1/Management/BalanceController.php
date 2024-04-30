@@ -14,17 +14,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Management\BalanceFundConfirmRequest;
 use App\Http\Requests\Management\BalanceFundFilterRequest;
 use App\Http\Requests\Management\BalanceFundRequest;
+use App\Http\Resources\Management\BalanceFillingErrorResource;
+use App\Http\Resources\Management\BalanceFillingResource;
 use App\Http\Resources\Management\BalanceFundResource;
-use App\Http\Resources\Management\SubscriptionFundBalanceErrorResource;
-use App\Http\Resources\Management\SubscriptionFundBalanceResource;
 use App\Models\Company\BalanceFund;
 use App\Services\AtmosCardService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
+use Spatie\FlareClient\Http\Exceptions\BadResponse;
 
-class SubscriptionController extends Controller
+class BalanceController extends Controller
 {
     public function __construct(
         private readonly AtmosCardService $atmosCardService
@@ -32,7 +33,7 @@ class SubscriptionController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/v1/subscription',
+        path: '/api/v1/balance/index',
         description: 'Subscription route',
         tags: ['Subscription'],
         parameters: [
@@ -69,7 +70,7 @@ class SubscriptionController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/subscription/fund-balance',
+        path: '/api/v1/balance/fill',
         description: 'Funding customer balance',
         requestBody: new OA\RequestBody(
             description: 'Funding balance request body',
@@ -79,22 +80,23 @@ class SubscriptionController extends Controller
         tags: ['Subscription'],
 
         responses: [
-            new OpenApiDataResponse(resourceName: 'SubscriptionFundBalanceResource'),
+            new OpenApiDataResponse(resourceName: 'BalanceFillingResource'),
+            new OpenApiDataResponse(resourceName: 'BalanceFillingErrorResource', response: 401),
         ]
     )]
-    public function fundBalance(BalanceFundRequest $request): SubscriptionFundBalanceResource|SubscriptionFundBalanceErrorResource
+    public function fill(BalanceFundRequest $request): BalanceFillingResource|BalanceFillingErrorResource
     {
-        $response = $this->atmosCardService->attachCard(AtmosAttachCardRequestDTO::from($request->toArray()));
+        $response = $this->atmosCardService->attachCard(new AtmosAttachCardRequestDTO($request->number, $request->expiry));
 
         if ($response->result->isSucces()) {
-            return new SubscriptionFundBalanceResource($response);
+            return new BalanceFillingResource($response);
         }
 
-        return new SubscriptionFundBalanceErrorResource($response);
+        return new BalanceFillingErrorResource($response);
     }
 
     #[OA\Post(
-        path: '/api/v1/subscription/confirm-payment',
+        path: '/api/v1/balance/confirm-payment',
         description: 'Confirming payment of funding user balance',
         requestBody: new OA\RequestBody(
             description: 'User payment request body',
@@ -104,12 +106,14 @@ class SubscriptionController extends Controller
         tags: ['Subscription'],
 
         responses: [
-            new OpenApiDataResponse(resourceName: 'SubscriptionConfirmPaymentResource'),
+            new OpenApiDataResponse(resourceName: 'BalanceFundResource'),
         ]
     )]
-    public function confirmPayment(BalanceFundConfirmRequest $request): BalanceFundResource
+    public function confirmPayment(BalanceFundConfirmRequest $request): BadResponse|BalanceFundResource
     {
 
-        return new BalanceFundResource($this->atmosCardService->fundBalance(BalanceFundConfirmDTO::from($request->toArray())));
+        $result = $this->atmosCardService->fundBalance(BalanceFundConfirmDTO::from($request->toArray()));
+
+        return $result != null ? new BalanceFundResource($result) : new BadResponse('Error on confirming payment');
     }
 }
