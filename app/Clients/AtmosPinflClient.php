@@ -2,9 +2,13 @@
 
 namespace App\Clients;
 
+use App\DTOs\Atmos\Transction\AtmosTransactionCancelResponseDTO;
+use App\DTOs\Atmos\Transction\AtmosTransactionCreateResponseDTO;
+use App\DTOs\Atmos\Transction\AtmosTransactionInfoResponseDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
-use App\Models\Company\Feature;
+use App\Exceptions\AtmosException;
+use Throwable;
 
 class AtmosPinflClient extends BaseAtmosClient
 {
@@ -13,11 +17,14 @@ class AtmosPinflClient extends BaseAtmosClient
     const PAYMENT_CHECK = '/ppa/transaction/check';
     const PAYMENT_CANCEL = '/ppa/transaction/cancel';
 
+    /**
+     * @throws Throwable
+     */
     public function __construct()
     {
         $this->baseUrl = config('clients.atmos.pinfl.base_url');
-        $this->activateToken(Feature::findByName(FeatureEnum::ATMOS_PINFL_PAY->value));
         $this->channel = 'atmos-pinfl-client';
+        $this->featureName = FeatureEnum::ATMOS_PINFL_PAY;
     }
 
     public function getClientCode(): ClientCodeEnum
@@ -29,12 +36,15 @@ class AtmosPinflClient extends BaseAtmosClient
     {
         $username = config('clients.atmos.pinfl.username');
         $password = config('clients.atmos.pinfl.password');
-        $response = $this->getToken($username, $password);
-        $this->token = $response['access_token'] ?? null;
+        $response = $this->getOrRefreshToken($username, $password);
+        $this->token = $response->access_token;
     }
 
-    /**
+    /*
      * ------------- PINFL Payment module begin --------------
+     */
+    /**
+     * @throws AtmosException
      */
     public function payWithPinfl(string $ext_id, string $first_name, string $last_name, string $middle_name, string $pinfl, string $passer, string $pasnum, string $contract_number, int $amount): mixed
     {
@@ -51,11 +61,16 @@ class AtmosPinflClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::PAYMENT_CREATE, $data)->json('payload', []);
+        $res = $this->makeRequest(self::PAYMENT_CREATE, $data);
+
+        return AtmosTransactionCreateResponseDTO::from($res['payload']);
 
     }
 
-    public function payConfirmWithPinfl(string $ext_id, int $transaction_id): mixed
+    /**
+     * @throws AtmosException
+     */
+    public function payConfirmWithPinfl(string $ext_id, int $transaction_id): AtmosTransactionInfoResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,
@@ -63,10 +78,15 @@ class AtmosPinflClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::PAYMENT_CONFIRM, $data)->json('payload', []);
+        $res = $this->makeRequest(self::PAYMENT_CONFIRM, $data);
+
+        return AtmosTransactionInfoResponseDTO::from($res['payload']);
     }
 
-    public function payCheckWithPinfl(string $ext_id, string $pinfl, string $passer, string $pasnum, string $contract_number, int $amount): mixed
+    /**
+     * @throws AtmosException
+     */
+    public function payCheckWithPinfl(string $ext_id, string $pinfl, string $passer, string $pasnum, string $contract_number, int $amount): AtmosTransactionInfoResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,
@@ -78,10 +98,15 @@ class AtmosPinflClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::PAYMENT_CHECK, $data)->json('payload', []);
+        $res = $this->makeRequest(self::PAYMENT_CHECK, $data);
+
+        return AtmosTransactionInfoResponseDTO::from($res['payload']);
     }
 
-    public function payCancelWithPinfl(string $ext_id, int $transaction_id): mixed
+    /**
+     * @throws AtmosException
+     */
+    public function payCancelWithPinfl(string $ext_id, int $transaction_id): AtmosTransactionCancelResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,
@@ -89,9 +114,11 @@ class AtmosPinflClient extends BaseAtmosClient
             'lang' => app()->getLocale(),
         ];
 
-        return $this->makeRequest(self::PAYMENT_CANCEL, $data)->json('payload', []);
+        $res = $this->makeRequest(self::PAYMENT_CANCEL, $data);
+
+        return AtmosTransactionCancelResponseDTO::from($res['payload']);
     }
-    /**
+    /*
      * ------------- PINFL Payment module end --------------
      */
 }

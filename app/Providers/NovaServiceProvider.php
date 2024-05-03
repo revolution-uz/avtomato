@@ -84,6 +84,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
             if ($admin->role === AdminRoleEnum::SUPER_ADMIN) {
                 $menu->append([
+                    MenuItem::externalLink(trans('Swagger API Docs'), route('l5-swagger.default.api'))->openInNewTab(),
                     MenuItem::link('Horizon dashboard', '/horizon'),
                     MenuItem::externalLink('Log viewer', '/nova/log-viewer')->openInNewTab(),
                 ]

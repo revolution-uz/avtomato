@@ -5,10 +5,7 @@ namespace App\Http\Resources\Customer;
 use App\Enums\GenderEnum;
 use App\Http\Resources\Common\AddressResource;
 use App\Http\Resources\Common\PhoneResource;
-use App\Models\Company\Address;
-use App\Models\Company\Card;
 use App\Models\Company\Customer;
-use App\Models\Company\Phone;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
@@ -65,9 +62,9 @@ class SingleCustomerResource extends JsonResource
             'gender' => $this->resource->gender,
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
-            'cards' => $this->resource->cards->map(fn (Card $card) => new CardResource($card)),
-            'phones' => $this->resource->phones->map(fn (Phone $phone) => new PhoneResource($phone)),
-            'addresses' => $this->resource->addresses->map(fn (Address $address) => new AddressResource($address)),
+            'cards' => CardResource::collection($this->resource->cards),
+            'phones' => PhoneResource::collection($this->resource->phones),
+            'addresses' => AddressResource::collection($this->resource->addresses),
         ];
     }
 }

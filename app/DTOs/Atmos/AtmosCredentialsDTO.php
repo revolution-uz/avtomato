@@ -24,6 +24,7 @@ class AtmosCredentialsDTO extends BaseScoringRequest
         public ?int $store_id,
         public ?int $expires_in,
         public ?string $access_token,
+        public ?string $token_type = null
     ) {
     }
 }

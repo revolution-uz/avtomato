@@ -7,6 +7,7 @@ use App\Enums\Company\InstallmentTypeEnum;
 use App\Http\Resources\AttachmentResource;
 use App\Http\Resources\Customer\CardResource;
 use App\Http\Resources\Customer\CustomerListItemResource;
+use App\Http\Resources\Customer\SingleCustomerResource;
 use App\Http\Resources\Management\BranchResource;
 use App\Models\Company\Installment;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class InstallmentResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'customer_id' => $this->resource->customer_id,
-            'customer' => new CustomerListItemResource($this->resource->customer),
+            'customer' => new SingleCustomerResource($this->resource->customer),
             'graphs' => InstallmentGraphResource::collection($this->resource->graphs),
             'cards' => CardResource::collection($this->resource->cards),
             'guarantors' => CustomerListItemResource::collection($this->resource->guarantors),
