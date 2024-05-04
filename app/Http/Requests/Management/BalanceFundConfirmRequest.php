@@ -9,7 +9,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Schema(
     schema: 'BalanceFundConfirmRequest',
-    title: 'Request to confirm subscription payment',
+    title: 'Request to confirm balance fund payment',
     properties: [
         new OA\Property(property: 'transaction_id', type: 'int', example: '1'),
         new OA\Property(property: 'amount', type: 'int', example: '1'),

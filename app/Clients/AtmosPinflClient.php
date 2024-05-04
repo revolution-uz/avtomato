@@ -32,12 +32,11 @@ class AtmosPinflClient extends BaseAtmosClient
         return ClientCodeEnum::ATMOS_PINFL_PAY;
     }
 
-    public function setRevolutionToken(): void
+    public function setRevolutionCredentials(): void
     {
-        $username = config('clients.atmos.pinfl.username');
-        $password = config('clients.atmos.pinfl.password');
-        $response = $this->getOrRefreshToken($username, $password);
-        $this->token = $response->access_token;
+        $this->isFeature = false;
+        $this->username = config('clients.atmos.pinfl.username');
+        $this->password = config('clients.atmos.pinfl.password');
     }
 
     /*
