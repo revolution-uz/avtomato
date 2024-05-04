@@ -16,7 +16,11 @@ abstract class BaseAtmosClient extends BaseClient
     const GET_TOKEN_URI = '/token';
 
     protected ?FeatureEnum $featureName = null;
+    protected bool $isFeature = true;
     protected ?string $baseUrl;
+
+    protected ?string $username = null;
+    protected ?string $password = null;
     protected ?string $token = null;
     protected ?int $store_id = null;
 
@@ -46,10 +50,17 @@ abstract class BaseAtmosClient extends BaseClient
         return AtmosAuthTokenDTO::from($response->json());
     }
 
+    protected function activateRevolutionToken()
+    {
+        $response = $this->getOrRefreshToken($this->username, $this->password);
+        $this->token = $response->token_type . ' ' . $response->access_token;
+
+    }
+
     /**
      * @throws Throwable
      */
-    protected function activateToken(): void
+    protected function activateFeatureToken(): void
     {
         $feature = Feature::findByName($this->featureName?->value);
 
@@ -121,5 +132,14 @@ abstract class BaseAtmosClient extends BaseClient
         ));
 
         return $response->json();
+    }
+
+    private function activateToken()
+    {
+        if ($this->isFeature) {
+            $this->activateFeatureToken();
+        } else {
+            $this->activateRevolutionToken();
+        }
     }
 }

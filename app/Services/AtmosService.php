@@ -78,4 +78,9 @@ class AtmosService
 
         return null;
     }
+
+    public function setRevolutionCredentials(): void
+    {
+        $this->atmosCardClient->setRevolutionCredentials();
+    }
 }

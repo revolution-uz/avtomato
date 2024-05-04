@@ -40,13 +40,12 @@ class AtmosCardClient extends BaseAtmosClient
         return ClientCodeEnum::ATMOS_CARD_PAY;
     }
 
-    public function setRevolutionToken(): void
+    public function setRevolutionCredentials(): void
     {
+        $this->isFeature = false;
         $this->store_id = config('clients.atmos.card.store_id');
-        $username = config('clients.atmos.card.username');
-        $password = config('clients.atmos.card.password');
-        $response = $this->getOrRefreshToken($username, $password);
-        $this->token = $response->access_token ?? null;
+        $this->username = config('clients.atmos.card.username');
+        $this->password = config('clients.atmos.card.password');
     }
 
     /*

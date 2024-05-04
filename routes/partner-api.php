@@ -110,7 +110,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::delete('/', 'delete')->name('branches.delete');
         });
 
-        // subscriptions
+        // Balance
         Route::prefix('balance')->controller(BalanceController::class)->group(function () {
             Route::get('/', 'index')->name('balance.index');
             Route::post('fill', 'fill')->name('balance.fill');

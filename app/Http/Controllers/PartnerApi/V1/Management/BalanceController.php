@@ -29,12 +29,13 @@ class BalanceController extends Controller
     public function __construct(
         private readonly AtmosService $atmosCardService
     ) {
+        $this->atmosCardService->setRevolutionCredentials();
     }
 
     #[OA\Get(
         path: '/api/v1/balance/index',
-        description: 'Subscription route',
-        tags: ['Subscription'],
+        description: 'Balance route',
+        tags: ['Balance'],
         parameters: [
             new OpenApiPageParameter,
             new OpenApiPerPageParameter,
@@ -76,7 +77,7 @@ class BalanceController extends Controller
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/BalanceFundRequest')
         ),
-        tags: ['Subscription'],
+        tags: ['Balance'],
 
         responses: [
             new OpenApiDataResponse(resourceName: 'BalanceFillingResource'),
@@ -102,7 +103,7 @@ class BalanceController extends Controller
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/BalanceFundConfirmRequest')
         ),
-        tags: ['Subscription'],
+        tags: ['Balance'],
 
         responses: [
             new OpenApiDataResponse(resourceName: 'BalanceFundResource'),
