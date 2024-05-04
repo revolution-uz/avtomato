@@ -2,26 +2,37 @@
 
 namespace App\Clients;
 
+use App\DTOs\Atmos\AtmosAuthTokenDTO;
 use App\DTOs\Atmos\AtmosCredentialsDTO;
 use App\DTOs\HttpRequestLogDTO;
+use App\Enums\FeatureEnum;
+use App\Exceptions\AtmosException;
 use App\Models\Company\Feature;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Throwable;
 
 abstract class BaseAtmosClient extends BaseClient
 {
-    const GET_TOKEN_URI = '/token?grant_type=client_credentials';
+    const GET_TOKEN_URI = '/token';
 
+    protected ?FeatureEnum $featureName = null;
     protected ?string $baseUrl;
     protected ?string $token = null;
     protected ?int $store_id = null;
 
-    public function getToken($username, $password)
+    protected function getOrRefreshToken(string $username, string $password, string $token = null): AtmosAuthTokenDTO
     {
+        $data = [
+            'grant_type' => 'client_credentials',
+        ];
+        if ($token) {
+            $data['refresh_token'] = $token;
+        }
+
         $response = Http::withHeaders([
             'Authorization' => 'Basic ' . base64_encode($username . ':' . $password),
             'Content-Type' => 'application/x-www-form-urlencoded',
-        ])->get($this->baseUrl . self::GET_TOKEN_URI);
+        ])->post($this->baseUrl . self::GET_TOKEN_URI, $data);
 
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',
@@ -32,37 +43,73 @@ abstract class BaseAtmosClient extends BaseClient
             params: [],
         ));
 
-        return $response->json();
+        return AtmosAuthTokenDTO::from($response->json());
     }
 
-    protected function activateToken(Feature $feature): void
+    /**
+     * @throws Throwable
+     */
+    protected function activateToken(): void
     {
+        $feature = Feature::findByName($this->featureName?->value);
+
         if (! $feature->is_active) {
             return;
         }
-        $credentials = new AtmosCredentialsDTO($feature->data['username'] ?? null, $feature->data['password'] ?? null, $feature->data['store_id'] ?? null, $feature->data['expires_in'] ?? null, $feature->data['access_token'] ?? null);
+        $credentials = new AtmosCredentialsDTO(
+            $feature->data['username'] ?? null,
+            $feature->data['password'] ?? null,
+            $feature->data['store_id'] ?? null,
+            $feature->data['expires_in'] ?? null,
+            $feature->data['access_token'] ?? null,
+            $feature->data['token_type'] ?? null
+        );
 
         if (! $credentials->username) {
             return;
         }
 
-        if ($credentials->expires_in > time()) {
-            return;
+        if ($credentials->expires_in <= time()) {
+            $response = $this->getOrRefreshToken($credentials->username, $credentials->password, $credentials->access_token);
+            $credentials->access_token = $response->access_token;
+            $credentials->expires_in = $response->expires_in + time();
+            $credentials->token_type = $response->token_type;
+
+            $feature->data = $credentials->toArray();
+            $feature->saveOrFail();
         }
-        $response = $this->getToken($credentials->username, $credentials->password);
-        $credentials->access_token = $response['access_token'] ?? null;
-        $credentials->expires_in = $response['expires_in'] ?? 0;
+
         $this->store_id = $credentials->store_id;
-        $this->token = $credentials->access_token;
-        $credentials->expires_in += time();
-        $feature->data = $credentials->toArray();
-        $feature->saveOrFail();
+        $this->token = $credentials->token_type . ' ' . $credentials->access_token;
     }
 
-    protected function makeRequest($path, $data, $method = 'post'): Response
+    /**
+     * @throws AtmosException|Throwable
+     */
+    protected function makeRequest(string $path, array $data, string $method = 'post'): array
     {
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
+        $this->activateToken();
+        $response = Http::withHeaders(['Authorization' => $this->token])
             ->$method($this->baseUrl . $path, $data);
+
+        if (
+            $response->status() !== 200 &&
+            $response->status() !== 201
+        ) {
+            parent::logRequest(
+                new HttpRequestLogDTO(
+                    method: $method,
+                    url: $this->baseUrl . $path,
+                    status: $response->status(),
+                    response: $response->body(),
+                    duration: $response->transferStats?->getTransferTime(),
+                    body: $data,
+                ),
+                'error'
+            );
+
+            throw new AtmosException($response['description'], $response['code']);
+        }
 
         parent::logRequest(new HttpRequestLogDTO(
             method: $method,
@@ -73,6 +120,6 @@ abstract class BaseAtmosClient extends BaseClient
             body: $data,
         ));
 
-        return $response;
+        return $response->json();
     }
 }

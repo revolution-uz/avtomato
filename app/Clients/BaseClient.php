@@ -12,8 +12,8 @@ abstract class BaseClient
 
     abstract public function getClientCode(): ClientCodeEnum;
 
-    protected function logRequest(HttpRequestLogDTO $request): void
+    protected function logRequest(HttpRequestLogDTO $request, string $logType = 'info'): void
     {
-        Log::channel($this->channel)->info(get_called_class(), $request->toArray());
+        Log::channel($this->channel)->$logType(get_called_class(), $request->toArray());
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Management;
 
-use App\DTOs\Atmos\Card\AtmosAttachCardRequestDTO;
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Helpers\Swagger\OpenApiArrayResponse;
 use App\Helpers\Swagger\OpenApiDataResponse;
@@ -18,7 +17,7 @@ use App\Http\Resources\Management\BalanceFillingErrorResource;
 use App\Http\Resources\Management\BalanceFillingResource;
 use App\Http\Resources\Management\BalanceFundResource;
 use App\Models\Company\BalanceFund;
-use App\Services\AtmosCardService;
+use App\Services\AtmosService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
@@ -28,7 +27,7 @@ use Spatie\FlareClient\Http\Exceptions\BadResponse;
 class BalanceController extends Controller
 {
     public function __construct(
-        private readonly AtmosCardService $atmosCardService
+        private readonly AtmosService $atmosCardService
     ) {
     }
 
@@ -86,7 +85,7 @@ class BalanceController extends Controller
     )]
     public function fill(BalanceFundRequest $request): BalanceFillingResource|BalanceFillingErrorResource
     {
-        $response = $this->atmosCardService->attachCard(new AtmosAttachCardRequestDTO($request->number, $request->expiry));
+        $response = $this->atmosCardService->attachCard($request->number, $request->expiry);
 
         if ($response->result->isSucces()) {
             return new BalanceFillingResource($response);

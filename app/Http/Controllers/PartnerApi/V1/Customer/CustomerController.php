@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Customer;
 
-use App\DTOs\Atmos\Card\AtmosAttachCardRequestDTO;
-use App\DTOs\Atmos\Card\AtmosConfirmCardRequestDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
@@ -36,7 +34,7 @@ use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
-use App\Services\AtmosCardService;
+use App\Services\AtmosService;
 use App\Services\CustomerService;
 use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
@@ -51,7 +49,7 @@ class CustomerController extends Controller
 {
     public function __construct(
         private readonly PassportInfoService $passportInfoService,
-        private readonly AtmosCardService $atmosCardService,
+        private readonly AtmosService $atmosCardService,
         private readonly CustomerService $customerService
     ) {
     }
@@ -237,7 +235,7 @@ class CustomerController extends Controller
         $card->customer_id = $id;
         $card->saveOrFail();
 
-        return AttachCustomerCardResource::make($this->atmosCardService->attachCard(new AtmosAttachCardRequestDTO($card->number, $card->expiry)), new CardResource($card));
+        return AttachCustomerCardResource::make($this->atmosCardService->attachCard($card->number, $card->expiry), new CardResource($card));
     }
 
     #[OA\Post(
@@ -294,6 +292,9 @@ class CustomerController extends Controller
         return new StatusResource(true);
     }
 
+    /**
+     * @throws Throwable
+     */
     #[OA\Post(
         path: '/api/v1/customer/{id}/confirm-card',
         description: 'Card confirm route',
@@ -318,7 +319,7 @@ class CustomerController extends Controller
             ->where('customer_id', $id)
             ->findOrFail($request->card_id);
 
-        $atmosConfirmCardDto = $this->atmosCardService->confirmCard(new AtmosConfirmCardRequestDTO($request->transaction_id, $request->otp));
+        $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request->transaction_id, $request->otp);
         if ($atmosConfirmCardDto->result->isSucces()) {
             $card->external_id = $atmosConfirmCardDto->data->card_token;
             $card->balance = $atmosConfirmCardDto->data->balance;
