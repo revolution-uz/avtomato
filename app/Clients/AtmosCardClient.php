@@ -43,7 +43,7 @@ class AtmosCardClient extends BaseAtmosClient
     public function setRevolutionCredentials(): void
     {
         $this->isFeature = false;
-        $this->store_id = 1622;
+        $this->store_id = (int) config('clients.atmos.card.store_id');
         $this->username = config('clients.atmos.card.username');
         $this->password = config('clients.atmos.card.password');
     }
