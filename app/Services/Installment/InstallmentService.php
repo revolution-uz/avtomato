@@ -15,7 +15,6 @@ use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorDetachRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
-use App\Http\Requests\Installment\InstallmentImageUploadRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentToggleRequest;
@@ -86,14 +85,6 @@ class InstallmentService
     public function uploadAttachment(Installment $installment, InstallmentDocumentUploadRequest $request): Installment
     {
         Attachment::upload($request->file('file'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $installment, $request->name);
-        $installment->refresh();
-
-        return $installment;
-    }
-
-    public function uploadImage(Installment $installment, InstallmentImageUploadRequest $request): Installment
-    {
-        Attachment::upload($request->file('file'), AttachmentTypeEnum::INSTALLMENT_IMAGE, $installment, $request->name);
         $installment->refresh();
 
         return $installment;
