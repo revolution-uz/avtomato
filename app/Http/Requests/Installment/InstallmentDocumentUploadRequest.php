@@ -26,7 +26,7 @@ class InstallmentDocumentUploadRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'file' => 'required|file|mimes:png,jpg,jpeg|max:10240',
+            'file' => 'required|file|mimes:docx,doc,pdf,png,jpg,jpeg|max:10240',
         ];
     }
 
