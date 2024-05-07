@@ -18,6 +18,7 @@ use App\Http\Requests\Installment\InstallmentCardAttachRequest;
 use App\Http\Requests\Installment\InstallmentCardDetachRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentCustomersListRequest;
 use App\Http\Requests\Installment\InstallmentDocumentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
@@ -36,6 +37,7 @@ use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Http\Requests\Installment\InstallmentViewRequest;
 use App\Http\Resources\Installment\InstallmentCardResource;
 use App\Http\Resources\Installment\InstallmentCommentListResource;
+use App\Http\Resources\Installment\InstallmentCustomersListResource;
 use App\Http\Resources\Installment\InstallmentGuarantorResource;
 use App\Http\Resources\Installment\InstallmentResource;
 use App\Http\Resources\StatusResource;
@@ -293,6 +295,9 @@ class InstallmentController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardAttachRequest')
         ),
         tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'InstallmentCardResource'),
         ]
@@ -331,6 +336,9 @@ class InstallmentController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/InstallmentGuarantorRequest')
         ),
         tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'InstallmentGuarantorResource'),
         ]
@@ -338,6 +346,28 @@ class InstallmentController extends Controller
     public function attachGuarantor(int $id, InstallmentGuarantorRequest $request): InstallmentGuarantorResource
     {
         return new InstallmentGuarantorResource($this->installmentService->attachGuarantor($id, $request));
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/customers-list',
+        description: 'Installment customers list route',
+        tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
+        responses: [
+            new OpenApiArrayResponse(resourceName: 'InstallmentCustomersListResource'),
+
+        ]
+    )]
+    public function customersList(int $id, InstallmentCustomersListRequest $request): InstallmentCustomersListResource
+    {
+        $model = Installment::query()
+            ->with(['customer', 'guarantors'])
+            ->where('id', $id)
+            ->firstOrFail();
+
+        return new InstallmentCustomersListResource($model);
     }
 
     #[OA\Put(
@@ -472,6 +502,9 @@ class InstallmentController extends Controller
             ),
         ),
         tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'InstallmentResource'),
         ],
@@ -513,6 +546,9 @@ class InstallmentController extends Controller
             ),
         ),
         tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'InstallmentResource'),
         ],
