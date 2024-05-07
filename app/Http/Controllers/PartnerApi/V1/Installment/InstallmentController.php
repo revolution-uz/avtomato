@@ -27,8 +27,6 @@ use App\Http\Requests\Installment\InstallmentFreezeRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorDetachRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
-use App\Http\Requests\Installment\InstallmentImagesDeleteRequest;
-use App\Http\Requests\Installment\InstallmentImageUploadRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentStartRequest;
@@ -77,7 +75,7 @@ class InstallmentController extends Controller
 
         return InstallmentResource::collection(
             Installment::query()
-                ->with(['customer', 'branch', 'tariff', 'graphs', 'cards', 'guarantors', 'documents', 'images', 'comments', 'transactions'])
+                ->with(['customer', 'branch', 'tariff', 'graphs', 'cards', 'guarantors', 'documents', 'comments', 'transactions'])
                 ->when(
                     $request->search,
                     fn (Builder $q) => $q->where('id', $request->search)
@@ -528,50 +526,6 @@ class InstallmentController extends Controller
         ]
     )]
     public function deleteDocument(InstallmentDocumentsDeleteRequest $request): StatusResource
-    {
-        $this->installmentService->deleteAttachment($request->ids);
-
-        return new StatusResource(true);
-    }
-
-    #[OA\Post(
-        path: '/api/v1/installment/installment/{id}/image',
-        description: 'Upload image route',
-        requestBody: new OA\RequestBody(
-            description: 'Installment Image upload body. Send as multipart/form-data',
-            required: true,
-            content: new OA\MediaType(
-                mediaType: 'multipart/form-data',
-                schema: new OA\Schema(ref: '#/components/schemas/InstallmentImageUploadRequest')
-            ),
-        ),
-        tags: ['Installments'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'Installment'),
-        ],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
-        ],
-    )]
-    public function uploadImage(int $id, InstallmentImageUploadRequest $request): InstallmentResource
-    {
-        return new InstallmentResource($this->installmentService->uploadImage(Installment::findOrFail($id), $request));
-    }
-
-    #[OA\Delete(
-        path: '/api/v1/installment/installment/image',
-        description: 'Installment Images delete route',
-        requestBody: new OA\RequestBody(
-            description: 'Installment images delete request body',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentImagesDeleteRequest')
-        ),
-        tags: ['Installments'],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'StatusResource'),
-        ]
-    )]
-    public function deleteImage(InstallmentImagesDeleteRequest $request): StatusResource
     {
         $this->installmentService->deleteAttachment($request->ids);
 

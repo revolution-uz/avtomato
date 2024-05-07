@@ -45,7 +45,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Card[] $cards
  * @property InstallmentGraph[] $graphs
  * @property Attachment[] $documents
- * @property Attachment[] $images
  * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
  * @property Customer[] $guarantors
  * @property Transaction[] $transactions
@@ -117,11 +116,6 @@ class Installment extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'installment_id');
-    }
-
-    public function images(): MorphMany
-    {
-        return $this->morphMany(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_IMAGE);
     }
 
     public function comments(): HasMany
