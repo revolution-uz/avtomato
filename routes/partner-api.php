@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('{id}/attach-card', 'attachCard')->name('installments.attach-card');
             Route::delete('detach-card', 'detachCard')->name('installments.detach-card');
             Route::post('{id}/attach-guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
+            Route::get('{id}/customer-list', 'customersList')->name('installments.customers-list');
             Route::put('update-guarantor/{id}', 'updateGuarantor')->name('installments.update-guarantor');
             Route::delete('detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
             Route::post('{id}/comment', 'createComment')->name('installments.create-comment');

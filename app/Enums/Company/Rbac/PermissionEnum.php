@@ -3,7 +3,6 @@
 namespace App\Enums\Company\Rbac;
 
 use App\Enums\FeatureEnum;
-use App\Models\Company\Feature;
 
 /**
  * To add new permission:
@@ -78,6 +77,7 @@ enum PermissionEnum: string
     case INSTALLMENT_CANCEL = 'installment_cancel';
     case INSTALLMENT_FREEZE = 'installment_freeze';
     case INSTALLMENT_FINISH = 'installment_finish';
+    case INSTALLMENT_CUSTOMER_LIST = 'installment_customer_list';
     case INSTALLMENT_CREATE = 'installment_create';
     case INSTALLMENT_EDIT = 'installment_edit';
     case INSTALLMENT_DELETE = 'installment_delete';
@@ -288,6 +288,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_DELETE,
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD,
+            self::INSTALLMENT_CUSTOMER_LIST,
             self::INSTALLMENT_ATTACH_GUARANTOR,
             self::INSTALLMENT_UPDATE_GUARANTOR,
             self::INSTALLMENT_DETACH_GUARANTOR,
@@ -357,6 +358,7 @@ enum PermissionEnum: string
                 self::INSTALLMENT_CANCEL->value,
                 self::INSTALLMENT_FREEZE->value,
                 self::INSTALLMENT_FINISH->value,
+                self::INSTALLMENT_CUSTOMER_LIST->value,
                 self::INSTALLMENT_EDIT->value,
                 self::INSTALLMENT_DELETE->value,
                 self::INSTALLMENT_ATTACH_CARD->value,
@@ -522,6 +524,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_CANCEL,
             self::INSTALLMENT_FREEZE,
             self::INSTALLMENT_FINISH,
+            self::INSTALLMENT_CUSTOMER_LIST,
             self::INSTALLMENT_EDIT,
             self::INSTALLMENT_DELETE => FeatureEnum::INSTALLMENT_MANAGEMENT,
 
