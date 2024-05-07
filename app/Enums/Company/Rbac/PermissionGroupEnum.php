@@ -86,6 +86,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::INSTALLMENT_DELETE,
                 PermissionEnum::INSTALLMENT_ATTACH_CARD,
                 PermissionEnum::INSTALLMENT_DETACH_CARD,
+                PermissionEnum::INSTALLMENT_CUSTOMER_LIST,
                 PermissionEnum::INSTALLMENT_ATTACH_GUARANTOR,
                 PermissionEnum::INSTALLMENT_UPDATE_GUARANTOR,
                 PermissionEnum::INSTALLMENT_DETACH_GUARANTOR,

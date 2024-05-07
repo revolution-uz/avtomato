@@ -18,6 +18,7 @@ use App\Http\Requests\Installment\InstallmentCardAttachRequest;
 use App\Http\Requests\Installment\InstallmentCardDetachRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentCustomersListRequest;
 use App\Http\Requests\Installment\InstallmentDocumentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
@@ -359,7 +360,7 @@ class InstallmentController extends Controller
 
         ]
     )]
-    public function customersList(int $id): InstallmentCustomersListResource
+    public function customersList(int $id, InstallmentCustomersListRequest $request): InstallmentCustomersListResource
     {
         $model = Installment::query()
             ->with(['customer', 'guarantors'])
