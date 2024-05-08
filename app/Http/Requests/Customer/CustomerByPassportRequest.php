@@ -13,8 +13,8 @@ use OpenApi\Attributes as OA;
     title: 'Request to get customer by passport data',
     properties: [
         new OA\Property(property: 'passport_series', type: 'string', example: 'AA'),
-        new OA\Property(property: 'passport_number', type: 'int', example: '1234567'),
-        new OA\Property(property: 'pinfl', type: 'int', example: '12345678901234'),
+        new OA\Property(property: 'passport_number', type: 'string', example: '1234567'),
+        new OA\Property(property: 'pinfl', type: 'string', example: '12345678901234'),
     ],
 )]
 /**
