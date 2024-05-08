@@ -33,7 +33,7 @@ class BalanceController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/v1/balance/index',
+        path: '/api/v1/management/balance/index',
         description: 'Balance route',
         tags: ['Balance'],
         parameters: [
@@ -70,7 +70,7 @@ class BalanceController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/balance/fill',
+        path: '/api/v1/management/balance/fill',
         description: 'Funding customer balance',
         requestBody: new OA\RequestBody(
             description: 'Funding balance request body',
@@ -96,7 +96,7 @@ class BalanceController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/balance/confirm-payment',
+        path: '/api/v1/management/balance/confirm-payment',
         description: 'Confirming payment of funding user balance',
         requestBody: new OA\RequestBody(
             description: 'User payment request body',
