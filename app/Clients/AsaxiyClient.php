@@ -31,7 +31,7 @@ class AsaxiyClient extends BaseClient
             method: 'POST',
             url: $this->baseUrl . '/katm/create-request',
             status: $response->status(),
-            response: $response->body(),
+            response: $response->json(),
             duration: $response->transferStats?->getTransferTime(),
             body: $data,
         ));
@@ -48,7 +48,7 @@ class AsaxiyClient extends BaseClient
             method: 'GET',
             url: $this->baseUrl . '/katm/get-request',
             status: $response->status(),
-            response: $response->body(),
+            response: $response->json(),
             duration: $response->transferStats?->getTransferTime(),
             params: $params,
         ));
@@ -64,7 +64,7 @@ class AsaxiyClient extends BaseClient
             method: 'GET',
             url: $this->baseUrl . '/katm/mib',
             status: $response->status(),
-            response: $response->body(),
+            response: $response->json(),
             duration: $response->transferStats?->getTransferTime(),
             params: $params,
         ));
@@ -80,7 +80,7 @@ class AsaxiyClient extends BaseClient
             method: 'GET',
             url: $this->baseUrl . '/katm/tax',
             status: $response->status(),
-            response: $response->body(),
+            response: $response->json(),
             duration: $response->transferStats?->getTransferTime(),
             params: $params,
         ));
@@ -96,7 +96,7 @@ class AsaxiyClient extends BaseClient
             method: 'POST',
             url: $this->baseUrl . '/katm/humo',
             status: $response->status(),
-            response: $response->body(),
+            response: $response->json(),
             duration: $response->transferStats?->getTransferTime(),
             body: $data,
         ));
@@ -112,7 +112,7 @@ class AsaxiyClient extends BaseClient
             method: 'POST',
             url: $this->baseUrl . '/katm/uzcard',
             status: $response->status(),
-            response: $response->body(),
+            response: $response->json(),
             duration: $response->transferStats?->getTransferTime(),
             body: $data,
         ));
