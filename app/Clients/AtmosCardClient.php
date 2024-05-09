@@ -13,11 +13,11 @@ use Throwable;
 
 class AtmosCardClient extends BaseAtmosClient
 {
-    const CARD_BIND_INIT = '/bind-card/init';
-    const CARD_BIND_CONFIRM = '/bind-card/confirm';
+    const CARD_BIND_INIT = '/partner/bind-card/init';
+    const CARD_BIND_CONFIRM = '/partner/bind-card/confirm';
     const CARD_CHECK = '/card/1/check-card-token';
-    const CARD_LIST = '/list-cards';
-    const CARD_REMOVE = '/remove-card';
+    const CARD_LIST = '/partner/list-cards';
+    const CARD_REMOVE = '/partner/remove-card';
 
     const PAYMENT_CREATE = '/merchant/pay/create';
     const PAYMENT_PRE_CONFIRM = '/merchant/pay/pre-apply';
@@ -59,7 +59,6 @@ class AtmosCardClient extends BaseAtmosClient
         $data = [
             'card_number' => $card_number,
             'expiry' => $expiry,
-            'lang' => app()->getLocale(),
         ];
 
         return AtmosAttachCardResponseDTO::from($this->makeRequest(self::CARD_BIND_INIT, $data));
@@ -73,7 +72,6 @@ class AtmosCardClient extends BaseAtmosClient
         $data = [
             'transaction_id' => $transaction_id,
             'otp' => $otp,
-            'lang' => app()->getLocale(),
         ];
 
         return AtmosConfirmCardResponseDTO::from($this->makeRequest(self::CARD_BIND_CONFIRM, $data));
@@ -86,7 +84,6 @@ class AtmosCardClient extends BaseAtmosClient
     {
         $data = [
             'token' => $token,
-            'lang' => app()->getLocale(),
         ];
 
         return $this->makeRequest(self::CARD_CHECK, $data);
@@ -100,7 +97,6 @@ class AtmosCardClient extends BaseAtmosClient
         $data = [
             'page' => $page,
             'page_size' => $pageSize,
-            'lang' => app()->getLocale(),
         ];
 
         return $this->makeRequest(self::CARD_LIST, $data);
@@ -113,7 +109,6 @@ class AtmosCardClient extends BaseAtmosClient
     {
         $data = [
             'token' => $token,
-            'lang' => app()->getLocale(),
         ];
 
         return $this->makeRequest(self::CARD_REMOVE, $data);
@@ -135,7 +130,6 @@ class AtmosCardClient extends BaseAtmosClient
             'amount' => $amount * 100, // tiyin
             'details' => $details,
             'debit-available-amount' => true,
-            'lang' => app()->getLocale(),
         ];
 
         return AtmosCreatePayResponseDTO::from($this->makeRequest(self::PAYMENT_CREATE, $data));
@@ -150,7 +144,6 @@ class AtmosCardClient extends BaseAtmosClient
             'store_id' => $this->store_id,
             'card_token' => $card_token,
             'transaction_id' => $transaction_id,
-            'lang' => app()->getLocale(),
         ];
 
         return AtmosPreConfirmPayResponseDTO::from($this->makeRequest(self::PAYMENT_PRE_CONFIRM, $data));
@@ -164,7 +157,6 @@ class AtmosCardClient extends BaseAtmosClient
         $data = [
             'store_id' => $this->store_id,
             'transaction_id' => $transaction_id,
-            'lang' => app()->getLocale(),
         ];
 
         return AtmosCreatePayResponseDTO::from($this->makeRequest(self::PAYMENT_CONFIRM, $data));
@@ -178,7 +170,6 @@ class AtmosCardClient extends BaseAtmosClient
         $data = [
             'store_id' => $this->store_id,
             'transaction_id' => $transaction_id,
-            'lang' => app()->getLocale(),
         ];
 
         return AtmosCreatePayResponseDTO::from($this->makeRequest(self::PAYMENT_GET, $data));
@@ -194,7 +185,6 @@ class AtmosCardClient extends BaseAtmosClient
             'transaction_id' => $transaction_id,
             'reason' => $reason,
             'hold_amount' => $hold_amount,
-            'lang' => app()->getLocale(),
         ];
 
         return $this->makeRequest(self::PAYMENT_CANCEL, $data);

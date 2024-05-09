@@ -57,7 +57,6 @@ class AtmosPinflClient extends BaseAtmosClient
             'passport_number' => $pasnum,
             'contract_number' => $contract_number,
             'amount' => $amount,
-            'lang' => app()->getLocale(),
         ];
 
         $res = $this->makeRequest(self::PAYMENT_CREATE, $data);
@@ -74,7 +73,6 @@ class AtmosPinflClient extends BaseAtmosClient
         $data = [
             'ext_id' => $ext_id,
             'transaction_id' => $transaction_id,
-            'lang' => app()->getLocale(),
         ];
 
         $res = $this->makeRequest(self::PAYMENT_CONFIRM, $data);
@@ -94,7 +92,6 @@ class AtmosPinflClient extends BaseAtmosClient
             'passport_number' => $pasnum,
             'contract_number' => $contract_number,
             'amount' => $amount,
-            'lang' => app()->getLocale(),
         ];
 
         $res = $this->makeRequest(self::PAYMENT_CHECK, $data);
@@ -110,7 +107,6 @@ class AtmosPinflClient extends BaseAtmosClient
         $data = [
             'ext_id' => $ext_id,
             'transaction_id' => $transaction_id,
-            'lang' => app()->getLocale(),
         ];
 
         $res = $this->makeRequest(self::PAYMENT_CANCEL, $data);

@@ -56,7 +56,7 @@ class AtmosService
 
         $preConfirmPayResponseDTO = $this->atmosCardClient->payPreApply($confirmCardResponseDTO->data->card_token, $createPayResponseDTO->transaction_id);
 
-        if ($preConfirmPayResponseDTO->result->isSucces()) {
+        if (! $preConfirmPayResponseDTO->result->isSucces()) {
             return null;
         }
 
@@ -75,6 +75,8 @@ class AtmosService
         if ($balanceFund->saveOrFail()) {
             return $balanceFund;
         }
+
+        $this->atmosCardClient->removeCard($confirmCardResponseDTO->data->card_token);
 
         return null;
     }
