@@ -3,6 +3,7 @@
 namespace App\Enums\Company\Scoring;
 
 use App\Enums\External\AsaxiyKatmTypeEnum;
+use App\Enums\FeatureEnum;
 use InvalidArgumentException;
 
 enum ScoringRequestTypeEnum: int
@@ -21,6 +22,16 @@ enum ScoringRequestTypeEnum: int
             self::KATM_CREDIT_HISTORY => AsaxiyKatmTypeEnum::KATM_CREDIT_HISTORY,
             self::KATM_INPS_HISTORY => AsaxiyKatmTypeEnum::KATM_INPS_HISTORY,
             self::KATM_PENSION_INFO => AsaxiyKatmTypeEnum::KATM_PENSION_INFO,
+            default => throw new InvalidArgumentException,
+        };
+    }
+
+    public function getFeatureEnum(): FeatureEnum
+    {
+        return match ($this) {
+            self::KATM_CREDIT_HISTORY => FeatureEnum::SCORING_CREDIT_HISTORY,
+            self::KATM_INPS_HISTORY => FeatureEnum::SCORING_INPS_HISTORY,
+            self::KATM_PENSION_INFO => FeatureEnum::SCORING_PENSION_INFO,
             default => throw new InvalidArgumentException,
         };
     }

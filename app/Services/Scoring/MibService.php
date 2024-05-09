@@ -7,12 +7,15 @@ use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Mib\MibInfoResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Enums\FeatureEnum;
 use App\Models\Company\ScoringRequest;
+use App\Services\User\BalanceService;
 
 class MibService
 {
     public function __construct(
-        private readonly PlumClient $plumClient
+        private readonly PlumClient $plumClient,
+        private readonly BalanceService $balanceService
     ) {
     }
 
@@ -24,6 +27,8 @@ class MibService
         $model->client_code = $this->plumClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
+        $this->balanceService->chargeAmount(FeatureEnum::SCORING_MIB_INFO, $model);
+
         $model->response = MibInfoResponseDTO::from($this->plumClient->scoringMib(
             $dto->toArray()
         ));

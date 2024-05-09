@@ -11,23 +11,27 @@ use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Enums\External\AsaxiyRequestStatusEnum;
 use App\Models\Company\ScoringRequest;
+use App\Services\User\BalanceService;
 use InvalidArgumentException;
 
 class KatmService
 {
     public function __construct(
-        private readonly AsaxiyClient $asaxiyClient
+        private readonly AsaxiyClient $asaxiyClient,
+        private readonly BalanceService $balanceService,
     ) {
     }
 
     public function createRequest(KatmCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
     {
+
         $model = new ScoringRequest;
         $model->type = $type;
         $model->request = $dto;
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::CREATED;
         $model->saveOrFail();
+        $this->balanceService->chargeAmount($type->getFeatureEnum(), $model);
 
         $externalId = $this->asaxiyClient->createRequest(
             array_merge(

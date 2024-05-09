@@ -12,12 +12,27 @@ class BalanceControllerTest extends TestCase
     /**
      * @test
      */
-    public function index(): void
+    public function funds(): void
     {
         $admin = $this->createAdminUser();
 
         $response = $this->actingAs($admin)
-            ->getJson(route('balance.index'));
+            ->getJson(route('balance.funds'));
+
+        $response->assertOk();
+
+        $this->assertIsArray($response->json('data'));
+    }
+
+    /**
+     * @test
+     */
+    public function charges(): void
+    {
+        $admin = $this->createAdminUser();
+
+        $response = $this->actingAs($admin)
+            ->getJson(route('balance.charges'));
 
         $response->assertOk();
 
