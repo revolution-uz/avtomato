@@ -112,7 +112,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // Balance
         Route::prefix('balance')->controller(BalanceController::class)->group(function () {
             Route::get('funds', 'funds')->name('balance.funds');
-            Route::get('charges', 'charges')->name('branches.charges');
+            Route::get('charges', 'charges')->name('balance.charges');
             Route::post('fill', 'fill')->name('balance.fill');
             Route::post('confirm-payment', 'confirmPayment')->name('balance.confirm-payment');
         });
