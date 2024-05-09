@@ -28,6 +28,13 @@ enum PermissionEnum: string
     case BALANCE_FUND_CREATE = 'balance_fund_create';
     case BALANCE_FUND_CONFIRM = 'balance_fund_confirm';
 
+    // Balance charges
+    case BALANCE_CHARGE_VIEW_ALL = 'balance_charge_view_all';
+    case BALANCE_CHARGE_VIEW = 'balance_charge_view';
+    case BALANCE_CHARGE_DELETE = 'balance_charge_delete';
+    case BALANCE_CHARGE_CREATE = 'balance_charge_create';
+    case BALANCE_CHARGE_CONFIRM = 'balance_charge_confirm';
+
     // Manage Admins
     case ADMIN_VIEW_ALL = 'admin_view_all';
     case ADMIN_VIEW = 'admin_view';
@@ -184,6 +191,12 @@ enum PermissionEnum: string
             self::BALANCE_FUND_CONFIRM,
             self::BALANCE_FUND_DELETE,
             self::BALANCE_FUND_CREATE,
+
+            self::BALANCE_CHARGE_VIEW_ALL,
+            self::BALANCE_CHARGE_VIEW,
+            self::BALANCE_CHARGE_CONFIRM,
+            self::BALANCE_CHARGE_DELETE,
+            self::BALANCE_CHARGE_CREATE,
 
             self::ADMIN_VIEW_ALL,
             self::ADMIN_VIEW,
@@ -458,6 +471,13 @@ enum PermissionEnum: string
                 self::BALANCE_FUND_DELETE->value,
                 self::BALANCE_FUND_CREATE->value,
             ],
+            PermissionGroupEnum::BALANCE_CHARGE->value => [
+                self::BALANCE_CHARGE_VIEW_ALL->value,
+                self::BALANCE_CHARGE_VIEW->value,
+                self::BALANCE_CHARGE_CONFIRM->value,
+                self::BALANCE_CHARGE_DELETE->value,
+                self::BALANCE_CHARGE_CREATE->value,
+            ],
             PermissionGroupEnum::ACTIVITY_LOG->value => [
                 self::ACTIVITY_LOG_VIEW_ALL->value,
                 self::ACTIVITY_LOG_VIEW_OWN->value,
@@ -480,6 +500,12 @@ enum PermissionEnum: string
             self::BALANCE_FUND_CONFIRM,
             self::BALANCE_FUND_DELETE,
             self::BALANCE_FUND_CREATE => FeatureEnum::BALANCE_FUND,
+
+            self::BALANCE_CHARGE_VIEW_ALL,
+            self::BALANCE_CHARGE_VIEW,
+            self::BALANCE_CHARGE_CONFIRM,
+            self::BALANCE_CHARGE_DELETE,
+            self::BALANCE_CHARGE_CREATE => FeatureEnum::BALANCE_CHARGE,
 
             self::ADMIN_VIEW_ALL,
             self::ADMIN_VIEW,

@@ -10,12 +10,15 @@ use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Management\BalanceChargesFilterRequest;
 use App\Http\Requests\Management\BalanceFundConfirmRequest;
 use App\Http\Requests\Management\BalanceFundFilterRequest;
 use App\Http\Requests\Management\BalanceFundRequest;
+use App\Http\Resources\Management\BalanceChargesResource;
 use App\Http\Resources\Management\BalanceFillingErrorResource;
 use App\Http\Resources\Management\BalanceFillingResource;
 use App\Http\Resources\Management\BalanceFundResource;
+use App\Models\Company\BalanceCharge;
 use App\Models\Company\BalanceFund;
 use App\Services\AtmosService;
 use Illuminate\Database\Eloquent\Builder;
@@ -33,8 +36,8 @@ class BalanceController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/v1/management/balance/index',
-        description: 'Balance route',
+        path: '/api/v1/management/balance/funds',
+        description: 'Balance funds list',
         tags: ['Balance'],
         parameters: [
             new OpenApiPageParameter,
@@ -46,7 +49,7 @@ class BalanceController extends Controller
             new OpenApiArrayResponse(resourceName: 'BalanceFundResource', withPagination: true, withSortables: true),
         ]
     )]
-    public function index(BalanceFundFilterRequest $request): AnonymousResourceCollection
+    public function funds(BalanceFundFilterRequest $request): AnonymousResourceCollection
     {
         $sortables = ['id', 'amount', 'phone_number', 'card_number']; // TODO add all fields, it's just for testing
 
@@ -57,6 +60,42 @@ class BalanceController extends Controller
                     fn (Builder $q) => $q
                         ->where('phone_number', 'ILIKE', '%' . $request->search . '%')
                         ->where('card_number', 'ILIKE', '%' . $request->search . '%')
+
+                )
+                ->when(
+                    $request->sort && in_array($request->sort, $sortables),
+                    fn (Builder $q) => Str::startsWith($request->sort, '-')
+                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
+                        : $q->orderBy($request->sort)
+                )
+                ->paginate($request->per_page)
+        )->additional(['sortables' => $sortables]);
+    }
+
+    #[OA\Get(
+        path: '/api/v1/management/balance/charges',
+        description: 'Balance charges list',
+        tags: ['Balance'],
+        parameters: [
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+            new OpenApiSortParameter,
+        ],
+        responses: [
+            new OpenApiArrayResponse(resourceName: 'BalanceChargesResource', withPagination: true, withSortables: true),
+        ]
+    )]
+    public function charges(BalanceChargesFilterRequest $request): AnonymousResourceCollection
+    {
+        $sortables = ['id', 'feature_id', 'amount']; // TODO add all fields, it's just for testing
+
+        return BalanceChargesResource::collection(
+            BalanceCharge::query()
+                ->when(
+                    $request->search,
+                    fn (Builder $q) => $q
+                        ->where('feature_id', $request->search)
 
                 )
                 ->when(

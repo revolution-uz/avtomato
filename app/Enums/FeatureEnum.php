@@ -6,9 +6,11 @@ enum FeatureEnum: string
 {
     case PROFILE_EDIT = 'profile_edit';
     case BALANCE_FUND = 'balance_fund';
+    case BALANCE_CHARGE = 'balance_charge';
     case USER_MANAGEMENT = 'user_management';
     case THEME_MANAGEMENT = 'theme_management';
     case CUSTOMER_MANAGEMENT = 'customer_management';
+    case ADD_CARD_PHONE_REQUIRED = 'add_card_phone_required';
     case CUSTOMER_CARDS_MANAGEMENT = 'customer_cards_management';
     case GET_STATIC_INFORMATION = 'info_view';
     case CALCULATOR_INSTALLMENT = 'calculator_installment';
