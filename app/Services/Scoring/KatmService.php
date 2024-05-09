@@ -10,9 +10,11 @@ use App\DTOs\Scoring\Katm\PensionInfo\KatmPensionInfoResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Enums\External\AsaxiyRequestStatusEnum;
+use App\Exceptions\BalanceIsNotEnoughException;
 use App\Models\Company\ScoringRequest;
 use App\Services\User\BalanceService;
 use InvalidArgumentException;
+use Throwable;
 
 class KatmService
 {
@@ -22,6 +24,10 @@ class KatmService
     ) {
     }
 
+    /**
+     * @throws Throwable
+     * @throws BalanceIsNotEnoughException
+     */
     public function createRequest(KatmCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
     {
 
