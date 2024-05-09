@@ -13,7 +13,7 @@ use Throwable;
 
 abstract class BaseAtmosClient extends BaseClient
 {
-    const GET_TOKEN_URI = '/token';
+    const GET_TOKEN_URI = '/token?grant_type=client_credentials';
 
     protected ?FeatureEnum $featureName = null;
     protected bool $isFeature = true;
@@ -24,19 +24,12 @@ abstract class BaseAtmosClient extends BaseClient
     protected ?string $token = null;
     protected ?int $store_id = null;
 
-    protected function getOrRefreshToken(string $username, string $password, string $token = null): AtmosAuthTokenDTO
+    protected function getOrRefreshToken(string $username, string $password): AtmosAuthTokenDTO
     {
-        $data = [
-            'grant_type' => 'client_credentials',
-        ];
-        if ($token) {
-            $data['refresh_token'] = $token;
-        }
-
         $response = Http::withHeaders([
             'Authorization' => 'Basic ' . base64_encode($username . ':' . $password),
             'Content-Type' => 'application/x-www-form-urlencoded',
-        ])->post($this->baseUrl . self::GET_TOKEN_URI, $data);
+        ])->post($this->baseUrl . self::GET_TOKEN_URI);
 
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',
@@ -81,7 +74,7 @@ abstract class BaseAtmosClient extends BaseClient
         }
 
         if ($credentials->expires_in <= time()) {
-            $response = $this->getOrRefreshToken($credentials->username, $credentials->password, $credentials->access_token);
+            $response = $this->getOrRefreshToken($credentials->username, $credentials->password);
             $credentials->access_token = $response->access_token;
             $credentials->expires_in = $response->expires_in + time();
             $credentials->token_type = $response->token_type;
@@ -100,7 +93,12 @@ abstract class BaseAtmosClient extends BaseClient
     protected function makeRequest(string $path, array $data, string $method = 'post'): array
     {
         $this->activateToken();
-        $response = Http::withHeaders(['Authorization' => $this->token])
+        $data['lang'] = app()->getLocale();
+        $response = Http::withHeaders([
+            'Authorization' => $this->token,
+            'Content-Type' => 'application/json',
+            'Connection' => 'close',
+        ])
             ->$method($this->baseUrl . $path, $data);
 
         if (
@@ -110,6 +108,7 @@ abstract class BaseAtmosClient extends BaseClient
             parent::logRequest(
                 new HttpRequestLogDTO(
                     method: $method,
+                    headers: ['Authorization' => $this->token],
                     url: $this->baseUrl . $path,
                     status: $response->status(),
                     response: $response->body(),
