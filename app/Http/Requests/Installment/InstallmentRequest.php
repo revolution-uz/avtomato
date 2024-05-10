@@ -8,6 +8,7 @@ use App\Helpers\RbacHelper;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\Tariff;
+use App\Services\User\BalanceService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\RequiredIf;
@@ -91,8 +92,8 @@ class InstallmentRequest extends FormRequest
         ];
     }
 
-    public function authorize(): bool
+    public function authorize(BalanceService $balanceService): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE);
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE) && $balanceService->isBalanceEnoughForFeature(PermissionEnum::INSTALLMENT_CREATE);
     }
 }

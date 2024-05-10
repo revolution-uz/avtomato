@@ -10,24 +10,36 @@ use App\DTOs\Scoring\Katm\PensionInfo\KatmPensionInfoResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Enums\External\AsaxiyRequestStatusEnum;
+use App\Exceptions\BalanceIsNotEnoughException;
 use App\Models\Company\ScoringRequest;
+use App\Services\User\BalanceService;
 use InvalidArgumentException;
+use Throwable;
 
 class KatmService
 {
+    private BalanceService $balanceService;
+
     public function __construct(
-        private readonly AsaxiyClient $asaxiyClient
+        private readonly AsaxiyClient $asaxiyClient,
     ) {
+        $this->balanceService = new BalanceService;
     }
 
+    /**
+     * @throws Throwable
+     * @throws BalanceIsNotEnoughException
+     */
     public function createRequest(KatmCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
     {
+
         $model = new ScoringRequest;
         $model->type = $type;
         $model->request = $dto;
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::CREATED;
         $model->saveOrFail();
+        $this->balanceService->chargeAmount($type->getFeatureEnum(), $model);
 
         $externalId = $this->asaxiyClient->createRequest(
             array_merge(

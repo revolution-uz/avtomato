@@ -47,8 +47,10 @@ enum ModuleEnum: string
             FeatureEnum::SCORING_UZCARD => [self::SCORING],
             FeatureEnum::PROFILE_EDIT,
             FeatureEnum::BALANCE_FUND,
+            FeatureEnum::BALANCE_CHARGE,
             FeatureEnum::THEME_MANAGEMENT,
             FeatureEnum::GET_STATIC_INFORMATION,
+            FeatureEnum::ADD_CARD_PHONE_REQUIRED,
             FeatureEnum::ACTIVITY_LOG => self::cases(),
         };
     }

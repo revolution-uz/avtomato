@@ -5,6 +5,7 @@ namespace App\Services\Installment;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Http\Requests\Installment\InstallmentCardAttachRequest;
@@ -34,6 +35,13 @@ use Throwable;
 
 class InstallmentService
 {
+    private BalanceService $balanceService;
+
+    public function __construct(BalanceService $balanceService)
+    {
+        $this->balanceService = $balanceService;
+    }
+
     public function create(InstallmentRequest $request): Installment
     {
         $attributes = $request->validated();
@@ -65,8 +73,7 @@ class InstallmentService
         if ($request->auto_charge) {
             $installment->type = InstallmentTypeEnum::WITH_CARD;
             if (! $installment->withdrawn_auto_charge) {
-                $balanceService = new BalanceService;
-                $balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
+                $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
                 $installment->withdrawn_auto_charge = true;
             }
         } else {
@@ -185,6 +192,7 @@ class InstallmentService
             return $this->changeStatus($installment, InstallmentStatusEnum::RUNNING);
         }
         if ($this->changeStatus($installment, InstallmentStatusEnum::RUNNING)) {
+            $this->balanceService->chargeAmount(PermissionEnum::getFeature(PermissionEnum::INSTALLMENT_START), $installment);
             /** @var Tariff $tariff */
             $tariff = Tariff::findOrFail($installment->tariff_id);
             $amount = $installment->amount;
