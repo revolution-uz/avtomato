@@ -631,4 +631,9 @@ enum PermissionEnum: string
             self::ACTIVITY_LOG_VIEW_OWN => FeatureEnum::ACTIVITY_LOG,
         };
     }
+
+    public function getMyFeature(): FeatureEnum
+    {
+        return self::getFeature($this);
+    }
 }
