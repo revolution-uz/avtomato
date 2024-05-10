@@ -25,7 +25,7 @@ class CreateMibInfoRequest extends FormRequest
     public function authorize(BalanceService $balanceService): bool
     {
         return RbacHelper::checkPermission(PermissionEnum::SCORING_MIB_INFO_CREATE)
-            && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_MIB_INFO_CREATE));
+            && $balanceService->isBalanceEnoughForFeature(PermissionEnum::SCORING_MIB_INFO_CREATE->getMyFeature());
     }
 
     public function rules(): array

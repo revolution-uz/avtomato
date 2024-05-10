@@ -37,11 +37,11 @@ class KatmCreditHistoryCreateRequest extends FormRequest
     {
         return match (Route::currentRouteName()) {
             'credit-history.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_CREDIT_HISTORY_CREATE)
-                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_CREDIT_HISTORY_CREATE)),
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::SCORING_CREDIT_HISTORY_CREATE->getMyFeature()),
             'inps-history.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_INPS_HISTORY_CREATE)
-                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_INPS_HISTORY_CREATE)),
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::SCORING_INPS_HISTORY_CREATE->getMyFeature()),
             'pension-info.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_PENSION_INFO_CREATE)
-                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_PENSION_INFO_CREATE)),
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::SCORING_PENSION_INFO_CREATE->getMyFeature()),
             default => false
         };
     }

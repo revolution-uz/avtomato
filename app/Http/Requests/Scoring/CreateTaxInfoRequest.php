@@ -24,7 +24,7 @@ class CreateTaxInfoRequest extends FormRequest
     public function authorize(BalanceService $balanceService): bool
     {
         return RbacHelper::checkPermission(PermissionEnum::SCORING_TAX_INFO_CREATE)
-            && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_TAX_INFO_CREATE));
+            && $balanceService->isBalanceEnoughForFeature(PermissionEnum::SCORING_TAX_INFO_CREATE->getMyFeature());
     }
 
     public function rules(): array

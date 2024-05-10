@@ -94,6 +94,6 @@ class InstallmentRequest extends FormRequest
 
     public function authorize(BalanceService $balanceService): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE) && $balanceService->isBalanceEnoughForFeature(PermissionEnum::INSTALLMENT_CREATE);
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE) && $balanceService->isBalanceEnoughForFeature(PermissionEnum::INSTALLMENT_CREATE->getMyFeature());
     }
 }

@@ -23,9 +23,9 @@ class CreateCardScoringRequest extends FormRequest
     {
         return match (Route::currentRouteName()) {
             'humo.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_HUMO_CREATE)
-                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_HUMO_CREATE)),
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::SCORING_HUMO_CREATE->getMyFeature()),
             'uzcard.create' => RbacHelper::checkPermission(PermissionEnum::SCORING_UZCARD_CREATE)
-                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::getFeature(PermissionEnum::SCORING_UZCARD_CREATE)),
+                && $balanceService->isBalanceEnoughForFeature(PermissionEnum::SCORING_UZCARD_CREATE->getMyFeature()),
             default => false
         };
     }
