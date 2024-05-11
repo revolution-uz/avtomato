@@ -76,9 +76,15 @@ class InstallmentController extends Controller
         return InstallmentResource::collection(
             Installment::query()
                 ->with(['customer', 'branch', 'tariff', 'graphs', 'cards', 'guarantors', 'documents', 'comments', 'transactions'])
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q->where('id', $request->search)
+                ->when($request->search, fn (Builder $q) => $q
+                    ->whereHas('customer', fn (Builder $q) => $q
+                        ->where('first_name', 'like', "%{$request->search}%")
+                        ->orWhere('last_name', 'ilike', "%{$request->search}%")
+                        ->orWhere('middle_name', 'ilike', "%{$request->search}%")
+                        ->orWhere('phone', 'like', "%{$request->search}%")
+                    )
+                    ->orWhereHas('branch', fn (Builder $q) => $q->where('name', 'ilike', "%{$request->search}%"))
+                    ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$request->search}%"))
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
@@ -346,7 +352,7 @@ class InstallmentController extends Controller
         return new InstallmentGuarantorResource($this->installmentService->attachGuarantor($id, $request));
     }
 
-    #[OA\Post(
+    #[OA\Get(
         path: '/api/v1/installment/installment/{id}/customers-list',
         description: 'Installment customers list route',
         tags: ['Installments'],

@@ -179,6 +179,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'avatar' => 'Avatar',
+    ],
 
 ];

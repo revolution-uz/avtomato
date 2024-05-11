@@ -27,7 +27,7 @@ class InstallmentCustomersListResource extends JsonResource
         $data = [
             [
                 'id' => $this->resource->customer_id,
-                'full_name' => $this->resource->customer->first_name . ' ' . $this->resource->customer->last_name . ' ' . $this->resource->customer->middle_name,
+                'full_name' => $this->resource->customer->first_name . ' ' . $this->resource->customer->last_name,
                 'type' => trans('api.debtor'),
             ],
         ];
@@ -36,7 +36,7 @@ class InstallmentCustomersListResource extends JsonResource
         foreach ($this->resource->guarantors as $guarantor) {
             $data[] = [
                 'id' => $guarantor->id,
-                'full_name' => $guarantor->first_name . ' ' . $guarantor->last_name . ' ' . $guarantor->middle_name,
+                'full_name' => $guarantor->first_name . ' ' . $guarantor->last_name,
                 'type' => trans('api.guarantor'),
             ];
         }
