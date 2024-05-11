@@ -13,7 +13,7 @@ use OpenApi\Attributes as OA;
     title: 'Avatar upload body',
     description: 'Avatar upload body. Send as multipart/form-data',
     properties: [
-        new OA\Property(property: 'avatar', description: 'File to upload', type: 'file'),
+        new OA\Property(property: 'avatar', description: 'File to upload', type: 'file', format: 'binary', maxLength: 10240),
     ],
 )]
 class AvatarRequest extends FormRequest
@@ -21,7 +21,12 @@ class AvatarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'avatar' => 'required|file|mimes:png,jpg,jpeg|max:10240',
+            'avatar' => [
+                'required',
+                'file',
+                'mimes:jpeg,png,jpg',
+                'max:10240',
+            ],
         ];
     }
 

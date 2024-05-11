@@ -108,11 +108,11 @@ abstract class BaseAtmosClient extends BaseClient
             parent::logRequest(
                 new HttpRequestLogDTO(
                     method: $method,
-                    headers: ['Authorization' => $this->token],
                     url: $this->baseUrl . $path,
                     status: $response->status(),
                     response: $response->body(),
                     duration: $response->transferStats?->getTransferTime(),
+                    headers: ['Authorization' => $this->token],
                     body: $data,
                 ),
                 'error'

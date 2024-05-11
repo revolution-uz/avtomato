@@ -46,7 +46,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api.php'));
         }
 
-        Route::middleware('api')
+        Route::middleware(['api', 'force.json'])
             ->namespace($this->namespace)
             ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
             ->prefix('api/v1')
