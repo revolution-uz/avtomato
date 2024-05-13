@@ -6,6 +6,7 @@ use App\Enums\Company\AttachmentTypeEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -61,11 +62,16 @@ class Attachment extends Model
         $attachment->attachmentable_id = $model->getKey();
         // storing file and preview
         $file->storeAs(self::UPLOADS_PATH . '/' . $type->getStoragePath(), $attachment->path, ['disk' => 'public']);
-        $thumbnail = Image::make($file)->resize(300, 300);
-        Storage::disk('public')->put(
-            self::PREVIEW_PATH . '/' . $type->getStoragePath() . '/' . $attachment->preview_path,
-            $thumbnail->encode('webp')
-        );
+        try {
+            $thumbnail = Image::make($file)->resize(300, 300);
+            Storage::disk('public')->put(
+                self::PREVIEW_PATH . '/' . $type->getStoragePath() . '/' . $attachment->preview_path,
+                $thumbnail->encode('webp')
+            );
+        } catch (\Exception $e) {
+            Log::error('Image processing error: ' . $e->getMessage());
+//            throw new \Exception('Image processing error');
+        }
         // saving attachment
         $attachment->saveOrFail();
 
@@ -75,14 +81,14 @@ class Attachment extends Model
     public function url(): Attribute
     {
         return Attribute::make(
-            get: fn () => asset(Attachment::UPLOADS_PATH . '/' . $this->type->getStoragePath() . '/' . $this->path)
+            get: fn() => asset(Attachment::UPLOADS_PATH . '/' . $this->type->getStoragePath() . '/' . $this->path)
         );
     }
 
     public function previewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => asset(Attachment::PREVIEW_PATH . '/' . $this->type->getStoragePath() . '/' . $this->preview_path)
+            get: fn() => asset(Attachment::PREVIEW_PATH . '/' . $this->type->getStoragePath() . '/' . $this->preview_path)
         );
     }
 }
