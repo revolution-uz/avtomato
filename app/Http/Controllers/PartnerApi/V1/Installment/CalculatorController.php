@@ -36,7 +36,7 @@ class CalculatorController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/installment/calculator/export/csv',
+        path: '/api/v1/installment/calculator/export-csv',
         description: 'Export installment calculator route',
         requestBody: new OA\RequestBody(
             description: 'Calculator request body',
@@ -48,7 +48,7 @@ class CalculatorController extends Controller
             new OA\Response(response: 200, description: 'Returned file', content: new OA\MediaType(mediaType: 'text/csv')),
         ]
     )]
-    public function export(CalculatorExportRequest $request)
+    public function exportCsv(CalculatorExportRequest $request)
     {
         $data = [['ID', 'Date', 'Amount', 'Portion', 'Monthly']];
         foreach ($this->prepareInstallmentGraph($request) as $item) {

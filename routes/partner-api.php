@@ -51,7 +51,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // calculator
         Route::prefix('calculator')->controller(CalculatorController::class)->group(function () {
             Route::post('calculate', 'calculate')->name('calculator');
-            Route::post('export', 'export')->name('calculator.export');
+            Route::post('export-csv', 'exportCsv')->name('calculator.export-csv');
         });
 
         // installments
