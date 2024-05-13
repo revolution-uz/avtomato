@@ -18,6 +18,7 @@ return [
         'localhost',
         'avtomato.test',
         'avtomato.uz',
+        'automato.uz',
     ],
 
     /**
