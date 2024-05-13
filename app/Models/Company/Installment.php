@@ -2,7 +2,6 @@
 
 namespace App\Models\Company;
 
-use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;

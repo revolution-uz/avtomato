@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\AttachmentTypeEnum;
+use Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
@@ -68,9 +69,9 @@ class Attachment extends Model
                 self::PREVIEW_PATH . '/' . $type->getStoragePath() . '/' . $attachment->preview_path,
                 $thumbnail->encode('webp')
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Image processing error: ' . $e->getMessage());
-//            throw new \Exception('Image processing error');
+            //            throw new \Exception('Image processing error');
         }
         // saving attachment
         $attachment->saveOrFail();
@@ -81,14 +82,14 @@ class Attachment extends Model
     public function url(): Attribute
     {
         return Attribute::make(
-            get: fn() => asset(Attachment::UPLOADS_PATH . '/' . $this->type->getStoragePath() . '/' . $this->path)
+            get: fn () => asset(Attachment::UPLOADS_PATH . '/' . $this->type->getStoragePath() . '/' . $this->path)
         );
     }
 
     public function previewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => asset(Attachment::PREVIEW_PATH . '/' . $this->type->getStoragePath() . '/' . $this->preview_path)
+            get: fn () => asset(Attachment::PREVIEW_PATH . '/' . $this->type->getStoragePath() . '/' . $this->preview_path)
         );
     }
 }
