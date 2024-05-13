@@ -2,7 +2,6 @@
 
 namespace App\Models\Company;
 
-use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;
@@ -110,7 +109,7 @@ class Installment extends Model
 
     public function documents(): MorphMany
     {
-        return $this->morphMany(Attachment::class, 'attachmentable')->where('attachmentable_type', AttachmentTypeEnum::INSTALLMENT_DOCUMENT);
+        return $this->morphMany(Attachment::class, 'attachmentable');
     }
 
     public function transactions(): HasMany
