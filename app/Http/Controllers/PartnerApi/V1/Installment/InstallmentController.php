@@ -343,8 +343,11 @@ class InstallmentController extends Controller
         return new InstallmentGuarantorResource($this->installmentService->updateGuarantor($id, $request));
     }
 
+    /**
+     * @throws Throwable
+     */
     #[OA\Delete(
-        path: '/api/v1/installment/installment/detach-guarantor',
+        path: '/api/v1/installment/installment/{id}/detach-guarantor',
         description: 'Installment guarantors detach route',
         requestBody: new OA\RequestBody(
             description: 'Installment guarantors request body',
@@ -352,13 +355,16 @@ class InstallmentController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/InstallmentGuarantorDetachRequest')
         ),
         tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function detachGuarantor(InstallmentGuarantorDetachRequest $request): StatusResource
+    public function detachGuarantor(int $id, InstallmentGuarantorDetachRequest $request): StatusResource
     {
-        $this->installmentService->detachGuarantors($request);
+        $this->installmentService->detachGuarantors($request->ids, $id);
 
         return new StatusResource(true);
     }

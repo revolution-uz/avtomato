@@ -13,7 +13,6 @@ use App\Http\Requests\Installment\InstallmentCardDetachRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
-use App\Http\Requests\Installment\InstallmentGuarantorDetachRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
@@ -21,7 +20,6 @@ use App\Http\Requests\Installment\InstallmentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Models\Company\Attachment;
-use App\Models\Company\Card;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentCard;
 use App\Models\Company\InstallmentComment;
@@ -142,22 +140,26 @@ class InstallmentService
         return $installmentGuarantor;
     }
 
-    public function detachGuarantors(InstallmentGuarantorDetachRequest $request)
+    /**
+     * @param  int[]  $guarantorIds
+     *
+     * @throws Throwable
+     */
+    public function detachGuarantors(array $guarantorIds, $installmentId): void
     {
-        foreach ($request->ids as $id) {
-            $this->detachGuarantor($id);
-        }
-    }
-
-    public function detachGuarantor(int $installmentGuarantorId): void
-    {
-        /** @var InstallmentGuarantor $installmentGuarantor */
-        $installmentGuarantor = InstallmentGuarantor::findOrFail($installmentGuarantorId);
-        //        deleting guarantor all attached cards
-        $cardIds = Card::query()->where('customer_id', $installmentGuarantor->customer_id)->pluck('id')->toArray();
-        InstallmentCard::query()->where('installment_id', $installmentGuarantor->installment_id)->whereIn('card_id', $cardIds)->delete();
+        InstallmentCard::query()
+            ->whereHas('installment', function ($query) use ($guarantorIds) {
+                $query->whereHas('guarantors', function ($query) use ($guarantorIds) {
+                    $query->whereIn('id', $guarantorIds);
+                });
+            })
+            ->where('installment_id', $installmentId)
+            ->delete();
         //        delete guarantor
-        $installmentGuarantor->delete();
+        InstallmentGuarantor::query()
+            ->whereIn('customer_id', $guarantorIds)
+            ->where('installment_id', $installmentId)
+            ->delete();
     }
 
     public function createComment(int $installmentId, InstallmentCommentRequest $request): InstallmentComment
