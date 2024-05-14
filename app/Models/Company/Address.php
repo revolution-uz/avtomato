@@ -12,6 +12,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
+ * @property AddressTypeEnum $type
  * @property string|null $address
  * @property int|null $region_id
  * @property int|null $district_id
