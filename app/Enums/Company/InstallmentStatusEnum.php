@@ -4,7 +4,6 @@ namespace App\Enums\Company;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\EnumMethods;
-use InvalidArgumentException;
 
 enum InstallmentStatusEnum: int
 {
@@ -31,7 +30,7 @@ enum InstallmentStatusEnum: int
         };
     }
 
-    public static function getPermissions(self|int $status): PermissionEnum
+    public static function getPermissions(self|int|null $status): ?PermissionEnum
     {
         if (! $status instanceof self) {
             $status = self::tryFrom($status);
@@ -42,7 +41,7 @@ enum InstallmentStatusEnum: int
             self::CANCELED => PermissionEnum::INSTALLMENT_CANCEL,
             self::FROZEN => PermissionEnum::INSTALLMENT_FREEZE,
             self::FINISHED => PermissionEnum::INSTALLMENT_FINISH,
-            default => throw new InvalidArgumentException('Status is not valid', 403),
+            default => null,
         };
     }
 }

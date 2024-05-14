@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Installment;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Installment;
 use App\Services\User\BalanceService;
@@ -48,6 +49,10 @@ class InstallmentChangeStatusRequest extends FormRequest
     public function authorize(BalanceService $balanceService): bool
     {
         $permissionEnum = InstallmentStatusEnum::getPermissions($this->status);
+
+        if (! $permissionEnum instanceof PermissionEnum) {
+            return false;
+        }
 
         return RbacHelper::checkPermission($permissionEnum) && $balanceService->isBalanceEnoughForFeature($permissionEnum->getMyFeature());
     }
