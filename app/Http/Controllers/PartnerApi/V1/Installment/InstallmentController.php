@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Installment;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Exceptions\BalanceIsNotEnoughException;
 use App\Helpers\RbacHelper;
 use App\Helpers\Swagger\OpenApiArrayResponse;
 use App\Helpers\Swagger\OpenApiDataResponse;
@@ -13,23 +15,20 @@ use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Installment\InstallmentCancelRequest;
 use App\Http\Requests\Installment\InstallmentCardAttachRequest;
 use App\Http\Requests\Installment\InstallmentCardDetachRequest;
+use App\Http\Requests\Installment\InstallmentChangeStatusRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentCustomersListRequest;
 use App\Http\Requests\Installment\InstallmentDocumentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
 use App\Http\Requests\Installment\InstallmentFilterRequest;
-use App\Http\Requests\Installment\InstallmentFinishRequest;
-use App\Http\Requests\Installment\InstallmentFreezeRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorDetachRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentsDeleteRequest;
-use App\Http\Requests\Installment\InstallmentStartRequest;
 use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Http\Requests\Installment\InstallmentViewRequest;
@@ -46,6 +45,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Throwable;
 
 class InstallmentController extends Controller
 {
@@ -81,7 +81,6 @@ class InstallmentController extends Controller
                         ->where('first_name', 'like', "%{$request->search}%")
                         ->orWhere('last_name', 'ilike', "%{$request->search}%")
                         ->orWhere('middle_name', 'ilike', "%{$request->search}%")
-                        ->orWhere('phone', 'like', "%{$request->search}%")
                     )
                     ->orWhereHas('branch', fn (Builder $q) => $q->where('name', 'ilike', "%{$request->search}%"))
                     ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$request->search}%"))
@@ -186,88 +185,31 @@ class InstallmentController extends Controller
         return new InstallmentResource($this->installmentService->toggleAutoCharge(Installment::findOrFail($id), $request));
     }
 
+    /**
+     * @return InstallmentResource
+     *
+     * @throws BalanceIsNotEnoughException
+     * @throws Throwable
+     */
     #[OA\Post(
-        path: '/api/v1/installment/installment/{id}/start',
-        description: 'Installment start route',
+        path: '/api/v1/installment/installment/{id}/change-status',
+        description: 'Installment change status route',
         tags: ['Installments'],
         parameters: [
             new OpenApiIdParameter(modelName: 'Installment'),
         ],
         responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
+            new OpenApiDataResponse(resourceName: 'InstallmentChangeStatusRequest'),
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function start(int $id, InstallmentStartRequest $request)
+    public function changeStatus(int $id, InstallmentChangeStatusRequest $request)
     {
         $installment = Installment::findOrFail($id);
-        if ($this->installmentService->start($installment)) {
+        if ($this->installmentService->changeStatus($id, InstallmentStatusEnum::tryFrom($request->status))) {
             return new InstallmentResource($installment);
         }
         throw new AccessDeniedException('You cannot start this installment');
-    }
-
-    #[OA\Post(
-        path: '/api/v1/installment/installment/{id}/cancel',
-        description: 'Installment cancel route',
-        tags: ['Installments'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'Installment'),
-        ],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
-            new OpenApiNotFoundResponse,
-        ]
-    )]
-    public function cancel(int $id, InstallmentCancelRequest $request)
-    {
-        $installment = Installment::findOrFail($id);
-        if ($this->installmentService->cancel($installment)) {
-            return new InstallmentResource($installment);
-        }
-        throw new AccessDeniedException('You cannot cancel this installment');
-    }
-
-    #[OA\Post(
-        path: '/api/v1/installment/installment/{id}/freeze',
-        description: 'Installment freeze route',
-        tags: ['Installments'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'Installment'),
-        ],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
-            new OpenApiNotFoundResponse,
-        ]
-    )]
-    public function freeze(int $id, InstallmentFreezeRequest $request)
-    {
-        $installment = Installment::findOrFail($id);
-        if ($this->installmentService->freeze($installment)) {
-            return new InstallmentResource($installment);
-        }
-        throw new AccessDeniedException('You cannot cancel this installment');
-    }
-
-    #[OA\Post(
-        path: '/api/v1/installment/installment/{id}/finish',
-        description: 'Installment finish route',
-        tags: ['Installments'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'Installment'),
-        ],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentResource'),
-            new OpenApiNotFoundResponse,
-        ]
-    )]
-    public function finish(int $id, InstallmentFinishRequest $request)
-    {
-        $installment = Installment::findOrFail($id);
-        if ($this->installmentService->finish($installment)) {
-            return new InstallmentResource($installment);
-        }
-        throw new AccessDeniedException('You cannot cancel this installment');
     }
 
     #[OA\Delete(
@@ -401,8 +343,11 @@ class InstallmentController extends Controller
         return new InstallmentGuarantorResource($this->installmentService->updateGuarantor($id, $request));
     }
 
+    /**
+     * @throws Throwable
+     */
     #[OA\Delete(
-        path: '/api/v1/installment/installment/detach-guarantor',
+        path: '/api/v1/installment/installment/{id}/detach-guarantor',
         description: 'Installment guarantors detach route',
         requestBody: new OA\RequestBody(
             description: 'Installment guarantors request body',
@@ -410,13 +355,16 @@ class InstallmentController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/InstallmentGuarantorDetachRequest')
         ),
         tags: ['Installments'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
     )]
-    public function detachGuarantor(InstallmentGuarantorDetachRequest $request): StatusResource
+    public function detachGuarantor(int $id, InstallmentGuarantorDetachRequest $request): StatusResource
     {
-        $this->installmentService->detachGuarantors($request);
+        $this->installmentService->detachGuarantors($request->ids, $id);
 
         return new StatusResource(true);
     }

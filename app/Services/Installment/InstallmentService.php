@@ -13,7 +13,6 @@ use App\Http\Requests\Installment\InstallmentCardDetachRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
-use App\Http\Requests\Installment\InstallmentGuarantorDetachRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorRequest;
 use App\Http\Requests\Installment\InstallmentGuarantorUpdateRequest;
 use App\Http\Requests\Installment\InstallmentRequest;
@@ -21,7 +20,6 @@ use App\Http\Requests\Installment\InstallmentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Models\Company\Attachment;
-use App\Models\Company\Card;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentCard;
 use App\Models\Company\InstallmentComment;
@@ -142,22 +140,26 @@ class InstallmentService
         return $installmentGuarantor;
     }
 
-    public function detachGuarantors(InstallmentGuarantorDetachRequest $request)
+    /**
+     * @param  int[]  $guarantorIds
+     *
+     * @throws Throwable
+     */
+    public function detachGuarantors(array $guarantorIds, $installmentId): void
     {
-        foreach ($request->ids as $id) {
-            $this->detachGuarantor($id);
-        }
-    }
-
-    public function detachGuarantor(int $installmentGuarantorId): void
-    {
-        /** @var InstallmentGuarantor $installmentGuarantor */
-        $installmentGuarantor = InstallmentGuarantor::findOrFail($installmentGuarantorId);
-        //        deleting guarantor all attached cards
-        $cardIds = Card::query()->where('customer_id', $installmentGuarantor->customer_id)->pluck('id')->toArray();
-        InstallmentCard::query()->where('installment_id', $installmentGuarantor->installment_id)->whereIn('card_id', $cardIds)->delete();
+        InstallmentCard::query()
+            ->whereHas('installment', function ($query) use ($guarantorIds) {
+                $query->whereHas('guarantors', function ($query) use ($guarantorIds) {
+                    $query->whereIn('id', $guarantorIds);
+                });
+            })
+            ->where('installment_id', $installmentId)
+            ->delete();
         //        delete guarantor
-        $installmentGuarantor->delete();
+        InstallmentGuarantor::query()
+            ->whereIn('customer_id', $guarantorIds)
+            ->where('installment_id', $installmentId)
+            ->delete();
     }
 
     public function createComment(int $installmentId, InstallmentCommentRequest $request): InstallmentComment
@@ -185,67 +187,48 @@ class InstallmentService
         }
     }
 
-    public function start(Installment $installment): bool
+    /**
+     * @throws Throwable
+     * @throws BalanceIsNotEnoughException
+     */
+    public function changeStatus(int $installmentId, InstallmentStatusEnum $status): bool
     {
+        $installment = Installment::query()
+            ->where('id', $installmentId)
+            ->firstOrFail();
 
-        if ($installment->status == InstallmentStatusEnum::FROZEN) {
-            return $this->changeStatus($installment, InstallmentStatusEnum::RUNNING);
-        }
-        if ($this->changeStatus($installment, InstallmentStatusEnum::RUNNING)) {
-            $this->balanceService->chargeAmount(PermissionEnum::getFeature(PermissionEnum::INSTALLMENT_START), $installment);
-            /** @var Tariff $tariff */
-            $tariff = Tariff::findOrFail($installment->tariff_id);
-            $amount = $installment->amount;
-            $amount -= $installment->initial_fee;
-            $portion = $amount * $tariff->percent / 100;
-
-            $currentDate = new Carbon;
-            $currentDate->timestamp = $installment->starts_in->timestamp;
-            $periods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($installment->period - 1));
-
-            foreach ($periods as $period) {
-                $installmentGraph = new InstallmentGraph;
-                $installmentGraph->installment_id = $installment->id;
-                $installmentGraph->amount = $amount / $installment->period + $portion;
-                $installmentGraph->starts_in = Carbon::make($period->timestamp);
-                $installmentGraph->status = InstallmentStatusEnum::RUNNING;
-                $installmentGraph->save();
-            }
-
-            return true;
+        if ($status == InstallmentStatusEnum::RUNNING) {
+            $this->running($installment);
         }
 
-        return false;
+        $installment->status = $status;
+
+        return $installment->save();
     }
 
-    public function cancel(Installment $installment)
+    /**
+     * @throws BalanceIsNotEnoughException
+     */
+    private function running(Installment $installment): void
     {
-        return $this->changeStatus($installment, InstallmentStatusEnum::CANCELED);
-    }
+        $this->balanceService->chargeAmount(PermissionEnum::getFeature(PermissionEnum::INSTALLMENT_START), $installment);
+        /** @var Tariff $tariff */
+        $tariff = Tariff::findOrFail($installment->tariff_id);
+        $amount = $installment->amount;
+        $amount -= $installment->initial_fee;
+        $portion = $amount * $tariff->percent / 100;
 
-    public function freeze(Installment $installment)
-    {
-        return $this->changeStatus($installment, InstallmentStatusEnum::FROZEN);
-    }
+        $currentDate = new Carbon;
+        $currentDate->timestamp = $installment->starts_in->timestamp;
+        $periods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($installment->period - 1));
 
-    public function finish(Installment $installment)
-    {
-        return $this->changeStatus($installment, InstallmentStatusEnum::FINISHED);
-    }
-
-    private function changeStatus(Installment $installment, InstallmentStatusEnum $statusEnum)
-    {
-        if ($this->possibleToConvertIntoStatus($installment, $statusEnum)) {
-            $installment->status = $statusEnum;
-
-            return $installment->save();
+        foreach ($periods as $period) {
+            $installmentGraph = new InstallmentGraph;
+            $installmentGraph->installment_id = $installment->id;
+            $installmentGraph->amount = $amount / $installment->period + $portion;
+            $installmentGraph->starts_in = Carbon::make($period->timestamp);
+            $installmentGraph->status = InstallmentStatusEnum::RUNNING;
+            $installmentGraph->save();
         }
-
-        return false;
-    }
-
-    private function possibleToConvertIntoStatus(Installment $installment, InstallmentStatusEnum $statusEnum)
-    {
-        return in_array($installment->status, InstallmentStatusEnum::getStatusListByStatus($statusEnum));
     }
 }

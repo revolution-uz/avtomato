@@ -5,6 +5,7 @@ namespace App\Http\Requests\Installment;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -23,7 +24,11 @@ class InstallmentGuarantorDetachRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:installment_guarantors,id',
+            'ids.*' => [
+                'required',
+                'integer',
+                Rule::exists('installment_guarantors', 'id'),
+            ],
         ];
     }
 
