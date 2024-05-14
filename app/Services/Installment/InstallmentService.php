@@ -185,67 +185,48 @@ class InstallmentService
         }
     }
 
-    public function start(Installment $installment): bool
+    /**
+     * @throws Throwable
+     * @throws BalanceIsNotEnoughException
+     */
+    public function changeStatus(int $installmentId, InstallmentStatusEnum $status): bool
     {
+        $installment = Installment::query()
+            ->where('id', $installmentId)
+            ->firstOrFail();
 
-        if ($installment->status == InstallmentStatusEnum::FROZEN) {
-            return $this->changeStatus($installment, InstallmentStatusEnum::RUNNING);
-        }
-        if ($this->changeStatus($installment, InstallmentStatusEnum::RUNNING)) {
-            $this->balanceService->chargeAmount(PermissionEnum::getFeature(PermissionEnum::INSTALLMENT_START), $installment);
-            /** @var Tariff $tariff */
-            $tariff = Tariff::findOrFail($installment->tariff_id);
-            $amount = $installment->amount;
-            $amount -= $installment->initial_fee;
-            $portion = $amount * $tariff->percent / 100;
-
-            $currentDate = new Carbon;
-            $currentDate->timestamp = $installment->starts_in->timestamp;
-            $periods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($installment->period - 1));
-
-            foreach ($periods as $period) {
-                $installmentGraph = new InstallmentGraph;
-                $installmentGraph->installment_id = $installment->id;
-                $installmentGraph->amount = $amount / $installment->period + $portion;
-                $installmentGraph->starts_in = Carbon::make($period->timestamp);
-                $installmentGraph->status = InstallmentStatusEnum::RUNNING;
-                $installmentGraph->save();
-            }
-
-            return true;
+        if ($status == InstallmentStatusEnum::RUNNING) {
+            $this->running($installment);
         }
 
-        return false;
+        $installment->status = $status;
+
+        return $installment->save();
     }
 
-    public function cancel(Installment $installment)
+    /**
+     * @throws BalanceIsNotEnoughException
+     */
+    private function running(Installment $installment): void
     {
-        return $this->changeStatus($installment, InstallmentStatusEnum::CANCELED);
-    }
+        $this->balanceService->chargeAmount(PermissionEnum::getFeature(PermissionEnum::INSTALLMENT_START), $installment);
+        /** @var Tariff $tariff */
+        $tariff = Tariff::findOrFail($installment->tariff_id);
+        $amount = $installment->amount;
+        $amount -= $installment->initial_fee;
+        $portion = $amount * $tariff->percent / 100;
 
-    public function freeze(Installment $installment)
-    {
-        return $this->changeStatus($installment, InstallmentStatusEnum::FROZEN);
-    }
+        $currentDate = new Carbon;
+        $currentDate->timestamp = $installment->starts_in->timestamp;
+        $periods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($installment->period - 1));
 
-    public function finish(Installment $installment)
-    {
-        return $this->changeStatus($installment, InstallmentStatusEnum::FINISHED);
-    }
-
-    private function changeStatus(Installment $installment, InstallmentStatusEnum $statusEnum)
-    {
-        if ($this->possibleToConvertIntoStatus($installment, $statusEnum)) {
-            $installment->status = $statusEnum;
-
-            return $installment->save();
+        foreach ($periods as $period) {
+            $installmentGraph = new InstallmentGraph;
+            $installmentGraph->installment_id = $installment->id;
+            $installmentGraph->amount = $amount / $installment->period + $portion;
+            $installmentGraph->starts_in = Carbon::make($period->timestamp);
+            $installmentGraph->status = InstallmentStatusEnum::RUNNING;
+            $installmentGraph->save();
         }
-
-        return false;
-    }
-
-    private function possibleToConvertIntoStatus(Installment $installment, InstallmentStatusEnum $statusEnum)
-    {
-        return in_array($installment->status, InstallmentStatusEnum::getStatusListByStatus($statusEnum));
     }
 }

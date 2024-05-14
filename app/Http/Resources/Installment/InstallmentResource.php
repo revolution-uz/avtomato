@@ -6,7 +6,6 @@ use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Http\Resources\AttachmentResource;
 use App\Http\Resources\Customer\CardResource;
-use App\Http\Resources\Customer\CustomerListItemResource;
 use App\Http\Resources\Customer\SingleCustomerResource;
 use App\Http\Resources\Management\BranchResource;
 use App\Models\Company\Installment;
@@ -20,7 +19,7 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
-        new OA\Property(property: 'customer', ref: '#/components/schemas/CustomerListItemResource'),
+        new OA\Property(property: 'customer', ref: '#/components/schemas/SingleCustomerResource'),
         new OA\Property(property: 'branch_id', type: 'int', example: '1'),
         new OA\Property(property: 'branch', ref: '#/components/schemas/BranchResource', nullable: true),
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
@@ -38,7 +37,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'updated_at', type: 'int', example: '16933424'),
         new OA\Property(property: 'graphs', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentGraphResource')),
         new OA\Property(property: 'cards', type: 'array', items: new OA\Items(ref: '#/components/schemas/CardResource')),
-        new OA\Property(property: 'guarantors', type: 'array', items: new OA\Items(ref: '#/components/schemas/CustomerListItemResource')),
+        new OA\Property(property: 'guarantors', type: 'array', items: new OA\Items(ref: '#/components/schemas/SingleCustomerResource')),
         new OA\Property(property: 'documents', type: 'array', items: new OA\Items(ref: '#/components/schemas/AttachmentResource')),
         new OA\Property(property: 'comments', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentCommentListResource')),
         new OA\Property(property: 'transactions', type: 'array', items: new OA\Items(ref: '#/components/schemas/TransactionResource')),
@@ -57,7 +56,7 @@ class InstallmentResource extends JsonResource
             'customer' => new SingleCustomerResource($this->resource->customer),
             'graphs' => InstallmentGraphResource::collection($this->resource->graphs),
             'cards' => CardResource::collection($this->resource->cards),
-            'guarantors' => CustomerListItemResource::collection($this->resource->guarantors),
+            'guarantors' => SingleCustomerResource::collection($this->resource->guarantors),
             'documents' => AttachmentResource::collection($this->resource->documents),
             'comments' => InstallmentCommentListResource::collection($this->resource->comments),
             'transactions' => TransactionResource::collection($this->resource->transactions),
