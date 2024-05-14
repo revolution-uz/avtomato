@@ -12,7 +12,7 @@ use OpenApi\Attributes as OA;
     schema: 'AttachAddressRequest',
     title: 'Request to create an address',
     properties: [
-        new OA\Property(property: 'type', type: 'int', enum: [AddressTypeEnum::BIRTH_PLACE, AddressTypeEnum::LIVING_PLACE, AddressTypeEnum::TEMPORARY_PLACE], example: '1'),
+        new OA\Property(property: 'type', type: 'int', enum: [AddressTypeEnum::BIRTH_PLACE, AddressTypeEnum::LIVING_PLACE, AddressTypeEnum::TEMPORARY_PLACE, AddressTypeEnum::WORK_PLACE], example: '1'),
         new OA\Property(property: 'address', type: 'string', example: 'Al-Xorazmiy ko\'chasi 1-uy'),
         new OA\Property(property: 'region_id', type: 'int', example: '1', nullable: true),
         new OA\Property(property: 'district_id', type: 'int', example: '2', nullable: true),
