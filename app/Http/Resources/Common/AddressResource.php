@@ -12,6 +12,7 @@ use OpenApi\Attributes as OA;
     title: 'AddressResource',
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
+        new OA\Property(property: 'type', type: 'int', example: '1'),
         new OA\Property(property: 'address', type: 'string', example: 'Al-Xorazmiy ko\'chasi 1-uy'),
         new OA\Property(property: 'region_id', type: 'int', example: '1'),
         new OA\Property(property: 'district_id', type: 'int', example: '1'),
@@ -30,6 +31,7 @@ class AddressResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
+            'type' => $this->resource->type,
             'address' => $this->resource->address,
             'region_id' => $this->resource->region_id,
             'district_id' => $this->resource->district_id,

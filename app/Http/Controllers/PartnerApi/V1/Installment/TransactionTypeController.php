@@ -27,7 +27,7 @@ use OpenApi\Attributes as OA;
 class TransactionTypeController extends Controller
 {
     #[OA\Get(
-        path: '/api/v1/transaction-type',
+        path: '/api/v1/installment/transaction-type',
         description: 'TransactionType route',
         tags: ['TransactionTypes'],
         parameters: [
@@ -67,7 +67,7 @@ class TransactionTypeController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/v1/transaction-type/{id}',
+        path: '/api/v1/installment/transaction-type/{id}',
         description: 'TransactionType get single route',
         tags: ['TransactionTypes'],
         parameters: [
@@ -84,7 +84,7 @@ class TransactionTypeController extends Controller
     }
 
     #[OA\Post(
-        path: '/api/v1/transaction-type',
+        path: '/api/v1/installment/transaction-type',
         description: 'TransactionType create route',
         requestBody: new OA\RequestBody(
             description: 'TransactionType create request body',
@@ -108,7 +108,7 @@ class TransactionTypeController extends Controller
     }
 
     #[OA\Put(
-        path: '/api/v1/transaction-type/{id}',
+        path: '/api/v1/installment/transaction-type/{id}',
         description: 'TransactionType update route',
         requestBody: new OA\RequestBody(
             description: 'TransactionType update request body',
@@ -145,7 +145,7 @@ class TransactionTypeController extends Controller
     }
 
     #[OA\Delete(
-        path: '/api/v1/transaction-type',
+        path: '/api/v1/installment/transaction-type',
         description: 'TransactionType delete route',
         requestBody: new OA\RequestBody(
             description: 'TransactionTypes delete request body',
