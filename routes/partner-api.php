@@ -59,7 +59,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/', 'index')->name('installments.index');
             Route::post('/', 'create')->name('installments.create');
             Route::delete('/', 'delete')->name('installments.delete');
-            Route::get('{id}', 'getSingle')->name('installments.get-single');
+            Route::get('{id}', 'single')->name('installments.single');
             Route::put('{id}', 'update')->name('installments.update');
             Route::post('{id}/change-status', 'changeStatus')->name('installments.change-status');
             Route::post('{id}/attach-card', 'attachCard')->name('installments.attach-card');

@@ -108,7 +108,7 @@ class InstallmentController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function getSingle(int $id, InstallmentViewRequest $request): InstallmentResource
+    public function single(int $id, InstallmentViewRequest $request): InstallmentResource
     {
         return new InstallmentResource(Installment::findOrFail($id));
     }

@@ -78,7 +78,7 @@ class InstallmentUpdateRequest extends FormRequest
                     }
                 },
             ],
-            'starts_in' => 'required|int',
+            'starts_in' => 'required|date',
         ];
     }
 
