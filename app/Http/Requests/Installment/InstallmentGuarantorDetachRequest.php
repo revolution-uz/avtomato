@@ -27,7 +27,7 @@ class InstallmentGuarantorDetachRequest extends FormRequest
             'ids.*' => [
                 'required',
                 'integer',
-                Rule::exists('installment_guarantors', 'id'),
+                Rule::exists('customers', 'id'),
             ],
         ];
     }
