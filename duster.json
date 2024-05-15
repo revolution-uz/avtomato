@@ -4,5 +4,8 @@
       "phpstan": ["./vendor/bin/phpstan", "analyse"]
     }
   },
+  "exclude": [
+    "public/adminer/**"
+  ],
   "processTimeout": 240
 }
