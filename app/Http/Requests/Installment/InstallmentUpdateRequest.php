@@ -18,7 +18,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'period', type: 'int', example: '12'),
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
         new OA\Property(property: 'initial_fee', type: 'double', example: '100000'),
-        new OA\Property(property: 'starts_in', type: 'int', example: '16933424'),
+        new OA\Property(property: 'starts_in', type: 'string', format: 'date', example: '01-12-2023'),
     ],
 )]
 /**

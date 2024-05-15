@@ -120,7 +120,7 @@ class InstallmentControllerTest extends TestCase
             'period' => $tariff->max_period,
             'amount' => $tariff->max_amount,
             'initial_fee' => $tariff->max_initial_fee,
-            'starts_in' => Carbon::now()->toDateString(),
+            'starts_in' => Carbon::now(),
         ];
         $response = $this->actingAs($admin)->putJson(route('installments.update', ['id' => $installment->id]), $request);
         $installment->refresh();
