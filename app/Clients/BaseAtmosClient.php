@@ -76,11 +76,9 @@ abstract class BaseAtmosClient extends BaseClient
             $credentials->access_token = $response->access_token;
             $credentials->expires_in = $response->expires_in + time();
             $credentials->token_type = $response->token_type;
-
             $feature->data = $credentials->toArray();
-            $this->token = $credentials->token_type . ' ' . $credentials->access_token;
 
-            return $feature->saveOrFail();
+            $feature->saveOrFail();
         }
 
         $this->token = $credentials->token_type . ' ' . $credentials->access_token;
