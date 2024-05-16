@@ -18,6 +18,7 @@ class BaseFeatureSeeder extends Seeder
                 'name' => $case->value,
             ], [
                 'is_default_active' => ModuleEnum::getModuleForFeature($case) === ModuleEnum::cases(),
+                'description' => $case->getDefaultDescription(),
                 'original_amount' => 0,
             ]);
             $feature->modules()->sync(

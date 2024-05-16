@@ -56,7 +56,7 @@ class FeatureResource extends Resource
                 return (bool) $resource->modules->first(fn (Module $module) => $module->is_active);
             }),
             Code::make(__('nova.feature.original_data'), 'original_data')->json()->exceptOnForms(),
-            Code::make(__('nova.feature.data'), 'data')->json()->exceptOnForms(),
+            Code::make(__('nova.feature.data'), 'data')->json()->help($this->resource->description),
             DateTime::make(__('nova.feature.created_at'), 'created_at')->filterable()->exceptOnForms(),
             DateTime::make(__('nova.feature.updated_at'), 'updated_at')->filterable()->exceptOnForms(),
 
