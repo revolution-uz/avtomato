@@ -200,7 +200,6 @@ class CustomerControllerTest extends TestCase
             'external_id' => null,
         ]);
 
-        $card_id = '1234567890';
         AtmosFaker::getToken();
         AtmosFaker::confirmCard();
 
@@ -212,7 +211,6 @@ class CustomerControllerTest extends TestCase
 
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)->postJson(route('customer.confirm-card', ['id' => $customer->id]), $request);
-
         $response->assertSuccessful();
     }
 

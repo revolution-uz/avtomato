@@ -40,6 +40,7 @@ use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -116,6 +117,34 @@ class CustomerController extends Controller
         );
 
         return new CustomerInfoByPassportDataResource($passportData);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/customer/by-passport',
+        description: 'Get single customer by passport info',
+        requestBody: new OA\RequestBody(
+            description: 'Request to find a customer by passport',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/CustomerByPassportRequest')
+        ),
+        tags: ['Customers'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'SingleCustomerResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function findByPassport(CustomerByPassportRequest $request): SingleCustomerResource
+    {
+        return new SingleCustomerResource(
+            Customer::query()
+                ->when($request->pinfl, fn (Builder $q) => $q->where('pinfl', $request->pinfl))
+                ->when(
+                    $request->passport_series,
+                    fn (Builder $q) => $q
+                        ->where('passport_series', $request->passport_series)
+                        ->where('passport_number', $request->passport_number)
+                )->firstOrFail()
+        );
     }
 
     /**
@@ -230,66 +259,11 @@ class CustomerController extends Controller
     {
         $card = new Card;
         $card->fill($request->validated());
-        $card->setPan();
-        $card->status = CardStatusEnum::INACTIVE;
+        $card->computingBeforeInsert();
         $card->customer_id = $id;
         $card->saveOrFail();
 
-        return AttachCustomerCardResource::make($this->atmosCardService->attachCard($card->number, $card->expiry), new CardResource($card));
-    }
-
-    #[OA\Post(
-        path: '/api/v1/customer/by-passport',
-        description: 'Get single customer by passport info',
-        requestBody: new OA\RequestBody(
-            description: 'Request to find a customer by passport',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CustomerByPassportRequest')
-        ),
-        tags: ['Customers'],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'SingleCustomerResource'),
-            new OpenApiNotFoundResponse,
-        ]
-    )]
-    public function findByPassport(CustomerByPassportRequest $request): SingleCustomerResource
-    {
-        return new SingleCustomerResource(
-            Customer::query()
-                ->when($request->pinfl, fn (Builder $q) => $q->where('pinfl', $request->pinfl))
-                ->when(
-                    $request->passport_series,
-                    fn (Builder $q) => $q
-                        ->where('passport_series', $request->passport_series)
-                        ->where('passport_number', $request->passport_number)
-                )->firstOrFail()
-        );
-    }
-
-    #[OA\Delete(
-        path: '/api/v1/customer/{id}/card',
-        description: 'Card delete route',
-        requestBody: new OA\RequestBody(
-            description: 'Card delete request body',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CardsDeleteRequest')
-        ),
-        tags: ['Customers'],
-        parameters: [
-            new OpenApiIdParameter(modelName: 'Customer'),
-        ],
-        responses: [
-            new OpenApiDataResponse('StatusResource'),
-        ]
-    )]
-    public function detachCard(int $id, CardsDeleteRequest $request): StatusResource
-    {
-        Card::query()
-            ->whereIn('id', $request->ids)
-            ->where('customer_id', $id)
-            ->delete();
-
-        return new StatusResource(true);
+        return AttachCustomerCardResource::make($this->atmosCardService->attachCard(Crypt::decryptString($card->number), $card->expiry), new CardResource($card));
     }
 
     /**
@@ -322,15 +296,41 @@ class CustomerController extends Controller
         $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request->transaction_id, $request->otp);
         if ($atmosConfirmCardDto->result->isSucces()) {
             $card->external_id = $atmosConfirmCardDto->data->card_token;
-            $card->balance = $atmosConfirmCardDto->data->balance;
             $card->owner = $atmosConfirmCardDto->data->card_holder;
-            $card->phone = $atmosConfirmCardDto->data->phone;
+            $card->phone = '+' . $atmosConfirmCardDto->data->phone;
+            $card->status = CardStatusEnum::ACTIVE;
             $card->saveOrFail();
 
             return CardResource::make($card);
         }
 
         return ErrorConfirmCardResource::make($atmosConfirmCardDto->result, CardResource::make($card));
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/customer/{id}/card',
+        description: 'Card delete route',
+        requestBody: new OA\RequestBody(
+            description: 'Card delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/CardsDeleteRequest')
+        ),
+        tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer'),
+        ],
+        responses: [
+            new OpenApiDataResponse('StatusResource'),
+        ]
+    )]
+    public function detachCard(int $id, CardsDeleteRequest $request): StatusResource
+    {
+        Card::query()
+            ->whereIn('id', $request->ids)
+            ->where('customer_id', $id)
+            ->delete();
+
+        return new StatusResource(true);
     }
 
     #[OA\Post(

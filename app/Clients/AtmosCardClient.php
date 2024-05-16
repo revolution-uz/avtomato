@@ -32,7 +32,7 @@ class AtmosCardClient extends BaseAtmosClient
     {
         $this->baseUrl = config('clients.atmos.card.base_url');
         $this->channel = 'atmos-card-client';
-        $this->featureName = FeatureEnum::ATMOS_PINFL_PAY;
+        $this->featureName = FeatureEnum::ATMOS_CARD_PAY;
     }
 
     public function getClientCode(): ClientCodeEnum

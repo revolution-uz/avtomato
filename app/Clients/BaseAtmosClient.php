@@ -4,6 +4,7 @@ namespace App\Clients;
 
 use App\DTOs\Atmos\AtmosAuthTokenDTO;
 use App\DTOs\Atmos\AtmosCredentialsDTO;
+use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\HttpRequestLogDTO;
 use App\Enums\FeatureEnum;
 use App\Exceptions\AtmosException;
@@ -43,35 +44,32 @@ abstract class BaseAtmosClient extends BaseClient
         return AtmosAuthTokenDTO::from($response->json());
     }
 
-    protected function activateRevolutionToken()
+    protected function activateRevolutionToken(): bool
     {
         $response = $this->getOrRefreshToken($this->username, $this->password);
         $this->token = $response->token_type . ' ' . $response->access_token;
+
+        return true;
 
     }
 
     /**
      * @throws Throwable
      */
-    protected function activateFeatureToken(): void
+    protected function activateFeatureToken(): bool
     {
         $feature = Feature::findByName($this->featureName?->value);
 
-        if (! $feature->is_active) {
-            return;
+        if (! $feature->is_active || ! $feature->data) {
+            return false;
         }
-        $credentials = new AtmosCredentialsDTO(
-            $feature->data['username'] ?? null,
-            $feature->data['password'] ?? null,
-            $feature->data['store_id'] ?? null,
-            $feature->data['expires_in'] ?? null,
-            $feature->data['access_token'] ?? null,
-            $feature->data['token_type'] ?? null
-        );
 
+        $credentials = AtmosCredentialsDTO::from($feature->data);
         if (! $credentials->username) {
-            return;
+            return false;
         }
+
+        $this->store_id = $credentials->store_id;
 
         if ($credentials->expires_in <= time()) {
             $response = $this->getOrRefreshToken($credentials->username, $credentials->password);
@@ -80,11 +78,14 @@ abstract class BaseAtmosClient extends BaseClient
             $credentials->token_type = $response->token_type;
 
             $feature->data = $credentials->toArray();
-            $feature->saveOrFail();
+            $this->token = $credentials->token_type . ' ' . $credentials->access_token;
+
+            return $feature->saveOrFail();
         }
 
-        $this->store_id = $credentials->store_id;
         $this->token = $credentials->token_type . ' ' . $credentials->access_token;
+
+        return true;
     }
 
     /**
@@ -92,7 +93,9 @@ abstract class BaseAtmosClient extends BaseClient
      */
     protected function makeRequest(string $path, array $data, string $method = 'post'): array
     {
-        $this->activateToken();
+        if (! $this->activateToken()) {
+            return ['result' => new AtmosResultDTO('ERROR', 'Cannot activate the token')];
+        }
         $data['lang'] = app()->getLocale();
         $response = Http::withHeaders([
             'Authorization' => $this->token,
@@ -136,9 +139,9 @@ abstract class BaseAtmosClient extends BaseClient
     private function activateToken()
     {
         if ($this->isFeature) {
-            $this->activateFeatureToken();
+            return $this->activateFeatureToken();
         } else {
-            $this->activateRevolutionToken();
+            return $this->activateRevolutionToken();
         }
     }
 }

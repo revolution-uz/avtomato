@@ -66,14 +66,25 @@ class Card extends Model
             ->logFillable();
     }
 
-    public function setPan()
+    public function setPan(): void
     {
         $this->pan = substr_replace($this->number, '******', 6, 6);
+    }
+
+    public function setNumber(): void
+    {
         $this->number = Crypt::encryptString($this->number);
     }
 
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function computingBeforeInsert(): void
+    {
+        $this->status = CardStatusEnum::INACTIVE;
+        $this->setPan();
+        $this->setNumber();
     }
 }
