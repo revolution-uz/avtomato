@@ -9,7 +9,7 @@ class AtmosConfirmCardResponseDTO extends BaseScoringRequest
 {
     public function __construct(
         public AtmosResultDTO $result,
-        public AtmosCardDTO $data,
+        public ?AtmosCardDTO $data,
     ) {
     }
 }
