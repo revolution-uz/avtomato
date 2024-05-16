@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
@@ -48,7 +49,7 @@ class BaseFeatureResource extends Resource
         return [
             ID::make()->sortable(),
             Text::make(__('nova.feature.name'), 'name')->filterable()->exceptOnForms(),
-            Text::make(__('nova.feature.description'), 'description')->filterable(),
+            Textarea::make(__('nova.feature.description'), 'description')->filterable(),
             Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable(),
             Boolean::make(__('nova.feature.is_default_active'), 'is_default_active')->filterable()->showOnUpdating(function (NovaRequest $request, BaseFeature $resource) {
                 return (bool) $resource->modules->first(fn (BaseModule $module) => $module->is_default_active);

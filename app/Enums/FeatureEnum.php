@@ -36,4 +36,13 @@ enum FeatureEnum: string
     case ACTIVITY_LOG = 'activity_log';
     case ATMOS_CARD_PAY = 'atmos_card_pay';
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
+
+    public function getDefaultDescription(): ?string
+    {
+        return match ($this) {
+            self::ATMOS_PINFL_PAY,
+            self::ATMOS_CARD_PAY => '{"username" : "Consumer Key", "password" : "Consumer Secret", "store_id" : 1323, "expires_in": 0, "access_token" : "client_token", "token_type" : "Bearer"}',
+            default => null,
+        };
+    }
 }
