@@ -2,6 +2,7 @@
 
 namespace App\Services\Scoring;
 
+use App\Clients\AsaxiyClient;
 use App\Clients\PlumClient;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoResponseDTO;
@@ -14,9 +15,10 @@ use App\Services\User\BalanceService;
 class TaxService
 {
     public function __construct(
-        private readonly PlumClient $plumClient,
+        private readonly AsaxiyClient   $taxScoringClient,
         private readonly BalanceService $balanceService
-    ) {
+    )
+    {
     }
 
     public function scoringTax(TaxInfoCreateRequestDTO $dto): ScoringRequest
@@ -24,12 +26,12 @@ class TaxService
         $model = new ScoringRequest;
         $model->type = ScoringRequestTypeEnum::PLUM_TAX_INFO;
         $model->request = $dto;
-        $model->client_code = $this->plumClient->getClientCode();
+        $model->client_code = $this->taxScoringClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
         $this->balanceService->chargeAmount(FeatureEnum::SCORING_TAX_INFO, $model);
 
-        $model->response = TaxInfoResponseDTO::from($this->plumClient->scoringTax(
+        $model->response = TaxInfoResponseDTO::from($this->taxScoringClient->scoringTax(
             $dto->toArray()
         ));
 
