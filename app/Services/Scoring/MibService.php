@@ -3,7 +3,6 @@
 namespace App\Services\Scoring;
 
 use App\Clients\AsaxiyClient;
-use App\Clients\PlumClient;
 use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Mib\MibInfoResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
@@ -15,10 +14,9 @@ use App\Services\User\BalanceService;
 class MibService
 {
     public function __construct(
-        private readonly AsaxiyClient   $mibScoringClient,
+        private readonly AsaxiyClient $mibScoringClient,
         private readonly BalanceService $balanceService
-    )
-    {
+    ) {
     }
 
     public function scoringMib(MibInfoCreateRequestDTO $dto): ScoringRequest

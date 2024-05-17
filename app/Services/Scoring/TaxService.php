@@ -3,7 +3,6 @@
 namespace App\Services\Scoring;
 
 use App\Clients\AsaxiyClient;
-use App\Clients\PlumClient;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
@@ -15,10 +14,9 @@ use App\Services\User\BalanceService;
 class TaxService
 {
     public function __construct(
-        private readonly AsaxiyClient   $taxScoringClient,
+        private readonly AsaxiyClient $taxScoringClient,
         private readonly BalanceService $balanceService
-    )
-    {
+    ) {
     }
 
     public function scoringTax(TaxInfoCreateRequestDTO $dto): ScoringRequest
