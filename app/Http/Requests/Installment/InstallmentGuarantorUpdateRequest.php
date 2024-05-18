@@ -7,6 +7,7 @@ use App\Helpers\RbacHelper;
 use App\Models\Company\InstallmentGuarantor;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -25,7 +26,13 @@ class InstallmentGuarantorUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => [
+                'required',
+                'integer',
+                Rule::exists('installment_guarantors', 'customer_id')
+                    ->where('installment_id', $this->route('installment'))
+                    ->whereNull('deleted_at'),
+            ],
             'any_card_charge' => 'required|boolean',
         ];
     }
