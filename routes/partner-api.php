@@ -5,6 +5,7 @@ use App\Http\Controllers\PartnerApi\V1\Customer\CustomerController;
 use App\Http\Controllers\PartnerApi\V1\Info\InfoController;
 use App\Http\Controllers\PartnerApi\V1\Installment\CalculatorController;
 use App\Http\Controllers\PartnerApi\V1\Installment\InstallmentController;
+use App\Http\Controllers\PartnerApi\V1\Installment\InstallmentDetailsController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TariffsController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TransactionController;
 use App\Http\Controllers\PartnerApi\V1\Installment\TransactionTypeController;
@@ -62,17 +63,32 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('{id}', 'single')->name('installments.single');
             Route::put('{id}', 'update')->name('installments.update');
             Route::post('{id}/change-status', 'changeStatus')->name('installments.change-status');
-            Route::post('{id}/attach-card', 'attachCard')->name('installments.attach-card');
+        });
+
+        // installment-details
+        Route::prefix('installment-details/{id}')->controller(InstallmentDetailsController::class)->group(function () {
+            //cards
+            Route::get('installment-customers-card-list', 'installmentCustomersCardList')->name('installments.installment-customers-card-list');
+            Route::post('attach-card', 'attachCard')->name('installments.attach-card');
             Route::delete('detach-card', 'detachCard')->name('installments.detach-card');
-            Route::post('{id}/attach-guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
-            Route::get('{id}/customer-list', 'customersList')->name('installments.customers-list');
-            Route::put('update-guarantor/{id}', 'updateGuarantor')->name('installments.update-guarantor');
-            Route::delete('{id}/detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
-            Route::post('{id}/comment', 'createComment')->name('installments.create-comment');
-            Route::put('comment/{id}', 'updateComment')->name('installments.update-comment');
+            //guarantors
+            Route::get('guarantor-list', 'guarantorList')->name('installments.guarantor-list');
+            Route::post('attach-guarantor', 'attachGuarantor')->name('installments.attach-guarantor');
+            Route::put('update-guarantor/{guarantor_id}', 'updateGuarantor')->name('installments.update-guarantor');
+            Route::delete('detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
+
+            Route::get('customer-list', 'customersList')->name('installments.customers-list');
+            //comments
+            Route::get('comment-list', 'commentList')->name('installments.comment-list');
+            Route::post('comment', 'createComment')->name('installments.create-comment');
+            Route::put('comment/{comment_id}', 'updateComment')->name('installments.update-comment');
             Route::delete('comment', 'deleteComment')->name('installments.delete-comment');
-            Route::post('{id}/document', 'uploadDocument')->name('installments.upload-document');
+            //documents
+            Route::get('document-list', 'documentList')->name('installments.document-list');
+            Route::post('document', 'uploadDocument')->name('installments.upload-document');
             Route::delete('document', 'deleteDocument')->name('installments.delete-document');
+            //contacts
+            Route::get('contact-list', 'contactList')->name('installments.contact-list');
         });
 
         // transactions

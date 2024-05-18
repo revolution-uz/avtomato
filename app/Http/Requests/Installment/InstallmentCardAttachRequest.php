@@ -5,6 +5,7 @@ namespace App\Http\Requests\Installment;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -22,7 +23,11 @@ class InstallmentCardAttachRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'card_id' => 'required|exists:cards,id',
+            'card_id' => [
+                'required',
+                // todo: check if the card belongs to the customer
+                Rule::exists('cards', 'id'),
+            ],
         ];
     }
 

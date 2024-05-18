@@ -4,8 +4,6 @@ namespace App\Http\Resources\Installment;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
-use App\Http\Resources\AttachmentResource;
-use App\Http\Resources\Customer\CardResource;
 use App\Http\Resources\Customer\SingleCustomerResource;
 use App\Http\Resources\Management\BranchResource;
 use App\Models\Company\Installment;
@@ -19,16 +17,16 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+        new OA\Property(property: 'status', type: 'int', enum: InstallmentStatusEnum::class, example: InstallmentStatusEnum::DRAFT),
         new OA\Property(property: 'customer', ref: '#/components/schemas/SingleCustomerResource'),
         new OA\Property(property: 'branch_id', type: 'int', example: '1'),
         new OA\Property(property: 'branch', ref: '#/components/schemas/BranchResource', nullable: true),
         new OA\Property(property: 'tariff_id', type: 'int', example: '1'),
         new OA\Property(property: 'tariff', ref: '#/components/schemas/TariffResource'),
-        new OA\Property(property: 'type', type: 'int', enum: [InstallmentTypeEnum::WITHOUT_CARD, InstallmentTypeEnum::WITH_CARD], example: InstallmentTypeEnum::WITHOUT_CARD),
+        new OA\Property(property: 'type', type: 'int', enum: InstallmentTypeEnum::class, example: InstallmentTypeEnum::WITHOUT_CARD),
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
         new OA\Property(property: 'initial_fee', type: 'double', example: '100000'),
         new OA\Property(property: 'description', type: 'string', example: 'inside the order'),
-        new OA\Property(property: 'status', type: 'int', enum: [InstallmentStatusEnum::CANCELED, InstallmentStatusEnum::FROZEN, InstallmentStatusEnum::DRAFT, InstallmentStatusEnum::RUNNING, InstallmentStatusEnum::FINISHED], example: InstallmentStatusEnum::DRAFT),
         new OA\Property(property: 'sms_notify', type: 'boolean', example: 'false'),
         new OA\Property(property: 'any_card_charge', type: 'boolean', example: 'false'),
         new OA\Property(property: 'starts_in', type: 'int', example: '16933424'),
@@ -36,11 +34,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'created_at', type: 'int', example: '16933424'),
         new OA\Property(property: 'updated_at', type: 'int', example: '16933424'),
         new OA\Property(property: 'graphs', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentGraphResource')),
-        new OA\Property(property: 'cards', type: 'array', items: new OA\Items(ref: '#/components/schemas/CardResource')),
-        new OA\Property(property: 'guarantors', type: 'array', items: new OA\Items(ref: '#/components/schemas/SingleCustomerResource')),
-        new OA\Property(property: 'documents', type: 'array', items: new OA\Items(ref: '#/components/schemas/AttachmentResource')),
-        new OA\Property(property: 'comments', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentCommentListResource')),
         new OA\Property(property: 'transactions', type: 'array', items: new OA\Items(ref: '#/components/schemas/TransactionResource')),
+        new OA\Property(property: 'attach_card_ids', type: 'array', items: new OA\Items(type: 'int', example: '1')),
     ],
 )]
 /**
@@ -53,12 +48,10 @@ class InstallmentResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'customer_id' => $this->resource->customer_id,
+            'status' => $this->resource->status,
             'customer' => new SingleCustomerResource($this->resource->customer),
             'graphs' => InstallmentGraphResource::collection($this->resource->graphs),
-            'cards' => CardResource::collection($this->resource->cards),
-            'guarantors' => SingleCustomerResource::collection($this->resource->guarantors),
-            'documents' => AttachmentResource::collection($this->resource->documents),
-            'comments' => InstallmentCommentListResource::collection($this->resource->comments),
+            'attach_card_ids' => $this->resource->cards->pluck('id'),
             'transactions' => TransactionResource::collection($this->resource->transactions),
             'branch_id' => $this->resource->branch_id,
             'branch' => new BranchResource($this->resource->branch),

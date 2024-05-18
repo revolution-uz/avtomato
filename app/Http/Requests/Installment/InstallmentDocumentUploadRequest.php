@@ -13,7 +13,7 @@ use OpenApi\Attributes as OA;
     description: 'Document upload body. Send as multipart/form-data',
     properties: [
         new OA\Property(property: 'name', description: 'Anketa', type: 'string'),
-        new OA\Property(property: 'file', description: 'File to upload', type: 'file'),
+        new OA\Property(property: 'file', description: 'File to upload', type: 'file', maximum: 10240),
     ],
 )]
 /**
@@ -26,7 +26,12 @@ class InstallmentDocumentUploadRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'file' => 'required|file|mimes:docx,doc,pdf,png,jpg,jpeg|max:10240',
+            'file' => [
+                'required',
+                'file',
+                'mimes:docx,doc,pdf,png,jpg,jpeg',
+                'max:10240',
+            ],
         ];
     }
 
