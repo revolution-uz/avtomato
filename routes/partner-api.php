@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('{id}', 'single')->name('installments.single');
             Route::put('{id}', 'update')->name('installments.update');
             Route::post('{id}/change-status', 'changeStatus')->name('installments.change-status');
+            Route::post('{id}/toggle-auto-charge', 'toggleAutoCharge')->name('installments.toggle-auto-charge');
         });
 
         // installment-details
