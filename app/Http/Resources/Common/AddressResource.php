@@ -13,7 +13,7 @@ use OpenApi\Attributes as OA;
     title: 'AddressResource',
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
-        new OA\Property(property: 'type', type: 'int', example: '1', enum: AddressTypeEnum::class),
+        new OA\Property(property: 'type', type: 'int', enum: AddressTypeEnum::class, example: '1'),
         new OA\Property(property: 'address', type: 'string', example: 'Al-Xorazmiy ko\'chasi 1-uy'),
         new OA\Property(property: 'region', type: 'string', example: 'Xorazm viloyati'),
         new OA\Property(property: 'district', type: 'string', example: 'Urganch tumani'),
@@ -31,9 +31,9 @@ class AddressResource extends JsonResource
             'id' => $this->resource->id,
             'type' => $this->resource->type,
             'address' => $this->resource->address,
-            'region' => $this->resource->region->{'name_' . app()->getLocale()},
-            'district' => $this->resource->district->{'name_' . app()->getLocale()},
-            'mahalla' => $this->resource->mahalla->{'name_' . app()->getLocale()},
+            'region' => $this->resource->region?->{'name_' . app()->getLocale()},
+            'district' => $this->resource->district?->{'name_' . app()->getLocale()},
+            'mahalla' => $this->resource->mahalla?->{'name_' . app()->getLocale()},
         ];
     }
 }

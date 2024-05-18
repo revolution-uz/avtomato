@@ -26,7 +26,7 @@ use OpenApi\Attributes as OA;
 /**
  * @property Installment $resource
  */
-class InstallmentContactListResource extends JsonResource
+class InstallmentContactResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
