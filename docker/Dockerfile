@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-alpine3.18
+FROM php:8.3-fpm-alpine
 
 ENV PHP_FPM_MAX_CHILDREN=5
 ENV PHP_FPM_START_SERVERS=2

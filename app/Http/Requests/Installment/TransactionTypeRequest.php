@@ -17,7 +17,7 @@ use OpenApi\Attributes as OA;
 )]
 /**
  * @property string $name
- * use @mixin TransactionType
+ *                        use @mixin TransactionType
  */
 class TransactionTypeRequest extends FormRequest
 {
