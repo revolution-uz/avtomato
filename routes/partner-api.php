@@ -90,6 +90,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::delete('document', 'deleteDocument')->name('installments.delete-document');
             //contacts
             Route::get('contact-list', 'contactList')->name('installments.contact-list');
+
+            //transactions
+            Route::get('transaction', 'transactionList')->name('installments.transaction-list');
+            Route::post('transaction', 'createTransaction')->name('installments.create-transaction');
         });
 
         // transactions

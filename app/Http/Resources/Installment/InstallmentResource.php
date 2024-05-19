@@ -34,8 +34,6 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'created_at', type: 'int', example: '16933424'),
         new OA\Property(property: 'updated_at', type: 'int', example: '16933424'),
         new OA\Property(property: 'graphs', type: 'array', items: new OA\Items(ref: '#/components/schemas/InstallmentGraphResource')),
-        new OA\Property(property: 'transactions', type: 'array', items: new OA\Items(ref: '#/components/schemas/TransactionResource')),
-        new OA\Property(property: 'attach_card_ids', type: 'array', items: new OA\Items(type: 'int', example: '1')),
     ],
 )]
 /**
@@ -51,8 +49,6 @@ class InstallmentResource extends JsonResource
             'status' => $this->resource->status,
             'customer' => new SingleCustomerResource($this->resource->customer),
             'graphs' => InstallmentGraphResource::collection($this->resource->graphs),
-            'attach_card_ids' => $this->resource->cards->pluck('id'),
-            'transactions' => TransactionResource::collection($this->resource->transactions),
             'branch_id' => $this->resource->branch_id,
             'branch' => new BranchResource($this->resource->branch),
             'tariff_id' => $this->resource->tariff_id,

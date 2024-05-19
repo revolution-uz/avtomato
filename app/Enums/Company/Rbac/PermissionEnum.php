@@ -94,6 +94,7 @@ enum PermissionEnum: string
     case INSTALLMENT_UPDATE_GUARANTOR = 'installment_update_guarantor';
     case INSTALLMENT_DETACH_GUARANTOR = 'installment_detach_guarantor';
     case INSTALLMENT_CREATE_COMMENT = 'installment_create_comment';
+    case INSTALLMENT_CREATE_TRANSACTION = 'installment_create_transaction';
     case INSTALLMENT_UPDATE_COMMENT = 'installment_update_comment';
     case INSTALLMENT_DELETE_COMMENT = 'installment_delete_comment';
 
@@ -313,6 +314,8 @@ enum PermissionEnum: string
             self::INSTALLMENT_UPLOAD_DOCUMENT,
             self::INSTALLMENT_DELETE_DOCUMENT,
 
+            self::INSTALLMENT_CREATE_TRANSACTION,
+
             self::TRANSACTION_VIEW_ALL,
             self::TRANSACTION_VIEW,
             self::TRANSACTION_CREATE,
@@ -384,6 +387,7 @@ enum PermissionEnum: string
                 self::INSTALLMENT_DELETE_COMMENT->value,
                 self::INSTALLMENT_UPLOAD_DOCUMENT->value,
                 self::INSTALLMENT_DELETE_DOCUMENT->value,
+                self::INSTALLMENT_CREATE_TRANSACTION->value,
             ],
             PermissionGroupEnum::TARIFF_MANAGEMENT->value => [
                 self::TARIFF_VIEW_ALL->value,
@@ -543,6 +547,7 @@ enum PermissionEnum: string
             self::CALCULATE_INSTALLMENT,
             self::CALCULATOR_EXPORT => FeatureEnum::CALCULATOR_INSTALLMENT,
 
+            self::INSTALLMENT_CREATE_TRANSACTION,
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
             self::INSTALLMENT_CREATE,

@@ -22,8 +22,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property TransactionType $transactionType
  * @property int $external_id
  * @property float $amount
+ * @property int $employee_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read  User $employee
  */
 class Transaction extends Model
 {
@@ -38,6 +40,7 @@ class Transaction extends Model
         'transaction_type_id',
         'external_id',
         'amount',
+        'employee_id',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -64,5 +67,10 @@ class Transaction extends Model
     public function transactionType(): BelongsTo
     {
         return $this->belongsTo(TransactionType::class);
+    }
+
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'employee_id', 'id');
     }
 }
