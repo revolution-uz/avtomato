@@ -101,4 +101,9 @@ class Customer extends Model
         return LogOptions::defaults()
             ->logFillable();
     }
+
+    public function fullName(): string
+    {
+        return $this->last_name . ' ' . $this->first_name;
+    }
 }

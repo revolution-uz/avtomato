@@ -12,6 +12,7 @@ use App\Http\Requests\Installment\InstallmentCardAttachRequest;
 use App\Http\Requests\Installment\InstallmentCardDetachRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
+use App\Http\Requests\Installment\InstallmentCreateTransactionRequest;
 use App\Http\Requests\Installment\InstallmentCustomersListRequest;
 use App\Http\Requests\Installment\InstallmentDocumentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
@@ -25,12 +26,14 @@ use App\Http\Resources\Installment\InstallmentCommentResource;
 use App\Http\Resources\Installment\InstallmentContactResource;
 use App\Http\Resources\Installment\InstallmentCustomersListResource;
 use App\Http\Resources\Installment\InstallmentGuarantorResource;
+use App\Http\Resources\Installment\InstallmentTransactionResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Attachment;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentCard;
 use App\Models\Company\InstallmentComment;
 use App\Models\Company\InstallmentGuarantor;
+use App\Models\Company\Transaction;
 use App\Services\Installment\InstallmentService;
 use OpenApi\Attributes as OA;
 use Throwable;
@@ -125,9 +128,11 @@ class InstallmentDetailsController extends Controller
     )]
     public function guarantorList(int $id, InstallmentViewRequest $request)
     {
-        $installment = Installment::findOrFail($id);
+        $installmentGuarantors = InstallmentGuarantor::query()
+            ->where('installment_id', $id)
+            ->with('customer')->get();
 
-        return InstallmentGuarantorResource::collection($installment->guarantors);
+        return InstallmentGuarantorResource::collection($installmentGuarantors);
     }
 
     #[OA\Post(
@@ -267,9 +272,9 @@ class InstallmentDetailsController extends Controller
     )]
     public function commentList(int $id, InstallmentViewRequest $request)
     {
-        $installment = Installment::findOrFail($id);
+        $installmentComment = InstallmentComment::query()->where('installment_id', $id)->get();
 
-        return InstallmentCommentResource::collection($installment->comments);
+        return InstallmentCommentResource::collection($installmentComment);
     }
 
     #[OA\Post(
@@ -380,9 +385,9 @@ class InstallmentDetailsController extends Controller
     )]
     public function documentList(int $id, InstallmentViewRequest $request)
     {
-        $installment = Installment::findOrFail($id);
+        $installment = Installment::query()->with('documents')->where('id', $id)->firstOrFail();
 
-        return AttachmentResource::collection($installment->documents());
+        return AttachmentResource::collection($installment->documents);
     }
 
     #[OA\Post(
@@ -460,5 +465,60 @@ class InstallmentDetailsController extends Controller
         return new InstallmentContactResource($installment);
     }
 
+    #[OA\Get(
+        path: '/api/v1/installment/installment-details/{id}/transaction',
+        description: 'Installment transaction list route',
+        tags: ['InstallmentDetails'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentTransactionResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function transactionList(int $id, InstallmentViewRequest $request)
+    {
+        $installmentTransactions = Transaction::query()
+            ->with(['customer'])
+            ->where('installment_id', $id)
+            ->firstOrFail();
 
+        return new InstallmentTransactionResource($installmentTransactions);
+    }
+
+    #[OA\Post(
+        path: '/api/v1/installment/installment-details/{id}/transaction',
+        description: 'Installment create Installment transaction route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment transaction create request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCreateTransactionRequest')
+        ),
+        tags: ['InstallmentDetails'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Installment ID',
+                in: 'path',
+                required: true
+            ),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentTransactionResource'),
+        ]
+    )]
+    public function createTransaction(int $id, InstallmentCreateTransactionRequest $request): InstallmentTransactionResource
+    {
+        $installment = Installment::findOrFail($id);
+        $attributes = $request->validated();
+        $attributes['installment_id'] = $id;
+        $attributes['employee_id'] = auth()->id();
+        $attributes['customer_id'] = $installment->customer_id;
+        $attributes['external_id'] = 'local_' . time();
+
+        $model = Transaction::create($attributes);
+
+        return new InstallmentTransactionResource($model);
+    }
 }

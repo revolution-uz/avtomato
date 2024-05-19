@@ -96,6 +96,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::INSTALLMENT_DELETE_COMMENT,
                 PermissionEnum::INSTALLMENT_UPLOAD_DOCUMENT,
                 PermissionEnum::INSTALLMENT_DELETE_DOCUMENT,
+                PermissionEnum::INSTALLMENT_CREATE_TRANSACTION,
             ],
             self::TARIFF_MANAGEMENT => [
                 PermissionEnum::TARIFF_VIEW_ALL,
