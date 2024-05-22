@@ -30,18 +30,32 @@ class InstallmentContactResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $guarantor_addresses = [];
+
+        $this->resource->guarantors->map(function ($guarantor) use (&$guarantor_addresses) {
+            $guarantor_addresses = [
+                ...$guarantor_addresses,
+                ...AddressResource::collection($guarantor->addresses),
+            ];
+        });
+
+        $guarantor_phones = [];
+
+        $this->resource->guarantors->map(function ($guarantor) use (&$guarantor_phones) {
+            $guarantor_phones = [
+                ...$guarantor_phones,
+                ...PhoneResource::collection($guarantor->phones),
+            ];
+        });
+
         return [
             'addresses' => [
                 'customer' => AddressResource::collection($this->resource->customer->addresses),
-                'guarantor' => $this->resource->guarantors->map(function ($guarantor) {
-                    return AddressResource::collection($guarantor->addresses);
-                }),
+                'guarantor' => $guarantor_addresses,
             ],
             'phones' => [
                 'customer' => PhoneResource::collection($this->resource->customer->phones),
-                'guarantor' => $this->resource->guarantors->map(function ($guarantor) {
-                    return PhoneResource::collection($guarantor->phones);
-                }),
+                'guarantor' => $guarantor_phones,
             ],
         ];
     }
