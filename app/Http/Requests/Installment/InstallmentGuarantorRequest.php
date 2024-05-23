@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\InstallmentGuarantor;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -23,7 +24,13 @@ class InstallmentGuarantorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => [
+                'required',
+                'integer',
+                Rule::exists('customers', 'id'),
+                Rule::unique('installment_guarantors', 'customer_id')
+                    ->where('installment_id', $this->route('id')),
+            ],
         ];
     }
 

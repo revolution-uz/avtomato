@@ -8,6 +8,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
+/**
+ * @property int $card_id
+ */
 #[OA\Schema(
     schema: 'InstallmentCardAttachRequest',
     title: 'Request to create a card',
