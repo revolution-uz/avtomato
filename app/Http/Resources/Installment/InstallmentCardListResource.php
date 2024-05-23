@@ -14,6 +14,7 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'type', type: 'string', enum: ['customer', 'guarantor'], example: 'customer'),
         new OA\Property(property: 'id', type: 'int', example: '1'),
+        new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'owner', type: 'string', example: 'Ali Valiyev'),
         new OA\Property(property: 'pan', type: 'string', example: '986011******4444'),
         new OA\Property(property: 'expiry', type: 'string', example: '2**9'),
@@ -28,25 +29,26 @@ class InstallmentCardListResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = $this->resource->customer->cards->map(function ($card) {
-            return $this->getCardData($card, $this->resource->cards);
+            return $this->getCardData($card, $this->resource->cards, $this->resource->customer->id);
         })->toArray();
 
         $this->resource->guarantors->each(function ($guarantor) use (&$data) {
-            $guarantor->cards->each(function ($card) use (&$data) {
-                $data[] = $this->getCardData($card, $this->resource->cards, true);
+            $guarantor->cards->each(function ($card) use (&$data, $guarantor) {
+                $data[] = $this->getCardData($card, $this->resource->cards, $guarantor->id, true);
             });
         });
 
         return $data;
     }
 
-    private function getCardData(Card $card, $installmentCards, $isGuarantor = false): array
+    private function getCardData(Card $card, $installmentCards, $customerId, $isGuarantor = false): array
     {
         $expiry = str_split($card->expiry, 2);
 
         return [
             'type' => $isGuarantor ? 'guarantor' : 'customer',
             'id' => $card->id,
+            'customer_id' => $customerId,
             'owner' => $card->owner,
             'pan' => $card->pan,
             'expiry' => implode('/', [$expiry[1], $expiry[0]]),

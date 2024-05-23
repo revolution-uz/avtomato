@@ -34,17 +34,11 @@ use App\Models\Company\InstallmentCard;
 use App\Models\Company\InstallmentComment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Transaction;
-use App\Services\Installment\InstallmentService;
 use OpenApi\Attributes as OA;
 use Throwable;
 
 class InstallmentDetailsController extends Controller
 {
-    public function __construct(
-        protected InstallmentService $installmentService
-    ) {
-    }
-
     #[OA\Get(
         path: '/api/v1/installment/installment-details/{id}/installment-customers-card-list',
         description: 'Installment details route',
@@ -85,9 +79,8 @@ class InstallmentDetailsController extends Controller
     )]
     public function attachCard(int $id, InstallmentCardAttachRequest $request)
     {
-        $attributes = $request->validated();
-        $attributes['installment_id'] = $id;
-        InstallmentCard::create($attributes);
+        $installment = Installment::findOrFail($id);
+        $installment->cards()->attach($request->card_id);
 
         return new StatusResource(true);
     }
