@@ -50,7 +50,7 @@ class Attachment extends Model
         'type' => AttachmentTypeEnum::class,
     ];
 
-    public static function upload(UploadedFile $file, AttachmentTypeEnum $type, Model $model, ?string $name = null): self
+    public static function upload(UploadedFile $file, AttachmentTypeEnum $type, Model $model, string $name = null): self
     {
         $attachment = new self;
         $attachment->type = $type;

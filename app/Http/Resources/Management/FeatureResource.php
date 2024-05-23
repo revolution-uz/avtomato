@@ -12,6 +12,7 @@ use OpenApi\Attributes as OA;
     title: 'FeatureResource',
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
+        new OA\Property(property: 'key', type: 'string', example: 'installment_create'),
         new OA\Property(property: 'name', type: 'string', example: 'Rassrochka yaratish'),
         new OA\Property(property: 'description', type: 'string', example: 'Rassrochka yaratish qiymati X so`m bu miqdor rassrochka aktivlashgan yechiladi'),
         new OA\Property(property: 'amount', type: 'int', example: '25000'),
@@ -29,7 +30,8 @@ class FeatureResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'name' => $this->resource->name,
+            'key' => $this->resource->name,
+            'name' => __('feature.' . $this->resource->name),
             'description' => $this->resource->description,
             'amount' => $this->resource->amount,
             'is_active' => $this->resource->is_active,

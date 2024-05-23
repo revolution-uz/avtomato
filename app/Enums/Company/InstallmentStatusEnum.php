@@ -18,7 +18,7 @@ enum InstallmentStatusEnum: int
     /**
      * @return self[]
      */
-    public static function getStatusListByStatus(?self $statusEnum = null): array
+    public static function getStatusListByStatus(self $statusEnum = null): array
     {
         return match ($statusEnum) {
             self::CANCELED,
