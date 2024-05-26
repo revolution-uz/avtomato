@@ -31,7 +31,7 @@ class FeatureResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'key' => $this->resource->name,
-            'name' => __('feature.' . $this->resource->name),
+            'name' => __('feature.' . $this->resource->name->value),
             'description' => $this->resource->description,
             'amount' => $this->resource->amount,
             'is_active' => $this->resource->is_active,
