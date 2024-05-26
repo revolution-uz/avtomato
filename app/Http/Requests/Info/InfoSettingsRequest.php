@@ -10,6 +10,6 @@ class InfoSettingsRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INFO_SETTINGS);
+        return !auth()->user() || RbacHelper::checkPermission(PermissionEnum::INFO_SETTINGS);
     }
 }
