@@ -172,7 +172,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::prefix('info')->controller(InfoController::class)->group(function () {
-        Route::get('settings', 'settings')->name('info.settings');
+        Route::get('settings', 'settings')->withoutMiddleware(['auth:sanctum'])->name('info.settings');
         Route::get('regions', 'regions')->name('info.regions');
         Route::get('districts', 'districts')->name('info.districts');
         Route::get('mahallas', 'mahallas')->name('info.mahallas');

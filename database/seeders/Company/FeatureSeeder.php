@@ -4,6 +4,7 @@ namespace Database\Seeders\Company;
 
 use App\Models\BaseFeature;
 use App\Models\Company\Feature;
+use App\Models\Company\Rbac\Permission;
 use Illuminate\Database\Seeder;
 
 class FeatureSeeder extends Seeder
@@ -37,5 +38,8 @@ class FeatureSeeder extends Seeder
                 $baseFeature->modules()->pluck('base_modules.id')
             );
         }
+
+        Permission::query()->whereNotIn('feature_id', BaseFeature::query()->pluck('id'))->forceDelete();
+        Feature::query()->whereNotIn('id', BaseFeature::query()->pluck('id'))->forceDelete();
     }
 }
