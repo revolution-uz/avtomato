@@ -12,7 +12,7 @@ class ModuleSeeder extends Seeder
     {
         /** @var BaseModule $baseModule */
         foreach (BaseModule::query()->get()->all() as $baseModule) {
-            /** @var Module $module */
+            /** @var Module|null $module */
             $module = Module::query()->find($baseModule->id);
 
             if ($module) {
@@ -31,5 +31,7 @@ class ModuleSeeder extends Seeder
                 ]);
             }
         }
+
+        Module::query()->whereNotIn('id', BaseModule::query()->pluck('id'))->forceDelete();
     }
 }

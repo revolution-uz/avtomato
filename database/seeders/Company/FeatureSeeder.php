@@ -37,5 +37,7 @@ class FeatureSeeder extends Seeder
                 $baseFeature->modules()->pluck('base_modules.id')
             );
         }
+
+        Feature::query()->whereIn('id', BaseFeature::query()->pluck('id'))->forceDelete();
     }
 }
