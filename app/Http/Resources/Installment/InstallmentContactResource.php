@@ -22,8 +22,9 @@ use OpenApi\Attributes as OA;
                 new OA\Property(property: 'region', type: 'string', example: 'Xorazm viloyati'),
                 new OA\Property(property: 'district', type: 'string', example: 'Urganch tumani'),
                 new OA\Property(property: 'mahalla', type: 'string', example: 'Olmazor mahallasi'),
-                new OA\Property(property: 'customer_name', type: 'string', example: 'John Doe (Debtor)'),
+                new OA\Property(property: 'customer_name', type: 'string', example: 'John Doe'),
                 new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+                new OA\Property(property: 'is_guarantor', type: 'boolean', example: 'false'),
             ]
         )),
 
@@ -33,8 +34,9 @@ use OpenApi\Attributes as OA;
                 new OA\Property(property: 'id', type: 'int', example: '1'),
                 new OA\Property(property: 'type', type: 'int', example: '1'),
                 new OA\Property(property: 'comment', type: 'string', example: 'comment'),
-                new OA\Property(property: 'customer_name', type: 'string', example: 'John Doe (Debtor)'),
+                new OA\Property(property: 'customer_name', type: 'string', example: 'John Doe'),
                 new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+                new OA\Property(property: 'is_guarantor', type: 'boolean', example: 'false'),
             ]
         )),
     ]
@@ -79,8 +81,9 @@ class InstallmentContactResource extends JsonResource
             'region' => $address->region?->{'name_' . app()->getLocale()},
             'district' => $address->district?->{'name_' . app()->getLocale()},
             'mahalla' => $address->mahalla?->{'name_' . app()->getLocale()},
-            'customer_name' => $customer->fullName() . ' (' . ($isGuarantor ? trans('api.guarantor') : trans('api.debtor')) . ')',
+            'customer_name' => $customer->fullName(),
             'customer_id' => $customer->id,
+            'is_guarantor' => $isGuarantor,
         ];
     }
 
@@ -91,8 +94,9 @@ class InstallmentContactResource extends JsonResource
             'id' => $phone->pivot->id,
             'type' => $phone->pivot->type,
             'comment' => $phone->pivot->comment,
-            'customer_name' => $customer->fullName() . ' (' . ($isGuarantor ? trans('api.guarantor') : trans('api.debtor')) . ')',
+            'customer_name' => $customer->fullName(),
             'customer_id' => $customer->id,
+            'is_guarantor' => $isGuarantor,
         ];
     }
 }
