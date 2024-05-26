@@ -18,7 +18,7 @@ class KatmPensionInfoResponseDTO extends BaseScoringResponse
 {
     public function __construct(
         public string $result,
-        public KatmPensionSizePensionDTO $sizePension,
+        public ?KatmPensionSizePensionDTO $sizePension,
         public string $comments,
     ) {
     }
