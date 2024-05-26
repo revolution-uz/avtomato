@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Crypt;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -54,10 +53,16 @@ class Card extends Model
         'balance',
         'external_id',
         'owner',
+        'number_hash',
     ];
 
     protected $casts = [
         'status' => CardStatusEnum::class,
+        'number' => 'encrypted',
+    ];
+
+    protected $hidden = [
+        'number_hash',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -70,11 +75,11 @@ class Card extends Model
     {
         $this->pan = substr_replace($this->number, '******', 6, 6);
     }
-
-    public function setNumber(): void
-    {
-        $this->number = Crypt::encryptString($this->number);
-    }
+    //
+    //    public function setNumber(): void
+    //    {
+    //        $this->number = Crypt::encryptString($this->number);
+    //    }
 
     public function customer(): BelongsTo
     {
@@ -85,6 +90,6 @@ class Card extends Model
     {
         $this->status = CardStatusEnum::INACTIVE;
         $this->setPan();
-        $this->setNumber();
+        //        $this->setNumber();
     }
 }

@@ -35,12 +35,12 @@ use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
 use App\Services\AtmosService;
+use App\Services\ConfirmationService;
 use App\Services\CustomerService;
 use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -51,7 +51,8 @@ class CustomerController extends Controller
     public function __construct(
         private readonly PassportInfoService $passportInfoService,
         private readonly AtmosService $atmosCardService,
-        private readonly CustomerService $customerService
+        private readonly CustomerService $customerService,
+        private readonly ConfirmationService $confirmationService,
     ) {
     }
 
@@ -257,13 +258,24 @@ class CustomerController extends Controller
     )]
     public function attachCard(int $id, CardRequest $request): AttachCustomerCardResource
     {
-        $card = new Card;
-        $card->fill($request->validated());
-        $card->computingBeforeInsert();
-        $card->customer_id = $id;
-        $card->saveOrFail();
+        $card = Card::query()
+            ->onlyTrashed()
+            ->where('customer_id', $id)
+            ->where('number_hash', bcrypt($request->number))
+            ->first();
 
-        return AttachCustomerCardResource::make($this->atmosCardService->attachCard(Crypt::decryptString($card->number), $card->expiry), new CardResource($card));
+        if (! $card) {
+            $card = new Card;
+            $card->fill($request->validated());
+            $card->computingBeforeInsert();
+            $card->customer_id = $id;
+            $card->saveOrFail();
+
+            return AttachCustomerCardResource::make($card, $this->atmosCardService->attachCard($card->number, $card->expiry));
+        }
+        $this->confirmationService->send($card->phone);
+
+        return AttachCustomerCardResource::make($card);
     }
 
     /**
