@@ -12,9 +12,8 @@ use OpenApi\Attributes as OA;
     title: 'BalanceChargesResource object',
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
-        new OA\Property(property: 'feature_id', type: 'int', example: '1'),
+        new OA\Property(property: 'description', type: 'string', example: 'Falonchi xizmat uchun, ID=2'),
         new OA\Property(property: 'amount', type: 'int', example: '100000'),
-        new OA\Property(property: 'feature', ref: '#/components/schemas/FeatureResource'),
         new OA\Property(property: 'created_at', type: 'int', example: '121312312'),
     ],
 )]
@@ -27,9 +26,8 @@ class BalanceChargesResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'feature_id' => $this->resource->feature_id,
             'amount' => $this->resource->amount,
-            'feature' => FeatureResource::make($this->resource->feature),
+            'description' => __('feature.' . $this->resource->feature->name->value) . ', ID=' . $this->resource->chargeable_id,
             'created_at' => $this->resource->created_at->getTimestamp(),
         ];
     }
