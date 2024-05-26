@@ -22,6 +22,7 @@ enum ModuleEnum: string
         return match ($feature) {
             FeatureEnum::USER_MANAGEMENT,
             FeatureEnum::BRANCH_MANAGEMENT,
+            FeatureEnum::ACTIVITY_LOG,
             FeatureEnum::ROLE_MANAGEMENT => [self::MULTIBRANCH_2, self::MULTIBRANCH_3, self::MULTIBRANCH_4],
             FeatureEnum::SMS => [self::INSTALLMENT, self::MARKETING],
             FeatureEnum::CUSTOMER_MANAGEMENT => [self::INSTALLMENT, self::SCORING],
@@ -37,6 +38,7 @@ enum ModuleEnum: string
             FeatureEnum::TRANSACTION_TYPE_MANAGEMENT,
             FeatureEnum::INSTALLMENT_MANAGEMENT,
             FeatureEnum::ATMOS_CARD_PAY,
+            FeatureEnum::ADD_CARD_PHONE_REQUIRED,
             FeatureEnum::ATMOS_PINFL_PAY => [self::INSTALLMENT],
             FeatureEnum::SCORING_CREDIT_HISTORY,
             FeatureEnum::SCORING_INPS_HISTORY,
@@ -49,9 +51,7 @@ enum ModuleEnum: string
             FeatureEnum::BALANCE_FUND,
             FeatureEnum::BALANCE_CHARGE,
             FeatureEnum::THEME_MANAGEMENT,
-            FeatureEnum::GET_STATIC_INFORMATION,
-            FeatureEnum::ADD_CARD_PHONE_REQUIRED,
-            FeatureEnum::ACTIVITY_LOG => self::cases(),
+            FeatureEnum::GET_STATIC_INFORMATION => self::cases(),
         };
     }
 }
