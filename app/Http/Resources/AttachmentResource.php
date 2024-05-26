@@ -14,7 +14,6 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', description: 'Attachment id', type: 'string', example: '1'),
         new OA\Property(property: 'type', description: 'Attachment type', type: 'integer', example: 1),
-        new OA\Property(property: 'preview_url', description: 'Attachment preview path', type: 'string', example: '/uploads/preview/1.jpg'),
         new OA\Property(property: 'url', description: 'Attachment path', type: 'string', example: '/uploads/1.jpg'),
         new OA\Property(property: 'name', description: 'Attachment name', type: 'string', example: 'My file'),
         new OA\Property(property: 'original_name', description: 'Attachment original name', type: 'string', example: 'My file'),
@@ -31,7 +30,6 @@ class AttachmentResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'type' => $this->resource->type,
-            'preview_url' => $this->resource->preview_url,
             'url' => $this->resource->url,
             'name' => $this->resource->name,
             'original_name' => $this->resource->original_name,

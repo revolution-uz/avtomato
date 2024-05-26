@@ -101,7 +101,6 @@ class ProfileControllerTest extends TestCase
 
         $response->assertOk();
         $this->assertFileExists(storage_path('app/public/' . Attachment::UPLOADS_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $admin->fresh()->avatar->path));
-        $this->assertFileExists(storage_path('app/public/' . Attachment::PREVIEW_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $admin->fresh()->avatar->preview_path));
     }
 
     /**
