@@ -3,8 +3,10 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\CardStatusEnum;
+use App\Helpers\CardHelper;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +30,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read string $card_type
  *
  * @method static Builder|static query()
  * @method static self find(int $id)
@@ -91,5 +94,10 @@ class Card extends Model
         $this->status = CardStatusEnum::INACTIVE;
         $this->setPan();
         //        $this->setNumber();
+    }
+
+    public function cardType()
+    {
+        return Attribute::make(get: fn () => CardHelper::getNameByCardNumber($this->number));
     }
 }

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Clients\SmsFlyClient;
 use App\DTOs\Sms\SendMessageDTO;
-use App\Models\Company\AuthAttempt;
+use App\Models\Company\CardConfirmationSms;
 use Carbon\Carbon;
 use Exception;
 
@@ -15,14 +15,10 @@ class ConfirmationService
      */
     public function send(string $phone): true
     {
-        if (in_array($phone, config('test_users.allowed_phones'))) {
-            return true;
-        }
-
-        /** @var AuthAttempt|null $authAttempt */
-        $authAttempt = AuthAttempt::query()
+        /** @var CardConfirmationSms|null $authAttempt */
+        $authAttempt = CardConfirmationSms::query()
             ->where('phone', $phone)
-            ->where('updated_at', '>', Carbon::now()->subMinutes(5))
+            ->where('created_at', '>', Carbon::now()->subMinutes(2))
             ->exists();
 
         if ($authAttempt) {
@@ -32,7 +28,10 @@ class ConfirmationService
         // todo: real code generation and sending to the user after integration with the SMS provider
         $code = 123456;
         $this->generateCode();
-        AuthAttempt::query()->updateOrCreate(['phone' => $phone], ['code' => $code]);
+        CardConfirmationSms::query()->create([
+            'phone' => $phone,
+            'code' => $code,
+        ]);
 
         // todo: message template
         //        (new SmsFlyClient)->send(new SendMessageDTO($phone, "Your code: $code"));

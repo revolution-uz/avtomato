@@ -19,15 +19,15 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  *
- * @method static Builder|AuthAttempt query()
- * @method static Builder|AuthAttempt whereCode($value)
+ * @method static Builder|CardConfirmationSms query()
+ * @method static Builder|CardConfirmationSms whereCode($value)
  */
-class AuthAttempt extends Model
+class CardConfirmationSms extends Model
 {
     use LogsActivity;
     use TenantConnection;
 
-    protected $table = 'auth_attempts';
+    protected $table = 'card_confirmation_sms';
 
     protected $fillable = [
         'phone',
