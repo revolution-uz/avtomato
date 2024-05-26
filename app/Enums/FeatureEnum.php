@@ -15,7 +15,7 @@ enum FeatureEnum: string
     case GET_STATIC_INFORMATION = 'info_view';
     case CALCULATOR_INSTALLMENT = 'calculator_installment';
     case INSTALLMENT_MANAGEMENT = 'installment_management';
-    case INSTALLMENT_SMS = 'installment_sms';
+    case SMS = 'sms';
     case INSTALLMENT_AUTO_CHARGE = 'installment_auto_charge';
     case INSTALLMENT_GUARANTOR = 'installment_guarantor';
     case INSTALLMENT_COMMENT = 'installment_comment';
@@ -55,6 +55,7 @@ enum FeatureEnum: string
             self::SCORING_INPS_HISTORY => 'Oyliklar tarixini KATM orqali olish',
             self::SCORING_UZCARD => 'UzCard kartalari yillik oborot skoringi',
             self::SCORING_HUMO => 'Humo kartalari yillik oborot skoringi',
+            self::SMS => 'Sms yuborish xizmati',
             default => null,
         };
     }
