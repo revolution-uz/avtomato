@@ -32,8 +32,6 @@ class CardConfirmationSms extends Model
     protected $fillable = [
         'phone',
         'code',
-        'type',
-        'notification_type',
     ];
 
     protected $casts = [

@@ -42,6 +42,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 use Throwable;
@@ -261,7 +262,7 @@ class CustomerController extends Controller
         $card = Card::query()
             ->onlyTrashed()
             ->where('customer_id', $id)
-            ->where('number_hash', bcrypt($request->number))
+            ->where('number_hash', Hash::make($request->number))
             ->first();
 
         if (! $card) {

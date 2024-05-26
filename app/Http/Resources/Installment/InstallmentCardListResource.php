@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Installment;
 
 use App\Models\Company\Card;
-use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -31,27 +30,27 @@ class InstallmentCardListResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = $this->resource->customer->cards->map(function ($card) {
-            return $this->getCardData($card, $this->resource->cards, $this->resource->customer);
+            return $this->getCardData($card, $this->resource->cards, $this->resource->customer->id);
         })->toArray();
 
         $this->resource->guarantors->each(function ($guarantor) use (&$data) {
             $guarantor->cards->each(function ($card) use (&$data, $guarantor) {
-                $data[] = $this->getCardData($card, $this->resource->cards, $guarantor, true);
+                $data[] = $this->getCardData($card, $this->resource->cards, $guarantor->id, true);
             });
         });
 
         return $data;
     }
 
-    private function getCardData(Card $card, $installmentCards, Customer $customer, $isGuarantor = false): array
+    private function getCardData(Card $card, $installmentCards, int $customerId, $isGuarantor = false): array
     {
         $expiry = str_split($card->expiry, 2);
 
         return [
             'type' => $isGuarantor ? 'guarantor' : 'customer',
             'id' => $card->id,
-            'customer_id' => $customer->id,
-            'owner' => $card->owner ?? $customer->fullName(),
+            'customer_id' => $customerId,
+            'owner' => $card->owner,
             'pan' => $card->pan,
             'expiry' => implode('/', [$expiry[1], $expiry[0]]),
             'is_attached' => $installmentCards->where('id', $card->id)->count() > 0,
