@@ -70,6 +70,7 @@ class KatmPensionInfoController extends Controller
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
+                ->orderByDesc('id')
                 ->paginate($request->per_page)
         )->additional(['sortables' => $sortables]);
     }
