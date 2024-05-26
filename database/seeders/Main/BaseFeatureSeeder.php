@@ -25,5 +25,7 @@ class BaseFeatureSeeder extends Seeder
                 BaseModule::query()->whereIn('name', ModuleEnum::getModuleForFeature($case))->pluck('id')
             );
         }
+
+        BaseFeature::query()->whereNotIn('name', FeatureEnum::cases())->forceDelete();
     }
 }

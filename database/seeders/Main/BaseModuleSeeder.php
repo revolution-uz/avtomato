@@ -17,5 +17,7 @@ class BaseModuleSeeder extends Seeder
                 'original_amount' => 0,
             ]);
         }
+
+        BaseModule::query()->whereNotIn('name', ModuleEnum::cases())->forceDelete();
     }
 }
