@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('card_confirmation_sms', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('phone', 17);
-            $table->string('code',6);
+            $table->string('code', 6);
             $table->timestamps();
         });
     }
