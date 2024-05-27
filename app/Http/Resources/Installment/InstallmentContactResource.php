@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources\Installment;
 
-use App\Http\Resources\Common\AddressResource;
-use App\Http\Resources\Common\PhoneResource;
+use App\Models\Company\Address;
+use App\Models\Company\Customer;
 use App\Models\Company\Installment;
+use App\Models\Company\Phone;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
@@ -13,14 +14,31 @@ use OpenApi\Attributes as OA;
     schema: 'InstallmentContactListResource',
     title: 'Installment Contact List Resource',
     properties: [
-        new OA\Property(property: 'addresses', properties: [
-            new OA\Property(property: 'customer', type: 'array', items: new OA\Items(ref: '#/components/schemas/AddressResource')),
-            new OA\Property(property: 'guarantor', type: 'array', items: new OA\Items(ref: '#/components/schemas/AddressResource')),
-        ]),
-        new OA\Property(property: 'phones', properties: [
-            new OA\Property(property: 'customer', type: 'array', items: new OA\Items(ref: '#/components/schemas/PhoneResource')),
-            new OA\Property(property: 'guarantor', type: 'array', items: new OA\Items(ref: '#/components/schemas/PhoneResource')),
-        ]),
+        new OA\Property(property: 'addresses', type: 'array', items: new OA\Items(
+            properties: [
+                new OA\Property(property: 'id', type: 'int', example: '1'),
+                new OA\Property(property: 'type', type: 'int', example: '1'),
+                new OA\Property(property: 'address', type: 'string', example: 'Al-Xorazmiy ko\'chasi 1-uy'),
+                new OA\Property(property: 'region', type: 'string', example: 'Xorazm viloyati'),
+                new OA\Property(property: 'district', type: 'string', example: 'Urganch tumani'),
+                new OA\Property(property: 'mahalla', type: 'string', example: 'Olmazor mahallasi'),
+                new OA\Property(property: 'customer_name', type: 'string', example: 'John Doe'),
+                new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+                new OA\Property(property: 'is_guarantor', type: 'boolean', example: 'false'),
+            ]
+        )),
+
+        new OA\Property(property: 'phones', type: 'array', items: new OA\Items(
+            properties: [
+                new OA\Property(property: 'phone', type: 'int', example: '998933993300'),
+                new OA\Property(property: 'id', type: 'int', example: '1'),
+                new OA\Property(property: 'type', type: 'int', example: '1'),
+                new OA\Property(property: 'comment', type: 'string', example: 'comment'),
+                new OA\Property(property: 'customer_name', type: 'string', example: 'John Doe'),
+                new OA\Property(property: 'customer_id', type: 'int', example: '1'),
+                new OA\Property(property: 'is_guarantor', type: 'boolean', example: 'false'),
+            ]
+        )),
     ]
 )]
 /**
@@ -30,33 +48,55 @@ class InstallmentContactResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $guarantor_addresses = [];
-
-        $this->resource->guarantors->map(function ($guarantor) use (&$guarantor_addresses) {
-            $guarantor_addresses = [
-                ...$guarantor_addresses,
-                ...AddressResource::collection($guarantor->addresses),
-            ];
+        $addresses = [];
+        $phones = [];
+        $this->resource->customer->addresses->map(function ($address) use (&$addresses) {
+            $addresses[] = $this->addressData($address, $this->resource->customer);
+        });
+        $this->resource->customer->phones->map(function ($phone) use (&$phones) {
+            $phones[] = $this->phoneData($phone, $this->resource->customer);
         });
 
-        $guarantor_phones = [];
-
-        $this->resource->guarantors->map(function ($guarantor) use (&$guarantor_phones) {
-            $guarantor_phones = [
-                ...$guarantor_phones,
-                ...PhoneResource::collection($guarantor->phones),
-            ];
+        $this->resource->guarantors->map(function ($guarantor) use (&$addresses, &$phones) {
+            $guarantor->addresses->map(function ($address) use (&$addresses, $guarantor) {
+                $addresses[] = $this->addressData($address, $guarantor, true);
+            });
+            $guarantor->phones->map(function ($phone) use (&$phones, $guarantor) {
+                $phones[] = $this->phoneData($phone, $guarantor, true);
+            });
         });
 
         return [
-            'addresses' => [
-                'customer' => AddressResource::collection($this->resource->customer->addresses),
-                'guarantor' => $guarantor_addresses,
-            ],
-            'phones' => [
-                'customer' => PhoneResource::collection($this->resource->customer->phones),
-                'guarantor' => $guarantor_phones,
-            ],
+            'addresses' => $addresses,
+            'phones' => $phones,
+        ];
+    }
+
+    private function addressData(Address $address, Customer $customer, bool $isGuarantor = false): array
+    {
+        return [
+            'id' => $address->id,
+            'type' => $address->type,
+            'address' => $address->address,
+            'region' => $address->region?->{'name_' . app()->getLocale()},
+            'district' => $address->district?->{'name_' . app()->getLocale()},
+            'mahalla' => $address->mahalla?->{'name_' . app()->getLocale()},
+            'customer_name' => $customer->fullName(),
+            'customer_id' => $customer->id,
+            'is_guarantor' => $isGuarantor,
+        ];
+    }
+
+    private function phoneData(Phone $phone, Customer $customer, bool $isGuarantor = false): array
+    {
+        return [
+            'phone' => $phone->phone,
+            'id' => $phone->pivot->id,
+            'type' => $phone->pivot->type,
+            'comment' => $phone->pivot->comment,
+            'customer_name' => $customer->fullName(),
+            'customer_id' => $customer->id,
+            'is_guarantor' => $isGuarantor,
         ];
     }
 }

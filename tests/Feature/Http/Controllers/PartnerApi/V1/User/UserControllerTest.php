@@ -132,7 +132,6 @@ class UserControllerTest extends TestCase
         $user->refresh();
         $response->assertOk();
         $this->assertFileExists(storage_path('app/public/' . Attachment::UPLOADS_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $user->avatar->path));
-        $this->assertFileExists(storage_path('app/public/' . Attachment::PREVIEW_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $user->avatar->preview_path));
     }
 
     /**

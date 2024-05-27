@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Customer;
 
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
+use App\Models\Company\Card;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
@@ -17,8 +18,8 @@ use OpenApi\Attributes as OA;
 class AttachCustomerCardResource extends JsonResource
 {
     public function __construct(
-        public AtmosAttachCardResponseDTO $attachData,
-        public CardResource $card,
+        public Card $card,
+        public ?AtmosAttachCardResponseDTO $attachData = null,
     ) {
     }
 
@@ -26,7 +27,7 @@ class AttachCustomerCardResource extends JsonResource
     {
         return [
             'attachData' => $this->attachData,
-            'card' => $this->card,
+            'card' => new CardResource($this->card),
         ];
     }
 }

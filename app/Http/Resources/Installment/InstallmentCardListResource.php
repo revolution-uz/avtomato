@@ -19,6 +19,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'pan', type: 'string', example: '986011******4444'),
         new OA\Property(property: 'expiry', type: 'string', example: '2**9'),
         new OA\Property(property: 'is_attached', type: 'boolean', example: 'true'),
+        new OA\Property(property: 'card_type', type: 'string', example: 'UZCARD'),
     ]
 )]
 /**
@@ -41,7 +42,7 @@ class InstallmentCardListResource extends JsonResource
         return $data;
     }
 
-    private function getCardData(Card $card, $installmentCards, $customerId, $isGuarantor = false): array
+    private function getCardData(Card $card, $installmentCards, int $customerId, $isGuarantor = false): array
     {
         $expiry = str_split($card->expiry, 2);
 
@@ -53,6 +54,7 @@ class InstallmentCardListResource extends JsonResource
             'pan' => $card->pan,
             'expiry' => implode('/', [$expiry[1], $expiry[0]]),
             'is_attached' => $installmentCards->where('id', $card->id)->count() > 0,
+            'card_type' => $card->card_type,
         ];
     }
 }
