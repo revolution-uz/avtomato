@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -16,6 +17,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
         new OA\Property(property: 'transaction_type_id', type: 'int', example: '100'),
         new OA\Property(property: 'amount', type: 'double', example: '2100000'),
+        new OA\Property(property: 'paid_at', type: 'string', format: 'date', example: '2021-09-15'),
     ],
 )]
 /**
@@ -26,10 +28,32 @@ class TransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'installment_id' => 'required|int',
-            'customer_id' => 'required|int',
-            'transaction_type_id' => 'required|int',
-            'amount' => 'required|numeric',
+            'installment_id' => [
+                'required',
+                'int',
+                Rule::exists('installments', 'id'),
+            ],
+            'customer_id' => [
+                'required',
+                'int',
+                Rule::exists('customers', 'id'),
+            ],
+            'transaction_type_id' => [
+                'required',
+                'int',
+                Rule::exists('transaction_types', 'id'),
+
+            ],
+            'amount' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+            'paid_at' => [
+                'nullable',
+                'date',
+                'date_format:Y-m-d',
+            ],
         ];
     }
 

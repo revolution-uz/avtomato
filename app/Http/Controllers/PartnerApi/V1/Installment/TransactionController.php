@@ -48,6 +48,7 @@ class TransactionController extends Controller
 
         return TransactionResource::collection(
             Transaction::query()
+                ->with(['installment', 'employee', 'customer', 'transactionType', 'installment.branch'])
                 ->when(
                     $request->search,
                     fn (Builder $q) => $q->where('id', $request->search)
@@ -100,6 +101,7 @@ class TransactionController extends Controller
     {
         $model = new Transaction;
         $model->fill($request->validated());
+        $model->external_id = 'local_' . Str::random();
         $model->saveOrFail();
 
         return new TransactionResource($model);
