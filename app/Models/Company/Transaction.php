@@ -20,12 +20,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Card $card
  * @property int $transaction_type_id
  * @property TransactionType $transactionType
- * @property int $external_id
+ * @property string|null $external_id
  * @property float $amount
  * @property int $employee_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read  User $employee
+ * @property Carbon|null $paid_at
  */
 class Transaction extends Model
 {
@@ -41,6 +42,13 @@ class Transaction extends Model
         'external_id',
         'amount',
         'employee_id',
+        'paid_at',
+    ];
+
+    protected $casts = [
+        'paid_at' => 'date',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function getActivitylogOptions(): LogOptions

@@ -33,16 +33,16 @@ class InstallmentTransactionResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
+            'admin_name' => $this->resource->employee?->fullName() ?? 'Avtomato (Bot)',
+            'admin_id' => $this->resource->employee_id,
             'customer_id' => $this->resource->customer_id,
-            'employee_id' => $this->resource->employee_id,
-            'employee' => $this->resource->employee?->fullName() ?? 'Avtomato Bot',
-            'customer' => $this->resource->customer->fullName(),
-            'card_id' => $this->resource->card_id,
-            'card_pan' => $this->resource->card?->pan,
-            'external_id' => $this->resource->external_id,
-            'transaction_type' => $this->resource->transactionType->{'name_' . app()->getLocale()},
+            'customer_name' => $this->resource->customer->fullName(),
+            'ext_id' => $this->resource->external_id,
             'amount' => $this->resource->amount,
-            'created_at' => $this->resource->created_at->getTimestamp(),
+            'transaction_type' => $this->resource->transactionType->{'name_' . app()->getLocale()},
+            'updated_at' => $this->resource->updated_at->getTimestamp(),
+            'card' => $this->resource->card?->pan ?? '',
+            'card_id' => $this->resource->card_id,
         ];
     }
 }

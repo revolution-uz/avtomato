@@ -93,7 +93,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
             //transactions
             Route::get('transaction', 'transactionList')->name('installments.transaction-list');
-            Route::post('transaction', 'createTransaction')->name('installments.create-transaction');
         });
 
         // transactions

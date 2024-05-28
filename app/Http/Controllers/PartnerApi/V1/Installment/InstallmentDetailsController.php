@@ -12,7 +12,6 @@ use App\Http\Requests\Installment\InstallmentCardAttachRequest;
 use App\Http\Requests\Installment\InstallmentCardDetachRequest;
 use App\Http\Requests\Installment\InstallmentCommentRequest;
 use App\Http\Requests\Installment\InstallmentCommentsDeleteRequest;
-use App\Http\Requests\Installment\InstallmentCreateTransactionRequest;
 use App\Http\Requests\Installment\InstallmentCustomersListRequest;
 use App\Http\Requests\Installment\InstallmentDocumentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentDocumentUploadRequest;
@@ -478,40 +477,5 @@ class InstallmentDetailsController extends Controller
             ->firstOrFail();
 
         return new InstallmentTransactionResource($installmentTransactions);
-    }
-
-    #[OA\Post(
-        path: '/api/v1/installment/installment-details/{id}/transaction',
-        description: 'Installment create Installment transaction route',
-        requestBody: new OA\RequestBody(
-            description: 'Installment transaction create request body',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCreateTransactionRequest')
-        ),
-        tags: ['InstallmentDetails'],
-        parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'Installment ID',
-                in: 'path',
-                required: true
-            ),
-        ],
-        responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentTransactionResource'),
-        ]
-    )]
-    public function createTransaction(int $id, InstallmentCreateTransactionRequest $request): InstallmentTransactionResource
-    {
-        $installment = Installment::findOrFail($id);
-        $attributes = $request->validated();
-        $attributes['installment_id'] = $id;
-        $attributes['employee_id'] = auth()->id();
-        $attributes['customer_id'] = $installment->customer_id;
-        $attributes['external_id'] = 'local_' . time();
-
-        $model = Transaction::create($attributes);
-
-        return new InstallmentTransactionResource($model);
     }
 }
