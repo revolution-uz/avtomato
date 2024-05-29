@@ -465,7 +465,7 @@ class InstallmentDetailsController extends Controller
             new OpenApiIdParameter(modelName: 'Installment'),
         ],
         responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentTransactionResource'),
+            new OpenApiArrayResponse(resourceName: 'InstallmentTransactionResource'),
             new OpenApiNotFoundResponse,
         ]
     )]
@@ -474,8 +474,8 @@ class InstallmentDetailsController extends Controller
         $installmentTransactions = Transaction::query()
             ->with(['customer'])
             ->where('installment_id', $id)
-            ->firstOrFail();
+            ->get();
 
-        return new InstallmentTransactionResource($installmentTransactions);
+        return InstallmentTransactionResource::collection($installmentTransactions);
     }
 }
