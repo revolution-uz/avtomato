@@ -65,7 +65,7 @@ class InstallmentService
      * @throws Throwable
      * @throws BalanceIsNotEnoughException
      */
-    public function toggleGuarantorAutoCharge(InstallmentGuarantor $installmentGuarantor, InstallmentToggleRequest $request): Installment
+    public function toggleGuarantorAutoCharge(InstallmentGuarantor $installmentGuarantor, InstallmentToggleRequest $request): InstallmentGuarantor
     {
         if ($request->auto_charge) {
             $installmentGuarantor->any_card_charge = true;
