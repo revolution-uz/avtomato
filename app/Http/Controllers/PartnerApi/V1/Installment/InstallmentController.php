@@ -22,9 +22,11 @@ use App\Http\Requests\Installment\InstallmentsDeleteRequest;
 use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Http\Requests\Installment\InstallmentUpdateRequest;
 use App\Http\Requests\Installment\InstallmentViewRequest;
+use App\Http\Resources\Installment\InstallmentGuarantorResource;
 use App\Http\Resources\Installment\InstallmentResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Installment;
+use App\Models\Company\InstallmentGuarantor;
 use App\Services\Installment\InstallmentService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -182,6 +184,37 @@ class InstallmentController extends Controller
     public function toggleAutoCharge(int $id, InstallmentToggleRequest $request): InstallmentResource
     {
         return new InstallmentResource($this->installmentService->toggleAutoCharge(Installment::findOrFail($id), $request));
+    }
+
+    /**
+     * @throws Throwable
+     * @throws BalanceIsNotEnoughException
+     */
+    #[OA\Post(
+        path: '/api/v1/installment/installment/{id}/toggle-guarantor-auto-charge',
+        description: 'Installment toggle route',
+        requestBody: new OA\RequestBody(
+            description: 'Installment toggle request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentToggleRequest')
+        ),
+        tags: ['Installments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Installment Guarantor ID',
+                in: 'path',
+                required: true
+            ),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'InstallmentGuarantorResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function toggleGuarantorAutoCharge(int $id, InstallmentToggleRequest $request): InstallmentGuarantorResource
+    {
+        return new InstallmentGuarantorResource($this->installmentService->toggleGuarantorAutoCharge(InstallmentGuarantor::findOrFail($id), $request));
     }
 
     /**

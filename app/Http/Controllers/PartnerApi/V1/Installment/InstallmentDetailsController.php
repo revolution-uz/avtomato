@@ -7,6 +7,8 @@ use App\Helpers\Swagger\OpenApiArrayResponse;
 use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
+use App\Helpers\Swagger\OpenApiPageParameter;
+use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Installment\InstallmentCardAttachRequest;
 use App\Http\Requests\Installment\InstallmentCardDetachRequest;
@@ -462,10 +464,12 @@ class InstallmentDetailsController extends Controller
         description: 'Installment transaction list route',
         tags: ['InstallmentDetails'],
         parameters: [
-            new OpenApiIdParameter(modelName: 'Installment'),
+            new OpenApiIdParameter(modelName: 'InstallmentId'),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
         ],
         responses: [
-            new OpenApiDataResponse(resourceName: 'InstallmentTransactionResource'),
+            new OpenApiArrayResponse(resourceName: 'InstallmentTransactionResource', withPagination: true, withSortables: true),
             new OpenApiNotFoundResponse,
         ]
     )]
@@ -474,8 +478,8 @@ class InstallmentDetailsController extends Controller
         $installmentTransactions = Transaction::query()
             ->with(['customer'])
             ->where('installment_id', $id)
-            ->firstOrFail();
+            ->paginate($request->per_page);
 
-        return new InstallmentTransactionResource($installmentTransactions);
+        return InstallmentTransactionResource::collection($installmentTransactions);
     }
 }
