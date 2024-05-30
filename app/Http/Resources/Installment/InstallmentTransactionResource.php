@@ -13,8 +13,8 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
-        new OA\Property(property: 'employee_id', type: 'int', example: '1'),
-        new OA\Property(property: 'employee', type: 'string', example: 'John Doe'),
+        new OA\Property(property: 'admin_id', type: 'int', example: '1'),
+        new OA\Property(property: 'admin', type: 'string', example: 'John Doe'),
         new OA\Property(property: 'customer', type: 'string', example: 'John Doe'),
         new OA\Property(property: 'card_id', type: ['int', 'null'], example: '1'),
         new OA\Property(property: 'card_pan', type: ['string', 'null'], example: '8600********'),
