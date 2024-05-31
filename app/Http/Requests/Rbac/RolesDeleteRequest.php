@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -24,7 +25,11 @@ class RolesDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:roles,id|not_in:' . Role::getAdmin()->id,
+            'ids.*' => [
+                'required',
+                'integer',
+                Rule::notIn([Role::getAdmin()->id]),
+            ],
         ];
     }
 

@@ -2,7 +2,6 @@
 
 namespace App\Models\Company\Rbac;
 
-use App\DTOs\PermissionRequestDTO;
 use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Models\Company\Branch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,15 +42,6 @@ class Role extends Model
     {
         return LogOptions::defaults()
             ->logFillable();
-    }
-
-    public function syncPermissions(...$permissions): void
-    {
-        $this->permissions()->detach();
-        $collection = PermissionRequestDTO::collection($permissions[0]);
-        foreach ($collection as $permissionDto) {
-            $this->permissions()->attach($permissionDto->permission_id, ['branch_id' => $permissionDto->branch_id]);
-        }
     }
 
     public function rolePermissions(): HasMany
@@ -105,12 +95,17 @@ class Role extends Model
                 $permissionItem['slug'] = $permission->slug;
                 $permissionItem['name'] = $permission->name;
                 $permissionItem['branches'] = [];
+
+                $allBranchEnabled = true;
                 foreach (Branch::all() as $branch) {
                     $branchItem['id'] = $branch->id;
                     $branchItem['name'] = $branch->name;
                     $branchItem['editable'] = $permission->is_branch_related;
                     $branchItem['enabled'] = in_array($branch->id, $permissionBranches[$permission->id] ?? [], true);
 
+                    if ($allBranchEnabled) {
+                        $allBranchEnabled = $branchItem['enabled'];
+                    }
                     $permissionItem['branches'][] = $branchItem;
                 }
                 // Add All branch
@@ -118,7 +113,7 @@ class Role extends Model
                     'id' => null,
                     'name' => 'All',
                     'editable' => true,
-                    'enabled' => in_array(null, $permissionBranches[$permission->id] ?? [], true),
+                    'enabled' => $allBranchEnabled,
                 ];
                 $groupItem['permissions'][] = $permissionItem;
             }

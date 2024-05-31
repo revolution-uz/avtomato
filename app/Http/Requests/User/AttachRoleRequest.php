@@ -5,6 +5,7 @@ namespace App\Http\Requests\User;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -19,7 +20,11 @@ class AttachRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role_id' => 'required|int|exists:roles,id',
+            'role_id' => [
+                'required',
+                'integer',
+                Rule::exists('roles', 'id'),
+            ],
         ];
     }
 

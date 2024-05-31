@@ -310,7 +310,14 @@ class UserController extends Controller
     )]
     public function attachRole(int $id, AttachRoleRequest $request)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('id', $id)
+            ->where('role_id', '!=', $request->role_id)
+            ->firstOrFail();
+
+        if ($user->id === auth()->id()) {
+            abort(403, 'You can\'t change your own role');
+        }
+
         $user->updateOrFail(['role_id' => $request->role_id]);
 
         return new SingleUserResource($user);
