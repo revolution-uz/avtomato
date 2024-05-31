@@ -51,7 +51,13 @@ class TransactionController extends Controller
                 ->with(['installment', 'employee', 'customer', 'transactionType', 'installment.branch'])
                 ->when(
                     $request->search,
-                    fn (Builder $q) => $q->where('id', $request->search)
+                    fn (Builder $q) => $q
+                        ->orWhere('id', $request->id)
+                        ->orWhere('installment_id', $request->installment_id)
+                        ->orWhere('customer_id', $request->customer_id)
+                        ->orWhere('card_id', $request->card_id)
+                        ->orWhere('transaction_type_id', $request->transaction_type_id)
+                        ->orWhere('amount', $request->amount)
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
