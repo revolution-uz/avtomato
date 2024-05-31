@@ -178,7 +178,10 @@ class RoleController extends Controller
             }
         }
 
-        $role->syncPermissions($filtered);
+        $role->permissions()->detach();
+        foreach ($filtered as $permission) {
+            $role->permissions()->attach($permission['permission_id'], ['branch_id' => $permission['branch_id']]);
+        }
 
         return new SingleRoleResource($role);
     }
