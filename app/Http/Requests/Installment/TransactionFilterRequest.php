@@ -30,10 +30,10 @@ class TransactionFilterRequest extends BaseFilterRequest
             'page' => 'int|min:1',
             'per_page' => 'int|min:1',
             'id' => 'int|min:1',
-            'installment_id' => ['required', 'int', Rule::exists('installments', 'id')],
-            'customer_id' => ['required', 'int', Rule::exists('customers', 'id')],
-            'card_id' => ['required', 'int', Rule::exists('cards', 'id')],
-            'transaction_type_id' => ['required', 'int', Rule::exists('transaction_types', 'id')],
+            'installment_id' => ['nullable', 'int', Rule::exists('installments', 'id')],
+            'customer_id' => ['nullable', 'int', Rule::exists('customers', 'id')],
+            'card_id' => ['nullable', 'int', Rule::exists('cards', 'id')],
+            'transaction_type_id' => ['nullable', 'int', Rule::exists('transaction_types', 'id')],
             'amount' => 'int|min:0',
         ];
     }
