@@ -4,9 +4,9 @@ namespace App\Http\Requests\Installment;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFilterRequest;
 
-class InstallmentViewRequest extends FormRequest
+class InstallmentViewRequest extends BaseFilterRequest
 {
     public function authorize(): bool
     {

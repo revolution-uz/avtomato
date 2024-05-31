@@ -11,6 +11,7 @@ use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGraph;
+use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
@@ -45,16 +46,36 @@ class InstallmentService
     {
         if ($request->auto_charge) {
             $installment->type = InstallmentTypeEnum::WITH_CARD;
-            if (! $installment->withdrawn_auto_charge) {
-                $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
-                $installment->withdrawn_auto_charge = true;
-            }
         } else {
             $installment->type = InstallmentTypeEnum::WITHOUT_CARD;
+        }
+        if (isset($request->any_card)) {
+            $installment->any_card_charge = $request->any_card;
+        }
+
+        if ($installment->any_card_charge || $installment->type == InstallmentTypeEnum::WITH_CARD) {
+            $this->withdrawAutoCharge($installment);
         }
         $installment->saveOrFail();
 
         return $installment;
+    }
+
+    /**
+     * @throws Throwable
+     * @throws BalanceIsNotEnoughException
+     */
+    public function toggleGuarantorAutoCharge(InstallmentGuarantor $installmentGuarantor, InstallmentToggleRequest $request): InstallmentGuarantor
+    {
+        if ($request->auto_charge) {
+            $installmentGuarantor->any_card_charge = true;
+            $this->withdrawAutoCharge($installmentGuarantor->installment);
+        } else {
+            $installmentGuarantor->any_card_charge = false;
+        }
+        $installmentGuarantor->saveOrFail();
+
+        return $installmentGuarantor;
     }
 
     /**
@@ -74,6 +95,15 @@ class InstallmentService
         $installment->status = $status;
 
         return $installment->save();
+    }
+
+    private function withdrawAutoCharge(Installment $installment)
+    {
+        if (! $installment->withdrawn_auto_charge) {
+            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
+            $installment->withdrawn_auto_charge = true;
+        }
+        $installment->saveOrFail();
     }
 
     /**

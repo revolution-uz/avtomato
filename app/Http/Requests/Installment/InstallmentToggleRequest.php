@@ -12,10 +12,12 @@ use OpenApi\Attributes as OA;
     title: 'Request to update an installment',
     properties: [
         new OA\Property(property: 'auto_charge', type: 'bool', example: 'true'),
+        new OA\Property(property: 'any_card', type: 'bool', example: 'true'),
     ],
 )]
 /**
  * @property bool $auto_charge
+ * @property bool $any_card
  */
 class InstallmentToggleRequest extends FormRequest
 {
@@ -23,6 +25,7 @@ class InstallmentToggleRequest extends FormRequest
     {
         return [
             'auto_charge' => 'required|boolean',
+            'any_card' => 'boolean',
         ];
     }
 
