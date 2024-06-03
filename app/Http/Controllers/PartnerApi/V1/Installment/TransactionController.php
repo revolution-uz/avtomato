@@ -37,6 +37,7 @@ class TransactionController extends Controller
             new OpenApiPerPageParameter,
             new OpenApiSearchParameter,
             new OpenApiSortParameter,
+            new OpenApiCustomParameter('id'),
             new OpenApiCustomParameter('installment_id'),
             new OpenApiCustomParameter('customer_id'),
             new OpenApiCustomParameter('card_id'),
