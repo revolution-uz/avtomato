@@ -36,6 +36,36 @@ class TransactionController extends Controller
             new OpenApiPerPageParameter,
             new OpenApiSearchParameter,
             new OpenApiSortParameter,
+            new OA\Parameter(
+                name: 'installment_id',
+                description: 'Installment ID',
+                in: 'path',
+                required: false
+            ),
+            new OA\Parameter(
+                name: 'customer_id',
+                description: 'Customer ID',
+                in: 'path',
+                required: false
+            ),
+            new OA\Parameter(
+                name: 'card_id',
+                description: 'Card ID',
+                in: 'path',
+                required: false
+            ),
+            new OA\Parameter(
+                name: 'transaction_type_id',
+                description: 'Transaction Type ID',
+                in: 'path',
+                required: false
+            ),
+            new OA\Parameter(
+                name: 'amount',
+                description: 'Amount of transaction',
+                in: 'path',
+                required: false
+            ),
         ],
         responses: [
             new OpenApiArrayResponse(resourceName: 'TransactionResource', withPagination: true, withSortables: true),
