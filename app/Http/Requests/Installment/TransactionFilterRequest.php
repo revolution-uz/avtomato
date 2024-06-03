@@ -9,6 +9,8 @@ use Illuminate\Validation\Rule;
 
 /**
  * @property int $id
+ * @property int $branch_id
+ * @property int $admin_id
  * @property int $installment_id
  * @property int $customer_id
  * @property int $card_id

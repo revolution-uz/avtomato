@@ -45,9 +45,12 @@ class TransactionController extends Controller
             new OpenApiSearchParameter,
             new OpenApiSortParameter,
             new OpenApiCustomParameter('id'),
+            new OpenApiCustomParameter('branch_id'),
+            new OpenApiCustomParameter('admin_id'),
             new OpenApiCustomParameter('installment_id'),
             new OpenApiCustomParameter('customer_id'),
             new OpenApiCustomParameter('card_id'),
+            new OpenApiCustomParameter('created_at'),
             new OpenApiCustomParameter('transaction_type_id'),
             new OpenApiCustomParameter('amount'),
         ],
@@ -64,14 +67,44 @@ class TransactionController extends Controller
             Transaction::query()
                 ->with(['installment', 'employee', 'customer', 'transactionType', 'installment.branch'])
                 ->when(
-                    $request->search,
+                    $request->amount,
                     fn (Builder $q) => $q
-                        ->orWhere('id', $request->id)
-                        ->orWhere('installment_id', $request->installment_id)
-                        ->orWhere('customer_id', $request->customer_id)
-                        ->orWhere('card_id', $request->card_id)
-                        ->orWhere('transaction_type_id', $request->transaction_type_id)
-                        ->orWhere('amount', $request->amount)
+                        ->where('amount', $request->amount)
+                )
+                ->when(
+                    $request->id,
+                    fn (Builder $q) => $q
+                        ->where('id', $request->id)
+                )
+                ->when(
+                    $request->branch_id,
+                    fn (Builder $q) => $q
+                        ->whereHas('installment', fn (Builder $q) => $q->where('branch_id', $request->branch_id))
+                )
+                ->when(
+                    $request->admin_id,
+                    fn (Builder $q) => $q
+                        ->where('id', $request->admin_id)
+                )
+                ->when(
+                    $request->installment_id,
+                    fn (Builder $q) => $q
+                        ->where('installment_id', $request->installment_id)
+                )
+                ->when(
+                    $request->customer_id,
+                    fn (Builder $q) => $q
+                        ->where('customer_id', $request->customer_id)
+                )
+                ->when(
+                    $request->card_id,
+                    fn (Builder $q) => $q
+                        ->where('card_id', $request->card_id)
+                )
+                ->when(
+                    $request->transaction_type_id,
+                    fn (Builder $q) => $q
+                        ->where('transaction_type_id', $request->transaction_type_id)
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
