@@ -39,31 +39,31 @@ class TransactionController extends Controller
             new OA\Parameter(
                 name: 'installment_id',
                 description: 'Installment ID',
-                in: 'path',
+                in: 'query',
                 required: false
             ),
             new OA\Parameter(
                 name: 'customer_id',
                 description: 'Customer ID',
-                in: 'path',
+                in: 'query',
                 required: false
             ),
             new OA\Parameter(
                 name: 'card_id',
                 description: 'Card ID',
-                in: 'path',
+                in: 'query',
                 required: false
             ),
             new OA\Parameter(
                 name: 'transaction_type_id',
                 description: 'Transaction Type ID',
-                in: 'path',
+                in: 'query',
                 required: false
             ),
             new OA\Parameter(
                 name: 'amount',
                 description: 'Amount of transaction',
-                in: 'path',
+                in: 'query',
                 required: false
             ),
         ],
