@@ -110,6 +110,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::TRANSACTION_VIEW,
                 PermissionEnum::TRANSACTION_CREATE,
                 PermissionEnum::TRANSACTION_EDIT,
+                PermissionEnum::TRANSACTION_REVERSE,
                 PermissionEnum::TRANSACTION_DELETE,
             ],
             self::TRANSACTION_TYPE_MANAGEMENT => [

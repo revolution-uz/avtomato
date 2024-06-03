@@ -17,10 +17,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Installment\TransactionFilterRequest;
 use App\Http\Requests\Installment\TransactionRequest;
 use App\Http\Requests\Installment\TransactionsDeleteRequest;
+use App\Http\Requests\Installment\TransactionsReverseRequest;
 use App\Http\Requests\Installment\TransactionViewRequest;
 use App\Http\Resources\Installment\TransactionResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Transaction;
+use App\Services\AtmosService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
@@ -28,6 +30,11 @@ use OpenApi\Attributes as OA;
 
 class TransactionController extends Controller
 {
+    public function __construct(
+        private readonly AtmosService $atmosCardService,
+    ) {
+    }
+
     #[OA\Get(
         path: '/api/v1/installment/transaction',
         description: 'Transaction route',
@@ -168,6 +175,26 @@ class TransactionController extends Controller
     public function delete(TransactionsDeleteRequest $request): StatusResource
     {
         Transaction::query()->whereIn('id', $request->ids)->delete();
+
+        return new StatusResource(true);
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/installment/transaction/{id}/reverse',
+        description: 'Transaction cancel route',
+        requestBody: new OA\RequestBody(
+            description: 'Transactions delete request body',
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/TransactionsReverseRequest')
+        ),
+        tags: ['Transactions'],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'StatusResource'),
+        ]
+    )]
+    public function reverse(int $id, TransactionsReverseRequest $request): StatusResource
+    {
+        $this->atmosCardService->reversePayment(Transaction::findOrFail($id));
 
         return new StatusResource(true);
     }

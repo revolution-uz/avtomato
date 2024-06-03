@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Clients\AtmosCardClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
+use App\DTOs\Atmos\CardPay\AtmosTransactionReversePaymentDto;
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Exceptions\AtmosException;
 use App\Models\Company\BalanceFund;
+use App\Models\Company\Transaction;
 use Throwable;
 
 class AtmosService
@@ -44,7 +46,7 @@ class AtmosService
             return null;
         }
 
-        $createPayResponseDTO = $this->atmosCardClient->payCreate(
+        $createPayResponseDTO = $this->atmosCardClient->createPayment(
             'Fill balance',
             $balanceFundConfirmDTO->amount,
             'User is going to fill his own balance'
@@ -54,13 +56,13 @@ class AtmosService
             return null;
         }
 
-        $preConfirmPayResponseDTO = $this->atmosCardClient->payPreApply($confirmCardResponseDTO->data->card_token, $createPayResponseDTO->transaction_id);
+        $preConfirmPayResponseDTO = $this->atmosCardClient->preConfirmPayment($confirmCardResponseDTO->data->card_token, $createPayResponseDTO->transaction_id);
 
         if (! $preConfirmPayResponseDTO->result->isSucces()) {
             return null;
         }
 
-        $confirmPayResponseDTO = $this->atmosCardClient->payApplyOfd($createPayResponseDTO->transaction_id);
+        $confirmPayResponseDTO = $this->atmosCardClient->confirmPayment($createPayResponseDTO->transaction_id);
 
         if (! $confirmPayResponseDTO->result->isSucces()) {
             return null;
@@ -84,5 +86,13 @@ class AtmosService
     public function setRevolutionCredentials(): void
     {
         $this->atmosCardClient->setRevolutionCredentials();
+    }
+
+    public function reversePayment(Transaction $transaction): void
+    {
+        $response = AtmosTransactionReversePaymentDto::from($this->atmosCardClient->reversePayment($transaction->external_id));
+        if ($response->result->isSucces()) {
+            $transaction->delete();
+        }
     }
 }

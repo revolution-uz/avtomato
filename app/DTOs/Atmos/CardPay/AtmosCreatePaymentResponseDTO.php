@@ -6,7 +6,7 @@ use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\Atmos\AtmosStoreTransactionDTO;
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 
-class AtmosCreatePayResponseDTO extends BaseScoringRequest
+class AtmosCreatePaymentResponseDTO extends BaseScoringRequest
 {
     public function __construct(
         public AtmosResultDTO $result,
