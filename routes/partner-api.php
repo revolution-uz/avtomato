@@ -103,7 +103,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('/', 'create')->name('transactions.create');
             Route::put('{id}', 'update')->name('transactions.update');
             Route::delete('/', 'delete')->name('transactions.delete');
-            Route::delete('/', 'reverse')->name('transactions.reverse');
+            Route::delete('{id}/reverse', 'reverse')->name('transactions.reverse');
         });
 
         // transaction_types

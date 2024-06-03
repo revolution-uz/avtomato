@@ -45,4 +45,9 @@ class AtmosFaker
             self::PARTNER_URL . $path => Http::response(json_decode(file_get_contents(storage_path($jsonPath)), true), $status),
         ]);
     }
+
+    public static function reversePayment()
+    {
+        self::fakeResponse(AtmosCardClient::PAYMENT_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-reverse.json');
+    }
 }

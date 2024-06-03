@@ -181,12 +181,10 @@ class TransactionController extends Controller
 
     #[OA\Delete(
         path: '/api/v1/installment/transaction/{id}/reverse',
-        description: 'Transaction cancel route',
-        requestBody: new OA\RequestBody(
-            description: 'Transactions delete request body',
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/TransactionsReverseRequest')
-        ),
+        description: 'Transaction reverse route',
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Transaction'),
+        ],
         tags: ['Transactions'],
         responses: [
             new OpenApiDataResponse(resourceName: 'StatusResource'),
