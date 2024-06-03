@@ -19,6 +19,11 @@ class AtmosFaker
         self::fakeResponse(AtmosCardClient::CARD_BIND_INIT, '../JSON-for-testing/atmos/card/bind-card-init.json');
     }
 
+    public static function removeCard()
+    {
+        self::fakeResponse(AtmosCardClient::CARD_BIND_INIT, '../JSON-for-testing/atmos/card/remove-card.json');
+    }
+
     public static function confirmCard()
     {
         self::fakeResponse(AtmosCardClient::CARD_BIND_CONFIRM, '../JSON-for-testing/atmos/card/bind-card-confirm.json');

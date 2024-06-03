@@ -187,6 +187,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('{id}', 'getSingle')->name('customer.get-single');
         Route::post('{id}/card', 'attachCard')->name('customer.attach-card');
         Route::delete('{id}/card', 'detachCard')->name('customer.detach-card');
+        Route::delete('{id}/remove-card', 'removeCard')->name('customer.remove-card');
         Route::post('{id}/confirm-card', 'confirmCard')->name('customer.confirm-card');
         Route::post('{id}/phone', 'attachPhone')->name('customer.attach-phone');
         Route::delete('{id}/phone', 'detachPhone')->name('customer.detach-phone');

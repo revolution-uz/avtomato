@@ -13,6 +13,7 @@ use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\AttachAddressRequest;
 use App\Http\Requests\Customer\AttachPhoneRequest;
+use App\Http\Requests\Customer\CardRemoveRequest;
 use App\Http\Requests\Customer\CardRequest;
 use App\Http\Requests\Customer\CardsDeleteRequest;
 use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
@@ -358,7 +359,7 @@ class CustomerController extends Controller
             new OpenApiDataResponse('CardRemoveResource'),
         ]
     )]
-    public function removeCard(int $id, CardsDeleteRequest $request): CardRemoveResource
+    public function removeCard(int $id, CardRemoveRequest $request): CardRemoveResource
     {
         return $this->atmosCardService->removeCard(Card::findOrFail($id));
     }
