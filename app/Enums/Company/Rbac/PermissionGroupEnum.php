@@ -56,6 +56,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::CUSTOMER_INFO_BY_PASSPORT,
                 PermissionEnum::CUSTOMER_EDIT,
                 PermissionEnum::CUSTOMER_CARD_EDIT,
+                PermissionEnum::CUSTOMER_CARD_REMOVE,
             ],
             self::ROLE_MANAGEMENT => [
                 PermissionEnum::ROLE_VIEW_ALL,

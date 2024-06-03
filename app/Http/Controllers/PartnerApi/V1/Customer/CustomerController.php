@@ -25,6 +25,7 @@ use App\Http\Requests\Customer\DetachPhonesRequest;
 use App\Http\Requests\Customer\GetCustomerInfoByPassportRequest;
 use App\Http\Requests\Customer\UpdateCustomerRequest;
 use App\Http\Resources\Customer\AttachCustomerCardResource;
+use App\Http\Resources\Customer\CardRemoveResource;
 use App\Http\Resources\Customer\CardResource;
 use App\Http\Resources\Customer\CustomerListItemResource;
 use App\Http\Resources\Customer\ErrorConfirmCardResource;
@@ -344,6 +345,22 @@ class CustomerController extends Controller
             ->delete();
 
         return new StatusResource(true);
+    }
+
+    #[OA\Delete(
+        path: '/api/v1/customer/{id}/remove-card',
+        description: 'Card remove route',
+        tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Card Id'),
+        ],
+        responses: [
+            new OpenApiDataResponse('CardRemoveResource'),
+        ]
+    )]
+    public function removeCard(int $id, CardsDeleteRequest $request): CardRemoveResource
+    {
+        return $this->atmosCardService->removeCard(Card::findOrFail($id));
     }
 
     #[OA\Post(
