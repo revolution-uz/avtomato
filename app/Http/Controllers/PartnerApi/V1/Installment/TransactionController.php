@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PartnerApi\V1\Installment;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiCustomParameter;
 use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
@@ -36,36 +37,11 @@ class TransactionController extends Controller
             new OpenApiPerPageParameter,
             new OpenApiSearchParameter,
             new OpenApiSortParameter,
-            new OA\Parameter(
-                name: 'installment_id',
-                description: 'Installment ID',
-                in: 'query',
-                required: false
-            ),
-            new OA\Parameter(
-                name: 'customer_id',
-                description: 'Customer ID',
-                in: 'query',
-                required: false
-            ),
-            new OA\Parameter(
-                name: 'card_id',
-                description: 'Card ID',
-                in: 'query',
-                required: false
-            ),
-            new OA\Parameter(
-                name: 'transaction_type_id',
-                description: 'Transaction Type ID',
-                in: 'query',
-                required: false
-            ),
-            new OA\Parameter(
-                name: 'amount',
-                description: 'Amount of transaction',
-                in: 'query',
-                required: false
-            ),
+            new OpenApiCustomParameter('installment_id'),
+            new OpenApiCustomParameter('customer_id'),
+            new OpenApiCustomParameter('card_id'),
+            new OpenApiCustomParameter('transaction_type_id'),
+            new OpenApiCustomParameter('amount'),
         ],
         responses: [
             new OpenApiArrayResponse(resourceName: 'TransactionResource', withPagination: true, withSortables: true),
