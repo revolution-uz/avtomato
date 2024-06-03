@@ -9,6 +9,7 @@ use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use App\Models\Company\User;
+use Tests\Fakers\AtmosFaker;
 use Tests\TestCase;
 
 class TransactionControllerTest extends TestCase
@@ -69,5 +70,35 @@ class TransactionControllerTest extends TestCase
 
         $response->assertOk();
         $this->assertEquals($customer->id, $response->json('data.id'));
+    }
+
+    /**
+     * @test
+     */
+    public function deleteTransactions()
+    {
+        $admin = $this->createAdminUser();
+
+        $transaction = Transaction::factory()->create();
+
+        $response = $this->actingAs($admin)->deleteJson(route('transactions.delete'), ['ids' => [$transaction->id]]);
+        $response->assertOk();
+    }
+
+    /**
+     * @test
+     */
+    public function reverse()
+    {
+        $admin = $this->createAdminUser();
+
+        AtmosFaker::getToken();
+        AtmosFaker::reversePayment();
+        $transaction = Transaction::factory()->create();
+        $transaction->external_id = 1;
+        $transaction->saveOrFail();
+
+        $response = $this->actingAs($admin)->deleteJson(route('transactions.reverse', ['id' => $transaction->id]));
+        $response->assertOk();
     }
 }

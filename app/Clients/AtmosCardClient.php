@@ -4,8 +4,9 @@ namespace App\Clients;
 
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
-use App\DTOs\Atmos\CardPay\AtmosCreatePayResponseDTO;
-use App\DTOs\Atmos\CardPay\AtmosPreConfirmPayResponseDTO;
+use App\DTOs\Atmos\CardPay\AtmosConfirmPaymentResponseDTO;
+use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
+use App\DTOs\Atmos\CardPay\AtmosPreConfirmPaymentResponseDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\AtmosException;
@@ -122,7 +123,7 @@ class AtmosCardClient extends BaseAtmosClient
     /**
      * @throws AtmosException
      */
-    public function payCreate(string $account, int $amount, string $details): AtmosCreatePayResponseDTO
+    public function createPayment(string $account, int $amount, string $details): AtmosCreatePaymentResponseDTO
     {
         $data = [
             'store_id' => $this->store_id,
@@ -132,13 +133,13 @@ class AtmosCardClient extends BaseAtmosClient
             'debit-available-amount' => true,
         ];
 
-        return AtmosCreatePayResponseDTO::from($this->makeRequest(self::PAYMENT_CREATE, $data));
+        return AtmosCreatePaymentResponseDTO::from($this->makeRequest(self::PAYMENT_CREATE, $data));
     }
 
     /**
      * @throws AtmosException
      */
-    public function payPreApply(string $card_token, int $transaction_id): AtmosPreConfirmPayResponseDTO
+    public function preConfirmPayment(string $card_token, int $transaction_id): AtmosPreConfirmPaymentResponseDTO
     {
         $data = [
             'store_id' => $this->store_id,
@@ -146,39 +147,39 @@ class AtmosCardClient extends BaseAtmosClient
             'transaction_id' => $transaction_id,
         ];
 
-        return AtmosPreConfirmPayResponseDTO::from($this->makeRequest(self::PAYMENT_PRE_CONFIRM, $data));
+        return AtmosPreConfirmPaymentResponseDTO::from($this->makeRequest(self::PAYMENT_PRE_CONFIRM, $data));
     }
 
     /**
      * @throws AtmosException
      */
-    public function payApplyOfd(int $transaction_id): AtmosCreatePayResponseDTO
+    public function confirmPayment(int $transaction_id): AtmosConfirmPaymentResponseDTO
     {
         $data = [
             'store_id' => $this->store_id,
             'transaction_id' => $transaction_id,
         ];
 
-        return AtmosCreatePayResponseDTO::from($this->makeRequest(self::PAYMENT_CONFIRM, $data));
+        return AtmosConfirmPaymentResponseDTO::from($this->makeRequest(self::PAYMENT_CONFIRM, $data));
     }
 
     /**
      * @throws AtmosException
      */
-    public function payGet(int $transaction_id): AtmosCreatePayResponseDTO
+    public function getPayment(int $transaction_id): AtmosCreatePaymentResponseDTO
     {
         $data = [
             'store_id' => $this->store_id,
             'transaction_id' => $transaction_id,
         ];
 
-        return AtmosCreatePayResponseDTO::from($this->makeRequest(self::PAYMENT_GET, $data));
+        return AtmosCreatePaymentResponseDTO::from($this->makeRequest(self::PAYMENT_GET, $data));
     }
 
     /**
      * @throws AtmosException
      */
-    public function payReverse(int $transaction_id, string $reason = 'Wrong payment', int $hold_amount = 0): mixed
+    public function reversePayment(int $transaction_id, string $reason = 'Wrong payment', int $hold_amount = 0): mixed
     {
         $data = [
             'store_id' => $this->store_id,

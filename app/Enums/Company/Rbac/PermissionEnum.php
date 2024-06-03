@@ -114,6 +114,7 @@ enum PermissionEnum: string
     case TRANSACTION_CREATE = 'transaction_create';
     case TRANSACTION_EDIT = 'transaction_edit';
     case TRANSACTION_DELETE = 'transaction_delete';
+    case TRANSACTION_REVERSE = 'transaction_cancel';
 
     // Manage transaction types
     case TRANSACTION_TYPE_VIEW_ALL = 'transaction_type_view_all';
@@ -320,7 +321,8 @@ enum PermissionEnum: string
             self::TRANSACTION_VIEW,
             self::TRANSACTION_CREATE,
             self::TRANSACTION_EDIT,
-            self::TRANSACTION_DELETE => true,
+            self::TRANSACTION_DELETE,
+            self::TRANSACTION_REVERSE => true,
         };
     }
 
@@ -402,6 +404,7 @@ enum PermissionEnum: string
                 self::TRANSACTION_CREATE->value,
                 self::TRANSACTION_EDIT->value,
                 self::TRANSACTION_DELETE->value,
+                self::TRANSACTION_REVERSE->value,
             ],
             PermissionGroupEnum::TRANSACTION_TYPE_MANAGEMENT->value => [
                 self::TRANSACTION_TYPE_VIEW_ALL->value,
@@ -583,6 +586,7 @@ enum PermissionEnum: string
             self::TRANSACTION_VIEW,
             self::TRANSACTION_CREATE,
             self::TRANSACTION_EDIT,
+            self::TRANSACTION_REVERSE,
             self::TRANSACTION_DELETE => FeatureEnum::TRANSACTION_MANAGEMENT,
 
             self::TRANSACTION_TYPE_VIEW_ALL,
