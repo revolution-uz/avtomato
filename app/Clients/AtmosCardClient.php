@@ -7,6 +7,7 @@ use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\CardPay\AtmosConfirmPaymentResponseDTO;
 use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
 use App\DTOs\Atmos\CardPay\AtmosPreConfirmPaymentResponseDTO;
+use App\DTOs\Atmos\CardPay\AtmosTransactionReversePaymentDto;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\AtmosException;
@@ -106,13 +107,13 @@ class AtmosCardClient extends BaseAtmosClient
     /**
      * @throws AtmosException
      */
-    public function removeCard(string $token): array
+    public function removeCard(string $token): AtmosConfirmCardResponseDTO
     {
         $data = [
             'token' => $token,
         ];
 
-        return $this->makeRequest(self::CARD_REMOVE, $data);
+        return AtmosConfirmCardResponseDTO::from($this->makeRequest(self::CARD_REMOVE, $data));
     }
 
     /*
@@ -179,7 +180,7 @@ class AtmosCardClient extends BaseAtmosClient
     /**
      * @throws AtmosException
      */
-    public function reversePayment(int $transaction_id, string $reason = 'Wrong payment', int $hold_amount = 0): mixed
+    public function reversePayment(int $transaction_id, string $reason = 'Wrong payment', int $hold_amount = 0): AtmosTransactionReversePaymentDto
     {
         $data = [
             'store_id' => $this->store_id,
@@ -188,7 +189,7 @@ class AtmosCardClient extends BaseAtmosClient
             'hold_amount' => $hold_amount,
         ];
 
-        return $this->makeRequest(self::PAYMENT_CANCEL, $data);
+        return AtmosTransactionReversePaymentDto::from($this->makeRequest(self::PAYMENT_CANCEL, $data));
     }
     /*
      * ------------- Card Payment module end --------------

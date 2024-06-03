@@ -192,6 +192,23 @@ class CustomerControllerTest extends TestCase
     /**
      * @test
      */
+    public function removeCard()
+    {
+        AtmosFaker::getToken();
+        AtmosFaker::removeCard();
+        $card = Card::factory()->create();
+        $card->external_id = 'token';
+        $card->saveOrFail();
+
+        $admin = $this->createAdminUser();
+        $response = $this->actingAs($admin)->deleteJson(route('customer.remove-card', ['id' => $card->id]));
+
+        $response->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
     public function confirmCard()
     {
         $customer = Customer::factory()->create();

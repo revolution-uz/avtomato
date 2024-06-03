@@ -5,10 +5,11 @@ namespace App\Services;
 use App\Clients\AtmosCardClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
-use App\DTOs\Atmos\CardPay\AtmosTransactionReversePaymentDto;
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Exceptions\AtmosException;
+use App\Http\Resources\Customer\CardRemoveResource;
 use App\Models\Company\BalanceFund;
+use App\Models\Company\Card;
 use App\Models\Company\Transaction;
 use Throwable;
 
@@ -90,9 +91,22 @@ class AtmosService
 
     public function reversePayment(Transaction $transaction): void
     {
-        $response = AtmosTransactionReversePaymentDto::from($this->atmosCardClient->reversePayment($transaction->external_id));
+        $response = $this->atmosCardClient->reversePayment($transaction->external_id);
         if ($response->result->isSucces()) {
             $transaction->delete();
         }
+    }
+
+    public function removeCard(Card $card): CardRemoveResource
+    {
+        if ($card->isBindedWithInstallment()) {
+            return new CardRemoveResource(false, 'The card was binded with installment');
+        }
+        $response = $this->atmosCardClient->removeCard($card->external_id);
+        if ($response->result->isSucces()) {
+            $card->delete();
+        }
+
+        return new CardRemoveResource(true, 'The card was successfully removed');
     }
 }
