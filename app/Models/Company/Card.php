@@ -97,7 +97,7 @@ class Card extends Model
         //        $this->setNumber();
     }
 
-    public function cardType()
+    public function cardType(): Attribute
     {
         return Attribute::make(get: fn () => CardHelper::getNameByCardNumber($this->number));
     }
