@@ -29,5 +29,7 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
         'abilities',
         'expires_at',
         'device_ip',
+        'device_type',
+        'device_os',
     ];
 }
