@@ -65,8 +65,7 @@ class KatmCreditHistoryController extends Controller
                             ->orWhere('request->passport_number', 'ILIKE', $search);
                     });
                 })
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
+                ->when($request->sort && in_array($request->sort, $sortables),
                     fn (Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
