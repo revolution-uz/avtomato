@@ -5,6 +5,9 @@ namespace App\Http\Controllers\PartnerApi\V1\User;
 use App\Helpers\Swagger\OpenApiArrayResponse;
 use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
+use App\Helpers\Swagger\OpenApiPageParameter;
+use App\Helpers\Swagger\OpenApiPerPageParameter;
+use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\AvatarRequest;
 use App\Http\Requests\User\DeviceRevokeRequest;
@@ -19,6 +22,7 @@ use App\Http\Resources\StatusResource;
 use App\Http\Resources\User\SingleUserResource;
 use App\Models\Company\PersonalAccessToken;
 use App\Services\User\UserService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Attributes as OA;
 
@@ -152,16 +156,30 @@ class ProfileController extends Controller
         path: '/api/v1/profile/devices',
         description: 'My devices route',
         tags: ['Profile'],
+        parameters: [
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSearchParameter,
+        ],
         responses: [
             new OpenApiArrayResponse(resourceName: 'DeviceInfoResource'),
         ]
     )]
     public function devices(UsersDevicesRequest $request): AnonymousResourceCollection
     {
-        return DeviceInfoResource::collection(auth()->user()->tokens()->paginate(
-            $request->per_page,
-            page: $request->page
-        ));
+        return DeviceInfoResource::collection(
+            auth()->user()->tokens()->when($request->search, function (Builder $q) use ($request) {
+                $search = '%' . $request->search . '%';
+                $q->where(function (Builder $query) use ($search) {
+                    $query->where('name', 'ILIKE', $search)
+                        ->orWhere('device_ip', 'ILIKE', $search)
+                        ->orWhere('device_type', 'ILIKE', $search)
+                        ->orWhere('device_os', 'ILIKE', $search);
+                });
+            })->paginate(
+                $request->per_page,
+                page: $request->page
+            ));
     }
 
     #[OA\Delete(

@@ -4,16 +4,14 @@ namespace App\Http\Requests\User;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFilterRequest;
 use Illuminate\Support\Facades\Route;
 
 /**
  * Class UsersDevicesRequest
  *
- * @property int $page
- * @property int $per_page
  * / */
-class UsersDevicesRequest extends FormRequest
+class UsersDevicesRequest extends BaseFilterRequest
 {
     public function authorize(): bool
     {
