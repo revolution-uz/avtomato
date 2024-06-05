@@ -79,7 +79,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::put('update-guarantor/{guarantor_id}', 'updateGuarantor')->name('installments.update-guarantor');
             Route::delete('detach-guarantor', 'detachGuarantor')->name('installments.detach-guarantor');
 
-            Route::get('customer-list', 'customersList')->name('installments.customers-list');
+            Route::get('customers-list', 'customersList')->name('installments.customers-list');
             //comments
             Route::get('comment-list', 'commentList')->name('installments.comment-list');
             Route::post('comment', 'createComment')->name('installments.create-comment');
