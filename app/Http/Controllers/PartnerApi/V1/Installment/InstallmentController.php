@@ -226,6 +226,10 @@ class InstallmentController extends Controller
     #[OA\Post(
         path: '/api/v1/installment/installment/{id}/change-status',
         description: 'Installment change status route',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/InstallmentChangeStatusRequest'),
+        ),
         tags: ['Installments'],
         parameters: [
             new OpenApiIdParameter(modelName: 'Installment'),

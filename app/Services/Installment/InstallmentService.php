@@ -128,6 +128,7 @@ class InstallmentService
             $installmentGraph->amount = $amount / $installment->period + $portion;
             $installmentGraph->starts_in = Carbon::make($period->timestamp);
             $installmentGraph->status = InstallmentStatusEnum::RUNNING;
+            $installmentGraph->paid_amount = 0;
             $installmentGraph->save();
         }
     }
