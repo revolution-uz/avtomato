@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\GenderEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Address[]|Collection<int,Address> $addresses
  * @property Phone[]|Collection<int,Phone> $phones
  * @property Card[]|Collection<int,Phone> $cards
+ * @property-read  string $full_name
  *
  * @method static Builder|static query()
  * @method static Customer find(int $id)
@@ -102,8 +104,8 @@ class Customer extends Model
             ->logFillable();
     }
 
-    public function fullName(): string
+    public function fullName(): Attribute
     {
-        return $this->last_name . ' ' . $this->first_name;
+        return Attribute::make(get: fn () => $this->last_name . ' ' . $this->first_name);
     }
 }

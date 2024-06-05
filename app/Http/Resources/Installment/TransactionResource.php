@@ -39,7 +39,7 @@ class TransactionResource extends JsonResource
             'admin_name' => $this->resource->employee?->fullName() ?? 'Avtomato (Bot)',
             'admin_id' => $this->resource->employee_id,
             'customer_id' => $this->resource->customer_id,
-            'customer_name' => $this->resource->customer->fullName(),
+            'customer_name' => $this->resource->customer->full_name,
             'installment_id' => $this->resource->installment_id,
             'ext_id' => $this->resource->external_id,
             'amount' => $this->resource->amount,
