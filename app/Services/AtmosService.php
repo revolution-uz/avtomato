@@ -43,7 +43,7 @@ class AtmosService
     {
         $confirmCardResponseDTO = $this->atmosCardClient->confirmCard($balanceFundConfirmDTO->transaction_id, $balanceFundConfirmDTO->otp);
 
-        if (! $confirmCardResponseDTO->result->isSucces()) {
+        if (!$confirmCardResponseDTO->result->isSucces()) {
             return null;
         }
 
@@ -53,19 +53,19 @@ class AtmosService
             'User is going to fill his own balance'
         );
 
-        if (! $createPayResponseDTO->result->isSucces()) {
+        if (!$createPayResponseDTO->result->isSucces()) {
             return null;
         }
 
         $preConfirmPayResponseDTO = $this->atmosCardClient->preConfirmPayment($confirmCardResponseDTO->data->card_token, $createPayResponseDTO->transaction_id);
 
-        if (! $preConfirmPayResponseDTO->result->isSucces()) {
+        if (!$preConfirmPayResponseDTO->result->isSucces()) {
             return null;
         }
 
         $confirmPayResponseDTO = $this->atmosCardClient->confirmPayment($createPayResponseDTO->transaction_id);
 
-        if (! $confirmPayResponseDTO->result->isSucces()) {
+        if (!$confirmPayResponseDTO->result->isSucces()) {
             return null;
         }
 
@@ -99,7 +99,7 @@ class AtmosService
 
     public function removeCard(Card $card): CardRemoveResource
     {
-        if ($card->external_id == null) {
+        if (!$card->is_connected) {
             return new CardRemoveResource(true, 'The card was not binded');
         }
         if ($card->isBindedWithInstallment()) {
