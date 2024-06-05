@@ -99,12 +99,18 @@ class Installment extends Model
 
     public function cards(): BelongsToMany
     {
-        return $this->belongsToMany(Card::class, 'installment_cards', 'installment_id', 'card_id')->select('cards.*');
+        return $this
+            ->belongsToMany(Card::class, 'installment_cards', 'installment_id', 'card_id')
+            ->whereNull('installment_cards.deleted_at')
+            ->select('cards.*');
     }
 
     public function guarantors(): BelongsToMany
     {
-        return $this->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')->select('customers.*');
+        return $this
+            ->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')
+            ->whereNull('installment_guarantors.deleted_at')
+            ->select('customers.*');
     }
 
     public function documents(): MorphMany
