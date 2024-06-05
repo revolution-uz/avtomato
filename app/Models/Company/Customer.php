@@ -39,6 +39,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Address[]|Collection<int,Address> $addresses
  * @property Phone[]|Collection<int,Phone> $phones
  * @property Card[]|Collection<int,Phone> $cards
+ * @property-read  string $full_name
  *
  * @method static Builder|static query()
  * @method static Customer find(int $id)

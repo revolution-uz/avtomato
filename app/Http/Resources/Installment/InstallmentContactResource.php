@@ -81,7 +81,7 @@ class InstallmentContactResource extends JsonResource
             'region' => $address->region?->{'name_' . app()->getLocale()},
             'district' => $address->district?->{'name_' . app()->getLocale()},
             'mahalla' => $address->mahalla?->{'name_' . app()->getLocale()},
-            'customer_name' => $customer->fullName(),
+            'customer_name' => $customer->full_name,
             'customer_id' => $customer->id,
             'is_guarantor' => $isGuarantor,
         ];
@@ -94,7 +94,7 @@ class InstallmentContactResource extends JsonResource
             'id' => $phone->pivot->id,
             'type' => $phone->pivot->type,
             'comment' => $phone->pivot->comment,
-            'customer_name' => $customer->fullName(),
+            'customer_name' => $customer->full_name,
             'customer_id' => $customer->id,
             'is_guarantor' => $isGuarantor,
         ];

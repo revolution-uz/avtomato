@@ -32,6 +32,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property-read string $card_type
+ * @property-read bool $is_connected
  *
  * @method static Builder|static query()
  * @method static self find(int $id)
@@ -100,6 +101,11 @@ class Card extends Model
     public function cardType(): Attribute
     {
         return Attribute::make(get: fn () => CardHelper::getNameByCardNumber($this->number));
+    }
+
+    public function isConnected(): bool
+    {
+        return $this->external_id !== null;
     }
 
     public function isBindedWithInstallment(): bool
