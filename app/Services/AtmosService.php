@@ -99,6 +99,9 @@ class AtmosService
 
     public function removeCard(Card $card): CardRemoveResource
     {
+        if (is_null($card->external_id)) {
+            return new CardRemoveResource(true, 'The card was not binded');
+        }
         if ($card->isBindedWithInstallment()) {
             return new CardRemoveResource(false, 'The card was binded with installment');
         }
