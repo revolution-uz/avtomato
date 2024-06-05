@@ -95,6 +95,9 @@ class InstallmentDetailsController extends Controller
             content: new OA\JsonContent(ref: '#/components/schemas/InstallmentCardDetachRequest')
         ),
         tags: ['InstallmentDetails'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Installment'),
+        ],
         responses: [
             new OpenApiDataResponse(resourceName: 'StatusResource'),
         ]
