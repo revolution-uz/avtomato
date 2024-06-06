@@ -20,6 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
+ * @property string $username
  * @property string $first_name
  * @property string $last_name
  * @property string $phone
