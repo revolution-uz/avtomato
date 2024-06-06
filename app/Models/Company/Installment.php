@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property int $customer_id
  * @property int $branch_id
+ * @property int $user_id
  * @property int $tariff_id
  * @property float $amount
  * @property float $initial_fee
@@ -29,6 +31,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $any_card_charge
  * @property bool $is_blacklist
  * @property bool $withdrawn_auto_charge
+ * @property bool $auto_pay
  * @property int $period
  * @property string $plum_id
  * @property Carbon|null $starts_in
@@ -36,6 +39,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property Carbon|null $canceled_at
+ * @property string $cancellation_details
  * @property InstallmentTypeEnum $type
  * @property InstallmentStatusEnum $status
  * @property Branch $branch
@@ -47,6 +52,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
  * @property Customer[] $guarantors
  * @property Transaction[] $transactions
+ * @property-read  User $user
  */
 class Installment extends Model
 {
@@ -69,12 +75,15 @@ class Installment extends Model
         'status',
         'period',
         'plum_id',
+        'canceled_at',
+        'cancellation_details',
         'starts_in',
         'next_pay_date',
         'withdrawn_auto_charge',
     ];
 
     protected $casts = [
+        'canceled_at' => 'date:d-m-Y',
         'starts_in' => 'date:d-m-Y',
         'next_pay_date' => 'date:d-m-Y',
         'status' => InstallmentStatusEnum::class,
@@ -136,5 +145,15 @@ class Installment extends Model
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class, 'branch_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function autoPay(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
     }
 }
