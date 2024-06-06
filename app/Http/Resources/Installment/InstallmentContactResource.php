@@ -2,11 +2,7 @@
 
 namespace App\Http\Resources\Installment;
 
-use App\Models\Company\Address;
-use App\Models\Company\Customer;
 use App\Models\Company\Installment;
-use App\Models\Company\Phone;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
@@ -46,57 +42,51 @@ use OpenApi\Attributes as OA;
  */
 class InstallmentContactResource extends JsonResource
 {
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
-        $addresses = [];
-        $phones = [];
-        $this->resource->customer->addresses->map(function ($address) use (&$addresses) {
-            $addresses[] = $this->addressData($address, $this->resource->customer);
-        });
-        $this->resource->customer->phones->map(function ($phone) use (&$phones) {
-            $phones[] = $this->phoneData($phone, $this->resource->customer);
-        });
+        $customer = $this->resource->customer;
+        $guarantors = $this->resource->guarantors;
 
-        $this->resource->guarantors->map(function ($guarantor) use (&$addresses, &$phones) {
-            $guarantor->addresses->map(function ($address) use (&$addresses, $guarantor) {
-                $addresses[] = $this->addressData($address, $guarantor, true);
-            });
-            $guarantor->phones->map(function ($phone) use (&$phones, $guarantor) {
-                $phones[] = $this->phoneData($phone, $guarantor, true);
-            });
-        });
+        $addresses = collect();
+        $phones = collect();
+
+        $collectCustomerData = function ($customer, $isGuarantor) use (&$addresses, &$phones) {
+            foreach ($customer->addresses as $address) {
+                $addresses->push([
+                    'id' => $address->id,
+                    'type' => $address->type,
+                    'address' => $address->address,
+                    'region' => $address->region,
+                    'district' => $address->district,
+                    'mahalla' => $address->mahalla,
+                    'customer_name' => $customer->full_name,
+                    'customer_id' => $customer->id,
+                    'is_guarantor' => $isGuarantor,
+                ]);
+            }
+
+            foreach ($customer->phones as $phone) {
+                $phones->push([
+                    'id' => $phone->id,
+                    'type' => $phone->pivot->type,
+                    'phone' => $phone->phone,
+                    'comment' => $phone->pivot->comment,
+                    'customer_name' => $customer->full_name,
+                    'customer_id' => $customer->id,
+                    'is_guarantor' => $isGuarantor,
+                ]);
+            }
+        };
+
+        $collectCustomerData($customer, false);
+
+        foreach ($guarantors as $guarantor) {
+            $collectCustomerData($guarantor, true);
+        }
 
         return [
-            'addresses' => $addresses,
-            'phones' => $phones,
-        ];
-    }
-
-    private function addressData(Address $address, Customer $customer, bool $isGuarantor = false): array
-    {
-        return [
-            'id' => $address->id,
-            'type' => $address->type,
-            'address' => $address->address,
-            'region' => $address->region?->{'name_' . app()->getLocale()},
-            'district' => $address->district?->{'name_' . app()->getLocale()},
-            'mahalla' => $address->mahalla?->{'name_' . app()->getLocale()},
-            'customer_name' => $customer->full_name,
-            'customer_id' => $customer->id,
-            'is_guarantor' => $isGuarantor,
-        ];
-    }
-
-    private function phoneData(Phone $phone, Customer $customer, bool $isGuarantor = false): array
-    {
-        return [
-            'phone' => $phone->phone,
-            'id' => $phone->pivot->id,
-            'type' => $phone->pivot->type,
-            'comment' => $phone->pivot->comment,
-            'customer_name' => $customer->full_name,
-            'customer_id' => $customer->id,
-            'is_guarantor' => $isGuarantor,
+            'addresses' => $addresses->values()->all(),
+            'phones' => $phones->values()->all(),
         ];
     }
 }
