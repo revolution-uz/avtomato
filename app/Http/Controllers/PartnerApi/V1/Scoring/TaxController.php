@@ -54,17 +54,19 @@ class TaxController extends Controller
         return TaxInfoResource::collection(
             ScoringRequest::query()
                 ->where('type', ScoringRequestTypeEnum::PLUM_TAX_INFO)
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->orWhere('request->pinfl', 'ILIKE', '%' . $request->search . '%')
-                )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('request->pinfl', 'ILIKE', $search);
+                    });
+                })
+                ->when($request->sort && in_array($request->sort, $sortables), function (Builder $q) use ($request) {
+                    if (Str::startsWith($request->sort, '-')) {
+                        $q->orderBy(Str::substr($request->sort, 1), 'desc');
+                    } else {
+                        $q->orderBy($request->sort);
+                    }
+                })
                 ->orderByDesc('id')
                 ->paginate($request->per_page)
         )->additional(['sortables' => $sortables]);
