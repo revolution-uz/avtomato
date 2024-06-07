@@ -80,21 +80,23 @@ class CustomerController extends Controller
 
         return CustomerListItemResource::collection(
             Customer::query()
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('first_name', 'ILIKE', '%' . $request->search . '%')
-                        ->where('last_name', 'ILIKE', '%' . $request->search . '%')
-                        ->where('middle_name', 'ILIKE', '%' . $request->search . '%')
-                        ->where('passport_series', 'ILIKE', '%' . $request->search . '%')
-                        ->where('passport_number', 'ILIKE', '%' . $request->search . '%')
-                )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('first_name', 'ILIKE', $search)
+                            ->orWhere('last_name', 'ILIKE', $search)
+                            ->orWhere('middle_name', 'ILIKE', $search)
+                            ->orWhere('passport_series', 'ILIKE', $search)
+                            ->orWhere('passport_number', 'ILIKE', $search);
+                    });
+                })
+                ->when($request->sort && in_array($request->sort, $sortables), function (Builder $q) use ($request) {
+                    if (Str::startsWith($request->sort, '-')) {
+                        $q->orderBy(Str::substr($request->sort, 1), 'desc');
+                    } else {
+                        $q->orderBy($request->sort);
+                    }
+                })
                 ->paginate($request->per_page)
         )->additional(['sortables' => $sortables]);
     }
