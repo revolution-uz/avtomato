@@ -25,16 +25,14 @@ class ConfirmationService
             return true;
         }
 
-        // todo: real code generation and sending to the user after integration with the SMS provider
-        $code = 123456;
-        $this->generateCode();
+        $code = $this->generateCode();
         CardConfirmationSms::query()->create([
             'phone' => $phone,
             'code' => $code,
         ]);
 
         // todo: message template
-        //        (new SmsFlyClient)->send(new SendMessageDTO($phone, "Your code: $code"));
+        (new SmsFlyClient)->send(new SendMessageDTO($phone, "Your code: $code"));
 
         return true;
     }

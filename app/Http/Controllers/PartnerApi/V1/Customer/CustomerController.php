@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Customer;
 
-use App\Enums\Company\CardStatusEnum;
 use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
@@ -37,14 +36,13 @@ use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
 use App\Services\AtmosService;
-use App\Services\ConfirmationService;
+use App\Services\CustomerCardService;
 use App\Services\CustomerService;
 use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 use Throwable;
@@ -53,10 +51,11 @@ class CustomerController extends Controller
 {
     public function __construct(
         private readonly PassportInfoService $passportInfoService,
-        private readonly AtmosService $atmosCardService,
-        private readonly CustomerService $customerService,
-        private readonly ConfirmationService $confirmationService,
-    ) {
+        private readonly AtmosService        $atmosCardService,
+        private readonly CustomerService     $customerService,
+        private readonly CustomerCardService $customerCardService,
+    )
+    {
     }
 
     #[OA\Get(
@@ -82,7 +81,7 @@ class CustomerController extends Controller
             Customer::query()
                 ->when(
                     $request->search,
-                    fn (Builder $q) => $q
+                    fn(Builder $q) => $q
                         ->where('first_name', 'ILIKE', '%' . $request->search . '%')
                         ->where('last_name', 'ILIKE', '%' . $request->search . '%')
                         ->where('middle_name', 'ILIKE', '%' . $request->search . '%')
@@ -91,7 +90,7 @@ class CustomerController extends Controller
                 )
                 ->when(
                     $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
+                    fn(Builder $q) => Str::startsWith($request->sort, '-')
                         ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
                         : $q->orderBy($request->sort)
                 )
@@ -141,10 +140,10 @@ class CustomerController extends Controller
     {
         return new SingleCustomerResource(
             Customer::query()
-                ->when($request->pinfl, fn (Builder $q) => $q->where('pinfl', $request->pinfl))
+                ->when($request->pinfl, fn(Builder $q) => $q->where('pinfl', $request->pinfl))
                 ->when(
                     $request->passport_series,
-                    fn (Builder $q) => $q
+                    fn(Builder $q) => $q
                         ->where('passport_series', $request->passport_series)
                         ->where('passport_number', $request->passport_number)
                 )->firstOrFail()
@@ -261,24 +260,9 @@ class CustomerController extends Controller
     )]
     public function attachCard(int $id, CardRequest $request): AttachCustomerCardResource
     {
-        $card = Card::query()
-            ->onlyTrashed()
-            ->where('customer_id', $id)
-            ->where('number_hash', Hash::make($request->number))
-            ->first();
+        list($card, $cardServiceResponse) = $this->customerCardService->attachCard($id, $request);
 
-        if (! $card) {
-            $card = new Card;
-            $card->fill($request->validated());
-            $card->computingBeforeInsert();
-            $card->customer_id = $id;
-            $card->saveOrFail();
-
-            return AttachCustomerCardResource::make($card, $this->atmosCardService->attachCard($card->number, $card->expiry));
-        }
-        $this->confirmationService->send($card->phone);
-
-        return AttachCustomerCardResource::make($card);
+        return AttachCustomerCardResource::make($card, $cardServiceResponse);
     }
 
     /**
@@ -303,23 +287,13 @@ class CustomerController extends Controller
     )]
     public function confirmCard(int $id, ConfirmCustomerCardRequest $request): CardResource|ErrorConfirmCardResource
     {
-        /** @var Card $card */
-        $card = Card::query()
-            ->where('customer_id', $id)
-            ->findOrFail($request->card_id);
+        list($card, $cardServiceResponse) = $this->customerCardService->confirmCard($id, $request);
 
-        $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request->transaction_id, $request->otp);
-        if ($atmosConfirmCardDto->result->isSucces()) {
-            $card->external_id = $atmosConfirmCardDto->data->card_token;
-            $card->owner = $atmosConfirmCardDto->data->card_holder;
-            $card->phone = '+' . $atmosConfirmCardDto->data->phone;
-            $card->status = CardStatusEnum::ACTIVE;
-            $card->saveOrFail();
-
+        if ($cardServiceResponse->result->isSucces()) {
             return CardResource::make($card);
         }
 
-        return ErrorConfirmCardResource::make($atmosConfirmCardDto->result, CardResource::make($card));
+        return ErrorConfirmCardResource::make($cardServiceResponse->result, CardResource::make($card));
     }
 
     #[OA\Delete(
