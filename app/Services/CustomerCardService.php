@@ -31,8 +31,11 @@ class CustomerCardService
 
         // if connected card not exists create it and send request to card service
         if (!$card->exists()) {
+            $response = $this->atmosCardService->attachCard($request->number, $request->expiry);
+            if (!$response->result->isSucces()) {
+                throw new BadRequestHttpException($response->result->description);
+            }
             $newCard = $this->createOrGetCard($customerId, $request);
-            $response = $this->atmosCardService->attachCard($newCard->number, $newCard->expiry);
             return array($newCard, $response);
         }
 
@@ -64,6 +67,7 @@ class CustomerCardService
         $card->fill($request->validated());
         $card->computingBeforeInsert();
         $card->customer_id = $customerId;
+        $card->status = CardStatusEnum::INACTIVE;
         $card->saveOrFail();
 
         return $card;

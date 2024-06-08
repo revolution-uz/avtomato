@@ -44,10 +44,26 @@ class ConfirmationService
     {
         $length = 6;
         do {
-            $random = (string) rand(10 ** ($length - 1), 10 ** $length - 1);
+            $random = (string)rand(10 ** ($length - 1), 10 ** $length - 1);
 
         } while (str_contains($random, '0'));
 
         return $random;
+    }
+
+    public function confirm(string $phone, string $otp): bool
+    {
+        $authAttempt = CardConfirmationSms::query()
+            ->where('phone', $phone)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if ($authAttempt && $authAttempt->code === $otp && $authAttempt->created_at->gt(Carbon::now()->subMinutes(2))) {
+            $authAttempt->delete();
+
+            return true;
+        }
+
+        return false;
     }
 }
