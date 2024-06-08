@@ -99,6 +99,7 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create();
         $newPassword = 'password';
         $response = $this->actingAs($admin)->postJson(route('users.change-password', ['id' => $user->id]), [
+            'old_password' => 'password',
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
