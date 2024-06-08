@@ -54,13 +54,13 @@ class BalanceController extends Controller
 
         return BalanceFundResource::collection(
             BalanceFund::query()
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('phone_number', 'ILIKE', '%' . $request->search . '%')
-                        ->where('card_number', 'ILIKE', '%' . $request->search . '%')
-
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('phone_number', 'ILIKE', $search)
+                            ->orWhere('card_number', 'ILIKE', $search);
+                    });
+                })
                 ->when($request->isSortable(), function (Builder $q) use ($request) {
                     $q->orderBy($request->sortField(), $request->sortDirection());
                 })

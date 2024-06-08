@@ -44,10 +44,12 @@ class TariffsController extends Controller
 
         return TariffResource::collection(
             Tariff::query()
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q->where('name', 'ILIKE', '%' . $request->search . '%')
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('name', 'ILIKE', $search);
+                    });
+                })
                 ->when($request->isSortable(), function (Builder $q) use ($request) {
                     $q->orderBy($request->sortField(), $request->sortDirection());
                 })

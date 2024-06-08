@@ -60,13 +60,14 @@ class UserController extends Controller
 
         return UserListResource::collection(
             User::query()
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('username', 'ILIKE', '%' . $request->search . '%')
-                        ->where('first_name', 'ILIKE', '%' . $request->search . '%')
-                        ->where('last_name', 'ILIKE', '%' . $request->search . '%')
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('username', 'ILIKE', $search)
+                            ->orWhere('first_name', 'ILIKE', $search)
+                            ->orWhere('last_name', 'ILIKE', $search);
+                    });
+                })
                 ->when($request->isSortable(), function (Builder $q) use ($request) {
                     $q->orderBy($request->sortField(), $request->sortDirection());
                 })

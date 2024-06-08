@@ -43,13 +43,14 @@ class BranchController extends Controller
 
         return BranchResource::collection(
             Branch::query()
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('name', 'ILIKE', '%' . $request->search . '%')
-                        ->where('address', 'ILIKE', '%' . $request->search . '%')
-                        ->where('inn', 'ILIKE', '%' . $request->search . '%')
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('name', 'ILIKE', $search)
+                            ->orWhere('address', 'ILIKE', $search)
+                            ->orWhere('inn', 'ILIKE', $search);
+                    });
+                })
                 ->when($request->isSortable(), function (Builder $q) use ($request) {
                     $q->orderBy($request->sortField(), $request->sortDirection());
                 })

@@ -44,11 +44,12 @@ class LogController extends Controller
         return LogResource::collection(
             ActivityLog::query()
                 ->with(['causer'])
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('description', 'ILIKE', '%' . $request->search . '%')
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('description', 'ILIKE', $search);
+                    });
+                })
                 ->when(
                     $request->user_id,
                     fn (Builder $q) => $q
@@ -82,11 +83,12 @@ class LogController extends Controller
         return LogResource::collection(
             ActivityLog::query()
                 ->where('causer_id', auth()->user()->id)
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('description', 'ILIKE', '%' . $request->search . '%')
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('description', 'ILIKE', $search);
+                    });
+                })
                 ->when($request->isSortable(), function (Builder $q) use ($request) {
                     $q->orderBy($request->sortField(), $request->sortDirection());
                 })
