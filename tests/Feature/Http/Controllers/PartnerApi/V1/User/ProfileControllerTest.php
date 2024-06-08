@@ -51,6 +51,7 @@ class ProfileControllerTest extends TestCase
         $admin = $this->createAdminUser();
         $newPassword = 'password';
         $response = $this->actingAs($admin)->postJson(route('profile.change-password'), [
+            'old_password' => 'password',
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);

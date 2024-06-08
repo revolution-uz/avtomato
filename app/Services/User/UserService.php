@@ -33,7 +33,7 @@ class UserService
     public function updatePassword(User $user, PasswordRequest $request): User
     {
         $user->updateOrFail([
-            'password' => Hash::make('password'),
+            'password' => Hash::make($request->password),
         ]);
 
         return $user;
