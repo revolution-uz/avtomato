@@ -54,8 +54,7 @@ class CustomerController extends Controller
         private readonly AtmosService $atmosCardService,
         private readonly CustomerService $customerService,
         private readonly CustomerCardService $customerCardService,
-    )
-    {
+    ) {
     }
 
     #[OA\Get(
@@ -262,7 +261,7 @@ class CustomerController extends Controller
     )]
     public function attachCard(int $id, CardRequest $request): AttachCustomerCardResource
     {
-        list($card, $cardServiceResponse) = $this->customerCardService->attachCard($id, $request);
+        [$card, $cardServiceResponse] = $this->customerCardService->attachCard($id, $request);
 
         return AttachCustomerCardResource::make($card, $cardServiceResponse);
     }
@@ -289,7 +288,7 @@ class CustomerController extends Controller
     )]
     public function confirmCard(int $id, ConfirmCustomerCardRequest $request): CardResource|ErrorConfirmCardResource
     {
-        list($card, $cardServiceResponse) = $this->customerCardService->confirmCard($id, $request);
+        [$card, $cardServiceResponse] = $this->customerCardService->confirmCard($id, $request);
 
         if ($cardServiceResponse->result->isSucces()) {
             return CardResource::make($card);

@@ -32,7 +32,7 @@ class ConfirmationService
         ]);
 
         // todo: message template
-        (new SmsFlyClient)->send(new SendMessageDTO($phone, "Your code: $code"));
+        (new SmsFlyClient)->send(new SendMessageDTO($phone, "Your code: {$code}"));
 
         return true;
     }
@@ -60,7 +60,7 @@ class ConfirmationService
     {
         $length = 6;
         do {
-            $random = (string)rand(10 ** ($length - 1), 10 ** $length - 1);
+            $random = (string) rand(10 ** ($length - 1), 10 ** $length - 1);
 
         } while (str_contains($random, '0'));
 

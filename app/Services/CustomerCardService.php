@@ -29,13 +29,14 @@ class CustomerCardService
             ->whereNotNull('external_id');
 
         // if connected card not exists create it and send request to card service
-        if (!$card->exists()) {
+        if (! $card->exists()) {
             $response = $this->atmosCardService->attachCard($request->number, $request->expiry);
-            if (!$response->result->isSucces()) {
+            if (! $response->result->isSucces()) {
                 throw new BadRequestHttpException($response->result->description);
             }
             $newCard = $this->createOrGetCard($customerId, $request);
-            return array($newCard, $response);
+
+            return [$newCard, $response];
         }
 
         // check that the card is connected to this customer
@@ -46,9 +47,9 @@ class CustomerCardService
         $card = $this->createOrGetCard($customerId, $request);
 
         $this->confirmationService->send($card->phone);
-        $customResponse = AtmosAttachCardResponseDTO::from(array('phone' => $card->phone, 'transaction_id' => $card->id));
+        $customResponse = AtmosAttachCardResponseDTO::from(['phone' => $card->phone, 'transaction_id' => $card->id]);
 
-        return array($card, $customResponse);
+        return [$card, $customResponse];
     }
 
     public function confirmCard(int $customerId, ConfirmCustomerCardRequest $request)
@@ -58,7 +59,7 @@ class CustomerCardService
             ->where('customer_id', $customerId)
             ->findOrFail($request->card_id);
 
-        if ($request->transaction_id === $card->id && !empty($card->phone)) {
+        if ($request->transaction_id === $card->id && ! empty($card->phone)) {
             $confirmed = $this->confirmationService->confirm($card->phone, $request->otp);
             if ($confirmed) {
                 $card = Card::query()
@@ -66,11 +67,12 @@ class CustomerCardService
                     ->where('number_hash', Hash::make($card->number))
                     ->whereNotNull('external_id');
             }
-            $customResponse = AtmosConfirmCardResponseDTO::from(array('result' => new AtmosResultDTO(
+            $customResponse = AtmosConfirmCardResponseDTO::from(['result' => new AtmosResultDTO(
                 $confirmed ? 'OK' : 'FAILED',
                 $confirmed ? 'Success' : 'OTP confirmation failed'
-            )));
-            return array($card, $customResponse);
+            )]);
+
+            return [$card, $customResponse];
         }
 
         $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request->transaction_id, $request->otp);
@@ -81,7 +83,8 @@ class CustomerCardService
             $card->status = CardStatusEnum::ACTIVE;
             $card->saveOrFail();
         }
-        return array($card, $atmosConfirmCardDto);
+
+        return [$card, $atmosConfirmCardDto];
     }
 
     private function createOrGetCard(int $customerId, CardRequest $request)
