@@ -159,8 +159,8 @@ class CustomerControllerTest extends TestCase
         AtmosFaker::attachCard();
 
         $request = [
-            'number' => '1234567890123456',
-            'expiry' => '2301',
+            'number' => '8600490744313347',
+            'expiry' => '2410',
         ];
 
         $admin = $this->createAdminUser();
