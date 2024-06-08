@@ -31,7 +31,7 @@ class PasswordRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            if (!$this->checkOldPassword()) {
+            if (! $this->checkOldPassword()) {
                 $validator->errors()->add('old_password', 'The old password is incorrect.');
             }
         });
