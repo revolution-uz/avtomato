@@ -45,7 +45,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 use Throwable;
 
@@ -76,7 +75,7 @@ class CustomerController extends Controller
     )]
     public function index(CustomersFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name'];
+        $request->sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name', 'birth_date'];
 
         return CustomerListItemResource::collection(
             Customer::query()
@@ -90,15 +89,11 @@ class CustomerController extends Controller
                             ->orWhere('passport_number', 'ILIKE', $search);
                     });
                 })
-                ->when($request->sort && in_array($request->sort, $sortables), function (Builder $q) use ($request) {
-                    if (Str::startsWith($request->sort, '-')) {
-                        $q->orderBy(Str::substr($request->sort, 1), 'desc');
-                    } else {
-                        $q->orderBy($request->sort);
-                    }
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
                 })
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Post(

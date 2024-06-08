@@ -21,7 +21,6 @@ use App\Http\Resources\StatusResource;
 use App\Models\Company\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class TransactionTypeController extends Controller
@@ -42,7 +41,7 @@ class TransactionTypeController extends Controller
     )]
     public function index(TransactionTypeFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'name', 'is_system']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'name', 'is_system']; // TODO add all fields, it's just for testing
 
         return TransactionTypeResource::collection(
             TransactionType::query()
@@ -56,14 +55,11 @@ class TransactionTypeController extends Controller
                         ->orWhere('name_ru', 'ilike', "%{$request->search}%")
                         ->orWhere('name_en', 'ilike', "%{$request->search}%")
                 )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Get(

@@ -60,7 +60,7 @@ class TransactionController extends Controller
     )]
     public function index(TransactionFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created']; // TODO add all fields, it's just for testing
         $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_VIEW_ALL);
 
         return TransactionResource::collection(
@@ -106,18 +106,15 @@ class TransactionController extends Controller
                     fn (Builder $q) => $q
                         ->where('transaction_type_id', $request->transaction_type_id)
                 )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
                 ->when($branches,
                     fn (Builder $q) => $q->whereHas('installment',
                         fn (Builder $q) => $q->whereIn('branch_id', $branches)
                     ))
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Get(
