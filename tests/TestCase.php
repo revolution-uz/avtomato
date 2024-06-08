@@ -81,7 +81,7 @@ abstract class TestCase extends BaseTestCase
     {
         return Company\User::factory()->create([
             'role_id' => Role::getAdmin()->id,
-            'password' => Hash::make('password')
+            'password' => Hash::make('password'),
         ]);
     }
 }
