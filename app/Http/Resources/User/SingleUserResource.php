@@ -55,7 +55,7 @@ class SingleUserResource extends JsonResource
             'language' => $this->resource->language,
             'role' => RoleListResource::make($this->resource->role),
             'permissions' => $this->resource->role?->mapRolePermissionByBranch(),
-            'created_at' => $this->resource->created_at->format('d-m-Y'),
+            'created_at' => $this->resource->created_at?->format('U'),
         ];
     }
 }
