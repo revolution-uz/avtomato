@@ -20,15 +20,11 @@ class AtmosResultDTO extends BaseScoringRequest
     public function __construct(
         public ?string $code,
         public ?string $description,
+        public ?AtmosResponseStatusEnum $status = null,
     ) {
         $this->status = $this->getStatusAttribute();
     }
 
-    /**
-     * Get the status attribute from the code attribute.
-     *
-     * @return AtmosResponseStatusEnum|null
-     */
     public function getStatusAttribute():  ?AtmosResponseStatusEnum
     {
         return AtmosResponseStatusEnum::tryFrom($this->code);

@@ -37,20 +37,6 @@ class ConfirmationService
         return true;
     }
 
-    /**
-     * @throws Exception
-     */
-    private function generateCode(): string
-    {
-        $length = 6;
-        do {
-            $random = (string)rand(10 ** ($length - 1), 10 ** $length - 1);
-
-        } while (str_contains($random, '0'));
-
-        return $random;
-    }
-
     public function confirm(string $phone, string $otp): bool
     {
         $authAttempt = CardConfirmationSms::query()
@@ -65,5 +51,19 @@ class ConfirmationService
         }
 
         return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function generateCode(): string
+    {
+        $length = 6;
+        do {
+            $random = (string)rand(10 ** ($length - 1), 10 ** $length - 1);
+
+        } while (str_contains($random, '0'));
+
+        return $random;
     }
 }

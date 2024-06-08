@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class CustomerCardService
 {
     public function __construct(
-        private readonly AtmosService        $atmosCardService,
+        private readonly AtmosService $atmosCardService,
         private readonly ConfirmationService $confirmationService
     )
     {
@@ -52,27 +52,6 @@ class CustomerCardService
         return array($card, $customResponse);
     }
 
-    private function createOrGetCard(int $customerId, CardRequest $request)
-    {
-        $card = Card::query()
-            ->where('customer_id', $customerId)
-            ->where('number_hash', Hash::make($request->number))
-            ->first();
-
-        if ($card) {
-            return $card;
-        }
-
-        $card = new Card;
-        $card->fill($request->validated());
-        $card->computingBeforeInsert();
-        $card->customer_id = $customerId;
-        $card->status = CardStatusEnum::INACTIVE;
-        $card->saveOrFail();
-
-        return $card;
-    }
-
     public function confirmCard(int $customerId, ConfirmCustomerCardRequest $request)
     {
         /** @var Card $card */
@@ -104,5 +83,26 @@ class CustomerCardService
             $card->saveOrFail();
         }
         return array($card, $atmosConfirmCardDto);
+    }
+
+    private function createOrGetCard(int $customerId, CardRequest $request)
+    {
+        $card = Card::query()
+            ->where('customer_id', $customerId)
+            ->where('number_hash', Hash::make($request->number))
+            ->first();
+
+        if ($card) {
+            return $card;
+        }
+
+        $card = new Card;
+        $card->fill($request->validated());
+        $card->computingBeforeInsert();
+        $card->customer_id = $customerId;
+        $card->status = CardStatusEnum::INACTIVE;
+        $card->saveOrFail();
+
+        return $card;
     }
 }
