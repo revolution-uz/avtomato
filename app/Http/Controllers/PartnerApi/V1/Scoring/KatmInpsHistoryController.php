@@ -23,7 +23,6 @@ use App\Models\Company\ScoringRequest;
 use App\Services\Scoring\KatmService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class KatmInpsHistoryController extends Controller
@@ -49,7 +48,7 @@ class KatmInpsHistoryController extends Controller
     )]
     public function index(KatmCreditHistoryFilterRequest $request)
     {
-        $sortables = ['id', 'status', 'created_at'];
+        $request->sortables = ['id', 'status', 'created_at'];
 
         return KatmInpsHistoryResource::collection(
             ScoringRequest::query()
@@ -65,16 +64,12 @@ class KatmInpsHistoryController extends Controller
                             ->orWhere('request->passport_number', 'ILIKE', $search);
                     });
                 })
-                ->when($request->sort && in_array($request->sort, $sortables), function (Builder $q) use ($request) {
-                    if (Str::startsWith($request->sort, '-')) {
-                        $q->orderBy(Str::substr($request->sort, 1), 'desc');
-                    } else {
-                        $q->orderBy($request->sort);
-                    }
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
                 })
                 ->orderByDesc('id')
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Post(
