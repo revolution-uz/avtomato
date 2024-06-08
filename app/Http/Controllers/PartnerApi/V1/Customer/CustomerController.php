@@ -51,8 +51,8 @@ class CustomerController extends Controller
 {
     public function __construct(
         private readonly PassportInfoService $passportInfoService,
-        private readonly AtmosService        $atmosCardService,
-        private readonly CustomerService     $customerService,
+        private readonly AtmosService $atmosCardService,
+        private readonly CustomerService $customerService,
         private readonly CustomerCardService $customerCardService,
     )
     {
@@ -142,10 +142,10 @@ class CustomerController extends Controller
     {
         return new SingleCustomerResource(
             Customer::query()
-                ->when($request->pinfl, fn(Builder $q) => $q->where('pinfl', $request->pinfl))
+                ->when($request->pinfl, fn (Builder $q) => $q->where('pinfl', $request->pinfl))
                 ->when(
                     $request->passport_series,
-                    fn(Builder $q) => $q
+                    fn (Builder $q) => $q
                         ->where('passport_series', $request->passport_series)
                         ->where('passport_number', $request->passport_number)
                 )->firstOrFail()
