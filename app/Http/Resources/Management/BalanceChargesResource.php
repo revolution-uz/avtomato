@@ -28,7 +28,7 @@ class BalanceChargesResource extends JsonResource
             'id' => $this->resource->id,
             'amount' => $this->resource->amount,
             'description' => __('feature.' . $this->resource->feature->name->value) . ', ID=' . $this->resource->chargeable_id,
-            'created_at' => $this->resource->created_at->getTimestamp(),
+            'created_at' => $this->resource->created_at?->format('U'),
         ];
     }
 }

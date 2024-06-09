@@ -54,8 +54,8 @@ class CustomerListItemResource extends JsonResource
             'birth_date' => $this->resource->birth_date->format('d-m-Y'),
             'birth_place' => $this->resource->birth_place,
             'gender' => $this->resource->gender,
-            'created_at' => $this->resource->created_at,
-            'updated_at' => $this->resource->updated_at,
+            'created_at' => $this->resource->created_at?->format('U'),
+            'updated_at' => $this->resource->created_at?->format('U'),
         ];
     }
 }

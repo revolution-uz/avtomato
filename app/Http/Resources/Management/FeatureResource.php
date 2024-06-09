@@ -35,8 +35,8 @@ class FeatureResource extends JsonResource
             'description' => $this->resource->description,
             'amount' => $this->resource->amount,
             'is_active' => $this->resource->is_active,
-            'created_at' => $this->resource->created_at ? (int) $this->resource->created_at->format('U') : null,
-            'updated_at' => $this->resource->updated_at ? (int) $this->resource->updated_at->format('U') : null,
+            'created_at' => $this->resource->created_at?->format('U'),
+            'updated_at' => $this->resource->created_at?->format('U'),
         ];
     }
 }
