@@ -4,6 +4,8 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -18,6 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class BalanceFund extends Model
 {
+    use LogsActivity;
     use TenantConnection;
 
     const UPDATED_AT = null;
@@ -30,4 +33,10 @@ class BalanceFund extends Model
         'merchant_id',
         'card_number',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
+    }
 }
