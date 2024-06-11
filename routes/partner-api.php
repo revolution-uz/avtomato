@@ -244,6 +244,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('log')->controller(LogController::class)->group(function () {
         Route::get('/', 'index')->name('log.index');
+        Route::get('{id}', 'getSingle')->name('log.get-single');
         Route::get('own', 'ownLogs')->name('log.own');
     });
 });

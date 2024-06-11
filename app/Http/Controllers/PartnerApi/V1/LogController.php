@@ -101,8 +101,8 @@ class LogController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/v1/management/branches/{id}',
-        description: 'Get single branch route',
+        path: '/api/v1/log/{id}',
+        description: 'Get single log route',
         tags: ['ActivityLogs'],
         parameters: [
             new OpenApiIdParameter(modelName: 'ActivityLog'),
