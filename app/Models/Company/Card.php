@@ -70,6 +70,22 @@ class Card extends Model
         'number_hash',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (self $card) {
+            $scoringRequests = ScoringRequest::query()->whereNull('card_id')->when(function ($query) use ($card) {
+                $query->where('request->number', $card->number);
+            })->get();
+            foreach ($scoringRequests as $scoringRequest) {
+                $scoringRequest->card_id = $card->id;
+                $scoringRequest->customer_id = $card->customer_id;
+                $scoringRequest->save();
+            }
+        });
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
