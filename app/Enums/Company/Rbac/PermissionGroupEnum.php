@@ -194,6 +194,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::BALANCE_CHARGE_CREATE,
             ],
             self::ACTIVITY_LOG => [
+                PermissionEnum::ACTIVITY_LOG_VIEW,
                 PermissionEnum::ACTIVITY_LOG_VIEW_ALL,
                 PermissionEnum::ACTIVITY_LOG_VIEW_OWN,
             ],

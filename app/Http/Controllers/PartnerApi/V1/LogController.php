@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\PartnerApi\V1;
 
 use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
+use App\Helpers\Swagger\OpenApiIdParameter;
+use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LogFilterRequest;
+use App\Http\Requests\LogViewRequest;
 use App\Http\Requests\OwnLogsRequest;
 use App\Http\Resources\LogResource;
 use App\Models\Company\ActivityLog;
@@ -94,5 +98,22 @@ class LogController extends Controller
                 })
                 ->paginate($request->per_page)
         )->additional(['sortables' => $request->sortables]);
+    }
+
+    #[OA\Get(
+        path: '/api/v1/management/branches/{id}',
+        description: 'Get single branch route',
+        tags: ['ActivityLogs'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'ActivityLog'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'LogResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function getSingle(int $id, LogViewRequest $request): LogResource
+    {
+        return new LogResource(ActivityLog::findOrFail($id));
     }
 }
