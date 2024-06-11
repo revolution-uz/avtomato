@@ -30,7 +30,7 @@ class TransactionTypeResource extends JsonResource
             'name' => $this->resource->{'name_' . app()->getLocale()},
             'is_system' => $this->resource->is_system,
             'created_at' => $this->resource->created_at?->format('U'),
-            'updated_at' => $this->resource->created_at?->format('U'),
+            'updated_at' => $this->resource->updated_at?->format('U'),
         ];
     }
 }

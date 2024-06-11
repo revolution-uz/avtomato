@@ -32,7 +32,7 @@ class InstallmentCommentResource extends JsonResource
             'creator_name' => $this->resource->user->full_name,
             'comment' => $this->resource->comment,
             'created_at' => $this->resource->created_at?->format('U'),
-            'updated_at' => $this->resource->created_at?->format('U'),
+            'updated_at' => $this->resource->updated_at?->format('U'),
         ];
     }
 }

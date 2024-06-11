@@ -69,11 +69,11 @@ class InstallmentResource extends JsonResource
             'auto_pay' => $this->resource->auto_pay,
             'auto_pay_by_pinfl' => $this->resource->any_card_charge,
             'description' => $this->resource->description,
-            'starts_in' => $this->resource->created_at?->format('U'),
-            'next_pay_date' => $this->resource->created_at?->format('U'),
+            'starts_in' => $this->resource->starts_in?->format('U'),
+            'next_pay_date' => $this->resource->next_pay_date?->format('U'),
             'created_at' => $this->resource->created_at?->format('U'),
-            'updated_at' => $this->resource->created_at?->format('U'),
-            'canceled_at' => $this->resource->created_at?->format('U'),
+            'updated_at' => $this->resource->updated_at?->format('U'),
+            'canceled_at' => $this->resource->canceled_at?->format('U'),
             'cancellation_details' => $this->resource->cancellation_details,
         ];
     }

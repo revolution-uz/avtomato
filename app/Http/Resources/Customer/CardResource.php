@@ -44,7 +44,7 @@ class CardResource extends JsonResource
             'status' => $this->resource->status,
             'balance' => $this->resource->balance,
             'created_at' => $this->resource->created_at?->format('U'),
-            'updated_at' => $this->resource->created_at?->format('U'),
+            'updated_at' => $this->resource->updated_at?->format('U'),
         ];
     }
 }
