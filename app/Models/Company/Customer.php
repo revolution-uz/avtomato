@@ -33,8 +33,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $birth_date
  * @property string|null $birth_place
  * @property GenderEnum|null $gender
- * @property string $created_at
- * @property string $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property string|null $deleted_at
  * @property Attachment[] $attachments
  * @property Address[]|Collection<int,Address> $addresses

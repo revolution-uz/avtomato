@@ -5,6 +5,8 @@ namespace App\Models\Company;
 use App\DTOs\UserTemplateThemeDto;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\Rbac\Role;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -23,12 +25,15 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $username
  * @property string $first_name
  * @property string $last_name
+ * @property string $full_name
  * @property string $phone
  * @property UserStatusEnum $status
  * @property UserTemplateThemeDto $template_theme
  * @property string $language
  * @property-read Attachment|null $avatar
  * @property-read Role|null $role
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class User extends Authenticatable
 {
@@ -96,8 +101,8 @@ class User extends Authenticatable
         $this->phones()->sync([$model->id], false);
     }
 
-    public function fullName(): string
+    public function fullName(): Attribute
     {
-        return $this->last_name . ' ' . $this->first_name;
+        return Attribute::make(get: fn () => $this->last_name . ' ' . $this->first_name);
     }
 }

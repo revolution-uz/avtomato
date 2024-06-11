@@ -32,7 +32,7 @@ class BalanceFundResource extends JsonResource
             'phone_number' => $this->resource->phone_number,
             'external_transaction_id' => $this->resource->external_transaction_id,
             'card_number' => $this->resource->card_number,
-            'created_at' => $this->resource->created_at->getTimestamp(),
+            'created_at' => $this->resource->created_at?->format('U'),
         ];
     }
 }
