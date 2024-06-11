@@ -7,13 +7,13 @@ use App\Casts\ScoringResponseCast;
 use App\DTOs\Customer\CustomerPassportDTO;
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 use App\DTOs\Scoring\Base\BaseScoringResponse;
+use App\DTOs\Scoring\Card\CardCreateRequestDTO;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\Http\Requests\Scoring\CreateCardScoringRequest;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -69,7 +69,7 @@ class ScoringRequest extends Model
 
         static::creating(function (self $scoringRequest) {
             if (is_null($scoringRequest->card_id)) {
-                if ($scoringRequest->request instanceof CreateCardScoringRequest) {
+                if ($scoringRequest->request instanceof CardCreateRequestDTO) {
                     $card = Card::query()->where('number', Crypt::encryptString($scoringRequest->request->number))->first();
                     if ($card) {
                         $scoringRequest->card_id = $card->id;
