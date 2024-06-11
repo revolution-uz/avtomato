@@ -77,6 +77,24 @@ class Customer extends Model
         'gender' => GenderEnum::class,
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (self $customer) {
+            $scoringRequests = ScoringRequest::query()->whereNull('customer_id')->when(function ($query) use ($customer) {
+                $query->when(function ($query) use ($customer) {
+                    $query->where('passport_series', $customer->passport_series)
+                        ->where('passport_number', $customer->passport_number);
+                })->orWhere('pinfl', $customer->pinfl);
+            })->get();
+            foreach ($scoringRequests as $scoringRequest) {
+                $scoringRequest->customer_id = $customer->id;
+                $scoringRequest->save();
+            }
+        });
+    }
+
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachmentable');
