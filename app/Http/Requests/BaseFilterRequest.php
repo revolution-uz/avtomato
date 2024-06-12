@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 class BaseFilterRequest extends FormRequest
 {
     public $sortables = [];
+    public $languageAbleFields = ['name', 'title', 'description'];
 
     public function authorize(): bool
     {
@@ -40,13 +41,32 @@ class BaseFilterRequest extends FormRequest
         return in_array($this->sortField(), $this->sortables);
     }
 
+    public function isLanguageAbleField()
+    {
+        return in_array($this->sortField(), $this->languageAbleFields);
+    }
+
     public function sortField(): string
     {
         return ltrim($this->getSort(), '-');
     }
 
+    public function languageAbleField(): string
+    {
+        return $this->sortField() . '_' . app()->getLocale();
+    }
+
     public function sortDirection(): string
     {
         return Str::startsWith($this->getSort(), '-') ? 'desc' : 'asc';
+    }
+
+    public function getFieldAndDirection()
+    {
+        if ($this->isLanguageAbleField()) {
+            return [$this->languageAbleField(), $this->sortDirection()];
+        } else {
+            return [$this->sortField(), $this->sortDirection()];
+        }
     }
 }

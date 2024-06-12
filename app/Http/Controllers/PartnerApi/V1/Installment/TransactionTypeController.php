@@ -41,7 +41,8 @@ class TransactionTypeController extends Controller
     )]
     public function index(TransactionTypeFilterRequest $request): AnonymousResourceCollection
     {
-        $request->sortables = ['id', 'name', 'is_system']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'name', 'is_system', 'created_at', 'updated_at']; // TODO add all fields, it's just for testing
+        $request->languageAbleFields = ['name'];
 
         return TransactionTypeResource::collection(
             TransactionType::query()
@@ -56,7 +57,8 @@ class TransactionTypeController extends Controller
                         ->orWhere('name_en', 'ilike', "%{$request->search}%")
                 )
                 ->when($request->isSortable(), function (Builder $q) use ($request) {
-                    $q->orderBy($request->sortField(), $request->sortDirection());
+                    [$field, $direction] = $request->getFieldAndDirection();
+                    $q->orderBy($field, $direction);
                 })
                 ->paginate($request->per_page)
         )->additional(['sortables' => $request->sortables]);

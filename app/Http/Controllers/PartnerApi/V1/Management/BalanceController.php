@@ -50,7 +50,7 @@ class BalanceController extends Controller
     )]
     public function funds(BalanceFundFilterRequest $request): AnonymousResourceCollection
     {
-        $request->sortables = ['id', 'amount', 'phone_number', 'card_number']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'amount', 'phone_number', 'card_number', 'created_at']; // TODO add all fields, it's just for testing
 
         return BalanceFundResource::collection(
             BalanceFund::query()
@@ -84,7 +84,7 @@ class BalanceController extends Controller
     )]
     public function charges(BalanceChargesFilterRequest $request): AnonymousResourceCollection
     {
-        $request->sortables = ['id', 'feature_id', 'amount']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'feature_id', 'amount', 'created_at']; // TODO add all fields, it's just for testing
 
         return BalanceChargesResource::collection(
             BalanceCharge::query()
