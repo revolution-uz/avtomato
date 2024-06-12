@@ -36,7 +36,7 @@ class RolesDeleteRequest extends FormRequest
     public function messages()
     {
         return parent::messages() + [
-            'ids.*.not_in' => 'You cannot delete the owner role',
+            'ids.*.not_in' => __('api.roles are used'),
         ];
     }
 
