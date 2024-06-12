@@ -9,14 +9,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('attachments', function (Blueprint $table) {
-            $table->dropColumn('preview_path');
+            if (Schema::hasColumn('attachments', 'preview_path')) {
+                $table->dropColumn('preview_path');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('attachments', function (Blueprint $table) {
-            $table->string('preview_path')->nullable();
+            if (! Schema::hasColumn('attachments', 'preview_path')) {
+                $table->string('preview_path')->nullable();
+            }
         });
     }
 };

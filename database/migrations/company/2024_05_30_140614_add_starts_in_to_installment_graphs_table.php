@@ -9,14 +9,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('installment_graphs', function (Blueprint $table) {
-            $table->date('starts_in')->nullable()->after('status');
+            if (! Schema::hasColumn('installment_graphs', 'start_date')) {
+                $table->date('starts_in')->nullable()->after('status');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('installment_graphs', function (Blueprint $table) {
-            $table->dropColumn('starts_in');
+            if (Schema::hasColumn('installment_graphs', 'start_date')) {
+                $table->dropColumn('starts_in');
+            }
         });
     }
 };

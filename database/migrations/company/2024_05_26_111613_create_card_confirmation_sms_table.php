@@ -8,12 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('card_confirmation_sms', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('phone', 17);
-            $table->string('code', 6);
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('card_confirmation_sms')) {
+            Schema::create('card_confirmation_sms', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('phone', 17);
+                $table->string('code', 6);
+                $table->timestamps();
+            });
+        }
     }
 
     public function down(): void
