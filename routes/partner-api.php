@@ -43,9 +43,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // tariffs
         Route::prefix('tariffs')->controller(TariffsController::class)->group(function () {
             Route::get('/', 'index')->name('tariffs.index');
-            Route::get('{id}', 'getSingle')->name('tariffs.get-single');
+            Route::get('{id:[0-9]+}', 'getSingle')->name('tariffs.get-single');
             Route::post('/', 'create')->name('tariffs.create');
-            Route::put('{id}', 'update')->name('tariffs.update');
+            Route::put('{id:[0-9]+}', 'update')->name('tariffs.update');
             Route::delete('/', 'delete')->name('tariffs.delete');
         });
 
@@ -60,15 +60,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/', 'index')->name('installments.index');
             Route::post('/', 'create')->name('installments.create');
             Route::delete('/', 'delete')->name('installments.delete');
-            Route::get('{id}', 'single')->name('installments.single');
-            Route::put('{id}', 'update')->name('installments.update');
-            Route::post('{id}/change-status', 'changeStatus')->name('installments.change-status');
-            Route::post('{id}/toggle-auto-charge', 'toggleAutoCharge')->name('installments.toggle-auto-charge');
-            Route::post('{id}/toggle-guarantor-auto-charge', 'toggleGuarantorAutoCharge')->name('installments.toggle-guarantor-auto-charge');
+            Route::get('{id:[0-9]+}', 'single')->name('installments.single');
+            Route::put('{id:[0-9]+}', 'update')->name('installments.update');
+            Route::post('{id:[0-9]+}/change-status', 'changeStatus')->name('installments.change-status');
+            Route::post('{id:[0-9]+}/toggle-auto-charge', 'toggleAutoCharge')->name('installments.toggle-auto-charge');
+            Route::post('{id:[0-9]+}/toggle-guarantor-auto-charge', 'toggleGuarantorAutoCharge')->name('installments.toggle-guarantor-auto-charge');
         });
 
         // installment-details
-        Route::prefix('installment-details/{id}')->controller(InstallmentDetailsController::class)->group(function () {
+        Route::prefix('installment-details/{id:[0-9]+}')->controller(InstallmentDetailsController::class)->group(function () {
             //cards
             Route::get('installment-customers-card-list', 'installmentCustomersCardList')->name('installments.installment-customers-card-list');
             Route::post('attach-card', 'attachCard')->name('installments.attach-card');
@@ -99,19 +99,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // transactions
         Route::prefix('transaction')->controller(TransactionController::class)->group(function () {
             Route::get('/', 'index')->name('transactions.index');
-            Route::get('{id}', 'getSingle')->name('transactions.get-single');
+            Route::get('{id:[0-9]+}', 'getSingle')->name('transactions.get-single');
             Route::post('/', 'create')->name('transactions.create');
-            Route::put('{id}', 'update')->name('transactions.update');
+            Route::put('{id:[0-9]+}', 'update')->name('transactions.update');
             Route::delete('/', 'delete')->name('transactions.delete');
-            Route::delete('{id}/reverse', 'reverse')->name('transactions.reverse');
+            Route::delete('{id:[0-9]+}/reverse', 'reverse')->name('transactions.reverse');
         });
 
         // transaction_types
         Route::prefix('transaction-type')->controller(TransactionTypeController::class)->group(function () {
             Route::get('/', 'index')->name('transaction-types.index');
-            Route::get('{id}', 'getSingle')->name('transaction-types.get-single');
+            Route::get('{id:[0-9]+}', 'getSingle')->name('transaction-types.get-single');
             Route::post('/', 'create')->name('transaction-types.create');
-            Route::put('{id}', 'update')->name('transaction-types.update');
+            Route::put('{id:[0-9]+}', 'update')->name('transaction-types.update');
             Route::delete('/', 'delete')->name('transaction-types.delete');
         });
 
@@ -122,9 +122,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // branches
         Route::prefix('branches')->controller(BranchController::class)->group(function () {
             Route::get('/', 'index')->name('branches.index');
-            Route::get('{id}', 'getSingle')->name('branches.get-single');
+            Route::get('{id:[0-9]+}', 'getSingle')->name('branches.get-single');
             Route::post('/', 'create')->name('branches.create');
-            Route::put('{id}', 'update')->name('branches.update');
+            Route::put('{id:[0-9]+}', 'update')->name('branches.update');
             Route::delete('/', 'delete')->name('branches.delete');
         });
 
@@ -151,24 +151,24 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
         Route::get('/', 'index')->name('users.index');
-        Route::get('{id}', 'getSingle')->name('users.get-single');
+        Route::get('{id:[0-9]+}', 'getSingle')->name('users.get-single');
         Route::post('/', 'create')->name('users.create');
-        Route::put('{id}', 'update')->name('users.update');
-        Route::post('{id}/change-password', 'changePassword')->name('users.change-password');
-        Route::post('{id}/change-theme', 'changeTheme')->name('users.change-theme');
-        Route::post('{id}/change-avatar', 'uploadAvatar')->name('users.change-avatar');
-        Route::get('{id}/devices', 'devices')->name('users.devices');
-        Route::post('{id}/attach-role', 'attachRole')->name('users.attach-role');
+        Route::put('{id:[0-9]+}', 'update')->name('users.update');
+        Route::post('{id:[0-9]+}/change-password', 'changePassword')->name('users.change-password');
+        Route::post('{id:[0-9]+}/change-theme', 'changeTheme')->name('users.change-theme');
+        Route::post('{id:[0-9]+}/change-avatar', 'uploadAvatar')->name('users.change-avatar');
+        Route::get('{id:[0-9]+}/devices', 'devices')->name('users.devices');
+        Route::post('{id:[0-9]+}/attach-role', 'attachRole')->name('users.attach-role');
         Route::delete('revoke-device', 'revokeDevice')->name('users.revoke-device');
         Route::delete('/', 'delete')->name('users.delete');
     });
 
     Route::prefix('roles')->controller(RoleController::class)->group(function () {
         Route::get('/', 'index')->name('roles.index');
-        Route::get('{id}', 'getSingle')->name('roles.get-single');
+        Route::get('{id:[0-9]+}', 'getSingle')->name('roles.get-single');
         Route::post('/', 'create')->name('roles.create');
-        Route::put('{id}', 'update')->name('roles.update');
-        Route::post('{id}/attach-permissions', 'attachPermissions')->name('roles.attach-permissions');
+        Route::put('{id:[0-9]+}', 'update')->name('roles.update');
+        Route::post('{id:[0-9]+}/attach-permissions', 'attachPermissions')->name('roles.attach-permissions');
         Route::delete('/', 'delete')->name('roles.delete');
     });
 
@@ -183,16 +183,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('info-by-passport', 'infoByPassport')->name('customer.info-by-passport');
         Route::get('/', 'index')->name('customer.index');
         Route::post('/', 'create')->name('customer.create');
-        Route::put('{id}', 'update')->name('customer.update');
-        Route::get('{id}', 'getSingle')->name('customer.get-single');
-        Route::post('{id}/card', 'attachCard')->name('customer.attach-card');
-        Route::delete('{id}/card', 'detachCard')->name('customer.detach-card');
-        Route::delete('{id}/remove-card', 'removeCard')->name('customer.remove-card');
-        Route::post('{id}/confirm-card', 'confirmCard')->name('customer.confirm-card');
-        Route::post('{id}/phone', 'attachPhone')->name('customer.attach-phone');
-        Route::delete('{id}/phone', 'detachPhone')->name('customer.detach-phone');
-        Route::post('{id}/address', 'attachAddress')->name('customer.attach-address');
-        Route::delete('{id}/address', 'detachAddress')->name('customer.detach-address');
+        Route::put('{id:[0-9]+}', 'update')->name('customer.update');
+        Route::get('{id:[0-9]+}', 'getSingle')->name('customer.get-single');
+        Route::post('{id:[0-9]+}/card', 'attachCard')->name('customer.attach-card');
+        Route::delete('{id:[0-9]+}/card', 'detachCard')->name('customer.detach-card');
+        Route::delete('{id:[0-9]+}/remove-card', 'removeCard')->name('customer.remove-card');
+        Route::post('{id:[0-9]+}/confirm-card', 'confirmCard')->name('customer.confirm-card');
+        Route::post('{id:[0-9]+}/phone', 'attachPhone')->name('customer.attach-phone');
+        Route::delete('{id:[0-9]+}/phone', 'detachPhone')->name('customer.detach-phone');
+        Route::post('{id:[0-9]+}/address', 'attachAddress')->name('customer.attach-address');
+        Route::delete('{id:[0-9]+}/address', 'detachAddress')->name('customer.detach-address');
         Route::post('by-passport', 'findByPassport')->name('customer.by-passport');
     });
 
@@ -200,51 +200,51 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::prefix('credit-history')->controller(KatmCreditHistoryController::class)->group(function () {
             Route::post('create', 'create')->name('credit-history.create');
             Route::get('/', 'index')->name('credit-history.index');
-            Route::get('{id}', 'read')->name('credit-history.read');
+            Route::get('{id:[0-9]+}', 'read')->name('credit-history.read');
             Route::delete('/', 'delete')->name('credit-history.delete');
         });
         Route::prefix('inps-history')->controller(KatmInpsHistoryController::class)->group(function () {
             Route::post('create', 'create')->name('inps-history.create');
             Route::get('/', 'index')->name('inps-history.index');
-            Route::get('{id}', 'read')->name('inps-history.read');
+            Route::get('{id:[0-9]+}', 'read')->name('inps-history.read');
             Route::delete('/', 'delete')->name('inps-history.delete');
         });
         Route::prefix('pension-info')->controller(KatmPensionInfoController::class)->group(function () {
             Route::post('create', 'create')->name('pension-info.create');
             Route::get('/', 'index')->name('pension-info.index');
-            Route::get('{id}', 'read')->name('pension-info.read');
+            Route::get('{id:[0-9]+}', 'read')->name('pension-info.read');
             Route::delete('/', 'delete')->name('pension-info.delete');
 
         });
         Route::prefix('mib')->controller(MibController::class)->group(function () {
             Route::get('/', 'index')->name('mib.index');
             Route::post('create', 'create')->name('mib.create');
-            Route::get('{id}', 'read')->name('mib.read');
+            Route::get('{id:[0-9]+}', 'read')->name('mib.read');
             Route::delete('/', 'delete')->name('mib.delete');
         });
         Route::prefix('tax')->controller(TaxController::class)->group(function () {
             Route::get('/', 'index')->name('tax.index');
             Route::post('create', 'create')->name('tax.create');
-            Route::get('{id}', 'read')->name('tax.read');
+            Route::get('{id:[0-9]+}', 'read')->name('tax.read');
             Route::delete('/', 'delete')->name('tax.delete');
         });
         Route::prefix('humo')->controller(HumoController::class)->group(function () {
             Route::get('/', 'index')->name('humo.index');
             Route::post('create', 'create')->name('humo.create');
-            Route::get('{id}', 'read')->name('humo.read');
+            Route::get('{id:[0-9]+}', 'read')->name('humo.read');
             Route::delete('/', 'delete')->name('humo.delete');
         });
         Route::prefix('uzcard')->controller(UzcardController::class)->group(function () {
             Route::get('/', 'index')->name('uzcard.index');
             Route::post('create', 'create')->name('uzcard.create');
-            Route::get('{id}', 'read')->name('uzcard.read');
+            Route::get('{id:[0-9]+}', 'read')->name('uzcard.read');
             Route::delete('/', 'delete')->name('uzcard.delete');
         });
     });
 
     Route::prefix('log')->controller(LogController::class)->group(function () {
         Route::get('/', 'index')->name('log.index');
-        Route::get('{id}', 'getSingle')->name('log.get-single');
+        Route::get('{id:[0-9]+}', 'getSingle')->name('log.get-single');
         Route::get('own', 'ownLogs')->name('log.own');
     });
 });
