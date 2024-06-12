@@ -15,7 +15,6 @@ use App\Http\Requests\Installment\TransactionTypeFilterRequest;
 use App\Http\Requests\Installment\TransactionTypeRequest;
 use App\Http\Requests\Installment\TransactionTypesDeleteRequest;
 use App\Http\Requests\Installment\TransactionTypeViewRequest;
-use App\Http\Resources\Installment\TransactionResource;
 use App\Http\Resources\Installment\TransactionTypeResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\TransactionType;
@@ -125,7 +124,7 @@ class TransactionTypeController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, TransactionTypeRequest $request): TransactionResource
+    public function update(int $id, TransactionTypeRequest $request): TransactionTypeResource
     {
         if ($id < 100) {
             abort(403, 'You can not edit system transaction types');
@@ -137,7 +136,7 @@ class TransactionTypeController extends Controller
         $transactionType->setNames($request->name);
         $transactionType->saveOrFail();
 
-        return new TransactionResource($transactionType);
+        return new TransactionTypeResource($transactionType);
     }
 
     #[OA\Delete(
