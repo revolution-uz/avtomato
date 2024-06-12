@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Installment;
 
+use App\Http\Resources\Common\AddressResource;
 use App\Models\Company\Installment;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
@@ -14,10 +15,7 @@ use OpenApi\Attributes as OA;
             properties: [
                 new OA\Property(property: 'id', type: 'int', example: '1'),
                 new OA\Property(property: 'type', type: 'int', example: '1'),
-                new OA\Property(property: 'address', type: 'string', example: 'Al-Xorazmiy ko\'chasi 1-uy'),
-                new OA\Property(property: 'region', type: 'string', example: 'Xorazm viloyati'),
-                new OA\Property(property: 'district', type: 'string', example: 'Urganch tumani'),
-                new OA\Property(property: 'mahalla', type: 'string', example: 'Olmazor mahallasi'),
+                new OA\Property(property: 'address', ref: 'AddressResource'),
                 new OA\Property(property: 'customer_name', type: 'string', example: 'John Doe'),
                 new OA\Property(property: 'customer_id', type: 'int', example: '1'),
                 new OA\Property(property: 'is_guarantor', type: 'boolean', example: 'false'),
@@ -55,10 +53,7 @@ class InstallmentContactResource extends JsonResource
                 $addresses->push([
                     'id' => $address->id,
                     'type' => $address->type,
-                    'address' => $address->address,
-                    'region' => $address->region,
-                    'district' => $address->district,
-                    'mahalla' => $address->mahalla,
+                    'address' => new AddressResource($address->address),
                     'customer_name' => $customer->full_name,
                     'customer_id' => $customer->id,
                     'is_guarantor' => $isGuarantor,
