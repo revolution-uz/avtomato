@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('installment_graphs', function (Blueprint $table) {
             if (! Schema::hasColumn('installment_graphs', 'starts_in')) {
-                $table->date('starts_in')->nullable()->after('status');
+                $table->date('starts_in')->nullable();
             }
         });
     }

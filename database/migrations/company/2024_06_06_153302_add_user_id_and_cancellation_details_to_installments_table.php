@@ -10,13 +10,13 @@ return new class extends Migration
     {
         Schema::table('installments', function (Blueprint $table) {
             if (! Schema::hasColumn('installments', 'user_id')) {
-                $table->unsignedBigInteger('user_id')->nullable()->after('branch_id');
+                $table->unsignedBigInteger('user_id')->nullable();
             }
             if (! Schema::hasColumn('installments', 'canceled_at')) {
-                $table->date('canceled_at')->nullable()->after('user_id');
+                $table->date('canceled_at')->nullable();
             }
             if (! Schema::hasColumn('installments', 'cancellation_details')) {
-                $table->text('cancellation_details')->nullable()->after('canceled_at');
+                $table->text('cancellation_details')->nullable();
             }
         });
     }

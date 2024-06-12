@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             if (! Schema::hasColumn('transactions', 'paid_at')) {
-                $table->date('paid_at')->nullable()->after('employee_id');
+                $table->date('paid_at')->nullable();
             }
         });
     }
