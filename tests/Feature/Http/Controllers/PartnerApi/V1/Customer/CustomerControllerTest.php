@@ -165,7 +165,7 @@ class CustomerControllerTest extends TestCase
 
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)->postJson(route('customer.attach-card', ['id' => $customer->id]), $request);
-        // Debugging response
+
         if ($response->getStatusCode() !== 200) {
             $response->assertBadRequest();
         } else {
