@@ -2,12 +2,11 @@
 
 namespace App\Models\Company;
 
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -22,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class BalanceCharge extends Model
 {
-    use LogsActivity;
+    use LogsActivityDirtyOnlyTrait;
     use TenantConnection;
 
     const UPDATED_AT = null;
@@ -42,11 +41,5 @@ class BalanceCharge extends Model
     public function feature(): BelongsTo
     {
         return $this->belongsTo(Feature::class);
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
     }
 }

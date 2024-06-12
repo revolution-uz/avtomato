@@ -14,12 +14,11 @@ use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Crypt;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -40,7 +39,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class ScoringRequest extends Model
 {
-    use LogsActivity;
+    use LogsActivityDirtyOnlyTrait;
     use SoftDeletes;
     use TenantConnection;
 
@@ -92,11 +91,5 @@ class ScoringRequest extends Model
                 }
             }
         });
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
     }
 }

@@ -2,12 +2,11 @@
 
 namespace App\Models\Company;
 
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -20,7 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class InstallmentCard extends Model
 {
     use HasFactory;
-    use LogsActivity;
+    use LogsActivityDirtyOnlyTrait;
     use SoftDeletes;
     use TenantConnection;
 
@@ -39,11 +38,5 @@ class InstallmentCard extends Model
     public function card(): BelongsTo
     {
         return $this->belongsTo(Card::class);
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
     }
 }

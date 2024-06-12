@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\GenderEnum;
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -13,8 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -51,7 +50,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Customer extends Model
 {
-    use HasFactory, LogsActivity, SoftDeletes, TenantConnection;
+    use HasFactory, SoftDeletes, TenantConnection;
+    use LogsActivityDirtyOnlyTrait;
 
     protected $fillable = [
         'pinfl',
@@ -114,12 +114,6 @@ class Customer extends Model
     public function cards(): HasMany
     {
         return $this->hasMany(Card::class);
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
     }
 
     public function fullName(): Attribute

@@ -3,12 +3,11 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\AttachmentTypeEnum;
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 use Throwable;
 
@@ -28,7 +27,7 @@ use Throwable;
  */
 class Attachment extends Model
 {
-    use LogsActivity;
+    use LogsActivityDirtyOnlyTrait;
     use TenantConnection;
 
     public const UPLOADS_PATH = 'uploads';
@@ -72,11 +71,5 @@ class Attachment extends Model
         return Attribute::make(
             get: fn () => asset(Attachment::UPLOADS_PATH . '/' . $this->type->getStoragePath() . '/' . $this->path)
         );
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
     }
 }

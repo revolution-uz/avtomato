@@ -49,13 +49,13 @@ class FeatureResource extends Resource
         return [
             ID::make()->sortable(),
             Text::make(__('nova.feature.name'), 'name')->filterable()->exceptOnForms(),
-            Text::make(__('nova.feature.description'), 'description')->filterable()->exceptOnForms(),
+            Text::make(__('nova.feature.description'), 'description')->filterable()->onlyOnDetail(),
             Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable()->exceptOnForms(),
             Currency::make(__('nova.feature.amount'), 'amount')->currency('UZS')->filterable(),
             Boolean::make(__('nova.feature.is_active'), 'is_active')->filterable()->showOnUpdating(function (NovaRequest $request, Feature $resource) {
                 return (bool) $resource->modules->first(fn (Module $module) => $module->is_active);
             }),
-            Code::make(__('nova.feature.original_data'), 'original_data')->json()->exceptOnForms(),
+            Code::make(__('nova.feature.original_data'), 'original_data')->json()->onlyOnDetail(),
             Code::make(__('nova.feature.data'), 'data')->json()->help($this->resource->description),
             DateTime::make(__('nova.feature.created_at'), 'created_at')->filterable()->exceptOnForms(),
             DateTime::make(__('nova.feature.updated_at'), 'updated_at')->filterable()->exceptOnForms(),
