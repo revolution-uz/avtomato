@@ -36,7 +36,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot(): void
     {
         parent::boot();
-        activity()->disableLogging();
         Nova::mainMenu(function (Request $request, Menu $menu) {
             if (tenancy()->initialized) {
                 /** @var Company $company */

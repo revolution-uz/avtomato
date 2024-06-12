@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\AttachmentTypeEnum;
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
@@ -26,6 +27,7 @@ use Throwable;
  */
 class Attachment extends Model
 {
+    use LogsActivityDirtyOnlyTrait;
     use TenantConnection;
 
     public const UPLOADS_PATH = 'uploads';

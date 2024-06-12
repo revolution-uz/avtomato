@@ -17,6 +17,12 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'expiry', type: 'int', example: '2808'),
     ],
 )]
+/**
+ * Class CreateCardScoringRequest
+ *
+ * @property string $number
+ * @property string $expiry
+ */
 class CreateCardScoringRequest extends FormRequest
 {
     public function authorize(BalanceService $balanceService): bool

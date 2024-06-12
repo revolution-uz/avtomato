@@ -2,12 +2,11 @@
 
 namespace App\Models\Company;
 
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -23,7 +22,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class TransactionType extends Model
 {
     use HasFactory;
-    use LogsActivity;
+    use LogsActivityDirtyOnlyTrait;
     use SoftDeletes;
     use TenantConnection;
 
@@ -33,12 +32,6 @@ class TransactionType extends Model
         'name_en',
         'is_system',
     ];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
-    }
 
     public function setNames(string $name)
     {

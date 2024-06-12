@@ -41,5 +41,6 @@ class CompanySeeder extends Seeder
                 'role_id' => Role::where('name', UserRoleEnum::ADMIN)->first()->id,
             ]
         );
+        activity()->enableLogging();
     }
 }

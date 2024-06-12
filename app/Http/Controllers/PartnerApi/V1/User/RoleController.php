@@ -22,8 +22,6 @@ use App\Http\Resources\Rbac\RoleListResource;
 use App\Http\Resources\Rbac\SingleRoleResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Rbac\Role;
-use App\Models\Company\User;
-use GuzzleHttp\Promise\RejectionException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Attributes as OA;
@@ -200,10 +198,6 @@ class RoleController extends Controller
     )]
     public function delete(RolesDeleteRequest $request): StatusResource
     {
-        $checking_query = User::query()->whereIn('role_id', $request->ids);
-        if ($checking_query->exists()) {
-            throw new RejectionException($checking_query->pluck('role_id')->toArray(), trans('api.roles are used'));
-        }
         Role::query()->whereIn('id', $request->ids)->delete();
 
         return new StatusResource(true);

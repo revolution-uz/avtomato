@@ -57,7 +57,7 @@ class InstallmentController extends Controller
     )]
     public function index(InstallmentFilterRequest $request): AnonymousResourceCollection
     {
-        $request->sortables = ['id', 'customer_id', 'tariff_id', 'amount']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'customer_id', 'tariff_id', 'amount', 'created_at', 'starts_in', 'next_pay_date']; // TODO add all fields, it's just for testing
         $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW);
 
         return InstallmentResource::collection(
@@ -259,6 +259,12 @@ class InstallmentController extends Controller
     )]
     public function delete(InstallmentsDeleteRequest $request): StatusResource
     {
+        $count = Installment::query()->whereIn('status', InstallmentStatusEnum::getStatusListByStatus())->whereIn('id', $request->ids)->count();
+
+        if ($count !== count($request->ids)) {
+            throw new AccessDeniedException('You cannot delete this installment');
+        }
+
         Installment::query()->whereIn('status', InstallmentStatusEnum::getStatusListByStatus())->whereIn('id', $request->ids)->delete();
 
         return new StatusResource(true);

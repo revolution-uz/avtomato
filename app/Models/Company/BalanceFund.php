@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -18,6 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class BalanceFund extends Model
 {
+    use LogsActivityDirtyOnlyTrait;
     use TenantConnection;
 
     const UPDATED_AT = null;

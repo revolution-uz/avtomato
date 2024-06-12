@@ -4,13 +4,12 @@ namespace App\Models\Company\Rbac;
 
 use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Models\Company\Branch;
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * App\Models\Company\Rbac\Role
@@ -23,7 +22,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Role extends Model
 {
     use HasFactory;
-    use LogsActivity;
+    use LogsActivityDirtyOnlyTrait;
     use SoftDeletes;
 
     protected $fillable = [
@@ -36,12 +35,6 @@ class Role extends Model
         $adminRole = self::query()->where('name', UserRoleEnum::ADMIN)->first();
 
         return $adminRole;
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
     }
 
     public function rolePermissions(): HasMany

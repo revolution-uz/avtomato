@@ -174,6 +174,7 @@ enum PermissionEnum: string
     case SCORING_UZCARD_DELETE = 'scoring_uzcard_delete';
 
     // Activity log
+    case ACTIVITY_LOG_VIEW = 'activity_log_view';
     case ACTIVITY_LOG_VIEW_ALL = 'activity_log_view_all';
     case ACTIVITY_LOG_VIEW_OWN = 'activity_log_view_own';
 
@@ -289,6 +290,7 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE,
 
+            self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,
             self::ACTIVITY_LOG_VIEW_OWN,
 
@@ -489,6 +491,7 @@ enum PermissionEnum: string
                 self::BALANCE_CHARGE_CREATE->value,
             ],
             PermissionGroupEnum::ACTIVITY_LOG->value => [
+                self::ACTIVITY_LOG_VIEW->value,
                 self::ACTIVITY_LOG_VIEW_ALL->value,
                 self::ACTIVITY_LOG_VIEW_OWN->value,
             ],
@@ -640,6 +643,7 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE => FeatureEnum::SCORING_UZCARD,
 
+            self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,
             self::ACTIVITY_LOG_VIEW_OWN => FeatureEnum::ACTIVITY_LOG,
         };
