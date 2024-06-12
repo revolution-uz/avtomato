@@ -259,6 +259,12 @@ class InstallmentController extends Controller
     )]
     public function delete(InstallmentsDeleteRequest $request): StatusResource
     {
+        $count = Installment::query()->whereIn('status', InstallmentStatusEnum::getStatusListByStatus())->whereIn('id', $request->ids)->count();
+
+        if ($count !== count($request->ids)) {
+            throw new AccessDeniedException('You cannot delete this installment');
+        }
+
         Installment::query()->whereIn('status', InstallmentStatusEnum::getStatusListByStatus())->whereIn('id', $request->ids)->delete();
 
         return new StatusResource(true);
