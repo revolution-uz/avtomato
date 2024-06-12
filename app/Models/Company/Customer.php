@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\CardStatusEnum;
 use App\Enums\GenderEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -119,5 +120,10 @@ class Customer extends Model
     public function fullName(): Attribute
     {
         return Attribute::make(get: fn () => $this->last_name . ' ' . $this->first_name);
+    }
+
+    public function activeCards()
+    {
+        return $this->cards()->where('status', CardStatusEnum::ACTIVE);
     }
 }

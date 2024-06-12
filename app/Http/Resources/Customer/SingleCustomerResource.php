@@ -62,7 +62,7 @@ class SingleCustomerResource extends JsonResource
             'gender' => $this->resource->gender,
             'created_at' => $this->resource->created_at?->format('U'),
             'updated_at' => $this->resource->updated_at?->format('U'),
-            'cards' => CardResource::collection($this->resource->cards),
+            'cards' => CardResource::collection($this->resource->activeCards),
             'phones' => PhoneResource::collection($this->resource->phones),
             'addresses' => AddressResource::collection($this->resource->addresses),
         ];

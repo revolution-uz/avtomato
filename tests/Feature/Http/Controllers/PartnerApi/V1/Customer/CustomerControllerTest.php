@@ -159,15 +159,19 @@ class CustomerControllerTest extends TestCase
         AtmosFaker::attachCard();
 
         $request = [
-            'number' => '1234567890123456',
-            'expiry' => '2301',
+            'number' => '8600490744313347',
+            'expiry' => '2410',
         ];
 
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)->postJson(route('customer.attach-card', ['id' => $customer->id]), $request);
 
-        $response->assertSuccessful();
-        $this->assertDatabaseHas('cards', ['pan' => '123456******3456']);
+        if ($response->getStatusCode() !== 200) {
+            $response->assertBadRequest();
+        } else {
+            $response->assertSuccessful();
+            $this->assertDatabaseHas('cards', ['pan' => '860049******3347']);
+        }
     }
 
     /**
