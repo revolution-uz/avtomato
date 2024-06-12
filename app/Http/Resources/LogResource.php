@@ -25,7 +25,7 @@ use OpenApi\Attributes as OA;
 /** @property ActivityLog $resource */
 class LogResource extends JsonResource
 {
-    public static function logMessageBuilder($modelName, $modelId, $event)
+    public static function logMessageBuilder($modelName, $modelId, $event): string
     {
         $modelName = trans('models.' . $modelName);
 
@@ -36,9 +36,7 @@ class LogResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'user' => $this->whenLoaded('causer', function () {
-                return UserListResource::make($this->resource->causer);
-            }),
+            'user' => $this->resource->causer ? UserListResource::make($this->resource->causer) : null,
             'properties' => $this->resource->properties,
             'created_at' => $this->resource->created_at?->format('U'),
             'description' => self::logMessageBuilder($this->resource->subject_type, $this->resource->subject_id, $this->resource->event->value),

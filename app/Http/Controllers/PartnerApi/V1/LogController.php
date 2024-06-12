@@ -87,6 +87,7 @@ class LogController extends Controller
         return LogResource::collection(
             ActivityLog::query()
                 ->where('causer_id', auth()->user()->id)
+                ->with('causer')
                 ->when($request->search, function (Builder $q) use ($request) {
                     $search = '%' . $request->search . '%';
                     $q->where(function (Builder $query) use ($search) {
@@ -114,6 +115,6 @@ class LogController extends Controller
     )]
     public function getSingle(int $id, LogViewRequest $request): LogResource
     {
-        return new LogResource(ActivityLog::findOrFail($id));
+        return new LogResource(ActivityLog::query()->with('causer')->findOrFail($id));
     }
 }
