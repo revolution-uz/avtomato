@@ -5,7 +5,7 @@ return [
     /*
      * If set to false, no activities will be saved to the database.
      */
-    'enabled' => env('ACTIVITY_LOGGER_ENABLED', true),
+    'enabled' => true,
 
     /*
      * When the clean-command is executed, all recording activities older than
@@ -28,7 +28,7 @@ return [
     /*
      * If set to true, the subject returns soft deleted models.
      */
-    'subject_returns_soft_deleted_models' => false,
+    'subject_returns_soft_deleted_models' => true,
 
     /*
      * This model will be used to log activity.

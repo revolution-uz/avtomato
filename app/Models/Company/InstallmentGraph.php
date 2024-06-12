@@ -6,8 +6,6 @@ use App\Enums\Company\InstallmentStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -22,7 +20,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class InstallmentGraph extends Model
 {
     use HasFactory;
-    use LogsActivity;
     use TenantConnection;
 
     protected $fillable = [
@@ -42,11 +39,5 @@ class InstallmentGraph extends Model
     public function installment()
     {
         return $this->belongsTo(Installment::class);
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
     }
 }

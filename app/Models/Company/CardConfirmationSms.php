@@ -5,8 +5,6 @@ namespace App\Models\Company;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -24,7 +22,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class CardConfirmationSms extends Model
 {
-    use LogsActivity;
     use TenantConnection;
 
     protected $table = 'card_confirmation_sms';
@@ -38,10 +35,4 @@ class CardConfirmationSms extends Model
         'phone' => 'string',
         'code' => 'string',
     ];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
-    }
 }

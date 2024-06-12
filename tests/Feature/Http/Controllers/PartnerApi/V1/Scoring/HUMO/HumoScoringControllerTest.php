@@ -4,6 +4,7 @@ namespace Http\Controllers\PartnerApi\V1\Scoring\HUMO;
 
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
+use App\Models\Company\User;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
 
@@ -47,6 +48,17 @@ class HumoScoringControllerTest extends TestCase
         $this->assertDatabaseHas('scoring_requests', ['request->number' => $request['number']]);
 
         $this->assertDatabaseHas('scoring_requests', ['request->expiry' => $request['expiry']]);
+
+        $this->assertDatabaseHas(
+            'activity_logs',
+            [
+                'description' => 'created',
+                'subject_type' => ScoringRequest::class,
+                'subject_id' => $response->json('data.id'),
+                'causer_type' => User::class,
+                'causer_id' => $admin->id,
+            ]
+        );
 
         $this->assertIsArray($response->json('data'));
     }

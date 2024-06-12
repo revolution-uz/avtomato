@@ -3,11 +3,10 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\AddressTypeEnum;
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -26,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Address extends Model
 {
-    use LogsActivity;
+    use LogsActivityDirtyOnlyTrait;
     use SoftDeletes;
     use TenantConnection;
 
@@ -41,12 +40,6 @@ class Address extends Model
     protected $casts = [
         'type' => AddressTypeEnum::class,
     ];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
-    }
 
     public function region(): BelongsTo
     {
