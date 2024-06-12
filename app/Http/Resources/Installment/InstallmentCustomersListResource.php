@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Installment;
 
-use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,19 +24,12 @@ class InstallmentCustomersListResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = [
-            [
-                'id' => $this->resource->customer_id,
-                'full_name' => $this->resource->customer->first_name . ' ' . $this->resource->customer->last_name,
-                'type' => trans('api.debtor'),
-            ],
+            new InstallmentCustomersListItemResource($this->resource->customer, false),
         ];
 
-        /** @var Customer $guarantor */
         foreach ($this->resource->guarantors as $guarantor) {
             $data[] = [
-                'id' => $guarantor->id,
-                'full_name' => $guarantor->first_name . ' ' . $guarantor->last_name,
-                'type' => trans('api.guarantor'),
+                new InstallmentCustomersListItemResource($guarantor, true),
             ];
         }
 
