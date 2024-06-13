@@ -37,6 +37,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         parent::boot();
         Nova::mainMenu(function (Request $request, Menu $menu) {
+            tenancy()->initialize(Company::query()->first());
             if (tenancy()->initialized) {
                 /** @var Company $company */
                 $company = tenancy()->tenant;

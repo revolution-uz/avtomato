@@ -2,7 +2,6 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\Localization;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -46,7 +45,6 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\ForceJsonResponse::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            Localization::class,
         ],
         'universal' => [],
     ];
