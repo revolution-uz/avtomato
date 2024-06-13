@@ -455,7 +455,7 @@ class InstallmentDetailsController extends Controller
     public function contactList(int $id, InstallmentViewRequest $request)
     {
         $installment = Installment::query()
-            ->with(['customer.addresses', 'customer.phones', 'guarantors.addresses', 'guarantors.phones'])
+            ->with(['customer', 'customer.addresses', 'customer.phones', 'guarantors', 'guarantors.addresses', 'guarantors.phones'])
             ->findOrFail($id);
 
         return new InstallmentContactResource($installment);
