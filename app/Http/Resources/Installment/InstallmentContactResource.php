@@ -4,6 +4,7 @@ namespace App\Http\Resources\Installment;
 
 use App\Http\Resources\Common\AddressResource;
 use App\Http\Resources\Common\PhoneResource;
+use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
@@ -40,15 +41,15 @@ class InstallmentContactResource extends JsonResource
         $addresses = collect();
         $phones = collect();
 
-        $collectCustomerData = function ($customer, $isGuarantor) use (&$addresses, &$phones) {
-            foreach ($customer->addresses() as $address) {
+        $collectCustomerData = function (Customer $customer, bool $isGuarantor) use (&$addresses, &$phones) {
+            foreach ($customer->addresses as $address) {
                 $addresses->push([
                     'address' => new AddressResource($address),
                     'customer' => new InstallmentCustomersListItemResource($customer, $isGuarantor),
                 ]);
             }
 
-            foreach ($customer->phones() as $phone) {
+            foreach ($customer->phones as $phone) {
                 $phones->push([
                     'phone' => new PhoneResource($phone),
                     'customer' => new InstallmentCustomersListItemResource($customer, $isGuarantor),
