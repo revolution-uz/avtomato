@@ -255,7 +255,7 @@ class CustomerController extends Controller
             new OpenApiArrayResponse(resourceName: 'InstallmentResource', withPagination: true, withSortables: true),
         ]
     )]
-    public function installments(int $id, CustomerViewInstallmentRequest $request): InstallmentResource
+    public function installments(int $id, CustomerViewInstallmentRequest $request): AnonymousResourceCollection
     {
 
         $request->sortables = ['id', 'tariff_id', 'amount', 'created_at', 'starts_in', 'next_pay_date']; // TODO add all fields, it's just for testing
