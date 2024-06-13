@@ -65,6 +65,8 @@ enum PermissionEnum: string
     case CUSTOMER_EDIT = 'customer_edit';
     case CUSTOMER_VIEW_ALL = 'customer_view_all';
     case CUSTOMER_VIEW = 'customer_view';
+    case CUSTOMER_VIEW_INSTALLMENTS = 'customer_view_installments';
+    case CUSTOMER_CARD_VIEW = 'customer_card_view';
     case CUSTOMER_CARD_EDIT = 'customer_card_edit';
     case CUSTOMER_CARD_REMOVE = 'customer_card_remove';
 
@@ -216,9 +218,11 @@ enum PermissionEnum: string
 
             self::CUSTOMER_VIEW_ALL,
             self::CUSTOMER_VIEW,
+            self::CUSTOMER_VIEW_INSTALLMENTS,
             self::CUSTOMER_CREATE,
             self::CUSTOMER_INFO_BY_PASSPORT,
             self::CUSTOMER_EDIT,
+            self::CUSTOMER_CARD_VIEW,
             self::CUSTOMER_CARD_EDIT,
             self::CUSTOMER_CARD_REMOVE,
 
@@ -349,9 +353,11 @@ enum PermissionEnum: string
             PermissionGroupEnum::CUSTOMER_MANAGEMENT->value => [
                 self::CUSTOMER_VIEW_ALL->value,
                 self::CUSTOMER_VIEW->value,
+                self::CUSTOMER_VIEW_INSTALLMENTS->value,
                 self::CUSTOMER_CREATE->value,
                 self::CUSTOMER_INFO_BY_PASSPORT->value,
                 self::CUSTOMER_EDIT->value,
+                self::CUSTOMER_CARD_VIEW->value,
                 self::CUSTOMER_CARD_EDIT->value,
                 self::CUSTOMER_CARD_REMOVE->value,
             ],
@@ -543,8 +549,10 @@ enum PermissionEnum: string
 
             self::CUSTOMER_VIEW_ALL,
             self::CUSTOMER_VIEW,
+            self::CUSTOMER_VIEW_INSTALLMENTS,
             self::CUSTOMER_CREATE,
             self::CUSTOMER_EDIT,
+            self::CUSTOMER_CARD_VIEW,
             self::CUSTOMER_CARD_EDIT,
             self::CUSTOMER_CARD_REMOVE,
             self::CUSTOMER_INFO_BY_PASSPORT => FeatureEnum::CUSTOMER_MANAGEMENT,

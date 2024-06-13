@@ -10,6 +10,6 @@ class CardViewRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_VIEW);
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARD_VIEW);
     }
 }
