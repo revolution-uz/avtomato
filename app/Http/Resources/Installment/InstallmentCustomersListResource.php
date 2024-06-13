@@ -28,9 +28,7 @@ class InstallmentCustomersListResource extends JsonResource
         ];
 
         foreach ($this->resource->guarantors as $guarantor) {
-            $data[] = [
-                new InstallmentCustomersListItemResource($guarantor, true),
-            ];
+            $data[] = new InstallmentCustomersListItemResource($guarantor, true);
         }
 
         return $data;
