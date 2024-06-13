@@ -26,7 +26,7 @@ class CustomerByPassportRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_VIEW);
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_INFO_BY_PASSPORT);
     }
 
     public function rules(): array

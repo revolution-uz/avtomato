@@ -52,9 +52,11 @@ enum PermissionGroupEnum: string
             self::CUSTOMER_MANAGEMENT => [
                 PermissionEnum::CUSTOMER_VIEW_ALL,
                 PermissionEnum::CUSTOMER_VIEW,
+                PermissionEnum::CUSTOMER_VIEW_INSTALLMENTS,
                 PermissionEnum::CUSTOMER_CREATE,
                 PermissionEnum::CUSTOMER_INFO_BY_PASSPORT,
                 PermissionEnum::CUSTOMER_EDIT,
+                PermissionEnum::CUSTOMER_CARD_VIEW,
                 PermissionEnum::CUSTOMER_CARD_EDIT,
                 PermissionEnum::CUSTOMER_CARD_REMOVE,
             ],

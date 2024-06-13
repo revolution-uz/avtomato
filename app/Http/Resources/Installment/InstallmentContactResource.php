@@ -41,14 +41,14 @@ class InstallmentContactResource extends JsonResource
         $phones = collect();
 
         $collectCustomerData = function ($customer, $isGuarantor) use (&$addresses, &$phones) {
-            foreach ($customer->addresses as $address) {
+            foreach ($customer->addresses() as $address) {
                 $addresses->push([
                     'address' => new AddressResource($address),
                     'customer' => new InstallmentCustomersListItemResource($customer, $isGuarantor),
                 ]);
             }
 
-            foreach ($customer->phones as $phone) {
+            foreach ($customer->phones() as $phone) {
                 $phones->push([
                     'phone' => new PhoneResource($phone),
                     'customer' => new InstallmentCustomersListItemResource($customer, $isGuarantor),

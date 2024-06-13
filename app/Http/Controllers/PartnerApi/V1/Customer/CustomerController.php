@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Customer;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
+use App\Helpers\Swagger\OpenApiArrayResponse;
 use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
@@ -19,6 +22,7 @@ use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
 use App\Http\Requests\Customer\CreateCustomerRequest;
 use App\Http\Requests\Customer\CustomerByPassportRequest;
 use App\Http\Requests\Customer\CustomersFilterRequest;
+use App\Http\Requests\Customer\CustomerViewInstallmentRequest;
 use App\Http\Requests\Customer\CustomerViewRequest;
 use App\Http\Requests\Customer\DetachAddressRequest;
 use App\Http\Requests\Customer\DetachPhonesRequest;
@@ -31,9 +35,11 @@ use App\Http\Resources\Customer\CustomerListItemResource;
 use App\Http\Resources\Customer\ErrorConfirmCardResource;
 use App\Http\Resources\Customer\PassportInfo\CustomerInfoByPassportDataResource;
 use App\Http\Resources\Customer\SingleCustomerResource;
+use App\Http\Resources\Installment\InstallmentResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
+use App\Models\Company\Installment;
 use App\Models\Company\Phone;
 use App\Services\AtmosService;
 use App\Services\CustomerCardService;
@@ -233,6 +239,38 @@ class CustomerController extends Controller
     public function getSingle(int $id, CustomerViewRequest $request): SingleCustomerResource
     {
         return new SingleCustomerResource(Customer::findOrFail($id));
+    }
+
+    #[OA\Get(
+        path: '/api/v1/customer/{id}/installments',
+        description: 'Get customer installments route',
+        tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer ID'),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSortParameter,
+        ],
+        responses: [
+            new OpenApiArrayResponse(resourceName: 'InstallmentResource', withPagination: true, withSortables: true),
+        ]
+    )]
+    public function installments(int $id, CustomerViewInstallmentRequest $request): InstallmentResource
+    {
+
+        $request->sortables = ['id', 'tariff_id', 'amount', 'created_at', 'starts_in', 'next_pay_date']; // TODO add all fields, it's just for testing
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::CUSTOMER_VIEW_INSTALLMENTS);
+
+        return InstallmentResource::collection(
+            Installment::query()
+                ->with(['customer', 'branch', 'tariff', 'graphs', 'cards', 'guarantors', 'documents', 'comments', 'transactions'])
+                ->where('customer_id', $id)
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
+                ->when($branches, fn (Builder $q) => $q->whereIn('branch_id', $branches))
+                ->paginate($request->per_page)
+        )->additional(['sortables' => $request->sortables]);
     }
 
     /**
