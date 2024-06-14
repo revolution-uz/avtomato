@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use App\Enums\Company\CardStatusEnum;
 use App\Helpers\CardHelper;
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -12,8 +13,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -44,7 +43,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class Card extends Model
 {
     use HasFactory;
-    use LogsActivity;
+    use LogsActivityDirtyOnlyTrait;
     use SoftDeletes;
     use TenantConnection;
 
@@ -70,10 +69,20 @@ class Card extends Model
         'number_hash',
     ];
 
-    public function getActivitylogOptions(): LogOptions
+    protected static function boot()
     {
-        return LogOptions::defaults()
-            ->logFillable();
+        parent::boot();
+
+        static::created(function (self $card) {
+            $scoringRequests = ScoringRequest::query()->whereNull('card_id')->when(function ($query) use ($card) {
+                $query->where('request->number', $card->number);
+            })->get();
+            foreach ($scoringRequests as $scoringRequest) {
+                $scoringRequest->card_id = $card->id;
+                $scoringRequest->customer_id = $card->customer_id;
+                $scoringRequest->save();
+            }
+        });
     }
 
     public function setPan(): void

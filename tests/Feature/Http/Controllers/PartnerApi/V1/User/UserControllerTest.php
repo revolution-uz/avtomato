@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\Attachment;
+use App\Models\Company\Rbac\Role;
 use App\Models\Company\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
@@ -48,11 +49,13 @@ class UserControllerTest extends TestCase
      */
     public function create()
     {
+        $role = Role::factory()->create();
         $admin = $this->createAdminUser();
         $response = $this->actingAs($admin)->postJson(route('users.create'), [
             'first_name' => 'Test First Name',
             'last_name' => 'Test Last Name',
             'username' => 'test_username',
+            'role_id' => $role->id,
             'status' => UserStatusEnum::ACTIVE->value,
             'password' => 'password',
             'password_confirmation' => 'password',
@@ -96,6 +99,7 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create();
         $newPassword = 'password';
         $response = $this->actingAs($admin)->postJson(route('users.change-password', ['id' => $user->id]), [
+            'old_password' => 'password',
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);

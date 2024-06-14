@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\PhoneTypeEnum;
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -21,6 +22,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Phoneable extends Model
 {
+    use LogsActivityDirtyOnlyTrait;
     use TenantConnection;
 
     protected $fillable = [

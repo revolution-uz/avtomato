@@ -12,6 +12,7 @@ use Database\Seeders\Company\ModuleSeeder;
 use Database\Seeders\Company\PermissionSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Hash;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -80,6 +81,7 @@ abstract class TestCase extends BaseTestCase
     {
         return Company\User::factory()->create([
             'role_id' => Role::getAdmin()->id,
+            'password' => Hash::make('password'),
         ]);
     }
 }

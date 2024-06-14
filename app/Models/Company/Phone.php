@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -15,6 +16,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Phone extends Model
 {
+    use LogsActivityDirtyOnlyTrait;
     use TenantConnection;
 
     protected $fillable = [

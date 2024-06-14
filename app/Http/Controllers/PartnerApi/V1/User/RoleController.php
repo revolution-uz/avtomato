@@ -23,7 +23,6 @@ use App\Http\Resources\Rbac\SingleRoleResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Attributes as OA;
 
@@ -45,26 +44,24 @@ class RoleController extends Controller
     )]
     public function index(RolesFilterRequest $request)
     {
-        $sortables = ['id', 'name', 'created_at', 'updated_at'];
+        $request->sortables = ['id', 'name', 'created_at', 'updated_at'];
 
         return RoleListResource::collection(
             Role::query()
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('name', 'ILIKE', '%' . $request->search . '%')
-                )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('name', 'ILIKE', $search);
+                    });
+                })
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
                 ->paginate(
                     $request->per_page,
                     page: $request->page
                 )
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Get(

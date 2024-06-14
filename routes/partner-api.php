@@ -194,6 +194,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('{id}/address', 'attachAddress')->name('customer.attach-address');
         Route::delete('{id}/address', 'detachAddress')->name('customer.detach-address');
         Route::post('by-passport', 'findByPassport')->name('customer.by-passport');
+        Route::delete('{id}/installments', 'installments')->name('customer.installments');
     });
 
     Route::prefix('scoring')->group(function () {
@@ -244,6 +245,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('log')->controller(LogController::class)->group(function () {
         Route::get('/', 'index')->name('log.index');
+        Route::get('{id}', 'getSingle')->name('log.get-single');
         Route::get('own', 'ownLogs')->name('log.own');
     });
 });

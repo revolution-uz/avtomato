@@ -31,7 +31,6 @@ use App\Models\Company\User;
 use App\Services\User\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class UserController extends Controller
@@ -55,27 +54,25 @@ class UserController extends Controller
             new OpenApiArrayResponse(resourceName: 'UserListResource', withPagination: true, withSortables: true),
         ]
     )]
-    public function index(UserFilterRequest $request): AnonymousResourceCollection
+    public function index(UserFilterRequest $request)
     {
-        $sortables = ['id', 'username', 'first_name', 'last_name', 'created_at', 'updated_at'];
+        $request->sortables = ['id', 'username', 'first_name', 'last_name', 'created_at', 'updated_at'];
 
         return UserListResource::collection(
             User::query()
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('username', 'ILIKE', '%' . $request->search . '%')
-                        ->where('first_name', 'ILIKE', '%' . $request->search . '%')
-                        ->where('last_name', 'ILIKE', '%' . $request->search . '%')
-                )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('username', 'ILIKE', $search)
+                            ->orWhere('first_name', 'ILIKE', $search)
+                            ->orWhere('last_name', 'ILIKE', $search);
+                    });
+                })
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Get(

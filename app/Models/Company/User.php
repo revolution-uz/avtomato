@@ -5,6 +5,9 @@ namespace App\Models\Company;
 use App\DTOs\UserTemplateThemeDto;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\Rbac\Role;
+use App\Traits\LogsActivityDirtyOnlyTrait;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -14,8 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Traits\CausesActivity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -23,18 +25,22 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $username
  * @property string $first_name
  * @property string $last_name
+ * @property string $full_name
  * @property string $phone
  * @property UserStatusEnum $status
  * @property UserTemplateThemeDto $template_theme
  * @property string $language
  * @property-read Attachment|null $avatar
  * @property-read Role|null $role
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class User extends Authenticatable
 {
+    use CausesActivity;
     use HasApiTokens;
     use HasFactory;
-    use LogsActivity;
+    use LogsActivityDirtyOnlyTrait;
     use Notifiable;
     use SoftDeletes;
     use TenantConnection;
@@ -55,12 +61,6 @@ class User extends Authenticatable
         'status' => UserStatusEnum::class,
         'template_theme' => UserTemplateThemeDto::class,
     ];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logFillable();
-    }
 
     public function tokens(): MorphMany
     {
@@ -96,8 +96,8 @@ class User extends Authenticatable
         $this->phones()->sync([$model->id], false);
     }
 
-    public function fullName(): string
+    public function fullName(): Attribute
     {
-        return $this->last_name . ' ' . $this->first_name;
+        return Attribute::make(get: fn () => $this->last_name . ' ' . $this->first_name);
     }
 }

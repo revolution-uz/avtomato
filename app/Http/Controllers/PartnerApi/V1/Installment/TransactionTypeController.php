@@ -15,13 +15,11 @@ use App\Http\Requests\Installment\TransactionTypeFilterRequest;
 use App\Http\Requests\Installment\TransactionTypeRequest;
 use App\Http\Requests\Installment\TransactionTypesDeleteRequest;
 use App\Http\Requests\Installment\TransactionTypeViewRequest;
-use App\Http\Resources\Installment\TransactionResource;
 use App\Http\Resources\Installment\TransactionTypeResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class TransactionTypeController extends Controller
@@ -42,7 +40,8 @@ class TransactionTypeController extends Controller
     )]
     public function index(TransactionTypeFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'name', 'is_system']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'name', 'is_system', 'created_at', 'updated_at']; // TODO add all fields, it's just for testing
+        $request->languageAbleFields = ['name'];
 
         return TransactionTypeResource::collection(
             TransactionType::query()
@@ -56,14 +55,12 @@ class TransactionTypeController extends Controller
                         ->orWhere('name_ru', 'ilike', "%{$request->search}%")
                         ->orWhere('name_en', 'ilike', "%{$request->search}%")
                 )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    [$field, $direction] = $request->getFieldAndDirection();
+                    $q->orderBy($field, $direction);
+                })
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Get(
@@ -129,7 +126,7 @@ class TransactionTypeController extends Controller
             new OpenApiNotFoundResponse,
         ]
     )]
-    public function update(int $id, TransactionTypeRequest $request): TransactionResource
+    public function update(int $id, TransactionTypeRequest $request): TransactionTypeResource
     {
         if ($id < 100) {
             abort(403, 'You can not edit system transaction types');
@@ -141,7 +138,7 @@ class TransactionTypeController extends Controller
         $transactionType->setNames($request->name);
         $transactionType->saveOrFail();
 
-        return new TransactionResource($transactionType);
+        return new TransactionTypeResource($transactionType);
     }
 
     #[OA\Delete(

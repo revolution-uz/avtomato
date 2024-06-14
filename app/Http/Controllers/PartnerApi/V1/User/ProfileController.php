@@ -167,19 +167,26 @@ class ProfileController extends Controller
     )]
     public function devices(UsersDevicesRequest $request): AnonymousResourceCollection
     {
+        $request->sortables = ['id', 'name', 'device_ip', 'device_type', 'device_os', 'last_used_at']; // TODO add all fields, it's just for testing
+
         return DeviceInfoResource::collection(
-            auth()->user()->tokens()->when($request->search, function (Builder $q) use ($request) {
-                $search = '%' . $request->search . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('name', 'ILIKE', $search)
-                        ->orWhere('device_ip', 'ILIKE', $search)
-                        ->orWhere('device_type', 'ILIKE', $search)
-                        ->orWhere('device_os', 'ILIKE', $search);
-                });
-            })->paginate(
-                $request->per_page,
-                page: $request->page
-            ));
+            auth()->user()->tokens()
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('name', 'ILIKE', $search)
+                            ->orWhere('device_ip', 'ILIKE', $search)
+                            ->orWhere('device_type', 'ILIKE', $search)
+                            ->orWhere('device_os', 'ILIKE', $search);
+                    });
+                })
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
+                ->paginate(
+                    $request->per_page,
+                    page: $request->page
+                ))->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Delete(

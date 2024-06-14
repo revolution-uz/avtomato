@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class InstallmentCard extends Model
 {
     use HasFactory;
+    use LogsActivityDirtyOnlyTrait;
     use SoftDeletes;
     use TenantConnection;
 

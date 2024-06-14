@@ -3,17 +3,20 @@
 namespace App\Http\Controllers\PartnerApi\V1;
 
 use App\Helpers\Swagger\OpenApiArrayResponse;
+use App\Helpers\Swagger\OpenApiDataResponse;
+use App\Helpers\Swagger\OpenApiIdParameter;
+use App\Helpers\Swagger\OpenApiNotFoundResponse;
 use App\Helpers\Swagger\OpenApiPageParameter;
 use App\Helpers\Swagger\OpenApiPerPageParameter;
 use App\Helpers\Swagger\OpenApiSearchParameter;
 use App\Helpers\Swagger\OpenApiSortParameter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LogFilterRequest;
+use App\Http\Requests\LogViewRequest;
 use App\Http\Requests\OwnLogsRequest;
 use App\Http\Resources\LogResource;
 use App\Models\Company\ActivityLog;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 
 class LogController extends Controller
@@ -40,29 +43,27 @@ class LogController extends Controller
     )]
     public function index(LogFilterRequest $request)
     {
-        $sortables = ['id', 'created_at'];
+        $request->sortables = ['id', 'created_at'];
 
         return LogResource::collection(
             ActivityLog::query()
                 ->with(['causer'])
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('description', 'ILIKE', '%' . $request->search . '%')
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('description', 'ILIKE', $search);
+                    });
+                })
                 ->when(
                     $request->user_id,
                     fn (Builder $q) => $q
                         ->where('causer_id', $request->user_id)
                 )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Get(
@@ -81,23 +82,39 @@ class LogController extends Controller
     )]
     public function ownLogs(OwnLogsRequest $request)
     {
-        $sortables = ['id', 'created_at'];
+        $request->sortables = ['id', 'created_at'];
 
         return LogResource::collection(
             ActivityLog::query()
                 ->where('causer_id', auth()->user()->id)
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('description', 'ILIKE', '%' . $request->search . '%')
-                )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->with('causer')
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('description', 'ILIKE', $search);
+                    });
+                })
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
+    }
+
+    #[OA\Get(
+        path: '/api/v1/log/{id}',
+        description: 'Get single log route',
+        tags: ['ActivityLogs'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'ActivityLog'),
+        ],
+        responses: [
+            new OpenApiDataResponse(resourceName: 'LogResource'),
+            new OpenApiNotFoundResponse,
+        ]
+    )]
+    public function getSingle(int $id, LogViewRequest $request): LogResource
+    {
+        return new LogResource(ActivityLog::query()->with('causer')->findOrFail($id));
     }
 }

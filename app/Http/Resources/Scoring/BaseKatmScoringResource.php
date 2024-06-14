@@ -29,8 +29,8 @@ class BaseKatmScoringResource extends JsonResource
             'status' => $this->resource->status->value,
             'request' => $this->resource->request->toArray(),
             'response' => $this->resource->response?->toArray(),
-            'created_at' => $this->resource->created_at->getTimestamp(),
-            'updated_at' => $this->resource->updated_at->getTimestamp(),
+            'created_at' => $this->resource->created_at?->format('U'),
+            'updated_at' => $this->resource->updated_at?->format('U'),
         ];
 
         if ($this->resource->request instanceof KatmCreateRequestDTO) {

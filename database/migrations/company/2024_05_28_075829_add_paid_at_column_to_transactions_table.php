@@ -9,14 +9,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->date('paid_at')->nullable()->after('employee_id');
+            if (! Schema::hasColumn('transactions', 'paid_at')) {
+                $table->date('paid_at')->nullable();
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn('paid_at');
+            if (Schema::hasColumn('transactions', 'paid_at')) {
+                $table->dropColumn('paid_at');
+            }
         });
     }
 };

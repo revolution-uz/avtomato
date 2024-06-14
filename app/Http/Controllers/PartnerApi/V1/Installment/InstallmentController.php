@@ -30,7 +30,6 @@ use App\Models\Company\InstallmentGuarantor;
 use App\Services\Installment\InstallmentService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Throwable;
@@ -58,7 +57,7 @@ class InstallmentController extends Controller
     )]
     public function index(InstallmentFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'customer_id', 'tariff_id', 'amount']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'customer_id', 'tariff_id', 'amount', 'created_at', 'starts_in', 'next_pay_date']; // TODO add all fields, it's just for testing
         $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW);
 
         return InstallmentResource::collection(
@@ -73,15 +72,12 @@ class InstallmentController extends Controller
                     ->orWhereHas('branch', fn (Builder $q) => $q->where('name', 'ilike', "%{$request->search}%"))
                     ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$request->search}%"))
                 )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
                 ->when($branches, fn (Builder $q) => $q->whereIn('branch_id', $branches))
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Get(
@@ -263,6 +259,12 @@ class InstallmentController extends Controller
     )]
     public function delete(InstallmentsDeleteRequest $request): StatusResource
     {
+        $count = Installment::query()->whereIn('status', InstallmentStatusEnum::getStatusListByStatus())->whereIn('id', $request->ids)->count();
+
+        if ($count !== count($request->ids)) {
+            throw new AccessDeniedException('You cannot delete this installment');
+        }
+
         Installment::query()->whereIn('status', InstallmentStatusEnum::getStatusListByStatus())->whereIn('id', $request->ids)->delete();
 
         return new StatusResource(true);

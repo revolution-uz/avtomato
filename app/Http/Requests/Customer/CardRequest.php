@@ -7,6 +7,12 @@ use App\Helpers\RbacHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
+/**
+ * The card request dto object class
+ *
+ * @property string $number
+ * @property string $expiry
+ */
 #[OA\Schema(
     schema: 'CardRequest',
     title: 'Request to create or update a card',

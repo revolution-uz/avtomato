@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\PartnerApi\V1\Customer;
 
-use App\Enums\Company\CardStatusEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Helpers\RbacHelper;
+use App\Helpers\Swagger\OpenApiArrayResponse;
 use App\Helpers\Swagger\OpenApiDataResponse;
 use App\Helpers\Swagger\OpenApiIdParameter;
 use App\Helpers\Swagger\OpenApiNotFoundResponse;
@@ -20,6 +22,7 @@ use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
 use App\Http\Requests\Customer\CreateCustomerRequest;
 use App\Http\Requests\Customer\CustomerByPassportRequest;
 use App\Http\Requests\Customer\CustomersFilterRequest;
+use App\Http\Requests\Customer\CustomerViewInstallmentRequest;
 use App\Http\Requests\Customer\CustomerViewRequest;
 use App\Http\Requests\Customer\DetachAddressRequest;
 use App\Http\Requests\Customer\DetachPhonesRequest;
@@ -32,20 +35,20 @@ use App\Http\Resources\Customer\CustomerListItemResource;
 use App\Http\Resources\Customer\ErrorConfirmCardResource;
 use App\Http\Resources\Customer\PassportInfo\CustomerInfoByPassportDataResource;
 use App\Http\Resources\Customer\SingleCustomerResource;
+use App\Http\Resources\Installment\InstallmentResource;
 use App\Http\Resources\StatusResource;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
+use App\Models\Company\Installment;
 use App\Models\Company\Phone;
 use App\Services\AtmosService;
-use App\Services\ConfirmationService;
+use App\Services\CustomerCardService;
 use App\Services\CustomerService;
 use App\Services\Scoring\PassportInfoService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 use Throwable;
 
@@ -55,7 +58,7 @@ class CustomerController extends Controller
         private readonly PassportInfoService $passportInfoService,
         private readonly AtmosService $atmosCardService,
         private readonly CustomerService $customerService,
-        private readonly ConfirmationService $confirmationService,
+        private readonly CustomerCardService $customerCardService,
     ) {
     }
 
@@ -76,7 +79,7 @@ class CustomerController extends Controller
     )]
     public function index(CustomersFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name'];
+        $request->sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name', 'birth_date'];
 
         return CustomerListItemResource::collection(
             Customer::query()
@@ -90,15 +93,11 @@ class CustomerController extends Controller
                             ->orWhere('passport_number', 'ILIKE', $search);
                     });
                 })
-                ->when($request->sort && in_array($request->sort, $sortables), function (Builder $q) use ($request) {
-                    if (Str::startsWith($request->sort, '-')) {
-                        $q->orderBy(Str::substr($request->sort, 1), 'desc');
-                    } else {
-                        $q->orderBy($request->sort);
-                    }
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
                 })
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Post(
@@ -242,6 +241,38 @@ class CustomerController extends Controller
         return new SingleCustomerResource(Customer::findOrFail($id));
     }
 
+    #[OA\Get(
+        path: '/api/v1/customer/{id}/installments',
+        description: 'Get customer installments route',
+        tags: ['Customers'],
+        parameters: [
+            new OpenApiIdParameter(modelName: 'Customer ID'),
+            new OpenApiPageParameter,
+            new OpenApiPerPageParameter,
+            new OpenApiSortParameter,
+        ],
+        responses: [
+            new OpenApiArrayResponse(resourceName: 'InstallmentResource', withPagination: true, withSortables: true),
+        ]
+    )]
+    public function installments(int $id, CustomerViewInstallmentRequest $request): AnonymousResourceCollection
+    {
+
+        $request->sortables = ['id', 'tariff_id', 'amount', 'created_at', 'starts_in', 'next_pay_date']; // TODO add all fields, it's just for testing
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::CUSTOMER_VIEW_INSTALLMENTS);
+
+        return InstallmentResource::collection(
+            Installment::query()
+                ->with(['customer', 'branch', 'tariff', 'graphs', 'cards', 'guarantors', 'documents', 'comments', 'transactions'])
+                ->where('customer_id', $id)
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
+                ->when($branches, fn (Builder $q) => $q->whereIn('branch_id', $branches))
+                ->paginate($request->per_page)
+        )->additional(['sortables' => $request->sortables]);
+    }
+
     /**
      * @throws Throwable
      */
@@ -263,24 +294,9 @@ class CustomerController extends Controller
     )]
     public function attachCard(int $id, CardRequest $request): AttachCustomerCardResource
     {
-        $card = Card::query()
-            ->onlyTrashed()
-            ->where('customer_id', $id)
-            ->where('number_hash', Hash::make($request->number))
-            ->first();
+        [$card, $cardServiceResponse] = $this->customerCardService->attachCard($id, $request);
 
-        if (! $card) {
-            $card = new Card;
-            $card->fill($request->validated());
-            $card->computingBeforeInsert();
-            $card->customer_id = $id;
-            $card->saveOrFail();
-
-            return AttachCustomerCardResource::make($card, $this->atmosCardService->attachCard($card->number, $card->expiry));
-        }
-        $this->confirmationService->send($card->phone);
-
-        return AttachCustomerCardResource::make($card);
+        return AttachCustomerCardResource::make($card, $cardServiceResponse);
     }
 
     /**
@@ -305,23 +321,13 @@ class CustomerController extends Controller
     )]
     public function confirmCard(int $id, ConfirmCustomerCardRequest $request): CardResource|ErrorConfirmCardResource
     {
-        /** @var Card $card */
-        $card = Card::query()
-            ->where('customer_id', $id)
-            ->findOrFail($request->card_id);
+        [$card, $cardServiceResponse] = $this->customerCardService->confirmCard($id, $request);
 
-        $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request->transaction_id, $request->otp);
-        if ($atmosConfirmCardDto->result->isSucces()) {
-            $card->external_id = $atmosConfirmCardDto->data->card_token;
-            $card->owner = $atmosConfirmCardDto->data->card_holder;
-            $card->phone = '+' . $atmosConfirmCardDto->data->phone;
-            $card->status = CardStatusEnum::ACTIVE;
-            $card->saveOrFail();
-
+        if ($cardServiceResponse->result->isSucces()) {
             return CardResource::make($card);
         }
 
-        return ErrorConfirmCardResource::make($atmosConfirmCardDto->result, CardResource::make($card));
+        return ErrorConfirmCardResource::make($cardServiceResponse->result, CardResource::make($card));
     }
 
     #[OA\Delete(

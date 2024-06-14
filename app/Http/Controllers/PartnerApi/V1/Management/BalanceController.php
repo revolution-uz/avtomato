@@ -23,7 +23,6 @@ use App\Models\Company\BalanceFund;
 use App\Services\AtmosService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 use Spatie\FlareClient\Http\Exceptions\BadResponse;
 
@@ -51,25 +50,22 @@ class BalanceController extends Controller
     )]
     public function funds(BalanceFundFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'amount', 'phone_number', 'card_number']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'amount', 'phone_number', 'card_number', 'created_at']; // TODO add all fields, it's just for testing
 
         return BalanceFundResource::collection(
             BalanceFund::query()
-                ->when(
-                    $request->search,
-                    fn (Builder $q) => $q
-                        ->where('phone_number', 'ILIKE', '%' . $request->search . '%')
-                        ->where('card_number', 'ILIKE', '%' . $request->search . '%')
-
-                )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->search, function (Builder $q) use ($request) {
+                    $search = '%' . $request->search . '%';
+                    $q->where(function (Builder $query) use ($search) {
+                        $query->where('phone_number', 'ILIKE', $search)
+                            ->orWhere('card_number', 'ILIKE', $search);
+                    });
+                })
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Get(
@@ -88,7 +84,7 @@ class BalanceController extends Controller
     )]
     public function charges(BalanceChargesFilterRequest $request): AnonymousResourceCollection
     {
-        $sortables = ['id', 'feature_id', 'amount']; // TODO add all fields, it's just for testing
+        $request->sortables = ['id', 'feature_id', 'amount', 'created_at']; // TODO add all fields, it's just for testing
 
         return BalanceChargesResource::collection(
             BalanceCharge::query()
@@ -98,14 +94,11 @@ class BalanceController extends Controller
                         ->where('feature_id', $request->search)
 
                 )
-                ->when(
-                    $request->sort && in_array($request->sort, $sortables),
-                    fn (Builder $q) => Str::startsWith($request->sort, '-')
-                        ? $q->orderBy(Str::substr($request->sort, 1), 'desc')
-                        : $q->orderBy($request->sort)
-                )
+                ->when($request->isSortable(), function (Builder $q) use ($request) {
+                    $q->orderBy($request->sortField(), $request->sortDirection());
+                })
                 ->paginate($request->per_page)
-        )->additional(['sortables' => $sortables]);
+        )->additional(['sortables' => $request->sortables]);
     }
 
     #[OA\Post(
