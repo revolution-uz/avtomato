@@ -4,6 +4,8 @@ namespace App\Http\Requests\Installment;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -23,7 +25,26 @@ class TransactionTypesDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:transaction_types,id',
+            'ids.*' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    if ($value < 100) {
+                        $fail(__('api.You cannot delete', [
+                            'item' => TransactionType::query()->where('id', $value)->first()->name,
+                        ]));
+                    }
+                    if (! TransactionType::query()->where('id', $value)->exists()) {
+                        $fail(__('api.not found'));
+                    }
+                    if (Transaction::query()->where('transaction_type_id', $value)->exists()) {
+                        $fail(__('api.are used', [
+                            'item' => __('api.Transaction Type'),
+                            'element' => __('api.Transaction'),
+                        ]));
+                    }
+                },
+            ],
         ];
     }
 

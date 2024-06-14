@@ -4,6 +4,8 @@ namespace App\Http\Requests\Management;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Branch;
+use App\Models\Company\Installment;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -23,7 +25,21 @@ class BranchesDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:branches,id',
+            'ids.*' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    if (! Branch::query()->where('id', $value)->exists()) {
+                        $fail(__('api.not found'));
+                    }
+                    if (Installment::query()->where('branch_id', $value)->exists()) {
+                        $fail(__('api.are used', [
+                            'item' => __('api.Branch'),
+                            'element' => __('api.Installment'),
+                        ]));
+                    }
+                },
+            ],
         ];
     }
 
