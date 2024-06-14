@@ -69,7 +69,7 @@ class CustomerCardService
             }
             $customResponse = AtmosConfirmCardResponseDTO::from(['result' => new AtmosResultDTO(
                 $confirmed ? 'OK' : 'FAILED',
-                $confirmed ? 'Success' : 'OTP confirmation failed'
+                $confirmed ? __('api.success') : __('api.otp_was_wrong')
             )]);
 
             return [$card, $customResponse];
