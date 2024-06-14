@@ -8,4 +8,6 @@ return [
     'not found' => 'Topilmadi',
     'Role' => 'Rol',
     'User' => 'Foydalanuvchi',
+    'success' => 'Muvaffaqiyatli',
+    'otp_was_wrong' => 'Tasdiqlash kodi xato',
 ];
