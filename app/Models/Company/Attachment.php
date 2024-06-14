@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
@@ -20,9 +21,9 @@ use Throwable;
  * @property string $mime
  * @property int $attachmentable_id
  * @property string $attachmentable_type
- * @property string $created_at
- * @property string $updated_at
- * @property string $deleted_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
  * @property-read string $url
  */
 class Attachment extends Model

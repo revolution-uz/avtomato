@@ -4,7 +4,6 @@ namespace App\Services\User;
 
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Http\Requests\User\AvatarRequest;
-use App\Http\Requests\User\PasswordRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserThemeRequest;
 use App\Http\Requests\User\UserUpdateRequest;
@@ -30,10 +29,10 @@ class UserService
         return $user;
     }
 
-    public function updatePassword(User $user, PasswordRequest $request): User
+    public function updatePassword(User $user, string $newPassword): User
     {
         $user->updateOrFail([
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($newPassword),
         ]);
 
         return $user;

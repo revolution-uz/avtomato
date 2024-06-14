@@ -9,7 +9,7 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
 /**
  * @property int $id
- * @property string $name
+ * @property SettingsEnum $name
  * @property string $value
  * @property SettingsTypeEnum|null $type
  * @property string $description
@@ -29,6 +29,7 @@ class Settings extends Model
 
     protected $casts = [
         'type' => SettingsTypeEnum::class,
+        'name' => SettingsEnum::class,
     ];
 
     public static function getConfig(SettingsEnum $settings): ?string

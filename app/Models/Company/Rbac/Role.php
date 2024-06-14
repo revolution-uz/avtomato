@@ -5,6 +5,7 @@ namespace App\Models\Company\Rbac;
 use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Models\Company\Branch;
 use App\Traits\LogsActivityDirtyOnlyTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,6 +17,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int $id
  * @property string $name
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
  * @property-read RolePermission[] $rolePermissions
  * @property-read Permission[] $permissions
  */

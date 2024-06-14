@@ -27,13 +27,16 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $last_name
  * @property string $full_name
  * @property string $phone
+ * @property int $role_id
  * @property UserStatusEnum $status
  * @property UserTemplateThemeDto $template_theme
  * @property string $language
+ * @property string $password
  * @property-read Attachment|null $avatar
  * @property-read Role|null $role
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
  */
 class User extends Authenticatable
 {
