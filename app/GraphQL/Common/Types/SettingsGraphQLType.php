@@ -27,7 +27,7 @@ class SettingsGraphQLType extends GraphQLType
                 'description' => 'Mobile App Maintenance Mode',
                 'resolve' => function (Collection $root) {
                     /** @var Collection<int, Settings> $root */
-                    return $root->first(fn (Settings $settings) => $settings->name === SettingsEnum::PARTNER_APP_MAINTENANCE_MODE) ?? true;
+                    return $root->first(fn (Settings $settings) => $settings->name === SettingsEnum::PARTNER_APP_MAINTENANCE_MODE)->value ?? true;
                 },
             ],
             'web_maintenance_mode' => [
@@ -35,7 +35,7 @@ class SettingsGraphQLType extends GraphQLType
                 'description' => 'Web Panel Maintenance Mode',
                 'resolve' => function (Collection $root) {
                     /** @var Collection<int, Settings> $root */
-                    return $root->first(fn (Settings $settings) => $settings->name === SettingsEnum::PARTNER_WEB_MAINTENANCE_MODE) ?? true;
+                    return $root->first(fn (Settings $settings) => $settings->name === SettingsEnum::PARTNER_WEB_MAINTENANCE_MODE)->value ?? true;
                 },
             ],
             'app_min_version' => [
@@ -43,7 +43,7 @@ class SettingsGraphQLType extends GraphQLType
                 'description' => 'Mobile App Minimum Version',
                 'resolve' => function (Collection $root) {
                     /** @var Collection<int, Settings> $root */
-                    return $root->first(fn (Settings $settings) => $settings->name === SettingsEnum::PARTNER_APP_MIN_VERSION) ?? 0;
+                    return $root->first(fn (Settings $settings) => $settings->name === SettingsEnum::PARTNER_APP_MIN_VERSION)->value ?? 0;
                 },
             ],
             'balance' => [
