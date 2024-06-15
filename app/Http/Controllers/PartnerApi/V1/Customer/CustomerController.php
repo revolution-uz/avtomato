@@ -259,7 +259,7 @@ class CustomerController extends Controller
     {
 
         $request->sortables = ['id', 'tariff_id', 'amount', 'created_at', 'starts_in', 'next_pay_date']; // TODO add all fields, it's just for testing
-        $branches = RbacHelper::getEnabledBranches(PermissionEnum::CUSTOMER_VIEW_INSTALLMENTS);
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW);
 
         return InstallmentResource::collection(
             Installment::query()
