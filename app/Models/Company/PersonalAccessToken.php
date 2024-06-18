@@ -14,6 +14,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name
  * @property string $token
  * @property array $abilities
+ * @property Carbon|null $created_at
  * @property Carbon|null $last_used_at
  * @property string|null $device_ip
  * @property string|null $device_type
@@ -22,6 +23,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
     use SoftDeletes, TenantConnection;
+
+    public static array $sortables = ['id', 'name', 'device_ip', 'device_type', 'device_os', 'last_used_at'];
 
     protected $fillable = [
         'name',

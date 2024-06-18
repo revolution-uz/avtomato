@@ -112,8 +112,8 @@ class ProfileController extends Controller
     }
 
     #[OA\Put(
-        path: '/api/v1/profile/me',
-        description: 'Profile me route',
+        path: '/api/v1/profile/update',
+        description: 'Profile update route',
         requestBody: new OA\RequestBody(
             description: 'Profile update request body',
             required: true,
