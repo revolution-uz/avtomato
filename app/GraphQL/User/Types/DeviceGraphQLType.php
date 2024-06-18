@@ -47,7 +47,7 @@ class DeviceGraphQLType extends GraphQLType
                 },
             ],
             'device_os' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::string(),
                 'resolve' => function (PersonalAccessToken $root) {
                     return $root->device_os;
                 },
