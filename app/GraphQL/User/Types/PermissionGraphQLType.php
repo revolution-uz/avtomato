@@ -21,7 +21,7 @@ class PermissionGraphQLType extends GraphQLType
 
         foreach (PermissionEnum::cases() as $permission) {
             $fields[$permission->value] = [
-                'type' => Type::listOf(Type::string()),
+                'type' => Type::string(),
                 'description' => 'One permission item',
                 'resolve' => fn (array $root) => isset($root[$permission->value]) ? json_encode($root[$permission->value]) : null,
             ];
