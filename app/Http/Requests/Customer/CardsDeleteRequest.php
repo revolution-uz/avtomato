@@ -4,6 +4,8 @@ namespace App\Http\Requests\Customer;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Card;
+use App\Models\Company\InstallmentCard;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -23,7 +25,21 @@ class CardsDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:cards,id',
+            'ids.*' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    if (! Card::query()->where('id', $value)->exists()) {
+                        $fail(__('api.not found'));
+                    }
+                    if (InstallmentCard::query()->where('card_id', $value)->exists()) {
+                        $fail(__('api.are used', [
+                            'item' => __('api.Card'),
+                            'element' => __('api.Installment'),
+                        ]));
+                    }
+                },
+            ],
         ];
     }
 

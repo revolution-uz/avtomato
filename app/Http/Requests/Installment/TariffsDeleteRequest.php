@@ -4,6 +4,8 @@ namespace App\Http\Requests\Installment;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Installment;
+use App\Models\Company\Tariff;
 use Illuminate\Foundation\Http\FormRequest;
 use OpenApi\Attributes as OA;
 
@@ -23,7 +25,21 @@ class TariffsDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:tariffs,id',
+            'ids.*' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    if (! Tariff::query()->where('id', $value)->exists()) {
+                        $fail(__('api.not found'));
+                    }
+                    if (Installment::query()->where('tariff_id', $value)->exists()) {
+                        $fail(__('api.are used', [
+                            'item' => __('api.Tariff'),
+                            'element' => __('api.Installment'),
+                        ]));
+                    }
+                },
+            ],
         ];
     }
 

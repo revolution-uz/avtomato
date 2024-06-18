@@ -3,7 +3,11 @@
 return [
     'guarantor' => 'Kafil',
     'debtor' => 'Qarz oluvchi',
-    'roles are used' => 'Quyidagi role-larni o`chirib bo`lmaydi chunki ular orqali foydalanuvchi yaratilgan',
+    'are used' => 'Quyidagi :item-larni o`chirib bo`lmaydi chunki ular orqali :element yaratilgan',
+    'You cannot delete' => ':item-ni o\'chirolmaysiz',
+    'not found' => 'Topilmadi',
+    'Role' => 'Rol',
+    'User' => 'Foydalanuvchi',
     'success' => 'Muvaffaqiyatli',
     'otp_was_wrong' => 'Tasdiqlash kodi xato',
 ];
