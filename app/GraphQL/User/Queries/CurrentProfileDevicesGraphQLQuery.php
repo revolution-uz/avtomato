@@ -34,6 +34,14 @@ class CurrentProfileDevicesGraphQLQuery extends Query
                 'name' => 'search',
                 'type' => Type::string(),
             ],
+            'page' => [
+                'name' => 'page',
+                'type' => Type::int(),
+            ],
+            'per_page' => [
+                'name' => 'per_page',
+                'type' => Type::int(),
+            ],
         ];
     }
 
