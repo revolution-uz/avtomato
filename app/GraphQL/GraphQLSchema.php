@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\User;
+namespace App\GraphQL;
 
 use App\GraphQL\User\Mutations\ChangePasswordGraphQLMutation;
 use App\GraphQL\User\Mutations\LogoutGraphQLMutation;
@@ -15,7 +15,7 @@ use App\GraphQL\User\Types\RoleGraphQLType;
 use App\GraphQL\User\Types\TemplateThemeGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
-class UsersGraphQLSchema implements ConfigConvertible
+class GraphQLSchema implements ConfigConvertible
 {
     public function toConfig(): array
     {
