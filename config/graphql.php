@@ -21,6 +21,7 @@ return [
         'middleware' => [
             InitializeTenancyByDomain::class,
             PreventAccessFromCentralDomains::class,
+            \Illuminate\Http\Middleware\HandleCors::class,
         ],
 
         // Additional route group attributes
