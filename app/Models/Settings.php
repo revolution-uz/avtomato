@@ -37,8 +37,11 @@ class Settings extends Model
         if (! self::$_cache) {
             self::$_cache = self::query()
                 ->get()
-                ->pluck('value', 'name')
-                ->toArray();
+                ->reduce(function (array $result, self $value, $key) {
+                    $result[$value->name->value] = $value->value;
+
+                    return $result;
+                }, []);
         }
 
         return self::$_cache[$settings->value] ?? null;
