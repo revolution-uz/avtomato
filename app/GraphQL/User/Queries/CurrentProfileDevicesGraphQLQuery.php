@@ -74,8 +74,8 @@ class CurrentProfileDevicesGraphQLQuery extends Query
     protected function rules(array $args = []): array
     {
         return [
-            'sort' => 'string|regex:/^[-]?[a-z_]+$/',
-            'search' => 'string|max:255',
+            'sort' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
+            'search' => 'nullable|string|max:255',
         ];
     }
 }
