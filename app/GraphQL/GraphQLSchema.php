@@ -9,7 +9,6 @@ use App\GraphQL\User\Queries\CurrentProfileGraphQLQuery;
 use App\GraphQL\User\Types\AdminGraphQLType;
 use App\GraphQL\User\Types\AttachmentGraphQLType;
 use App\GraphQL\User\Types\DeviceGraphQLType;
-use App\GraphQL\User\Types\PermissionDetailsGraphQLType;
 use App\GraphQL\User\Types\PermissionGraphQLType;
 use App\GraphQL\User\Types\RoleGraphQLType;
 use App\GraphQL\User\Types\TemplateThemeGraphQLType;
@@ -31,7 +30,6 @@ class GraphQLSchema implements ConfigConvertible
             'types' => [
                 AdminGraphQLType::class,
                 AttachmentGraphQLType::class,
-                PermissionDetailsGraphQLType::class,
                 PermissionGraphQLType::class,
                 RoleGraphQLType::class,
                 TemplateThemeGraphQLType::class,

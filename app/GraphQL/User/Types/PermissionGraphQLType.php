@@ -4,7 +4,6 @@ namespace App\GraphQL\User\Types;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class PermissionGraphQLType extends GraphQLType
@@ -22,9 +21,9 @@ class PermissionGraphQLType extends GraphQLType
 
         foreach (PermissionEnum::cases() as $permission) {
             $fields[$permission->value] = [
-                'type' => Type::listOf(GraphQL::type(PermissionDetailsGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::listOf(Type::string()),
                 'description' => 'One permission item',
-                'resolve' => fn (array $root) => $root[$permission->value],
+                'resolve' => fn (array $root) => isset($root[$permission->value]) ? json_encode($root[$permission->value]) : null,
             ];
         }
 
