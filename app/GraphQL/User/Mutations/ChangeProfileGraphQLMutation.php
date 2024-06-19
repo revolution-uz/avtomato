@@ -34,10 +34,6 @@ class ChangeProfileGraphQLMutation extends Mutation
                 'name' => 'first_name',
                 'type' => Type::string(),
             ],
-            'avatar' => [
-                'name' => 'avatar',
-                'type' => Type::string(),
-            ],
         ];
     }
 
@@ -56,7 +52,6 @@ class ChangeProfileGraphQLMutation extends Mutation
         return [
             'first_name' => 'nullable|string|max:50',
             'last_name' => 'nullable|string|max:50',
-            'avatar' => 'nullable|string|max:255',
         ];
     }
 }
