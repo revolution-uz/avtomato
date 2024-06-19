@@ -21,7 +21,7 @@ class CurrentProfileActivityLogsGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ActivityLogGraphQLType::GRAPHQL_TYPE_NAME));
+        return GraphQL::paginate(ActivityLogGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
