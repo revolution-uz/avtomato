@@ -1,9 +1,9 @@
 <?php
 
-namespace App\GraphQL\User\Queries;
+namespace App\GraphQL\Management\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\User\Types\ActivityLogGraphQLType;
+use App\GraphQL\Management\Types\ActivityLogGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ActivityLog;
 use Closure;

@@ -1,53 +1,53 @@
 <?php
 
-namespace App\GraphQL\User\Mutations;
+namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Models\Company\PersonalAccessToken;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Mutation;
 
-class RevokeDeviceGraphQLMutation extends Mutation
+class ChangeLanguageGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'revokeDevices',
+        'name' => 'changeLanguage',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(Type::boolean());
+        return Type::nonNull(Type::string());
     }
 
     public function args(): array
     {
         return [
-            'ids' => [
-                'name' => 'ids',
-                'type' => Type::nonNull(Type::listOf(Type::int())),
+            'language' => [
+                'name' => 'language',
+                'type' => Type::nonNull(Type::string()),
             ],
         ];
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::PROFILE_REVOKE_DEVICE);
+        return RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_LANGUAGE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        PersonalAccessToken::query()->whereIn('id', $args['ids'])->delete();
+        $user = auth()->user();
+        $user->update(['language' => $args['language']]);
+        $user->refresh();
 
-        return true;
+        return $user->language;
     }
 
     protected function rules(array $args = []): array
     {
         return [
-            'ids' => 'array',
-            'ids.*' => 'integer|exists:personal_access_tokens,id',
+            'language' => 'required|string|max:2|in:ru,uz,oz,en',
         ];
     }
 }

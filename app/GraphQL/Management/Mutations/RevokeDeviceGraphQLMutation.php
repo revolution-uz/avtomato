@@ -1,20 +1,19 @@
 <?php
 
-namespace App\GraphQL\User\Mutations;
+namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Rules\CheckCurrentPassword;
-use App\Services\User\UserService;
+use App\Models\Company\PersonalAccessToken;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Mutation;
 
-class ChangePasswordGraphQLMutation extends Mutation
+class RevokeDeviceGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'changePassword',
+        'name' => 'revokeDevices',
     ];
 
     public function type(): Type
@@ -25,25 +24,21 @@ class ChangePasswordGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
-            'old_password' => [
-                'name' => 'old_password',
-                'type' => Type::nonNull(Type::string()),
-            ],
-            'password' => [
-                'name' => 'password',
-                'type' => Type::nonNull(Type::string()),
+            'ids' => [
+                'name' => 'ids',
+                'type' => Type::nonNull(Type::listOf(Type::int())),
             ],
         ];
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_PASSWORD);
+        return RbacHelper::checkPermission(PermissionEnum::PROFILE_REVOKE_DEVICE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        (new UserService)->updatePassword(auth()->user(), $args['password']);
+        PersonalAccessToken::query()->whereIn('id', $args['ids'])->delete();
 
         return true;
     }
@@ -51,8 +46,8 @@ class ChangePasswordGraphQLMutation extends Mutation
     protected function rules(array $args = []): array
     {
         return [
-            'old_password' => ['required', 'string', 'min:8'],
-            'password' => ['required', 'string', 'min:8', 'confirmed', new CheckCurrentPassword],
+            'ids' => 'array',
+            'ids.*' => 'integer|exists:personal_access_tokens,id',
         ];
     }
 }

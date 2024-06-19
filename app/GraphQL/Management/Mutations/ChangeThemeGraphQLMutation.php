@@ -1,30 +1,33 @@
 <?php
 
-namespace App\GraphQL\User\Mutations;
+namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Services\User\UserService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
-class ChangeLanguageGraphQLMutation extends Mutation
+class ChangeThemeGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'changeLanguage',
+        'name' => 'changeTheme',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(Type::string());
+        return Type::nonNull(GraphQL::type(TemplateThemeGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
     {
         return [
-            'language' => [
-                'name' => 'language',
+            'layout_name' => [
+                'name' => 'layout_name',
                 'type' => Type::nonNull(Type::string()),
             ],
         ];
@@ -32,22 +35,20 @@ class ChangeLanguageGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_LANGUAGE);
+        return RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_THEME);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $user = auth()->user();
-        $user->update(['language' => $args['language']]);
-        $user->refresh();
+        $user = (new UserService)->updateTheme(auth()->user(), $args);
 
-        return $user->language;
+        return $user->template_theme;
     }
 
     protected function rules(array $args = []): array
     {
         return [
-            'language' => 'required|string|max:2|in:ru,uz,oz,en',
+            'layout_name' => ['required', 'string'],
         ];
     }
 }

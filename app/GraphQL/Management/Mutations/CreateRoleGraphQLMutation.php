@@ -1,33 +1,34 @@
 <?php
 
-namespace App\GraphQL\User\Mutations;
+namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\User\Types\TemplateThemeGraphQLType;
+use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Services\User\UserService;
+use App\Models\Company\Rbac\Role;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
-class ChangeThemeGraphQLMutation extends Mutation
+class CreateRoleGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'changeTheme',
+        'name' => 'createRole',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(TemplateThemeGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(RoleGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
     {
         return [
-            'layout_name' => [
-                'name' => 'layout_name',
+            'name' => [
+                'name' => 'name',
                 'type' => Type::nonNull(Type::string()),
             ],
         ];
@@ -35,20 +36,29 @@ class ChangeThemeGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_THEME);
+        return RbacHelper::checkPermission(PermissionEnum::ROLE_CREATE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $user = (new UserService)->updateTheme(auth()->user(), $args);
+        $model = new Role;
+        $model->fill(['name' => $args['name']]);
+        $model->saveOrFail();
 
-        return $user->template_theme;
+        return $model;
     }
 
     protected function rules(array $args = []): array
     {
         return [
-            'layout_name' => ['required', 'string'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('roles', 'name')
+                    ->withoutTrashed()
+                    ->ignore($this->id),
+            ],
         ];
     }
 }

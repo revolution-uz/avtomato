@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\User\Mutations;
+namespace App\GraphQL\Management\Mutations;
 
 use App\Models\Company\PersonalAccessToken;
 use Closure;

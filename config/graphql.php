@@ -82,7 +82,7 @@ return [
     //  ]
     //
     'schemas' => [
-        'default' => \App\GraphQL\GraphQLSchema::class,
+        'management' => \App\GraphQL\Management\ManagementGraphQLSchema::class,
         'common' => CommonGraphQLSchema::class,
     ],
 

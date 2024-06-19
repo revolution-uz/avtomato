@@ -29,6 +29,8 @@ class Role extends Model
     use LogsActivityDirtyOnlyTrait;
     use SoftDeletes;
 
+    public static array $sortables = ['id', 'name', 'created_at', 'updated_at'];
+
     protected $fillable = [
         'name',
     ];
