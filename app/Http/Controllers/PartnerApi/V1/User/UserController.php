@@ -145,7 +145,7 @@ class UserController extends Controller
     public function update(int $id, UserUpdateRequest $request): SingleUserResource
     {
         $user = User::findOrFail($id);
-        $this->userService->updateDetails($user, $request);
+        $this->userService->updateDetails($user, $request->validated());
 
         return new SingleUserResource($user);
     }
@@ -197,7 +197,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return new SingleUserResource($this->userService->updateTheme($user, $request));
+        return new SingleUserResource($this->userService->updateTheme($user, $request->getData()));
     }
 
     #[OA\Post(
@@ -220,7 +220,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return new SingleUserResource($this->userService->updateAvatar($user, $request));
+        return new SingleUserResource($this->userService->updateAvatar($user, $request->file('avatar')));
     }
 
     #[OA\Get(

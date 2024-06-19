@@ -3,12 +3,10 @@
 namespace App\Services\User;
 
 use App\Enums\Company\AttachmentTypeEnum;
-use App\Http\Requests\User\AvatarRequest;
 use App\Http\Requests\User\UserCreateRequest;
-use App\Http\Requests\User\UserThemeRequest;
-use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\Company\Attachment;
 use App\Models\Company\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -21,10 +19,9 @@ class UserService
         return User::create($attributes);
     }
 
-    public function updateDetails(User $user, UserUpdateRequest $request): User
+    public function updateDetails(User $user, array $request): User
     {
-        $attributes = $request->validated();
-        $user->updateOrFail($attributes);
+        $user->updateOrFail($request);
 
         return $user;
     }
@@ -38,18 +35,18 @@ class UserService
         return $user;
     }
 
-    public function updateTheme(User $user, UserThemeRequest $request): User
+    public function updateTheme(User $user, array $request): User
     {
         $user->updateOrFail([
-            'template_theme' => $request->getData(),
+            'template_theme' => $request,
         ]);
 
         return $user;
     }
 
-    public function updateAvatar(User $user, AvatarRequest $request): User
+    public function updateAvatar(User $user, UploadedFile $file): User
     {
-        Attachment::upload($request->file('avatar'), AttachmentTypeEnum::AVATAR, $user);
+        Attachment::upload($file, AttachmentTypeEnum::AVATAR, $user);
         $user->refresh();
 
         return $user;

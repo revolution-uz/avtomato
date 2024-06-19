@@ -85,7 +85,7 @@ class ProfileController extends Controller
     )]
     public function changeTheme(UserThemeRequest $request)
     {
-        return new SingleUserResource($this->userService->updateTheme(auth()->user(), $request));
+        return new SingleUserResource($this->userService->updateTheme(auth()->user(), $request->getData()));
     }
 
     #[OA\Post(
@@ -128,7 +128,7 @@ class ProfileController extends Controller
     )]
     public function update(UserUpdateRequest $request)
     {
-        return new SingleUserResource($this->userService->updateDetails(auth()->user(), $request));
+        return new SingleUserResource($this->userService->updateDetails(auth()->user(), $request->validated()));
     }
 
     #[OA\Post(
@@ -149,7 +149,7 @@ class ProfileController extends Controller
     )]
     public function uploadAvatar(AvatarRequest $request)
     {
-        return new SingleUserResource($this->userService->updateAvatar(auth()->user(), $request));
+        return new SingleUserResource($this->userService->updateAvatar(auth()->user(), $request->file('avatar')));
     }
 
     #[OA\Get(

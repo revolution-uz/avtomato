@@ -16,6 +16,13 @@ class ActivityLogGraphQLType extends GraphQLType
         'model' => ActivityLog::class, // to get sortable columns
     ];
 
+    public static function logMessageBuilder($modelName, $modelId, $event): string
+    {
+        $modelName = trans('models.' . $modelName);
+
+        return trans('logging.' . $event, ['entity' => $modelName, 'id' => $modelId]);
+    }
+
     public function fields(): array
     {
         return [
@@ -38,12 +45,12 @@ class ActivityLogGraphQLType extends GraphQLType
                 },
             ],
             // TODO write format for
-//            'properties' => [
-//                'type' => Type::nonNull(GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME)),
-//                'resolve' => function (ActivityLog $root) {
-//                    return $root->causer;
-//                },
-//            ],
+            //            'properties' => [
+            //                'type' => Type::nonNull(GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME)),
+            //                'resolve' => function (ActivityLog $root) {
+            //                    return $root->causer;
+            //                },
+            //            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => function (ActivityLog $root) {
@@ -57,12 +64,5 @@ class ActivityLogGraphQLType extends GraphQLType
                 },
             ],
         ];
-    }
-
-    public static function logMessageBuilder($modelName, $modelId, $event): string
-    {
-        $modelName = trans('models.' . $modelName);
-
-        return trans('logging.' . $event, ['entity' => $modelName, 'id' => $modelId]);
     }
 }
