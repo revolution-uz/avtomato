@@ -13,7 +13,7 @@ class DeviceGraphQLType extends GraphQLType
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
         'description' => 'Device GraphQL Type',
-        'model' => PersonalAccessToken::class,
+        'model' => PersonalAccessToken::class, // to get sortable columns
     ];
 
     public function fields(): array

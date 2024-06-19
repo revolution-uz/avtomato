@@ -43,6 +43,10 @@ class ActivityLogsGraphQLQuery extends Query
                 'name' => 'per_page',
                 'type' => Type::int(),
             ],
+            'admin_id' => [
+                'name' => 'admin_id',
+                'type' => Type::nonNull(Type::int()),
+            ],
         ];
     }
 
@@ -54,7 +58,7 @@ class ActivityLogsGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return ActivityLog::query()
-            ->where('causer_id', $args['user_id'])
+            ->where('causer_id', $args['admin_id'])
             ->with('causer')
             ->when($args['search'], function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
@@ -76,7 +80,7 @@ class ActivityLogsGraphQLQuery extends Query
             'search' => 'nullable|string|max:255',
             'page' => 'nullable|int|min:1',
             'per_page' => 'nullable|int|min:5|max:100',
-            'user_id' => 'required|int|exists:users,id',
+            'admin_id' => 'required|int|exists:users,id',
         ];
     }
 }

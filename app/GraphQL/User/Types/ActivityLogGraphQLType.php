@@ -13,6 +13,7 @@ class ActivityLogGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
+        'model' => ActivityLog::class, // to get sortable columns
     ];
 
     public function fields(): array
@@ -24,13 +25,13 @@ class ActivityLogGraphQLType extends GraphQLType
                     return $root->id;
                 },
             ],
-            'user_id' => [
+            'admin_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => function (ActivityLog $root) {
                     return $root->causer_id;
                 },
             ],
-            'user' => [
+            'admin' => [
                 'type' => Type::nonNull(GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => function (ActivityLog $root) {
                     return $root->causer;

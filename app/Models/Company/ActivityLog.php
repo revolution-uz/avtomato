@@ -27,6 +27,8 @@ class ActivityLog extends Activity
 {
     use TenantConnection;
 
+    public static array $sortables = ['id', 'admin_id', 'description'];
+
     protected $casts = [
         'properties' => 'collection',
         'event' => LogType::class,
