@@ -7,6 +7,7 @@ use App\GraphQL\User\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\User\Queries\CurrentProfileDevicesGraphQLQuery;
 use App\GraphQL\User\Queries\CurrentProfileGraphQLQuery;
 use App\GraphQL\User\Queries\CurrentProfileActivityLogsGraphQLQuery;
+use App\GraphQL\User\Queries\SingleActivityLogGraphQLQuery;
 use App\GraphQL\User\Types\AdminGraphQLType;
 use App\GraphQL\User\Types\AttachmentGraphQLType;
 use App\GraphQL\User\Types\DeviceGraphQLType;
@@ -25,6 +26,7 @@ class GraphQLSchema implements ConfigConvertible
                 CurrentProfileGraphQLQuery::class,
                 CurrentProfileDevicesGraphQLQuery::class,
                 CurrentProfileActivityLogsGraphQLQuery::class,
+                SingleActivityLogGraphQLQuery::class,
             ],
             'mutation' => [
                 LogoutGraphQLMutation::class,
