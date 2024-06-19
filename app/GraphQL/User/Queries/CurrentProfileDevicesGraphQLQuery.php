@@ -62,6 +62,7 @@ class CurrentProfileDevicesGraphQLQuery extends Query
                         ->orWhere('device_os', 'ILIKE', $search);
                 });
             })
+            // TODO sortable
 //            ->when($request->isSortable(), function (Builder $q) use ($request) {
 //                $q->orderBy($request->sortField(), $request->sortDirection());
 //            })
@@ -76,6 +77,8 @@ class CurrentProfileDevicesGraphQLQuery extends Query
         return [
             'sort' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
             'search' => 'nullable|string|max:255',
+            'page' => 'nullable|int|min:1',
+            'per_page' => 'nullable|int|min:5|max:100',
         ];
     }
 }

@@ -6,9 +6,11 @@ use App\GraphQL\User\Mutations\ChangePasswordGraphQLMutation;
 use App\GraphQL\User\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\User\Queries\CurrentProfileDevicesGraphQLQuery;
 use App\GraphQL\User\Queries\CurrentProfileGraphQLQuery;
+use App\GraphQL\User\Queries\CurrentProfileActivityLogsGraphQLQuery;
 use App\GraphQL\User\Types\AdminGraphQLType;
 use App\GraphQL\User\Types\AttachmentGraphQLType;
 use App\GraphQL\User\Types\DeviceGraphQLType;
+use App\GraphQL\User\Types\ActivityLogGraphQLType;
 use App\GraphQL\User\Types\PermissionGraphQLType;
 use App\GraphQL\User\Types\RoleGraphQLType;
 use App\GraphQL\User\Types\TemplateThemeGraphQLType;
@@ -22,6 +24,7 @@ class GraphQLSchema implements ConfigConvertible
             'query' => [
                 CurrentProfileGraphQLQuery::class,
                 CurrentProfileDevicesGraphQLQuery::class,
+                CurrentProfileActivityLogsGraphQLQuery::class,
             ],
             'mutation' => [
                 LogoutGraphQLMutation::class,
@@ -34,6 +37,7 @@ class GraphQLSchema implements ConfigConvertible
                 RoleGraphQLType::class,
                 TemplateThemeGraphQLType::class,
                 DeviceGraphQLType::class,
+                ActivityLogGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
