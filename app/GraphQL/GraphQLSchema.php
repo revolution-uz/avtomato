@@ -4,6 +4,7 @@ namespace App\GraphQL;
 
 use App\GraphQL\User\Mutations\ChangePasswordGraphQLMutation;
 use App\GraphQL\User\Mutations\LogoutGraphQLMutation;
+use App\GraphQL\User\Queries\ActivityLogsGraphQLQuery;
 use App\GraphQL\User\Queries\CurrentProfileDevicesGraphQLQuery;
 use App\GraphQL\User\Queries\CurrentProfileGraphQLQuery;
 use App\GraphQL\User\Queries\CurrentProfileActivityLogsGraphQLQuery;
@@ -27,6 +28,7 @@ class GraphQLSchema implements ConfigConvertible
                 CurrentProfileDevicesGraphQLQuery::class,
                 CurrentProfileActivityLogsGraphQLQuery::class,
                 SingleActivityLogGraphQLQuery::class,
+                ActivityLogsGraphQLQuery::class,
             ],
             'mutation' => [
                 LogoutGraphQLMutation::class,
