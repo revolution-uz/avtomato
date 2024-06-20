@@ -174,7 +174,7 @@ class CreateCustomerGraphQLMutation extends Mutation
                 'size:7',
                 'regex:/^[0-9]+$/',
                 Rule::unique('customers', 'passport_number')
-                    ->where('passport_series', $this->passport_series),
+                    ->where('passport_series', $args['passport_series']),
             ],
             'passport_given_date' => [
                 'required',
