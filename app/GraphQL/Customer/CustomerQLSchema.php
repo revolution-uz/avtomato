@@ -8,6 +8,7 @@ use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\PhoneGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\GraphQL\Customer\Mutations\CreateCustomerGraphQLMutation;
+use App\GraphQL\Customer\Mutations\UpdateCustomerGraphQLMutation;
 use App\GraphQL\Customer\Queries\CustomersGraphQLQuery;
 use App\GraphQL\Customer\Queries\SingleCustomerGraphQLQuery;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
@@ -23,7 +24,8 @@ class CustomerQLSchema implements ConfigConvertible
                 SingleCustomerGraphQLQuery::class,
             ],
             'mutation' => [
-                CreateCustomerGraphQLMutation::class,
+                //                CreateCustomerGraphQLMutation::class,
+                //                UpdateCustomerGraphQLMutation::class,
             ],
             'types' => [
                 AddressGraphQLType::class,

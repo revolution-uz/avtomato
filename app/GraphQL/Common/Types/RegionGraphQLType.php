@@ -19,7 +19,7 @@ class RegionGraphQLType extends GraphQLType
     {
         return [
             'id' => [
-                'type' => Type::int(),
+                'type' => Type::nonNull(Type::int()),
                 'description' => 'ID of region',
                 'resolve' => function (Region $root) {
                     return $root->id;

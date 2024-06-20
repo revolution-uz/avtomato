@@ -20,7 +20,7 @@ class MahallaGraphQLType extends GraphQLType
     {
         return [
             'id' => [
-                'type' => Type::int(),
+                'type' => Type::nonNull(Type::int()),
                 'description' => 'ID of mahalla',
                 'resolve' => function (Mahalla $root) {
                     return $root->id;

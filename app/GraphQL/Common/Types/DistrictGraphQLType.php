@@ -20,7 +20,7 @@ class DistrictGraphQLType extends GraphQLType
     {
         return [
             'id' => [
-                'type' => Type::int(),
+                'type' => Type::nonNull(Type::int()),
                 'description' => 'ID of district',
                 'resolve' => function (District $root) {
                     return $root->id;

@@ -20,7 +20,7 @@ class AddressGraphQLType extends GraphQLType
     {
         return [
             'id' => [
-                'type' => Type::int(),
+                'type' => Type::nonNull(Type::int()),
                 'description' => 'ID of address',
                 'resolve' => function (Address $root) {
                     return $root->id;

@@ -19,7 +19,7 @@ class PhoneGraphQLType extends GraphQLType
     {
         return [
             'id' => [
-                'type' => Type::int(),
+                'type' => Type::nonNull(Type::int()),
                 'description' => 'ID of phone',
                 'resolve' => function (Phone $root) {
                     return $root->id;
