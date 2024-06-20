@@ -74,7 +74,7 @@ class UpdateRoleGraphQLMutation extends Mutation
                 'max:255',
                 Rule::unique('roles', 'name')
                     ->withoutTrashed()
-                    ->ignore($this->id),
+                    ->ignore($args['id']),
             ],
         ];
     }

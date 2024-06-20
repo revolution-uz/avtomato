@@ -3,8 +3,7 @@
 namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\Enums\Company\Rbac\UserRoleEnum;
-use App\Exceptions\ForbiddenException;
+use App\GraphQL\Common\Types\IDsGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Rbac\Role;
@@ -12,7 +11,6 @@ use App\Models\Company\User;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
@@ -32,11 +30,7 @@ class DeleteRoleGraphQLMutation extends Mutation
         return [
             'ids' => [
                 'name' => 'id',
-                'type' => Type::nonNull(Type::int()),
-            ],
-            'name' => [
-                'name' => 'name',
-                'type' => Type::nonNull(Type::string()),
+                'type' => GraphQL::type(IDsGraphQLType::GRAPHQL_TYPE_NAME),
             ],
         ];
     }
@@ -48,16 +42,9 @@ class DeleteRoleGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        /** @var Role $role */
-        $role = Role::findOrFail($args['id']);
+        Role::query()->whereIn('id', $args['ids'])->delete();
 
-        if ($role->name === UserRoleEnum::ADMIN->value) {
-            throw new ForbiddenException('You can\'t update admin role');
-        }
-
-        $role->name = $args['name'];
-
-        return $role->saveOrFail();
+        return true;
     }
 
     protected function rules(array $args = []): array
@@ -84,14 +71,6 @@ class DeleteRoleGraphQLMutation extends Mutation
                         ]));
                     }
                 },
-            ],
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('roles', 'name')
-                    ->withoutTrashed()
-                    ->ignore($this->id),
             ],
         ];
     }
