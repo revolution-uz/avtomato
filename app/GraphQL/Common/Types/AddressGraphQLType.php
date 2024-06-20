@@ -48,21 +48,21 @@ class AddressGraphQLType extends GraphQLType
                 },
             ],
             'region' => [
-                'type' => GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::nonNull(GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'Region of address',
                 'resolve' => function (Address $root) {
                     return $root->region;
                 },
             ],
             'district_id' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::nonNull(Type::int())),
                 'description' => 'District ID of address',
                 'resolve' => function (Address $root) {
                     return $root->district_id;
                 },
             ],
             'district' => [
-                'type' => GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::nonNull(GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'District of address',
                 'resolve' => function (Address $root) {
                     return $root->district;
@@ -76,7 +76,7 @@ class AddressGraphQLType extends GraphQLType
                 },
             ],
             'mahalla' => [
-                'type' => GraphQL::type(MahallaGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::nonNull(GraphQL::type(MahallaGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'Mahalla of address',
                 'resolve' => function (Address $root) {
                     return $root->mahalla;

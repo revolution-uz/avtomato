@@ -44,7 +44,7 @@ class CreateCustomerGraphQLMutation extends Mutation
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::nonNull(Type::int())),
             ],
             'tin' => [
                 'name' => 'tin',
@@ -52,35 +52,35 @@ class CreateCustomerGraphQLMutation extends Mutation
             ],
             'passport_series' => [
                 'name' => 'passport_series',
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(Type::nonNull(Type::string())),
             ],
             'passport_number' => [
                 'name' => 'passport_number',
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(Type::nonNull(Type::string())),
             ],
             'passport_given_date' => [
                 'name' => 'passport_given_date',
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(Type::nonNull(Type::string())),
             ],
             'passport_expiration_date' => [
                 'name' => 'passport_expiration_date',
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(Type::nonNull(Type::string())),
             ],
             'passport_given_place' => [
                 'name' => 'passport_given_place',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
             ],
             'passport_citizenship' => [
                 'name' => 'passport_given_place',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
             ],
             'first_name' => [
                 'name' => 'first_name',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
             ],
             'last_name' => [
                 'name' => 'last_name',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
             ],
             'middle_name' => [
                 'name' => 'middle_name',
@@ -92,7 +92,7 @@ class CreateCustomerGraphQLMutation extends Mutation
             ],
             'birth_place' => [
                 'name' => 'birth_place',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
             ],
             'gender' => [
                 'name' => 'gender',

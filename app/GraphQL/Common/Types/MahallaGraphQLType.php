@@ -34,14 +34,14 @@ class MahallaGraphQLType extends GraphQLType
                 },
             ],
             'district' => [
-                'type' => GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::nonNull(GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'District of mahalla',
                 'resolve' => function (Mahalla $root) {
                     return $root->district;
                 },
             ],
             'name' => [
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
                 'description' => 'Name of mahalla',
                 'resolve' => function (Mahalla $root) {
                     return $root->name;

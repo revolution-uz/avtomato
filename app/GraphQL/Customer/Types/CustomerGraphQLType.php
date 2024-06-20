@@ -33,7 +33,7 @@ class CustomerGraphQLType extends GraphQLType
                 },
             ],
             'tin' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'description' => 'TIN of customer',
                 'resolve' => function (Customer $root) {
                     return $root->tin;
@@ -96,7 +96,7 @@ class CustomerGraphQLType extends GraphQLType
                 },
             ],
             'middle_name' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::string(),
                 'description' => 'Middle name of customer',
                 'resolve' => function (Customer $root) {
                     return $root->last_name;

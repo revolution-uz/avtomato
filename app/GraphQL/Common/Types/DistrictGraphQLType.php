@@ -27,21 +27,21 @@ class DistrictGraphQLType extends GraphQLType
                 },
             ],
             'region_id' => [
-                'type' => Type::int(),
+                'type' => Type::nonNull(Type::int()),
                 'description' => 'Region ID of district',
                 'resolve' => function (District $root) {
                     return $root->id;
                 },
             ],
             'region' => [
-                'type' => GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::nonNull(GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'Region of district',
                 'resolve' => function (District $root) {
                     return $root->region;
                 },
             ],
             'name' => [
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
                 'description' => 'Name of district',
                 'resolve' => function (District $root) {
                     return $root->name;
