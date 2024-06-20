@@ -30,7 +30,8 @@ class CreateCustomerGraphQLMutation extends Mutation
 
     public function __construct(
         private readonly CustomerService $customerService,
-    ) {
+    )
+    {
 
     }
 
@@ -134,10 +135,8 @@ class CreateCustomerGraphQLMutation extends Mutation
 
             DB::commit();
 
-            return true;
         } catch (Throwable $th) {
             DB::rollBack();
-
             throw $th;
         }
 
