@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Common\Types;
 
-use App\Models\Company\mahalla;
+use App\Models\Company\Mahalla;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
