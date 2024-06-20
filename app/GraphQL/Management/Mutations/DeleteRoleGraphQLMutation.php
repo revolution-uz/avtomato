@@ -3,7 +3,7 @@
 namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Common\Types\IDsGraphQLType;
+use App\GraphQL\Common\Types\ArrayGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Rbac\Role;
@@ -30,7 +30,7 @@ class DeleteRoleGraphQLMutation extends Mutation
         return [
             'ids' => [
                 'name' => 'id',
-                'type' => GraphQL::type(IDsGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::nonNull(GraphQL::type(ArrayGraphQLType::GRAPHQL_TYPE_NAME)),
             ],
         ];
     }
