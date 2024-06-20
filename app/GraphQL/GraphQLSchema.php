@@ -2,9 +2,6 @@
 
 namespace App\GraphQL;
 
-use App\GraphQL\Customer\Queries\CustomersGraphQLQuery;
-use App\GraphQL\Customer\Queries\SingleCustomerGraphQLQuery;
-use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\User\Mutations\ChangeLanguageGraphQLMutation;
 use App\GraphQL\User\Mutations\ChangePasswordGraphQLMutation;
 use App\GraphQL\User\Mutations\ChangeProfileGraphQLMutation;
@@ -37,8 +34,6 @@ class GraphQLSchema implements ConfigConvertible
                 CurrentProfileActivityLogsGraphQLQuery::class,
                 SingleActivityLogGraphQLQuery::class,
                 ActivityLogsGraphQLQuery::class,
-                CustomersGraphQLQuery::class,
-                SingleCustomerGraphQLQuery::class,
             ],
             'mutation' => [
                 LogoutGraphQLMutation::class,
@@ -58,7 +53,6 @@ class GraphQLSchema implements ConfigConvertible
                 TemplateThemeGraphQLType::class,
                 DeviceGraphQLType::class,
                 ActivityLogGraphQLType::class,
-                CustomerGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
