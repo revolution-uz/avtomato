@@ -12,7 +12,7 @@ class CustomerGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Profile Me GraphQL Type',
+        'description' => 'Customer GraphQL Type',
     ];
 
     public function fields(): array
@@ -107,6 +107,13 @@ class CustomerGraphQLType extends GraphQLType
                 'description' => 'Full name of customer',
                 'resolve' => function (Customer $root) {
                     return $root->full_name;
+                },
+            ],
+            'gender' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Gender of customer',
+                'resolve' => function (Customer $root) {
+                    return $root->gender;
                 },
             ],
             'created_at' => [

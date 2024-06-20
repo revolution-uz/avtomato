@@ -1,0 +1,87 @@
+<?php
+
+namespace App\GraphQL\Common\Types;
+
+use App\Models\Company\Address;
+use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
+use Rebing\GraphQL\Support\Type as GraphQLType;
+
+class AddressGraphQLType extends GraphQLType
+{
+    public const GRAPHQL_TYPE_NAME = 'AddressGraphQLType';
+
+    protected $attributes = [
+        'name' => self::GRAPHQL_TYPE_NAME,
+        'description' => 'Address GraphQL Type',
+    ];
+
+    public function fields(): array
+    {
+        return [
+            'id' => [
+                'type' => Type::int(),
+                'description' => 'ID of address',
+                'resolve' => function (Address $root) {
+                    return $root->id;
+                },
+            ],
+            'address' => [
+                'type' => Type::nonNull(Type::string()),
+                'description' => 'Address',
+                'resolve' => function (Address $root) {
+                    return $root->address;
+                },
+            ],
+            'type' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Type of address',
+                'resolve' => function (Address $root) {
+                    return $root->type;
+                },
+            ],
+            'region_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Region ID of address',
+                'resolve' => function (Address $root) {
+                    return $root->region_id;
+                },
+            ],
+            'region' => [
+                'type' => GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME),
+                'description' => 'Region of address',
+                'resolve' => function (Address $root) {
+                    return $root->region;
+                },
+            ],
+            'district_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'District ID of address',
+                'resolve' => function (Address $root) {
+                    return $root->district_id;
+                },
+            ],
+            'district' => [
+                'type' => GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME),
+                'description' => 'District of address',
+                'resolve' => function (Address $root) {
+                    return $root->district;
+                },
+            ],
+            'mahalla_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Mahalla ID of address',
+                'resolve' => function (Address $root) {
+                    return $root->mahalla_id;
+                },
+            ],
+            'mahalla' => [
+                'type' => GraphQL::type(MahallaGraphQLType::GRAPHQL_TYPE_NAME),
+                'description' => 'Mahalla of address',
+                'resolve' => function (Address $root) {
+                    return $root->mahalla;
+                },
+            ],
+        ];
+    }
+}
