@@ -30,8 +30,7 @@ class CreateCustomerGraphQLMutation extends Mutation
 
     public function __construct(
         private readonly CustomerService $customerService,
-    )
-    {
+    ) {
 
     }
 
