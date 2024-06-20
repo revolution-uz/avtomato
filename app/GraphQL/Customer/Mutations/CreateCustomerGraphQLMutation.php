@@ -11,7 +11,6 @@ use App\GraphQL\Common\Types\PhoneGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Http\Requests\Customer\CreateCustomerRequest;
-use App\Http\Resources\Customer\SingleCustomerResource;
 use App\Models\Company\Phone;
 use App\Services\CustomerService;
 use Closure;
@@ -135,7 +134,7 @@ class CreateCustomerGraphQLMutation extends Mutation
 
             DB::commit();
 
-            return new SingleCustomerResource($customer);
+            return true;
         } catch (Throwable $th) {
             DB::rollBack();
 
