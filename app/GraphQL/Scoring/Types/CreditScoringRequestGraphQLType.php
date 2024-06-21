@@ -3,12 +3,11 @@
 namespace App\GraphQL\Scoring\Types;
 
 use App\Models\Company\ScoringRequest;
-use App\Models\Company\User;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class ScoringRequestGraphQLType extends GraphQLType
+class CreditScoringRequestGraphQLType extends GraphQLType
 {
     public const GRAPHQL_TYPE_NAME = 'ScoringRequestGraphQLType';
 
@@ -75,7 +74,6 @@ class ScoringRequestGraphQLType extends GraphQLType
                 'resolve' => function (ScoringRequest $root) {
                     return $root->request;
                 },
-                'is_relation' => false,
             ],
             'response' => [
                 'type' => GraphQL::type(KatmRequestGraphQLType::GRAPHQL_TYPE_NAME),
@@ -83,26 +81,25 @@ class ScoringRequestGraphQLType extends GraphQLType
                 'resolve' => function (ScoringRequest $root) {
                     return $root->response;
                 },
-                'is_relation' => false,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'Scoring request created timestamp',
-                'resolve' => function (User $root) {
+                'resolve' => function (ScoringRequest $root) {
                     return $root->created_at->timestamp;
                 },
             ],
             'updated_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'Scoring request updated timestamp',
-                'resolve' => function (User $root) {
+                'resolve' => function (ScoringRequest $root) {
                     return $root->updated_at->timestamp;
                 },
             ],
             'deleted_at' => [
                 'type' => Type::int(),
                 'description' => 'Scoring request deleted timestamp',
-                'resolve' => function (User $root) {
+                'resolve' => function (ScoringRequest $root) {
                     return $root->deleted_at?->timestamp;
                 },
             ],
