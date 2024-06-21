@@ -21,51 +21,26 @@ class MahallaGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'ID of mahalla',
                 'resolve' => function (Mahalla $root) {
                     return $root->id;
                 },
             ],
             'district_id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'District ID of mahalla',
                 'resolve' => function (Mahalla $root) {
                     return $root->district_id;
                 },
             ],
             'district' => [
-                'type' => Type::nonNull(GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME)),
-                'description' => 'District of mahalla',
+                'type' => Type::nonNull(GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => function (Mahalla $root) {
                     return $root->district;
                 },
             ],
             'name' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'Name of mahalla',
                 'resolve' => function (Mahalla $root) {
                     return $root->name;
-                },
-            ],
-            'name_uz' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Name Uz of mahalla',
-                'resolve' => function (Mahalla $root) {
-                    return $root->name_uz;
-                },
-            ],
-            'name_ru' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Name Ru of mahalla',
-                'resolve' => function (Mahalla $root) {
-                    return $root->name_ru;
-                },
-            ],
-            'name_en' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Name En of mahalla',
-                'resolve' => function (Mahalla $root) {
-                    return $root->name_en;
                 },
             ],
         ];

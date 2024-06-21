@@ -4,6 +4,7 @@ namespace App\GraphQL\Common\Types;
 
 use App\Models\Company\Region;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class RegionGraphQLType extends GraphQLType
@@ -32,25 +33,10 @@ class RegionGraphQLType extends GraphQLType
                     return $root->name;
                 },
             ],
-            'name_uz' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Name Uz of region',
+            'districts' => [
+                'type' => Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME)))),
                 'resolve' => function (Region $root) {
-                    return $root->name_uz;
-                },
-            ],
-            'name_ru' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Name Ru of region',
-                'resolve' => function (Region $root) {
-                    return $root->name_ru;
-                },
-            ],
-            'name_en' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Name En of region',
-                'resolve' => function (Region $root) {
-                    return $root->name_en;
+                    return $root->districts;
                 },
             ],
         ];

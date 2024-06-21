@@ -18,7 +18,7 @@ class RegionsGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME))));
     }
 
     public function args(): array

@@ -12,12 +12,12 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property int $district_id
  * @property int $oilakredit_id
- * @property string $name
  * @property string $name_uz
  * @property string $name_oz
  * @property string $name_ru
  * @property string $name_en
- * @property District $district
+ * @property-read string $name
+ * @property-read District $district
  */
 class Mahalla extends Model
 {
@@ -39,7 +39,7 @@ class Mahalla extends Model
         return $this->belongsTo(District::class);
     }
 
-    public function fullName(): Attribute
+    public function name(): Attribute
     {
         return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }

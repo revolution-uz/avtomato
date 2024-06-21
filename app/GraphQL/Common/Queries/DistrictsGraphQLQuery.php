@@ -18,16 +18,26 @@ class DistrictsGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME))));
     }
 
     public function args(): array
     {
-        return [];
+        return [
+            'region_id' => [
+                'name' => 'region_id',
+                'type' => Type::int(),
+                'rules' => ['nullable', 'exists:regions,id'],
+            ],
+        ];
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
+        if (isset($args['region_id'])) {
+            return District::query()->where('region_id', $args['region_id'])->get();
+        }
+
         return District::query()->get();
     }
 }
