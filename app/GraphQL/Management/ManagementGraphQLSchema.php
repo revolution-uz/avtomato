@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Management;
 
-use App\GraphQL\Management\Mutations\AttachPermissionsRoleGraphQLMutation;
+use App\GraphQL\Management\Mutations\AttachPermissionsToRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeLanguageGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangePasswordGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileGraphQLMutation;
@@ -54,7 +54,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 UploadAvatarGraphQLMutation::class,
                 CreateRoleGraphQLMutation::class,
                 UpdateRoleGraphQLMutation::class,
-                AttachPermissionsRoleGraphQLMutation::class,
+                AttachPermissionsToRoleGraphQLMutation::class,
                 DeleteRoleGraphQLMutation::class,
             ],
             'types' => [

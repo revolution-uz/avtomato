@@ -18,7 +18,7 @@ use Rebing\GraphQL\Support\Mutation;
 class UpdateRoleGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'createRole',
+        'name' => 'updateRole',
     ];
 
     public function type(): Type

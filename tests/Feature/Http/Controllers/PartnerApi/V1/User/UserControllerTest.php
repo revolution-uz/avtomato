@@ -8,6 +8,7 @@ use App\Models\Company\Attachment;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -87,6 +88,39 @@ class UserControllerTest extends TestCase
         $response->assertOk();
         $this->assertEquals('Updated First Name', $user->fresh()->first_name);
         $this->assertEquals('Updated Last Name', $user->fresh()->last_name);
+    }
+
+    /**
+     * @test
+     */
+    public function changePassword()
+    {
+        $admin = $this->createAdminUser();
+        $user = User::factory()->create();
+        $newPassword = 'password';
+        $response = $this->actingAs($admin)->postJson(route('users.change-password', ['id' => $user->id]), [
+            'old_password' => 'password',
+            'password' => $newPassword,
+            'password_confirmation' => $newPassword,
+        ]);
+        $user->refresh();
+        $response->assertOk();
+        $this->assertTrue(Hash::check($newPassword, $user->password));
+    }
+
+    /**
+     * @test
+     */
+    public function changeTheme()
+    {
+        $admin = $this->createAdminUser();
+        $user = User::factory()->create();
+        $response = $this->actingAs($admin)->postJson(route('users.change-theme', ['id' => $user->id]), [
+            'layout_name' => 'fixed',
+        ]);
+
+        $response->assertOk();
+        $this->assertEquals('fixed', $user->fresh()->template_theme->layout_name);
     }
 
     /**

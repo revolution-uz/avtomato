@@ -3,37 +3,41 @@
 namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\GraphQL\Management\Types\PermissionInputGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Http\Requests\Rbac\RolePermissionRequest;
 use App\Models\Company\Rbac\Role;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
-class AttachPermissionsRoleGraphQLMutation extends Mutation
+class AttachPermissionsToRoleGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'createRole',
+        'name' => 'attachPermissionsToRole',
     ];
-
-    public function type(): Type
-    {
-        return Type::nonNull(GraphQL::type(RoleGraphQLType::GRAPHQL_TYPE_NAME));
-    }
 
     public function args(): array
     {
         return [
-            'id' => [
-                'name' => 'id',
+            'role_id' => [
+                'name' => 'role_id',
                 'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', 'exists:roles,id'],
+            ],
+            'permissions' => [
+                'name' => 'permissions',
+                'type' => Type::nonNull(Type::listOf(GraphQL::type(PermissionInputGraphQLType::GRAPHQL_TYPE_NAME))),
             ],
         ];
+    }
+
+    public function type(): Type
+    {
+        return Type::nonNull(GraphQL::type(RoleGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -44,16 +48,15 @@ class AttachPermissionsRoleGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         /** @var Role $role */
-        $role = Role::findOrFail($args['id']);
-
-        $request = new RolePermissionRequest($args);
-        $filtered = array_filter($request->validated(), fn ($item) => $item['enabled'] !== false);
-
+        $role = Role::findOrFail($args['role_id']);
+        $filtered = array_filter($args['permissions'], fn ($item) => $item['enabled']);
         // additional validation for permissions
         $mapped = array_reduce(
             $filtered,
             static function ($carry, $item) {
-                $carry[$item['permission_id']][] = $item['branch_id'];
+                if ($item['enabled']) {
+                    $carry[$item['permission_id']][] = $item['branch_id'];
+                }
 
                 return $carry;
             },
@@ -70,20 +73,5 @@ class AttachPermissionsRoleGraphQLMutation extends Mutation
             $role->permissions()->attach($permission['permission_id'], ['branch_id' => $permission['branch_id']]);
         }
 
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'id' => [
-                'required',
-                'integer',
-                Rule::exists('roles', 'id')
-                    ->where('id', $args['id']),
-            ],
-            '*.permission_id' => 'required|exists:permissions,id',
-            '*.branch_id' => 'nullable|exists:branches,id',
-            '*.enabled' => 'required|boolean',
-        ];
     }
 }

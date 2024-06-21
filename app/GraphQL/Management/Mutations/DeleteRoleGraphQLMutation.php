@@ -3,34 +3,31 @@
 namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Common\Types\ArrayGraphQLType;
-use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\User;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
 class DeleteRoleGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'createRole',
+        'name' => 'deleteRole',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(RoleGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(Type::boolean());
     }
 
     public function args(): array
     {
         return [
             'ids' => [
-                'name' => 'id',
-                'type' => Type::nonNull(GraphQL::type(ArrayGraphQLType::GRAPHQL_TYPE_NAME)),
+                'name' => 'ids',
+                'type' => Type::nonNull(Type::listOf(Type::int())),
             ],
         ];
     }
