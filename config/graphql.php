@@ -86,7 +86,6 @@ return [
         'common' => CommonGraphQLSchema::class,
         'customer' => \App\GraphQL\Customer\CustomerQLSchema::class,
         'info' => \App\GraphQL\Info\InfoQLSchema::class,
-        'activity-log' => \App\GraphQL\ActivityLog\ActivityLogQLSchema::class,
     ],
 
     // The global types available to all schemas.
