@@ -22,10 +22,10 @@ class PermissionBranchItemGraphQLType extends GraphQLType
                     return $root['id'];
                 },
             ],
-            'slug' => [
+            'name' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => function (array $root) {
-                    return $root['slug'];
+                    return $root['name'];
                 },
             ],
             'editable' => [
