@@ -24,7 +24,10 @@ use App\GraphQL\Management\Types\ActivityLogGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
+use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
+use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionGraphQLType;
+use App\GraphQL\Management\Types\PermissionGroupGraphQLType;
 use App\GraphQL\Management\Types\PermissionInputGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
@@ -67,6 +70,9 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 DeviceGraphQLType::class,
                 ActivityLogGraphQLType::class,
                 PermissionInputGraphQLType::class,
+                PermissionBranchItemGraphQLType::class,
+                PermissionEditableItemGraphQLType::class,
+                PermissionGroupGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
