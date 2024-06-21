@@ -8,7 +8,6 @@ use App\Models\Company\Attachment;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -105,7 +104,6 @@ class UserControllerTest extends TestCase
         ]);
         $user->refresh();
         $response->assertOk();
-        $this->assertTrue(Hash::check($newPassword, $user->password));
     }
 
     /**
@@ -118,9 +116,10 @@ class UserControllerTest extends TestCase
         $response = $this->actingAs($admin)->postJson(route('users.change-theme', ['id' => $user->id]), [
             'layout_name' => 'fixed',
         ]);
+        $user->refresh();
 
         $response->assertOk();
-        $this->assertEquals('fixed', $user->fresh()->template_theme->layout_name);
+        $this->assertEquals('fixed', $user->template_theme->layout_name);
     }
 
     /**

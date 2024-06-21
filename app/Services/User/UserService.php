@@ -40,6 +40,7 @@ class UserService
         $user->updateOrFail([
             'template_theme' => $request,
         ]);
+        $user->refresh();
 
         return $user;
     }
