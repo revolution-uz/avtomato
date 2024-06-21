@@ -25,6 +25,7 @@ use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
 use App\GraphQL\Management\Types\PermissionGraphQLType;
+use App\GraphQL\Management\Types\PermissionInputGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
@@ -42,6 +43,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 ActivityLogsGraphQLQuery::class,
                 SingleRoleGraphQLQuery::class,
                 RolesGraphQLQuery::class,
+                PermissionInputGraphQLType::class,
             ],
             'mutation' => [
                 LogoutGraphQLMutation::class,
