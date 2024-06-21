@@ -99,7 +99,7 @@ class CustomerGraphQLType extends GraphQLType
                 'type' => Type::string(),
                 'description' => 'Middle name of customer',
                 'resolve' => function (Customer $root) {
-                    return $root->last_name;
+                    return $root->middle_name;
                 },
             ],
             'full_name' => [
