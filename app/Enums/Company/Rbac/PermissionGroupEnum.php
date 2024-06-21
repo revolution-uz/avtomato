@@ -13,7 +13,6 @@ enum PermissionGroupEnum: string
     case BALANCE_CHARGE = 'balance_charge';
     case ADMIN_MANAGEMENT = 'admin_management';
     case CUSTOMER_MANAGEMENT = 'customer_management';
-    case GET_STATIC_INFORMATION = 'info_view';
     case CALCULATOR_INSTALLMENT = 'calculator_installment';
     case INSTALLMENT_MANAGEMENT = 'installment_management';
     case TARIFF_MANAGEMENT = 'tariff_management';
@@ -67,12 +66,6 @@ enum PermissionGroupEnum: string
                 PermissionEnum::ROLE_EDIT,
                 PermissionEnum::ROLE_DELETE,
                 PermissionEnum::ROLE_PERMISSIONS,
-            ],
-            self::GET_STATIC_INFORMATION => [
-                PermissionEnum::INFO_SETTINGS,
-                PermissionEnum::INFO_REGIONS,
-                PermissionEnum::INFO_DISTRICTS,
-                PermissionEnum::INFO_MAHALLAS,
             ],
             self::CALCULATOR_INSTALLMENT => [
                 PermissionEnum::CALCULATE_INSTALLMENT,

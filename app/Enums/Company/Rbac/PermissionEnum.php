@@ -70,12 +70,6 @@ enum PermissionEnum: string
     case CUSTOMER_CARD_EDIT = 'customer_card_edit';
     case CUSTOMER_CARD_REMOVE = 'customer_card_remove';
 
-    // Get static information
-    case INFO_SETTINGS = 'info_settings';
-    case INFO_REGIONS = 'info_regions';
-    case INFO_DISTRICTS = 'info_districts';
-    case INFO_MAHALLAS = 'info_mahallas';
-
     // Calculator installment
     case CALCULATE_INSTALLMENT = 'calculate_installment';
     case CALCULATOR_EXPORT = 'calculator_export';
@@ -368,12 +362,6 @@ enum PermissionEnum: string
                 self::ROLE_EDIT->value,
                 self::ROLE_DELETE->value,
                 self::ROLE_PERMISSIONS->value,
-            ],
-            PermissionGroupEnum::GET_STATIC_INFORMATION->value => [
-                self::INFO_SETTINGS->value,
-                self::INFO_REGIONS->value,
-                self::INFO_DISTRICTS->value,
-                self::INFO_MAHALLAS->value,
             ],
             PermissionGroupEnum::CALCULATOR_INSTALLMENT->value => [
                 self::CALCULATE_INSTALLMENT->value,

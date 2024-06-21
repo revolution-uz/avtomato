@@ -2,9 +2,7 @@
 
 namespace App\GraphQL\Common\Queries;
 
-use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Common\Types\RegionGraphQLType;
-use App\Helpers\RbacHelper;
 use App\Models\Company\Region;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -26,11 +24,6 @@ class RegionsGraphQLQuery extends Query
     public function args(): array
     {
         return [];
-    }
-
-    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    {
-        return RbacHelper::checkPermission(PermissionEnum::INFO_REGIONS);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
