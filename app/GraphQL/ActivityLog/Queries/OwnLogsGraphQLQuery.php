@@ -16,7 +16,7 @@ use Rebing\GraphQL\Support\Query;
 class OwnLogsGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'activityLogs',
+        'name' => 'ownLogs',
     ];
 
     public function type(): Type
