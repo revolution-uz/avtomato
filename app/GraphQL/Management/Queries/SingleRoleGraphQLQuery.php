@@ -1,26 +1,26 @@
 <?php
 
-namespace App\GraphQL\User\Queries;
+namespace App\GraphQL\Management\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\User\Types\ActivityLogGraphQLType;
+use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\ActivityLog;
+use App\Models\Company\Rbac\Role;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class SingleActivityLogGraphQLQuery extends Query
+class SingleRoleGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'singleActivityLog',
+        'name' => 'singleRole',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ActivityLogGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(RoleGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
@@ -28,25 +28,19 @@ class SingleActivityLogGraphQLQuery extends Query
         return [
             'id' => [
                 'name' => 'id',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
+                'rules' => ['required', 'exists:roles,id'],
             ],
         ];
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::ACTIVITY_LOG_VIEW);
+        return RbacHelper::checkPermission(PermissionEnum::ROLE_VIEW);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return ActivityLog::query()->findOrFail($args['id']);
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'id' => 'int|exists:activity_logs,id',
-        ];
+        return Role::query()->findOrFail($args['id']);
     }
 }

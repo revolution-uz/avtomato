@@ -1,11 +1,11 @@
 <?php
 
-namespace App\GraphQL\User\Queries;
+namespace App\GraphQL\Management\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\User\Types\ActivityLogGraphQLType;
+use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\ActivityLog;
+use App\Models\Company\Rbac\Role;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -13,15 +13,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class ActivityLogsGraphQLQuery extends Query
+class RolesGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'activityLogs',
+        'name' => 'roles',
     ];
 
     public function type(): Type
     {
-        return GraphQL::paginate(ActivityLogGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(RoleGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -43,27 +43,21 @@ class ActivityLogsGraphQLQuery extends Query
                 'name' => 'per_page',
                 'type' => Type::int(),
             ],
-            'admin_id' => [
-                'name' => 'admin_id',
-                'type' => Type::nonNull(Type::int()),
-            ],
         ];
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::ACTIVITY_LOG_VIEW_ALL);
+        return RbacHelper::checkPermission(PermissionEnum::ROLE_VIEW_ALL);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return ActivityLog::query()
-            ->where('causer_id', $args['admin_id'])
-            ->with('causer')
+        return Role::query()
             ->when($args['search'], function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
-                    $query->where('description', 'ILIKE', $search);
+                    $query->where('name', 'ILIKE', $search);
                 });
             })
             // TODO sortable
@@ -80,7 +74,6 @@ class ActivityLogsGraphQLQuery extends Query
             'search' => 'nullable|string|max:255',
             'page' => 'nullable|int|min:1',
             'per_page' => 'nullable|int|min:5|max:100',
-            'admin_id' => 'required|int|exists:users,id',
         ];
     }
 }

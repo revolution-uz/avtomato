@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\User\Types;
+namespace App\GraphQL\Management\Types;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use GraphQL\Type\Definition\Type;

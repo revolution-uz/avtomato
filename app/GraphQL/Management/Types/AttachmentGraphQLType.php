@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\User\Types;
+namespace App\GraphQL\Management\Types;
 
 use App\Models\Company\Attachment;
 use GraphQL\Type\Definition\Type;
