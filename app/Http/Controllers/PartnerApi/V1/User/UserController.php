@@ -172,7 +172,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return new SingleUserResource($this->userService->updatePassword($user, $request));
+        return new SingleUserResource($this->userService->updatePassword($user, $request->get('password')));
     }
 
     #[OA\Post(

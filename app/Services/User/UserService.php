@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\DTOs\UserTemplateThemeDto;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Models\Company\Attachment;
@@ -35,7 +36,7 @@ class UserService
         return $user;
     }
 
-    public function updateTheme(User $user, array $request): User
+    public function updateTheme(User $user, array|UserTemplateThemeDto $request): User
     {
         $user->updateOrFail([
             'template_theme' => $request,
