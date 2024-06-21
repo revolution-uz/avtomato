@@ -6,7 +6,7 @@ use App\Enums\Company\AddressTypeEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\GenderEnum;
-use App\GraphQL\Common\Types\AddressGraphQLType;
+use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\Helpers\RbacHelper;
