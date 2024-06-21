@@ -55,6 +55,13 @@ class RoleGraphQLType extends GraphQLType
                     return $root->deleted_at?->timestamp;
                 },
             ],
+            'permission_groups' => [
+                'type' => Type::nonNull(Type::listOf(GraphQL::type(PermissionGraphQLType::GRAPHQL_TYPE_NAME))),
+                'description' => 'Permissions of admin',
+                'resolve' => function (Role $root) {
+                    return $root->mapAllPermissionByBranch();
+                },
+            ],
             'permissions' => [
                 'type' => GraphQL::type(PermissionGraphQLType::GRAPHQL_TYPE_NAME),
                 'description' => 'Permissions of admin',
