@@ -2,16 +2,14 @@
 
 namespace App\GraphQL\Customer;
 
-use App\GraphQL\Common\Types\AddressGraphQLType;
-use App\GraphQL\Common\Types\DistrictGraphQLType;
-use App\GraphQL\Common\Types\MahallaGraphQLType;
-use App\GraphQL\Common\Types\PhoneGraphQLType;
-use App\GraphQL\Common\Types\RegionGraphQLType;
-use App\GraphQL\Customer\Mutations\CreateCustomerGraphQLMutation;
-use App\GraphQL\Customer\Mutations\UpdateCustomerGraphQLMutation;
 use App\GraphQL\Customer\Queries\CustomersGraphQLQuery;
 use App\GraphQL\Customer\Queries\SingleCustomerGraphQLQuery;
+use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
+use App\GraphQL\Customer\Types\PhoneGraphQLType;
+use App\GraphQL\Info\Types\DistrictGraphQLType;
+use App\GraphQL\Info\Types\MahallaGraphQLType;
+use App\GraphQL\Info\Types\RegionGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class CustomerQLSchema implements ConfigConvertible

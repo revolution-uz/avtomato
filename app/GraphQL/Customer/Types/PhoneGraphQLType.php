@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Common\Types;
+namespace App\GraphQL\Customer\Types;
 
 use App\Models\Company\Phone;
 use GraphQL\Type\Definition\Type;
