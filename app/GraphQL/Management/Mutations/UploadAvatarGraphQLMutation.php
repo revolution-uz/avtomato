@@ -1,9 +1,9 @@
 <?php
 
-namespace App\GraphQL\User\Mutations;
+namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\User\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\User\UserService;
 use Closure;

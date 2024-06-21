@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\User\Types;
+namespace App\GraphQL\Management\Types;
 
 use App\Models\Company\Rbac\Role;
 use GraphQL\Type\Definition\Type;
@@ -14,6 +14,7 @@ class RoleGraphQLType extends GraphQLType
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
         'description' => 'Role GraphQL Type',
+        'model' => Role::class,
     ];
 
     public function fields(): array

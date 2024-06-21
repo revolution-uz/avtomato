@@ -63,7 +63,7 @@ class ProfileController extends Controller
     )]
     public function changePassword(PasswordRequest $request)
     {
-        $this->userService->updatePassword(auth()->user(), $request);
+        $this->userService->updatePassword(auth()->user(), $request->get('password'));
 
         return new StatusResource(true);
     }

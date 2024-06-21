@@ -1,8 +1,8 @@
 <?php
 
-namespace App\GraphQL\User\Queries;
+namespace App\GraphQL\Management\Queries;
 
-use App\GraphQL\User\Types\AdminGraphQLType;
+use App\GraphQL\Management\Types\AdminGraphQLType;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
