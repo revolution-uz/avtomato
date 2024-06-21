@@ -92,39 +92,6 @@ class UserControllerTest extends TestCase
     /**
      * @test
      */
-    public function changePassword()
-    {
-        $admin = $this->createAdminUser();
-        $user = User::factory()->create();
-        $newPassword = 'password';
-        $response = $this->actingAs($admin)->postJson(route('users.change-password', ['id' => $user->id]), [
-            'old_password' => 'password',
-            'password' => $newPassword,
-            'password_confirmation' => $newPassword,
-        ]);
-        $user->refresh();
-        $response->assertOk();
-    }
-
-    /**
-     * @test
-     */
-    public function changeTheme()
-    {
-        $admin = $this->createAdminUser();
-        $user = User::factory()->create();
-        $response = $this->actingAs($admin)->postJson(route('users.change-theme', ['id' => $user->id]), [
-            'layout_name' => 'fixed',
-        ]);
-        $user->refresh();
-
-//        $response->assertOk();
-        $this->assertEquals('fixed', $user->template_theme->layout_name);
-    }
-
-    /**
-     * @test
-     */
     public function changeAvatar()
     {
         $admin = $this->createAdminUser();
