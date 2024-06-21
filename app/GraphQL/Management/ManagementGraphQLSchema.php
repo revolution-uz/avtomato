@@ -43,7 +43,6 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 ActivityLogsGraphQLQuery::class,
                 SingleRoleGraphQLQuery::class,
                 RolesGraphQLQuery::class,
-                PermissionInputGraphQLType::class,
             ],
             'mutation' => [
                 LogoutGraphQLMutation::class,
@@ -67,6 +66,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 TemplateThemeGraphQLType::class,
                 DeviceGraphQLType::class,
                 ActivityLogGraphQLType::class,
+                PermissionInputGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
