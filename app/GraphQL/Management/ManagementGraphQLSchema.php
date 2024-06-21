@@ -2,13 +2,16 @@
 
 namespace App\GraphQL\Management;
 
+use App\GraphQL\Management\Mutations\AttachPermissionsToRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeLanguageGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangePasswordGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeThemeGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateRoleGraphQLMutation;
+use App\GraphQL\Management\Mutations\DeleteRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\Management\Mutations\RevokeDeviceGraphQLMutation;
+use App\GraphQL\Management\Mutations\UpdateRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\UploadAvatarGraphQLMutation;
 use App\GraphQL\Management\Queries\ActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileActivityLogsGraphQLQuery;
@@ -38,6 +41,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 SingleActivityLogGraphQLQuery::class,
                 ActivityLogsGraphQLQuery::class,
                 SingleRoleGraphQLQuery::class,
+                RolesGraphQLQuery::class,
             ],
             'mutation' => [
                 LogoutGraphQLMutation::class,
@@ -48,8 +52,10 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 ChangeThemeGraphQLMutation::class,
                 RevokeDeviceGraphQLMutation::class,
                 UploadAvatarGraphQLMutation::class,
-                RolesGraphQLQuery::class,
                 CreateRoleGraphQLMutation::class,
+                UpdateRoleGraphQLMutation::class,
+                AttachPermissionsToRoleGraphQLMutation::class,
+                DeleteRoleGraphQLMutation::class,
             ],
             'types' => [
                 AdminGraphQLType::class,

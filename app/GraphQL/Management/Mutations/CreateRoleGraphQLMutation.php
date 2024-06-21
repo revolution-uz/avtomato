@@ -56,8 +56,7 @@ class CreateRoleGraphQLMutation extends Mutation
                 'string',
                 'max:255',
                 Rule::unique('roles', 'name')
-                    ->withoutTrashed()
-                    ->ignore($this->id),
+                    ->withoutTrashed(),
             ],
         ];
     }
