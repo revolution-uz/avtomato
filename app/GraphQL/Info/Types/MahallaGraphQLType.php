@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Common\Types;
+namespace App\GraphQL\Info\Types;
 
 use App\Models\Company\Mahalla;
 use GraphQL\Type\Definition\Type;
