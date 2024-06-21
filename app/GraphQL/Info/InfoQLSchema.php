@@ -25,7 +25,7 @@ class InfoQLSchema implements ConfigConvertible
             'types' => [
                 RegionGraphQLType::class,
                 DistrictGraphQLType::class,
-                MahallaGraphQLType::class
+                MahallaGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];

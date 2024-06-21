@@ -16,7 +16,7 @@ class ActivityLogQLSchema implements ConfigConvertible
             'query' => [
                 ActivityLogsGraphQLQuery::class,
                 OwnLogsGraphQLQuery::class,
-                SingleLogGraphQLQuery::class
+                SingleLogGraphQLQuery::class,
             ],
             'mutation' => [
             ],
