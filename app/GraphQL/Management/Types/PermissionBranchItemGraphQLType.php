@@ -28,6 +28,12 @@ class PermissionBranchItemGraphQLType extends GraphQLType
                     return $root['slug'];
                 },
             ],
+            'name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => function (array $root) {
+                    return $root['name'];
+                },
+            ],
             'editable' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => function (array $root) {
