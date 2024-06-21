@@ -1,26 +1,26 @@
 <?php
 
-namespace App\GraphQL\Info\Queries;
+namespace App\GraphQL\Common\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Info\Types\MahallaGraphQLType;
+use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Mahalla;
+use App\Models\Company\Region;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class MahallasGraphQLQuery extends Query
+class RegionsGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'mahallas',
+        'name' => 'regions',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(MahallaGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
@@ -30,11 +30,11 @@ class MahallasGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INFO_MAHALLAS);
+        return RbacHelper::checkPermission(PermissionEnum::INFO_REGIONS);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return Mahalla::query()->get();
+        return Region::query()->get();
     }
 }

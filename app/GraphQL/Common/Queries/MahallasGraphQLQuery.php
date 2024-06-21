@@ -1,26 +1,26 @@
 <?php
 
-namespace App\GraphQL\Info\Queries;
+namespace App\GraphQL\Common\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Info\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\District;
+use App\Models\Company\Mahalla;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class DistrictsGraphQLQuery extends Query
+class MahallasGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'districts',
+        'name' => 'mahallas',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(MahallaGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
@@ -30,11 +30,11 @@ class DistrictsGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INFO_DISTRICTS);
+        return RbacHelper::checkPermission(PermissionEnum::INFO_MAHALLAS);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return District::query()->get();
+        return Mahalla::query()->get();
     }
 }

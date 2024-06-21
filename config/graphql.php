@@ -85,7 +85,6 @@ return [
         'management' => \App\GraphQL\Management\ManagementGraphQLSchema::class,
         'common' => CommonGraphQLSchema::class,
         'customer' => \App\GraphQL\Customer\CustomerQLSchema::class,
-        'info' => \App\GraphQL\Info\InfoQLSchema::class,
     ],
 
     // The global types available to all schemas.

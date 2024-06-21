@@ -2,9 +2,9 @@
 
 namespace App\GraphQL\Customer\Types;
 
-use App\GraphQL\Info\Types\DistrictGraphQLType;
-use App\GraphQL\Info\Types\MahallaGraphQLType;
-use App\GraphQL\Info\Types\RegionGraphQLType;
+use App\GraphQL\Common\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\MahallaGraphQLType;
+use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\Models\Company\Address;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
