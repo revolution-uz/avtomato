@@ -5,7 +5,7 @@ namespace App\GraphQL\Scoring\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\CreditHistory\CreditScoringGraphQLType;
+use App\GraphQL\Scoring\Types\PensionHistory\PensionInfoGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ScoringRequest;
 use Closure;
@@ -23,7 +23,7 @@ class ReadPensionInfoGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::paginate(CreditScoringGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(PensionInfoGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array

@@ -8,13 +8,13 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class CreditScoringGraphQLType extends GraphQLType
+class CreditHistoryGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'ScoringRequestGraphQLType';
+    public const GRAPHQL_TYPE_NAME = 'CreditHistoryGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Scoring Request GraphQL Type',
+        'description' => 'Credit History GraphQL Type',
     ];
 
     public function fields(): array
@@ -77,7 +77,7 @@ class CreditScoringGraphQLType extends GraphQLType
                 },
             ],
             'response' => [
-                'type' => GraphQL::type(KatmCreateRequestGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => GraphQL::type(KatmCreditHistoryResponseGraphQLType::GRAPHQL_TYPE_NAME),
                 'description' => 'Request of scoring',
                 'resolve' => function (ScoringRequest $root) {
                     return $root->response;
