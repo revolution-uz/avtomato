@@ -4,26 +4,25 @@ namespace App\GraphQL\Scoring\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\CreditHistory\CreditScoringGraphQLType;
+use App\GraphQL\Scoring\Types\PensionHistory\PensionInfoGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ScoringRequest;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Route;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class KatmCreditHistoryGraphQLQuery extends Query
+class PensionInfoGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'katmCreditHistory',
+        'name' => 'katmPensionInfo',
     ];
 
     public function type(): Type
     {
-        return GraphQL::paginate(CreditScoringGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(PensionInfoGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -50,18 +49,13 @@ class KatmCreditHistoryGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return match (Route::currentRouteName()) {
-            'credit-history.index' => RbacHelper::checkPermission(PermissionEnum::SCORING_CREDIT_HISTORY_VIEW_ALL),
-            'inps-history.index' => RbacHelper::checkPermission(PermissionEnum::SCORING_INPS_HISTORY_VIEW_ALL),
-            'pension-info.index' => RbacHelper::checkPermission(PermissionEnum::SCORING_PENSION_INFO_VIEW_ALL),
-            default => false
-        };
+        return RbacHelper::checkPermission(PermissionEnum::SCORING_PENSION_INFO_VIEW_ALL);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return ScoringRequest::query()
-            ->where('type', ScoringRequestTypeEnum::KATM_CREDIT_HISTORY)
+            ->where('type', ScoringRequestTypeEnum::KATM_PENSION_INFO)
             ->when($args['search'], function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
