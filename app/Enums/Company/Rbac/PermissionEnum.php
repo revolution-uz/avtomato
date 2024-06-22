@@ -227,11 +227,6 @@ enum PermissionEnum: string
             self::ROLE_DELETE,
             self::ROLE_PERMISSIONS,
 
-            self::INFO_SETTINGS,
-            self::INFO_REGIONS,
-            self::INFO_DISTRICTS,
-            self::INFO_MAHALLAS,
-
             self::CALCULATE_INSTALLMENT,
             self::CALCULATOR_EXPORT,
 
@@ -544,11 +539,6 @@ enum PermissionEnum: string
             self::CUSTOMER_CARD_EDIT,
             self::CUSTOMER_CARD_REMOVE,
             self::CUSTOMER_INFO_BY_PASSPORT => FeatureEnum::CUSTOMER_MANAGEMENT,
-
-            self::INFO_SETTINGS,
-            self::INFO_REGIONS,
-            self::INFO_DISTRICTS,
-            self::INFO_MAHALLAS => FeatureEnum::GET_STATIC_INFORMATION,
 
             self::CALCULATE_INSTALLMENT,
             self::CALCULATOR_EXPORT => FeatureEnum::CALCULATOR_INSTALLMENT,
