@@ -6,7 +6,7 @@ use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class KatmRequestGraphQLType extends GraphQLType
+class KatmCreateRequestGraphQLType extends GraphQLType
 {
     public const GRAPHQL_TYPE_NAME = 'ScoringRequestDTOGraphQLType';
 

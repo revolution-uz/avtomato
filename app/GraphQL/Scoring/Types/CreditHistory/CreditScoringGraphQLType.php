@@ -1,13 +1,14 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types;
+namespace App\GraphQL\Scoring\Types\CreditHistory;
 
+use App\GraphQL\Scoring\Types\KatmCreateRequestGraphQLType;
 use App\Models\Company\ScoringRequest;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class CreditScoringRequestGraphQLType extends GraphQLType
+class CreditScoringGraphQLType extends GraphQLType
 {
     public const GRAPHQL_TYPE_NAME = 'ScoringRequestGraphQLType';
 
@@ -69,14 +70,14 @@ class CreditScoringRequestGraphQLType extends GraphQLType
                 },
             ],
             'request' => [
-                'type' => GraphQL::type(KatmRequestGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => GraphQL::type(KatmCreateRequestGraphQLType::GRAPHQL_TYPE_NAME),
                 'description' => 'Request of scoring',
                 'resolve' => function (ScoringRequest $root) {
                     return $root->request;
                 },
             ],
             'response' => [
-                'type' => GraphQL::type(KatmRequestGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => GraphQL::type(KatmCreateRequestGraphQLType::GRAPHQL_TYPE_NAME),
                 'description' => 'Request of scoring',
                 'resolve' => function (ScoringRequest $root) {
                     return $root->response;
