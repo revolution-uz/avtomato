@@ -24,66 +24,51 @@ class AddressGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'ID of address',
-                'resolve' => function (Address $root) {
-                    return $root->id;
-                },
+                'resolve' => fn (Address $root) => $root->id,
             ],
             'address' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'Address',
-                'resolve' => function (Address $root) {
-                    return $root->address;
-                },
+                'resolve' => fn (Address $root) => $root->address,
             ],
             'type' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'Type of address',
-                'resolve' => function (Address $root) {
-                    return $root->type;
-                },
+                'resolve' => fn (Address $root) => $root->type,
             ],
             'region_id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'Region ID of address',
-                'resolve' => function (Address $root) {
-                    return $root->region_id;
-                },
+                'resolve' => fn (Address $root) => $root->region_id,
             ],
             'region' => [
                 'type' => Type::nonNull(GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME)),
-                'description' => 'Region of address',
-                'resolve' => function (Address $root) {
-                    return $root->region;
-                },
+                'resolve' => fn (Address $root) => $root->region,
             ],
             'district_id' => [
                 'type' => Type::nonNull(Type::nonNull(Type::int())),
-                'description' => 'District ID of address',
-                'resolve' => function (Address $root) {
-                    return $root->district_id;
-                },
+                'resolve' => fn (Address $root) => $root->district_id,
             ],
             'district' => [
                 'type' => Type::nonNull(GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME)),
-                'description' => 'District of address',
-                'resolve' => function (Address $root) {
-                    return $root->district;
-                },
+                'resolve' => fn (Address $root) => $root->district,
             ],
             'mahalla_id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'Mahalla ID of address',
-                'resolve' => function (Address $root) {
-                    return $root->mahalla_id;
-                },
+                'resolve' => fn (Address $root) => $root->mahalla_id,
             ],
             'mahalla' => [
                 'type' => Type::nonNull(GraphQL::type(MahallaGraphQLType::GRAPHQL_TYPE_NAME)),
-                'description' => 'Mahalla of address',
-                'resolve' => function (Address $root) {
-                    return $root->mahalla;
-                },
+                'resolve' => fn (Address $root) => $root->mahalla,
+            ],
+            'created_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Address $root) => $root->created_at->timestamp,
+            ],
+            'updated_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Address $root) => $root->updated_at->timestamp,
+            ],
+            'deleted_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (Address $root) => $root->deleted_at?->timestamp,
             ],
         ];
     }

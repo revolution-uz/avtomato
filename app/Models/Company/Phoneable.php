@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use App\Enums\Company\PhoneTypeEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -15,8 +16,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $phone_id
  * @property int $phoneable_id
  * @property string $phoneable_type
- * @property int $created_at
- * @property int $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property int $deleted_at
  * @property Phone $phone
  */

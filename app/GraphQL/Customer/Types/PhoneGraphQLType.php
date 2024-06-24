@@ -12,7 +12,6 @@ class PhoneGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Phone GraphQL Type',
     ];
 
     public function fields(): array
@@ -20,31 +19,27 @@ class PhoneGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'ID of phone',
-                'resolve' => function (Phone $root) {
-                    return $root->id;
-                },
+                'resolve' => fn (Phone $root) => $root->id,
             ],
             'phone' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'Phone number',
-                'resolve' => function (Phone $root) {
-                    return $root->phone;
-                },
+                'resolve' => fn (Phone $root) => $root->phone,
             ],
             'type' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'Type of phone',
-                'resolve' => function (Phone $root) {
-                    return $root->pivot->type;
-                },
+                'resolve' => fn (Phone $root) => $root->pivot->type,
             ],
             'comment' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Comment of phone',
-                'resolve' => function (Phone $root) {
-                    return $root->pivot->comment;
-                },
+                'type' => Type::string(),
+                'resolve' => fn (Phone $root) => $root->pivot->comment,
+            ],
+            'created_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Phone $root) => $root->pivot->created_at->timestamp,
+            ],
+            'updated_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Phone $root) => $root->pivot->updated_at->timestamp,
             ],
         ];
     }

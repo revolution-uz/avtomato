@@ -68,6 +68,6 @@ class UpdateCustomerRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CREATE);
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_EDIT);
     }
 }

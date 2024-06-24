@@ -175,7 +175,7 @@ class CustomerController extends Controller
         DB::beginTransaction();
 
         try {
-            $customer = $this->customerService->saveCustomer($request);
+            $customer = $this->customerService->saveCustomer($request->validated());
 
             foreach ($request->phones as $phoneInput) {
                 /** @var Phone $phone */
@@ -219,7 +219,7 @@ class CustomerController extends Controller
     )]
     public function update(int $id, UpdateCustomerRequest $request)
     {
-        $customer = $this->customerService->saveCustomer($request, $id);
+        $customer = $this->customerService->saveCustomer($request->validated(), $id);
 
         return new SingleCustomerResource($customer);
     }
