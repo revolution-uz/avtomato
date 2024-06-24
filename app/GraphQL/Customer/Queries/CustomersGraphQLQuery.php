@@ -31,18 +31,6 @@ class CustomersGraphQLQuery extends Query
                 'name' => 'sort',
                 'type' => Type::string(),
             ],
-            'pinfl' => [
-                'name' => 'pinfl',
-                'type' => Type::string(),
-            ],
-            'passport_series' => [
-                'name' => 'passport_series',
-                'type' => Type::string(),
-            ],
-            'passport_number' => [
-                'name' => 'passport_number',
-                'type' => Type::string(),
-            ],
             'search' => [
                 'name' => 'search',
                 'type' => Type::string(),
@@ -76,20 +64,6 @@ class CustomersGraphQLQuery extends Query
                         ->orWhere('passport_number', 'ILIKE', $search);
                 });
             })
-            ->when($args['pinfl'], function (Builder $q) use ($args) {
-                $search = '%' . $args['pinfl'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('pinfl', 'ILIKE', $search);
-                });
-            })
-            ->when($args['passport_series'] && $args['passport_number'], function (Builder $q) use ($args) {
-                $passport_series = '%' . $args['passport_series'] . '%';
-                $passport_number = '%' . $args['passport_number'] . '%';
-                $q->where(function (Builder $query) use ($passport_series, $passport_number) {
-                    $query->where('passport_series', 'ILIKE', $passport_series)
-                        ->where('passport_number', 'ILIKE', $passport_number);
-                });
-            })
             // TODO sortable
 //            ->when($request->isSortable(), function (Builder $q) use ($request) {
 //                $q->orderBy($request->sortField(), $request->sortDirection());
@@ -102,9 +76,6 @@ class CustomersGraphQLQuery extends Query
         return [
             'sort' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
             'search' => 'nullable|string|max:255',
-            'pinfl' => 'nullable|string|size:14',
-            'passport_series' => 'nullable|string|size:2',
-            'passport_number' => 'nullable|int|size:7',
             'page' => 'nullable|int|min:1',
             'per_page' => 'nullable|int|min:5|max:100',
         ];

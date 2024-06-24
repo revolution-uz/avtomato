@@ -50,8 +50,7 @@ enum ModuleEnum: string
             FeatureEnum::PROFILE_EDIT,
             FeatureEnum::BALANCE_FUND,
             FeatureEnum::BALANCE_CHARGE,
-            FeatureEnum::THEME_MANAGEMENT,
-            FeatureEnum::GET_STATIC_INFORMATION => self::cases(),
+            FeatureEnum::THEME_MANAGEMENT => self::cases(),
         };
     }
 }

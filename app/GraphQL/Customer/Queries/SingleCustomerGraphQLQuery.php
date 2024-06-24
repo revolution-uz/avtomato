@@ -29,6 +29,7 @@ class SingleCustomerGraphQLQuery extends Query
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', 'exists:customers,id'],
             ],
         ];
     }
@@ -41,12 +42,5 @@ class SingleCustomerGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return Customer::query()->findOrFail($args['id']);
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'id' => 'int|exists:customers,id',
-        ];
     }
 }

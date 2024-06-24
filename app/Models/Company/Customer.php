@@ -54,6 +54,8 @@ class Customer extends Model
     use HasFactory, SoftDeletes, TenantConnection;
     use LogsActivityDirtyOnlyTrait;
 
+    public static array $sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name', 'birth_date'];
+
     protected $fillable = [
         'pinfl',
         'tin',
