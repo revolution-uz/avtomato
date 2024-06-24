@@ -84,6 +84,7 @@ return [
     'schemas' => [
         'management' => \App\GraphQL\Management\ManagementGraphQLSchema::class,
         'common' => CommonGraphQLSchema::class,
+        'scoring' => \App\GraphQL\Scoring\ScoringGraphQLSchema::class,
     ],
 
     // The global types available to all schemas.
