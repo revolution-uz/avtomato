@@ -14,7 +14,7 @@ class PensionInfoGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Credit History GraphQL Type',
+        'description' => 'Pension Info GraphQL Type',
     ];
 
     public function fields(): array

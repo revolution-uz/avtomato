@@ -14,7 +14,7 @@ class InpsHistoryGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Credit History GraphQL Type',
+        'description' => 'Inps History GraphQL Type',
     ];
 
     public function fields(): array

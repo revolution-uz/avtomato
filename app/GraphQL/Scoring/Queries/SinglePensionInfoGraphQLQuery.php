@@ -11,7 +11,7 @@ use App\Models\Company\ScoringRequest;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -43,18 +43,18 @@ class SinglePensionInfoGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $scoring = ScoringRequest::findOrFail($args['id']);
-        if ($scoring->status !== ScoringRequestStatusEnum::SUCCESS || $scoring->type !== ScoringRequestTypeEnum::KATM_PENSION_INFO) {
-            throw new ModelNotFoundException;
-        }
-
-        return $scoring;
+        return ScoringRequest::findOrFail($args['id']);
     }
 
     protected function rules(array $args = []): array
     {
         return [
-            'id' => 'int|exists:scoring_requests,id',
+            'id' => [
+                'required',
+                Rule::exists('scoring_requests', 'id')
+                    ->where('status', ScoringRequestStatusEnum::SUCCESS)
+                    ->where('type', ScoringRequestTypeEnum::KATM_PENSION_INFO),
+            ],
         ];
     }
 }
