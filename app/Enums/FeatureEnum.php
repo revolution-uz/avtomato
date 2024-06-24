@@ -12,7 +12,6 @@ enum FeatureEnum: string
     case CUSTOMER_MANAGEMENT = 'customer_management';
     case ADD_CARD_PHONE_REQUIRED = 'add_card_phone_required';
     case CUSTOMER_CARDS_MANAGEMENT = 'customer_cards_management';
-    case GET_STATIC_INFORMATION = 'info_view';
     case CALCULATOR_INSTALLMENT = 'calculator_installment';
     case INSTALLMENT_MANAGEMENT = 'installment_management';
     case SMS = 'sms';
@@ -48,7 +47,6 @@ enum FeatureEnum: string
             self::USER_MANAGEMENT => 'Foydalanuvchilarni boshqarish imkoniyati',
             self::ROLE_MANAGEMENT => 'Rollarni boshqarish imkoniyati',
             self::THEME_MANAGEMENT => 'Foydalanuvchi UI ni o\'ziga moslashtira olishi imkoniyati',
-            self::GET_STATIC_INFORMATION => 'Pasport ma\'lumotlari orqali formani to\'ldirish funksiyasi',
             self::ACTIVITY_LOG => 'Foydalanuvchi loglarini ko\'rish imkoniyati',
             self::SCORING_CREDIT_HISTORY => 'Kredit tarixini KATM orqali olish',
             self::SCORING_PENSION_INFO => 'Pensiya tarixini KATM orqali olish',

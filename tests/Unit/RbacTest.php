@@ -26,6 +26,10 @@ class RbacTest extends TestCase
             'api/v1/logout',
             'api/v1/docs',
             'api/v1/profile/me',
+            'api/v1/info/settings',
+            'api/v1/info/regions',
+            'api/v1/info/districts',
+            'api/v1/info/mahallas',
         ];
 
         /** @var RouteCollection $routes */

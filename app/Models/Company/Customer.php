@@ -35,7 +35,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property GenderEnum|null $gender
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property string|null $deleted_at
+ * @property Carbon|null $deleted_at
  * @property Attachment[] $attachments
  * @property Address[]|Collection<int,Address> $addresses
  * @property Phone[]|Collection<int,Phone> $phones
@@ -53,6 +53,8 @@ class Customer extends Model
 {
     use HasFactory, SoftDeletes, TenantConnection;
     use LogsActivityDirtyOnlyTrait;
+
+    public static array $sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name', 'birth_date'];
 
     protected $fillable = [
         'pinfl',

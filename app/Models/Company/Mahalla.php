@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,11 +16,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_oz
  * @property string $name_ru
  * @property string $name_en
- * @property District $district
+ * @property-read string $name
+ * @property-read District $district
  */
 class Mahalla extends Model
 {
     use HasFactory, TenantConnection;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -34,5 +37,10 @@ class Mahalla extends Model
     public function district(): BelongsTo
     {
         return $this->belongsTo(District::class);
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }
 }
