@@ -15,10 +15,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class ReadPensionInfoGraphQLQuery extends Query
+class SinglePensionInfoGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'readKatmCreditHistory',
+        'name' => 'singlePensionInfo',
     ];
 
     public function type(): Type

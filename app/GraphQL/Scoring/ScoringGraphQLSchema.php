@@ -2,12 +2,12 @@
 
 namespace App\GraphQL\Scoring;
 
-use App\GraphQL\Scoring\Queries\CreditHistoryGraphQLQuery;
-use App\GraphQL\Scoring\Queries\InpsHistoryGraphQLQuery;
-use App\GraphQL\Scoring\Queries\PensionInfoGraphQLQuery;
-use App\GraphQL\Scoring\Queries\ReadCreditHistoryGraphQLQuery;
-use App\GraphQL\Scoring\Queries\ReadInpsHistoryGraphQLQuery;
-use App\GraphQL\Scoring\Queries\ReadPensionInfoGraphQLQuery;
+use App\GraphQL\Scoring\Queries\CreditHistoriesGraphQLQuery;
+use App\GraphQL\Scoring\Queries\InpsHistoriesGraphQLQuery;
+use App\GraphQL\Scoring\Queries\PensionInfosGraphQLQuery;
+use App\GraphQL\Scoring\Queries\SingleCreditHistoryGraphQLQuery;
+use App\GraphQL\Scoring\Queries\SingleInpsHistoryGraphQLQuery;
+use App\GraphQL\Scoring\Queries\SinglePensionInfoGraphQLQuery;
 use App\GraphQL\Scoring\Types\CreditHistory\CreditHistoryGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\KatmCreditHistoryAdditionalInfoGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\KatmCreditHistoryDebtGraphQLType;
@@ -35,12 +35,12 @@ class ScoringGraphQLSchema implements ConfigConvertible
     {
         return [
             'query' => [
-                CreditHistoryGraphQLQuery::class,
-                ReadCreditHistoryGraphQLQuery::class,
-                InpsHistoryGraphQLQuery::class,
-                ReadInpsHistoryGraphQLQuery::class,
-                PensionInfoGraphQLQuery::class,
-                ReadPensionInfoGraphQLQuery::class,
+                CreditHistoriesGraphQLQuery::class,
+                SingleCreditHistoryGraphQLQuery::class,
+                InpsHistoriesGraphQLQuery::class,
+                SingleInpsHistoryGraphQLQuery::class,
+                PensionInfosGraphQLQuery::class,
+                SinglePensionInfoGraphQLQuery::class,
             ],
             'mutation' => [
             ],

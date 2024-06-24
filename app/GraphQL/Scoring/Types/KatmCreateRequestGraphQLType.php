@@ -8,7 +8,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class KatmCreateRequestGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'ScoringRequestDTOGraphQLType';
+    public const GRAPHQL_TYPE_NAME = 'KatmCreateRequestGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

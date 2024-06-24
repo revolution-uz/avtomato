@@ -14,10 +14,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class InpsHistoryGraphQLQuery extends Query
+class InpsHistoriesGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'katmCreditHistory',
+        'name' => 'inpsHistories',
     ];
 
     public function type(): Type

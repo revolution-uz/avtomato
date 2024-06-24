@@ -4,7 +4,7 @@ namespace App\GraphQL\Scoring\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\CreditHistory\CreditHistoryGraphQLType;
+use App\GraphQL\Scoring\Types\PensionHistory\PensionInfoGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ScoringRequest;
 use Closure;
@@ -14,15 +14,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class CreditHistoryGraphQLQuery extends Query
+class PensionInfosGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'katmCreditHistory',
+        'name' => 'pensionInfos',
     ];
 
     public function type(): Type
     {
-        return GraphQL::paginate(CreditHistoryGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(PensionInfoGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -49,13 +49,13 @@ class CreditHistoryGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::SCORING_CREDIT_HISTORY_VIEW_ALL);
+        return RbacHelper::checkPermission(PermissionEnum::SCORING_PENSION_INFO_VIEW_ALL);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return ScoringRequest::query()
-            ->where('type', ScoringRequestTypeEnum::KATM_CREDIT_HISTORY)
+            ->where('type', ScoringRequestTypeEnum::KATM_PENSION_INFO)
             ->when($args['search'], function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
