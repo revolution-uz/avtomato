@@ -22,7 +22,7 @@ class InpsHistoriesGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::paginate(InpsHistoryGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(GraphQL::type(InpsHistoryGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array

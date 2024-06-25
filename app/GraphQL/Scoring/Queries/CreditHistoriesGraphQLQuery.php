@@ -22,7 +22,7 @@ class CreditHistoriesGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::paginate(CreditHistoryGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(GraphQL::type(CreditHistoryGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array

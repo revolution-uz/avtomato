@@ -22,7 +22,7 @@ class PensionInfosGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::paginate(PensionInfoGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(GraphQL::type(PensionInfoGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array

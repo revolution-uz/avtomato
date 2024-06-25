@@ -12,6 +12,7 @@ use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
 class SingleCreditHistoryGraphQLQuery extends Query
@@ -22,7 +23,7 @@ class SingleCreditHistoryGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(CreditHistoryGraphQLType::GRAPHQL_TYPE_NAME);
+        return Type::nonNull(GraphQL::type(CreditHistoryGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
