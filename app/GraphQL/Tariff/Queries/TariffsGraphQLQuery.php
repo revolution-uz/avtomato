@@ -48,7 +48,7 @@ class TariffsGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_VIEW_ALL);
+        return RbacHelper::checkPermission(PermissionEnum::TARIFF_VIEW_ALL);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
