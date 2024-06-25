@@ -3,7 +3,7 @@
 namespace App\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\TransactionType\Types\TransactionTypeGraphQLType;
+use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\TransactionType;
 use Closure;

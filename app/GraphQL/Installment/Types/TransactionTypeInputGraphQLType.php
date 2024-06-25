@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\TransactionType\Types;
+namespace App\GraphQL\Installment\Types;
 
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\InputType;
