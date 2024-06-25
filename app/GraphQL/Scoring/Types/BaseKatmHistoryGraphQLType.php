@@ -8,7 +8,7 @@ use Rebing\GraphQL\Support\Facades\GraphQL;
 
 class BaseKatmHistoryGraphQLType
 {
-    public function fields(): array
+    public static function fields(): array
     {
         return [
             'id' => [
