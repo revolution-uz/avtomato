@@ -5,8 +5,9 @@ namespace App\GraphQL\Scoring\Types\PensionHistory;
 use App\GraphQL\Scoring\Types\BaseKatmHistoryGraphQLType;
 use App\Models\Company\ScoringRequest;
 use Rebing\GraphQL\Support\Facades\GraphQL;
+use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class PensionInfoGraphQLType extends BaseKatmHistoryGraphQLType
+class PensionInfoGraphQLType extends GraphQLType
 {
     public const GRAPHQL_TYPE_NAME = 'PensionInfoGraphQLType';
 
@@ -17,7 +18,7 @@ class PensionInfoGraphQLType extends BaseKatmHistoryGraphQLType
 
     public function fields(): array
     {
-        $fields = parent::fields();
+        $fields = BaseKatmHistoryGraphQLType::fields();
 
         $fields['response'] = [
             'type' => GraphQL::type(KatmPensionInfoResponseGraphQLType::GRAPHQL_TYPE_NAME),

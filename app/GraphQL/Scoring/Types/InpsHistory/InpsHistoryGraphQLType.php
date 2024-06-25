@@ -5,8 +5,9 @@ namespace App\GraphQL\Scoring\Types\InpsHistory;
 use App\GraphQL\Scoring\Types\BaseKatmHistoryGraphQLType;
 use App\Models\Company\ScoringRequest;
 use Rebing\GraphQL\Support\Facades\GraphQL;
+use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class InpsHistoryGraphQLType extends BaseKatmHistoryGraphQLType
+class InpsHistoryGraphQLType extends GraphQLType
 {
     public const GRAPHQL_TYPE_NAME = 'InpsHistoryGraphQLType';
 
@@ -17,7 +18,7 @@ class InpsHistoryGraphQLType extends BaseKatmHistoryGraphQLType
 
     public function fields(): array
     {
-        $fields = parent::fields();
+        $fields = BaseKatmHistoryGraphQLType::fields();
         $fields['response'] = [
             'type' => GraphQL::type(KatmInpsHistoryResponseGraphQLType::GRAPHQL_TYPE_NAME),
             'description' => 'Request of Inps History scoring',
