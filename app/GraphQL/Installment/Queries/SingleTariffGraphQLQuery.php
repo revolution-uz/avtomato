@@ -1,9 +1,9 @@
 <?php
 
-namespace App\GraphQL\Tariff\Queries;
+namespace App\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Tariff\Types\TariffGraphQLType;
+use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Tariff;
 use Closure;

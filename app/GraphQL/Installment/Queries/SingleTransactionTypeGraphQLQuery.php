@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\TransactionType\Queries;
+namespace App\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\TransactionType\Types\TransactionTypeGraphQLType;
