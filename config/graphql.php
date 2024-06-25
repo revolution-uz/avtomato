@@ -86,6 +86,7 @@ return [
         'common' => CommonGraphQLSchema::class,
         'customer' => \App\GraphQL\Customer\CustomerQLSchema::class,
         'scoring' => \App\GraphQL\Scoring\ScoringGraphQLSchema::class,
+        'tariff' => \App\GraphQL\Tariff\TariffGraphQLSchema::class,
     ],
 
     // The global types available to all schemas.
