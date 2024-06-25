@@ -46,26 +46,27 @@ class ScoringGraphQLSchema implements ConfigConvertible
             ],
             'types' => [
                 CreditHistoryGraphQLType::class,
-                KatmCreditHistoryResponseGraphQLType::class,
-                KatmClientGraphQLType::class,
-                KatmCreateRequestGraphQLType::class,
                 KatmCreditHistoryAdditionalInfoGraphQLType::class,
                 KatmCreditHistoryDebtGraphQLType::class,
+                KatmCreditHistoryResponseGraphQLType::class,
                 KatmCreditHistoryScoreGraphQLType::class,
 
+                KatmClientGraphQLType::class,
+                KatmCreateRequestGraphQLType::class,
+
                 InpsHistoryGraphQLType::class,
-                KatmInpsHistoryResponseGraphQLType::class,
                 KatmIncomeGraphQLType::class,
                 KatmIncomesGraphQLType::class,
                 KatmIncomesPeriodGraphQLType::class,
+                KatmInpsHistoryResponseGraphQLType::class,
                 KatmPresenceReportGraphQLType::class,
                 KatmPresenceReportsGraphQLType::class,
 
-                PensionInfoGraphQLType::class,
-                KatmPensionInfoResponseGraphQLType::class,
                 KatmPensionDataGraphQLType::class,
+                KatmPensionInfoResponseGraphQLType::class,
                 KatmPensionRowGraphQLType::class,
                 KatmPensionSizePensionGraphQLType::class,
+                PensionInfoGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
