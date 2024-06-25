@@ -12,6 +12,7 @@ use App\GraphQL\Customer\Queries\SingleCustomerGraphQLQuery;
 use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
+use App\GraphQL\Customer\Types\CustomerInputGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
@@ -36,6 +37,7 @@ class CustomerQLSchema implements ConfigConvertible
                 PhoneGraphQLType::class,
                 CustomerGraphQLType::class,
                 CardGraphQLType::class,
+                CustomerInputGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
