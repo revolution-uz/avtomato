@@ -16,7 +16,6 @@ class AddressGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Address GraphQL Type',
     ];
 
     public function fields(): array
@@ -43,7 +42,7 @@ class AddressGraphQLType extends GraphQLType
                 'resolve' => fn (Address $root) => $root->region,
             ],
             'district_id' => [
-                'type' => Type::nonNull(Type::nonNull(Type::int())),
+                'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Address $root) => $root->district_id,
             ],
             'district' => [
