@@ -8,7 +8,6 @@ use App\GraphQL\Scoring\Queries\PensionInfosGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleCreditHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleInpsHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SinglePensionInfoGraphQLQuery;
-use App\GraphQL\Scoring\Types\BaseKatmHistoryGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\CreditHistoryGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\KatmCreditHistoryAdditionalInfoGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\KatmCreditHistoryDebtGraphQLType;
@@ -46,8 +45,6 @@ class ScoringGraphQLSchema implements ConfigConvertible
             'mutation' => [
             ],
             'types' => [
-                BaseKatmHistoryGraphQLType::class,
-
                 CreditHistoryGraphQLType::class,
                 KatmCreditHistoryResponseGraphQLType::class,
                 KatmClientGraphQLType::class,
