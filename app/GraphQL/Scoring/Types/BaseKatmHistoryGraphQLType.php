@@ -5,9 +5,8 @@ namespace App\GraphQL\Scoring\Types;
 use App\Models\Company\ScoringRequest;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
-use Rebing\GraphQL\Support\Type as GraphQLType;
 
-abstract class BaseKatmHistoryGraphQLType extends GraphQLType
+class BaseKatmHistoryGraphQLType
 {
     public function fields(): array
     {
