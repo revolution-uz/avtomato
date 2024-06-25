@@ -1,10 +1,10 @@
 <?php
 
-namespace App\GraphQL\Tariff\Mutations;
+namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
-use App\GraphQL\Tariff\Types\TariffInputGraphQLType;
+use App\GraphQL\Installment\Types\TariffInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Tariff;
 use Closure;

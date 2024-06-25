@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Tariff\Types;
+namespace App\GraphQL\Installment\Types;
 
 use App\Models\Company\Tariff;
 use GraphQL\Type\Definition\Type;

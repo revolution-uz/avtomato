@@ -1,10 +1,10 @@
 <?php
 
-namespace App\GraphQL\TransactionType\Mutations;
+namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\TransactionType\Types\TransactionTypeGraphQLType;
-use App\GraphQL\TransactionType\Types\TransactionTypeInputGraphQLType;
+use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
+use App\GraphQL\Installment\Types\TransactionTypeInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\TransactionType;
 use Closure;

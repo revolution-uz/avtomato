@@ -1,26 +1,26 @@
 <?php
 
-namespace App\GraphQL\TransactionType\Queries;
+namespace App\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\TransactionType\Types\TransactionTypeGraphQLType;
+use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\TransactionType;
+use App\Models\Company\Tariff;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class SingleTransactionTypeGraphQLQuery extends Query
+class SingleTariffGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'singleTransactionType',
+        'name' => 'singleTariff',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(TransactionTypeGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(TariffGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
@@ -29,18 +29,18 @@ class SingleTransactionTypeGraphQLQuery extends Query
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:transaction_types,id'],
+                'rules' => ['required', 'exists:tariffs,id'],
             ],
         ];
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::TRANSACTION_TYPE_VIEW);
+        return RbacHelper::checkPermission(PermissionEnum::TARIFF_VIEW);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return TransactionType::query()->findOrFail($args['id']);
+        return Tariff::query()->findOrFail($args['id']);
     }
 }

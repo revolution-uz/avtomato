@@ -1,11 +1,11 @@
 <?php
 
-namespace App\GraphQL\Tariff\Queries;
+namespace App\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Tariff\Types\TariffGraphQLType;
+use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Tariff;
+use App\Models\Company\TransactionType;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -13,15 +13,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class TariffsGraphQLQuery extends Query
+class TransactionTypesGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'tariffs',
+        'name' => 'transactionTypes',
     ];
 
     public function type(): Type
     {
-        return GraphQL::paginate(TariffGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(TransactionTypeGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -53,11 +53,13 @@ class TariffsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return Tariff::query()
+        return TransactionType::query()
             ->when($args['search'], function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
-                    $query->where('name', 'ILIKE', $search);
+                    $query->orWhere('name_uz', 'ILIKE', $search)
+                        ->orWhere('name_ru', 'ILIKE', $search)
+                        ->orWhere('name_en', 'ILIKE', $search);
                 });
             })
             // TODO sortable
