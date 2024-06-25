@@ -10,10 +10,10 @@ use App\GraphQL\Installment\Queries\TariffsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionTypesGraphQLQuery;
 use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\GraphQL\Installment\Types\TariffInputGraphQLType;
-use App\GraphQL\TransactionType\Mutations\CreateTransactionTypeGraphQLMutation;
-use App\GraphQL\TransactionType\Mutations\UpdateTransactionTypeGraphQLMutation;
-use App\GraphQL\TransactionType\Types\TransactionTypeGraphQLType;
-use App\GraphQL\TransactionType\Types\TransactionTypeInputGraphQLType;
+use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
+use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
+use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
+use App\GraphQL\Installment\Types\TransactionTypeInputGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class InstallmentGraphQLSchema implements ConfigConvertible
