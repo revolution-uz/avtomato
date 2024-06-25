@@ -7,7 +7,9 @@ use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\GraphQL\Customer\Mutations\CreateCustomerGraphQLMutation;
 use App\GraphQL\Customer\Mutations\UpdateCustomerGraphQLMutation;
+use App\GraphQL\Customer\Queries\CardsGraphQLQuery;
 use App\GraphQL\Customer\Queries\CustomersGraphQLQuery;
+use App\GraphQL\Customer\Queries\SingleCardGraphQLQuery;
 use App\GraphQL\Customer\Queries\SingleCustomerGraphQLQuery;
 use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\AddressInputGraphQLType;
@@ -26,6 +28,8 @@ class CustomerQLSchema implements ConfigConvertible
             'query' => [
                 CustomersGraphQLQuery::class,
                 SingleCustomerGraphQLQuery::class,
+                CardsGraphQLQuery::class,
+                SingleCardGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateCustomerGraphQLMutation::class,
