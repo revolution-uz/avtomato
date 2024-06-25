@@ -3,15 +3,15 @@
 namespace App\GraphQL\Installment;
 
 use App\GraphQL\Installment\Mutations\CreateTariffGraphQLMutation;
+use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
+use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Queries\SingleTariffGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTransactionTypeGraphQLQuery;
 use App\GraphQL\Installment\Queries\TariffsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionTypesGraphQLQuery;
 use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\GraphQL\Installment\Types\TariffInputGraphQLType;
-use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
-use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
 use App\GraphQL\Installment\Types\TransactionTypeInputGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
