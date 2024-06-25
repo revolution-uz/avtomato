@@ -12,7 +12,6 @@ use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
 class SinglePensionInfoGraphQLQuery extends Query
@@ -23,7 +22,7 @@ class SinglePensionInfoGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::paginate(PensionInfoGraphQLType::GRAPHQL_TYPE_NAME);
+        return Type::nonNull(PensionInfoGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
