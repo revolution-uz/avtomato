@@ -20,10 +20,10 @@ class PhoneInputGraphQLType extends InputType
         return [
             'phone' => [
                 'name' => 'phone',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::string()),
                 'rules' => [
                     'required',
-                    'integer',
+                    'string',
                     'digits_between:9,13',
                     'regex:/^[0-9]+$/',
                 ],

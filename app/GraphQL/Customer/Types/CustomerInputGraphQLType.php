@@ -20,20 +20,20 @@ class CustomerInputGraphQLType extends InputType
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::string()),
                 'rules' => [
                     'required',
-                    'integer',
+                    'string',
                     'digits:14',
                     'regex:/^[0-9]+$/',
                 ],
             ],
             'tin' => [
                 'name' => 'tin',
-                'type' => Type::int(),
+                'type' => Type::string(),
                 'rules' => [
                     'nullable',
-                    'integer',
+                    'string',
                     'digits:9',
                     'regex:/^[0-9]+$/',
                 ],
