@@ -59,13 +59,6 @@ class BaseScoringRequestGraphQLType
                     return $root->card_id;
                 },
             ],
-            'response' => [
-                'type' => Type::string(),
-                'description' => 'Request of scoring',
-                'resolve' => function (ScoringRequest $root) {
-                    return '';
-                },
-            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'Scoring request created timestamp',
