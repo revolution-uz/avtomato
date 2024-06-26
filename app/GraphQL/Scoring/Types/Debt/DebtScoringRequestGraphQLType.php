@@ -26,7 +26,7 @@ class DebtScoringRequestGraphQLType extends GraphQLType
             'phone' => [
                 'name' => 'phone',
                 'type' => Type::string(),
-                'resolve' => fn (TaxInfoCreateRequestDTO|MibInfoCreateRequestDTO $root) => $root->phone ?? null,
+                'resolve' => fn (TaxInfoCreateRequestDTO|MibInfoCreateRequestDTO $root) => $root instanceof MibInfoCreateRequestDTO ? $root->phone : null,
             ],
         ];
     }
