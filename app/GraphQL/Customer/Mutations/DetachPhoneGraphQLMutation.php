@@ -27,7 +27,7 @@ class DetachPhoneGraphQLMutation extends Mutation
             ],
             'phones' => [
                 'name' => 'phones',
-                'type' => Type::nonNull(Type::listOf(Type::nonNull(Type::int()))),
+                'type' => Type::nonNull(Type::listOf(Type::nonNull(Type::string()))),
                 'rules' => ['required', 'array', 'distinct'],
             ],
         ];
