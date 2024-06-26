@@ -51,15 +51,15 @@ class CardGraphQLType extends GraphQLType
                 'resolve' => fn (Card $root) => $root->is_connected,
             ],
             'phone' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::string(),
                 'resolve' => fn (Card $root) => $root->phone,
             ],
             'status' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Card $root) => $root->status,
+                'resolve' => fn (Card $root) => $root->status->value,
             ],
             'balance' => [
-                'type' => Type::nonNull(Type::float()),
+                'type' => Type::float(),
                 'resolve' => fn (Card $root) => $root->balance,
             ],
             'created_at' => [

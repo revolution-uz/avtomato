@@ -41,7 +41,7 @@ class KatmCreditHistoryAdditionalInfoGraphQLType extends GraphQLType
                 },
             ],
             'notifications' => [
-                'type' => Type::nonNull(Type::float()),
+                'type' => Type::nonNull(Type::listOf(Type::string())),
                 'description' => 'notifications',
                 'resolve' => function (KatmCreditHistoryAdditionalInfoDTO $root) {
                     return $root->notifications;
