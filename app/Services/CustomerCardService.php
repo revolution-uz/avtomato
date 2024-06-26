@@ -6,8 +6,6 @@ use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\Enums\Company\CardStatusEnum;
-use App\Http\Requests\Customer\CardRequest;
-use App\Http\Requests\Customer\ConfirmCustomerCardRequest;
 use App\Models\Company\Card;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -20,17 +18,17 @@ class CustomerCardService
     ) {
     }
 
-    public function attachCard(int $customerId, CardRequest $request)
+    public function attachCard(int $customerId, array $request)
     {
         // check has already connected card
         $card = Card::query()
             ->withTrashed()
-            ->where('number_hash', Hash::make($request->number))
+            ->where('number_hash', Hash::make($request['number']))
             ->whereNotNull('external_id');
 
         // if connected card not exists create it and send request to card service
         if (! $card->exists()) {
-            $response = $this->atmosCardService->attachCard($request->number, $request->expiry);
+            $response = $this->atmosCardService->attachCard($request['number'], $request['expiry']);
             if (! $response->result->isSucces()) {
                 throw new BadRequestHttpException($response->result->description);
             }
@@ -52,15 +50,15 @@ class CustomerCardService
         return [$card, $customResponse];
     }
 
-    public function confirmCard(int $customerId, ConfirmCustomerCardRequest $request)
+    public function confirmCard(int $customerId, array $request): array
     {
         /** @var Card $card */
         $card = Card::query()
             ->where('customer_id', $customerId)
-            ->findOrFail($request->card_id);
+            ->findOrFail($request['card_id']);
 
-        if ($request->transaction_id === $card->id && ! empty($card->phone)) {
-            $confirmed = $this->confirmationService->confirm($card->phone, $request->otp);
+        if ($request['transaction_id'] === $card->id && ! empty($card->phone)) {
+            $confirmed = $this->confirmationService->confirm($card->phone, $request['otp']);
             if ($confirmed) {
                 $card = Card::query()
                     ->withTrashed()
@@ -75,7 +73,7 @@ class CustomerCardService
             return [$card, $customResponse];
         }
 
-        $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request->transaction_id, $request->otp);
+        $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request['transaction_id'], $request['otp']);
         if ($atmosConfirmCardDto->result->isSucces()) {
             $card->external_id = $atmosConfirmCardDto->data->card_token;
             $card->owner = $atmosConfirmCardDto->data->card_holder;
@@ -87,11 +85,11 @@ class CustomerCardService
         return [$card, $atmosConfirmCardDto];
     }
 
-    private function createOrGetCard(int $customerId, CardRequest $request)
+    private function createOrGetCard(int $customerId, array $request)
     {
         $card = Card::query()
             ->where('customer_id', $customerId)
-            ->where('number_hash', Hash::make($request->number))
+            ->where('number_hash', Hash::make($request['number']))
             ->first();
 
         if ($card) {
@@ -99,7 +97,7 @@ class CustomerCardService
         }
 
         $card = new Card;
-        $card->fill($request->validated());
+        $card->fill($request);
         $card->computingBeforeInsert();
         $card->customer_id = $customerId;
         $card->status = CardStatusEnum::INACTIVE;

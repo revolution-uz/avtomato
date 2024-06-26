@@ -294,7 +294,7 @@ class CustomerController extends Controller
     )]
     public function attachCard(int $id, CardRequest $request): AttachCustomerCardResource
     {
-        [$card, $cardServiceResponse] = $this->customerCardService->attachCard($id, $request);
+        [$card, $cardServiceResponse] = $this->customerCardService->attachCard($id, $request->validated());
 
         return AttachCustomerCardResource::make($card, $cardServiceResponse);
     }
@@ -321,7 +321,7 @@ class CustomerController extends Controller
     )]
     public function confirmCard(int $id, ConfirmCustomerCardRequest $request): CardResource|ErrorConfirmCardResource
     {
-        [$card, $cardServiceResponse] = $this->customerCardService->confirmCard($id, $request);
+        [$card, $cardServiceResponse] = $this->customerCardService->confirmCard($id, $request->validated());
 
         if ($cardServiceResponse->result->isSucces()) {
             return CardResource::make($card);
