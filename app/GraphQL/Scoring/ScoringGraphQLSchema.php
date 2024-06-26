@@ -3,6 +3,7 @@
 namespace App\GraphQL\Scoring;
 
 use App\GraphQL\Common\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\GraphQL\Scoring\Mutations\CreateCardScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\CreateDebtScoringGraphQLMutation;
@@ -99,6 +100,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
 
                 RegionGraphQLType::class,
                 DistrictGraphQLType::class,
+                MahallaGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
