@@ -35,10 +35,6 @@ class InstallmentGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Installment $root) => $root->branch_id,
             ],
-            'branch' => [
-                'type' => Type::nonNull(GraphQL::type(BranchGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Installment $root) => $root->branch,
-            ],
             'tariff_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Installment $root) => $root->tariff_id,
