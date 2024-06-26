@@ -27,6 +27,7 @@ use App\GraphQL\Scoring\Types\Card\CardScoringRequestGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardScoringResponseGraphQLType;
 use App\GraphQL\Scoring\Types\Debt\DebtCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\Debt\DebtScoringGraphQLType;
+use App\GraphQL\Scoring\Types\Debt\DebtScoringRequestGraphQLType;
 use App\GraphQL\Scoring\Types\Debt\DebtScoringResponseGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\CreditHistory\CreditHistoryGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\CreditHistory\KatmCreditHistoryAdditionalInfoGraphQLType;
@@ -83,7 +84,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
 
                 DebtCreateInputGraphQLType::class,
                 DebtScoringGraphQLType::class,
-                DebtScoringRequestsGraphQLQuery::class,
+                DebtScoringRequestGraphQLType::class,
                 DebtScoringResponseGraphQLType::class,
 
                 CreditHistoryGraphQLType::class,
