@@ -45,7 +45,7 @@ class CreatePensionInfoScoringGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $dto = KatmCreateRequestDTO::from($args);
+        $dto = KatmCreateRequestDTO::from($args['data']);
 
         return (new KatmService(new AsaxiyClient))->createRequest($dto, ScoringRequestTypeEnum::KATM_PENSION_INFO);
     }
