@@ -38,7 +38,7 @@ class KatmInpsHistoryResponseGraphQLType extends GraphQLType
                 'type' => Type::nonNull(GraphQL::type(KatmIncomesGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'Incomes period',
                 'resolve' => function (KatmInpsHistoryResponseDTO $root) {
-                    return $root->incomes_period;
+                    return $root->incomes;
                 },
             ],
             'presence_reports' => [
