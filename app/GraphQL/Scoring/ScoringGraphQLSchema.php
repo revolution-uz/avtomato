@@ -2,6 +2,9 @@
 
 namespace App\GraphQL\Scoring;
 
+use App\GraphQL\Scoring\Mutations\CreateCreditHistoryScoringGraphQLMutation;
+use App\GraphQL\Scoring\Mutations\CreateInpsHistoryScoringGraphQLMutation;
+use App\GraphQL\Scoring\Mutations\CreatePensionInfoScoringGraphQLMutation;
 use App\GraphQL\Scoring\Queries\CreditHistoriesGraphQLQuery;
 use App\GraphQL\Scoring\Queries\InpsHistoriesGraphQLQuery;
 use App\GraphQL\Scoring\Queries\PensionInfosGraphQLQuery;
@@ -21,6 +24,7 @@ use App\GraphQL\Scoring\Types\InpsHistory\KatmInpsHistoryResponseGraphQLType;
 use App\GraphQL\Scoring\Types\InpsHistory\KatmPresenceReportGraphQLType;
 use App\GraphQL\Scoring\Types\InpsHistory\KatmPresenceReportsGraphQLType;
 use App\GraphQL\Scoring\Types\KatmClientGraphQLType;
+use App\GraphQL\Scoring\Types\KatmCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\KatmCreateRequestGraphQLType;
 use App\GraphQL\Scoring\Types\PensionHistory\KatmPensionDataGraphQLType;
 use App\GraphQL\Scoring\Types\PensionHistory\KatmPensionInfoResponseGraphQLType;
@@ -43,6 +47,9 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 SinglePensionInfoGraphQLQuery::class,
             ],
             'mutation' => [
+                CreateCreditHistoryScoringGraphQLMutation::class,
+                CreateInpsHistoryScoringGraphQLMutation::class,
+                CreatePensionInfoScoringGraphQLMutation::class,
             ],
             'types' => [
                 CreditHistoryGraphQLType::class,
@@ -52,6 +59,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 KatmCreditHistoryScoreGraphQLType::class,
 
                 KatmClientGraphQLType::class,
+                KatmCreateInputGraphQLType::class,
                 KatmCreateRequestGraphQLType::class,
 
                 InpsHistoryGraphQLType::class,
