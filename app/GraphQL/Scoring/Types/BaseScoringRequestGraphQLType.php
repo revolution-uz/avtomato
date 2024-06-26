@@ -2,10 +2,8 @@
 
 namespace App\GraphQL\Scoring\Types;
 
-use App\GraphQL\Scoring\Types\Katm\KatmCreateRequestGraphQLType;
 use App\Models\Company\ScoringRequest;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 
 class BaseScoringRequestGraphQLType
 {
@@ -59,13 +57,6 @@ class BaseScoringRequestGraphQLType
                 'description' => 'Card ID of scoring',
                 'resolve' => function (ScoringRequest $root) {
                     return $root->card_id;
-                },
-            ],
-            'request' => [
-                'type' => GraphQL::type(KatmCreateRequestGraphQLType::GRAPHQL_TYPE_NAME),
-                'description' => 'Request of scoring',
-                'resolve' => function (ScoringRequest $root) {
-                    return $root->request;
                 },
             ],
             'response' => [
