@@ -2,6 +2,8 @@
 
 namespace App\GraphQL\Scoring;
 
+use App\GraphQL\Scoring\Mutations\CreateCardScoringGraphQLMutation;
+use App\GraphQL\Scoring\Mutations\CreateDebtScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\CreateKatmScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\DeleteScoringRequestsGraphQLMutation;
 use App\GraphQL\Scoring\Queries\CreditHistoriesGraphQLQuery;
@@ -10,11 +12,13 @@ use App\GraphQL\Scoring\Queries\PensionInfosGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleCreditHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleInpsHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SinglePensionInfoGraphQLQuery;
+use App\GraphQL\Scoring\Types\CardCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\CreditHistoryGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\KatmCreditHistoryAdditionalInfoGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\KatmCreditHistoryDebtGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\KatmCreditHistoryResponseGraphQLType;
 use App\GraphQL\Scoring\Types\CreditHistory\KatmCreditHistoryScoreGraphQLType;
+use App\GraphQL\Scoring\Types\DebtCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\InpsHistory\InpsHistoryGraphQLType;
 use App\GraphQL\Scoring\Types\InpsHistory\KatmIncomeGraphQLType;
 use App\GraphQL\Scoring\Types\InpsHistory\KatmIncomesGraphQLType;
@@ -46,6 +50,8 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 SinglePensionInfoGraphQLQuery::class,
             ],
             'mutation' => [
+                CreateCardScoringGraphQLMutation::class,
+                CreateDebtScoringGraphQLMutation::class,
                 CreateKatmScoringGraphQLMutation::class,
                 DeleteScoringRequestsGraphQLMutation::class,
             ],
@@ -56,6 +62,8 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 KatmCreditHistoryResponseGraphQLType::class,
                 KatmCreditHistoryScoreGraphQLType::class,
 
+                CardCreateInputGraphQLType::class,
+                DebtCreateInputGraphQLType::class,
                 KatmClientGraphQLType::class,
                 KatmCreateInputGraphQLType::class,
                 KatmCreateRequestGraphQLType::class,

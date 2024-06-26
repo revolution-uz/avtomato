@@ -1,0 +1,75 @@
+<?php
+
+namespace App\GraphQL\Scoring\Mutations;
+
+use App\Clients\AsaxiyClient;
+use App\DTOs\Scoring\Card\CardCreateRequestDTO;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\GraphQL\Scoring\Types\CardCreateInputGraphQLType;
+use App\Helpers\RbacHelper;
+use App\Services\Scoring\CardScoringService;
+use App\Services\User\BalanceService;
+use Closure;
+use Exception;
+use GraphQL\Type\Definition\ResolveInfo;
+use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
+use Rebing\GraphQL\Support\Facades\GraphQL;
+use Rebing\GraphQL\Support\Mutation;
+
+class CreateCardScoringGraphQLMutation extends Mutation
+{
+    protected $attributes = [
+        'name' => 'createCardScoring',
+    ];
+
+    public function args(): array
+    {
+        return [
+            'data' => [
+                'name' => 'data',
+                'type' => Type::nonNull(GraphQL::type(CardCreateInputGraphQLType::GRAPHQL_TYPE_NAME)),
+            ],
+            'type' => [
+                'name' => 'type',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    'integer',
+                    Rule::in([
+                        ScoringRequestTypeEnum::HUMO->value,
+                        ScoringRequestTypeEnum::UZCARD->value,
+                    ]),
+                ],
+            ],
+        ];
+    }
+
+    public function type(): Type
+    {
+        return Type::nonNull(Type::int());
+    }
+
+    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
+    {
+        $type = ScoringRequestTypeEnum::from($args['type']);
+        $permission = match ($type) {
+            ScoringRequestTypeEnum::HUMO => PermissionEnum::SCORING_HUMO_CREATE,
+            ScoringRequestTypeEnum::UZCARD => PermissionEnum::SCORING_UZCARD_CREATE,
+            default => throw new Exception('Unexpected match value'),
+        };
+
+        return RbacHelper::checkPermission($permission) && (new BalanceService)->isBalanceEnoughForFeature($permission->getMyFeature());
+    }
+
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
+    {
+        $type = ScoringRequestTypeEnum::from($args['type']);
+        $dto = CardCreateRequestDTO::from($args['data']);
+
+        return $type === ScoringRequestTypeEnum::HUMO
+            ? (new CardScoringService(new AsaxiyClient, new BalanceService))->scoringHumo($dto)->id
+            : (new CardScoringService(new AsaxiyClient, new BalanceService))->scoringUzcard($dto)->id;
+    }
+}
