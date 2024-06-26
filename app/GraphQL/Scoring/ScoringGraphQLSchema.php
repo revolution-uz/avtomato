@@ -2,6 +2,8 @@
 
 namespace App\GraphQL\Scoring;
 
+use App\GraphQL\Common\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\GraphQL\Scoring\Mutations\CreateCardScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\CreateDebtScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\CreateKatmScoringGraphQLMutation;
@@ -94,6 +96,9 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 KatmPensionRowGraphQLType::class,
                 KatmPensionSizePensionGraphQLType::class,
                 PensionInfoGraphQLType::class,
+
+                RegionGraphQLType::class,
+                DistrictGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
