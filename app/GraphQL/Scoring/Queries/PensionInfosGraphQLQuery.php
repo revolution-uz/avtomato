@@ -56,7 +56,7 @@ class PensionInfosGraphQLQuery extends Query
     {
         return ScoringRequest::query()
             ->where('type', ScoringRequestTypeEnum::KATM_PENSION_INFO)
-            ->when($args['search'], function (Builder $q) use ($args) {
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
                     $query->where('request->pinfl', 'ILIKE', $search)

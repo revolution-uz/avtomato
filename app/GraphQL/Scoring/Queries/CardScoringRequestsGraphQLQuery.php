@@ -73,7 +73,7 @@ class CardScoringRequestsGraphQLQuery extends Query
     {
         return ScoringRequest::query()
             ->where('type', $args['type'])
-            ->when($args['search'], function (Builder $q) use ($args) {
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
                     $query->where('request->card_number', 'ILIKE', $search)

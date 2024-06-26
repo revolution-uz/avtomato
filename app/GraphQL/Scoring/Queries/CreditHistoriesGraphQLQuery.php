@@ -56,7 +56,7 @@ class CreditHistoriesGraphQLQuery extends Query
     {
         return ScoringRequest::query()
             ->where('type', ScoringRequestTypeEnum::KATM_CREDIT_HISTORY)
-            ->when($args['search'], function (Builder $q) use ($args) {
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
                     $query->where('request->pinfl', 'ILIKE', $search)
