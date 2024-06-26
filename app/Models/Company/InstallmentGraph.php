@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
+ * @property int $id
  * @property int $installment_id
  * @property float $amount
  * @property float $paid_amount
