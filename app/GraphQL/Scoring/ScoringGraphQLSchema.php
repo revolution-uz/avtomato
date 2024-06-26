@@ -11,10 +11,12 @@ use App\GraphQL\Scoring\Mutations\CreateKatmScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\DeleteScoringRequestsGraphQLMutation;
 use App\GraphQL\Scoring\Queries\CardScoringRequestsGraphQLQuery;
 use App\GraphQL\Scoring\Queries\CreditHistoriesGraphQLQuery;
+use App\GraphQL\Scoring\Queries\DebtScoringRequestsGraphQLQuery;
 use App\GraphQL\Scoring\Queries\InpsHistoriesGraphQLQuery;
 use App\GraphQL\Scoring\Queries\PensionInfosGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleCardScoringRequestGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleCreditHistoryGraphQLQuery;
+use App\GraphQL\Scoring\Queries\SingleDebtScoringRequestGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleInpsHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SinglePensionInfoGraphQLQuery;
 use App\GraphQL\Scoring\Types\Card\CardCreateInputGraphQLType;
@@ -24,6 +26,8 @@ use App\GraphQL\Scoring\Types\Card\CardScoringGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardScoringRequestGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardScoringResponseGraphQLType;
 use App\GraphQL\Scoring\Types\Debt\DebtCreateInputGraphQLType;
+use App\GraphQL\Scoring\Types\Debt\DebtScoringGraphQLType;
+use App\GraphQL\Scoring\Types\Debt\DebtScoringResponseGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\CreditHistory\CreditHistoryGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\CreditHistory\KatmCreditHistoryAdditionalInfoGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\CreditHistory\KatmCreditHistoryDebtGraphQLType;
@@ -54,10 +58,12 @@ class ScoringGraphQLSchema implements ConfigConvertible
             'query' => [
                 CardScoringRequestsGraphQLQuery::class,
                 CreditHistoriesGraphQLQuery::class,
+                DebtScoringRequestsGraphQLQuery::class,
                 InpsHistoriesGraphQLQuery::class,
                 PensionInfosGraphQLQuery::class,
                 SingleCardScoringRequestGraphQLQuery::class,
                 SingleCreditHistoryGraphQLQuery::class,
+                SingleDebtScoringRequestGraphQLQuery::class,
                 SingleInpsHistoryGraphQLQuery::class,
                 SinglePensionInfoGraphQLQuery::class,
             ],
@@ -75,13 +81,17 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 CardScoringRequestGraphQLType::class,
                 CardScoringResponseGraphQLType::class,
 
+                DebtCreateInputGraphQLType::class,
+                DebtScoringGraphQLType::class,
+                DebtScoringRequestsGraphQLQuery::class,
+                DebtScoringResponseGraphQLType::class,
+
                 CreditHistoryGraphQLType::class,
                 KatmCreditHistoryAdditionalInfoGraphQLType::class,
                 KatmCreditHistoryDebtGraphQLType::class,
                 KatmCreditHistoryResponseGraphQLType::class,
                 KatmCreditHistoryScoreGraphQLType::class,
 
-                DebtCreateInputGraphQLType::class,
                 KatmClientGraphQLType::class,
                 KatmCreateInputGraphQLType::class,
                 KatmCreateRequestGraphQLType::class,
