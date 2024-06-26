@@ -19,7 +19,7 @@ class CardScoringGraphQLType extends GraphQLType
     {
         return BaseScoringRequestGraphQLType::fields() + [
             'response' => [
-                'type' => GraphQL::type(CardScoringResponseGraphQLType::class),
+                'type' => GraphQL::type(CardScoringResponseGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (ScoringRequest $root) => $root->response,
             ],
         ];
