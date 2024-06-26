@@ -23,11 +23,11 @@ class CustomerGraphQLType extends GraphQLType
                 'resolve' => fn (Customer $root) => $root->id,
             ],
             'pinfl' => [
-                'type' => Type::int(),
+                'type' => Type::string(),
                 'resolve' => fn (Customer $root) => $root->pinfl,
             ],
             'tin' => [
-                'type' => Type::int(),
+                'type' => Type::string(),
                 'resolve' => fn (Customer $root) => $root->tin,
             ],
             'passport_series' => [
@@ -76,7 +76,7 @@ class CustomerGraphQLType extends GraphQLType
             ],
             'gender' => [
                 'type' => Type::int(),
-                'resolve' => fn (Customer $root) => $root->gender,
+                'resolve' => fn (Customer $root) => $root->gender->value,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
