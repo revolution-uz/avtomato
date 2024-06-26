@@ -5,7 +5,11 @@ namespace App\GraphQL\Customer;
 use App\GraphQL\Common\Types\DistrictGraphQLType;
 use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
+use App\GraphQL\Customer\Mutations\AttachAddressGraphQLMutation;
+use App\GraphQL\Customer\Mutations\AttachPhoneGraphQLMutation;
 use App\GraphQL\Customer\Mutations\CreateCustomerGraphQLMutation;
+use App\GraphQL\Customer\Mutations\DetachAddressGraphQLMutation;
+use App\GraphQL\Customer\Mutations\DetachPhoneGraphQLMutation;
 use App\GraphQL\Customer\Mutations\UpdateCustomerGraphQLMutation;
 use App\GraphQL\Customer\Queries\CustomersGraphQLQuery;
 use App\GraphQL\Customer\Queries\SingleCustomerGraphQLQuery;
@@ -30,6 +34,10 @@ class CustomerQLSchema implements ConfigConvertible
             'mutation' => [
                 CreateCustomerGraphQLMutation::class,
                 UpdateCustomerGraphQLMutation::class,
+                AttachPhoneGraphQLMutation::class,
+                DetachPhoneGraphQLMutation::class,
+                AttachAddressGraphQLMutation::class,
+                DetachAddressGraphQLMutation::class,
             ],
             'types' => [
                 AddressGraphQLType::class,
