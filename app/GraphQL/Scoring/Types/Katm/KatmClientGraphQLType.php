@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types;
+namespace App\GraphQL\Scoring\Types\Katm;
 
 use App\DTOs\Scoring\Katm\KatmClientDTO;
 use GraphQL\Type\Definition\Type;

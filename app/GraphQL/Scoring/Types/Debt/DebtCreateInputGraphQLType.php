@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types;
+namespace App\GraphQL\Scoring\Types\Debt;
 
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\InputType;

@@ -6,7 +6,7 @@ use App\Clients\AsaxiyClient;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\KatmCreateInputGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\KatmCreateInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Scoring\KatmService;
 use App\Services\User\BalanceService;

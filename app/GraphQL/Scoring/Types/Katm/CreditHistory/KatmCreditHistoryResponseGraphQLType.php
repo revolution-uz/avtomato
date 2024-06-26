@@ -1,9 +1,9 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types\CreditHistory;
+namespace App\GraphQL\Scoring\Types\Katm\CreditHistory;
 
 use App\DTOs\Scoring\Katm\CreditHistory\KatmCreditHistoryResponseDTO;
-use App\GraphQL\Scoring\Types\KatmClientGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\KatmClientGraphQLType;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;

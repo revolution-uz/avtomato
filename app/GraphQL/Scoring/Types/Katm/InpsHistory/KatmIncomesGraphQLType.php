@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types\InpsHistory;
+namespace App\GraphQL\Scoring\Types\Katm\InpsHistory;
 
 use App\DTOs\Scoring\Katm\InpsHistory\KatmIncomesDTO;
 use GraphQL\Type\Definition\Type;

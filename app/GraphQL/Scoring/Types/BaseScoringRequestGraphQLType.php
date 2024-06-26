@@ -2,11 +2,12 @@
 
 namespace App\GraphQL\Scoring\Types;
 
+use App\GraphQL\Scoring\Types\Katm\KatmCreateRequestGraphQLType;
 use App\Models\Company\ScoringRequest;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 
-class BaseKatmHistoryGraphQLType
+class BaseScoringRequestGraphQLType
 {
     public static function fields(): array
     {

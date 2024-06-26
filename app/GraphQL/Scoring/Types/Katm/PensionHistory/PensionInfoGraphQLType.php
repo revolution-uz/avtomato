@@ -1,8 +1,8 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types\PensionHistory;
+namespace App\GraphQL\Scoring\Types\Katm\PensionHistory;
 
-use App\GraphQL\Scoring\Types\BaseKatmHistoryGraphQLType;
+use App\GraphQL\Scoring\Types\BaseScoringRequestGraphQLType;
 use App\Models\Company\ScoringRequest;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -18,7 +18,7 @@ class PensionInfoGraphQLType extends GraphQLType
 
     public function fields(): array
     {
-        $fields = BaseKatmHistoryGraphQLType::fields();
+        $fields = BaseScoringRequestGraphQLType::fields();
 
         $fields['response'] = [
             'type' => GraphQL::type(KatmPensionInfoResponseGraphQLType::GRAPHQL_TYPE_NAME),

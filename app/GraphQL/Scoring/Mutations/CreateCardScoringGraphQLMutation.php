@@ -6,7 +6,7 @@ use App\Clients\AsaxiyClient;
 use App\DTOs\Scoring\Card\CardCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\CardCreateInputGraphQLType;
+use App\GraphQL\Scoring\Types\Card\CardCreateInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Scoring\CardScoringService;
 use App\Services\User\BalanceService;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types;
+namespace App\GraphQL\Scoring\Types\Card;
 
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\InputType;

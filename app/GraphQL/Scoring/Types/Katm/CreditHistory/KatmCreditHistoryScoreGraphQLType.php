@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types\CreditHistory;
+namespace App\GraphQL\Scoring\Types\Katm\CreditHistory;
 
 use App\DTOs\Scoring\Katm\CreditHistory\KatmCreditHistoryScoreDTO;
 use GraphQL\Type\Definition\Type;

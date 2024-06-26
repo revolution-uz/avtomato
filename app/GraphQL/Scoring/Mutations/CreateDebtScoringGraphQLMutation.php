@@ -7,7 +7,7 @@ use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\DebtCreateInputGraphQLType;
+use App\GraphQL\Scoring\Types\Debt\DebtCreateInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Scoring\MibService;
 use App\Services\Scoring\TaxService;

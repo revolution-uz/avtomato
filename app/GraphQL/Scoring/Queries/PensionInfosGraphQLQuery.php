@@ -4,7 +4,7 @@ namespace App\GraphQL\Scoring\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\PensionHistory\PensionInfoGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\PensionHistory\PensionInfoGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ScoringRequest;
 use Closure;

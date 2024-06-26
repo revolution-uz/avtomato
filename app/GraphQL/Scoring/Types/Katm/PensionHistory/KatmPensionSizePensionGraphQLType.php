@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types\PensionHistory;
+namespace App\GraphQL\Scoring\Types\Katm\PensionHistory;
 
 use App\DTOs\Scoring\Katm\PensionInfo\KatmPensionSizePensionDTO;
 use GraphQL\Type\Definition\Type;

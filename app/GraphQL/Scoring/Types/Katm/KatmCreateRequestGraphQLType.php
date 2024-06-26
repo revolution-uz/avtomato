@@ -1,9 +1,14 @@
 <?php
 
-namespace App\GraphQL\Scoring\Types;
+namespace App\GraphQL\Scoring\Types\Katm;
 
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
+use App\GraphQL\Common\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\RegionGraphQLType;
+use App\Models\Company\District;
+use App\Models\Company\Region;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class KatmCreateRequestGraphQLType extends GraphQLType
@@ -95,12 +100,20 @@ class KatmCreateRequestGraphQLType extends GraphQLType
                     return $root->region_id;
                 },
             ],
+            'region' => [
+                'type' => Type::nonNull(GraphQL::type(RegionGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (KatmCreateRequestDTO $root) => Region::find($root->region_id),
+            ],
             'district_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'District ID of scoring request DTO',
                 'resolve' => function (KatmCreateRequestDTO $root) {
                     return $root->district_id;
                 },
+            ],
+            'district' => [
+                'type' => Type::nonNull(GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (KatmCreateRequestDTO $root) => District::find($root->district_id),
             ],
         ];
     }
