@@ -36,7 +36,7 @@ class DetachAddressGraphQLMutation extends Mutation
                     if ($validator->fails()) {
                         return $fail($validator->errors());
                     }
-                },],
+                }, ],
             ],
         ];
     }

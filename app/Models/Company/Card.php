@@ -104,7 +104,6 @@ class Card extends Model
     {
         $this->status = CardStatusEnum::INACTIVE;
         $this->setPan();
-        //        $this->setNumber();
     }
 
     public function cardType(): Attribute
@@ -112,9 +111,9 @@ class Card extends Model
         return Attribute::make(get: fn () => CardHelper::getNameByCardNumber($this->number));
     }
 
-    public function isConnected(): bool
+    public function isConnected(): Attribute
     {
-        return $this->external_id !== null;
+        return Attribute::make(get: fn () => $this->external_id !== null);
     }
 
     public function isBindedWithInstallment(): bool

@@ -31,7 +31,7 @@ class AddressGraphQLType extends GraphQLType
             ],
             'type' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Address $root) => $root->type,
+                'resolve' => fn (Address $root) => $root->type->value,
             ],
             'region_id' => [
                 'type' => Type::nonNull(Type::int()),

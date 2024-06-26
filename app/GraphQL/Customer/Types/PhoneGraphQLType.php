@@ -22,8 +22,8 @@ class PhoneGraphQLType extends GraphQLType
                 'resolve' => fn (Phone $root) => $root->id,
             ],
             'phone' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Phone $root) => $root->phone,
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Phone $root) => (string) $root->phone,
             ],
             'type' => [
                 'type' => Type::nonNull(Type::int()),

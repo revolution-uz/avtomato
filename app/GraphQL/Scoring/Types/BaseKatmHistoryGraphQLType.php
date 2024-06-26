@@ -29,21 +29,21 @@ class BaseKatmHistoryGraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'Status of scoring',
                 'resolve' => function (ScoringRequest $root) {
-                    return $root->status;
+                    return $root->status->value;
                 },
             ],
             'type' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'Type of scoring',
                 'resolve' => function (ScoringRequest $root) {
-                    return $root->type;
+                    return $root->type->value;
                 },
             ],
             'client_code' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'Client code of scoring',
                 'resolve' => function (ScoringRequest $root) {
-                    return $root->client_code;
+                    return $root->client_code->value;
                 },
             ],
             'customer_id' => [
