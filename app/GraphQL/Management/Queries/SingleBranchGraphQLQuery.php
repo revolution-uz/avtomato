@@ -35,7 +35,7 @@ class SingleBranchGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::ACTIVITY_LOG_VIEW);
+        return RbacHelper::checkPermission(PermissionEnum::BRANCH_VIEW);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
