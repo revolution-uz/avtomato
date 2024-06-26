@@ -31,7 +31,7 @@ class AttachPhoneGraphQLMutation extends Mutation
             ],
             'phone' => [
                 'name' => 'phone',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::string()),
                 'rules' => ['distinct', 'required', 'int', new PhoneRule],
             ],
             'type' => [
