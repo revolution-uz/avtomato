@@ -14,15 +14,18 @@ use App\GraphQL\Management\Mutations\RevokeDeviceGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\UploadAvatarGraphQLMutation;
 use App\GraphQL\Management\Queries\ActivityLogsGraphQLQuery;
+use App\GraphQL\Management\Queries\BranchesGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileDevicesGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileGraphQLQuery;
 use App\GraphQL\Management\Queries\RolesGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleActivityLogGraphQLQuery;
+use App\GraphQL\Management\Queries\SingleBranchGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleRoleGraphQLQuery;
 use App\GraphQL\Management\Types\ActivityLogGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
 use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
@@ -46,6 +49,8 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 ActivityLogsGraphQLQuery::class,
                 SingleRoleGraphQLQuery::class,
                 RolesGraphQLQuery::class,
+                BranchesGraphQLQuery::class,
+                SingleBranchGraphQLQuery::class,
             ],
             'mutation' => [
                 LogoutGraphQLMutation::class,
@@ -73,6 +78,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 PermissionBranchItemGraphQLType::class,
                 PermissionEditableItemGraphQLType::class,
                 PermissionGroupGraphQLType::class,
+                BranchGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
