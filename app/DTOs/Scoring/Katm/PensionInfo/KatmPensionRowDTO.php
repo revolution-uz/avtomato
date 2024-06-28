@@ -20,6 +20,5 @@ class KatmPensionRowDTO extends BaseScoringResponse
         public string $period,
         public string $month,
         public float $summa,
-    ) {
-    }
+    ) {}
 }

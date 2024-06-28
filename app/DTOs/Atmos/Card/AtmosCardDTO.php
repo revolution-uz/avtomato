@@ -14,6 +14,5 @@ class AtmosCardDTO extends BaseScoringRequest
         public ?int $balance, //tiyin
         public ?string $phone,
         public ?string $card_token,
-    ) {
-    }
+    ) {}
 }

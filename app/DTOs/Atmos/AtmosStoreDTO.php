@@ -12,6 +12,5 @@ class AtmosStoreDTO extends BaseScoringRequest
         public ?string $desc,
         public ?string $logo,
         public ?string $ga_id,
-    ) {
-    }
+    ) {}
 }

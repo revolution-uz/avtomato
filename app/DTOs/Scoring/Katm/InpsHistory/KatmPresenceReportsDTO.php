@@ -19,6 +19,5 @@ class KatmPresenceReportsDTO extends BaseScoringResponse
     public function __construct(
         #[DataCollectionOf(KatmPresenceReportDTO::class)]
         public ?DataCollection $presence_report,
-    ) {
-    }
+    ) {}
 }

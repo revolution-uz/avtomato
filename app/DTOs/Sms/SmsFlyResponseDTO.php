@@ -20,6 +20,5 @@ class SmsFlyResponseDTO extends BaseScoringRequest
         public bool $success,
         public string $reason,
         public int $resultCode
-    ) {
-    }
+    ) {}
 }

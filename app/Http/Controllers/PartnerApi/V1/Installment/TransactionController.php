@@ -32,8 +32,7 @@ class TransactionController extends Controller
 {
     public function __construct(
         private readonly AtmosService $atmosCardService,
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/v1/installment/transaction',

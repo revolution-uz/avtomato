@@ -11,6 +11,5 @@ class AtmosTransactionDetailDTO extends Data
         public int $amount,
         public int $upper_commission,
         public string $status,
-    ) {
-    }
+    ) {}
 }

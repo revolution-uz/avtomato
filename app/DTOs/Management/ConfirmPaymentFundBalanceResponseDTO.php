@@ -14,7 +14,5 @@ class ConfirmPaymentFundBalanceResponseDTO extends Data
         public string $merchantId,
         public string $cardNumber,
         public string $date,
-    ) {
-
-    }
+    ) {}
 }

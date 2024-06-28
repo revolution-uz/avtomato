@@ -9,6 +9,5 @@ class CreateUserCardDTO extends BaseScoringRequest
     public function __construct(
         public int $session,
         public string $otpSentPhone,
-    ) {
-    }
+    ) {}
 }

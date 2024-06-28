@@ -15,9 +15,7 @@ use Throwable;
 
 class AtmosService
 {
-    public function __construct(private readonly AtmosCardClient $atmosCardClient)
-    {
-    }
+    public function __construct(private readonly AtmosCardClient $atmosCardClient) {}
 
     /**
      * @throws AtmosException

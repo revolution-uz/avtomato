@@ -38,6 +38,5 @@ class KatmPensionDataDTO extends BaseScoringResponse
         public string $datepay,
         public string $pinpp,
         public string $datepens,
-    ) {
-    }
+    ) {}
 }

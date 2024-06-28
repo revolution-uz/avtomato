@@ -16,6 +16,5 @@ class MibInfoResponseDTO extends BaseScoringResponse
 {
     public function __construct(
         public int $debtBal,
-    ) {
-    }
+    ) {}
 }

@@ -18,6 +18,5 @@ class CardRemoveResource extends JsonResource
     public function __construct(
         public bool $card,
         public string $message,
-    ) {
-    }
+    ) {}
 }

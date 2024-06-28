@@ -8,6 +8,5 @@ class TaxInfoCreateRequestDTO extends BaseScoringRequest
 {
     public function __construct(
         public string $pinfl
-    ) {
-    }
+    ) {}
 }

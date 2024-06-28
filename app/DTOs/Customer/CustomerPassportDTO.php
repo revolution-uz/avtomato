@@ -17,6 +17,5 @@ class CustomerPassportDTO extends Data
         public string $pinfl,
         public string $passport_series,
         public string $passport_number,
-    ) {
-    }
+    ) {}
 }

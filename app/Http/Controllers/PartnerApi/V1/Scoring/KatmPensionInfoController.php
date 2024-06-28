@@ -29,8 +29,7 @@ class KatmPensionInfoController extends Controller
 {
     public function __construct(
         private readonly KatmService $katmService,
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/v1/scoring/pension-info',

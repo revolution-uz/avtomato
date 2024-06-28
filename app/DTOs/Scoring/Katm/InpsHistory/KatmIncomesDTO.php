@@ -19,6 +19,5 @@ class KatmIncomesDTO extends BaseScoringResponse
     public function __construct(
         #[DataCollectionOf(KatmIncomeDTO::class)]
         public ?DataCollection $income,
-    ) {
-    }
+    ) {}
 }

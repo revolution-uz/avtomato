@@ -26,8 +26,7 @@ class KatmCreateRequestDTO extends BaseScoringRequest
         public Carbon $birth_date,
         public int $region_id,
         public int $district_id,
-    ) {
-    }
+    ) {}
 
     public function toArray(): array
     {

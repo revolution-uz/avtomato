@@ -28,6 +28,5 @@ class KatmIncomeDTO extends BaseScoringResponse
         public string $income_summa,
         public string $inps_summa,
         public string $send_date,
-    ) {
-    }
+    ) {}
 }

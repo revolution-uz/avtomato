@@ -27,9 +27,7 @@ class UpdateScoringRequestStatusJob implements ShouldBeUnique, ShouldQueue
      */
     public int $uniqueFor = 10;
 
-    public function __construct(private readonly int $scoringRequestId)
-    {
-    }
+    public function __construct(private readonly int $scoringRequestId) {}
 
     /**
      * @throws Exception

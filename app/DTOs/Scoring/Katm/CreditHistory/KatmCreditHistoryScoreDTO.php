@@ -24,6 +24,5 @@ class KatmCreditHistoryScoreDTO extends BaseScoringResponse
         public string $score_level,
         public string $score_date,
         public string $score_version,
-    ) {
-    }
+    ) {}
 }

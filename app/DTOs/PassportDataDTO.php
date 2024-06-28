@@ -34,6 +34,5 @@ class PassportDataDTO extends Data
         public int $gender,
         public int $citizenship_id,
         public string $citizenship,
-    ) {
-    }
+    ) {}
 }

@@ -30,8 +30,7 @@ class MibController extends Controller
 {
     public function __construct(
         private readonly MibService $mibService,
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/v1/scoring/mib',

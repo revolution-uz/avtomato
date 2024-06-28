@@ -11,6 +11,5 @@ class AtmosAuthTokenDTO extends Data
         public ?string $scope,
         public ?string $token_type,
         public ?int $expires_in
-    ) {
-    }
+    ) {}
 }

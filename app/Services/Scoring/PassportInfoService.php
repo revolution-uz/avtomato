@@ -14,8 +14,7 @@ class PassportInfoService
     public function __construct(
         private readonly OilaKreditClient $oilaKreditClient,
         private readonly OnlineMahallaClient $onlineMahallaClient,
-    ) {
-    }
+    ) {}
 
     public function getPassportData(string $passportSeries, string $passportNumber, Carbon $birthData): ?PassportDataDTO
     {

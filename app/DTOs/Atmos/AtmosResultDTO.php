@@ -18,8 +18,7 @@ class AtmosResultDTO extends BaseScoringRequest
     public function __construct(
         public ?string $code,
         public ?string $description,
-    ) {
-    }
+    ) {}
 
     public function isSucces(): bool
     {

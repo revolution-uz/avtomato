@@ -31,6 +31,5 @@ class UserTemplateThemeDto extends Data
         public int $radius = 5,
         public bool $show_lock = true,
         public string $passcode = '',
-    ) {
-    }
+    ) {}
 }

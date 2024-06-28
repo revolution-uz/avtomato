@@ -30,8 +30,7 @@ class TaxController extends Controller
 {
     public function __construct(
         private readonly TaxService $taxService,
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/v1/scoring/tax',

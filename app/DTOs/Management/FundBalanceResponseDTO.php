@@ -10,7 +10,5 @@ class FundBalanceResponseDTO extends Data
         public string $session,
         public int $transactionId,
         public string $otpSentPhone
-    ) {
-
-    }
+    ) {}
 }

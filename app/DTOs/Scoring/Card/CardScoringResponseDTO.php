@@ -19,8 +19,7 @@ class CardScoringResponseDTO extends BaseScoringResponse
     public function __construct(
         #[DataCollectionOf(MonthlyAnalyticsDTO::class)]
         public ?DataCollection $report,
-    ) {
-    }
+    ) {}
 
     public static function parseFromUnired($response): CardScoringResponseDTO
     {

@@ -10,6 +10,5 @@ class AtmosTransactionReversePaymentDto extends BaseScoringRequest
     public function __construct(
         public AtmosResultDTO $result,
         public ?int $transaction_id
-    ) {
-    }
+    ) {}
 }

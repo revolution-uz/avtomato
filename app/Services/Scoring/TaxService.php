@@ -16,8 +16,7 @@ class TaxService
     public function __construct(
         private readonly AsaxiyClient $taxScoringClient,
         private readonly BalanceService $balanceService
-    ) {
-    }
+    ) {}
 
     public function scoringTax(TaxInfoCreateRequestDTO $dto): ScoringRequest
     {

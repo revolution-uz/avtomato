@@ -16,6 +16,4 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'updated_at', type: 'integer', example: 1695643479),
     ],
 )]
-class CardScoringResource extends BaseKatmScoringResource
-{
-}
+class CardScoringResource extends BaseKatmScoringResource {}

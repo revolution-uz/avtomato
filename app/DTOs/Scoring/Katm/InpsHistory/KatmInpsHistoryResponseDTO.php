@@ -23,6 +23,5 @@ class KatmInpsHistoryResponseDTO extends BaseScoringResponse
         public KatmIncomesPeriodDTO $incomes_period,
         public KatmPresenceReportsDTO $presence_reports,
         public KatmIncomesDTO $incomes,
-    ) {
-    }
+    ) {}
 }

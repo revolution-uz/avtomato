@@ -11,6 +11,5 @@ class AtmosLabelDTO extends BaseScoringRequest
         public ?string $label_ru,
         public ?string $label_uz,
         public ?string $label_en,
-    ) {
-    }
+    ) {}
 }

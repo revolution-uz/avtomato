@@ -19,8 +19,7 @@ class ErrorConfirmCardResource extends JsonResource
     public function __construct(
         public AtmosResultDTO $result,
         public CardResource $card,
-    ) {
-    }
+    ) {}
 
     public function toArray($request): array
     {

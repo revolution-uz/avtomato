@@ -18,6 +18,5 @@ class CreateAndAttachCardResource extends JsonResource
     public function __construct(
         public CardResource $card,
         public AttachCustomerCardResource $attach,
-    ) {
-    }
+    ) {}
 }

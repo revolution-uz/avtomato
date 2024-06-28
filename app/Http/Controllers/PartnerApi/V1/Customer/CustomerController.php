@@ -59,8 +59,7 @@ class CustomerController extends Controller
         private readonly AtmosService $atmosCardService,
         private readonly CustomerService $customerService,
         private readonly CustomerCardService $customerCardService,
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/v1/customer',

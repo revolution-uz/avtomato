@@ -38,8 +38,7 @@ class InstallmentController extends Controller
 {
     public function __construct(
         protected InstallmentService $installmentService
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/v1/installment/installment',

@@ -4,6 +4,4 @@ namespace App\Exceptions;
 
 use Exception;
 
-class BalanceIsNotEnoughException extends Exception
-{
-}
+class BalanceIsNotEnoughException extends Exception {}

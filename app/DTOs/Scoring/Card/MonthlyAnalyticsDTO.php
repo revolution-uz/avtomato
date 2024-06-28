@@ -27,6 +27,5 @@ class MonthlyAnalyticsDTO extends BaseScoringResponse
         public int $full_amount,
         #[DataCollectionOf(DetailedAnalyticsInMonthDTO::class)]
         public ?DataCollection $details,
-    ) {
-    }
+    ) {}
 }

@@ -21,6 +21,5 @@ class AtmosAttachCardResponseDTO extends BaseScoringRequest
         public AtmosResultDTO $result,
         public ?int $transaction_id,
         public ?string $phone,
-    ) {
-    }
+    ) {}
 }

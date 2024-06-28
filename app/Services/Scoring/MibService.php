@@ -16,8 +16,7 @@ class MibService
     public function __construct(
         private readonly AsaxiyClient $mibScoringClient,
         private readonly BalanceService $balanceService
-    ) {
-    }
+    ) {}
 
     public function scoringMib(MibInfoCreateRequestDTO $dto): ScoringRequest
     {

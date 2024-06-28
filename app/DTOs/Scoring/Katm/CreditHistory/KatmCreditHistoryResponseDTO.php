@@ -21,6 +21,5 @@ class KatmCreditHistoryResponseDTO extends BaseScoringResponse
         public KatmCreditHistoryAdditionalInfoDTO $additional_info,
         public KatmCreditHistoryScoreDTO $score,
         public KatmClientDTO $client,
-    ) {
-    }
+    ) {}
 }

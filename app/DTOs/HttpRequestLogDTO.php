@@ -15,6 +15,5 @@ class HttpRequestLogDTO extends Data
         public ?array $params = null,
         public ?array $headers = null,
         public ?array $body = null,
-    ) {
-    }
+    ) {}
 }

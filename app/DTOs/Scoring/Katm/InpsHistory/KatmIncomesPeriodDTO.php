@@ -20,6 +20,5 @@ class KatmIncomesPeriodDTO extends BaseScoringResponse
         public string $incomes_period_begin,
         public string $incomes_period_end,
         public string $incomes_all_summa,
-    ) {
-    }
+    ) {}
 }

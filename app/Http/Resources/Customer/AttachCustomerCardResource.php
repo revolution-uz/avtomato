@@ -20,8 +20,7 @@ class AttachCustomerCardResource extends JsonResource
     public function __construct(
         public Card $card,
         public ?AtmosAttachCardResponseDTO $attachData = null,
-    ) {
-    }
+    ) {}
 
     public function toArray($request): array
     {

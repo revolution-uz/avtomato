@@ -14,6 +14,5 @@ class AtmosTransactionInfoResponseDTO extends Data
         public string $transaction_status,
         #[DataCollectionOf(AtmosTransactionDetailDTO::class)]
         public ?DataCollection $details,
-    ) {
-    }
+    ) {}
 }

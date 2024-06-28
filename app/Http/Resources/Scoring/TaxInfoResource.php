@@ -16,6 +16,4 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'updated_at', type: 'integer', example: 1695643479),
     ],
 )]
-class TaxInfoResource extends BaseKatmScoringResource
-{
-}
+class TaxInfoResource extends BaseKatmScoringResource {}

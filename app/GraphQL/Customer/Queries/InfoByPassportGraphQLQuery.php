@@ -21,8 +21,7 @@ class InfoByPassportGraphQLQuery extends Query
 
     public function __construct(
         private readonly PassportInfoService $passportInfoService
-    ) {
-    }
+    ) {}
 
     public function type(): Type
     {

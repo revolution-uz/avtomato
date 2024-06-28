@@ -9,6 +9,5 @@ class AtmosPreConfirmPaymentResponseDTO extends BaseScoringRequest
 {
     public function __construct(
         public AtmosResultDTO $result,
-    ) {
-    }
+    ) {}
 }

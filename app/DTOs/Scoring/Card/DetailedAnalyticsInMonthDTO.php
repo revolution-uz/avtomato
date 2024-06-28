@@ -20,6 +20,5 @@ class DetailedAnalyticsInMonthDTO extends BaseScoringResponse
         public string $description,
         public string $type_code,
         public int $amount,
-    ) {
-    }
+    ) {}
 }

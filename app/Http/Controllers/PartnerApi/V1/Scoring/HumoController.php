@@ -29,8 +29,7 @@ class HumoController extends Controller
 {
     public function __construct(
         private readonly CardScoringService $scoringService,
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/v1/scoring/humo',

@@ -20,9 +20,7 @@ class CustomerByPassportGraphQLQuery extends Query
         'name' => 'customerByPassport',
     ];
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function type(): Type
     {

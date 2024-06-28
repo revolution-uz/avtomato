@@ -10,6 +10,5 @@ class AtmosTransactionCancelResponseDTO extends Data
         public int $transaction_id,
         public int $ext_id,
         public string $transaction_status,
-    ) {
-    }
+    ) {}
 }

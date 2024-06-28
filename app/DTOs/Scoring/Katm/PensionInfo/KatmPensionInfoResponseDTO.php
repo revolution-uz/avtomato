@@ -20,6 +20,5 @@ class KatmPensionInfoResponseDTO extends BaseScoringResponse
         public string $result,
         public ?KatmPensionSizePensionDTO $sizePension,
         public string $comments,
-    ) {
-    }
+    ) {}
 }

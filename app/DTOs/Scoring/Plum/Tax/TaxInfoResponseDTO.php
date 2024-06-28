@@ -16,6 +16,5 @@ class TaxInfoResponseDTO extends BaseScoringResponse
 {
     public function __construct(
         public float $debtBal,
-    ) {
-    }
+    ) {}
 }

@@ -21,6 +21,5 @@ class KatmPensionSizePensionDTO extends BaseScoringResponse
         public ?KatmPensionDataDTO $data,
         #[DataCollectionOf(KatmPensionRowDTO::class)]
         public ?DataCollection $row,
-    ) {
-    }
+    ) {}
 }

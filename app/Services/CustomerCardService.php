@@ -15,8 +15,7 @@ class CustomerCardService
     public function __construct(
         private readonly AtmosService $atmosCardService,
         private readonly ConfirmationService $confirmationService
-    ) {
-    }
+    ) {}
 
     public function attachCard(int $customerId, array $request)
     {

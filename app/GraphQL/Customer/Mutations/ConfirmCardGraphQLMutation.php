@@ -24,8 +24,7 @@ class ConfirmCardGraphQLMutation extends Mutation
 
     public function __construct(
         private readonly CustomerCardService $customerCardService,
-    ) {
-    }
+    ) {}
 
     public function args(): array
     {

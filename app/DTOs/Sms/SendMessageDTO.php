@@ -18,6 +18,5 @@ class SendMessageDTO extends BaseScoringRequest
     public function __construct(
         public int $phone,
         public string $message,
-    ) {
-    }
+    ) {}
 }

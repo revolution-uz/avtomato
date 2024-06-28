@@ -24,6 +24,5 @@ class AtmosStoreTransactionDTO extends BaseScoringRequest
         public $card_id = null,
         public $status_code = null,
         public $status_message = null,
-    ) {
-    }
+    ) {}
 }

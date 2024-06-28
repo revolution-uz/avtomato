@@ -30,8 +30,7 @@ class ProfileController extends Controller
 {
     public function __construct(
         protected UserService $userService
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/v1/profile/me',
