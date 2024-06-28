@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Installment;
 
+use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Installment\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
@@ -46,6 +47,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 TariffGraphQLType::class,
                 TransactionTypeInputGraphQLType::class,
                 TransactionTypeGraphQLType::class,
+                CustomerGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];

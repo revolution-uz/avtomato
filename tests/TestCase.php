@@ -79,7 +79,9 @@ abstract class TestCase extends BaseTestCase
 
     public function createAdminUser()
     {
-        return Company\User::factory()->create([
+        $admin = Company\User::query()->where('role_id', Role::getAdmin()->id)->first();
+
+        return $admin ?? Company\User::factory()->create([
             'role_id' => Role::getAdmin()->id,
             'password' => Hash::make('password'),
         ]);
