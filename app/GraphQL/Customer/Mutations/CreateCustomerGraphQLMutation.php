@@ -78,7 +78,7 @@ class CreateCustomerGraphQLMutation extends Mutation
             throw $th;
         }
 
-        return true;
+        return $customer;
     }
 
     protected function rules(array $args = []): array
