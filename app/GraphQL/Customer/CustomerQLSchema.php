@@ -14,7 +14,9 @@ use App\GraphQL\Customer\Mutations\DetachAddressGraphQLMutation;
 use App\GraphQL\Customer\Mutations\DetachCardGraphQLMutation;
 use App\GraphQL\Customer\Mutations\DetachPhoneGraphQLMutation;
 use App\GraphQL\Customer\Mutations\UpdateCustomerGraphQLMutation;
+use App\GraphQL\Customer\Queries\CustomerByPassportGraphQLQuery;
 use App\GraphQL\Customer\Queries\CustomersGraphQLQuery;
+use App\GraphQL\Customer\Queries\InfoByPassportGraphQLQuery;
 use App\GraphQL\Customer\Queries\SingleCustomerGraphQLQuery;
 use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\AddressInputGraphQLType;
@@ -23,6 +25,7 @@ use App\GraphQL\Customer\Types\AttachCardGraphQLType;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\CustomerInputGraphQLType;
+use App\GraphQL\Customer\Types\PassportDataGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Customer\Types\PhoneInputGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
@@ -35,6 +38,8 @@ class CustomerQLSchema implements ConfigConvertible
             'query' => [
                 CustomersGraphQLQuery::class,
                 SingleCustomerGraphQLQuery::class,
+                InfoByPassportGraphQLQuery::class,
+                CustomerByPassportGraphQLQuery::class,
             ],
             'mutation' => [
                 AttachAddressGraphQLMutation::class,
@@ -60,6 +65,7 @@ class CustomerQLSchema implements ConfigConvertible
                 RegionGraphQLType::class,
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
+                PassportDataGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
