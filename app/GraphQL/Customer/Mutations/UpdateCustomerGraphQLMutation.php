@@ -47,9 +47,7 @@ class UpdateCustomerGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        (new CustomerService)->saveCustomer($args['customer'], $args['id']);
-
-        return true;
+        return (new CustomerService)->saveCustomer($args['customer'], $args['id']);
     }
 
     protected function rules(array $args = []): array

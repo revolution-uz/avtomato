@@ -130,6 +130,13 @@ class KatmCreditHistoryDebtGraphQLType extends GraphQLType
                     return $root->delays_less_90_sum;
                 },
             ],
+            'delays_more_90_qty' => [
+                'type' => Type::nonNull(Type::float()),
+                'description' => 'delays_more_90_qty',
+                'resolve' => function (KatmCreditHistoryDebtDTO $root) {
+                    return $root->delays_more_90_qty;
+                },
+            ],
             'delays_more_90_sum' => [
                 'type' => Type::nonNull(Type::float()),
                 'description' => 'delays_more_90_sum',

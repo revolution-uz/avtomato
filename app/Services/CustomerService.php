@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Company\Customer;
+use Carbon\Carbon;
 use Throwable;
 
 class CustomerService
@@ -19,6 +20,10 @@ class CustomerService
         }
 
         $customer->fill($data);
+        $customer->passport_given_date = Carbon::make($data['passport_given_date'])->format('Y-m-d');
+        $customer->passport_expiration_date = Carbon::make($data['passport_expiration_date'])->format('Y-m-d');
+        $customer->birth_date = Carbon::make($data['birth_date'])->format('Y-m-d');
+
         $customer->saveOrFail();
 
         return $customer;
