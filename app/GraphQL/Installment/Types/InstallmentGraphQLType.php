@@ -43,8 +43,8 @@ class InstallmentGraphQLType extends GraphQLType
                 'resolve' => fn (Installment $root) => $root->transactions,
             ],
             'guarantors' => [
-                'type' => Type::listOf(GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Installment $root) => $root->guarantors,
+                'type' => Type::listOf(GraphQL::type(InstallmentGuarantorGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Installment $root) => $root->guarantorList,
             ],
             'comments' => [
                 'type' => Type::listOf(GraphQL::type(InstallmentCommentGraphQLType::GRAPHQL_TYPE_NAME)),
