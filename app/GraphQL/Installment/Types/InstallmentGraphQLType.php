@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
@@ -33,6 +34,10 @@ class InstallmentGraphQLType extends GraphQLType
             'customer' => [
                 'type' => Type::nonNull(GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Installment $root) => $root->customer,
+            ],
+            'cards' => [
+                'type' => Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Installment $root) => $root->cards,
             ],
             'graphs' => [
                 'type' => Type::listOf(GraphQL::type(InstallmentGraphGraphQLType::GRAPHQL_TYPE_NAME)),
