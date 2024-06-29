@@ -37,7 +37,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 TransactionTypesGraphQLQuery::class,
                 SingleTransactionTypeGraphQLQuery::class,
                 TransactionsGraphQLQuery::class,
-                SingleTransactionGraphQLQuery::class
+                SingleTransactionGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateTariffGraphQLMutation::class,
@@ -53,7 +53,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 TransactionTypeInputGraphQLType::class,
                 TransactionTypeGraphQLType::class,
                 CustomerGraphQLType::class,
-                TransactionGraphQLType::class
+                TransactionGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
