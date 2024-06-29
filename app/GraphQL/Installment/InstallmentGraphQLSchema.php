@@ -15,6 +15,7 @@ use App\GraphQL\Installment\Queries\SingleTransactionTypeGraphQLQuery;
 use App\GraphQL\Installment\Queries\TariffsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionTypesGraphQLQuery;
+use App\GraphQL\Installment\Types\InstallmentCommentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Installment\Types\TariffGraphQLType;
@@ -54,6 +55,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 TransactionTypeGraphQLType::class,
                 CustomerGraphQLType::class,
                 TransactionGraphQLType::class,
+                InstallmentCommentGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
