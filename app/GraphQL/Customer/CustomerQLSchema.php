@@ -23,6 +23,7 @@ use App\GraphQL\Customer\Types\AddressInputGraphQLType;
 use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
 use App\GraphQL\Customer\Types\AttachCardGraphQLType;
 use App\GraphQL\Customer\Types\CardGraphQLType;
+use App\GraphQL\Customer\Types\CustomerAddressByPassportDataGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\CustomerInputGraphQLType;
 use App\GraphQL\Customer\Types\PassportDataGraphQLType;
@@ -66,6 +67,7 @@ class CustomerQLSchema implements ConfigConvertible
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
                 PassportDataGraphQLType::class,
+                CustomerAddressByPassportDataGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];

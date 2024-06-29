@@ -51,6 +51,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
  * @property Customer[] $guarantors
  * @property Transaction[] $transactions
+ * @property InstallmentGuarantor[] $guarantorList
  * @property-read  User $user
  */
 class Installment extends Model
@@ -123,6 +124,11 @@ class Installment extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'installment_id');
+    }
+
+    public function guarantorList(): HasMany
+    {
+        return $this->hasMany(InstallmentGuarantor::class, 'installment_id');
     }
 
     public function comments(): HasMany

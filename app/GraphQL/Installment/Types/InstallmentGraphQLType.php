@@ -2,8 +2,10 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
+use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\Models\Company\Installment;
 use GraphQL\Type\Definition\Type;
@@ -33,9 +35,29 @@ class InstallmentGraphQLType extends GraphQLType
                 'type' => Type::nonNull(GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Installment $root) => $root->customer,
             ],
+            'cards' => [
+                'type' => Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Installment $root) => $root->cards,
+            ],
             'graphs' => [
                 'type' => Type::listOf(GraphQL::type(InstallmentGraphGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Installment $root) => $root->graphs,
+            ],
+            'transactions' => [
+                'type' => Type::listOf(GraphQL::type(TransactionGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Installment $root) => $root->transactions,
+            ],
+            'guarantors' => [
+                'type' => Type::listOf(GraphQL::type(InstallmentGuarantorGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Installment $root) => $root->guarantorList,
+            ],
+            'comments' => [
+                'type' => Type::listOf(GraphQL::type(InstallmentCommentGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Installment $root) => $root->comments,
+            ],
+            'documents' => [
+                'type' => Type::listOf(GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Installment $root) => $root->documents,
             ],
             'status' => [
                 'type' => Type::nonNull(Type::int()),
