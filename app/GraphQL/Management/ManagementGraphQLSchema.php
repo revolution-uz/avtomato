@@ -7,23 +7,29 @@ use App\GraphQL\Management\Mutations\ChangeLanguageGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangePasswordGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeThemeGraphQLMutation;
+use App\GraphQL\Management\Mutations\CreateAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateRoleGraphQLMutation;
+use App\GraphQL\Management\Mutations\DeleteAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\DeleteRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\Management\Mutations\RevokeDeviceGraphQLMutation;
+use App\GraphQL\Management\Mutations\UpdateAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\UploadAvatarGraphQLMutation;
 use App\GraphQL\Management\Queries\ActivityLogsGraphQLQuery;
+use App\GraphQL\Management\Queries\AdminsGraphQLQuery;
 use App\GraphQL\Management\Queries\BranchesGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileDevicesGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileGraphQLQuery;
 use App\GraphQL\Management\Queries\RolesGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleActivityLogGraphQLQuery;
+use App\GraphQL\Management\Queries\SingleAdminGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleBranchGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleRoleGraphQLQuery;
 use App\GraphQL\Management\Types\ActivityLogGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
+use App\GraphQL\Management\Types\AdminInputGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
@@ -41,18 +47,10 @@ class ManagementGraphQLSchema implements ConfigConvertible
     public function toConfig(): array
     {
         return [
-            'query' => [
-                CurrentProfileGraphQLQuery::class,
-                CurrentProfileDevicesGraphQLQuery::class,
-                CurrentProfileActivityLogsGraphQLQuery::class,
-                SingleActivityLogGraphQLQuery::class,
-                ActivityLogsGraphQLQuery::class,
-                SingleRoleGraphQLQuery::class,
-                RolesGraphQLQuery::class,
-                BranchesGraphQLQuery::class,
-                SingleBranchGraphQLQuery::class,
-            ],
             'mutation' => [
+                CreateAdminGraphQLMutation::class,
+                UpdateAdminGraphQLMutation::class,
+                DeleteAdminGraphQLMutation::class,
                 LogoutGraphQLMutation::class,
                 ChangePasswordGraphQLMutation::class,
                 ChangeThemeGraphQLMutation::class,
@@ -66,8 +64,22 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 AttachPermissionsToRoleGraphQLMutation::class,
                 DeleteRoleGraphQLMutation::class,
             ],
+            'query' => [
+                AdminsGraphQLQuery::class,
+                SingleAdminGraphQLQuery::class,
+                CurrentProfileGraphQLQuery::class,
+                CurrentProfileDevicesGraphQLQuery::class,
+                CurrentProfileActivityLogsGraphQLQuery::class,
+                SingleActivityLogGraphQLQuery::class,
+                ActivityLogsGraphQLQuery::class,
+                SingleRoleGraphQLQuery::class,
+                RolesGraphQLQuery::class,
+                BranchesGraphQLQuery::class,
+                SingleBranchGraphQLQuery::class,
+            ],
             'types' => [
                 AdminGraphQLType::class,
+                AdminInputGraphQLType::class,
                 AttachmentGraphQLType::class,
                 PermissionGraphQLType::class,
                 RoleGraphQLType::class,
