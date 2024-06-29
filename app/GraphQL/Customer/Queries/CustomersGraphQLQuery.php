@@ -54,20 +54,20 @@ class CustomersGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return Customer::query()
-            ->when($args['search'], function (Builder $q) use ($args) {
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
                     $query->where('first_name', 'ILIKE', $search)
                         ->orWhere('last_name', 'ILIKE', $search)
                         ->orWhere('middle_name', 'ILIKE', $search)
+                        ->orWhere('pinfl', 'ILIKE', $search)
                         ->orWhere('passport_series', 'ILIKE', $search)
                         ->orWhere('passport_number', 'ILIKE', $search);
                 });
             })
-            // TODO sortable
-//            ->when($request->isSortable(), function (Builder $q) use ($request) {
-//                $q->orderBy($request->sortField(), $request->sortDirection());
-//            })
+            ->when(isset($args['sort']), function (Builder|Customer $q) use ($args) {
+                $q->orderBySortable($args['sort']);
+            })
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 

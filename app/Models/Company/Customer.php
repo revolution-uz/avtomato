@@ -53,6 +53,7 @@ class Customer extends Model
 {
     use HasFactory, SoftDeletes, TenantConnection;
     use LogsActivityDirtyOnlyTrait;
+    use OrderBySortable;
 
     public static array $sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name', 'birth_date'];
 
