@@ -4,6 +4,7 @@ namespace App\GraphQL\Customer\Types;
 
 use App\DTOs\PassportDataDTO;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class PassportDataGraphQLType extends GraphQLType
@@ -46,6 +47,55 @@ class PassportDataGraphQLType extends GraphQLType
                     return $root->number;
                 },
             ],
+            'passport_given_date' => [
+                'type' => Type::nonNull(Type::string()),
+                'description' => 'Passport Given date',
+                'resolve' => function (PassportDataDTO $root) {
+                    return $root->given_date->format('Y-m-d');
+                },
+            ],
+            'passport_expiration_date' => [
+                'type' => Type::nonNull(Type::string()),
+                'description' => 'Passport Expiration date',
+                'resolve' => function (PassportDataDTO $root) {
+                    return $root->expiration_date->format('Y-m-d');
+                },
+            ],
+            'passport_given_place' => [
+                'type' => Type::nonNull(Type::string()),
+                'description' => 'Passport Given place',
+                'resolve' => function (PassportDataDTO $root) {
+                    return $root->given_place;
+                },
+            ],
+            'passport_given_org' => [
+                'type' => Type::string(),
+                'description' => 'Passport Given org',
+                'resolve' => function (PassportDataDTO $root) {
+                    return $root->given_org;
+                },
+            ],
+            'passport_citizenship_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Passport Citizenship ID',
+                'resolve' => function (PassportDataDTO $root) {
+                    return $root->citizenship_id;
+                },
+            ],
+            'passport_citizenship' => [
+                'type' => Type::nonNull(Type::string()),
+                'description' => 'Passport citizenship',
+                'resolve' => function (PassportDataDTO $root) {
+                    return $root->citizenship;
+                },
+            ],
+            'passport_living_place' => [
+                'type' => Type::string(),
+                'description' => 'Passport Living place',
+                'resolve' => function (PassportDataDTO $root) {
+                    return $root->living_place;
+                },
+            ],
             'first_name' => [
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'First Name',
@@ -81,60 +131,11 @@ class PassportDataGraphQLType extends GraphQLType
                     return $root->birth_date->format('Y-m-d');
                 },
             ],
-            'passport_given_date' => [
+            'birth_place' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'Passport Given date',
+                'description' => 'Birth place',
                 'resolve' => function (PassportDataDTO $root) {
-                    return $root->given_date->format('Y-m-d');
-                },
-            ],
-            'passport_expiration_date' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Passport Expiration date',
-                'resolve' => function (PassportDataDTO $root) {
-                    return $root->expiration_date->format('Y-m-d');
-                },
-            ],
-            'passport_given_place' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Passport Given place',
-                'resolve' => function (PassportDataDTO $root) {
-                    return $root->given_place;
-                },
-            ],
-            'passport_given_org' => [
-                'type' => Type::string(),
-                'description' => 'Given org',
-                'resolve' => function (PassportDataDTO $root) {
-                    return $root->given_org;
-                },
-            ],
-            'living_place' => [
-                'type' => Type::string(),
-                'description' => 'Living place',
-                'resolve' => function (PassportDataDTO $root) {
-                    return $root->living_place;
-                },
-            ],
-            'address' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Address',
-                'resolve' => function (PassportDataDTO $root) {
-                    return $root->address;
-                },
-            ],
-            'region_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'description' => 'Region ID',
-                'resolve' => function (PassportDataDTO $root) {
-                    return $root->region_id;
-                },
-            ],
-            'district_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'description' => 'District ID',
-                'resolve' => function (PassportDataDTO $root) {
-                    return $root->district_id;
+                    return $root->birth_place;
                 },
             ],
             'gender' => [
@@ -144,18 +145,11 @@ class PassportDataGraphQLType extends GraphQLType
                     return $root->gender;
                 },
             ],
-            'citizenship_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'description' => 'Citizenship ID',
+            'address' => [
+                'type' => GraphQL::type(CustomerAddressByPassportDataGraphQLType::GRAPHQL_TYPE_NAME),
+                'description' => 'Address',
                 'resolve' => function (PassportDataDTO $root) {
-                    return $root->citizenship_id;
-                },
-            ],
-            'citizenship' => [
-                'type' => Type::nonNull(Type::string()),
-                'description' => 'Citizenship',
-                'resolve' => function (PassportDataDTO $root) {
-                    return $root->citizenship;
+                    return $root;
                 },
             ],
         ];
