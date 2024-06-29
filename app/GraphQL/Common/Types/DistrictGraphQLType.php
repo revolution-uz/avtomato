@@ -28,7 +28,7 @@ class DistrictGraphQLType extends GraphQLType
             'region_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => function (District $root) {
-                    return $root->id;
+                    return $root->region_id;
                 },
             ],
             'region' => [

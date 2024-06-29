@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\Company\AddressTypeEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,6 +18,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int|null $region_id
  * @property int|null $district_id
  * @property int|null $mahalla_id
+ * @property string $addressable_type
+ * @property int $addressable_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -26,6 +29,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Address extends Model
 {
+    use HasFactory;
     use LogsActivityDirtyOnlyTrait;
     use SoftDeletes;
     use TenantConnection;

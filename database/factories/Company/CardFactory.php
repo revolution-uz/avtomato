@@ -16,8 +16,8 @@ class CardFactory extends Factory
     {
         return [
             'customer_id' => Customer::factory(),
-            'pan' => $this->faker->randomDigit(),
-            'number' => $this->faker->word(),
+            'pan' => substr_replace($this->faker->creditCardNumber(), '******', 6, 6),
+            'number' => $this->faker->creditCardNumber(),
             'expiry' => $this->faker->randomDigit(),
             'status' => CardStatusEnum::randomValue(),
             'balance' => $this->faker->randomFloat(),

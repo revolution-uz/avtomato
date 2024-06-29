@@ -9,10 +9,11 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class CustomerGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'CustomerGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'CustomerGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
+        'model' => Customer::class,
     ];
 
     public function fields(): array

@@ -8,7 +8,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class BranchGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'BranchGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'BranchGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
