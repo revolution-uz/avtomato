@@ -13,6 +13,7 @@ use App\GraphQL\Installment\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
+use App\GraphQL\Installment\Queries\CalculateGraphQLQuery;
 use App\GraphQL\Installment\Queries\InstallmentsGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleInstallmentGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTariffGraphQLQuery;
@@ -21,6 +22,7 @@ use App\GraphQL\Installment\Queries\SingleTransactionTypeGraphQLQuery;
 use App\GraphQL\Installment\Queries\TariffsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionTypesGraphQLQuery;
+use App\GraphQL\Installment\Types\CalculatedGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentCommentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
@@ -47,6 +49,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
     {
         return [
             'query' => [
+                CalculateGraphQLQuery::class,
                 InstallmentsGraphQLQuery::class,
                 SingleInstallmentGraphQLQuery::class,
                 TariffsGraphQLQuery::class,
@@ -63,6 +66,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 UpdateTransactionTypeGraphQLMutation::class,
             ],
             'types' => [
+                CalculatedGraphGraphQLType::class,
                 AdminGraphQLType::class,
                 TemplateThemeGraphQLType::class,
                 RoleGraphQLType::class,
