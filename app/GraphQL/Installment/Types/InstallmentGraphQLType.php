@@ -18,6 +18,7 @@ class InstallmentGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
+        'model' => Installment::class,
     ];
 
     public function fields(): array

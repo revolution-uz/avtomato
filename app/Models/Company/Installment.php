@@ -58,8 +58,11 @@ class Installment extends Model
 {
     use HasFactory;
     use LogsActivityDirtyOnlyTrait;
+    use OrderBySortable;
     use SoftDeletes;
     use TenantConnection;
+
+    public static array $sortables = ['id', 'customer_id', 'tariff_id', 'amount', 'created_at', 'starts_in', 'next_pay_date'];
 
     protected $fillable = [
         'customer_id',

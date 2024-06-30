@@ -30,18 +30,22 @@ class InstallmentsGraphQLQuery extends Query
             'sort' => [
                 'name' => 'sort',
                 'type' => Type::string(),
+                'rules' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
             ],
             'search' => [
                 'name' => 'search',
                 'type' => Type::string(),
+                'rules' => 'nullable|string|max:255',
             ],
             'page' => [
                 'name' => 'page',
                 'type' => Type::int(),
+                'rules' => 'nullable|int|min:1',
             ],
             'per_page' => [
                 'name' => 'per_page',
                 'type' => Type::int(),
+                'rules' => 'nullable|int|min:5|max:100',
             ],
         ];
     }
@@ -56,7 +60,7 @@ class InstallmentsGraphQLQuery extends Query
         return
             Installment::query()
                 ->with(['customer', 'branch', 'tariff', 'graphs', 'cards', 'guarantors', 'documents', 'comments', 'transactions'])
-                ->when($args['search'], fn (Builder $q) => $q
+                ->when(isset($args['search']), fn (Builder $q) => $q
                     ->whereHas('customer', fn (Builder $q) => $q
                         ->where('first_name', 'like', "%{$args['search']}%")
                         ->orWhere('last_name', 'ilike', "%{$args['search']}%")
@@ -65,20 +69,7 @@ class InstallmentsGraphQLQuery extends Query
                     ->orWhereHas('branch', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
                     ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
                 )
-                // TODO sortable
-//            ->when($request->isSortable(), function (Builder $q) use ($request) {
-//                $q->orderBy($request->sortField(), $request->sortDirection());
-//            })
+                ->when(isset($args['sort']), fn (Builder|Installment $q) => $q->orderBySortable($args['sort']))
                 ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'sort' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
-            'search' => 'nullable|string|max:255',
-            'page' => 'nullable|int|min:1',
-            'per_page' => 'nullable|int|min:5|max:100',
-        ];
     }
 }
