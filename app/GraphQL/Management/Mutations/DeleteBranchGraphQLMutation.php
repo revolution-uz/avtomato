@@ -6,7 +6,6 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Branch;
 use App\Models\Company\Installment;
-use App\Models\Company\User;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -58,12 +57,6 @@ class DeleteBranchGraphQLMutation extends Mutation
                 function ($attribute, $value, $fail) {
                     if (! Branch::query()->where('id', $value)->exists()) {
                         $fail(__('api.not found'));
-                    }
-                    if (User::query()->where('branch_id', $value)->exists()) {
-                        $fail(__('api.are used', [
-                            'item' => __('api.Branch'),
-                            'element' => __('api.User'),
-                        ]));
                     }
                     if (Installment::query()->where('branch_id', $value)->exists()) {
                         $fail(__('api.are used', [
