@@ -14,7 +14,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class InstallmentGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'InstallmentGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'InstallmentGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -68,7 +68,7 @@ class InstallmentGraphQLType extends GraphQLType
                 'resolve' => fn (Installment $root) => $root->branch_id,
             ],
             'branch' => [
-                'type' => Type::nonNull(GraphQL::type(BranchGraphQLType::class)),
+                'type' => Type::nonNull(GraphQL::type(BranchGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Installment $root) => $root->branch,
             ],
             'user_id' => [
@@ -76,7 +76,7 @@ class InstallmentGraphQLType extends GraphQLType
                 'resolve' => fn (Installment $root) => $root->user_id,
             ],
             'user' => [
-                'type' => Type::nonNull(GraphQL::type(AdminGraphQLType::class)),
+                'type' => Type::nonNull(GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Installment $root) => $root->user,
             ],
             'tariff_id' => [

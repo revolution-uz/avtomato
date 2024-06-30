@@ -2,8 +2,13 @@
 
 namespace App\GraphQL\Installment;
 
+use App\GraphQL\Common\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\MahallaGraphQLType;
+use App\GraphQL\Common\Types\RegionGraphQLType;
+use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
+use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Installment\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
@@ -25,8 +30,15 @@ use App\GraphQL\Installment\Types\TariffInputGraphQLType;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
 use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
 use App\GraphQL\Installment\Types\TransactionTypeInputGraphQLType;
+use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
+use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
+use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
+use App\GraphQL\Management\Types\PermissionGraphQLType;
+use App\GraphQL\Management\Types\PermissionGroupGraphQLType;
+use App\GraphQL\Management\Types\RoleGraphQLType;
+use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class InstallmentGraphQLSchema implements ConfigConvertible
@@ -51,6 +63,18 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 UpdateTransactionTypeGraphQLMutation::class,
             ],
             'types' => [
+                AdminGraphQLType::class,
+                TemplateThemeGraphQLType::class,
+                RoleGraphQLType::class,
+                PermissionGroupGraphQLType::class,
+                PermissionGraphQLType::class,
+                PermissionEditableItemGraphQLType::class,
+                PermissionBranchItemGraphQLType::class,
+                AddressGraphQLType::class,
+                RegionGraphQLType::class,
+                DistrictGraphQLType::class,
+                MahallaGraphQLType::class,
+                PhoneGraphQLType::class,
                 BranchGraphQLType::class,
                 InstallmentGraphQLType::class,
                 InstallmentGraphGraphQLType::class,
