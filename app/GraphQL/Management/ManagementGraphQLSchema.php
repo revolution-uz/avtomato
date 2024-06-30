@@ -3,9 +3,10 @@
 namespace App\GraphQL\Management;
 
 use App\GraphQL\Management\Mutations\AttachPermissionsToRoleGraphQLMutation;
+use App\GraphQL\Management\Mutations\ChangeProfileAvatarGraphQLMutation;
+use App\GraphQL\Management\Mutations\ChangeProfileGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileLanguageGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfilePasswordGraphQLMutation;
-use App\GraphQL\Management\Mutations\ChangeProfileGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileThemeGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateBranchGraphQLMutation;
@@ -14,14 +15,15 @@ use App\GraphQL\Management\Mutations\DeleteAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\DeleteBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\DeleteRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\LogoutGraphQLMutation;
+use App\GraphQL\Management\Mutations\RevokeAdminDeviceGraphQLMutation;
 use App\GraphQL\Management\Mutations\RevokeDeviceGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateAdminPasswordGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateAdminRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateRoleGraphQLMutation;
-use App\GraphQL\Management\Mutations\ChangeProfileAvatarGraphQLMutation;
 use App\GraphQL\Management\Queries\ActivityLogsGraphQLQuery;
+use App\GraphQL\Management\Queries\AdminDevicesGraphQLQuery;
 use App\GraphQL\Management\Queries\AdminsGraphQLQuery;
 use App\GraphQL\Management\Queries\BranchesGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileActivityLogsGraphQLQuery;
@@ -66,6 +68,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 DeleteBranchGraphQLMutation::class,
                 DeleteRoleGraphQLMutation::class,
                 LogoutGraphQLMutation::class,
+                RevokeAdminDeviceGraphQLMutation::class,
                 RevokeDeviceGraphQLMutation::class,
                 UpdateAdminGraphQLMutation::class,
                 UpdateAdminPasswordGraphQLMutation::class,
@@ -75,6 +78,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
             ],
             'query' => [
                 AdminsGraphQLQuery::class,
+                AdminDevicesGraphQLQuery::class,
                 SingleAdminGraphQLQuery::class,
                 CurrentProfileGraphQLQuery::class,
                 CurrentProfileDevicesGraphQLQuery::class,
