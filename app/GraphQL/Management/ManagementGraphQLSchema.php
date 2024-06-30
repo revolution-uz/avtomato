@@ -8,12 +8,15 @@ use App\GraphQL\Management\Mutations\ChangePasswordGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeThemeGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateAdminGraphQLMutation;
+use App\GraphQL\Management\Mutations\CreateBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\DeleteAdminGraphQLMutation;
+use App\GraphQL\Management\Mutations\DeleteBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\DeleteRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\Management\Mutations\RevokeDeviceGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateAdminGraphQLMutation;
+use App\GraphQL\Management\Mutations\UpdateBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\UploadAvatarGraphQLMutation;
 use App\GraphQL\Management\Queries\ActivityLogsGraphQLQuery;
@@ -63,6 +66,9 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 UpdateRoleGraphQLMutation::class,
                 AttachPermissionsToRoleGraphQLMutation::class,
                 DeleteRoleGraphQLMutation::class,
+                CreateBranchGraphQLMutation::class,
+                UpdateBranchGraphQLMutation::class,
+                DeleteBranchGraphQLMutation::class,
             ],
             'query' => [
                 AdminsGraphQLQuery::class,
