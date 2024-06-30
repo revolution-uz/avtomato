@@ -51,6 +51,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 UpdateTransactionTypeGraphQLMutation::class,
             ],
             'types' => [
+                BranchGraphQLType::class,
                 InstallmentGraphQLType::class,
                 InstallmentGraphGraphQLType::class,
                 TariffInputGraphQLType::class,
@@ -60,7 +61,6 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 CustomerGraphQLType::class,
                 CardGraphQLType::class,
                 AttachmentGraphQLType::class,
-                BranchGraphQLType::class,
                 TransactionGraphQLType::class,
                 InstallmentCommentGraphQLType::class,
                 InstallmentGuarantorGraphQLType::class,

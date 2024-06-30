@@ -19,6 +19,7 @@ class GraphQLSchemaIntrospectionTest extends TestCase
         );
 
         $response->assertOk();
+        $this->assertArrayNotHasKey('errors', $response->json());
     }
 
     /**
@@ -32,6 +33,7 @@ class GraphQLSchemaIntrospectionTest extends TestCase
         );
 
         $response->assertOk();
+        $this->assertArrayNotHasKey('errors', $response->json());
     }
 
     /**
@@ -45,6 +47,7 @@ class GraphQLSchemaIntrospectionTest extends TestCase
         );
 
         $response->assertOk();
+        $this->assertArrayNotHasKey('errors', $response->json());
     }
 
     /**
@@ -58,6 +61,7 @@ class GraphQLSchemaIntrospectionTest extends TestCase
         );
 
         $response->assertOk();
+        $this->assertArrayNotHasKey('errors', $response->json());
     }
 
     /**
@@ -71,5 +75,6 @@ class GraphQLSchemaIntrospectionTest extends TestCase
         );
 
         $response->assertOk();
+        $this->assertArrayNotHasKey('errors', $response->json());
     }
 }

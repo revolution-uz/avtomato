@@ -23,6 +23,7 @@ use App\GraphQL\Management\Mutations\UpdateAdminRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateRoleGraphQLMutation;
 use App\GraphQL\Management\Queries\ActivityLogsGraphQLQuery;
+use App\GraphQL\Management\Queries\AdminActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\AdminDevicesGraphQLQuery;
 use App\GraphQL\Management\Queries\AdminsGraphQLQuery;
 use App\GraphQL\Management\Queries\BranchesGraphQLQuery;
@@ -78,6 +79,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
             ],
             'query' => [
                 AdminsGraphQLQuery::class,
+                AdminActivityLogsGraphQLQuery::class,
                 AdminDevicesGraphQLQuery::class,
                 SingleAdminGraphQLQuery::class,
                 CurrentProfileGraphQLQuery::class,
