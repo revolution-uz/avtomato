@@ -74,15 +74,6 @@ class AdminInputGraphQLType extends InputType
                     'confirmed',
                 ],
             ],
-            'avatar' => [
-                'name' => 'avatar',
-                'type' => Type::string(),
-                'rules' => [
-                    'nullable',
-                    'string',
-                    'max:255',
-                ],
-            ],
         ];
     }
 }
