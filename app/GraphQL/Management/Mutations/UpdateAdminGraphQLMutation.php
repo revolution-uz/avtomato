@@ -39,10 +39,6 @@ class UpdateAdminGraphQLMutation extends Mutation
                 'name' => 'first_name',
                 'type' => Type::string(),
             ],
-            'avatar' => [
-                'name' => 'first_name',
-                'type' => Type::string(),
-            ],
         ];
     }
 
@@ -77,11 +73,6 @@ class UpdateAdminGraphQLMutation extends Mutation
             'last_name' => [
                 'nullable',
                 'last_name',
-                'max:50',
-            ],
-            'avatar' => [
-                'nullable',
-                'avatar',
                 'max:50',
             ],
         ];
