@@ -3,31 +3,28 @@
 namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Services\User\UserService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
-class ChangeThemeGraphQLMutation extends Mutation
+class ChangeProfileLanguageGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'changeTheme',
+        'name' => 'changeProfileLanguage',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(TemplateThemeGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(Type::string());
     }
 
     public function args(): array
     {
         return [
-            'layout_name' => [
-                'name' => 'layout_name',
+            'language' => [
+                'name' => 'language',
                 'type' => Type::nonNull(Type::string()),
             ],
         ];
@@ -35,20 +32,22 @@ class ChangeThemeGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_THEME);
+        return RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_LANGUAGE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $user = (new UserService)->updateTheme(auth()->user(), $args);
+        $user = auth()->user();
+        $user->update(['language' => $args['language']]);
+        $user->refresh();
 
-        return $user->template_theme;
+        return $user->language;
     }
 
     protected function rules(array $args = []): array
     {
         return [
-            'layout_name' => ['required', 'string'],
+            'language' => 'required|string|max:2|in:ru,uz,oz,en',
         ];
     }
 }

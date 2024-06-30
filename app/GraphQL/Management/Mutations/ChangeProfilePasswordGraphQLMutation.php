@@ -4,27 +4,33 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Rules\CheckCurrentPassword;
+use App\Services\User\UserService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Mutation;
 
-class ChangeLanguageGraphQLMutation extends Mutation
+class ChangeProfilePasswordGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'changeLanguage',
+        'name' => 'changeProfilePassword',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(Type::string());
+        return Type::nonNull(Type::boolean());
     }
 
     public function args(): array
     {
         return [
-            'language' => [
-                'name' => 'language',
+            'old_password' => [
+                'name' => 'old_password',
+                'type' => Type::nonNull(Type::string()),
+            ],
+            'password' => [
+                'name' => 'password',
                 'type' => Type::nonNull(Type::string()),
             ],
         ];
@@ -32,22 +38,21 @@ class ChangeLanguageGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_LANGUAGE);
+        return RbacHelper::checkPermission(PermissionEnum::PROFILE_CHANGE_PASSWORD);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $user = auth()->user();
-        $user->update(['language' => $args['language']]);
-        $user->refresh();
+        (new UserService)->updatePassword(auth()->user(), $args['password']);
 
-        return $user->language;
+        return true;
     }
 
     protected function rules(array $args = []): array
     {
         return [
-            'language' => 'required|string|max:2|in:ru,uz,oz,en',
+            'old_password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string', 'min:8', 'confirmed', new CheckCurrentPassword],
         ];
     }
 }

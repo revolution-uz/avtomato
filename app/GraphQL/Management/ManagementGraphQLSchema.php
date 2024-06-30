@@ -3,10 +3,10 @@
 namespace App\GraphQL\Management;
 
 use App\GraphQL\Management\Mutations\AttachPermissionsToRoleGraphQLMutation;
-use App\GraphQL\Management\Mutations\ChangeLanguageGraphQLMutation;
-use App\GraphQL\Management\Mutations\ChangePasswordGraphQLMutation;
+use App\GraphQL\Management\Mutations\ChangeProfileLanguageGraphQLMutation;
+use App\GraphQL\Management\Mutations\ChangeProfilePasswordGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileGraphQLMutation;
-use App\GraphQL\Management\Mutations\ChangeThemeGraphQLMutation;
+use App\GraphQL\Management\Mutations\ChangeProfileThemeGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateRoleGraphQLMutation;
@@ -55,11 +55,11 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 UpdateAdminGraphQLMutation::class,
                 DeleteAdminGraphQLMutation::class,
                 LogoutGraphQLMutation::class,
-                ChangePasswordGraphQLMutation::class,
-                ChangeThemeGraphQLMutation::class,
-                ChangeLanguageGraphQLMutation::class,
+                ChangeProfilePasswordGraphQLMutation::class,
+                ChangeProfileThemeGraphQLMutation::class,
+                ChangeProfileLanguageGraphQLMutation::class,
                 ChangeProfileGraphQLMutation::class,
-                ChangeThemeGraphQLMutation::class,
+                ChangeProfileThemeGraphQLMutation::class,
                 RevokeDeviceGraphQLMutation::class,
                 UploadAvatarGraphQLMutation::class,
                 CreateRoleGraphQLMutation::class,
