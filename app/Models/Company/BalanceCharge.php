@@ -27,7 +27,7 @@ class BalanceCharge extends Model
 
     public static array $sortables = ['id', 'feature_id', 'amount', 'created_at'];
 
-    const null UPDATED_AT = null;
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'feature_id',

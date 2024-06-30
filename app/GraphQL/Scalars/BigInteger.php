@@ -12,7 +12,7 @@ use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Contracts\TypeConvertible;
 
-class BigInteger extends ScalarType implements TypeConvertible
+final class BigInteger extends ScalarType implements TypeConvertible
 {
     public const string GRAPHQL_TYPE_NAME = 'BigInteger';
 
@@ -83,6 +83,6 @@ class BigInteger extends ScalarType implements TypeConvertible
 
     public function toType(): Type
     {
-        return new static;
+        return new self;
     }
 }

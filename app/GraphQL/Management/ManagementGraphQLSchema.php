@@ -2,7 +2,10 @@
 
 namespace App\GraphQL\Management;
 
+use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
 use App\GraphQL\Management\Mutations\AttachPermissionsToRoleGraphQLMutation;
+use App\GraphQL\Management\Mutations\BalanceFillConfirmGraphQLMutation;
+use App\GraphQL\Management\Mutations\BalanceFillGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileAvatarGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileLanguageGraphQLMutation;
@@ -61,6 +64,8 @@ class ManagementGraphQLSchema implements ConfigConvertible
         return [
             'mutation' => [
                 AttachPermissionsToRoleGraphQLMutation::class,
+                BalanceFillGraphQLMutation::class,
+                BalanceFillConfirmGraphQLMutation::class,
                 ChangeProfileAvatarGraphQLMutation::class,
                 ChangeProfileGraphQLMutation::class,
                 ChangeProfileLanguageGraphQLMutation::class,
@@ -102,6 +107,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 AdminGraphQLType::class,
                 AdminInputGraphQLType::class,
                 AttachmentGraphQLType::class,
+                AttachCardDataGraphQLType::class,
                 BalanceFundGraphQLType::class,
                 BalanceChargeGraphQLType::class,
                 PermissionGraphQLType::class,

@@ -25,7 +25,7 @@ class BalanceFund extends Model
 
     public static array $sortables = ['id', 'amount', 'phone_number', 'card_number', 'created_at'];
 
-    const null UPDATED_AT = null;
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'amount',
