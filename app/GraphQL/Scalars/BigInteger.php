@@ -23,9 +23,7 @@ class BigInteger extends ScalarType implements TypeConvertible
     /**
      * Serializes an internal value to include in a response.
      *
-     * @param mixed $value
-     *
-     * @return mixed
+     * @param  mixed  $value
      *
      * @throws Error
      */
@@ -34,7 +32,7 @@ class BigInteger extends ScalarType implements TypeConvertible
         if (! preg_match('/\d+/', $value)) {
             throw new Error($value . ' cannot represent a big integer.');
         }
-        
+
         return $value;
     }
 
@@ -43,8 +41,7 @@ class BigInteger extends ScalarType implements TypeConvertible
      *
      * In the case of an invalid value this method must throw an Exception
      *
-     * @param mixed $value
-     *
+     * @param  mixed  $value
      * @return mixed
      *
      * @throws Error
@@ -54,7 +51,7 @@ class BigInteger extends ScalarType implements TypeConvertible
         if (! preg_match('/\d+/', $value)) {
             throw new Error($value . ' cannot represent a big integer.');
         }
-        
+
         return (string) $value;
     }
 
@@ -63,10 +60,8 @@ class BigInteger extends ScalarType implements TypeConvertible
      *
      * In the case of an invalid node or value this method must throw an Exception
      *
-     * @param Node $valueNode
-     * @param mixed[]|null $variables
-     *
-     * @return mixed
+     * @param  Node  $valueNode
+     * @param  mixed[]|null  $variables
      *
      * @throws Exception
      */
@@ -88,6 +83,6 @@ class BigInteger extends ScalarType implements TypeConvertible
 
     public function toType(): Type
     {
-        return new static();
+        return new static;
     }
 }
