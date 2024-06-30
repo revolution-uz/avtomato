@@ -36,7 +36,7 @@ class UpdateAdminGraphQLMutation extends Mutation
                 'type' => Type::string(),
             ],
             'last_name' => [
-                'name' => 'first_name',
+                'name' => 'last_name',
                 'type' => Type::string(),
             ],
         ];
