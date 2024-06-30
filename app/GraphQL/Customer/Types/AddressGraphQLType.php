@@ -50,11 +50,11 @@ class AddressGraphQLType extends GraphQLType
                 'resolve' => fn (Address $root) => $root->district,
             ],
             'mahalla_id' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'resolve' => fn (Address $root) => $root->mahalla_id,
             ],
             'mahalla' => [
-                'type' => Type::nonNull(GraphQL::type(MahallaGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => GraphQL::type(MahallaGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (Address $root) => $root->mahalla,
             ],
             'created_at' => [
