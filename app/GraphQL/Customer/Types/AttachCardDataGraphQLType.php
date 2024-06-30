@@ -4,11 +4,12 @@ namespace App\GraphQL\Customer\Types;
 
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class AttachCardDataGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'AttachCardDataGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'AttachCardDataGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -18,7 +19,7 @@ class AttachCardDataGraphQLType extends GraphQLType
     {
         return [
             'transaction_id' => [
-                'type' => Type::int(),
+                'type' => GraphQL::type('BigInteger'),
                 'resolve' => fn (AtmosAttachCardResponseDTO $root) => $root->transaction_id,
             ],
             'phone' => [

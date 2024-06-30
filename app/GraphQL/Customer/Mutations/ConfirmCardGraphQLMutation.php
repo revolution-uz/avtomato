@@ -39,7 +39,7 @@ class ConfirmCardGraphQLMutation extends Mutation
             ],
             'transaction_id' => [
                 'name' => 'transaction_id',
-                'type' => Type::int(),
+                'type' => GraphQL::type('BigInteger'),
             ],
             'otp' => [
                 'name' => 'otp',

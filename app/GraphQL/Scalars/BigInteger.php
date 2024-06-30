@@ -1,0 +1,91 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\GraphQL\Scalars;
+
+use Exception;
+use GraphQL\Error\Error;
+use GraphQL\Language\AST\Node;
+use GraphQL\Language\AST\StringValueNode;
+use GraphQL\Type\Definition\ScalarType;
+use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Contracts\TypeConvertible;
+
+class BigInteger extends ScalarType implements TypeConvertible
+{
+    public string $name = 'BigInteger';
+
+    public ?string $description = 'An arbitrarily long sequence of digits that represents a big integer.';
+
+    /**
+     * Serializes an internal value to include in a response.
+     *
+     * @param mixed $value
+     *
+     * @return mixed
+     *
+     * @throws Error
+     */
+    public function serialize($value): mixed
+    {
+        if (! preg_match('/\d+/', $value)) {
+            throw new Error($value . ' cannot represent a big integer.');
+        }
+        
+        return $value;
+    }
+
+    /**
+     * Parses an externally provided value (query variable) to use as an input.
+     *
+     * In the case of an invalid value this method must throw an Exception
+     *
+     * @param mixed $value
+     *
+     * @return mixed
+     *
+     * @throws Error
+     */
+    public function parseValue($value)
+    {
+        if (! preg_match('/\d+/', $value)) {
+            throw new Error($value . ' cannot represent a big integer.');
+        }
+        
+        return (string) $value;
+    }
+
+    /**
+     * Parses an externally provided literal value (hardcoded in GraphQL query) to use as an input.
+     *
+     * In the case of an invalid node or value this method must throw an Exception
+     *
+     * @param Node $valueNode
+     * @param mixed[]|null $variables
+     *
+     * @return mixed
+     *
+     * @throws Exception
+     */
+    public function parseLiteral($valueNode, ?array $variables = null): mixed
+    {
+        if (! $valueNode instanceof StringValueNode) {
+            throw new Error(
+                "Query error: Can only parse strings got: {$valueNode->kind}",
+                $valueNode
+            );
+        }
+
+        if (! preg_match('/\d+/', $valueNode->value)) {
+            throw new Error($valueNode->value . ' cannot represent a big integer.');
+        }
+
+        return $valueNode->value;
+    }
+
+    public function toType(): Type
+    {
+        return new static();
+    }
+}
