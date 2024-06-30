@@ -14,7 +14,9 @@ use Rebing\GraphQL\Support\Contracts\TypeConvertible;
 
 class BigInteger extends ScalarType implements TypeConvertible
 {
-    public string $name = 'BigInteger';
+    public const string GRAPHQL_TYPE_NAME = 'BigInteger';
+
+    public string $name = self::GRAPHQL_TYPE_NAME;
 
     public ?string $description = 'An arbitrarily long sequence of digits that represents a big integer.';
 

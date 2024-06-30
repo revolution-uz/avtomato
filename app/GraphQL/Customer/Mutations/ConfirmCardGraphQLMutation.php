@@ -5,6 +5,7 @@ namespace App\GraphQL\Customer\Mutations;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\CardGraphQLType;
+use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Services\CustomerCardService;
 use Closure;
@@ -39,7 +40,7 @@ class ConfirmCardGraphQLMutation extends Mutation
             ],
             'transaction_id' => [
                 'name' => 'transaction_id',
-                'type' => GraphQL::type('BigInteger'),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
             ],
             'otp' => [
                 'name' => 'otp',
