@@ -26,6 +26,7 @@ use App\GraphQL\Management\Queries\ActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\AdminActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\AdminDevicesGraphQLQuery;
 use App\GraphQL\Management\Queries\AdminsGraphQLQuery;
+use App\GraphQL\Management\Queries\BalanceChargesGraphQLQuery;
 use App\GraphQL\Management\Queries\BalanceFundsGraphQLQuery;
 use App\GraphQL\Management\Queries\BranchesGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileActivityLogsGraphQLQuery;
@@ -40,6 +41,7 @@ use App\GraphQL\Management\Types\ActivityLogGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AdminInputGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\BalanceChargeGraphQLType;
 use App\GraphQL\Management\Types\BalanceFundGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
@@ -84,6 +86,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 AdminActivityLogsGraphQLQuery::class,
                 AdminDevicesGraphQLQuery::class,
                 BalanceFundsGraphQLQuery::class,
+                BalanceChargesGraphQLQuery::class,
                 SingleAdminGraphQLQuery::class,
                 CurrentProfileGraphQLQuery::class,
                 CurrentProfileDevicesGraphQLQuery::class,
@@ -100,6 +103,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 AdminInputGraphQLType::class,
                 AttachmentGraphQLType::class,
                 BalanceFundGraphQLType::class,
+                BalanceChargeGraphQLType::class,
                 PermissionGraphQLType::class,
                 RoleGraphQLType::class,
                 TemplateThemeGraphQLType::class,

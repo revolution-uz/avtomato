@@ -22,9 +22,12 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class BalanceCharge extends Model
 {
     use LogsActivityDirtyOnlyTrait;
+    use OrderBySortable;
     use TenantConnection;
 
-    const UPDATED_AT = null;
+    public static array $sortables = ['id', 'feature_id', 'amount', 'created_at'];
+
+    const null UPDATED_AT = null;
 
     protected $fillable = [
         'feature_id',

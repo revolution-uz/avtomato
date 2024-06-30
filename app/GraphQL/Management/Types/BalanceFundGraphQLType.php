@@ -12,6 +12,7 @@ class BalanceFundGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
+        'model' => BalanceFund::class,
     ];
 
     public function fields(): array

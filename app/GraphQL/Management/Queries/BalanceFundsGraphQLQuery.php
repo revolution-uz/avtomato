@@ -17,7 +17,6 @@ class BalanceFundsGraphQLQuery extends Query
 {
     protected $attributes = [
         'name' => 'balanceFunds',
-        'model' => BalanceFund::class,
     ];
 
     public function type(): Type
