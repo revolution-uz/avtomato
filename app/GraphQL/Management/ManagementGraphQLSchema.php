@@ -16,6 +16,8 @@ use App\GraphQL\Management\Mutations\DeleteRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\Management\Mutations\RevokeDeviceGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateAdminGraphQLMutation;
+use App\GraphQL\Management\Mutations\UpdateAdminPasswordGraphQLMutation;
+use App\GraphQL\Management\Mutations\UpdateAdminRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\ChangeProfileAvatarGraphQLMutation;
@@ -51,24 +53,25 @@ class ManagementGraphQLSchema implements ConfigConvertible
     {
         return [
             'mutation' => [
-                CreateAdminGraphQLMutation::class,
-                UpdateAdminGraphQLMutation::class,
-                DeleteAdminGraphQLMutation::class,
-                LogoutGraphQLMutation::class,
+                AttachPermissionsToRoleGraphQLMutation::class,
+                ChangeProfileAvatarGraphQLMutation::class,
+                ChangeProfileGraphQLMutation::class,
+                ChangeProfileLanguageGraphQLMutation::class,
                 ChangeProfilePasswordGraphQLMutation::class,
                 ChangeProfileThemeGraphQLMutation::class,
-                ChangeProfileLanguageGraphQLMutation::class,
-                ChangeProfileGraphQLMutation::class,
-                ChangeProfileThemeGraphQLMutation::class,
-                RevokeDeviceGraphQLMutation::class,
-                ChangeProfileAvatarGraphQLMutation::class,
-                CreateRoleGraphQLMutation::class,
-                UpdateRoleGraphQLMutation::class,
-                AttachPermissionsToRoleGraphQLMutation::class,
-                DeleteRoleGraphQLMutation::class,
+                CreateAdminGraphQLMutation::class,
                 CreateBranchGraphQLMutation::class,
-                UpdateBranchGraphQLMutation::class,
+                CreateRoleGraphQLMutation::class,
+                DeleteAdminGraphQLMutation::class,
                 DeleteBranchGraphQLMutation::class,
+                DeleteRoleGraphQLMutation::class,
+                LogoutGraphQLMutation::class,
+                RevokeDeviceGraphQLMutation::class,
+                UpdateAdminGraphQLMutation::class,
+                UpdateAdminPasswordGraphQLMutation::class,
+                UpdateAdminRoleGraphQLMutation::class,
+                UpdateBranchGraphQLMutation::class,
+                UpdateRoleGraphQLMutation::class,
             ],
             'query' => [
                 AdminsGraphQLQuery::class,
