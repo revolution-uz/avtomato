@@ -12,10 +12,10 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
-class UploadAvatarGraphQLMutation extends Mutation
+class ChangeProfileAvatarGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'uploadAvatar',
+        'name' => 'changeProfileAvatar',
     ];
 
     public function args(): array

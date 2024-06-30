@@ -18,7 +18,7 @@ use App\GraphQL\Management\Mutations\RevokeDeviceGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateRoleGraphQLMutation;
-use App\GraphQL\Management\Mutations\UploadAvatarGraphQLMutation;
+use App\GraphQL\Management\Mutations\ChangeProfileAvatarGraphQLMutation;
 use App\GraphQL\Management\Queries\ActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\AdminsGraphQLQuery;
 use App\GraphQL\Management\Queries\BranchesGraphQLQuery;
@@ -61,7 +61,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 ChangeProfileGraphQLMutation::class,
                 ChangeProfileThemeGraphQLMutation::class,
                 RevokeDeviceGraphQLMutation::class,
-                UploadAvatarGraphQLMutation::class,
+                ChangeProfileAvatarGraphQLMutation::class,
                 CreateRoleGraphQLMutation::class,
                 UpdateRoleGraphQLMutation::class,
                 AttachPermissionsToRoleGraphQLMutation::class,
