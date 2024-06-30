@@ -44,7 +44,21 @@ class KatmCreditHistoryAdditionalInfoGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::listOf(Type::string())),
                 'description' => 'notifications',
                 'resolve' => function (KatmCreditHistoryAdditionalInfoDTO $root) {
-                    return array_values($root->notifications);
+                    $result = [];
+
+                    foreach ($root->notifications as $notification) {
+                        if (is_string($notification)) {
+                            $result[] = $notification;
+                        } elseif (is_array($notification)) {
+                            foreach ($notification as $item) {
+                                if (is_string($item)) {
+                                    $result[] = $item;
+                                }
+                            }
+                        }
+                    }
+
+                    return $result;
                 },
             ],
         ];
