@@ -42,6 +42,8 @@ class User extends Authenticatable
 {
     use CausesActivity, HasApiTokens, HasFactory, LogsActivityDirtyOnlyTrait, Notifiable, OrderBySortable, SoftDeletes, TenantConnection;
 
+    public static array $sortables = ['id', 'username', 'first_name', 'last_name', 'created_at', 'updated_at'];
+
     protected $fillable = [
         'status',
         'first_name',

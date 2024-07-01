@@ -24,6 +24,8 @@ class Tariff extends Model
 {
     use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
+    public static array $sortables = ['id', 'name', 'is_annual', 'percent'];
+
     protected $fillable = [
         'name',
         'is_annual',

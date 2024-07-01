@@ -22,6 +22,8 @@ class Branch extends Model
 {
     use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
+    public static array $sortables = ['id', 'name', 'address', 'inn', 'created_at', 'updated_at'];
+
     protected $fillable = [
         'name',
         'inn',

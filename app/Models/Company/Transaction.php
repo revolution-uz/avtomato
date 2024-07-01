@@ -31,6 +31,8 @@ class Transaction extends Model
 {
     use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
 
+    public static array $sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created'];
+
     protected $fillable = [
         'installment_id',
         'customer_id',

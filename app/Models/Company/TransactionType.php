@@ -25,6 +25,8 @@ class TransactionType extends Model
 {
     use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
+    public static array $sortables = ['id', 'name', 'is_system', 'created_at', 'updated_at'];
+
     protected $fillable = [
         'name_uz',
         'name_ru',
