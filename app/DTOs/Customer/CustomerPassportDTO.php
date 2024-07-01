@@ -15,7 +15,7 @@ class CustomerPassportDTO extends Data
 {
     public function __construct(
         public string $pinfl,
-        public string $passport_series,
-        public string $passport_number,
+        public ?string $passport_series,
+        public ?string $passport_number,
     ) {}
 }

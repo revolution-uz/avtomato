@@ -79,11 +79,12 @@ class ScoringRequest extends Model
             if (is_null($scoringRequest->customer_id)) {
                 if ($scoringRequest->request instanceof KatmCreateRequestDTO || $scoringRequest->request instanceof MibInfoCreateRequestDTO || $scoringRequest->request instanceof TaxInfoCreateRequestDTO) {
                     $customerByPassport = CustomerPassportDTO::from($scoringRequest->request);
-                    $customer = Customer::query()->when(function ($query) use ($customerByPassport) {
-                        $query
+                    $customer = Customer::query()->when(
+                        $customerByPassport->passport_series && $customerByPassport->passport_number,
+                        fn ($query) => $query
                             ->where('passport_series', $customerByPassport->passport_series)
-                            ->where('passport_number', $customerByPassport->passport_number);
-                    })->orWhere('pinfl', $customerByPassport->pinfl)->first();
+                            ->where('passport_number', $customerByPassport->passport_number)
+                    )->orWhere('pinfl', $customerByPassport->pinfl)->first();
 
                     if ($customer) {
                         $scoringRequest->customer_id = $customer->id;
