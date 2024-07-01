@@ -70,8 +70,8 @@ class CreateDebtScoringGraphQLMutation extends Mutation
         $type = ScoringRequestTypeEnum::from($args['type']);
 
         return $type === ScoringRequestTypeEnum::PLUM_MIB_INFO
-            ? (new MibService(new AsaxiyClient, new BalanceService))->scoringMib(MibInfoCreateRequestDTO::from($args))->id
-            : (new TaxService(new AsaxiyClient, new BalanceService))->scoringTax(TaxInfoCreateRequestDTO::from($args))->id;
+            ? (new MibService(new AsaxiyClient, new BalanceService))->scoringMib(MibInfoCreateRequestDTO::from($args['data']))->id
+            : (new TaxService(new AsaxiyClient, new BalanceService))->scoringTax(TaxInfoCreateRequestDTO::from($args['data']))->id;
     }
 
     protected function rules(array $args = []): array
