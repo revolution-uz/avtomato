@@ -11,6 +11,8 @@ use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Installment\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
+use App\GraphQL\Installment\Mutations\DeleteTariffGraphQLMutation;
+use App\GraphQL\Installment\Mutations\DeleteTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Queries\CalculateGraphQLQuery;
@@ -31,7 +33,6 @@ use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\GraphQL\Installment\Types\TariffInputGraphQLType;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
 use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
-use App\GraphQL\Installment\Types\TransactionTypeInputGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
@@ -62,8 +63,10 @@ class InstallmentGraphQLSchema implements ConfigConvertible
             'mutation' => [
                 CreateTariffGraphQLMutation::class,
                 UpdateTariffGraphQLMutation::class,
+                DeleteTariffGraphQLMutation::class,
                 CreateTransactionTypeGraphQLMutation::class,
                 UpdateTransactionTypeGraphQLMutation::class,
+                DeleteTransactionTypeGraphQLMutation::class,
             ],
             'types' => [
                 CalculatedGraphGraphQLType::class,
@@ -84,7 +87,6 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 InstallmentGraphGraphQLType::class,
                 TariffInputGraphQLType::class,
                 TariffGraphQLType::class,
-                TransactionTypeInputGraphQLType::class,
                 TransactionTypeGraphQLType::class,
                 CustomerGraphQLType::class,
                 CardGraphQLType::class,

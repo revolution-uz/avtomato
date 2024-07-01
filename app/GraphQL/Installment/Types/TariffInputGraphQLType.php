@@ -7,7 +7,7 @@ use Rebing\GraphQL\Support\InputType;
 
 class TariffInputGraphQLType extends InputType
 {
-    public const GRAPHQL_TYPE_NAME = 'TariffInputGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'TariffInputGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
