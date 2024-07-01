@@ -111,7 +111,7 @@ class InstallmentController extends Controller
     )]
     public function create(InstallmentRequest $request): InstallmentResource
     {
-        return new InstallmentResource($this->installmentService->create($request));
+        return new InstallmentResource($this->installmentService->create($request->validated()));
     }
 
     /**

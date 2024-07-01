@@ -9,10 +9,13 @@ use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
+use App\GraphQL\Installment\Mutations\CreateInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
+use App\GraphQL\Installment\Mutations\DeleteInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTransactionTypeGraphQLMutation;
+use App\GraphQL\Installment\Mutations\UpdateInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Queries\CalculateGraphQLQuery;
@@ -29,6 +32,7 @@ use App\GraphQL\Installment\Types\InstallmentCommentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
 use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\GraphQL\Installment\Types\TariffInputGraphQLType;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
@@ -61,6 +65,9 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 SingleTransactionGraphQLQuery::class,
             ],
             'mutation' => [
+                CreateInstallmentGraphQLMutation::class,
+                UpdateInstallmentGraphQLMutation::class,
+                DeleteInstallmentGraphQLMutation::class,
                 CreateTariffGraphQLMutation::class,
                 UpdateTariffGraphQLMutation::class,
                 DeleteTariffGraphQLMutation::class,
@@ -69,6 +76,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 DeleteTransactionTypeGraphQLMutation::class,
             ],
             'types' => [
+                InstallmentInputGraphQLType::class,
                 CalculatedGraphGraphQLType::class,
                 AdminGraphQLType::class,
                 TemplateThemeGraphQLType::class,

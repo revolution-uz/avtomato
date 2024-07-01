@@ -7,7 +7,6 @@ use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
-use App\Http\Requests\Installment\InstallmentRequest;
 use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGraph;
@@ -27,9 +26,8 @@ class InstallmentService
         $this->balanceService = $balanceService;
     }
 
-    public function create(InstallmentRequest $request): Installment
+    public function create(array $attributes): Installment
     {
-        $attributes = $request->validated();
         $attributes['status'] = InstallmentStatusEnum::DRAFT;
         $attributes['user_id'] = auth()->user()->id;
         $attributes['sms_notify'] = false;

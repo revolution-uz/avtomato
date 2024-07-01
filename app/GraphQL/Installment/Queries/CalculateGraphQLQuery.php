@@ -39,8 +39,8 @@ class CalculateGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => 'required|numeric',
             ],
-            'initial_amount' => [
-                'name' => 'initial_amount',
+            'initial_fee' => [
+                'name' => 'initial_fee',
                 'type' => Type::nonNull(Type::int()),
                 'rules' => 'required|numeric',
             ],
@@ -62,7 +62,7 @@ class CalculateGraphQLQuery extends Query
         /** @var Tariff $tariff */
         $tariff = Tariff::query()->where('id', $args['tariff_id'])->firstOrFail();
         $amount = $args['amount'];
-        $amount -= $args['initial_amount'];
+        $amount -= $args['initial_fee'];
         $portion = $amount * $tariff->percent / 100;
 
         $currentDate = Carbon::now();
