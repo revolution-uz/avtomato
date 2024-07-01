@@ -18,10 +18,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class InstallmentCard extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use SoftDeletes;
-    use TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, SoftDeletes, TenantConnection;
 
     public $timestamps = false;
 

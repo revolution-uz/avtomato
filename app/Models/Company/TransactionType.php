@@ -23,10 +23,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class TransactionType extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use SoftDeletes;
-    use TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'name_uz',

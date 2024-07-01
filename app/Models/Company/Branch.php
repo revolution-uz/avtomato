@@ -20,10 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Branch extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use SoftDeletes;
-    use TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'name',

@@ -23,9 +23,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class InstallmentGuarantor extends Model
 {
-    use LogsActivityDirtyOnlyTrait;
-    use SoftDeletes;
-    use TenantConnection;
+    use LogsActivityDirtyOnlyTrait, SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'installment_id',

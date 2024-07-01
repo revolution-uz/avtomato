@@ -42,10 +42,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Card extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use SoftDeletes;
-    use TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'customer_id',

@@ -29,9 +29,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Transaction extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
 
     protected $fillable = [
         'installment_id',

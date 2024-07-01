@@ -40,13 +40,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class User extends Authenticatable
 {
-    use CausesActivity;
-    use HasApiTokens;
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use Notifiable;
-    use SoftDeletes;
-    use TenantConnection;
+    use CausesActivity, HasApiTokens, HasFactory, LogsActivityDirtyOnlyTrait, Notifiable, OrderBySortable, SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'status',

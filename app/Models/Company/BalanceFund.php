@@ -19,9 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class BalanceFund extends Model
 {
-    use LogsActivityDirtyOnlyTrait;
-    use OrderBySortable;
-    use TenantConnection;
+    use LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
 
     public static array $sortables = ['id', 'amount', 'phone_number', 'card_number', 'created_at'];
 

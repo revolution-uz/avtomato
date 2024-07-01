@@ -39,9 +39,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class ScoringRequest extends Model
 {
-    use LogsActivityDirtyOnlyTrait;
-    use SoftDeletes;
-    use TenantConnection;
+    use LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'ext_id',

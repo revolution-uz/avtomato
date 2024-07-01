@@ -80,11 +80,8 @@ class CardScoringRequestsGraphQLQuery extends Query
                         ->orWhere('request->expire', 'ILIKE', $search);
                 });
             })
-            ->orderByDesc('id')
-            // TODO sortable
-//            ->when($request->isSortable(), function (Builder $q) use ($request) {
-//                $q->orderBy($request->sortField(), $request->sortDirection());
-//            })
+            ->when(! isset($args['sort']), fn (Builder|ScoringRequest $q) => $q->orderByDesc('id'))
+            ->when(isset($args['sort']), fn (Builder|ScoringRequest $q) => $q->orderBySortable($args['sort']))
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

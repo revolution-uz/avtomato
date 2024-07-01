@@ -28,8 +28,7 @@ use Throwable;
  */
 class Attachment extends Model
 {
-    use LogsActivityDirtyOnlyTrait;
-    use TenantConnection;
+    use LogsActivityDirtyOnlyTrait, TenantConnection;
 
     public const UPLOADS_PATH = 'uploads';
 

@@ -4,6 +4,7 @@ namespace App\Models\Company\Rbac;
 
 use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\OrderBySortable;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,9 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Role extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use SoftDeletes;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes;
 
     public static array $sortables = ['id', 'name', 'created_at', 'updated_at'];
 
