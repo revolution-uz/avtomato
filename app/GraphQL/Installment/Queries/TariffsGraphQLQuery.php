@@ -60,10 +60,8 @@ class TariffsGraphQLQuery extends Query
                     $query->where('name', 'ILIKE', $search);
                 });
             })
-            // TODO sortable
-//            ->when($request->isSortable(), function (Builder $q) use ($request) {
-//                $q->orderBy($request->sortField(), $request->sortDirection());
-//            })
+            ->when(isset($args['sort']), fn (Builder|Tariff $q) => $q->orderBySortable($args['sort']))
+
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 

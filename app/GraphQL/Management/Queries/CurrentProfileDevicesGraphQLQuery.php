@@ -5,6 +5,7 @@ namespace App\GraphQL\Management\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\Company\PersonalAccessToken;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -62,10 +63,7 @@ class CurrentProfileDevicesGraphQLQuery extends Query
                         ->orWhere('device_os', 'ILIKE', $search);
                 });
             })
-            // TODO sortable
-//            ->when($request->isSortable(), function (Builder $q) use ($request) {
-//                $q->orderBy($request->sortField(), $request->sortDirection());
-//            })
+            ->when(isset($args['sort']), fn (Builder|PersonalAccessToken $q) => $q->orderBySortable($args['sort']))
             ->paginate(
                 perPage: $args['per_page'] ?? 10,
                 page: $args['page'] ?? 1

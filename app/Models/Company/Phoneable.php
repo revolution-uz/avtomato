@@ -23,8 +23,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Phoneable extends Model
 {
-    use LogsActivityDirtyOnlyTrait;
-    use TenantConnection;
+    use LogsActivityDirtyOnlyTrait, TenantConnection;
 
     protected $fillable = [
         'type',

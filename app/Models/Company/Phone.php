@@ -17,9 +17,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Phone extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, TenantConnection;
 
     protected $fillable = [
         'phone',

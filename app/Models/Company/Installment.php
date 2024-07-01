@@ -56,11 +56,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Installment extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use OrderBySortable;
-    use SoftDeletes;
-    use TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id', 'customer_id', 'tariff_id', 'amount', 'created_at', 'starts_in', 'next_pay_date'];
 

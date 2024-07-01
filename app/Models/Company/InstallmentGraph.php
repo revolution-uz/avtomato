@@ -20,8 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class InstallmentGraph extends Model
 {
-    use HasFactory;
-    use TenantConnection;
+    use HasFactory, TenantConnection;
 
     protected $fillable = [
         'installment_id',

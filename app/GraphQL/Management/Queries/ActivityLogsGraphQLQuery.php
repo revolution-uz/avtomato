@@ -61,10 +61,7 @@ class ActivityLogsGraphQLQuery extends Query
                     $query->where('description', 'ILIKE', $search);
                 });
             })
-            // TODO sortable
-//            ->when($request->isSortable(), function (Builder $q) use ($request) {
-//                $q->orderBy($request->sortField(), $request->sortDirection());
-//            })
+            ->when(isset($args['sort']), fn (Builder|ActivityLog $q) => $q->orderBySortable($args['sort']))
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 

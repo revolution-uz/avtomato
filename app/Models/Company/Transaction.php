@@ -29,9 +29,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Transaction extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
+
+    public static array $sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created'];
 
     protected $fillable = [
         'installment_id',

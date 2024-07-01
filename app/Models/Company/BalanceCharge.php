@@ -21,9 +21,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class BalanceCharge extends Model
 {
-    use LogsActivityDirtyOnlyTrait;
-    use OrderBySortable;
-    use TenantConnection;
+    use LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
 
     public static array $sortables = ['id', 'feature_id', 'amount', 'created_at'];
 

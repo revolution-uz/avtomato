@@ -22,10 +22,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Tariff extends Model
 {
-    use HasFactory;
-    use LogsActivityDirtyOnlyTrait;
-    use SoftDeletes;
-    use TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
+
+    public static array $sortables = ['id', 'name', 'is_annual', 'percent'];
 
     protected $fillable = [
         'name',
