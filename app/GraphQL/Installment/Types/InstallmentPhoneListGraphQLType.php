@@ -9,7 +9,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class InstallmentPhoneListGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'InstallmentAddressListGraphQLType';
+    public const GRAPHQL_TYPE_NAME = 'InstallmentPhoneListGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
