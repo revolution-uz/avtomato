@@ -29,6 +29,7 @@ use App\GraphQL\Customer\Types\CustomerInputGraphQLType;
 use App\GraphQL\Customer\Types\PassportDataGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Customer\Types\PhoneInputGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class CustomerQLSchema implements ConfigConvertible
@@ -68,6 +69,7 @@ class CustomerQLSchema implements ConfigConvertible
                 MahallaGraphQLType::class,
                 PassportDataGraphQLType::class,
                 CustomerAddressByPassportDataGraphQLType::class,
+                InstallmentGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];

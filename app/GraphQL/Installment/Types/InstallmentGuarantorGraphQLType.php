@@ -11,7 +11,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class InstallmentGuarantorGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'InstallmentCommentGraphQLType';
+    public const GRAPHQL_TYPE_NAME = 'InstallmentGuarantorGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
