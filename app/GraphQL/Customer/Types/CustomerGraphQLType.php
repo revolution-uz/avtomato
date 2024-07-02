@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Customer\Types;
 
-use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\Models\Company\Customer;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -103,10 +102,6 @@ class CustomerGraphQLType extends GraphQLType
             'phones' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(PhoneGraphQLType::GRAPHQL_TYPE_NAME))),
                 'resolve' => fn (Customer $root) => $root->phones,
-            ],
-            'installments' => [
-                'type' => Type::nonNull(Type::listOf(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME))),
-                'resolve' => fn (Customer $root) => $root->installments,
             ],
         ];
     }
