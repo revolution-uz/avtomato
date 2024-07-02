@@ -31,11 +31,14 @@ use App\GraphQL\Installment\Queries\TariffsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionTypesGraphQLQuery;
 use App\GraphQL\Installment\Types\CalculatedGraphGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentAddressListGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentCommentGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentContactListGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentPhoneListGraphQLType;
 use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\GraphQL\Installment\Types\TariffInputGraphQLType;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
@@ -108,6 +111,9 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 TransactionGraphQLType::class,
                 InstallmentCommentGraphQLType::class,
                 InstallmentGuarantorGraphQLType::class,
+                InstallmentContactListGraphQLType::class,
+                InstallmentAddressListGraphQLType::class,
+                InstallmentPhoneListGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];

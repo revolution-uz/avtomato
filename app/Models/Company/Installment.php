@@ -154,4 +154,41 @@ class Installment extends Model
     {
         return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
     }
+
+    public function contactList(): array
+    {
+        $addresses = collect();
+        $phones = collect();
+
+        $collectCustomerData = function (Customer $customer, bool $isGuarantor) use (&$addresses, &$phones) {
+            foreach ($customer->addresses as $address) {
+                $addresses->push([
+                    'address' => $address,
+                    'customer_id' => $customer->id,
+                    'is_guarantor' => $isGuarantor,
+                    'customer' => $customer,
+                ]);
+            }
+
+            foreach ($customer->phones as $phone) {
+                $phones->push([
+                    'phone' => $phone,
+                    'customer_id' => $customer->id,
+                    'is_guarantor' => $isGuarantor,
+                    'customer' => $customer,
+                ]);
+            }
+        };
+
+        $collectCustomerData($this->customer, false);
+
+        foreach ($this->guarantors as $guarantor) {
+            $collectCustomerData($guarantor, true);
+        }
+
+        return [
+            'addresses' => $addresses->values()->all(),
+            'phones' => $phones->values()->all(),
+        ];
+    }
 }
