@@ -164,18 +164,14 @@ class Installment extends Model
             foreach ($customer->addresses as $address) {
                 $addresses->push([
                     'address' => $address,
-                    'customer_id' => $customer->id,
-                    'is_guarantor' => $isGuarantor,
-                    'customer' => $customer,
+                    'customer' => $this->installmentCustomer($customer, $isGuarantor),
                 ]);
             }
 
             foreach ($customer->phones as $phone) {
                 $phones->push([
                     'phone' => $phone,
-                    'customer_id' => $customer->id,
-                    'is_guarantor' => $isGuarantor,
-                    'customer' => $customer,
+                    'customer' => $this->installmentCustomer($customer, $isGuarantor),
                 ]);
             }
         };
@@ -189,6 +185,28 @@ class Installment extends Model
         return [
             'addresses' => $addresses->values()->all(),
             'phones' => $phones->values()->all(),
+        ];
+    }
+
+    public function customerList()
+    {
+        $customers = collect();
+        $customers->push($this->installmentCustomer($this->customer, false));
+
+        foreach ($this->guarantors as $guarantor) {
+            $customers->push($this->installmentCustomer($guarantor, true));
+        }
+
+        return $customers->values()->all();
+    }
+
+    private function installmentCustomer(Customer $customer, bool $isGuarantor): array
+    {
+        return [
+            'id' => $customer->id,
+            'full_name' => $customer->full_name,
+            'type' => $isGuarantor ? trans('api.guarantor') : trans('api.debtor'),
+            'customer' => $customer,
         ];
     }
 }

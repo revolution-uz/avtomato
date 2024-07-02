@@ -64,6 +64,10 @@ class InstallmentGraphQLType extends GraphQLType
                 'type' => GraphQL::type(InstallmentContactListGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (Installment $root) => $root->contactList(),
             ],
+            'customer_list' => [
+                'type' => Type::listOf(GraphQL::type(InstallmentCustomerGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Installment $root) => $root->customerList(),
+            ],
             'status' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Installment $root) => $root->status->value,

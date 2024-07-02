@@ -34,6 +34,7 @@ use App\GraphQL\Installment\Types\CalculatedGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentAddressListGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentCommentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentContactListGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentCustomerGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
@@ -114,6 +115,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 InstallmentContactListGraphQLType::class,
                 InstallmentAddressListGraphQLType::class,
                 InstallmentPhoneListGraphQLType::class,
+                InstallmentCustomerGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
