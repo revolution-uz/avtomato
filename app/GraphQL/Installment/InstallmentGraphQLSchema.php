@@ -66,11 +66,11 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 SingleTransactionTypeGraphQLQuery::class,
                 TransactionsGraphQLQuery::class,
                 SingleTransactionGraphQLQuery::class,
+            ],
+            'mutation' => [
                 CreateInstallmentCommentGraphQLMutation::class,
                 UpdateInstallmentCommentGraphQLMutation::class,
                 DeleteInstallmentCommentGraphQLMutation::class,
-            ],
-            'mutation' => [
                 CreateInstallmentGraphQLMutation::class,
                 UpdateInstallmentGraphQLMutation::class,
                 DeleteInstallmentGraphQLMutation::class,
