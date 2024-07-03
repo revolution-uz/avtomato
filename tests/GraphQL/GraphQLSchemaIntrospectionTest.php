@@ -2,15 +2,14 @@
 
 namespace Tests\GraphQL;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class GraphQLSchemaIntrospectionTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function common()
     {
         $response = $this->postJson(
@@ -22,9 +21,7 @@ class GraphQLSchemaIntrospectionTest extends TestCase
         $this->assertArrayNotHasKey('errors', $response->json());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function customer()
     {
         $response = $this->actingAs($this->createAdminUser())->postJson(
@@ -36,9 +33,7 @@ class GraphQLSchemaIntrospectionTest extends TestCase
         $this->assertArrayNotHasKey('errors', $response->json());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function installment()
     {
         $response = $this->actingAs($this->createAdminUser())->postJson(
@@ -50,9 +45,7 @@ class GraphQLSchemaIntrospectionTest extends TestCase
         $this->assertArrayNotHasKey('errors', $response->json());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function management()
     {
         $response = $this->actingAs($this->createAdminUser())->postJson(
@@ -64,9 +57,7 @@ class GraphQLSchemaIntrospectionTest extends TestCase
         $this->assertArrayNotHasKey('errors', $response->json());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function scoring()
     {
         $response = $this->actingAs($this->createAdminUser())->postJson(

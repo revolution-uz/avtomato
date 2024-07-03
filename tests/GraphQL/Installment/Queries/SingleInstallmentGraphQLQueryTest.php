@@ -16,6 +16,7 @@ use App\Models\Company\Transaction;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
@@ -54,9 +55,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_guarantor->id, 'employee_id' => $this->_installment->user_id]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSingleInstallment()
     {
         $response = $this
@@ -69,9 +68,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessSingleInstallmentResponse($response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorSingleInstallment()
     {
         // not found

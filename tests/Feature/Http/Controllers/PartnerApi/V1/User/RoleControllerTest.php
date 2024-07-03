@@ -5,15 +5,14 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 use App\Models\Company\Branch;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Validation\ValidationException;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RoleControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index()
     {
         $admin = $this->createAdminUser();
@@ -23,9 +22,7 @@ class RoleControllerTest extends TestCase
         $this->assertCount(1, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function single()
     {
         $admin = $this->createAdminUser();
@@ -37,9 +34,7 @@ class RoleControllerTest extends TestCase
         $this->assertEquals($role->name, $response->json('data.name'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function create()
     {
         $admin = $this->createAdminUser();
@@ -54,9 +49,7 @@ class RoleControllerTest extends TestCase
         $this->assertEquals('Test Role', $response->json('data.name'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function update()
     {
         $admin = $this->createAdminUser();
@@ -72,9 +65,7 @@ class RoleControllerTest extends TestCase
         $this->assertEquals('Updated Role', $response->json('data.name'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function restrictUpdatingAdmin()
     {
         $admin = $this->createAdminUser();
@@ -86,9 +77,7 @@ class RoleControllerTest extends TestCase
         $this->assertEquals('You can\'t update admin role', $response->json('message'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attachPermissions()
     {
         $admin = $this->createAdminUser();
@@ -116,9 +105,7 @@ class RoleControllerTest extends TestCase
         $this->assertCount(2, $role->fresh()->permissions);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function remove()
     {
         $admin = $this->createAdminUser();
@@ -131,9 +118,7 @@ class RoleControllerTest extends TestCase
         $this->assertSoftDeleted($role);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function restrictDeletingAdmin()
     {
         $this->withoutExceptionHandling();

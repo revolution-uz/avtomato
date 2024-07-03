@@ -13,15 +13,14 @@ use App\Models\Company\Rbac\Role;
 use App\Models\Company\Tariff;
 use App\Models\Company\User;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class InstallmentControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index()
     {
         $branch1 = Branch::factory()->create();
@@ -39,9 +38,7 @@ class InstallmentControllerTest extends TestCase
         $this->assertCount(9, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexRestrictedBranch()
     {
         $branch1 = Branch::factory()->create();
@@ -59,9 +56,7 @@ class InstallmentControllerTest extends TestCase
         $this->assertCount(5, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function create()
     {
         $branch = Branch::factory()->create();
@@ -94,9 +89,7 @@ class InstallmentControllerTest extends TestCase
         $this->assertEquals($tariff->id, $response->json('data.tariff_id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function single()
     {
         $admin = $this->createAdminUser();
@@ -107,9 +100,7 @@ class InstallmentControllerTest extends TestCase
         $this->assertEquals($installment->tariff_id, $response->json('data.tariff_id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function update()
     {
         $tariff = Tariff::factory()->create();

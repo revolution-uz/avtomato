@@ -15,6 +15,7 @@ use App\Models\Company\Phone;
 use App\Models\Company\Transaction;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
@@ -53,9 +54,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $guarantor->id, 'employee_id' => $installment->user_id]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSingleCustomer()
     {
         $response = $this
@@ -68,9 +67,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessSingleCustomerResponse($response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorSingleCustomer()
     {
         // not found

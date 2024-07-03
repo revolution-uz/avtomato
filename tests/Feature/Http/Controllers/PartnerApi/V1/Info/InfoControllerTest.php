@@ -5,15 +5,14 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Info;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class InfoControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function settings()
     {
         $admin = $this->createAdminUser();
@@ -23,9 +22,7 @@ class InfoControllerTest extends TestCase
         $response->assertOk();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function regions()
     {
         Region::factory()->count(10)->create();
@@ -37,9 +34,7 @@ class InfoControllerTest extends TestCase
         $this->assertCount(10, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function districts()
     {
         District::factory()->count(10)->create();
@@ -51,9 +46,7 @@ class InfoControllerTest extends TestCase
         $this->assertCount(10, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mahallas()
     {
         Mahalla::factory()->count(10)->create();

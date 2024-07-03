@@ -4,6 +4,7 @@ namespace Http\Controllers\PartnerApi\V1\Scoring\UzCard;
 
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
 
@@ -11,9 +12,7 @@ class UzCardScoringControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index(): void
     {
         $admin = $this->createAdminUser();
@@ -26,9 +25,7 @@ class UzCardScoringControllerTest extends TestCase
         $this->assertIsArray($response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function create(): void
     {
         $admin = $this->createAdminUser();
@@ -51,9 +48,7 @@ class UzCardScoringControllerTest extends TestCase
         $this->assertIsArray($response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function checkValidation(): void
     {
         $admin = $this->createAdminUser();
@@ -69,9 +64,7 @@ class UzCardScoringControllerTest extends TestCase
         $response->assertJsonValidationErrors(['number', 'expiry']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function show(): void
     {
         $admin = $this->createAdminUser();
@@ -94,9 +87,7 @@ class UzCardScoringControllerTest extends TestCase
         $this->assertEquals($newScoringRequest->request->number, $response->json('data')['request']['number']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function deleteUzCardScoring(): void
     {
         $admin = $this->createAdminUser();

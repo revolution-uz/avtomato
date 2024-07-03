@@ -13,6 +13,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
@@ -60,9 +61,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
         Phone::query()->forceDelete();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successCreateWithoutAddressesAndPhones()
     {
         $response = $this
@@ -75,9 +74,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessCreateCustomerResponse($response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successCreateWithAddresses()
     {
         Artisan::call('tenants:seed', [
@@ -94,9 +91,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessCreateCustomerResponse($response, addresses: true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successCreateWithPhones()
     {
         $response = $this
@@ -109,9 +104,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessCreateCustomerResponse($response, phones: true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorUnique()
     {
         // unique pinfl
@@ -159,9 +152,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.unique', ['attribute' => 'customer.passport number']), $response->json('errors.0.extensions.validation')['customer.passport_number'][0]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorCustomerValidation()
     {
         // required errors
@@ -239,9 +230,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.date', ['attribute' => 'customer.passport given date']), $response->json('errors.0.extensions.validation')['customer.passport_given_date'][0]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorAddressValidation()
     {
         // required errors
@@ -288,9 +277,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.exists', ['attribute' => 'addresses.0.mahalla id']), $response->json('errors.0.extensions.validation')['addresses.0.mahalla_id'][0]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorPhoneValidation()
     {
         // required errors
