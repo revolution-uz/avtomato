@@ -39,6 +39,10 @@ use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
+use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
+use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
+use App\GraphQL\Management\Types\PermissionGraphQLType;
+use App\GraphQL\Management\Types\PermissionGroupGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
@@ -85,6 +89,10 @@ class CustomerQLSchema implements ConfigConvertible
                 AdminGraphQLType::class,
                 TemplateThemeGraphQLType::class,
                 RoleGraphQLType::class,
+                PermissionGroupGraphQLType::class,
+                PermissionGraphQLType::class,
+                PermissionEditableItemGraphQLType::class,
+                PermissionBranchItemGraphQLType::class,
 
                 // installment types
                 InstallmentGraphQLType::class,
