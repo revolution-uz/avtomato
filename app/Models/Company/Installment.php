@@ -156,51 +156,6 @@ class Installment extends Model
         return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
     }
 
-    public function contactList(): array
-    {
-        $addresses = collect();
-        $phones = collect();
-
-        $collectCustomerData = function (Customer $customer, bool $isGuarantor) use (&$addresses, &$phones) {
-            foreach ($customer->addresses as $address) {
-                $addresses->push([
-                    'address' => $address,
-                    'customer' => $this->installmentCustomer($customer, $isGuarantor),
-                ]);
-            }
-
-            foreach ($customer->phones as $phone) {
-                $phones->push([
-                    'phone' => $phone,
-                    'customer' => $this->installmentCustomer($customer, $isGuarantor),
-                ]);
-            }
-        };
-
-        $collectCustomerData($this->customer, false);
-
-        foreach ($this->guarantors as $guarantor) {
-            $collectCustomerData($guarantor, true);
-        }
-
-        return [
-            'addresses' => $addresses->values()->all(),
-            'phones' => $phones->values()->all(),
-        ];
-    }
-
-    public function customerList()
-    {
-        $customers = collect();
-        $customers->push($this->installmentCustomer($this->customer, false));
-
-        foreach ($this->guarantors as $guarantor) {
-            $customers->push($this->installmentCustomer($guarantor, true));
-        }
-
-        return $customers->values()->all();
-    }
-
     private function installmentCustomer(Customer $customer, bool $isGuarantor): array
     {
         return [
