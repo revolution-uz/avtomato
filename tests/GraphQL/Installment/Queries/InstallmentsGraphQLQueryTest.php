@@ -4,6 +4,7 @@ namespace Tests\GraphQL\Installment\Queries;
 
 use App\Models\Company\Installment;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class InstallmentsGraphQLQueryTest extends GraphQLTestCase
@@ -20,9 +21,7 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         Installment::factory()->count($this->_totalInstallmentsCount)->create();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successWithoutArguments()
     {
         $response = $this
@@ -35,9 +34,7 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessInstallmentsResponse($response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successPagination()
     {
         $response = $this
@@ -50,9 +47,7 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessInstallmentsResponse($response, page: 4);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successPerPage()
     {
         $response = $this
@@ -65,9 +60,7 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessInstallmentsResponse($response, perPage: 25);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSortAscending()
     {
         $response = $this
@@ -82,9 +75,7 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installmentIds, $response->json('data.installments.data.*.id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSortDescending()
     {
         $response = $this
@@ -99,9 +90,7 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installmentIds, $response->json('data.installments.data.*.id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSearch()
     {
         $installment = Installment::first();
@@ -116,9 +105,7 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installment->id, $response->json('data.installments.data.0.id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorPage()
     {
         // graphql type test
@@ -147,9 +134,7 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.min.numeric', ['attribute' => 'page', 'min' => 1]), $response->json('errors.0.extensions.validation.page.0'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorPerPage()
     {
         // graphql type test
@@ -191,9 +176,7 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.max.numeric', ['attribute' => 'per page', 'max' => 100]), $response->json('errors.0.extensions.validation.per_page.0'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorSort()
     {
         // graphql type test
