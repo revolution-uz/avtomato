@@ -11,14 +11,13 @@ use App\Models\Company\Transaction;
 use App\Models\Company\User;
 use Tests\Fakers\AtmosFaker;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class TransactionControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index()
     {
         $branch1 = Branch::factory()->create();
@@ -36,9 +35,7 @@ class TransactionControllerTest extends TestCase
         $this->assertCount(9, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexRestrictedBranch()
     {
         $branch1 = Branch::factory()->create();
@@ -58,9 +55,7 @@ class TransactionControllerTest extends TestCase
         $this->assertCount(5, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function single()
     {
         $customer = Transaction::factory()->create();
@@ -72,9 +67,7 @@ class TransactionControllerTest extends TestCase
         $this->assertEquals($customer->id, $response->json('data.id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function deleteTransactions()
     {
         $admin = $this->createAdminUser();
@@ -85,9 +78,7 @@ class TransactionControllerTest extends TestCase
         $response->assertOk();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function reverse()
     {
         $admin = $this->createAdminUser();

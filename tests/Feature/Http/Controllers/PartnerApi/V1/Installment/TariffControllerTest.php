@@ -4,14 +4,13 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment;
 
 use App\Models\Company\Tariff;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class TariffControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index()
     {
         Tariff::factory(5)->create();
@@ -22,9 +21,7 @@ class TariffControllerTest extends TestCase
         $this->assertCount(5, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getSingle()
     {
         $tariff = Tariff::factory()->create();
@@ -35,9 +32,7 @@ class TariffControllerTest extends TestCase
         $this->assertEquals($tariff->id, $response->json('data.id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function create()
     {
         $admin = $this->createAdminUser();
@@ -67,9 +62,7 @@ class TariffControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function update()
     {
         $tariff = Tariff::factory()->create();
@@ -100,9 +93,7 @@ class TariffControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function remove()
     {
         $tariff = Tariff::factory()->create();

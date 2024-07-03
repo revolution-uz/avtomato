@@ -6,14 +6,14 @@ use App\Models\Company\District;
 use App\Models\Company\Region;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+
 
 class KatmCreditHistoryScoringControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index(): void
     {
         $admin = $this->createAdminUser();

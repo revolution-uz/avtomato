@@ -9,6 +9,7 @@ use App\Models\Company\Customer;
 use App\Models\Company\Phone;
 use Illuminate\Testing\TestResponse;
 use Tests\GraphQL\GraphQLTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
 {
@@ -32,9 +33,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSingleCustomer()
     {
         $response = $this
@@ -47,9 +46,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessSingleCustomerResponse($response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorSingleCustomer()
     {
         // not found

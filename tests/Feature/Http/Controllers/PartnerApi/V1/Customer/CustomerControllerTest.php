@@ -8,14 +8,13 @@ use App\Models\Company\Customer;
 use Tests\Fakers\AtmosFaker;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CustomerControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index()
     {
         $admin = $this->createAdminUser();
@@ -25,9 +24,7 @@ class CustomerControllerTest extends TestCase
         $this->assertIsArray($response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function single()
     {
         $customer = Customer::factory()->create();
@@ -39,9 +36,7 @@ class CustomerControllerTest extends TestCase
         $this->assertEquals($customer->first_name, $response->json('data.first_name'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function infoByPassport()
     {
         $request = [
@@ -58,9 +53,7 @@ class CustomerControllerTest extends TestCase
         $this->assertEquals($name, $response->json('data.first_name'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function create()
     {
         $gender = GenderEnum::randomValue();
@@ -114,9 +107,7 @@ class CustomerControllerTest extends TestCase
         $this->assertEquals($request['addresses'][0]['address'], $customer->addresses[0]->address);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function update()
     {
         $customer = Customer::factory()->create();
@@ -149,9 +140,7 @@ class CustomerControllerTest extends TestCase
         $this->assertEquals($customer->last_name, $request['last_name']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attachCard()
     {
         $customer = Customer::factory()->create();
@@ -174,9 +163,7 @@ class CustomerControllerTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function detachCard()
     {
         $customer = Customer::factory()->create();
@@ -193,9 +180,7 @@ class CustomerControllerTest extends TestCase
         $this->assertNotNull($card->fresh()->deleted_at);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removeCard()
     {
         AtmosFaker::getToken();
@@ -210,9 +195,7 @@ class CustomerControllerTest extends TestCase
         $response->assertSuccessful();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function confirmCard()
     {
         $customer = Customer::factory()->create();
@@ -235,9 +218,7 @@ class CustomerControllerTest extends TestCase
         $response->assertSuccessful();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attachAddress()
     {
         $customer = Customer::factory()->create();
@@ -259,9 +240,7 @@ class CustomerControllerTest extends TestCase
         $this->assertCount(1, $customer->fresh()->addresses);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function detachAddress()
     {
         $customer = Customer::factory()->create();
@@ -282,9 +261,7 @@ class CustomerControllerTest extends TestCase
         $this->assertNotNull($address->fresh()->deleted_at);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function attachPhone()
     {
         $customer = Customer::factory()->create();

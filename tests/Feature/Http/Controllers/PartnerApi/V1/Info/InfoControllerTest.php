@@ -6,14 +6,13 @@ use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class InfoControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function settings()
     {
         $admin = $this->createAdminUser();
@@ -23,9 +22,7 @@ class InfoControllerTest extends TestCase
         $response->assertOk();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function regions()
     {
         Region::factory()->count(10)->create();
@@ -37,9 +34,7 @@ class InfoControllerTest extends TestCase
         $this->assertCount(10, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function districts()
     {
         District::factory()->count(10)->create();
@@ -51,9 +46,7 @@ class InfoControllerTest extends TestCase
         $this->assertCount(10, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mahallas()
     {
         Mahalla::factory()->count(10)->create();

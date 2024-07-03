@@ -11,19 +11,16 @@ abstract class GraphQLTestCase extends TestCase
     protected function getGraphQLType($variable): string
     {
         if (is_int($variable)) {
-            return 'Int';
+            return 'Int!';
         }
         if (is_float($variable)) {
-            return 'Float';
+            return 'Float!';
         }
         if (is_bool($variable)) {
-            return 'Boolean';
+            return 'Boolean!';
         }
         if (is_string($variable)) {
-            return 'String';
-        }
-        if (is_string($variable)) {
-            return 'String';
+            return 'String!';
         }
 
         return 'Object';
