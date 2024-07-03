@@ -16,7 +16,7 @@ use Rebing\GraphQL\Support\Query;
 class BalanceChargesGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'balanceFunds',
+        'name' => 'balanceCharges',
     ];
 
     public function type(): Type
