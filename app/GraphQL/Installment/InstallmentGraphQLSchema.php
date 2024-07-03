@@ -21,6 +21,7 @@ use App\GraphQL\Installment\Mutations\DeleteTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DetachCardGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DetachGuarantorGraphQLMutation;
+use App\GraphQL\Installment\Mutations\UpdateGuarantorGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
@@ -87,6 +88,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 AttachCardGraphQLMutation::class,
                 DetachCardGraphQLMutation::class,
                 AttachGuarantorGraphQLMutation::class,
+                UpdateGuarantorGraphQLMutation::class,
                 DetachGuarantorGraphQLMutation::class,
             ],
             'types' => [
