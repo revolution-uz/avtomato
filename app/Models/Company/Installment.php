@@ -112,7 +112,8 @@ class Installment extends Model
         return $this
             ->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')
             ->whereNull('installment_guarantors.deleted_at')
-            ->select('customers.*');
+            ->select('customers.*')
+            ->withTimestamps();
     }
 
     public function documents(): MorphMany
@@ -153,5 +154,15 @@ class Installment extends Model
     public function autoPay(): Attribute
     {
         return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
+    }
+
+    private function installmentCustomer(Customer $customer, bool $isGuarantor): array
+    {
+        return [
+            'id' => $customer->id,
+            'full_name' => $customer->full_name,
+            'type' => $isGuarantor ? trans('api.guarantor') : trans('api.debtor'),
+            'customer' => $customer,
+        ];
     }
 }

@@ -9,12 +9,15 @@ use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
+use App\GraphQL\Installment\Mutations\CreateInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
+use App\GraphQL\Installment\Mutations\DeleteInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTransactionTypeGraphQLMutation;
+use App\GraphQL\Installment\Mutations\UpdateInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
@@ -63,6 +66,9 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 SingleTransactionTypeGraphQLQuery::class,
                 TransactionsGraphQLQuery::class,
                 SingleTransactionGraphQLQuery::class,
+                CreateInstallmentCommentGraphQLMutation::class,
+                UpdateInstallmentCommentGraphQLMutation::class,
+                DeleteInstallmentCommentGraphQLMutation::class,
             ],
             'mutation' => [
                 CreateInstallmentGraphQLMutation::class,

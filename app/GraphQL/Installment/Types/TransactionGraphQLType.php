@@ -13,7 +13,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class TransactionGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'TransactionGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'TransactionGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -84,7 +84,7 @@ class TransactionGraphQLType extends GraphQLType
             ],
             'paid_at' => [
                 'type' => Type::int(),
-                'resolve' => fn (Transaction $root) => $root->paid_at->timestamp,
+                'resolve' => fn (Transaction $root) => $root->paid_at?->timestamp,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),

@@ -9,6 +9,7 @@ use App\Models\Company\Installment;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -29,7 +30,7 @@ class SingleInstallmentGraphQLQuery extends Query
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:installments,id'],
+                'rules' => ['required', Rule::exists('installments', 'id')->whereNull('deleted_at')],
             ],
         ];
     }
