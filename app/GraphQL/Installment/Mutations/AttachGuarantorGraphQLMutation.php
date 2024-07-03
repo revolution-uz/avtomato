@@ -34,13 +34,6 @@ class AttachGuarantorGraphQLMutation extends Mutation
             'customer_id' => [
                 'name' => 'customer_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => [
-                    'required',
-                    'integer',
-                    Rule::exists('customers', 'id'),
-                    Rule::unique('installment_guarantors', 'customer_id')
-                        ->where('installment_id', $this->route('id')),
-                ],
             ],
         ];
     }

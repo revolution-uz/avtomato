@@ -9,6 +9,8 @@ use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
+use App\GraphQL\Installment\Mutations\AttachCardGraphQLMutation;
+use App\GraphQL\Installment\Mutations\AttachGuarantorGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTariffGraphQLMutation;
@@ -17,6 +19,8 @@ use App\GraphQL\Installment\Mutations\DeleteInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTransactionTypeGraphQLMutation;
+use App\GraphQL\Installment\Mutations\DetachCardGraphQLMutation;
+use App\GraphQL\Installment\Mutations\DetachGuarantorGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
@@ -80,6 +84,10 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 CreateInstallmentCommentGraphQLMutation::class,
                 UpdateInstallmentCommentGraphQLMutation::class,
                 DeleteInstallmentCommentGraphQLMutation::class,
+                AttachCardGraphQLMutation::class,
+                DetachCardGraphQLMutation::class,
+                AttachGuarantorGraphQLMutation::class,
+                DetachGuarantorGraphQLMutation::class,
             ],
             'types' => [
                 InstallmentInputGraphQLType::class,
