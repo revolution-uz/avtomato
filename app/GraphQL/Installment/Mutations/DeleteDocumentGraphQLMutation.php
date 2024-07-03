@@ -69,7 +69,7 @@ class DeleteDocumentGraphQLMutation extends Mutation
                 'required',
                 'array',
                 function ($attribute, $value, $fail) {
-                    if (!Attachment::query()->where('id', $value)->exists()) {
+                    if (! Attachment::query()->where('id', $value)->exists()) {
                         $fail(__('api.not found'));
                     }
                 },

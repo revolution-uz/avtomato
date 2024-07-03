@@ -49,8 +49,12 @@ class CreateTransactionGraphQLMutation extends Mutation
                     'required',
                     'int',
                     Rule::exists('transaction_types', 'id'),
+                    function ($attribute, $value, $fail) {
+                        if ($value < 100) {
+                            $fail(__('api.You cannot create system payment manually'));
+                        }
+                    },
                 ],
-
             ],
             'amount' => [
                 'name' => 'amount',
