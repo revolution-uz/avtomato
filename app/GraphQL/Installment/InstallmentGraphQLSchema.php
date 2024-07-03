@@ -66,9 +66,6 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 SingleTransactionTypeGraphQLQuery::class,
                 TransactionsGraphQLQuery::class,
                 SingleTransactionGraphQLQuery::class,
-                CreateInstallmentCommentGraphQLMutation::class,
-                UpdateInstallmentCommentGraphQLMutation::class,
-                DeleteInstallmentCommentGraphQLMutation::class,
             ],
             'mutation' => [
                 CreateInstallmentGraphQLMutation::class,
@@ -80,6 +77,9 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 CreateTransactionTypeGraphQLMutation::class,
                 UpdateTransactionTypeGraphQLMutation::class,
                 DeleteTransactionTypeGraphQLMutation::class,
+                CreateInstallmentCommentGraphQLMutation::class,
+                UpdateInstallmentCommentGraphQLMutation::class,
+                DeleteInstallmentCommentGraphQLMutation::class,
             ],
             'types' => [
                 InstallmentInputGraphQLType::class,
