@@ -155,14 +155,4 @@ class Installment extends Model
     {
         return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
     }
-
-    private function installmentCustomer(Customer $customer, bool $isGuarantor): array
-    {
-        return [
-            'id' => $customer->id,
-            'full_name' => $customer->full_name,
-            'type' => $isGuarantor ? trans('api.guarantor') : trans('api.debtor'),
-            'customer' => $customer,
-        ];
-    }
 }
