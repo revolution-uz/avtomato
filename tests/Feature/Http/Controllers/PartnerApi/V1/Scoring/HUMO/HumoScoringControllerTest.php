@@ -5,9 +5,9 @@ namespace Http\Controllers\PartnerApi\V1\Scoring\HUMO;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
 use App\Models\Company\User;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class HumoScoringControllerTest extends TestCase
 {

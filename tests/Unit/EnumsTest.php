@@ -5,8 +5,8 @@ namespace Tests\Unit;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Rbac\PermissionGroupEnum;
 use Illuminate\Support\Arr;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class EnumsTest extends TestCase
 {

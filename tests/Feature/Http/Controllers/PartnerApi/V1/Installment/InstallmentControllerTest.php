@@ -13,8 +13,8 @@ use App\Models\Company\Rbac\Role;
 use App\Models\Company\Tariff;
 use App\Models\Company\User;
 use Carbon\Carbon;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class InstallmentControllerTest extends TestCase
 {

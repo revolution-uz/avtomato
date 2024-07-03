@@ -3,8 +3,8 @@
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Management;
 
 use App\Models\Company\Branch;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class BranchControllerTest extends TestCase
 {

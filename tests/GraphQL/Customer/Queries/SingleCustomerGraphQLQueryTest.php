@@ -8,8 +8,8 @@ use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
 use Illuminate\Testing\TestResponse;
-use Tests\GraphQL\GraphQLTestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\GraphQL\GraphQLTestCase;
 
 class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
 {

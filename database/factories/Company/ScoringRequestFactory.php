@@ -14,8 +14,8 @@ use App\Enums\ClientCodeEnum;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 use Spatie\LaravelData\DataCollection;
 
 /**
@@ -37,7 +37,7 @@ class ScoringRequestFactory extends Factory
         $type = 6;
 
         return [
-            'ext_id' => rand(100000,9999999999),
+            'ext_id' => rand(100000, 9999999999),
             'status' => $status,
             'type' => $type,
             'client_code' => $clientCode,
@@ -53,11 +53,11 @@ class ScoringRequestFactory extends Factory
         return match ($type) {
             ScoringRequestTypeEnum::KATM_CREDIT_HISTORY->value,
             ScoringRequestTypeEnum::KATM_INPS_HISTORY->value,
-            ScoringRequestTypeEnum::KATM_PENSION_INFO->value => new KatmCreateRequestDTO("30906997180039", "AB", "4143286", Carbon::createFromDate("15-06-2016"), "Akmal", "Baxodirov", "Azamat", "998882019909", "998882019909", Carbon::createFromDate("09-06-1999"), 13, 114),
-            ScoringRequestTypeEnum::PLUM_MIB_INFO->value => new MibInfoCreateRequestDTO("21710025140075", "+998938651719"),
-            ScoringRequestTypeEnum::PLUM_TAX_INFO->value => new TaxInfoCreateRequestDTO("21710025140075"),
+            ScoringRequestTypeEnum::KATM_PENSION_INFO->value => new KatmCreateRequestDTO('30906997180039', 'AB', '4143286', Carbon::createFromDate('15-06-2016'), 'Akmal', 'Baxodirov', 'Azamat', '998882019909', '998882019909', Carbon::createFromDate('09-06-1999'), 13, 114),
+            ScoringRequestTypeEnum::PLUM_MIB_INFO->value => new MibInfoCreateRequestDTO('21710025140075', '+998938651719'),
+            ScoringRequestTypeEnum::PLUM_TAX_INFO->value => new TaxInfoCreateRequestDTO('21710025140075'),
             ScoringRequestTypeEnum::UZCARD->value,
-            ScoringRequestTypeEnum::HUMO->value => new CardCreateRequestDTO("986012011463".rand(1000,9999), '2803'),
+            ScoringRequestTypeEnum::HUMO->value => new CardCreateRequestDTO('986012011463' . rand(1000, 9999), '2803'),
         };
     }
 
@@ -70,6 +70,7 @@ class ScoringRequestFactory extends Factory
                 new DetailedAnalyticsInMonthDTO('This is not description', '208', 20202020),
             ]
         );
+
         return match ($type) {
             default => new CardScoringResponseDTO(new DataCollection(
                 MonthlyAnalyticsDTO::class,
@@ -78,7 +79,7 @@ class ScoringRequestFactory extends Factory
                         Carbon::now(),
                         30303030,
                         $details
-                    )
+                    ),
                 ]
             ))
         };

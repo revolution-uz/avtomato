@@ -5,8 +5,8 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 use App\Models\Company\Branch;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Validation\ValidationException;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class RoleControllerTest extends TestCase
 {

@@ -5,10 +5,10 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Customer;
 use App\Enums\GenderEnum;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\AtmosFaker;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class CustomerControllerTest extends TestCase
 {

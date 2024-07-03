@@ -9,9 +9,9 @@ use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use App\Models\Company\User;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\AtmosFaker;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class TransactionControllerTest extends TestCase
 {

@@ -5,8 +5,8 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Info;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class InfoControllerTest extends TestCase
 {

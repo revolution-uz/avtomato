@@ -4,8 +4,8 @@ namespace Tests\GraphQL\Customer\Queries;
 
 use App\Models\Company\Customer;
 use Illuminate\Testing\TestResponse;
-use Tests\GraphQL\GraphQLTestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\GraphQL\GraphQLTestCase;
 
 class CustomersGraphQLQueryTest extends GraphQLTestCase
 {

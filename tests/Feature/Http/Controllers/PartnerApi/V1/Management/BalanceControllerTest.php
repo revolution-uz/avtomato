@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Management;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\AtmosFaker;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class BalanceControllerTest extends TestCase
 {

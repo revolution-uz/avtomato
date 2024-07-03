@@ -38,12 +38,12 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @method static Builder|static query()
  *
+ * @method static Builder|static query()
  */
 class ScoringRequest extends Model
 {
-    use LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection, HasFactory;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id', 'status', 'created_at'];
 

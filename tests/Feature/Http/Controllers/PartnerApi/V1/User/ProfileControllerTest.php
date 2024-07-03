@@ -6,8 +6,8 @@ use App\Enums\Company\AttachmentTypeEnum;
 use App\Models\Company\Attachment;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class ProfileControllerTest extends TestCase
 {

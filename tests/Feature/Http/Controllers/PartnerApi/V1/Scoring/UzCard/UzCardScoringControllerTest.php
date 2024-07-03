@@ -4,9 +4,9 @@ namespace Http\Controllers\PartnerApi\V1\Scoring\UzCard;
 
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class UzCardScoringControllerTest extends TestCase
 {

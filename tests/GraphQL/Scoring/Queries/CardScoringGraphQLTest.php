@@ -58,7 +58,6 @@ class CardScoringGraphQLTest extends GraphQLTestCase
         $this->assertSuccessScoringResponse($response, perPage: 25);
     }
 
-
     #[Test]
     public function successSortAscending()
     {
@@ -73,7 +72,6 @@ class CardScoringGraphQLTest extends GraphQLTestCase
         $scoringIds = ScoringRequest::query()->orderBy('id')->limit(10)->pluck('id')->toArray();
         $this->assertEquals($scoringIds, $response->json('data.cardScoringRequests.data.*.id'));
     }
-
 
     #[Test]
     public function successSortDescending()
@@ -133,7 +131,6 @@ class CardScoringGraphQLTest extends GraphQLTestCase
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.min.numeric', ['attribute' => 'page', 'min' => 1]), $response->json('errors.0.extensions.validation.page.0'));
     }
-
 
     #[Test]
     public function errorPerPage()
@@ -209,8 +206,8 @@ class CardScoringGraphQLTest extends GraphQLTestCase
     {
         $query = [];
         $query['variables'] = $variables;
-        $variableArgs = implode(', ', array_map(fn($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
-        $variableTypes = implode(', ', array_map(fn($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
+        $variableArgs = implode(', ', array_map(fn ($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
+        $variableTypes = implode(', ', array_map(fn ($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
         $query['query'] = '
             query cardScoringRequests' . ($variableTypes ? "({$variableTypes})" : '') . ' {
                 cardScoringRequests' . ($variableArgs ? "({$variableArgs})" : '') . ' {

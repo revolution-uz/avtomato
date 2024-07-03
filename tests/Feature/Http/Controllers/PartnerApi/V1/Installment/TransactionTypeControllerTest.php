@@ -3,8 +3,8 @@
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment;
 
 use App\Models\Company\TransactionType;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class TransactionTypeControllerTest extends TestCase
 {

@@ -4,10 +4,9 @@ namespace Http\Controllers\PartnerApi\V1\Scoring\CreditHistory;
 
 use App\Models\Company\District;
 use App\Models\Company\Region;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
-
 
 class KatmCreditHistoryScoringControllerTest extends TestCase
 {
