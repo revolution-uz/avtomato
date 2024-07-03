@@ -29,6 +29,18 @@ use App\GraphQL\Customer\Types\CustomerInputGraphQLType;
 use App\GraphQL\Customer\Types\PassportDataGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Customer\Types\PhoneInputGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentCommentGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
+use App\GraphQL\Installment\Types\TariffGraphQLType;
+use App\GraphQL\Installment\Types\TransactionGraphQLType;
+use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
+use App\GraphQL\Management\Types\AdminGraphQLType;
+use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\BranchGraphQLType;
+use App\GraphQL\Management\Types\RoleGraphQLType;
+use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class CustomerQLSchema implements ConfigConvertible
@@ -68,6 +80,21 @@ class CustomerQLSchema implements ConfigConvertible
                 MahallaGraphQLType::class,
                 PassportDataGraphQLType::class,
                 CustomerAddressByPassportDataGraphQLType::class,
+
+                AttachmentGraphQLType::class,
+                AdminGraphQLType::class,
+                TemplateThemeGraphQLType::class,
+                RoleGraphQLType::class,
+
+                // installment types
+                InstallmentGraphQLType::class,
+                InstallmentGraphGraphQLType::class,
+                TransactionGraphQLType::class,
+                InstallmentGuarantorGraphQLType::class,
+                InstallmentCommentGraphQLType::class,
+                BranchGraphQLType::class,
+                TariffGraphQLType::class,
+                TransactionTypeGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
