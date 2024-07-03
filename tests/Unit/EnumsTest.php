@@ -5,13 +5,12 @@ namespace Tests\Unit;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Rbac\PermissionGroupEnum;
 use Illuminate\Support\Arr;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class EnumsTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function permissionGroupShouldCoverAllPermissions(): void
     {
         $permissions = [];

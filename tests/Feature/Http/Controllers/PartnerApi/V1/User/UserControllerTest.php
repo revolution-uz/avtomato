@@ -9,15 +9,14 @@ use App\Models\Company\Rbac\Role;
 use App\Models\Company\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index()
     {
         $admin = $this->createAdminUser();
@@ -28,9 +27,7 @@ class UserControllerTest extends TestCase
         $this->assertCount(6, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function single()
     {
         $admin = $this->createAdminUser();
@@ -44,9 +41,7 @@ class UserControllerTest extends TestCase
         $this->assertEquals($user->username, $response->json('data.username'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function create()
     {
         $role = Role::factory()->create();
@@ -73,9 +68,7 @@ class UserControllerTest extends TestCase
         $this->assertEquals('test_username', $response->json('data.username'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function update()
     {
         $admin = $this->createAdminUser();
@@ -90,9 +83,7 @@ class UserControllerTest extends TestCase
         $this->assertEquals('Updated Last Name', $user->fresh()->last_name);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function changePassword()
     {
         $admin = $this->createAdminUser();
@@ -108,9 +99,7 @@ class UserControllerTest extends TestCase
         $this->assertTrue(Hash::check($newPassword, $user->password));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function changeTheme()
     {
         $admin = $this->createAdminUser();
@@ -123,9 +112,7 @@ class UserControllerTest extends TestCase
         $this->assertEquals('fixed', $user->fresh()->template_theme->layout_name);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function changeAvatar()
     {
         $admin = $this->createAdminUser();
@@ -138,9 +125,7 @@ class UserControllerTest extends TestCase
         $this->assertFileExists(storage_path('app/public/' . Attachment::UPLOADS_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $user->avatar->path));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function remove()
     {
         $admin = $this->createAdminUser();
@@ -153,9 +138,7 @@ class UserControllerTest extends TestCase
         $this->assertSoftDeleted($user);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function devices()
     {
         $admin = $this->createAdminUser();
@@ -170,9 +153,7 @@ class UserControllerTest extends TestCase
         $this->assertCount(1, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function revokeDevice()
     {
         $admin = $this->createAdminUser();

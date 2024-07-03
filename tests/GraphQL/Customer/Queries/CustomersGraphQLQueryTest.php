@@ -4,6 +4,7 @@ namespace Tests\GraphQL\Customer\Queries;
 
 use App\Models\Company\Customer;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class CustomersGraphQLQueryTest extends GraphQLTestCase
@@ -20,9 +21,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
         Customer::factory()->count($this->_totalCustomersCount)->create();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successWithoutArguments()
     {
         $response = $this
@@ -35,9 +34,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessCustomersResponse($response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successPagination()
     {
         $response = $this
@@ -50,9 +47,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessCustomersResponse($response, page: 4);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successPerPage()
     {
         $response = $this
@@ -65,9 +60,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessCustomersResponse($response, perPage: 25);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSortAscending()
     {
         $response = $this
@@ -82,9 +75,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customerIds, $response->json('data.customers.data.*.id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSortDescending()
     {
         $response = $this
@@ -99,9 +90,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customerIds, $response->json('data.customers.data.*.id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSearch()
     {
         $customer = Customer::first();
@@ -116,9 +105,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customer->id, $response->json('data.customers.data.0.id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorPage()
     {
         // graphql type test
@@ -131,7 +118,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('Variable "$page" of type "String" used in position expecting type "Int".', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$page" of type "String!" used in position expecting type "Int".', $response->json('errors.0.message'));
 
         // minimum validation test
         $response = $this
@@ -147,9 +134,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.min.numeric', ['attribute' => 'page', 'min' => 1]), $response->json('errors.0.extensions.validation.page.0'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorPerPage()
     {
         // graphql type test
@@ -162,7 +147,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('Variable "$per_page" of type "String" used in position expecting type "Int".', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$per_page" of type "String!" used in position expecting type "Int".', $response->json('errors.0.message'));
 
         // minimum validation test
         $response = $this
@@ -191,9 +176,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.max.numeric', ['attribute' => 'per page', 'max' => 100]), $response->json('errors.0.extensions.validation.per_page.0'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorSort()
     {
         // graphql type test
@@ -206,7 +189,7 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('Variable "$sort" of type "Int" used in position expecting type "String".', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$sort" of type "Int!" used in position expecting type "String".', $response->json('errors.0.message'));
 
         // not exist column validation test
         $response = $this

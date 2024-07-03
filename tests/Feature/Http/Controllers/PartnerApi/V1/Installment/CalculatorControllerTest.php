@@ -3,15 +3,14 @@
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment;
 
 use App\Models\Company\Tariff;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CalculatorControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function calculate()
     {
         $tariff = Tariff::factory()->create();

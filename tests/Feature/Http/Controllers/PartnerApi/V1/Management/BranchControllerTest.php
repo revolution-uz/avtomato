@@ -3,15 +3,14 @@
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Management;
 
 use App\Models\Company\Branch;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class BranchControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index()
     {
         Branch::factory(5)->create();
@@ -24,9 +23,7 @@ class BranchControllerTest extends TestCase
         $this->assertCount(5, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function single()
     {
         $branch = Branch::factory()->create();
@@ -39,9 +36,7 @@ class BranchControllerTest extends TestCase
         $this->assertEquals($branch->id, $response->json('data.id'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function create()
     {
         $admin = $this->createAdminUser();
@@ -58,9 +53,7 @@ class BranchControllerTest extends TestCase
         $this->assertEquals('123456789', $response->json('data.inn'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function update()
     {
         $branch = Branch::factory()->create();
@@ -79,9 +72,7 @@ class BranchControllerTest extends TestCase
         $this->assertEquals('123456789', $response->json('data.inn'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function remove()
     {
         $branch = Branch::factory()->create();

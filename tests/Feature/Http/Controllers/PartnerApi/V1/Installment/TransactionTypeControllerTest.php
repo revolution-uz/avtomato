@@ -3,15 +3,14 @@
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Installment;
 
 use App\Models\Company\TransactionType;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class TransactionTypeControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index()
     {
         $admin = $this->createAdminUser();
@@ -21,9 +20,7 @@ class TransactionTypeControllerTest extends TestCase
         $this->assertIsArray($response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function single()
     {
         $type = TransactionType::factory()->create();
