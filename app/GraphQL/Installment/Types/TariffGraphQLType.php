@@ -8,7 +8,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class TariffGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'TariffGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'TariffGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -36,11 +36,11 @@ class TariffGraphQLType extends GraphQLType
             ],
             'min_period' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Tariff $root) => $root->min_amount,
+                'resolve' => fn (Tariff $root) => $root->min_period,
             ],
             'max_period' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Tariff $root) => $root->max_amount,
+                'resolve' => fn (Tariff $root) => $root->max_period,
             ],
             'min_amount' => [
                 'type' => Type::nonNull(Type::int()),

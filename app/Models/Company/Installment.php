@@ -112,7 +112,8 @@ class Installment extends Model
         return $this
             ->belongsToMany(Customer::class, 'installment_guarantors', 'installment_id', 'customer_id')
             ->whereNull('installment_guarantors.deleted_at')
-            ->select('customers.*');
+            ->select('customers.*')
+            ->withTimestamps();
     }
 
     public function documents(): MorphMany

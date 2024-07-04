@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1\Management;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\AtmosFaker;
 use Tests\TestCase;
 
@@ -9,9 +10,7 @@ class BalanceControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function funds(): void
     {
         $admin = $this->createAdminUser();
@@ -24,9 +23,7 @@ class BalanceControllerTest extends TestCase
         $this->assertIsArray($response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function charges(): void
     {
         $admin = $this->createAdminUser();
@@ -39,9 +36,7 @@ class BalanceControllerTest extends TestCase
         $this->assertIsArray($response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fill(): void
     {
         $admin = $this->createAdminUser();
@@ -60,9 +55,7 @@ class BalanceControllerTest extends TestCase
         $this->assertIsArray($response->json());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function confirmPayment(): void
     {
         $admin = $this->createAdminUser();

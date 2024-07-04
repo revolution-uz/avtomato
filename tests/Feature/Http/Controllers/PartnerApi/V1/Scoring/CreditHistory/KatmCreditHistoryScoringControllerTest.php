@@ -4,6 +4,7 @@ namespace Http\Controllers\PartnerApi\V1\Scoring\CreditHistory;
 
 use App\Models\Company\District;
 use App\Models\Company\Region;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
 
@@ -11,9 +12,7 @@ class KatmCreditHistoryScoringControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index(): void
     {
         $admin = $this->createAdminUser();

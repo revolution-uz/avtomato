@@ -37,6 +37,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property Attachment[] $attachments
+ * @property Installment[] $installments
  * @property Address[]|Collection<int,Address> $addresses
  * @property Phone[]|Collection<int,Phone> $phones
  * @property Card[]|Collection<int,Phone> $cards
@@ -116,6 +117,11 @@ class Customer extends Model
     public function cards(): HasMany
     {
         return $this->hasMany(Card::class);
+    }
+
+    public function installments(): HasMany
+    {
+        return $this->hasMany(Installment::class);
     }
 
     public function fullName(): Attribute

@@ -2,12 +2,20 @@
 
 namespace Tests\GraphQL\Customer\Queries;
 
+use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Models\Company\Address;
+use App\Models\Company\Attachment;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
+use App\Models\Company\Installment;
+use App\Models\Company\InstallmentComment;
+use App\Models\Company\InstallmentGraph;
 use App\Models\Company\Phone;
+use App\Models\Company\Transaction;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
@@ -30,11 +38,23 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         foreach (Phone::factory()->count(1)->create() as $phone) {
             $this->_customer->phones()->attach($phone->id, ['type' => PhoneTypeEnum::randomValue()]);
         }
+        Installment::query()->forceDelete();
+        $installment = Installment::factory()->create(['customer_id' => $this->_customer->id, 'user_id' => $this->createAdminUser()->id]);
+        $guarantor = Customer::factory()->create();
+        $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
+        Card::query()->forceDelete();
+        Card::factory()->create(['customer_id' => $installment->customer_id]);
+        Card::factory()->create(['customer_id' => $guarantor->id]);
+        $installment->cards()->attach(Card::first());
+        Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->createAdminUser(), 'photo1.jpg');
+        InstallmentComment::factory()->create(['installment_id' => $installment->id, 'user_id' => $installment->user_id]);
+        Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $installment, 'photo1.jpg');
+        InstallmentGraph::factory()->create(['installment_id' => $installment->id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $installment->customer_id, 'employee_id' => $installment->user_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $guarantor->id, 'employee_id' => $installment->user_id]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successSingleCustomer()
     {
         $response = $this
@@ -47,9 +67,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessSingleCustomerResponse($response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorSingleCustomer()
     {
         // not found
@@ -152,6 +170,158 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                         created_at
                         updated_at
                     }
+                    installments {
+                        amount
+                        auto_pay
+                        auto_pay_by_pinfl
+                        branch {
+                            address
+                            created_at
+                            deleted_at
+                            id
+                            inn
+                            name
+                            updated_at
+                        }
+                        branch_id
+                        canceled_at
+                        cancellation_details
+                        created_at
+                        customer_id
+                        deleted_at
+                        description
+                        id
+                        initial_fee
+                        is_blacklist
+                        next_pay_date
+                        period
+                        sms_notify
+                        starts_in
+                        status
+                        tariff_id
+                        type
+                        updated_at
+                        user_id
+                        cards {
+                            balance
+                            card_type
+                            created_at
+                            customer_id
+                            expiry
+                            id
+                            is_connected
+                            number
+                            owner
+                            phone
+                            status
+                            updated_at
+                        }
+                        comments {
+                            comment
+                            created_at
+                            deleted_at
+                            id
+                            installment_id
+                            updated_at
+                            user {
+                                avatar {
+                                    created_at
+                                    deleted_at
+                                    id
+                                    mime
+                                    name
+                                    original_name
+                                    type
+                                    updated_at
+                                    url
+                                }
+                                created_at
+                                deleted_at
+                                first_name
+                                id
+                                language
+                                last_name
+                                phone
+                                role_id
+                                status
+                                template_theme {
+                                    layout_name
+                                }
+                                updated_at
+                                username
+                            }
+                            user_id
+                        }
+                        documents {
+                            created_at
+                            deleted_at
+                            id
+                            mime
+                            name
+                            original_name
+                            type
+                            updated_at
+                            url
+                        }
+                        graphs {
+                            amount
+                            id
+                            installment_id
+                            overdue_days
+                            paid_amount
+                            starts_in
+                            status
+                        }
+                        guarantors {
+                            any_card_charge
+                            created_at
+                            customer {
+                                id
+                            }
+                            customer_id
+                            deleted_at
+                            id
+                            installment_id
+                            updated_at
+                        }
+                        tariff {
+                            id
+                            is_annual
+                            max_amount
+                            max_initial_fee
+                            max_period
+                            min_amount
+                            min_initial_fee
+                            min_period
+                            name
+                            percent
+                        }
+                        transactions {
+                            admin_id
+                            amount
+                            branch_id
+                            card_id
+                            created_at
+                            customer_id
+                            external_id
+                            id
+                            installment_id
+                            paid_at
+                            transaction_type_id
+                            updated_at
+                            transaction_type {
+                                created_at
+                                deleted_at
+                                id
+                                is_system
+                                name
+                                name_en
+                                name_ru
+                                name_uz
+                                updated_at
+                            }
+                        }
+                    }
                 }
             }
         ';
@@ -235,6 +405,133 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                             'updated_at',
                         ],
                     ],
+                    'installments' => [
+                        '*' => [
+                            'amount',
+                            'auto_pay',
+                            'auto_pay_by_pinfl',
+                            'branch' => [
+                                'address',
+                                'created_at',
+                                'deleted_at',
+                                'id',
+                                'inn',
+                                'name',
+                                'updated_at',
+                            ],
+                            'branch_id',
+                            'canceled_at',
+                            'cancellation_details',
+                            'created_at',
+                            'customer_id',
+                            'deleted_at',
+                            'description',
+                            'id',
+                            'initial_fee',
+                            'is_blacklist',
+                            'next_pay_date',
+                            'period',
+                            'sms_notify',
+                            'starts_in',
+                            'status',
+                            'tariff_id',
+                            'type',
+                            'updated_at',
+                            'user_id',
+                            'cards' => [
+                                '*' => [
+                                    'balance',
+                                    'card_type',
+                                    'created_at',
+                                    'customer_id',
+                                    'expiry',
+                                    'id',
+                                    'is_connected',
+                                    'number',
+                                    'owner',
+                                    'phone',
+                                    'status',
+                                    'updated_at',
+                                ],
+                            ],
+                            'comments' => [
+                                '*' => [
+                                    'comment',
+                                    'created_at',
+                                    'deleted_at',
+                                    'id',
+                                    'installment_id',
+                                    'updated_at',
+                                    'user' => [
+                                        'avatar' => [
+                                            'created_at',
+                                            'deleted_at',
+                                            'id',
+                                            'mime',
+                                            'name',
+                                            'original_name',
+                                            'type',
+                                            'updated_at',
+                                            'url',
+                                        ],
+                                        'created_at',
+                                        'deleted_at',
+                                        'first_name',
+                                        'id',
+                                        'language',
+                                        'last_name',
+                                        'phone',
+                                        'role_id',
+                                        'status',
+                                        'template_theme' => [
+                                            'layout_name',
+                                        ],
+                                        'updated_at',
+                                        'username',
+                                    ],
+                                    'user_id',
+                                ],
+                            ],
+                            'documents' => [
+                                '*' => [
+                                    'created_at',
+                                    'deleted_at',
+                                    'id',
+                                    'mime',
+                                    'name',
+                                    'original_name',
+                                    'type',
+                                    'updated_at',
+                                    'url',
+                                ],
+                            ],
+                            'graphs' => [
+                                '*' => [
+                                    'amount',
+                                    'id',
+                                    'installment_id',
+                                    'overdue_days',
+                                    'paid_amount',
+                                    'starts_in',
+                                    'status',
+                                ],
+                            ],
+                            'guarantors' => [
+                                '*' => [
+                                    'any_card_charge',
+                                    'created_at',
+                                    'customer' => [
+                                        'id',
+                                    ],
+                                    'customer_id',
+                                    'deleted_at',
+                                    'id',
+                                    'installment_id',
+                                    'updated_at',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ]);
@@ -297,5 +594,71 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customer->phones[0]->pivot->comment, $response->json('data.singleCustomer.phones.0.comment'));
         $this->assertEquals($customer->phones[0]->pivot->created_at->timestamp, $response->json('data.singleCustomer.phones.0.created_at'));
         $this->assertEquals($customer->phones[0]->pivot->updated_at->timestamp, $response->json('data.singleCustomer.phones.0.updated_at'));
+
+        // installments
+        $this->assertEquals($customer->installments[0]->amount, $response->json('data.singleCustomer.installments.0.amount'));
+        $this->assertEquals($customer->installments[0]->auto_pay, $response->json('data.singleCustomer.installments.0.auto_pay'));
+        $this->assertEquals($customer->installments[0]->any_card_charge, $response->json('data.singleCustomer.installments.0.auto_pay_by_pinfl'));
+        $this->assertEquals($customer->installments[0]->branch->address, $response->json('data.singleCustomer.installments.0.branch.address'));
+        $this->assertEquals($customer->installments[0]->branch->created_at->timestamp, $response->json('data.singleCustomer.installments.0.branch.created_at'));
+        $this->assertEquals($customer->installments[0]->branch->deleted_at, $response->json('data.singleCustomer.installments.0.branch.deleted_at'));
+        $this->assertEquals($customer->installments[0]->branch->id, $response->json('data.singleCustomer.installments.0.branch.id'));
+        $this->assertEquals($customer->installments[0]->branch->inn, $response->json('data.singleCustomer.installments.0.branch.inn'));
+        $this->assertEquals($customer->installments[0]->branch->name, $response->json('data.singleCustomer.installments.0.branch.name'));
+        $this->assertEquals($customer->installments[0]->branch->updated_at->timestamp, $response->json('data.singleCustomer.installments.0.branch.updated_at'));
+        $this->assertEquals($customer->installments[0]->branch_id, $response->json('data.singleCustomer.installments.0.branch_id'));
+        $this->assertEquals($customer->installments[0]->canceled_at?->timestamp, $response->json('data.singleCustomer.installments.0.canceled_at'));
+        $this->assertEquals($customer->installments[0]->cancellation_details, $response->json('data.singleCustomer.installments.0.cancellation_details'));
+        $this->assertEquals($customer->installments[0]->created_at->timestamp, $response->json('data.singleCustomer.installments.0.created_at'));
+        $this->assertEquals($customer->installments[0]->customer_id, $response->json('data.singleCustomer.installments.0.customer_id'));
+        $this->assertEquals($customer->installments[0]->deleted_at, $response->json('data.singleCustomer.installments.0.deleted_at'));
+        $this->assertEquals($customer->installments[0]->description, $response->json('data.singleCustomer.installments.0.description'));
+        $this->assertEquals($customer->installments[0]->id, $response->json('data.singleCustomer.installments.0.id'));
+        $this->assertEquals($customer->installments[0]->initial_fee, $response->json('data.singleCustomer.installments.0.initial_fee'));
+        $this->assertEquals($customer->installments[0]->is_blacklist, $response->json('data.singleCustomer.installments.0.is_blacklist'));
+        $this->assertEquals($customer->installments[0]->next_pay_date?->timestamp, $response->json('data.singleCustomer.installments.0.next_pay_date'));
+        $this->assertEquals($customer->installments[0]->period, $response->json('data.singleCustomer.installments.0.period'));
+        $this->assertEquals($customer->installments[0]->sms_notify, $response->json('data.singleCustomer.installments.0.sms_notify'));
+        $this->assertEquals($customer->installments[0]->starts_in?->timestamp, $response->json('data.singleCustomer.installments.0.starts_in'));
+        $this->assertEquals($customer->installments[0]->status->value, $response->json('data.singleCustomer.installments.0.status'));
+        $this->assertEquals($customer->installments[0]->tariff_id, $response->json('data.singleCustomer.installments.0.tariff_id'));
+        $this->assertEquals($customer->installments[0]->type->value, $response->json('data.singleCustomer.installments.0.type'));
+        $this->assertEquals($customer->installments[0]->updated_at->timestamp, $response->json('data.singleCustomer.installments.0.updated_at'));
+        $this->assertEquals($customer->installments[0]->user_id, $response->json('data.singleCustomer.installments.0.user_id'));
+
+        // installment cards
+        $this->assertEquals($customer->installments[0]->cards[0]->balance, $response->json('data.singleCustomer.installments.0.cards.0.balance'));
+        $this->assertEquals($customer->installments[0]->cards[0]->card_type, $response->json('data.singleCustomer.installments.0.cards.0.card_type'));
+        $this->assertEquals($customer->installments[0]->cards[0]->created_at->timestamp, $response->json('data.singleCustomer.installments.0.cards.0.created_at'));
+        $this->assertEquals($customer->installments[0]->cards[0]->customer_id, $response->json('data.singleCustomer.installments.0.cards.0.customer_id'));
+        $this->assertEquals($customer->installments[0]->cards[0]->expiry, $response->json('data.singleCustomer.installments.0.cards.0.expiry'));
+        $this->assertEquals($customer->installments[0]->cards[0]->id, $response->json('data.singleCustomer.installments.0.cards.0.id'));
+        $this->assertEquals($customer->installments[0]->cards[0]->is_connected, $response->json('data.singleCustomer.installments.0.cards.0.is_connected'));
+        $this->assertEquals($customer->installments[0]->cards[0]->pan, $response->json('data.singleCustomer.installments.0.cards.0.number'));
+        $this->assertEquals($customer->installments[0]->cards[0]->owner, $response->json('data.singleCustomer.installments.0.cards.0.owner'));
+        $this->assertEquals($customer->installments[0]->cards[0]->phone, $response->json('data.singleCustomer.installments.0.cards.0.phone'));
+        $this->assertEquals($customer->installments[0]->cards[0]->status->value, $response->json('data.singleCustomer.installments.0.cards.0.status'));
+        $this->assertEquals($customer->installments[0]->cards[0]->updated_at->timestamp, $response->json('data.singleCustomer.installments.0.cards.0.updated_at'));
+
+        // installment guarantors
+        $this->assertEquals($customer->installments[0]->guarantorList[0]->any_card_charge, $response->json('data.singleCustomer.installments.0.guarantors.0.any_card_charge'));
+        $this->assertEquals($customer->installments[0]->guarantorList[0]->created_at->timestamp, $response->json('data.singleCustomer.installments.0.guarantors.0.created_at'));
+        $this->assertEquals($customer->installments[0]->guarantorList[0]->customer->id, $response->json('data.singleCustomer.installments.0.guarantors.0.customer.id'));
+        $this->assertEquals($customer->installments[0]->guarantorList[0]->customer_id, $response->json('data.singleCustomer.installments.0.guarantors.0.customer_id'));
+        $this->assertEquals($customer->installments[0]->guarantorList[0]->deleted_at, $response->json('data.singleCustomer.installments.0.guarantors.0.deleted_at'));
+        $this->assertEquals($customer->installments[0]->guarantorList[0]->id, $response->json('data.singleCustomer.installments.0.guarantors.0.id'));
+        $this->assertEquals($customer->installments[0]->guarantorList[0]->installment_id, $response->json('data.singleCustomer.installments.0.guarantors.0.installment_id'));
+        $this->assertEquals($customer->installments[0]->guarantorList[0]->updated_at->timestamp, $response->json('data.singleCustomer.installments.0.guarantors.0.updated_at'));
+
+        // installment documents
+        $this->assertEquals($customer->installments[0]->documents[0]->created_at->timestamp, $response->json('data.singleCustomer.installments.0.documents.0.created_at'));
+        $this->assertEquals($customer->installments[0]->documents[0]->deleted_at, $response->json('data.singleCustomer.installments.0.documents.0.deleted_at'));
+        $this->assertEquals($customer->installments[0]->documents[0]->id, $response->json('data.singleCustomer.installments.0.documents.0.id'));
+        $this->assertEquals($customer->installments[0]->documents[0]->mime, $response->json('data.singleCustomer.installments.0.documents.0.mime'));
+        $this->assertEquals($customer->installments[0]->documents[0]->name, $response->json('data.singleCustomer.installments.0.documents.0.name'));
+        $this->assertEquals($customer->installments[0]->documents[0]->original_name, $response->json('data.singleCustomer.installments.0.documents.0.original_name'));
+        $this->assertEquals($customer->installments[0]->documents[0]->type->value, $response->json('data.singleCustomer.installments.0.documents.0.type'));
+        $this->assertEquals($customer->installments[0]->documents[0]->updated_at->timestamp, $response->json('data.singleCustomer.installments.0.documents.0.updated_at'));
+        $this->assertEquals($customer->installments[0]->documents[0]->url, $response->json('data.singleCustomer.installments.0.documents.0.url'));
     }
 }

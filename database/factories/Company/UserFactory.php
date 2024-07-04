@@ -3,6 +3,7 @@
 namespace Database\Factories\Company;
 
 use App\Enums\Company\UserStatusEnum;
+use App\Models\Company\Rbac\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,7 +27,7 @@ class UserFactory extends Factory
             'language' => $this->faker->word(),
             'username' => $this->faker->userName(),
             'password' => bcrypt($this->faker->password()),
-            'role_id' => null,
+            'role_id' => Role::factory(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

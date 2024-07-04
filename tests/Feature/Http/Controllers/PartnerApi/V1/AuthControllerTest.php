@@ -3,15 +3,14 @@
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1;
 
 use App\Models\Company\User;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function login()
     {
         $user = User::factory()->create([

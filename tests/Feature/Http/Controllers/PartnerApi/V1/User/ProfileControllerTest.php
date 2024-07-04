@@ -6,15 +6,14 @@ use App\Enums\Company\AttachmentTypeEnum;
 use App\Models\Company\Attachment;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProfileControllerTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function me()
     {
         $admin = $this->createAdminUser();
@@ -27,9 +26,7 @@ class ProfileControllerTest extends TestCase
         $this->assertEquals($admin->username, $response->json('data.username'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function update()
     {
         $admin = $this->createAdminUser();
@@ -43,9 +40,7 @@ class ProfileControllerTest extends TestCase
         $this->assertEquals('Updated Last Name', $admin->last_name);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function changePassword()
     {
         $admin = $this->createAdminUser();
@@ -60,9 +55,7 @@ class ProfileControllerTest extends TestCase
         $this->assertTrue(Hash::check($newPassword, $admin->password));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function changeTheme()
     {
         $admin = $this->createAdminUser();
@@ -75,9 +68,7 @@ class ProfileControllerTest extends TestCase
         $this->assertEquals('fixed', $admin->fresh()->template_theme->layout_name);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function changeLanguage()
     {
         $admin = $this->createAdminUser();
@@ -90,9 +81,7 @@ class ProfileControllerTest extends TestCase
         $this->assertEquals('uz', $admin->fresh()->language);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function changeAvatar()
     {
         $admin = $this->createAdminUser();
@@ -104,9 +93,7 @@ class ProfileControllerTest extends TestCase
         $this->assertFileExists(storage_path('app/public/' . Attachment::UPLOADS_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $admin->fresh()->avatar->path));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function devices()
     {
         $admin = $this->createAdminUser();
@@ -118,9 +105,7 @@ class ProfileControllerTest extends TestCase
         $this->assertCount(1, $response->json('data'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function revokeDevice()
     {
         $admin = $this->createAdminUser();

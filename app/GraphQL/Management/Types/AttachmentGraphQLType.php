@@ -78,7 +78,7 @@ class AttachmentGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'description' => 'Attachment deleted timestamp',
                 'resolve' => function (Attachment $root) {
-                    return $root->deleted_at->timestamp;
+                    return $root->deleted_at?->timestamp;
                 },
             ],
         ];

@@ -81,12 +81,8 @@ class InstallmentService
      * @throws Throwable
      * @throws BalanceIsNotEnoughException
      */
-    public function changeStatus(int $installmentId, InstallmentStatusEnum $status): bool
+    public function changeStatus(Installment $installment, InstallmentStatusEnum $status): bool
     {
-        $installment = Installment::query()
-            ->where('id', $installmentId)
-            ->firstOrFail();
-
         if ($status == InstallmentStatusEnum::RUNNING) {
             $this->running($installment);
         }
