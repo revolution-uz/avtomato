@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class TariffInputGraphQLType extends InputType
@@ -59,7 +61,7 @@ class TariffInputGraphQLType extends InputType
             ],
             'min_amount' => [
                 'name' => 'min_amount',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'int',
@@ -67,7 +69,7 @@ class TariffInputGraphQLType extends InputType
             ],
             'max_amount' => [
                 'name' => 'max_amount',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'int',
@@ -75,7 +77,7 @@ class TariffInputGraphQLType extends InputType
             ],
             'min_initial_fee' => [
                 'name' => 'min_initial_fee',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'int',
@@ -83,7 +85,7 @@ class TariffInputGraphQLType extends InputType
             ],
             'max_initial_fee' => [
                 'name' => 'max_initial_fee',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'int',
