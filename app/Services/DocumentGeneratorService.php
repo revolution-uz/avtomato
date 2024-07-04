@@ -113,7 +113,7 @@ class DocumentGeneratorService
     {
         $attachment = new Attachment;
         $attachment->type = $type;
-        $attachment->path = storage_path('app/public/') . $name;
+        $attachment->path = storage_path('app/public/documents/') . $name;
         $attachment->name = $name;
         $attachment->original_name = $name;
         $attachment->mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
