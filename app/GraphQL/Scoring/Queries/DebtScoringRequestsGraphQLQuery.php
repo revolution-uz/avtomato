@@ -76,8 +76,8 @@ class DebtScoringRequestsGraphQLQuery extends Query
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
-                    $query->where('request->card_number', 'ILIKE', $search)
-                        ->orWhere('request->expire', 'ILIKE', $search);
+                    $query->where('request->pinfl', 'ILIKE', $search)
+                        ->orWhere('request->phone', 'ILIKE', $search);
                 });
             })
             ->when(! isset($args['sort']), fn (Builder|ScoringRequest $q) => $q->orderByDesc('id'))

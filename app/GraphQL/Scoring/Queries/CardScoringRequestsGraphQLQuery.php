@@ -77,7 +77,7 @@ class CardScoringRequestsGraphQLQuery extends Query
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
                     $query->where('request->number', 'ILIKE', $search)
-                        ->orWhere('request->expire', 'ILIKE', $search);
+                        ->orWhere('request->expiry', 'ILIKE', $search);
                 });
             })
             ->when(! isset($args['sort']), fn (Builder|ScoringRequest $q) => $q->orderByDesc('id'))

@@ -7,7 +7,7 @@ use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
-class CardScoringGraphQLTest extends GraphQLTestCase
+class CardScoringRequestGraphQLQueryTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
