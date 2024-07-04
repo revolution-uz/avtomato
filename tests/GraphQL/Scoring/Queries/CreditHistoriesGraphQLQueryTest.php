@@ -36,7 +36,7 @@ class CreditHistoriesGraphQLQueryTest extends GraphQLTestCase
                     ),
                     new KatmCreditHistoryScoreDTO(273, 'C3', 'СРЕДНИЙ', '2023-09-30 17:54', '1.6'),
                     new KatmClientDTO('Yura', '2005-08-10', 'M', 'Xorazm viloyati Urganch shaxri', '998882223123', 'Резидент', '12345678912345', '12345678912345', 'СРЕДНИЙ', '2023-09-30 17:54', 'Биометрический паспорт гражданина Республики Узбекистан', 'AA', '1234567', '2022-01-12', '?', '?', '?'),
-                )
+                ),
             ]);
     }
 
@@ -148,7 +148,7 @@ class CreditHistoriesGraphQLQueryTest extends GraphQLTestCase
                             }
                         }
                     }
-                '
+                ',
             ]
         );
         $this->assertSuccessCreditHistoriesResponse($response);
@@ -269,7 +269,7 @@ class CreditHistoriesGraphQLQueryTest extends GraphQLTestCase
                             }
                         }
                     }
-                '
+                ',
             ]
         );
         $response->assertOk();
@@ -384,7 +384,7 @@ class CreditHistoriesGraphQLQueryTest extends GraphQLTestCase
                         }
                     }
                 }
-            '
+            ',
             ]
         );
         $response->assertOk();
@@ -415,7 +415,7 @@ class CreditHistoriesGraphQLQueryTest extends GraphQLTestCase
                             'request' => [
                                 'pinfl',
                                 'first_name',
-                                'last_name'
+                                'last_name',
                             ],
                             'response' => [
                                 'additional_info' => [
@@ -496,12 +496,12 @@ class CreditHistoriesGraphQLQueryTest extends GraphQLTestCase
                                     'document_type_id',
                                     'subject_id',
                                     'credit_start_date',
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ]);
     }
 }

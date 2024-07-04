@@ -118,7 +118,7 @@ class SingleCardScoringRequestGraphQLQueryTest extends GraphQLTestCase
                     'updated_at',
                     'request' => [
                         'number',
-                        'expiry'
+                        'expiry',
                     ],
                     'response' => [
                         'report',

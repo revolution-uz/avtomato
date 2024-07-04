@@ -25,7 +25,7 @@ class DebtScoringRequestGraphQLQueryTest extends GraphQLTestCase
             [
                 'type' => ScoringRequestTypeEnum::PLUM_MIB_INFO,
                 'request' => new MibInfoCreateRequestDTO('21710025140075', '+998938612345'),
-                'response' => new MibInfoResponseDTO(1)
+                'response' => new MibInfoResponseDTO(1),
             ]
         );
     }
@@ -41,6 +41,7 @@ class DebtScoringRequestGraphQLQueryTest extends GraphQLTestCase
             );
         $this->assertEquals('Field "debtScoringRequests" argument "type" of type "Int!" is required but not provided.', $response->json('errors.0.message'));
     }
+
     #[Test]
     public function successPagination()
     {
@@ -103,7 +104,7 @@ class DebtScoringRequestGraphQLQueryTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'search' => "{$scoring->request->phone}",])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'search' => "{$scoring->request->phone}"])
             );
         $this->assertSuccessScoringResponse($response);
         $this->assertEquals($scoring->request->phone, $response->json('data.debtScoringRequests.data.0.request.phone'));

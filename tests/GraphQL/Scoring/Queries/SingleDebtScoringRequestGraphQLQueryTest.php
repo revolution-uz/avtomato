@@ -26,7 +26,7 @@ class SingleDebtScoringRequestGraphQLQueryTest extends GraphQLTestCase
                 'status' => ScoringRequestStatusEnum::SUCCESS,
                 'type' => ScoringRequestTypeEnum::PLUM_MIB_INFO,
                 'request' => new MibInfoCreateRequestDTO('21710025140075', '+998938612345'),
-                'response' => new MibInfoResponseDTO(1)
+                'response' => new MibInfoResponseDTO(1),
             ]
         );
     }
@@ -122,7 +122,7 @@ class SingleDebtScoringRequestGraphQLQueryTest extends GraphQLTestCase
                     'updated_at',
                     'request' => [
                         'pinfl',
-                        'phone'
+                        'phone',
                     ],
                     'response' => [
                         'debtBal',

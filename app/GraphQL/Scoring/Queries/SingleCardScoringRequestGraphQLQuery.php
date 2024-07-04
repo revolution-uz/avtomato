@@ -34,7 +34,7 @@ class SingleCardScoringRequestGraphQLQuery extends Query
                 'rules' => Rule::exists('scoring_requests', 'id')
                     ->where('status', ScoringRequestStatusEnum::SUCCESS)
                     ->whereIn('type', [ScoringRequestTypeEnum::HUMO, ScoringRequestTypeEnum::UZCARD])
-                ->whereNull('deleted_at'),
+                    ->whereNull('deleted_at'),
             ],
         ];
     }
