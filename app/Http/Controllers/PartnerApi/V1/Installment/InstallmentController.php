@@ -237,7 +237,7 @@ class InstallmentController extends Controller
     public function changeStatus(int $id, InstallmentChangeStatusRequest $request)
     {
         $installment = Installment::findOrFail($id);
-        if ($this->installmentService->changeStatus($id, InstallmentStatusEnum::tryFrom($request->status))) {
+        if ($this->installmentService->changeStatus($installment, InstallmentStatusEnum::tryFrom($request->status))) {
             return new InstallmentResource($installment);
         }
         throw new AccessDeniedException('You cannot start this installment');
