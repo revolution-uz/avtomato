@@ -31,7 +31,7 @@ class DocumentGeneratorService
 
     public function findOrCreateCustomerApplication(Customer $customer)
     {
-        if ($attachment = Attachment::query()->where('type', AttachmentTypeEnum::INSTALLMENT_FORM_DOCUMENT)->where('attachmentable_id', $customer->id)->first()) {
+        if ($attachment = Attachment::query()->where('type', AttachmentTypeEnum::CUSTOMER_APPLICATION_DOCUMENT)->where('attachmentable_id', $customer->id)->first()) {
             return $attachment;
         }
 
