@@ -16,6 +16,7 @@ use App\GraphQL\Customer\Mutations\DetachPhoneGraphQLMutation;
 use App\GraphQL\Customer\Mutations\UpdateCustomerGraphQLMutation;
 use App\GraphQL\Customer\Queries\CustomerByPassportGraphQLQuery;
 use App\GraphQL\Customer\Queries\CustomersGraphQLQuery;
+use App\GraphQL\Customer\Queries\GenerateCustomerApplicationDocumentGraphQLQuery;
 use App\GraphQL\Customer\Queries\InfoByPassportGraphQLQuery;
 use App\GraphQL\Customer\Queries\SingleCustomerGraphQLQuery;
 use App\GraphQL\Customer\Types\AddressGraphQLType;
@@ -57,6 +58,7 @@ class CustomerQLSchema implements ConfigConvertible
                 SingleCustomerGraphQLQuery::class,
                 InfoByPassportGraphQLQuery::class,
                 CustomerByPassportGraphQLQuery::class,
+                GenerateCustomerApplicationDocumentGraphQLQuery::class,
             ],
             'mutation' => [
                 AttachAddressGraphQLMutation::class,
