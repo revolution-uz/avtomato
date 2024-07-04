@@ -50,7 +50,7 @@ class AttachAddressGraphQLMutation extends Mutation
             'mahalla_id' => [
                 'name' => 'mahalla_id',
                 'type' => Type::int(),
-                'rules' => 'nullable|int|exists:districts,id',
+                'rules' => 'nullable|int|exists:mahallas,id',
             ],
         ];
     }
