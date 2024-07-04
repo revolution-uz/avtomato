@@ -2,12 +2,15 @@
 
 namespace Tests\GraphQL\Scoring\Queries;
 
+use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
+use App\DTOs\Scoring\Plum\Mib\MibInfoResponseDTO;
+use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
-class CardScoringGraphQLTest extends GraphQLTestCase
+class DebtScoringRequestGraphQLQueryTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
@@ -18,7 +21,13 @@ class CardScoringGraphQLTest extends GraphQLTestCase
         parent::setUp();
 
         ScoringRequest::query()->forceDelete();
-        ScoringRequest::factory()->count($this->_totalScoringCount)->create();
+        ScoringRequest::factory()->count($this->_totalScoringCount)->create(
+            [
+                'type' => ScoringRequestTypeEnum::PLUM_MIB_INFO,
+                'request' => new MibInfoCreateRequestDTO('21710025140075', '+998938612345'),
+                'response' => new MibInfoResponseDTO(1),
+            ]
+        );
     }
 
     #[Test]
@@ -30,7 +39,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
                 route('graphql.scoring'),
                 $this->buildGraphQLQuery()
             );
-        $this->assertEquals('Field "cardScoringRequests" argument "type" of type "Int!" is required but not provided.', $response->json('errors.0.message'));
+        $this->assertEquals('Field "debtScoringRequests" argument "type" of type "Int!" is required but not provided.', $response->json('errors.0.message'));
     }
 
     #[Test]
@@ -40,9 +49,8 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'page' => 4])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'page' => 4])
             );
-
         $this->assertSuccessScoringResponse($response, page: 4);
     }
 
@@ -53,7 +61,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'per_page' => 25])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'per_page' => 25])
             );
         $this->assertSuccessScoringResponse($response, perPage: 25);
     }
@@ -65,12 +73,12 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'sort' => 'id'])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'sort' => 'id'])
             );
 
         $this->assertSuccessScoringResponse($response);
         $scoringIds = ScoringRequest::query()->orderBy('id')->limit(10)->pluck('id')->toArray();
-        $this->assertEquals($scoringIds, $response->json('data.cardScoringRequests.data.*.id'));
+        $this->assertEquals($scoringIds, $response->json('data.debtScoringRequests.data.*.id'));
     }
 
     #[Test]
@@ -80,12 +88,12 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'sort' => '-id'])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'sort' => '-id'])
             );
 
         $this->assertSuccessScoringResponse($response);
         $scoringIds = ScoringRequest::query()->orderByDesc('id')->limit(10)->pluck('id')->toArray();
-        $this->assertEquals($scoringIds, $response->json('data.cardScoringRequests.data.*.id'));
+        $this->assertEquals($scoringIds, $response->json('data.debtScoringRequests.data.*.id'));
     }
 
     #[Test]
@@ -96,11 +104,10 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'search' => "{$scoring->request->number}"])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'search' => "{$scoring->request->phone}"])
             );
-
-        $this->assertSuccessScoringResponse($response, total: 1);
-        $this->assertEquals($scoring->id, $response->json('data.cardScoringRequests.data.0.id'));
+        $this->assertSuccessScoringResponse($response);
+        $this->assertEquals($scoring->request->phone, $response->json('data.debtScoringRequests.data.0.request.phone'));
     }
 
     #[Test]
@@ -111,7 +118,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'page' => 'asnjfasnjfasn'])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'page' => 'asnjfasnjfasn'])
             );
 
         $response->assertOk();
@@ -123,7 +130,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'page' => 0])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'page' => 0])
             );
 
         $response->assertOk();
@@ -140,7 +147,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'per_page' => 'asnjfasnjfasn'])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'per_page' => 'asnjfasnjfasn'])
             );
 
         $response->assertOk();
@@ -152,7 +159,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'per_page' => 0])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'per_page' => 0])
             );
 
         $response->assertOk();
@@ -165,7 +172,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'per_page' => 101])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'per_page' => 101])
             );
 
         $response->assertOk();
@@ -182,7 +189,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'sort' => 111])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'sort' => 111])
             );
 
         $response->assertOk();
@@ -193,7 +200,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(['type' => 6, 'sort' => 'non-exist-column'])
+                $this->buildGraphQLQuery(['type' => ScoringRequestTypeEnum::PLUM_MIB_INFO->value, 'sort' => 'non-exist-column'])
             );
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -209,8 +216,8 @@ class CardScoringGraphQLTest extends GraphQLTestCase
         $variableArgs = implode(', ', array_map(fn ($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
         $variableTypes = implode(', ', array_map(fn ($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
         $query['query'] = '
-            query cardScoringRequests' . ($variableTypes ? "({$variableTypes})" : '') . ' {
-                cardScoringRequests' . ($variableArgs ? "({$variableArgs})" : '') . ' {
+            query debtScoringRequests' . ($variableTypes ? "({$variableTypes})" : '') . ' {
+                debtScoringRequests' . ($variableArgs ? "({$variableArgs})" : '') . ' {
                     current_page
                     from
                     has_more_pages
@@ -226,6 +233,10 @@ class CardScoringGraphQLTest extends GraphQLTestCase
                         client_code
                         customer_id
                         card_id
+                        request {
+                                  pinfl
+                                  phone
+                                }
                         created_at
                         updated_at
                     }
@@ -243,7 +254,7 @@ class CardScoringGraphQLTest extends GraphQLTestCase
         $response->assertJsonIsObject();
         $response->assertJsonStructure([
             'data' => [
-                'cardScoringRequests' => [
+                'debtScoringRequests' => [
                     'current_page',
                     'from',
                     'has_more_pages',
@@ -270,13 +281,13 @@ class CardScoringGraphQLTest extends GraphQLTestCase
         $totalCount = $total ?? $this->_totalScoringCount;
         $currentPage = $page ?? 1;
         $currentPerPage = $perPage ?? 10;
-        $this->assertEquals($totalCount, $response->json('data.cardScoringRequests.total'));
-        $this->assertEquals($currentPerPage, $response->json('data.cardScoringRequests.per_page'));
-        $this->assertEquals($currentPage, $response->json('data.cardScoringRequests.current_page'));
-        $this->assertEquals(($currentPage - 1) * ($currentPerPage) + 1, $response->json('data.cardScoringRequests.from'));
-        $this->assertEquals(min($totalCount, $currentPage * $currentPerPage), $response->json('data.cardScoringRequests.to'));
-        $this->assertEquals(ceil($totalCount / $currentPerPage) > $currentPage, $response->json('data.cardScoringRequests.has_more_pages'));
-        $this->assertEquals(ceil($totalCount / $currentPerPage), $response->json('data.cardScoringRequests.last_page'));
-        $this->assertCount(min($totalCount - ($currentPage - 1) * $currentPerPage, $currentPerPage), $response->json('data.cardScoringRequests.data'));
+        $this->assertEquals($totalCount, $response->json('data.debtScoringRequests.total'));
+        $this->assertEquals($currentPerPage, $response->json('data.debtScoringRequests.per_page'));
+        $this->assertEquals($currentPage, $response->json('data.debtScoringRequests.current_page'));
+        $this->assertEquals(($currentPage - 1) * ($currentPerPage) + 1, $response->json('data.debtScoringRequests.from'));
+        $this->assertEquals(min($totalCount, $currentPage * $currentPerPage), $response->json('data.debtScoringRequests.to'));
+        $this->assertEquals(ceil($totalCount / $currentPerPage) > $currentPage, $response->json('data.debtScoringRequests.has_more_pages'));
+        $this->assertEquals(ceil($totalCount / $currentPerPage), $response->json('data.debtScoringRequests.last_page'));
+        $this->assertCount(min($totalCount - ($currentPage - 1) * $currentPerPage, $currentPerPage), $response->json('data.debtScoringRequests.data'));
     }
 }

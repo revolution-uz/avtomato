@@ -33,7 +33,8 @@ class SingleDebtScoringRequestGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => Rule::exists('scoring_requests', 'id')
                     ->where('status', ScoringRequestStatusEnum::SUCCESS)
-                    ->whereIn('type', [ScoringRequestTypeEnum::PLUM_MIB_INFO, ScoringRequestTypeEnum::PLUM_TAX_INFO]),
+                    ->whereIn('type', [ScoringRequestTypeEnum::PLUM_MIB_INFO, ScoringRequestTypeEnum::PLUM_TAX_INFO])
+                    ->whereNull('deleted_at'),
             ],
         ];
     }
