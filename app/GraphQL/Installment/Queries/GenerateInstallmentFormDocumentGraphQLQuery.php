@@ -47,6 +47,6 @@ class GenerateInstallmentFormDocumentGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return $this->documentGeneratorService->findOrCreateCustomerApplication(Installment::findOrFail($args['id']));
+        return $this->documentGeneratorService->findOrCreateInstallmentForm(Installment::findOrFail($args['id']));
     }
 }
