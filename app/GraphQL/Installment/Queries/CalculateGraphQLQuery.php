@@ -4,6 +4,7 @@ namespace App\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\CalculatedGraphGraphQLType;
+use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Tariff;
 use Carbon\Carbon;
@@ -36,12 +37,12 @@ class CalculateGraphQLQuery extends Query
             ],
             'amount' => [
                 'name' => 'amount',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => 'required|numeric',
             ],
             'initial_fee' => [
                 'name' => 'initial_fee',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => 'required|numeric',
             ],
             'period' => [
