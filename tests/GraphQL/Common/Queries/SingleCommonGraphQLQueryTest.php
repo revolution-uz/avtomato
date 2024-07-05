@@ -5,6 +5,7 @@ namespace Common\Queries;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class SingleCommonGraphQLQueryTest extends GraphQLTestCase
