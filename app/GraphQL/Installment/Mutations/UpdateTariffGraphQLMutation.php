@@ -50,7 +50,7 @@ class UpdateTariffGraphQLMutation extends Mutation
         $tariff->fill($args['tariff']);
         $tariff->saveOrFail();
 
-        return true;
+        return $tariff;
     }
 
     protected function rules(array $args = []): array
