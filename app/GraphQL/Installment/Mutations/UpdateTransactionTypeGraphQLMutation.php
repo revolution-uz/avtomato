@@ -58,9 +58,9 @@ class UpdateTransactionTypeGraphQLMutation extends Mutation
 
         /** @var TransactionType $transactionType */
         $transactionType = TransactionType::findOrFail($args['id']);
-        $transactionType->setNames($args['transactionType']['name']);
+        $transactionType->setNames($args['name']);
         $transactionType->saveOrFail();
 
-        return true;
+        return $transactionType;
     }
 }

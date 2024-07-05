@@ -53,7 +53,7 @@ class DeleteRoleGraphQLMutation extends Mutation
             ],
             'ids.*' => [
                 'required',
-                'array',
+                'integer',
                 function ($attribute, $value, $fail) {
                     if (! Role::query()->where('id', $value)->exists()) {
                         $fail(__('api.not found'));

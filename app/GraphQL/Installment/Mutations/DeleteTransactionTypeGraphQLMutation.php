@@ -53,7 +53,7 @@ class DeleteTransactionTypeGraphQLMutation extends Mutation
             ],
             'ids.*' => [
                 'required',
-                'array',
+                'integer',
                 function ($attribute, $value, $fail) {
                     if ($value < 100) {
                         $fail(__('api.You cannot delete', [
