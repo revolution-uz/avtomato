@@ -28,20 +28,20 @@ class CurrentProfileActivityLogsGraphQLQuery extends Query
     {
         return [
             'sort' => [
-                'name' => 'sort',
                 'type' => Type::string(),
+                'rules' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
             ],
             'search' => [
-                'name' => 'search',
                 'type' => Type::string(),
+                'rules' => 'nullable|string|max:255',
             ],
             'page' => [
-                'name' => 'page',
                 'type' => Type::int(),
+                'rules' => 'nullable|int|min:1',
             ],
             'per_page' => [
-                'name' => 'per_page',
                 'type' => Type::int(),
+                'rules' => 'nullable|int|min:5|max:100',
             ],
         ];
     }
@@ -56,7 +56,7 @@ class CurrentProfileActivityLogsGraphQLQuery extends Query
         return ActivityLog::query()
             ->where('causer_id', auth()->user()->id)
             ->with('causer')
-            ->when($args['search'], function (Builder $q) use ($args) {
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
                     $query->where('description', 'ILIKE', $search);
@@ -64,15 +64,5 @@ class CurrentProfileActivityLogsGraphQLQuery extends Query
             })
             ->when(isset($args['sort']), fn (Builder|ActivityLog $q) => $q->orderBySortable($args['sort']))
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'sort' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
-            'search' => 'nullable|string|max:255',
-            'page' => 'nullable|int|min:1',
-            'per_page' => 'nullable|int|min:5|max:100',
-        ];
     }
 }
