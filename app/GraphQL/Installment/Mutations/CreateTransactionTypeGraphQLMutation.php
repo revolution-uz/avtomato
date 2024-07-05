@@ -47,7 +47,7 @@ class CreateTransactionTypeGraphQLMutation extends Mutation
     {
 
         $transactionType = new TransactionType;
-        $transactionType->setNames($args['transactionType']['name']);
+        $transactionType->setNames($args['name']);
         $transactionType->is_system = false;
         $transactionType->saveOrFail();
 
