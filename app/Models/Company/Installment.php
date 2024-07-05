@@ -91,12 +91,12 @@ class Installment extends Model
 
     public function tariff(): BelongsTo
     {
-        return $this->belongsTo(Tariff::class);
+        return $this->belongsTo(Tariff::class)->withTrashed();
     }
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customer::class)->withTrashed();
     }
 
     public function cards(): BelongsToMany
@@ -143,12 +143,12 @@ class Installment extends Model
 
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(Branch::class, 'branch_id');
+        return $this->belongsTo(Branch::class, 'branch_id')->withTrashed();
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
     public function autoPay(): Attribute
