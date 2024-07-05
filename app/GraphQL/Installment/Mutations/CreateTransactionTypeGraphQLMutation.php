@@ -51,6 +51,6 @@ class CreateTransactionTypeGraphQLMutation extends Mutation
         $transactionType->is_system = false;
         $transactionType->saveOrFail();
 
-        return true;
+        return $transactionType;
     }
 }
