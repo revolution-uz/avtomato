@@ -7,7 +7,7 @@ use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
-class CardScoringRequestGraphQLQueryTest extends GraphQLTestCase
+class CardScoringRequestsGraphQLQueryTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
@@ -106,7 +106,6 @@ class CardScoringRequestGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function errorPage()
     {
-        // graphql type test
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
