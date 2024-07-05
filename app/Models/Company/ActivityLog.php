@@ -26,7 +26,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class ActivityLog extends Activity
 {
-    use OrderBySortable, TenantConnection, HasFactory;
+    use HasFactory, OrderBySortable, TenantConnection;
 
     public static array $sortables = ['id', 'admin_id', 'description'];
 

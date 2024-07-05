@@ -68,14 +68,14 @@ class SingleManagementGraphQLQueryTest extends GraphQLTestCase
                                         'enabled',
                                         'id',
                                         'name',
-                                    ]
+                                    ],
                                 ],
                                 'id',
                                 'name',
-//                                'slug',
+                                // 'slug',
                             ],
                         ],
-//                        'slug',
+                        // 'slug',
                     ],
                 ],
                 'permissions' => [
@@ -253,7 +253,7 @@ class SingleManagementGraphQLQueryTest extends GraphQLTestCase
                     'deleted_at',
                 ],
                 'template_theme' => [
-                    'layout_name'
+                    'layout_name',
                 ],
                 'role' => [
                     'id',
@@ -264,12 +264,12 @@ class SingleManagementGraphQLQueryTest extends GraphQLTestCase
                     'permission_groups' => [
                         '*' => [
                             'id',
-//                            'slug',
+                            // 'slug',
                             'name',
                             'permissions' => [
                                 '*' => [
                                     'id',
-//                                    'slug',
+                                    // 'slug',
                                     'name',
                                     'branches' => [
                                         '*' => [
@@ -462,12 +462,12 @@ class SingleManagementGraphQLQueryTest extends GraphQLTestCase
                 'permission_groups' => [
                     '*' => [
                         'id',
-//                        'slug',
+                        // 'slug',
                         'name',
                         'permissions' => [
                             '*' => [
                                 'id',
-//                            'slug',
+                                // 'slug',
                                 'name',
                                 'branches' => [
                                     '*' => [
@@ -655,12 +655,12 @@ class SingleManagementGraphQLQueryTest extends GraphQLTestCase
             'permission_groups' => [
                 '*' => [
                     'id',
-//                    'slug',
+                    // 'slug',
                     'name',
                     'permissions' => [
                         '*' => [
                             'id',
-//                            'slug',
+                            // 'slug',
                             'name',
                             'branches' => [
                                 '*' => [
@@ -812,8 +812,8 @@ class SingleManagementGraphQLQueryTest extends GraphQLTestCase
     {
         $query = [];
         $query['variables'] = $variables;
-        $variableArgs = implode(', ', array_map(fn($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
-        $variableTypes = implode(', ', array_map(fn($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
+        $variableArgs = implode(', ', array_map(fn ($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
+        $variableTypes = implode(', ', array_map(fn ($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
         $dataStructure = $this->convertIntoQuery($structure);
         $query['query'] = '
             query ' . ($variableTypes ? "({$variableTypes})" : '') . ' {
@@ -839,10 +839,11 @@ class SingleManagementGraphQLQueryTest extends GraphQLTestCase
     {
         foreach ($structure as $key => $value) {
             if (is_array($value)) {
-                if ($key == '*')
+                if ($key == '*') {
                     $structure[$key] = $this->convertIntoQuery($value);
-                else
-                    $structure[$key] = "$key {{$this->convertIntoQuery($value)}}";
+                } else {
+                    $structure[$key] = "{$key} {{$this->convertIntoQuery($value)}}";
+                }
             }
         }
 

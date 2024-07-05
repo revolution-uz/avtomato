@@ -23,7 +23,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
-    use OrderBySortable, SoftDeletes, TenantConnection, HasFactory;
+    use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id', 'name', 'device_ip', 'device_type', 'device_os', 'last_used_at'];
 

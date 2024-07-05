@@ -264,15 +264,15 @@ class ManagementGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery($field, $structure),
             );
 
-        $this->assertResponse($response, $field, $structure, $response->json("data.$field.total"));
+        $this->assertResponse($response, $field, $structure, $response->json("data.{$field}.total"));
     }
 
     private function buildGraphQLQuery(string $field, array $structure, array $variables = []): array
     {
         $query = [];
         $query['variables'] = $variables;
-        $variableArgs = implode(', ', array_map(fn($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
-        $variableTypes = implode(', ', array_map(fn($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
+        $variableArgs = implode(', ', array_map(fn ($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
+        $variableTypes = implode(', ', array_map(fn ($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
         $dataStructure = implode(' ', $structure);
         $query['query'] = '
             query ' . ($variableTypes ? "({$variableTypes})" : '') . ' {
@@ -315,13 +315,13 @@ class ManagementGraphQLQueryTest extends GraphQLTestCase
         $totalCount = $total ?? $this->_totalFactoryCount;
         $currentPage = $page ?? 1;
         $currentPerPage = $perPage ?? 10;
-        $this->assertEquals($currentPage, $response->json("data.$field.current_page"));
-        $this->assertEquals(($currentPage - 1) * ($currentPerPage) + 1, $response->json("data.$field.from"));
-        $this->assertEquals(ceil($totalCount / $currentPerPage) > $currentPage, $response->json("data.$field.has_more_pages"));
-        $this->assertEquals(ceil($totalCount / $currentPerPage), $response->json("data.$field.last_page"));
-        $this->assertEquals($currentPerPage, $response->json("data.$field.per_page"));
-        $this->assertEquals(min($totalCount, $currentPage * $currentPerPage), $response->json("data.$field.to"));
-        $this->assertEquals($totalCount, $response->json("data.$field.total"));
-        $this->assertCount(min($totalCount - ($currentPage - 1) * $currentPerPage, $currentPerPage), $response->json("data.$field.data"));
+        $this->assertEquals($currentPage, $response->json("data.{$field}.current_page"));
+        $this->assertEquals(($currentPage - 1) * ($currentPerPage) + 1, $response->json("data.{$field}.from"));
+        $this->assertEquals(ceil($totalCount / $currentPerPage) > $currentPage, $response->json("data.{$field}.has_more_pages"));
+        $this->assertEquals(ceil($totalCount / $currentPerPage), $response->json("data.{$field}.last_page"));
+        $this->assertEquals($currentPerPage, $response->json("data.{$field}.per_page"));
+        $this->assertEquals(min($totalCount, $currentPage * $currentPerPage), $response->json("data.{$field}.to"));
+        $this->assertEquals($totalCount, $response->json("data.{$field}.total"));
+        $this->assertCount(min($totalCount - ($currentPage - 1) * $currentPerPage, $currentPerPage), $response->json("data.{$field}.data"));
     }
 }
