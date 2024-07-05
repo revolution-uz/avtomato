@@ -21,10 +21,8 @@ class SingleCommonGraphQLQueryTest extends GraphQLTestCase
         Mahalla::factory()->count(1)->create();
     }
 
-    /**
-     * @test
-     */
-    public function successDistricts()
+    #[Test]
+    public function districts()
     {
         $region = Region::query()->first();
         $query = '
@@ -58,10 +56,8 @@ class SingleCommonGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($region->id, $response->json('data.districts.0.region_id'));
     }
 
-    /**
-     * @test
-     */
-    public function successMahallas()
+    #[Test]
+    public function mahallas()
     {
         $district = District::query()->whereHas('mahallas')->first();
         $query = '

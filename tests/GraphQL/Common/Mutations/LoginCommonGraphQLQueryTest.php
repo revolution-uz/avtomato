@@ -3,13 +3,12 @@
 namespace Common\Mutations;
 
 use App\Models\Company\User;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class LoginCommonGraphQLQueryTest extends GraphQLTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function successLogin()
     {
         $user = User::factory()->create([

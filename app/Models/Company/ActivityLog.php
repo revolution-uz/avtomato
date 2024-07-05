@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use App\Enums\Company\LogType;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Models\Activity;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -25,9 +26,21 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class ActivityLog extends Activity
 {
-    use OrderBySortable, TenantConnection;
+    use OrderBySortable, TenantConnection, HasFactory;
 
     public static array $sortables = ['id', 'admin_id', 'description'];
+
+    protected $fillable = [
+        'log_name',
+        'description',
+        'subject_type',
+        'subject_id',
+        'event',
+        'causer_type',
+        'causer_id',
+        'properties',
+        'batch_uuid',
+    ];
 
     protected $casts = [
         'properties' => 'collection',

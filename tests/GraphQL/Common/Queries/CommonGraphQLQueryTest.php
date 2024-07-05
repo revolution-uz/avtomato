@@ -6,6 +6,7 @@ use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class CommonGraphQLQueryTest extends GraphQLTestCase
@@ -26,9 +27,7 @@ class CommonGraphQLQueryTest extends GraphQLTestCase
         Region::factory()->count($this->_totalFactoryCount)->create();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successGettingDistricts()
     {
         $query = '
@@ -66,9 +65,7 @@ class CommonGraphQLQueryTest extends GraphQLTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successGettingMahallas()
     {
         $query = '
@@ -98,9 +95,7 @@ class CommonGraphQLQueryTest extends GraphQLTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successGettingRegions()
     {
         $query = '
@@ -140,9 +135,7 @@ class CommonGraphQLQueryTest extends GraphQLTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successGettingSettings()
     {
         $query = '

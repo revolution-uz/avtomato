@@ -63,7 +63,7 @@ class BranchesGraphQLQuery extends Query
 
                 });
             })
-            ->when(isset($args['sort']), fn (Builder|Branch $q) => $q->orderBySortable($args['sort']))
+            ->when(isset($args['sort']), fn(Builder|Branch $q) => $q->orderBySortable($args['sort']))
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }
