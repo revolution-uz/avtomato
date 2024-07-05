@@ -53,7 +53,7 @@ class SinglePensionInfoGraphQLQuery extends Query
                 'required',
                 Rule::exists('scoring_requests', 'id')
                     ->where('status', ScoringRequestStatusEnum::SUCCESS)
-                    ->where('type', ScoringRequestTypeEnum::KATM_PENSION_INFO),
+                    ->where('type', ScoringRequestTypeEnum::KATM_PENSION_INFO)->whereNull('deleted_at'),
             ],
         ];
     }

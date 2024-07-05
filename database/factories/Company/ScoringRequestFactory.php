@@ -37,7 +37,7 @@ class ScoringRequestFactory extends Factory
         $type = 6;
 
         return [
-            'ext_id' => rand(100000, 9999999999),
+            'ext_id' => rand(100000, 9999999),
             'status' => $status,
             'type' => $type,
             'client_code' => $clientCode,

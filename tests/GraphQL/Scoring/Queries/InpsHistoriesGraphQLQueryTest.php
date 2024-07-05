@@ -2,10 +2,12 @@
 
 namespace Tests\GraphQL\Scoring\Queries;
 
-use App\DTOs\Scoring\Katm\CreditHistory\KatmCreditHistoryAdditionalInfoDTO;
-use App\DTOs\Scoring\Katm\CreditHistory\KatmCreditHistoryDebtDTO;
-use App\DTOs\Scoring\Katm\CreditHistory\KatmCreditHistoryResponseDTO;
-use App\DTOs\Scoring\Katm\CreditHistory\KatmCreditHistoryScoreDTO;
+use App\DTOs\Scoring\Katm\InpsHistory\KatmIncomeDTO;
+use App\DTOs\Scoring\Katm\InpsHistory\KatmIncomesDTO;
+use App\DTOs\Scoring\Katm\InpsHistory\KatmIncomesPeriodDTO;
+use App\DTOs\Scoring\Katm\InpsHistory\KatmInpsHistoryResponseDTO;
+use App\DTOs\Scoring\Katm\InpsHistory\KatmPresenceReportDTO;
+use App\DTOs\Scoring\Katm\InpsHistory\KatmPresenceReportsDTO;
 use App\DTOs\Scoring\Katm\KatmClientDTO;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
@@ -13,495 +15,307 @@ use App\Models\Company\ScoringRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
+use Spatie\LaravelData\DataCollection;
 use Tests\GraphQL\GraphQLTestCase;
 
 class InpsHistoriesGraphQLQueryTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
+    private int $_totalInpsCount = 50;
+
     protected function setUp(): void
     {
         parent::setUp();
         ScoringRequest::query()->forceDelete();
-        ScoringRequest::factory()->count(5)->create(
+        ScoringRequest::factory()->count($this->_totalInpsCount)->create(
             [
-                'type' => ScoringRequestTypeEnum::KATM_CREDIT_HISTORY,
+                'type' => ScoringRequestTypeEnum::KATM_INPS_HISTORY,
                 'request' => new KatmCreateRequestDTO('30906997180039', 'AB', '4143286', Carbon::createFromDate('15-06-2016'), 'Akmal', 'Baxodirov', 'Azamat', '998882019909', '998882019909', Carbon::createFromDate('09-06-1999'), 13, 114),
-                'response' => new KatmCreditHistoryResponseDTO(
-                    new KatmCreditHistoryAdditionalInfoDTO(
-                        new KatmCreditHistoryDebtDTO(1.1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24),
-                        new KatmCreditHistoryDebtDTO(1.1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24),
-                        22.3,
-                        []
-                    ),
-                    new KatmCreditHistoryScoreDTO(273, 'C3', 'СРЕДНИЙ', '2023-09-30 17:54', '1.6'),
+                'response' => new KatmInpsHistoryResponseDTO(
                     new KatmClientDTO('Yura', '2005-08-10', 'M', 'Xorazm viloyati Urganch shaxri', '998882223123', 'Резидент', '12345678912345', '12345678912345', 'СРЕДНИЙ', '2023-09-30 17:54', 'Биометрический паспорт гражданина Республики Узбекистан', 'AA', '1234567', '2022-01-12', '?', '?', '?'),
+                    new KatmIncomesPeriodDTO('2022-10-01', '2023-10-01', '0'),
+                    new KatmPresenceReportsDTO(
+                        new DataCollection(
+                            KatmPresenceReportDTO::class,
+                            [
+                                new KatmPresenceReportDTO(1, '23', 'asd'),
+                                new KatmPresenceReportDTO(1, '23', 'asd'),
+                            ]
+                        )
+                    ),
+                    new KatmIncomesDTO(
+                        new DataCollection(
+                            KatmIncomeDTO::class,
+                            [
+                                new KatmIncomeDTO('1', '2023-07', '"VORTEX SOLAR" MCHJ', '310321569', '6001600.00', '6820.00', '2022-10-01'),
+                                new KatmIncomeDTO('1', '2023-07', '"VORTEX SOLAR" MCHJ', '310321569', '6001600.00', '6820.00', '2022-10-01'),
+                            ]
+                        )
+                    )
+
                 ),
             ]);
     }
 
     #[Test]
-    public function successCreditHistoriesQuery()
+    public function successWithoutArguments(): void
     {
-        $response = $this->actingAs($this->createAdminUser())->postJson(
-            route('graphql.scoring'),
-            [
-                'query' => '
-                    query {
-                        inpsHistories {
-                            data {
-                                id
-                                card_id
-                                client_code
-                                created_at
-                                updated_at
-                                customer_id
-                                ext_id
-                                status
-                                type
-                                request {
-                                      pinfl
-                                      first_name
-                                      last_name
-                                }
-                                response {
-                                      additional_info {
-                                            current_debt {
-                                              all_delays_qty
-                                              all_delays_sum
-                                              contracts_wo_delays_qty
-                                              contracts_wo_delays_sum
-                                              expired_percent_qty
-                                              expired_percent_sum
-                                              revised_contracts_qty
-                                              revised_contracts_sum
-                                              delays_less_30_qty
-                                              delays_less_30_sum
-                                              switched_month_qty
-                                              switched_month_sum
-                                              delays_less_60_qty
-                                              delays_less_60_sum
-                                              delays_less_90_qty
-                                              delays_less_90_sum
-                                              delays_more_90_qty
-                                              delays_more_90_sum
-                                              delays_in_court_qty
-                                              delays_in_court_sum
-                                              delays_decommissioned_qty
-                                              delays_decommissioned_sum
-                                              delays_decommissioned_pcnt_qty
-                                              delays_decommissioned_pcnt_sum
-                                            }
-                                            closed_debt {
-                                                  all_delays_qty
-                                                  all_delays_sum
-                                                  contracts_wo_delays_qty
-                                                  contracts_wo_delays_sum
-                                                  expired_percent_qty
-                                                  expired_percent_sum
-                                                  revised_contracts_qty
-                                                  revised_contracts_sum
-                                                  delays_less_30_qty
-                                                  delays_less_30_sum
-                                                  switched_month_qty
-                                                  switched_month_sum
-                                                  delays_less_60_qty
-                                                  delays_less_60_sum
-                                                  delays_less_90_qty
-                                                  delays_less_90_sum
-                                                  delays_more_90_qty
-                                                  delays_more_90_sum
-                                                  delays_in_court_qty
-                                                  delays_in_court_sum
-                                                  delays_decommissioned_qty
-                                                  delays_decommissioned_sum
-                                                  delays_decommissioned_pcnt_qty
-                                                  delays_decommissioned_pcnt_sum
-                                            }
-                                            average_monthly_payment
-                                            notifications
-                                      }
-                                      score {
-                                        score_point
-                                        score_class
-                                        score_level
-                                        score_date
-                                        score_version
-                                      }
-                                      client {
-                                            name
-                                            birth_date
-                                            gender
-                                            address
-                                            resident
-                                            pinfl
-                                            inn
-                                            document_type
-                                            document_serial
-                                            document_number
-                                            document_date
-                                            document_type_id
-                                            subject_id
-                                            credit_start_date
-                                      }
-                                }
-                            }
-                        }
-                    }
-                ',
-            ]
-        );
-        $this->assertSuccessCreditHistoriesResponse($response);
-    }
-
-    #[Test]
-    public function paginationCreditHistoriesQuery()
-    {
-        $response = $this->actingAs($this->createAdminUser())->postJson(
-            route('graphql.scoring'),
-            [
-                'query' => '
-                    query {
-                        inpsHistories(page: 2, per_page: 5) {
-                            current_page
-                            from
-                            has_more_pages
-                            last_page
-                            per_page
-                            to
-                            total
-                            data {
-                                id
-                                card_id
-                                client_code
-                                created_at
-                                updated_at
-                                customer_id
-                                ext_id
-                                status
-                                type
-                                request {
-                                      pinfl
-                                      first_name
-                                      last_name
-                                }
-                                response {
-                                      additional_info {
-                                            current_debt {
-                                              all_delays_qty
-                                              all_delays_sum
-                                              contracts_wo_delays_qty
-                                              contracts_wo_delays_sum
-                                              expired_percent_qty
-                                              expired_percent_sum
-                                              revised_contracts_qty
-                                              revised_contracts_sum
-                                              delays_less_30_qty
-                                              delays_less_30_sum
-                                              switched_month_qty
-                                              switched_month_sum
-                                              delays_less_60_qty
-                                              delays_less_60_sum
-                                              delays_less_90_qty
-                                              delays_less_90_sum
-                                              delays_more_90_qty
-                                              delays_more_90_sum
-                                              delays_in_court_qty
-                                              delays_in_court_sum
-                                              delays_decommissioned_qty
-                                              delays_decommissioned_sum
-                                              delays_decommissioned_pcnt_qty
-                                              delays_decommissioned_pcnt_sum
-                                            }
-                                            closed_debt {
-                                                  all_delays_qty
-                                                  all_delays_sum
-                                                  contracts_wo_delays_qty
-                                                  contracts_wo_delays_sum
-                                                  expired_percent_qty
-                                                  expired_percent_sum
-                                                  revised_contracts_qty
-                                                  revised_contracts_sum
-                                                  delays_less_30_qty
-                                                  delays_less_30_sum
-                                                  switched_month_qty
-                                                  switched_month_sum
-                                                  delays_less_60_qty
-                                                  delays_less_60_sum
-                                                  delays_less_90_qty
-                                                  delays_less_90_sum
-                                                  delays_more_90_qty
-                                                  delays_more_90_sum
-                                                  delays_in_court_qty
-                                                  delays_in_court_sum
-                                                  delays_decommissioned_qty
-                                                  delays_decommissioned_sum
-                                                  delays_decommissioned_pcnt_qty
-                                                  delays_decommissioned_pcnt_sum
-                                            }
-                                            average_monthly_payment
-                                            notifications
-                                      }
-                                      score {
-                                        score_point
-                                        score_class
-                                        score_level
-                                        score_date
-                                        score_version
-                                      }
-                                      client {
-                                            name
-                                            birth_date
-                                            gender
-                                            address
-                                            resident
-                                            pinfl
-                                            inn
-                                            document_type
-                                            document_serial
-                                            document_number
-                                            document_date
-                                            document_type_id
-                                            subject_id
-                                            credit_start_date
-                                      }
-                                }
-                            }
-                        }
-                    }
-                ',
-            ]
-        );
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery()
+            );
         $response->assertOk();
-        $response->assertJsonPath('data.inpsHistories.current_page', 2);
     }
 
     #[Test]
-    public function sortCreditHistoriesQuery()
+    public function successPagination()
     {
-        $response = $this->actingAs($this->createAdminUser())->postJson(
-            route('graphql.scoring'),
-            [
-                'query' => '
-                query {
-                    inpsHistories(sort: "-created_at") {
-                        data {
-                            id
-                            card_id
-                            client_code
-                            created_at
-                            updated_at
-                            customer_id
-                            ext_id
-                            status
-                            type
-                            request {
-                                  pinfl
-                                  first_name
-                                  last_name
-                            }
-                            response {
-                                  additional_info {
-                                        current_debt {
-                                          all_delays_qty
-                                          all_delays_sum
-                                          contracts_wo_delays_qty
-                                          contracts_wo_delays_sum
-                                          expired_percent_qty
-                                          expired_percent_sum
-                                          revised_contracts_qty
-                                          revised_contracts_sum
-                                          delays_less_30_qty
-                                          delays_less_30_sum
-                                          switched_month_qty
-                                          switched_month_sum
-                                          delays_less_60_qty
-                                          delays_less_60_sum
-                                          delays_less_90_qty
-                                          delays_less_90_sum
-                                          delays_more_90_qty
-                                          delays_more_90_sum
-                                          delays_in_court_qty
-                                          delays_in_court_sum
-                                          delays_decommissioned_qty
-                                          delays_decommissioned_sum
-                                          delays_decommissioned_pcnt_qty
-                                          delays_decommissioned_pcnt_sum
-                                        }
-                                        closed_debt {
-                                              all_delays_qty
-                                              all_delays_sum
-                                              contracts_wo_delays_qty
-                                              contracts_wo_delays_sum
-                                              expired_percent_qty
-                                              expired_percent_sum
-                                              revised_contracts_qty
-                                              revised_contracts_sum
-                                              delays_less_30_qty
-                                              delays_less_30_sum
-                                              switched_month_qty
-                                              switched_month_sum
-                                              delays_less_60_qty
-                                              delays_less_60_sum
-                                              delays_less_90_qty
-                                              delays_less_90_sum
-                                              delays_more_90_qty
-                                              delays_more_90_sum
-                                              delays_in_court_qty
-                                              delays_in_court_sum
-                                              delays_decommissioned_qty
-                                              delays_decommissioned_sum
-                                              delays_decommissioned_pcnt_qty
-                                              delays_decommissioned_pcnt_sum
-                                        }
-                                        average_monthly_payment
-                                        notifications
-                                  }
-                                  score {
-                                    score_point
-                                    score_class
-                                    score_level
-                                    score_date
-                                    score_version
-                                  }
-                                  client {
-                                        name
-                                        birth_date
-                                        gender
-                                        address
-                                        resident
-                                        pinfl
-                                        inn
-                                        document_type
-                                        document_serial
-                                        document_number
-                                        document_date
-                                        document_type_id
-                                        subject_id
-                                        credit_start_date
-                                  }
-                            }
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['page' => 4])
+            );
+        $this->assertSuccessInpsResponse($response, page: 4);
+    }
+
+    #[Test]
+    public function successPerPage()
+    {
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['per_page' => 25])
+            );
+        $this->assertSuccessInpsResponse($response, perPage: 25);
+    }
+
+    #[Test]
+    public function successSortAscending()
+    {
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['sort' => 'id'])
+            );
+
+        $this->assertSuccessInpsResponse($response);
+        $scoringIds = ScoringRequest::query()->orderBy('id')->limit(10)->pluck('id')->toArray();
+        $this->assertEquals($scoringIds, $response->json('data.inpsHistories.data.*.id'));
+    }
+
+    #[Test]
+    public function successSortDescending()
+    {
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['sort' => '-id'])
+            );
+
+        $this->assertSuccessInpsResponse($response);
+        $scoringIds = ScoringRequest::query()->orderByDesc('id')->limit(10)->pluck('id')->toArray();
+        $this->assertEquals($scoringIds, $response->json('data.inpsHistories.data.*.id'));
+    }
+
+    #[Test]
+    public function successSearch()
+    {
+        $scoring = ScoringRequest::query()->first();
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['search' => $scoring->request->pinfl])
+            );
+
+        $this->assertSuccessInpsResponse($response, total: $this->_totalInpsCount);
+        $this->assertEquals($scoring->request->pinfl, $response->json('data.inpsHistories.data.0.request.pinfl'));
+    }
+
+    #[Test]
+    public function errorPage()
+    {
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['page' => 'asnjfasnjfasn'])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('Variable "$page" of type "String!" used in position expecting type "Int".', $response->json('errors.0.message'));
+
+        // minimum validation test
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['page' => 0])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.min.numeric', ['attribute' => 'page', 'min' => 1]), $response->json('errors.0.extensions.validation.page.0'));
+    }
+
+    #[Test]
+    public function errorPerPage()
+    {
+        // graphql type test
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['per_page' => 'asnjfasnjfasn'])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('Variable "$per_page" of type "String!" used in position expecting type "Int".', $response->json('errors.0.message'));
+
+        // minimum validation test
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['per_page' => 0])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.min.numeric', ['attribute' => 'per page', 'min' => 5]), $response->json('errors.0.extensions.validation.per_page.0'));
+
+        // maximum validation test
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['per_page' => 101])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.max.numeric', ['attribute' => 'per page', 'max' => 100]), $response->json('errors.0.extensions.validation.per_page.0'));
+    }
+
+    #[Test]
+    public function errorSort()
+    {
+        // graphql type test
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['sort' => 111])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('Variable "$sort" of type "Int!" used in position expecting type "String".', $response->json('errors.0.message'));
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['sort' => 'non-exist-column'])
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.regex', ['attribute' => 'sort']), $response->json('errors.0.extensions.validation.sort.0'));
+    }
+
+    private function buildGraphQLQuery(array $variables = []): array
+    {
+        $query = [];
+        $query['variables'] = $variables;
+        $variableArgs = implode(', ', array_map(fn ($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
+        $variableTypes = implode(', ', array_map(fn ($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
+        $query['query'] = '
+            query inpsHistories' . ($variableTypes ? "({$variableTypes})" : '') . ' {
+                inpsHistories' . ($variableArgs ? "({$variableArgs})" : '') . ' {
+                    current_page
+                    from
+                    has_more_pages
+                    last_page
+                    per_page
+                    to
+                    total
+                    data {
+                        id
+                        ext_id
+                        status
+                        type
+                        client_code
+                        customer_id
+                        card_id
+                        created_at
+                        updated_at
+                        request {
+                           pinfl
                         }
                     }
                 }
-            ',
-            ]
-        );
-        $response->assertOk();
+            }
+        ';
 
-        $createdAtFirst = $response->json('data.inpsHistories.data.0.created_at');
-        $createdAtSecond = $response->json('data.inpsHistories.data.1.created_at');
-
-        $this->assertTrue(strtotime($createdAtFirst) >= strtotime($createdAtSecond));
+        return $query;
     }
 
-    private function assertSuccessCreditHistoriesResponse(TestResponse $response): void
+    private function assertSuccessInpsResponse(TestResponse $response, $total = null, $perPage = null, $page = null): void
     {
         $response->assertOk();
+        $response->assertJsonIsObject();
         $response->assertJsonStructure([
             'data' => [
                 'inpsHistories' => [
+                    'current_page',
+                    'from',
+                    'has_more_pages',
+                    'last_page',
+                    'per_page',
+                    'to',
+                    'total',
                     'data' => [
                         '*' => [
                             'id',
-                            'card_id',
-                            'client_code',
-                            'created_at',
-                            'updated_at',
-                            'customer_id',
                             'ext_id',
                             'status',
                             'type',
+                            'client_code',
+                            'customer_id',
+                            'card_id',
+                            'created_at',
+                            'updated_at',
                             'request' => [
                                 'pinfl',
-                                'first_name',
-                                'last_name',
-                            ],
-                            'response' => [
-                                'additional_info' => [
-                                    'current_debt' => [
-                                        'all_delays_qty',
-                                        'all_delays_sum',
-                                        'contracts_wo_delays_qty',
-                                        'contracts_wo_delays_sum',
-                                        'expired_percent_qty',
-                                        'expired_percent_sum',
-                                        'revised_contracts_qty',
-                                        'revised_contracts_sum',
-                                        'delays_less_30_qty',
-                                        'delays_less_30_sum',
-                                        'switched_month_qty',
-                                        'switched_month_sum',
-                                        'delays_less_60_qty',
-                                        'delays_less_60_sum',
-                                        'delays_less_90_qty',
-                                        'delays_less_90_sum',
-                                        'delays_more_90_qty',
-                                        'delays_more_90_sum',
-                                        'delays_in_court_qty',
-                                        'delays_in_court_sum',
-                                        'delays_decommissioned_qty',
-                                        'delays_decommissioned_sum',
-                                        'delays_decommissioned_pcnt_qty',
-                                        'delays_decommissioned_pcnt_sum',
-                                    ],
-                                    'closed_debt' => [
-                                        'all_delays_qty',
-                                        'all_delays_sum',
-                                        'contracts_wo_delays_qty',
-                                        'contracts_wo_delays_sum',
-                                        'expired_percent_qty',
-                                        'expired_percent_sum',
-                                        'revised_contracts_qty',
-                                        'revised_contracts_sum',
-                                        'delays_less_30_qty',
-                                        'delays_less_30_sum',
-                                        'switched_month_qty',
-                                        'switched_month_sum',
-                                        'delays_less_60_qty',
-                                        'delays_less_60_sum',
-                                        'delays_less_90_qty',
-                                        'delays_less_90_sum',
-                                        'delays_more_90_qty',
-                                        'delays_more_90_sum',
-                                        'delays_in_court_qty',
-                                        'delays_in_court_sum',
-                                        'delays_decommissioned_qty',
-                                        'delays_decommissioned_sum',
-                                        'delays_decommissioned_pcnt_qty',
-                                        'delays_decommissioned_pcnt_sum',
-                                    ],
-                                    'average_monthly_payment',
-                                    'notifications',
-                                ],
-                                'score' => [
-                                    'score_point',
-                                    'score_class',
-                                    'score_level',
-                                    'score_date',
-                                    'score_version',
-                                ],
-                                'client' => [
-                                    'name',
-                                    'birth_date',
-                                    'gender',
-                                    'resident',
-                                    'address',
-                                    'pinfl',
-                                    'inn',
-                                    'document_type',
-                                    'document_serial',
-                                    'document_number',
-                                    'document_date',
-                                    'document_type_id',
-                                    'subject_id',
-                                    'credit_start_date',
-                                ],
                             ],
                         ],
                     ],
                 ],
             ],
         ]);
+        $totalCount = $total ?? $this->_totalInpsCount;
+        $currentPage = $page ?? 1;
+        $currentPerPage = $perPage ?? 10;
+        $this->assertEquals($totalCount, $response->json('data.inpsHistories.total'));
+        $this->assertEquals($currentPerPage, $response->json('data.inpsHistories.per_page'));
+        $this->assertEquals($currentPage, $response->json('data.inpsHistories.current_page'));
+        $this->assertEquals(($currentPage - 1) * ($currentPerPage) + 1, $response->json('data.inpsHistories.from'));
+        $this->assertEquals(min($totalCount, $currentPage * $currentPerPage), $response->json('data.inpsHistories.to'));
+        $this->assertEquals(ceil($totalCount / $currentPerPage) > $currentPage, $response->json('data.inpsHistories.has_more_pages'));
+        $this->assertEquals(ceil($totalCount / $currentPerPage), $response->json('data.inpsHistories.last_page'));
+        $this->assertCount(min($totalCount - ($currentPage - 1) * $currentPerPage, $currentPerPage), $response->json('data.inpsHistories.data'));
     }
 }
