@@ -67,7 +67,7 @@ class Transaction extends Model
 
     public function transactionType(): BelongsTo
     {
-        return $this->belongsTo(TransactionType::class);
+        return $this->belongsTo(TransactionType::class)->withTrashed();
     }
 
     public function employee(): BelongsTo
