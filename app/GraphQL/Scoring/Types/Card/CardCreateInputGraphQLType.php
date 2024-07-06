@@ -24,7 +24,7 @@ class CardCreateInputGraphQLType extends InputType
             'expiry' => [
                 'name' => 'expiry',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|int|digits:4',
+                'rules' => 'required|string|min:4|max:4',
             ],
         ];
     }
