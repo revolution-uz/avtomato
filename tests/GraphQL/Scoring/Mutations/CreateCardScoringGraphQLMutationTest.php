@@ -31,13 +31,26 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successCreate(): void
+    public function successHumeCardCreate(): void
     {
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
                 $this->buildGraphQLQuery(data: $this->_input, type: $this->_type)
+            );
+        $this->assertSuccessCreateCardScoringResponse($response);
+    }
+    public function successUzCardCreate(): void
+    {
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(data: [
+                    'number' => '8600353506066262',
+                    'expiry' => '0427',
+                ], type: ScoringRequestTypeEnum::UZCARD->value)
             );
         $this->assertSuccessCreateCardScoringResponse($response);
     }
