@@ -24,7 +24,7 @@ class TariffPartValidations implements DataAwareRule, ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $tariff = Tariff::findOrFail($this->data['tariff_id']);
+        $tariff = Tariff::findOrFail($this->data['tariff_id'] ?? $this->data['installment']['tariff_id']);
         /** @var Tariff $tariff */
         if ($tariff == null) {
             $fail('Invalid tariff is not found selected.');
