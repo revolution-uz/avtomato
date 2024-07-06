@@ -86,4 +86,12 @@ abstract class TestCase extends BaseTestCase
             'password' => Hash::make('password'),
         ]);
     }
+
+    public function createSimpleAdminUser()
+    {
+        return Company\User::factory()->create([
+            'role_id' => null,
+            'password' => Hash::make('password'),
+        ]);
+    }
 }
