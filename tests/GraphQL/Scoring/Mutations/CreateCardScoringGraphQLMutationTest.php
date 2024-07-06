@@ -64,6 +64,19 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
             ->postJson(
                 route('graphql.scoring'),
                 $this->buildGraphQLQuery([
+                    'number' => '9860353506066262',
+                    'expiry' => '0000',
+                ], 1)
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.in', ['attribute' => 'type']), $response->json('errors.0.extensions.validation')['type'][0]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery([
                     'number' => '315039531300',
                     'expiry' => '1231',
                 ], $this->_type)
@@ -72,7 +85,6 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.digits', ['attribute' => 'data.number', 'digits' => 16]), $response->json('errors.0.extensions.validation')['data.number'][0]);
-
     }
 
     private function buildGraphQLQuery(array $data, int $type): array
