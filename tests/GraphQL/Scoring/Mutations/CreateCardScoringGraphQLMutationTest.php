@@ -41,6 +41,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
             );
         $this->assertSuccessCreateCardScoringResponse($response);
     }
+
     public function successUzCardCreate(): void
     {
         $response = $this
