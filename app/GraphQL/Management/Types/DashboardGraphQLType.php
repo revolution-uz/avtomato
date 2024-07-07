@@ -40,7 +40,7 @@ class DashboardGraphQLType extends GraphQLType
                 },
             ],
             'installment_overdues' => [
-                'type' => Type::listOf(GraphQL::type(InstallmentOverduesGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::listOf(GraphQL::type(InstallmentOverdueGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'Chart of Installment overdues',
                 'resolve' => function (array $root) {
                     return $root['installment_overdues'];

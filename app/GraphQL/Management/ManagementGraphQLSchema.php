@@ -35,6 +35,7 @@ use App\GraphQL\Management\Queries\BranchesGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileDevicesGraphQLQuery;
 use App\GraphQL\Management\Queries\CurrentProfileGraphQLQuery;
+use App\GraphQL\Management\Queries\DashboardGraphQLQuery;
 use App\GraphQL\Management\Queries\RolesGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleActivityLogGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleAdminGraphQLQuery;
@@ -47,7 +48,12 @@ use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BalanceChargeGraphQLType;
 use App\GraphQL\Management\Types\BalanceFundGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
+use App\GraphQL\Management\Types\DashboardGraphQLType;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
+use App\GraphQL\Management\Types\InstallmentAmountsGraphQLType;
+use App\GraphQL\Management\Types\InstallmentMonthlyChangesGraphQLType;
+use App\GraphQL\Management\Types\InstallmentMonthlyStatusesGraphQLType;
+use App\GraphQL\Management\Types\InstallmentOverdueGraphQLType;
 use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionGraphQLType;
@@ -102,6 +108,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 RolesGraphQLQuery::class,
                 BranchesGraphQLQuery::class,
                 SingleBranchGraphQLQuery::class,
+                DashboardGraphQLQuery::class,
             ],
             'types' => [
                 AdminGraphQLType::class,
@@ -120,6 +127,11 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 PermissionEditableItemGraphQLType::class,
                 PermissionGroupGraphQLType::class,
                 BranchGraphQLType::class,
+                InstallmentMonthlyStatusesGraphQLType::class,
+                InstallmentMonthlyChangesGraphQLType::class,
+                DashboardGraphQLType::class,
+                InstallmentAmountsGraphQLType::class,
+                InstallmentOverdueGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
