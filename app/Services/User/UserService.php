@@ -6,51 +6,51 @@ use App\DTOs\UserTemplateThemeDto;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Models\Company\Attachment;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    public function create(UserCreateRequest $request): User
+    public function create(UserCreateRequest $request): CompanyAdmin
     {
         $attributes = $request->validated();
         $attributes['password'] = bcrypt($attributes['password']);
 
-        return User::create($attributes);
+        return CompanyAdmin::create($attributes);
     }
 
-    public function updateDetails(User $user, array $request): User
+    public function updateDetails(CompanyAdmin $admin, array $request): CompanyAdmin
     {
-        $user->updateOrFail($request);
+        $admin->updateOrFail($request);
 
-        return $user;
+        return $admin;
     }
 
-    public function updatePassword(User $user, string $newPassword): User
+    public function updatePassword(CompanyAdmin $admin, string $newPassword): CompanyAdmin
     {
-        $user->updateOrFail([
+        $admin->updateOrFail([
             'password' => Hash::make($newPassword),
         ]);
 
-        return $user;
+        return $admin;
     }
 
-    public function updateTheme(User $user, array|UserTemplateThemeDto $request): User
+    public function updateTheme(CompanyAdmin $admin, array|UserTemplateThemeDto $request): CompanyAdmin
     {
-        $user->updateOrFail([
+        $admin->updateOrFail([
             'template_theme' => $request,
         ]);
-        $user->refresh();
+        $admin->refresh();
 
-        return $user;
+        return $admin;
     }
 
-    public function updateAvatar(User $user, UploadedFile $file): User
+    public function updateAvatar(CompanyAdmin $admin, UploadedFile $file): CompanyAdmin
     {
-        Attachment::upload($file, AttachmentTypeEnum::AVATAR, $user);
-        $user->refresh();
+        Attachment::upload($file, AttachmentTypeEnum::AVATAR, $admin);
+        $admin->refresh();
 
-        return $user;
+        return $admin;
     }
 }

@@ -31,8 +31,8 @@ class LogController extends Controller
             new OpenApiSearchParameter,
             new OpenApiSortParameter,
             new OA\Parameter(
-                name: 'user_id',
-                description: 'ID of user',
+                name: 'admin_id',
+                description: 'ID of admin',
                 in: 'query',
                 required: false
             ),
@@ -55,9 +55,9 @@ class LogController extends Controller
                     });
                 })
                 ->when(
-                    $request->user_id,
+                    $request->admin_id,
                     fn (Builder $q) => $q
-                        ->where('causer_id', $request->user_id)
+                        ->where('causer_id', $request->admin_id)
                 )
                 ->when($request->isSortable(), function (Builder $q) use ($request) {
                     $q->orderBy($request->sortField(), $request->sortDirection());

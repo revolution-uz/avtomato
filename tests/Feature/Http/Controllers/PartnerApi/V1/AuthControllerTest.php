@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\PartnerApi\V1;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -13,12 +13,12 @@ class AuthControllerTest extends TestCase
     #[Test]
     public function login()
     {
-        $user = User::factory()->create([
+        $admin = CompanyAdmin::factory()->create([
             'username' => 'test',
             'password' => bcrypt('password'),
         ]);
         $response = $this->postJson(route('auth.login'), [
-            'username' => $user->username,
+            'username' => $admin->username,
             'password' => 'password',
         ], ['Device-Name' => 'test', 'Device-OS' => 'android', 'Device-Type' => 'mobile']);
 

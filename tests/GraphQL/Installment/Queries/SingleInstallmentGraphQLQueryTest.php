@@ -32,7 +32,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
 
         Installment::query()->forceDelete();
         $this->_installment = Installment::factory()->create();
-        Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->_installment->user, 'photo1.jpg');
+        Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->_installment->admin, 'photo1.jpg');
         $this->_guarantor = Customer::factory()->create();
         $this->_installment->guarantors()->attach($this->_guarantor, ['any_card_charge' => true]);
         Card::query()->forceDelete();
@@ -48,11 +48,11 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
             $this->_installment->customer->phones()->attach($phone->id, ['type' => PhoneTypeEnum::randomValue()]);
             $this->_guarantor->phones()->attach($phone->id, ['type' => PhoneTypeEnum::randomValue()]);
         }
-        InstallmentComment::factory()->create(['installment_id' => $this->_installment->id, 'user_id' => $this->_installment->user_id]);
+        InstallmentComment::factory()->create(['installment_id' => $this->_installment->id, 'admin_id' => $this->_installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $this->_installment, 'photo1.jpg');
         InstallmentGraph::factory()->create(['installment_id' => $this->_installment->id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_installment->customer_id, 'employee_id' => $this->_installment->user_id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_guarantor->id, 'employee_id' => $this->_installment->user_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_installment->customer_id, 'employee_id' => $this->_installment->admin_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_guarantor->id, 'employee_id' => $this->_installment->admin_id]);
     }
 
     #[Test]
@@ -250,7 +250,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     tariff_id
                     type
                     updated_at
-                    user_id
+                    admin_id
                     cards {
                         {$cardFields}
                     }
@@ -261,10 +261,10 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                         id
                         installment_id
                         updated_at
-                        user {
+                        admin {
                             {$adminFields}
                         }
-                        user_id
+                        admin_id
                     }
                     customer {
                         {$customerFields}
@@ -350,7 +350,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                             updated_at
                         }
                     }
-                    user {
+                    admin {
                         {$adminFields}
                     }
                 }
@@ -511,7 +511,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     'tariff_id',
                     'type',
                     'updated_at',
-                    'user_id',
+                    'admin_id',
                     'cards' => [
                         '*' => [
                             'customer_id',
@@ -535,8 +535,8 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                             'id',
                             'installment_id',
                             'updated_at',
-                            'user_id',
-                            'user' => $adminFields,
+                            'admin_id',
+                            'admin' => $adminFields,
                         ],
                     ],
                     'customer' => $customerFields,
@@ -619,7 +619,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                             ],
                         ],
                     ],
-                    'user' => $adminFields,
+                    'admin' => $adminFields,
                 ],
             ],
         ]);
@@ -645,7 +645,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installment->tariff_id, $response->json('data.singleInstallment.tariff_id'));
         $this->assertEquals($installment->type->value, $response->json('data.singleInstallment.type'));
         $this->assertEquals($installment->updated_at->timestamp, $response->json('data.singleInstallment.updated_at'));
-        $this->assertEquals($installment->user_id, $response->json('data.singleInstallment.user_id'));
+        $this->assertEquals($installment->admin_id, $response->json('data.singleInstallment.admin_id'));
 
         // branch
         $this->assertEquals($installment->branch->address, $response->json('data.singleInstallment.branch.address'));
@@ -686,20 +686,20 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
             $this->assertEquals($comment->id, $commentResponse['id']);
             $this->assertEquals($comment->installment_id, $commentResponse['installment_id']);
             $this->assertEquals($comment->updated_at->timestamp, $commentResponse['updated_at']);
-            $this->assertEquals($comment->user_id, $commentResponse['user_id']);
-            $this->assertEquals($comment->user->avatar->url, $commentResponse['user']['avatar']['url']);
-            $this->assertEquals($comment->user->created_at->timestamp, $commentResponse['user']['created_at']);
-            $this->assertEquals($comment->user->deleted_at, $commentResponse['user']['deleted_at']);
-            $this->assertEquals($comment->user->first_name, $commentResponse['user']['first_name']);
-            $this->assertEquals($comment->user->id, $commentResponse['user']['id']);
-            $this->assertEquals($comment->user->language, $commentResponse['user']['language']);
-            $this->assertEquals($comment->user->last_name, $commentResponse['user']['last_name']);
-            $this->assertEquals($comment->user->phone, $commentResponse['user']['phone']);
-            $this->assertEquals($comment->user->role_id, $commentResponse['user']['role_id']);
-            $this->assertEquals($comment->user->status->value, $commentResponse['user']['status']);
-            $this->assertEquals($comment->user->template_theme->layout_name, $commentResponse['user']['template_theme']['layout_name']);
-            $this->assertEquals($comment->user->updated_at->timestamp, $commentResponse['user']['updated_at']);
-            $this->assertEquals($comment->user->username, $commentResponse['user']['username']);
+            $this->assertEquals($comment->admin_id, $commentResponse['admin_id']);
+            $this->assertEquals($comment->admin->avatar->url, $commentResponse['admin']['avatar']['url']);
+            $this->assertEquals($comment->admin->created_at->timestamp, $commentResponse['admin']['created_at']);
+            $this->assertEquals($comment->admin->deleted_at, $commentResponse['admin']['deleted_at']);
+            $this->assertEquals($comment->admin->first_name, $commentResponse['admin']['first_name']);
+            $this->assertEquals($comment->admin->id, $commentResponse['admin']['id']);
+            $this->assertEquals($comment->admin->language, $commentResponse['admin']['language']);
+            $this->assertEquals($comment->admin->last_name, $commentResponse['admin']['last_name']);
+            $this->assertEquals($comment->admin->phone, $commentResponse['admin']['phone']);
+            $this->assertEquals($comment->admin->role_id, $commentResponse['admin']['role_id']);
+            $this->assertEquals($comment->admin->status->value, $commentResponse['admin']['status']);
+            $this->assertEquals($comment->admin->template_theme->layout_name, $commentResponse['admin']['template_theme']['layout_name']);
+            $this->assertEquals($comment->admin->updated_at->timestamp, $commentResponse['admin']['updated_at']);
+            $this->assertEquals($comment->admin->username, $commentResponse['admin']['username']);
         }
 
         $this->assertCustomerFields($response->json('data.singleInstallment.customer'));

@@ -4,7 +4,7 @@ namespace App\Http\Resources\User;
 
 use App\Http\Resources\AttachmentResource;
 use App\Http\Resources\Rbac\RoleListResource;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
@@ -37,7 +37,7 @@ use OpenApi\Attributes as OA;
     ],
 )]
 /**
- * @property User $resource
+ * @property CompanyAdmin $resource
  */
 class SingleUserResource extends JsonResource
 {

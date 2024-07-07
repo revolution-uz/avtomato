@@ -3,14 +3,15 @@
 namespace Database\Factories\Company;
 
 use App\Enums\Company\UserStatusEnum;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Rbac\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin>
+ * @extends Factory<CompanyAdmin>
  */
-class UserFactory extends Factory
+class CompanyAdminFactory extends Factory
 {
     /**
      * Define the model's default state.

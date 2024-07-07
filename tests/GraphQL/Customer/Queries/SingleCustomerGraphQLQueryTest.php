@@ -39,7 +39,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
             $this->_customer->phones()->attach($phone->id, ['type' => PhoneTypeEnum::randomValue()]);
         }
         Installment::query()->forceDelete();
-        $installment = Installment::factory()->create(['customer_id' => $this->_customer->id, 'user_id' => $this->createAdminUser()->id]);
+        $installment = Installment::factory()->create(['customer_id' => $this->_customer->id, 'admin_id' => $this->createAdminUser()->id]);
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
         Card::query()->forceDelete();
@@ -47,11 +47,11 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         Card::factory()->create(['customer_id' => $guarantor->id]);
         $installment->cards()->attach(Card::first());
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->createAdminUser(), 'photo1.jpg');
-        InstallmentComment::factory()->create(['installment_id' => $installment->id, 'user_id' => $installment->user_id]);
+        InstallmentComment::factory()->create(['installment_id' => $installment->id, 'admin_id' => $installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $installment, 'photo1.jpg');
         InstallmentGraph::factory()->create(['installment_id' => $installment->id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $installment->customer_id, 'employee_id' => $installment->user_id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $guarantor->id, 'employee_id' => $installment->user_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $installment->customer_id, 'employee_id' => $installment->admin_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $guarantor->id, 'employee_id' => $installment->admin_id]);
     }
 
     #[Test]
@@ -201,7 +201,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                         tariff_id
                         type
                         updated_at
-                        user_id
+                        admin_id
                         cards {
                             balance
                             card_type
@@ -223,7 +223,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                             id
                             installment_id
                             updated_at
-                            user {
+                            admin {
                                 avatar {
                                     created_at
                                     deleted_at
@@ -250,7 +250,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                                 updated_at
                                 username
                             }
-                            user_id
+                            admin_id
                         }
                         documents {
                             created_at
@@ -437,7 +437,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                             'tariff_id',
                             'type',
                             'updated_at',
-                            'user_id',
+                            'admin_id',
                             'cards' => [
                                 '*' => [
                                     'balance',
@@ -462,7 +462,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                                     'id',
                                     'installment_id',
                                     'updated_at',
-                                    'user' => [
+                                    'admin' => [
                                         'avatar' => [
                                             'created_at',
                                             'deleted_at',
@@ -489,7 +489,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                                         'updated_at',
                                         'username',
                                     ],
-                                    'user_id',
+                                    'admin_id',
                                 ],
                             ],
                             'documents' => [
@@ -624,7 +624,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customer->installments[0]->tariff_id, $response->json('data.singleCustomer.installments.0.tariff_id'));
         $this->assertEquals($customer->installments[0]->type->value, $response->json('data.singleCustomer.installments.0.type'));
         $this->assertEquals($customer->installments[0]->updated_at->timestamp, $response->json('data.singleCustomer.installments.0.updated_at'));
-        $this->assertEquals($customer->installments[0]->user_id, $response->json('data.singleCustomer.installments.0.user_id'));
+        $this->assertEquals($customer->installments[0]->admin_id, $response->json('data.singleCustomer.installments.0.admin_id'));
 
         // installment cards
         $this->assertEquals($customer->installments[0]->cards[0]->balance, $response->json('data.singleCustomer.installments.0.cards.0.balance'));

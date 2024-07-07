@@ -4,8 +4,8 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Rbac\Role;
-use App\Models\Company\User;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -61,7 +61,7 @@ class DeleteRoleGraphQLMutation extends Mutation
                     if ($value == Role::getAdmin()->id) {
                         $fail(__('api.You cannot delete', ['item' => Role::query()->where('id', $value)->first()->name]));
                     }
-                    if (User::query()->where('role_id', $value)->exists()) {
+                    if (CompanyAdmin::query()->where('role_id', $value)->exists()) {
                         $fail(__('api.are used', [
                             'item' => __('api.Role'),
                             'element' => __('api.User'),

@@ -6,12 +6,12 @@ use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Tariff;
-use App\Models\Company\User;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -46,10 +46,10 @@ class InstallmentControllerTest extends TestCase
         $role = Role::factory()->create();
         $role->permissions()->attach(Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW_ALL)->first()->id);
         $role->permissions()->attach(Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW)->first()->id, ['branch_id' => $branch1->id]);
-        $user = User::factory()->create(['role_id' => $role->id]);
+        $admin = CompanyAdmin::factory()->create(['role_id' => $role->id]);
         Installment::factory(5)->create(['branch_id' => $branch1->id]);
         Installment::factory(4)->create(['branch_id' => $branch2->id]);
-        $response = $this->actingAs($user)->getJson(route('installments.index'));
+        $response = $this->actingAs($admin)->getJson(route('installments.index'));
 
         $response->assertOk();
         $this->assertIsArray($response->json('data'));

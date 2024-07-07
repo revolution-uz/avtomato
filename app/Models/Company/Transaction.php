@@ -24,7 +24,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $employee_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read  User $employee
+ * @property-read  CompanyAdmin $employee
  * @property Carbon|null $paid_at
  */
 class Transaction extends Model
@@ -72,6 +72,6 @@ class Transaction extends Model
 
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'employee_id', 'id');
+        return $this->belongsTo(CompanyAdmin::class, 'employee_id', 'id');
     }
 }

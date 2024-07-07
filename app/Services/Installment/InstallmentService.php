@@ -29,7 +29,7 @@ class InstallmentService
     public function create(array $attributes): Installment
     {
         $attributes['status'] = InstallmentStatusEnum::DRAFT;
-        $attributes['user_id'] = auth()->user()->id;
+        $attributes['admin_id'] = auth()->user()->id;
         $attributes['sms_notify'] = false;
         $attributes['any_card_charge'] = false;
         $attributes['type'] = InstallmentTypeEnum::WITHOUT_CARD;

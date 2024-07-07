@@ -30,7 +30,7 @@ return [
     'App\Models\Company\ScoringRequest' => 'Бахолаш мезони сўрови',
     'App\Models\Company\Tariff' => 'Тариф',
     'App\Models\Company\Transaction' => 'Транзаксия',
-    'App\Models\Company\User' => 'Фойдаланувчи',
+    'App\Models\Company\CompanyAdmin' => 'Фойдаланувчи',
     'App\Models\Admin' => 'Админ',
     'App\Models\BaseFeature' => 'Базавий имконият',
     'App\Models\BaseModule' => 'Базавий модул',

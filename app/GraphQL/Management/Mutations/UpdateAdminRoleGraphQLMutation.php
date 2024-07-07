@@ -4,7 +4,7 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use App\Services\User\UserService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -29,7 +29,7 @@ class UpdateAdminRoleGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', Rule::exists('users', 'id')->whereNull('deleted_at')],
+                'rules' => ['required', Rule::exists('admins', 'id')->whereNull('deleted_at')],
             ],
             'role_id' => [
                 'name' => 'role_id',
@@ -46,7 +46,7 @@ class UpdateAdminRoleGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        (new UserService)->updateDetails(User::findOrFail($args['id']), ['role_id' => $args['role_id']]);
+        (new UserService)->updateDetails(CompanyAdmin::findOrFail($args['id']), ['role_id' => $args['role_id']]);
 
         return true;
     }

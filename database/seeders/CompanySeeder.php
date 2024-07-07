@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Enums\Company\UserStatusEnum;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Rbac\Role;
-use App\Models\Company\User;
 use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\LocationSeeder;
@@ -29,8 +29,8 @@ class CompanySeeder extends Seeder
         $this->call(AdminRoleSeeder::class);
         $this->call(TransactionTypeSeeder::class);
         // TODO remove before production
-        /** @var User $user */
-        $user = User::query()->firstOrCreate(
+        /** @var CompanyAdmin $admin */
+        $admin = CompanyAdmin::query()->firstOrCreate(
             ['username' => 'admin'],
             [
                 'username' => 'admin',

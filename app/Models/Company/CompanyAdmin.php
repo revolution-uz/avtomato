@@ -38,11 +38,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  */
-class User extends Authenticatable
+class CompanyAdmin extends Authenticatable
 {
     use CausesActivity, HasApiTokens, HasFactory, LogsActivityDirtyOnlyTrait, Notifiable, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id', 'username', 'first_name', 'last_name', 'created_at', 'updated_at'];
+
+    protected $table = 'admins';
 
     protected $fillable = [
         'status',

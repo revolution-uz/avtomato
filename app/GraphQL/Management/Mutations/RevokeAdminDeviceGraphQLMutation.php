@@ -4,8 +4,8 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\PersonalAccessToken;
-use App\Models\Company\User;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -29,7 +29,7 @@ class RevokeAdminDeviceGraphQLMutation extends Mutation
             'admin_id' => [
                 'name' => 'admin_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => [Rule::exists('users', 'id')->whereNull('deleted_at')],
+                'rules' => [Rule::exists('admins', 'id')->whereNull('deleted_at')],
             ],
             'ids' => [
                 'name' => 'ids',
@@ -47,7 +47,7 @@ class RevokeAdminDeviceGraphQLMutation extends Mutation
     {
         PersonalAccessToken::query()
             ->where('tokenable_id', $args['admin_id'])
-            ->where('tokenable_type', User::class)
+            ->where('tokenable_type', CompanyAdmin::class)
             ->whereIn('id', $args['ids'])
             ->delete();
 

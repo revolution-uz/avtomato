@@ -2,7 +2,7 @@
 
 namespace App\Nova\Actions;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
@@ -23,7 +23,7 @@ class LoginAsUser extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        /* @var $user User */
+        /* @var $user CompanyAdmin */
         $user = $models->first();
         try {
             $token = $user->createToken('Nova');

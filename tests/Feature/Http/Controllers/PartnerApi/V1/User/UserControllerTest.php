@@ -5,8 +5,8 @@ namespace Tests\Feature\Http\Controllers\PartnerApi\V1\User;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\Attachment;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Rbac\Role;
-use App\Models\Company\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,7 +20,7 @@ class UserControllerTest extends TestCase
     public function index()
     {
         $admin = $this->createAdminUser();
-        User::factory(5)->create();
+        CompanyAdmin::factory(5)->create();
         $response = $this->actingAs($admin)->getJson(route('users.index'));
 
         $response->assertOk();
@@ -31,7 +31,7 @@ class UserControllerTest extends TestCase
     public function single()
     {
         $admin = $this->createAdminUser();
-        $user = User::factory()->create();
+        $user = CompanyAdmin::factory()->create();
         $response = $this->actingAs($admin)->getJson(route('users.get-single', ['id' => $user->id]));
 
         $response->assertOk();
@@ -72,7 +72,7 @@ class UserControllerTest extends TestCase
     public function update()
     {
         $admin = $this->createAdminUser();
-        $user = User::factory()->create();
+        $user = CompanyAdmin::factory()->create();
         $response = $this->actingAs($admin)->putJson(route('users.update', ['id' => $user->id]), [
             'first_name' => 'Updated First Name',
             'last_name' => 'Updated Last Name',
@@ -87,7 +87,7 @@ class UserControllerTest extends TestCase
     public function changePassword()
     {
         $admin = $this->createAdminUser();
-        $user = User::factory()->create();
+        $user = CompanyAdmin::factory()->create();
         $newPassword = 'password';
         $response = $this->actingAs($admin)->postJson(route('users.change-password', ['id' => $user->id]), [
             'old_password' => 'password',
@@ -103,7 +103,7 @@ class UserControllerTest extends TestCase
     public function changeTheme()
     {
         $admin = $this->createAdminUser();
-        $user = User::factory()->create();
+        $user = CompanyAdmin::factory()->create();
         $response = $this->actingAs($admin)->postJson(route('users.change-theme', ['id' => $user->id]), [
             'layout_name' => 'fixed',
         ]);
@@ -116,7 +116,7 @@ class UserControllerTest extends TestCase
     public function changeAvatar()
     {
         $admin = $this->createAdminUser();
-        $user = User::factory()->create();
+        $user = CompanyAdmin::factory()->create();
         $response = $this->actingAs($admin)->postJson(route('users.change-avatar', ['id' => $user->id]), [
             'avatar' => UploadedFile::fake()->image('avatar.jpg'),
         ]);
@@ -129,7 +129,7 @@ class UserControllerTest extends TestCase
     public function remove()
     {
         $admin = $this->createAdminUser();
-        $user = User::factory()->create();
+        $user = CompanyAdmin::factory()->create();
         $response = $this->actingAs($admin)->deleteJson(route('users.delete'), [
             'ids' => [$user->id],
         ]);
@@ -142,7 +142,7 @@ class UserControllerTest extends TestCase
     public function devices()
     {
         $admin = $this->createAdminUser();
-        $user = User::factory()->create();
+        $user = CompanyAdmin::factory()->create();
         $user->createTokenWithData('test');
 
         $response = $this->actingAs($admin)->getJson(route('users.devices', ['id' => $user->id]));
@@ -157,7 +157,7 @@ class UserControllerTest extends TestCase
     public function revokeDevice()
     {
         $admin = $this->createAdminUser();
-        $user = User::factory()->create();
+        $user = CompanyAdmin::factory()->create();
         $user->createTokenWithData('test');
         $token = $user->tokens()->first();
 

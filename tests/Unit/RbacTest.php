@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\Framework\Attributes\Test;
@@ -19,7 +19,7 @@ class RbacTest extends TestCase
     public function forbidden_access(): void
     {
         $routes = Route::getRoutes();
-        $user = User::factory()->create();
+        $user = CompanyAdmin::factory()->create();
 
         $skip_routes = [
             'api/v1/login',

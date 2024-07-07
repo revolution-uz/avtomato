@@ -30,7 +30,7 @@ return [
     'App\Models\Company\ScoringRequest' => 'Scoring Request',
     'App\Models\Company\Tariff' => 'Tariff',
     'App\Models\Company\Transaction' => 'Transaction',
-    'App\Models\Company\User' => 'User',
+    'App\Models\Company\CompanyAdmin' => 'User',
     'App\Models\Admin' => 'Admin',
     'App\Models\BaseFeature' => 'Base feature',
     'App\Models\BaseModule' => 'Base Module',

@@ -26,8 +26,8 @@ use App\Http\Resources\DeviceInfoResource;
 use App\Http\Resources\StatusResource;
 use App\Http\Resources\User\SingleUserResource;
 use App\Http\Resources\User\UserListResource;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\PersonalAccessToken;
-use App\Models\Company\User;
 use App\Services\User\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -58,7 +58,7 @@ class UserController extends Controller
         $request->sortables = ['id', 'username', 'first_name', 'last_name', 'created_at', 'updated_at'];
 
         return UserListResource::collection(
-            User::query()
+            CompanyAdmin::query()
                 ->when($request->search, function (Builder $q) use ($request) {
                     $search = '%' . $request->search . '%';
                     $q->where(function (Builder $query) use ($search) {
@@ -93,7 +93,7 @@ class UserController extends Controller
     )]
     public function getSingle(int $id, UserViewRequest $request): SingleUserResource
     {
-        return new SingleUserResource(User::findOrFail($id));
+        return new SingleUserResource(CompanyAdmin::findOrFail($id));
     }
 
     #[OA\Post(
@@ -111,7 +111,7 @@ class UserController extends Controller
     )]
     public function create(UserCreateRequest $request): SingleUserResource
     {
-        $model = new User;
+        $model = new CompanyAdmin;
         $model->fill($request->validated());
         $model->password = bcrypt($request->password);
         $model->saveOrFail();
@@ -143,7 +143,7 @@ class UserController extends Controller
     )]
     public function update(int $id, UserUpdateRequest $request): SingleUserResource
     {
-        $user = User::findOrFail($id);
+        $user = CompanyAdmin::findOrFail($id);
         $this->userService->updateDetails($user, $request->validated());
 
         return new SingleUserResource($user);
@@ -169,7 +169,7 @@ class UserController extends Controller
     )]
     public function changePassword(int $id, PasswordRequest $request)
     {
-        $user = User::findOrFail($id);
+        $user = CompanyAdmin::findOrFail($id);
 
         return new SingleUserResource($this->userService->updatePassword($user, $request->get('password')));
     }
@@ -194,7 +194,7 @@ class UserController extends Controller
     )]
     public function changeTheme(int $id, UserThemeRequest $request)
     {
-        $user = User::findOrFail($id);
+        $user = CompanyAdmin::findOrFail($id);
 
         return new SingleUserResource($this->userService->updateTheme($user, $request->getData()));
     }
@@ -217,7 +217,7 @@ class UserController extends Controller
     )]
     public function uploadAvatar(int $id, AvatarRequest $request)
     {
-        $user = User::findOrFail($id);
+        $user = CompanyAdmin::findOrFail($id);
 
         return new SingleUserResource($this->userService->updateAvatar($user, $request->file('avatar')));
     }
@@ -235,7 +235,7 @@ class UserController extends Controller
     )]
     public function devices(int $id, UsersDevicesRequest $request): AnonymousResourceCollection
     {
-        $user = User::findOrFail($id);
+        $user = CompanyAdmin::findOrFail($id);
 
         return DeviceInfoResource::collection($user->tokens()->paginate(
             $request->per_page,
@@ -280,7 +280,7 @@ class UserController extends Controller
     )]
     public function delete(UsersDeleteRequest $request): StatusResource
     {
-        User::query()->whereIn('id', $request->ids)->delete();
+        CompanyAdmin::query()->whereIn('id', $request->ids)->delete();
 
         return new StatusResource(true);
     }
@@ -306,7 +306,7 @@ class UserController extends Controller
     )]
     public function attachRole(int $id, AttachRoleRequest $request)
     {
-        $user = User::where('id', $id)
+        $user = CompanyAdmin::where('id', $id)
             ->where('role_id', '!=', $request->role_id)
             ->firstOrFail();
 
