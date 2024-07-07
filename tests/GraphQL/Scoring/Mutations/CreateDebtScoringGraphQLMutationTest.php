@@ -13,6 +13,7 @@ use Tests\GraphQL\GraphQLTestCase;
 class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
 {
     private const GRAPHQL_SCORING_ROUTE = 'graphql.scoring';
+
     protected bool $tenancy = true;
 
     private array $_input = [
