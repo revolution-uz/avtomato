@@ -92,13 +92,14 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
                 route('graphql.scoring'),
                 $this->buildGraphQLQuery([
                     'number' => '315039531300',
-                    'expiry' => '1231',
+                    'expiry' => '123',
                 ], $this->_type)
             );
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.digits', ['attribute' => 'data.number', 'digits' => 16]), $response->json('errors.0.extensions.validation')['data.number'][0]);
+        $this->assertEquals(trans('validation.digits', ['attribute' => 'data.expiry', 'digits' => 4]), $response->json('errors.0.extensions.validation')['data.expiry'][0]);
     }
 
     private function buildGraphQLQuery(array $data, int $type): array
