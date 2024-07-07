@@ -92,6 +92,11 @@ class InstallmentService
         return $installment->save();
     }
 
+    public function getDashboardInfo()
+    {
+        return [];
+    }
+
     private function withdrawAutoCharge(Installment $installment)
     {
         if (! $installment->withdrawn_auto_charge) {
