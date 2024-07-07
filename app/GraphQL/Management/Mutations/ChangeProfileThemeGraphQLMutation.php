@@ -40,9 +40,9 @@ class ChangeProfileThemeGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $user = (new UserService)->updateTheme(auth()->user(), $args);
+        $admin = (new UserService)->updateTheme(auth()->user(), $args);
 
-        return $user->template_theme;
+        return $admin->template_theme;
     }
 
     protected function rules(array $args = []): array

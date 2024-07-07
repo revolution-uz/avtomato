@@ -23,10 +23,10 @@ class LoginAsUser extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        /* @var $user CompanyAdmin */
-        $user = $models->first();
+        /* @var $admin CompanyAdmin */
+        $admin = $models->first();
         try {
-            $token = $user->createToken('Nova');
+            $token = $admin->createToken('Nova');
 
             return Action::openInNewTab(url('/') . '/#/login?token=' . substr($token->plainTextToken, strpos($token->plainTextToken, '|') + 1));
         } catch (Throwable $e) {

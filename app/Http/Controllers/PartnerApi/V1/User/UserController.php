@@ -143,10 +143,10 @@ class UserController extends Controller
     )]
     public function update(int $id, UserUpdateRequest $request): SingleUserResource
     {
-        $user = CompanyAdmin::findOrFail($id);
-        $this->userService->updateDetails($user, $request->validated());
+        $admin = CompanyAdmin::findOrFail($id);
+        $this->userService->updateDetails($admin, $request->validated());
 
-        return new SingleUserResource($user);
+        return new SingleUserResource($admin);
     }
 
     #[OA\Post(
@@ -169,9 +169,9 @@ class UserController extends Controller
     )]
     public function changePassword(int $id, PasswordRequest $request)
     {
-        $user = CompanyAdmin::findOrFail($id);
+        $admin = CompanyAdmin::findOrFail($id);
 
-        return new SingleUserResource($this->userService->updatePassword($user, $request->get('password')));
+        return new SingleUserResource($this->userService->updatePassword($admin, $request->get('password')));
     }
 
     #[OA\Post(
@@ -194,9 +194,9 @@ class UserController extends Controller
     )]
     public function changeTheme(int $id, UserThemeRequest $request)
     {
-        $user = CompanyAdmin::findOrFail($id);
+        $admin = CompanyAdmin::findOrFail($id);
 
-        return new SingleUserResource($this->userService->updateTheme($user, $request->getData()));
+        return new SingleUserResource($this->userService->updateTheme($admin, $request->getData()));
     }
 
     #[OA\Post(
@@ -217,9 +217,9 @@ class UserController extends Controller
     )]
     public function uploadAvatar(int $id, AvatarRequest $request)
     {
-        $user = CompanyAdmin::findOrFail($id);
+        $admin = CompanyAdmin::findOrFail($id);
 
-        return new SingleUserResource($this->userService->updateAvatar($user, $request->file('avatar')));
+        return new SingleUserResource($this->userService->updateAvatar($admin, $request->file('avatar')));
     }
 
     #[OA\Get(
@@ -235,9 +235,9 @@ class UserController extends Controller
     )]
     public function devices(int $id, UsersDevicesRequest $request): AnonymousResourceCollection
     {
-        $user = CompanyAdmin::findOrFail($id);
+        $admin = CompanyAdmin::findOrFail($id);
 
-        return DeviceInfoResource::collection($user->tokens()->paginate(
+        return DeviceInfoResource::collection($admin->tokens()->paginate(
             $request->per_page,
             page: $request->page
         ));
@@ -306,16 +306,16 @@ class UserController extends Controller
     )]
     public function attachRole(int $id, AttachRoleRequest $request)
     {
-        $user = CompanyAdmin::where('id', $id)
+        $admin = CompanyAdmin::where('id', $id)
             ->where('role_id', '!=', $request->role_id)
             ->firstOrFail();
 
-        if ($user->id === auth()->id()) {
+        if ($admin->id === auth()->id()) {
             abort(403, 'You can\'t change your own role');
         }
 
-        $user->updateOrFail(['role_id' => $request->role_id]);
+        $admin->updateOrFail(['role_id' => $request->role_id]);
 
-        return new SingleUserResource($user);
+        return new SingleUserResource($admin);
     }
 }

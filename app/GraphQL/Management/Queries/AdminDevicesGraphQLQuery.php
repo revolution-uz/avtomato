@@ -32,7 +32,7 @@ class AdminDevicesGraphQLQuery extends Query
             'admin_id' => [
                 'name' => 'admin_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => [Rule::exists('users', 'id')->whereNull('deleted_at')],
+                'rules' => [Rule::exists('admins', 'id')->whereNull('deleted_at')],
             ],
             'sort' => [
                 'name' => 'sort',

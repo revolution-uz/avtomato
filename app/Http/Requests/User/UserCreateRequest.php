@@ -27,7 +27,7 @@ class UserCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|max:50|unique:users,username',
+            'username' => 'required|string|max:50|unique:admins,username',
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'role_id' => ['required', 'int', Rule::exists('roles', 'id')],

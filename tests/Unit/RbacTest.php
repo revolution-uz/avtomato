@@ -19,7 +19,7 @@ class RbacTest extends TestCase
     public function forbidden_access(): void
     {
         $routes = Route::getRoutes();
-        $user = CompanyAdmin::factory()->create();
+        $admin = CompanyAdmin::factory()->create();
 
         $skip_routes = [
             'api/v1/login',
@@ -41,7 +41,7 @@ class RbacTest extends TestCase
                     $parameters[$parameterName] = 1;
                 }
                 $method = strtolower($route->methods()[0]);
-                $response = $this->actingAs($user)->$method(route($route->getName(), $parameters));
+                $response = $this->actingAs($admin)->$method(route($route->getName(), $parameters));
 
                 //                echo $route->getName() . PHP_EOL;
                 $response->assertForbidden();

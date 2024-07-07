@@ -23,7 +23,7 @@ class UsersDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'array',
-            'ids.*' => 'integer|exists:users,id|not_in:' . auth()->id(),
+            'ids.*' => 'integer|exists:admins,id|not_in:' . auth()->id(),
         ];
     }
 
