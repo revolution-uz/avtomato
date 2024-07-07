@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Enums\Main\AdminRoleEnum;
 use App\Helpers\UrlHelper;
-use App\Models\Admin;
 use App\Models\Company;
 use App\Nova\AdminResource;
 use App\Nova\BaseFeatureResource;
@@ -78,7 +77,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::initialPath('/dashboards/main');
 
         Nova::userMenu(function (Request $request, Menu $menu) {
-            /** @var Admin $admin */
+            /** @var Company\CompanyAdmin $admin */
             $admin = $request->user();
 
             if ($admin->role === AdminRoleEnum::SUPER_ADMIN) {
