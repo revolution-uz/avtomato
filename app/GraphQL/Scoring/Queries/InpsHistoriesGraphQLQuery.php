@@ -3,9 +3,11 @@
 namespace App\GraphQL\Scoring\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\GraphQL\Scoring\Types\Katm\InpsHistory\InpsHistoryGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Jobs\UpdateScoringRequestStatusJob;
 use App\Models\Company\ScoringRequest;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -54,6 +56,15 @@ class InpsHistoriesGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
+        foreach (
+            ScoringRequest::query()
+                ->where('status', ScoringRequestStatusEnum::WAITING)
+                ->where('type', ScoringRequestTypeEnum::KATM_INPS_HISTORY)
+                ->select('id')->get() as $item
+        ) {
+            dispatch(new UpdateScoringRequestStatusJob($item->id));
+        }
+
         return ScoringRequest::query()
             ->where('type', ScoringRequestTypeEnum::KATM_INPS_HISTORY)
             ->when(isset($args['search']), function (Builder $q) use ($args) {
