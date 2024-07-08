@@ -15,6 +15,7 @@ use App\Models\Company\Tariff;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class InstallmentService
@@ -94,7 +95,9 @@ class InstallmentService
 
     public function getDashboardInfo()
     {
-        return [];
+        return [
+            'installment_amounts' => $this->getInstallmentAmounts(),
+        ];
     }
 
     private function withdrawAutoCharge(Installment $installment)
@@ -131,5 +134,30 @@ class InstallmentService
             $installmentGraph->paid_amount = 0;
             $installmentGraph->save();
         }
+    }
+
+    private function getInstallmentAmounts()
+    {
+        $query = Installment::query();
+        $installment_total_amount = $query->sum('amount');
+        $lastMonthQuery = Installment::query()->where('created_at', '>=', Carbon::now()->startOfMonth());
+        $overdueQuery = Installment::join('installment_graphs', 'installments.id', '=', 'installment_graphs.installment_id')
+            ->where('installment_graphs.starts_in', '<', Carbon::now());
+        $nplQuery = InstallmentGraph::query()->where('starts_in', '<', Carbon::now()->subDays(60));
+        $eNplQuery = InstallmentGraph::query()->where('starts_in', '<', Carbon::now()->subDays(30));
+
+        return [
+            'installment_count' => $lastMonthQuery->count('id'),
+            'installment_amount' => $lastMonthQuery->sum('amount'),
+            'installment_future_profit' => Installment::join('tariffs', 'installments.tariff_id', '=', 'tariffs.id')
+                ->select(DB::raw('SUM(installments.amount / (1 + tariffs.percent / 100)) as total_profit'))
+                ->value('total_profit'),
+            'installment_total_amount' => $installment_total_amount,
+            'installment_overdue_count' => $overdueQuery->count('installments.id'),
+            'installment_overdue_amount' => $overdueQuery->sum('installment_graphs.amount - installment_graphs.paid_amount'),
+            'npl' => $nplQuery->sum('installment_graphs.amount - installment_graphs.paid_amount') / $installment_total_amount * 100,
+            'enpl' => $eNplQuery->sum('installment_graphs.amount - installment_graphs.paid_amount') / $installment_total_amount * 100,
+
+        ];
     }
 }
