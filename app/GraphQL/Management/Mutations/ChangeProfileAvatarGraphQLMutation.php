@@ -46,8 +46,8 @@ class ChangeProfileAvatarGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $user = (new UserService)->updateAvatar(auth()->user(), $args['avatar']);
+        $admin = (new UserService)->updateAvatar(auth()->user(), $args['avatar']);
 
-        return $user->avatar;
+        return $admin->avatar;
     }
 }

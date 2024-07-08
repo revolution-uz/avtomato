@@ -30,7 +30,7 @@ return [
     'App\Models\Company\ScoringRequest' => 'Baholash mezoni so\'rovi',
     'App\Models\Company\Tariff' => 'Tarif',
     'App\Models\Company\Transaction' => 'Tranzaksiya',
-    'App\Models\Company\User' => 'Foydalanuvchi',
+    'App\Models\Company\CompanyAdmin' => 'Foydalanuvchi',
     'App\Models\Admin' => 'Admin',
     'App\Models\BaseFeature' => 'Bazoviy imkoniyat',
     'App\Models\BaseModule' => 'Bazoviy modul',

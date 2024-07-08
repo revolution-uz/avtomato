@@ -6,7 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 
 /**
- * @property int $user_id
+ * @property int $admin_id
  */
 class OwnLogsRequest extends BaseFilterRequest
 {

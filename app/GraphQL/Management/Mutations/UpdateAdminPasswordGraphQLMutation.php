@@ -4,7 +4,7 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use App\Services\User\UserService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -29,7 +29,7 @@ class UpdateAdminPasswordGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', Rule::exists('users', 'id')->whereNull('deleted_at')],
+                'rules' => ['required', Rule::exists('admins', 'id')->whereNull('deleted_at')],
             ],
             'old_password' => [
                 'name' => 'old_password',
@@ -51,7 +51,7 @@ class UpdateAdminPasswordGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        (new UserService)->updatePassword(User::findOrFail($args['id']), $args['password']);
+        (new UserService)->updatePassword(CompanyAdmin::findOrFail($args['id']), $args['password']);
 
         return true;
     }

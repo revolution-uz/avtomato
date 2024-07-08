@@ -5,7 +5,7 @@ namespace App\GraphQL\Management\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -53,7 +53,7 @@ class AdminsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return User::query()
+        return CompanyAdmin::query()
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
@@ -62,7 +62,7 @@ class AdminsGraphQLQuery extends Query
                         ->orWhere('last_name', 'ILIKE', $search);
                 });
             })
-            ->when(isset($args['sort']), fn (Builder|User $q) => $q->orderBySortable($args['sort']))
+            ->when(isset($args['sort']), fn (Builder|CompanyAdmin $q) => $q->orderBySortable($args['sort']))
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

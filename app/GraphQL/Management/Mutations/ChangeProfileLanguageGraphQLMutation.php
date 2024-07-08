@@ -37,11 +37,11 @@ class ChangeProfileLanguageGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $user = auth()->user();
-        $user->update(['language' => $args['language']]);
-        $user->refresh();
+        $admin = auth()->user();
+        $admin->update(['language' => $args['language']]);
+        $admin->refresh();
 
-        return $user->language;
+        return $admin->language;
     }
 
     protected function rules(array $args = []): array

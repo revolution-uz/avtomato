@@ -2,7 +2,7 @@
 
 namespace App\Nova\Actions;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
@@ -23,10 +23,10 @@ class LoginAsUser extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        /* @var $user User */
-        $user = $models->first();
+        /* @var $admin CompanyAdmin */
+        $admin = $models->first();
         try {
-            $token = $user->createToken('Nova');
+            $token = $admin->createToken('Nova');
 
             return Action::openInNewTab(url('/') . '/#/login?token=' . substr($token->plainTextToken, strpos($token->plainTextToken, '|') + 1));
         } catch (Throwable $e) {

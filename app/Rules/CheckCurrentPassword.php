@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Hash;
@@ -17,9 +17,9 @@ class CheckCurrentPassword implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if (! Hash::check($value, $user->password)) {
+        /** @var CompanyAdmin $admin */
+        $admin = auth()->user();
+        if (! Hash::check($value, $admin->password)) {
             $fail('The old password is incorrect.');
         }
     }

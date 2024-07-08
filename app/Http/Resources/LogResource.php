@@ -14,7 +14,7 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'event', type: 'string', example: 'Created'),
-        new OA\Property(property: 'subject_type', type: 'string', example: 'App\Models\Company\Employee'),
+        new OA\Property(property: 'subject_type', type: 'string', example: 'App\Models\Company\CompanyAdmin'),
         new OA\Property(property: 'subject_id', type: 'int', example: '1'),
         new OA\Property(property: 'user', ref: '#/components/schemas/UserListResource', description: 'User who performed the action'),
         new OA\Property(property: 'properties', type: 'object', example: ['attributes' => ['name' => 'John Doe'], 'old' => ['name' => 'Jane Doe new']]),

@@ -28,7 +28,7 @@ class InstallmentCommentResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'installment_id' => $this->resource->installment_id,
-            'creator_id' => $this->resource->user_id,
+            'creator_id' => $this->resource->admin_id,
             'creator_name' => $this->resource->user->full_name,
             'comment' => $this->resource->comment,
             'created_at' => $this->resource->created_at?->format('U'),

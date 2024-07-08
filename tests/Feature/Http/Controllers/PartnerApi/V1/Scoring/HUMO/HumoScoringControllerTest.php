@@ -3,8 +3,8 @@
 namespace Http\Controllers\PartnerApi\V1\Scoring\HUMO;
 
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\ScoringRequest;
-use App\Models\Company\User;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\PlumFaker;
 use Tests\TestCase;
@@ -52,7 +52,7 @@ class HumoScoringControllerTest extends TestCase
                 'description' => 'created',
                 'subject_type' => ScoringRequest::class,
                 'subject_id' => $response->json('data.id'),
-                'causer_type' => User::class,
+                'causer_type' => CompanyAdmin::class,
                 'causer_id' => $admin->id,
             ]
         );

@@ -21,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property int $customer_id
  * @property int $branch_id
- * @property int $user_id
+ * @property int $admin_id
  * @property int $tariff_id
  * @property float $amount
  * @property float $initial_fee
@@ -52,7 +52,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Customer[] $guarantors
  * @property Transaction[] $transactions
  * @property InstallmentGuarantor[] $guarantorList
- * @property-read  User $user
+ * @property-read  CompanyAdmin $admin
  */
 class Installment extends Model
 {
@@ -146,9 +146,9 @@ class Installment extends Model
         return $this->belongsTo(Branch::class, 'branch_id')->withTrashed();
     }
 
-    public function user(): BelongsTo
+    public function admin(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id')->withTrashed();
+        return $this->belongsTo(CompanyAdmin::class, 'admin_id')->withTrashed();
     }
 
     public function autoPay(): Attribute

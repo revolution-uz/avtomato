@@ -6,7 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 
 /**
- * @property int $user_id
+ * @property int $admin_id
  */
 class LogFilterRequest extends BaseFilterRequest
 {
@@ -18,7 +18,7 @@ class LogFilterRequest extends BaseFilterRequest
     public function rules(): array
     {
         return parent::rules() + [
-            'user_id' => 'int|exists:users,id',
+            'admin_id' => 'int|exists:admins,id',
         ];
     }
 }

@@ -64,7 +64,7 @@ class TransactionController extends Controller
 
         return TransactionResource::collection(
             Transaction::query()
-                ->with(['installment', 'employee', 'customer', 'transactionType', 'installment.branch'])
+                ->with(['installment', 'admin', 'customer', 'transactionType', 'installment.branch'])
                 ->when(
                     $request->amount,
                     fn (Builder $q) => $q

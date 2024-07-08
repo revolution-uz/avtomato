@@ -7,8 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\StatusResource;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\PersonalAccessToken;
-use App\Models\Company\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -50,8 +50,8 @@ class AuthController extends Controller
     )]
     public function login(LoginRequest $request): LoginResource
     {
-        $user = User::query()->where('username', $request->username)->first();
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        $admin = CompanyAdmin::query()->where('username', $request->username)->first();
+        if (! $admin || ! Hash::check($request->password, $admin->password)) {
             throw new AuthenticationException('Login or password is wrong');
         }
 
@@ -59,7 +59,7 @@ class AuthController extends Controller
             throw new AuthenticationException('Login or password is wrong');
         }
 
-        return new LoginResource($user->createTokenWithData(
+        return new LoginResource($admin->createTokenWithData(
             Str::substr($request->header('Device-Name'), 0, 255),
             [
                 'device_type' => Str::substr($request->header('Device-Type'), 0, 32),

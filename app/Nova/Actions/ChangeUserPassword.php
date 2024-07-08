@@ -2,7 +2,7 @@
 
 namespace App\Nova\Actions;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
@@ -20,10 +20,10 @@ class ChangeUserPassword extends Action
      */
     public function handle(ActionFields $fields, Collection $models): mixed
     {
-        /* @var $user User */
-        $user = $models->first();
-        $user->password = bcrypt($fields->get('password'));
-        if ($user->save()) {
+        /* @var $admin CompanyAdmin */
+        $admin = $models->first();
+        $admin->password = bcrypt($fields->get('password'));
+        if ($admin->save()) {
             return Action::message(__('Password changed'));
         }
 

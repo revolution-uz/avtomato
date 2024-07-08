@@ -299,7 +299,7 @@ class InstallmentDetailsController extends Controller
     {
         $attributes = $request->validated();
         $attributes['installment_id'] = $id;
-        $attributes['user_id'] = auth()->id();
+        $attributes['admin_id'] = auth()->id();
         $model = InstallmentComment::create($attributes);
 
         return new InstallmentCommentResource($model);

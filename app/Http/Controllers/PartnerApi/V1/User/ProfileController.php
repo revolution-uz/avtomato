@@ -104,10 +104,10 @@ class ProfileController extends Controller
     )]
     public function changeLanguage(UserLangRequest $request)
     {
-        $user = auth()->user();
-        $user?->update(['language' => $request->language]);
+        $admin = auth()->user();
+        $admin?->update(['language' => $request->language]);
 
-        return new SingleUserResource($user);
+        return new SingleUserResource($admin);
     }
 
     #[OA\Put(
