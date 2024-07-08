@@ -10,7 +10,7 @@ use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
-class DebtScoringRequestGraphQLQueryTest extends GraphQLTestCase
+class DebtScoringRequestsGraphQLQueryTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 

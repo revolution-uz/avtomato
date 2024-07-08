@@ -52,7 +52,7 @@ class DeleteTransactionGraphQLMutation extends Mutation
             ],
             'ids.*' => [
                 'required',
-                'array',
+                'integer',
                 function ($attribute, $value, $fail) {
                     if (! Transaction::query()->where('id', $value)->exists()) {
                         $fail(__('api.not found'));

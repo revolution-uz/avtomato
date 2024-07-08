@@ -53,7 +53,7 @@ class SingleCreditHistoryGraphQLQuery extends Query
                 'required',
                 Rule::exists('scoring_requests', 'id')
                     ->where('status', ScoringRequestStatusEnum::SUCCESS)
-                    ->where('type', ScoringRequestTypeEnum::KATM_CREDIT_HISTORY),
+                    ->where('type', ScoringRequestTypeEnum::KATM_CREDIT_HISTORY)->whereNull('deleted_at'),
             ],
         ];
     }

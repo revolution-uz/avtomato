@@ -46,7 +46,7 @@ class CreateTariffGraphQLMutation extends Mutation
         $model->fill($args['tariff']);
         $model->saveOrFail();
 
-        return true;
+        return $model;
     }
 
     protected function rules(array $args = []): array

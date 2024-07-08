@@ -39,6 +39,7 @@ class CreateDocumentGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'string',
+                    'max:64',
                 ],
             ],
             'file' => [

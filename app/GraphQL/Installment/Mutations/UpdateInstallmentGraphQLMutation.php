@@ -4,7 +4,7 @@ namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Installment;
@@ -42,7 +42,7 @@ class UpdateInstallmentGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(InstallmentGraphGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool

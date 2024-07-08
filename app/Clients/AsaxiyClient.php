@@ -58,6 +58,9 @@ class AsaxiyClient extends BaseClient
 
     public function scoringMib(array $params)
     {
+        if ($this->token == 'asaxiy_token') {
+            return $this->scoringTest();
+        }
         $response = Http::withHeaders(['x-access-token' => $this->token])
             ->get($this->baseUrl . '/katm/mib?' . http_build_query($params));
         $this->logRequest(new HttpRequestLogDTO(
@@ -74,6 +77,9 @@ class AsaxiyClient extends BaseClient
 
     public function scoringTax(array $params)
     {
+        if ($this->token == 'asaxiy_token') {
+            return $this->scoringTest();
+        }
         $response = Http::withHeaders(['x-access-token' => $this->token])
             ->get($this->baseUrl . '/katm/tax?' . http_build_query($params));
         $this->logRequest(new HttpRequestLogDTO(
@@ -118,5 +124,12 @@ class AsaxiyClient extends BaseClient
         ));
 
         return $response->json('result');
+    }
+
+    private function scoringTest(): array
+    {
+        return [
+            'debtBal' => 1,
+        ];
     }
 }

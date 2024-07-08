@@ -53,7 +53,7 @@ class DeleteInstallmentGraphQLMutation extends Mutation
             ],
             'ids.*' => [
                 'required',
-                'array',
+                'integer',
                 function ($attribute, $value, $fail) {
                     if (! Installment::query()->where('id', $value)->where('status', InstallmentStatusEnum::DRAFT)->exists()) {
                         $fail(__('api.not found'));

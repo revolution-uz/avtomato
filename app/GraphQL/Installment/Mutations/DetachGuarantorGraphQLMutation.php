@@ -4,7 +4,6 @@ namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Customer;
 use App\Models\Company\InstallmentGuarantor;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -65,9 +64,9 @@ class DetachGuarantorGraphQLMutation extends Mutation
             ],
             'ids.*' => [
                 'required',
-                'array',
+                'integer',
                 function ($attribute, $value, $fail) {
-                    if (! Customer::query()->where('id', $value)->exists()) {
+                    if (! InstallmentGuarantor::query()->where('id', $value)->exists()) {
                         $fail(__('api.not found'));
                     }
                 },

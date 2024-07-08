@@ -55,8 +55,9 @@ class UpdateRoleGraphQLMutation extends Mutation
         }
 
         $role->name = $args['name'];
+        $role->saveOrFail();
 
-        return $role->saveOrFail();
+        return $role;
     }
 
     protected function rules(array $args = []): array
