@@ -77,7 +77,7 @@ class TransactionsGraphQLQuery extends Query
         $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_VIEW_ALL);
 
         return Transaction::query()
-            ->with(['installment', 'employee', 'customer', 'transactionType', 'installment.branch'])
+            ->with(['installment', 'admin', 'customer', 'transactionType', 'installment.branch'])
             ->when(
                 isset($args['amount']),
                 fn (Builder $q) => $q

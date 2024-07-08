@@ -40,7 +40,7 @@ class TransactionGraphQLType extends GraphQLType
             ],
             'admin' => [
                 'type' => GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Transaction $root) => $root->employee,
+                'resolve' => fn (Transaction $root) => $root->admin,
             ],
             'installment_id' => [
                 'type' => Type::nonNull(Type::int()),

@@ -779,20 +779,20 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
             $this->assertEquals($transaction->transaction_type_id, $transactionResponse['transaction_type_id']);
             $this->assertEquals($transaction->updated_at->timestamp, $transactionResponse['updated_at']);
 
-            // employee
-            $this->assertEquals($transaction->employee->avatar->url, $transactionResponse['admin']['avatar']['url']);
-            $this->assertEquals($transaction->employee->created_at->timestamp, $transactionResponse['admin']['created_at']);
-            $this->assertEquals($transaction->employee->deleted_at, $transactionResponse['admin']['deleted_at']);
-            $this->assertEquals($transaction->employee->first_name, $transactionResponse['admin']['first_name']);
-            $this->assertEquals($transaction->employee->id, $transactionResponse['admin']['id']);
-            $this->assertEquals($transaction->employee->language, $transactionResponse['admin']['language']);
-            $this->assertEquals($transaction->employee->last_name, $transactionResponse['admin']['last_name']);
-            $this->assertEquals($transaction->employee->phone, $transactionResponse['admin']['phone']);
-            $this->assertEquals($transaction->employee->role_id, $transactionResponse['admin']['role_id']);
-            $this->assertEquals($transaction->employee->status->value, $transactionResponse['admin']['status']);
-            $this->assertEquals($transaction->employee->template_theme->layout_name, $transactionResponse['admin']['template_theme']['layout_name']);
-            $this->assertEquals($transaction->employee->updated_at->timestamp, $transactionResponse['admin']['updated_at']);
-            $this->assertEquals($transaction->employee->username, $transactionResponse['admin']['username']);
+            // admin
+            $this->assertEquals($transaction->admin->avatar->url, $transactionResponse['admin']['avatar']['url']);
+            $this->assertEquals($transaction->admin->created_at->timestamp, $transactionResponse['admin']['created_at']);
+            $this->assertEquals($transaction->admin->deleted_at, $transactionResponse['admin']['deleted_at']);
+            $this->assertEquals($transaction->admin->first_name, $transactionResponse['admin']['first_name']);
+            $this->assertEquals($transaction->admin->id, $transactionResponse['admin']['id']);
+            $this->assertEquals($transaction->admin->language, $transactionResponse['admin']['language']);
+            $this->assertEquals($transaction->admin->last_name, $transactionResponse['admin']['last_name']);
+            $this->assertEquals($transaction->admin->phone, $transactionResponse['admin']['phone']);
+            $this->assertEquals($transaction->admin->role_id, $transactionResponse['admin']['role_id']);
+            $this->assertEquals($transaction->admin->status->value, $transactionResponse['admin']['status']);
+            $this->assertEquals($transaction->admin->template_theme->layout_name, $transactionResponse['admin']['template_theme']['layout_name']);
+            $this->assertEquals($transaction->admin->updated_at->timestamp, $transactionResponse['admin']['updated_at']);
+            $this->assertEquals($transaction->admin->username, $transactionResponse['admin']['username']);
 
             // card
             $this->assertEquals($transaction->card->balance, $transactionResponse['card']['balance']);
