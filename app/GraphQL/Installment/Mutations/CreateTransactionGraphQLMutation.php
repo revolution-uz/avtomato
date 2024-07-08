@@ -92,7 +92,7 @@ class CreateTransactionGraphQLMutation extends Mutation
         $model = new Transaction;
         $model->fill($args);
         $model->external_id = 'local_' . Str::random();
-        $model->employee_id = auth()->id();
+        $model->admin_id = auth()->id();
         if (! $model->paid_at) {
             $model->paid_at = Carbon::now();
         }

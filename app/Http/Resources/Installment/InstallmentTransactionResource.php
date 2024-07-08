@@ -34,7 +34,7 @@ class InstallmentTransactionResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'admin_name' => $this->resource->employee?->full_name,
-            'admin_id' => $this->resource->employee_id,
+            'admin_id' => $this->resource->admin_id,
             'customer_id' => $this->resource->customer_id,
             'customer_name' => $this->resource->customer->full_name,
             'ext_id' => $this->resource->external_id,

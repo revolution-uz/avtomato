@@ -37,7 +37,7 @@ class TransactionResource extends JsonResource
             'branch_name' => $this->resource->installment->branch->name,
             'branch_id' => $this->resource->installment->branch_id,
             'admin_name' => $this->resource->employee?->full_name,
-            'admin_id' => $this->resource->employee_id,
+            'admin_id' => $this->resource->admin_id,
             'customer_id' => $this->resource->customer_id,
             'customer_name' => $this->resource->customer->full_name,
             'installment_id' => $this->resource->installment_id,

@@ -30,9 +30,8 @@ class UserControllerTest extends TestCase
     #[Test]
     public function single()
     {
-        $admin = $this->createAdminUser();
         $admin = CompanyAdmin::factory()->create();
-        $response = $this->actingAs($admin)->getJson(route('users.get-single', ['id' => $admin->id]));
+        $response = $this->actingAs($this->createAdminUser())->getJson(route('users.get-single', ['id' => $admin->id]));
 
         $response->assertOk();
         $this->assertEquals($admin->id, $response->json('data.id'));
@@ -57,7 +56,7 @@ class UserControllerTest extends TestCase
         ]);
 
         $response->assertSuccessful();
-        $this->assertDatabaseHas('users', [
+        $this->assertDatabaseHas('admins', [
             'first_name' => 'Test First Name',
             'last_name' => 'Test Last Name',
             'username' => 'test_username',
@@ -72,84 +71,84 @@ class UserControllerTest extends TestCase
     public function update()
     {
         $admin = $this->createAdminUser();
-        $admin = CompanyAdmin::factory()->create();
-        $response = $this->actingAs($admin)->putJson(route('users.update', ['id' => $admin->id]), [
+        $companyAdmin = CompanyAdmin::factory()->create();
+        $response = $this->actingAs($admin)->putJson(route('users.update', ['id' => $companyAdmin->id]), [
             'first_name' => 'Updated First Name',
             'last_name' => 'Updated Last Name',
         ]);
 
         $response->assertOk();
-        $this->assertEquals('Updated First Name', $admin->fresh()->first_name);
-        $this->assertEquals('Updated Last Name', $admin->fresh()->last_name);
+        $this->assertEquals('Updated First Name', $companyAdmin->fresh()->first_name);
+        $this->assertEquals('Updated Last Name', $companyAdmin->fresh()->last_name);
     }
 
     #[Test]
     public function changePassword()
     {
         $admin = $this->createAdminUser();
-        $admin = CompanyAdmin::factory()->create();
+        $companyAdmin = CompanyAdmin::factory()->create();
         $newPassword = 'password';
-        $response = $this->actingAs($admin)->postJson(route('users.change-password', ['id' => $admin->id]), [
+        $response = $this->actingAs($admin)->postJson(route('users.change-password', ['id' => $companyAdmin->id]), [
             'old_password' => 'password',
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
-        $admin->refresh();
+        $companyAdmin->refresh();
         $response->assertOk();
-        $this->assertTrue(Hash::check($newPassword, $admin->password));
+        $this->assertTrue(Hash::check($newPassword, $companyAdmin->password));
     }
 
     #[Test]
     public function changeTheme()
     {
         $admin = $this->createAdminUser();
-        $admin = CompanyAdmin::factory()->create();
-        $response = $this->actingAs($admin)->postJson(route('users.change-theme', ['id' => $admin->id]), [
+        $companyAdmin = CompanyAdmin::factory()->create();
+        $response = $this->actingAs($admin)->postJson(route('users.change-theme', ['id' => $companyAdmin->id]), [
             'layout_name' => 'fixed',
         ]);
 
         $response->assertOk();
-        $this->assertEquals('fixed', $admin->fresh()->template_theme->layout_name);
+        $this->assertEquals('fixed', $companyAdmin->fresh()->template_theme->layout_name);
     }
 
     #[Test]
     public function changeAvatar()
     {
         $admin = $this->createAdminUser();
-        $admin = CompanyAdmin::factory()->create();
-        $response = $this->actingAs($admin)->postJson(route('users.change-avatar', ['id' => $admin->id]), [
+        $companyAdmin = CompanyAdmin::factory()->create();
+        $response = $this->actingAs($admin)->postJson(route('users.change-avatar', ['id' => $companyAdmin->id]), [
             'avatar' => UploadedFile::fake()->image('avatar.jpg'),
         ]);
-        $admin->refresh();
+        $companyAdmin->refresh();
         $response->assertOk();
-        $this->assertFileExists(storage_path('app/public/' . Attachment::UPLOADS_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $admin->avatar->path));
+        $this->assertFileExists(storage_path('app/public/' . Attachment::UPLOADS_PATH . '/' . AttachmentTypeEnum::AVATAR->getStoragePath() . '/' . $companyAdmin->avatar->path));
     }
 
     #[Test]
     public function remove()
     {
         $admin = $this->createAdminUser();
-        $admin = CompanyAdmin::factory()->create();
+        $companyAdmin = CompanyAdmin::factory()->create();
         $response = $this->actingAs($admin)->deleteJson(route('users.delete'), [
-            'ids' => [$admin->id],
+            'ids' => [$companyAdmin->id],
         ]);
 
         $response->assertOk();
-        $this->assertSoftDeleted($admin);
+        $this->assertSoftDeleted($companyAdmin);
     }
 
     #[Test]
     public function devices()
     {
         $admin = $this->createAdminUser();
-        $admin = CompanyAdmin::factory()->create();
-        $admin->createTokenWithData('test');
+        $companyAdmin = CompanyAdmin::factory()->create();
+        $companyAdmin->createTokenWithData('test');
 
-        $response = $this->actingAs($admin)->getJson(route('users.devices', ['id' => $admin->id]));
+        $response = $this->actingAs($admin)->getJson(route('users.devices', ['id' => $companyAdmin->id]));
 
         $response->assertOk();
         $this->assertNotEmpty($response->json('data'));
-        $this->assertEquals($admin->tokens()->first()->id, $response->json('data.0.id'));
+        $this->assertEquals($companyAdmin->tokens()->first()->id, $response->json('data.0.id'));
         $this->assertCount(1, $response->json('data'));
     }
 
@@ -157,15 +156,15 @@ class UserControllerTest extends TestCase
     public function revokeDevice()
     {
         $admin = $this->createAdminUser();
-        $admin = CompanyAdmin::factory()->create();
-        $admin->createTokenWithData('test');
-        $token = $admin->tokens()->first();
+        $companyAdmin = CompanyAdmin::factory()->create();
+        $companyAdmin->createTokenWithData('test');
+        $token = $companyAdmin->tokens()->first();
 
         $response = $this->actingAs($admin)->deleteJson(route('users.revoke-device', [
             'ids' => [$token->id],
         ]));
 
         $response->assertOk();
-        $this->assertEmpty($admin->tokens()->first());
+        $this->assertEmpty($companyAdmin->tokens()->first());
     }
 }

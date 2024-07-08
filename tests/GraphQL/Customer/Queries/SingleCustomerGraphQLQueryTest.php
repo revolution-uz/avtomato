@@ -50,8 +50,8 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         InstallmentComment::factory()->create(['installment_id' => $installment->id, 'admin_id' => $installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $installment, 'photo1.jpg');
         InstallmentGraph::factory()->create(['installment_id' => $installment->id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $installment->customer_id, 'employee_id' => $installment->admin_id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $guarantor->id, 'employee_id' => $installment->admin_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $installment->customer_id, 'admin_id' => $installment->admin_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $guarantor->id, 'admin_id' => $installment->admin_id]);
     }
 
     #[Test]

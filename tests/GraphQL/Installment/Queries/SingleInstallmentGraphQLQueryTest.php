@@ -51,8 +51,8 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         InstallmentComment::factory()->create(['installment_id' => $this->_installment->id, 'admin_id' => $this->_installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $this->_installment, 'photo1.jpg');
         InstallmentGraph::factory()->create(['installment_id' => $this->_installment->id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_installment->customer_id, 'employee_id' => $this->_installment->admin_id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_guarantor->id, 'employee_id' => $this->_installment->admin_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_installment->customer_id, 'admin_id' => $this->_installment->admin_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_guarantor->id, 'admin_id' => $this->_installment->admin_id]);
     }
 
     #[Test]
@@ -766,7 +766,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         foreach ($installment->transactions as $transaction) {
             $transactionResponse = collect($response->json('data.singleInstallment.transactions'))->first(fn ($item) => $item['id'] === $transaction->id);
             $this->assertNotNull($transactionResponse);
-            $this->assertEquals($transaction->employee_id, $transactionResponse['admin_id']);
+            $this->assertEquals($transaction->admin_id, $transactionResponse['admin_id']);
             $this->assertEquals($transaction->amount, $transactionResponse['amount']);
             $this->assertEquals($transaction->installment->branch_id, $transactionResponse['branch_id']);
             $this->assertEquals($transaction->card_id, $transactionResponse['card_id']);
