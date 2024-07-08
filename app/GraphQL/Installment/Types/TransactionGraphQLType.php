@@ -48,7 +48,7 @@ class TransactionGraphQLType extends GraphQLType
             ],
             'installment' => [
                 'type' => Type::nonNull(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Transaction $root) => $root->installment_id,
+                'resolve' => fn (Transaction $root) => $root->installment,
             ],
             'customer_id' => [
                 'type' => Type::nonNull(Type::int()),
