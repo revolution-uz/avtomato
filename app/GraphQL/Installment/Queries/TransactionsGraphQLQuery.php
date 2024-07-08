@@ -124,6 +124,14 @@ class TransactionsGraphQLQuery extends Query
                 ))
             ->when(isset($args['sort']), fn (Builder|Transaction $q) => $q->orderBySortable($args['sort']))
 
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
+                $search = '%' . $args['search'] . '%';
+                $q->where(function (Builder $query) use ($search) {
+                    $query->where('id', 'ILIKE', $search)
+                        ->orWhere('external_id', 'ILIKE', $search);
+                });
+            })
+
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }
