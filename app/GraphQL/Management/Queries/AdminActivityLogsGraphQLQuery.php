@@ -65,7 +65,7 @@ class AdminActivityLogsGraphQLQuery extends Query
     {
         return ActivityLog::query()
             ->with('causer')
-            ->when($args['search'], function (Builder $q) use ($args) {
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
                     $query->where('description', 'ILIKE', $search);

@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Traits\LogsActivityDirtyOnlyTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -19,7 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class BalanceFund extends Model
 {
-    use LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
 
     public static array $sortables = ['id', 'amount', 'phone_number', 'card_number', 'created_at'];
 
