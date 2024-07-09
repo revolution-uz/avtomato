@@ -5,8 +5,8 @@ namespace Common\Queries;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
-use Arr;
 use Database\Seeders\Company\LocationSeeder;
+use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -40,7 +40,7 @@ class MahallasGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function mahallasWithLanguage()
     {
-        $locale = Arr::first(config('app.supported_locales'), fn(string $lang) => $lang !== config('app.locale'));
+        $locale = Arr::first(config('app.supported_locales'), fn (string $lang) => $lang !== config('app.locale'));
         $response = $this
             ->postJson(
                 route('graphql.common'),
