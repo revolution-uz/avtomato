@@ -53,6 +53,7 @@ use App\GraphQL\Management\Types\DeviceGraphQLType;
 use App\GraphQL\Management\Types\InstallmentAmountsGraphQLType;
 use App\GraphQL\Management\Types\InstallmentMonthlyInfoGraphQLType;
 use App\GraphQL\Management\Types\InstallmentOverdueGraphQLType;
+use App\GraphQL\Management\Types\InstallmentStatusInfoGraphQLType;
 use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionGraphQLType;
@@ -127,6 +128,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 PermissionGroupGraphQLType::class,
                 BranchGraphQLType::class,
                 InstallmentMonthlyInfoGraphQLType::class,
+                InstallmentStatusInfoGraphQLType::class,
                 DashboardGraphQLType::class,
                 InstallmentAmountsGraphQLType::class,
                 InstallmentOverdueGraphQLType::class,
