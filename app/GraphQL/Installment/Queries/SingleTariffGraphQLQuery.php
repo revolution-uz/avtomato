@@ -9,6 +9,7 @@ use App\Models\Company\Tariff;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -29,7 +30,6 @@ class SingleTariffGraphQLQuery extends Query
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:tariffs,id'],
             ],
         ];
     }
@@ -42,5 +42,16 @@ class SingleTariffGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return Tariff::query()->findOrFail($args['id']);
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'id' => [
+                'required',
+                Rule::exists('tariffs', 'id')
+                    ->whereNull('deleted_at'),
+            ],
+        ];
     }
 }
