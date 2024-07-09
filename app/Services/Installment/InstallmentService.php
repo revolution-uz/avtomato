@@ -7,6 +7,7 @@ use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
+use App\Helpers\Utilities;
 use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGraph;
@@ -15,7 +16,6 @@ use App\Models\Company\Tariff;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class InstallmentService
@@ -97,6 +97,8 @@ class InstallmentService
     {
         return [
             'installment_amounts' => $this->getInstallmentAmounts(),
+            'installment_info_by_status' => $this->getInstallmentInfoByStatus(),
+            'installment_overdues' => $this->getInstallmentOverdues(),
         ];
     }
 
@@ -136,7 +138,7 @@ class InstallmentService
         }
     }
 
-    private function getInstallmentAmounts()
+    private function getInstallmentAmounts(): array
     {
         $query = Installment::query();
         $installment_total_amount = $query->sum('amount');
@@ -149,9 +151,7 @@ class InstallmentService
         return [
             'installment_count' => $lastMonthQuery->count('id'),
             'installment_amount' => $lastMonthQuery->sum('amount'),
-            'installment_future_profit' => Installment::join('tariffs', 'installments.tariff_id', '=', 'tariffs.id')
-                ->select(DB::raw('SUM(installments.amount / (1 + tariffs.percent / 100)) as total_profit'))
-                ->value('total_profit'),
+            'installment_future_profit' => Installment::join('tariffs', 'installments.tariff_id', '=', 'tariffs.id')->sum('installments.amount / (1 + tariffs.percent / 100))'),
             'installment_total_amount' => $installment_total_amount,
             'installment_overdue_count' => $overdueQuery->count('installments.id'),
             'installment_overdue_amount' => $overdueQuery->sum('installment_graphs.amount - installment_graphs.paid_amount'),
@@ -159,5 +159,73 @@ class InstallmentService
             'enpl' => $eNplQuery->sum('installment_graphs.amount - installment_graphs.paid_amount') / $installment_total_amount * 100,
 
         ];
+    }
+
+    private function getInstallmentOverdues(): array
+    {
+        $result = [];
+        $query = InstallmentGraph::query()->where('amount - paid_amount', '>', 0);
+        $total_amount = (clone $query)->where('starts_in', '<=', Carbon::now())->sum('amount - paid_amount');
+        $total_count = (clone $query)->where('starts_in', '<=', Carbon::now())->count('id');
+        for ($i = 10; $i < 70; $i += 10) {
+            $subQuery = (clone $query)->where('starts_in', '>', Carbon::now()->subDays($i))->where('starts_in', '<=', Carbon::now()->subDays($i - 10));
+            $count = (clone $subQuery)->count('id');
+            $amount = (clone $subQuery)->sum('amount');
+            $total_count -= $count;
+            $total_amount -= $amount;
+            $result[] = [
+                'overdue_days' => __('api.till :days days', [
+                    'days' => $i,
+                ]),
+                'amount' => $amount,
+                'count' => $count,
+            ];
+        }
+        $result[] = [
+            'overdue_days' => __('api.above :days days', [
+                'days' => 60,
+            ]),
+            'amount' => $total_amount,
+            'count' => $total_count,
+        ];
+
+        return $result;
+    }
+
+    private function getInstallmentInfoByStatus(): array
+    {
+        $timestamps = Utilities::getTimestampsOfMonthOfThisYear();
+        $monthNames = Utilities::getMonthNames();
+        $result = [];
+        for ($i = 0; $i < 12; $i++) {
+            $data = [];
+            $query = Installment::query()->whereBetween('created_at', [
+                Carbon::createFromTimestamp($timestamps[$i]['start']),
+                Carbon::createFromTimestamp($timestamps[$i]['end']),
+            ]);
+            foreach (InstallmentStatusEnum::values() as $value) {
+                $status = InstallmentStatusEnum::tryFrom($value);
+                $data[] = [
+                    'status' => $status->name,
+                    'count' => (clone $query)->where('status', $status)->count('id'),
+                ];
+            }
+            $result[] = [
+                'month_name' => $monthNames[$i],
+                'timestamp' => $timestamps[$i]['start'],
+                'data' => $data,
+            ];
+
+        }
+
+        return $result;
+    }
+
+    private function getInstallmentCharts(): array
+    {
+        $timestamps = Utilities::getTimestampsOfMonthOfThisYear();
+        $result = [];
+
+        return $result;
     }
 }

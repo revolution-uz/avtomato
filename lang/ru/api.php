@@ -10,4 +10,6 @@ return [
     'User' => 'Пользователь',
     'success' => 'Успешный',
     'otp_was_wrong' => 'Код подтверждения был неправильным',
+    'till :days days' => ':days до дня',
+    'above :days days' => 'более :days дней',
 ];

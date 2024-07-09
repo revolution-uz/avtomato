@@ -18,13 +18,6 @@ class DashboardGraphQLType extends GraphQLType
     public function fields(): array
     {
         return [
-            'installment_charts' => [
-                'type' => Type::listOf(GraphQL::type(InstallmentMonthlyChangesGraphQLType::GRAPHQL_TYPE_NAME)),
-                'description' => 'Chart of Installment monthly changes',
-                'resolve' => function (array $root) {
-                    return $root['installment_charts'];
-                },
-            ],
             'installment_amounts' => [
                 'type' => Type::listOf(GraphQL::type(InstallmentAmountsGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'Amount of installments',
@@ -32,8 +25,8 @@ class DashboardGraphQLType extends GraphQLType
                     return $root['installment_amounts'];
                 },
             ],
-            'installment_statuses' => [
-                'type' => Type::listOf(GraphQL::type(InstallmentMonthlyStatusesGraphQLType::GRAPHQL_TYPE_NAME)),
+            'installment_info_by_status' => [
+                'type' => Type::listOf(GraphQL::type(InstallmentMonthlyInfoGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'Chart of Installment monthly statuses',
                 'resolve' => function (array $root) {
                     return $root['installment_statuses'];
