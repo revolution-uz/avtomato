@@ -4,6 +4,7 @@ namespace App\GraphQL\Management\Types;
 
 use App\Models\Company\BalanceFund;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class BalanceFundGraphQLType extends GraphQLType
@@ -22,6 +23,18 @@ class BalanceFundGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => function (BalanceFund $root) {
                     return $root->id;
+                },
+            ],
+            'admin_id' => [
+                'type' => Type::int(),
+                'resolve' => function (BalanceFund $root) {
+                    return $root->admin_id;
+                },
+            ],
+            'admin' => [
+                'type' => GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => function (BalanceFund $root) {
+                    return $root->admin;
                 },
             ],
             'amount' => [

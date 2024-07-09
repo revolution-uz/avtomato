@@ -13,7 +13,7 @@ use Laravel\Nova\Fields\ID;
  */
 class RolePermissionResource extends Resource
 {
-    public static $model = RolePermission::class;
+    public static string $model = RolePermission::class;
 
     public static $title = 'slug';
 
@@ -23,7 +23,7 @@ class RolePermissionResource extends Resource
         'id',
     ];
 
-    public static function authorizedToCreate(Request $request)
+    public static function authorizedToCreate(Request $request): false
     {
         return false;
     }
@@ -61,17 +61,17 @@ class RolePermissionResource extends Resource
         return [];
     }
 
-    public function authorizedToDelete(Request $request)
+    public function authorizedToDelete(Request $request): false
     {
         return false;
     }
 
-    public function authorizedToUpdate(Request $request)
+    public function authorizedToUpdate(Request $request): false
     {
         return false;
     }
 
-    public function authorizedToReplicate(Request $request)
+    public function authorizedToReplicate(Request $request): false
     {
         return false;
     }

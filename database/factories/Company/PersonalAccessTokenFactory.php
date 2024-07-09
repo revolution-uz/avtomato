@@ -2,7 +2,7 @@
 
 namespace Database\Factories\Company;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PersonalAccessTokenFactory extends Factory
@@ -13,8 +13,8 @@ class PersonalAccessTokenFactory extends Factory
             'name' => $this->faker->word(),
             'token' => $this->faker->uuid(),
             'abilities' => ['*'],
-            'tokenable_id' => User::factory(),
-            'tokenable_type' => User::class,
+            'tokenable_id' => CompanyAdmin::factory(),
+            'tokenable_type' => CompanyAdmin::class,
             'device_ip' => $this->faker->ipv4(),
             'device_type' => $this->faker->word(),
             'device_os' => $this->faker->word(),

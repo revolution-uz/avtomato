@@ -33,6 +33,7 @@ class CommonGraphQLSchema implements ConfigConvertible
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
             ],
+            'middleware' => ['optional_auth:sanctum'],
         ];
     }
 }
