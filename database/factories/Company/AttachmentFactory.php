@@ -3,7 +3,7 @@
 namespace Database\Factories\Company;
 
 use App\Enums\Company\AttachmentTypeEnum;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,8 +17,8 @@ class AttachmentFactory extends Factory
             'name' => $this->faker->word(),
             'original_name' => $this->faker->word(),
             'mime' => $this->faker->word(),
-            'attachmentable_id' => User::class,
-            'attachmentable_type' => User::factory(),
+            'attachmentable_id' => CompanyAdmin::class,
+            'attachmentable_type' => CompanyAdmin::factory(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

@@ -2,14 +2,15 @@
 
 namespace Common\Mutations;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class LoginGraphQLQueryTest extends GraphQLTestCase
 {
-    private User $_user;
+    private CompanyAdmin $_admin;
 
     private array $_headers = [
         'Device-Name' => 'test',
@@ -21,10 +22,10 @@ class LoginGraphQLQueryTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        User::query()->forceDelete();
-        $this->_user = User::factory()->create([
+        CompanyAdmin::query()->forceDelete();
+        $this->_admin = CompanyAdmin::factory()->create([
             'username' => 'test',
-            'password' => bcrypt('password'),
+            'password' => Hash::make('password'),
         ]);
     }
 
@@ -34,7 +35,7 @@ class LoginGraphQLQueryTest extends GraphQLTestCase
         $response = $this
             ->postJson(
                 route('graphql.common'),
-                $this->buildGraphQLQuery($this->_user->username, 'password'),
+                $this->buildGraphQLQuery($this->_admin->username, 'password'),
                 $this->_headers
             );
 
@@ -47,7 +48,7 @@ class LoginGraphQLQueryTest extends GraphQLTestCase
         $response = $this
             ->postJson(
                 route('graphql.common'),
-                $this->buildGraphQLQuery($this->_user->username, 'not-password'),
+                $this->buildGraphQLQuery($this->_admin->username, 'not-password'),
                 $this->_headers
             );
 
@@ -111,7 +112,7 @@ class LoginGraphQLQueryTest extends GraphQLTestCase
                 ],
             ],
         ]);
-        $this->assertEquals($this->_user->id, $responseCurrentProfile->json('data.currentProfile.id'));
-        $this->assertEquals($this->_user->username, $responseCurrentProfile->json('data.currentProfile.username'));
+        $this->assertEquals($this->_admin->id, $responseCurrentProfile->json('data.currentProfile.id'));
+        $this->assertEquals($this->_admin->username, $responseCurrentProfile->json('data.currentProfile.username'));
     }
 }
