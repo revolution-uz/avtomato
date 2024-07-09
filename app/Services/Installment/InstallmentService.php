@@ -16,6 +16,7 @@ use App\Models\Company\Tariff;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class InstallmentService
@@ -151,12 +152,13 @@ class InstallmentService
         return [
             'installment_count' => $lastMonthQuery->count('id'),
             'installment_amount' => $lastMonthQuery->sum('amount'),
-            'installment_future_profit' => Installment::join('tariffs', 'installments.tariff_id', '=', 'tariffs.id')->sum('installments.amount / (1 + tariffs.percent / 100))'),
+            'installment_future_profit' => Installment::join('tariffs', 'installments.tariff_id', '=', 'tariffs.id')
+                ->sum(DB::raw('installments.amount / (1 + tariffs.percent / 100)')),
             'installment_total_amount' => $installment_total_amount,
             'installment_overdue_count' => $overdueQuery->count('installments.id'),
-            'installment_overdue_amount' => $overdueQuery->sum('installment_graphs.amount - installment_graphs.paid_amount'),
-            'npl' => $nplQuery->sum('installment_graphs.amount - installment_graphs.paid_amount') / $installment_total_amount * 100,
-            'enpl' => $eNplQuery->sum('installment_graphs.amount - installment_graphs.paid_amount') / $installment_total_amount * 100,
+            'installment_overdue_amount' => $overdueQuery->sum(DB::raw('installment_graphs.amount - installment_graphs.paid_amount')),
+            'npl' => $nplQuery->sum(DB::raw('installment_graphs.amount - installment_graphs.paid_amount')) / $installment_total_amount * 100,
+            'enpl' => $eNplQuery->sum(DB::raw('installment_graphs.amount - installment_graphs.paid_amount')) / $installment_total_amount * 100,
 
         ];
     }
@@ -164,8 +166,8 @@ class InstallmentService
     private function getInstallmentOverdues(): array
     {
         $result = [];
-        $query = InstallmentGraph::query()->where('amount - paid_amount', '>', 0);
-        $total_amount = (clone $query)->where('starts_in', '<=', Carbon::now())->sum('amount - paid_amount');
+        $query = InstallmentGraph::query()->where(DB::raw('amount - paid_amount'), '>', 0);
+        $total_amount = (clone $query)->where('starts_in', '<=', Carbon::now())->sum(DB::raw('amount - paid_amount'));
         $total_count = (clone $query)->where('starts_in', '<=', Carbon::now())->count('id');
         for ($i = 10; $i < 70; $i += 10) {
             $subQuery = (clone $query)->where('starts_in', '>', Carbon::now()->subDays($i))->where('starts_in', '<=', Carbon::now()->subDays($i - 10));
@@ -203,19 +205,18 @@ class InstallmentService
                 Carbon::createFromTimestamp($timestamps[$i]['start']),
                 Carbon::createFromTimestamp($timestamps[$i]['end']),
             ]);
-            foreach (InstallmentStatusEnum::values() as $value) {
-                $status = InstallmentStatusEnum::tryFrom($value);
+            foreach (InstallmentStatusEnum::cases() as $status) {
                 $data[] = [
-                    'status' => $status->name,
+                    'status' => $status->value,
+                    'status_name' => $status->name,
                     'count' => (clone $query)->where('status', $status)->count('id'),
                 ];
             }
             $result[] = [
                 'month_name' => $monthNames[$i],
                 'timestamp' => $timestamps[$i]['start'],
-                'data' => $data,
+                //                'data' => $data,
             ];
-
         }
 
         return $result;

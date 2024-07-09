@@ -7,11 +7,11 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class InstallmentStatusInfoGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'InstallmentMonthlyInfoGraphQLType';
+    public const GRAPHQL_TYPE_NAME = 'InstallmentStatusInfoGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Installment Monthly Info GraphQL Type',
+        'description' => 'Installment Status Info GraphQL Type',
     ];
 
     public function fields(): array
@@ -26,7 +26,7 @@ class InstallmentStatusInfoGraphQLType extends GraphQLType
             ],
             'status_name' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'Status',
+                'description' => 'Status Name',
                 'resolve' => function (array $root) {
                     return $root['status_name'];
                 },

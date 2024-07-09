@@ -24,7 +24,7 @@ class DashboardGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::paginate(DashboardGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::type(DashboardGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -34,7 +34,7 @@ class DashboardGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::DASHBOARD_INFO_VIEW);
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_VIEW_ALL);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

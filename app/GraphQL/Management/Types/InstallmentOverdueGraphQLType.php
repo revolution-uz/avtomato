@@ -18,21 +18,21 @@ class InstallmentOverdueGraphQLType extends GraphQLType
     {
         return [
             'overdue_days' => [
-                'type' => Type::listOf(Type::string()),
+                'type' => Type::string(),
                 'description' => 'The overdue days of installments',
                 'resolve' => function (array $root) {
                     return $root['overdue_days'];
                 },
             ],
             'amount' => [
-                'type' => Type::listOf(Type::float()),
+                'type' => Type::float(),
                 'description' => 'The sum of amount of overdue of installments',
                 'resolve' => function (array $root) {
                     return $root['amount'];
                 },
             ],
             'count' => [
-                'type' => Type::listOf(Type::int()),
+                'type' => Type::int(),
                 'description' => 'The number of overdue of installments',
                 'resolve' => function (array $root) {
                     return $root['count'];

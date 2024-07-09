@@ -35,11 +35,7 @@ class Utilities
             $date = Carbon::create(null, $month, 1);
 
             // Get month names in different languages
-            $months[] = [
-                'english' => $date->locale('en')->monthName,
-                'russian' => $date->locale('ru')->monthName,
-                'uzbek' => $date->locale('uz')->monthName,
-            ];
+            $months[] = $date->locale(app()->getLocale())->monthName;
         }
 
         return $months;

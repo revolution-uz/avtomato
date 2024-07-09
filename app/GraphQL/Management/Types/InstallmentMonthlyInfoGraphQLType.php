@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Management\Types;
 
-use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -27,8 +26,8 @@ class InstallmentMonthlyInfoGraphQLType extends GraphQLType
                 },
             ],
             'timestamp' => [
-                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
-                'description' => 'Start of Month',
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Timestamp of Month',
                 'resolve' => function (array $root) {
                     return $root['timestamp'];
                 },
