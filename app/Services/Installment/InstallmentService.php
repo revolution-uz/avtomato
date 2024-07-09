@@ -220,12 +220,4 @@ class InstallmentService
 
         return $result;
     }
-
-    private function getInstallmentCharts(): array
-    {
-        $timestamps = Utilities::getTimestampsOfMonthOfThisYear();
-        $result = [];
-
-        return $result;
-    }
 }
