@@ -10,7 +10,6 @@ enum FeatureEnum: string
     case USER_MANAGEMENT = 'user_management';
     case THEME_MANAGEMENT = 'theme_management';
     case CUSTOMER_MANAGEMENT = 'customer_management';
-    case ADD_CARD_PHONE_REQUIRED = 'add_card_phone_required';
     case CUSTOMER_CARDS_MANAGEMENT = 'customer_cards_management';
     case CALCULATOR_INSTALLMENT = 'calculator_installment';
     case INSTALLMENT_MANAGEMENT = 'installment_management';

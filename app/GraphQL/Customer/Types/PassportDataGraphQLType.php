@@ -3,6 +3,7 @@
 namespace App\GraphQL\Customer\Types;
 
 use App\DTOs\PassportDataDTO;
+use App\Enums\GenderEnum;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -142,7 +143,7 @@ class PassportDataGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'gender',
                 'resolve' => function (PassportDataDTO $root) {
-                    return $root->gender;
+                    return GenderEnum::convertFromOilaKredit($root->gender)->value; // OilaKredit gender same as our
                 },
             ],
             'address' => [
