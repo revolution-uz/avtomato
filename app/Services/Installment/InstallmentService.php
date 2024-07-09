@@ -105,7 +105,7 @@ class InstallmentService
 
     private function withdrawAutoCharge(Installment $installment)
     {
-        if (! $installment->withdrawn_auto_charge) {
+        if (!$installment->withdrawn_auto_charge) {
             $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
             $installment->withdrawn_auto_charge = true;
         }
@@ -215,7 +215,7 @@ class InstallmentService
             $result[] = [
                 'month_name' => $monthNames[$i],
                 'timestamp' => $timestamps[$i]['start'],
-                //                'data' => $data,
+                'data' => $data,
             ];
         }
 
