@@ -45,7 +45,7 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
         $invalidData['extra_phone'] = 'invalid_phone';
         $invalidData['passport_number'] = 'invalid_passport_number';
         $invalidData['passport_series'] = 'invalid_passport_series';
-        $invalidData['pinfl'] = 'invalid_pinfl';
+        $invalidData['pinfl'] = '1';
         $invalidData['first_name'] = 'invalid_first_name';
         $invalidData['last_name'] = 'invalid_last_name';
         $invalidData['middle_name'] = 'invalid_middle_name';
@@ -58,8 +58,7 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertStringContainsString('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('validation.integer', ['attribute' => 'data.pinfl']), $response->json('errors.0.extensions.validation')['data.pinfl'][0]);
-        $this->assertEquals(trans('validation.digits', ['attribute' => 'data.pinfl', 'digits' => 14]), $response->json('errors.0.extensions.validation')['data.pinfl'][1]);
+        $this->assertEquals(trans('validation.digits', ['attribute' => 'data.pinfl', 'digits' => 14]), $response->json('errors.0.extensions.validation')['data.pinfl'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'data.passport series', 'max' => 2]), $response->json('errors.0.extensions.validation')['data.passport_series'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'data.passport number', 'max' => 7]), $response->json('errors.0.extensions.validation')['data.passport_number'][0]);
         $this->assertEquals(trans('validation.regex', ['attribute' => 'data.passport number']), $response->json('errors.0.extensions.validation')['data.passport_number'][1]);

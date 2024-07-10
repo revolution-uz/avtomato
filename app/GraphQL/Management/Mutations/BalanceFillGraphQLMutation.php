@@ -5,6 +5,7 @@ namespace App\GraphQL\Management\Mutations;
 use App\Clients\AtmosCardClient;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
+use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Services\AtmosService;
 use Closure;
@@ -29,7 +30,7 @@ class BalanceFillGraphQLMutation extends Mutation
         return [
             'number' => [
                 'name' => 'number',
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'string',

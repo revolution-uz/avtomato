@@ -2,12 +2,14 @@
 
 namespace App\GraphQL\Scoring\Types\Debt;
 
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class DebtCreateInputGraphQLType extends InputType
 {
-    public const GRAPHQL_TYPE_NAME = 'DebtCreateInputGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'DebtCreateInputGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -18,7 +20,7 @@ class DebtCreateInputGraphQLType extends InputType
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => Type::nonNull(Type::string()),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'rules' => 'required|integer|digits:14',
             ],
             'phone' => [

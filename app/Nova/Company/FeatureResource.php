@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -48,8 +49,8 @@ class FeatureResource extends Resource
     {
         return [
             ID::make()->sortable(),
+            Heading::make($this->resource->description),
             Text::make(__('nova.feature.name'), 'name')->filterable()->exceptOnForms(),
-            Text::make(__('nova.feature.description'), 'description')->filterable()->onlyOnDetail(),
             Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable()->exceptOnForms(),
             Currency::make(__('nova.feature.amount'), 'amount')->currency('UZS')->filterable(),
             Boolean::make(__('nova.feature.is_active'), 'is_active')->filterable()->showOnUpdating(function (NovaRequest $request, Feature $resource) {

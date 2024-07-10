@@ -3,13 +3,14 @@
 namespace App\GraphQL\Scoring\Types\Card;
 
 use App\DTOs\Scoring\Card\MonthlyAnalyticsDTO;
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class CardMonthlyAnalyticsGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'CardMonthlyAnalyticsGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'CardMonthlyAnalyticsGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -25,7 +26,7 @@ class CardMonthlyAnalyticsGraphQLType extends GraphQLType
                 },
             ],
             'full_amount' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'resolve' => function (MonthlyAnalyticsDTO $root) {
                     return $root->full_amount;
                 },

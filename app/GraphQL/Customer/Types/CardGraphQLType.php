@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Customer\Types;
 
+use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\Card;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -9,7 +10,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class CardGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'CardGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'CardGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -31,7 +32,7 @@ class CardGraphQLType extends GraphQLType
                 'resolve' => fn (Card $root) => $root->customer,
             ],
             'number' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Card $root) => $root->pan,
             ],
             'card_type' => [

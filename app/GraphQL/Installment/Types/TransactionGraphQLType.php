@@ -6,6 +6,7 @@ use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
+use App\GraphQL\Scalars\BigFloat;
 use App\Models\Company\Transaction;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -79,7 +80,7 @@ class TransactionGraphQLType extends GraphQLType
                 'resolve' => fn (Transaction $root) => $root->external_id,
             ],
             'amount' => [
-                'type' => Type::nonNull(Type::float()),
+                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Transaction $root) => $root->amount,
             ],
             'paid_at' => [

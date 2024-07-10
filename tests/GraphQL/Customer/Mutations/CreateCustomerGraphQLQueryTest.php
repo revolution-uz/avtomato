@@ -178,7 +178,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.pinfl"; Expected non-nullable type "String!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.pinfl"; Expected non-nullable type "BigInteger!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.passport_series"; Expected non-nullable type "String!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.passport_number"; Expected non-nullable type "String!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.passport_given_date"; Expected non-nullable type "String!" not to be null.'));
@@ -294,7 +294,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$phones" got invalid value null at "phones[0].type"; Expected non-nullable type "Int!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$phones" got invalid value null at "phones[0].phone"; Expected non-nullable type "String!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$phones" got invalid value null at "phones[0].phone"; Expected non-nullable type "BigInteger!" not to be null.'));
 
         // validation errors
         $response = $this
@@ -304,7 +304,7 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery($this->_customerInput, phones: [array_merge($this->_phonesInput, [
                     'type' => 99,
                     'comment' => Str::random(129),
-                    'phone' => 'unknown',
+                    'phone' => '1',
                 ])])
             );
 
