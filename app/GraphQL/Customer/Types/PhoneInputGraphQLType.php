@@ -3,8 +3,10 @@
 namespace App\GraphQL\Customer\Types;
 
 use App\Enums\Company\PhoneTypeEnum;
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class PhoneInputGraphQLType extends InputType
@@ -20,7 +22,7 @@ class PhoneInputGraphQLType extends InputType
         return [
             'phone' => [
                 'name' => 'phone',
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'string',

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Management\Types;
+namespace App\GraphQL\Common\Types;
 
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -8,7 +8,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class DashboardGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'DashboardGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'DashboardGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

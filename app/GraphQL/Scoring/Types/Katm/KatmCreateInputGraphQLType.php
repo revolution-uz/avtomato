@@ -2,12 +2,14 @@
 
 namespace App\GraphQL\Scoring\Types\Katm;
 
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class KatmCreateInputGraphQLType extends InputType
 {
-    public const GRAPHQL_TYPE_NAME = 'KatmCreateInputGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'KatmCreateInputGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -18,7 +20,7 @@ class KatmCreateInputGraphQLType extends InputType
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => Type::nonNull(Type::string()),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'rules' => 'required|integer|digits:14',
             ],
             'passport_series' => [

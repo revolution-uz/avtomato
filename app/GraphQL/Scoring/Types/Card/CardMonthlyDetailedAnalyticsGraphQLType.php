@@ -3,6 +3,7 @@
 namespace App\GraphQL\Scoring\Types\Card;
 
 use App\DTOs\Scoring\Card\DetailedAnalyticsInMonthDTO;
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -31,7 +32,7 @@ class CardMonthlyDetailedAnalyticsGraphQLType extends GraphQLType
                 },
             ],
             'amount' => [
-                'type' => Type::nonNull(GraphQL::type('BigInteger')),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'resolve' => function (DetailedAnalyticsInMonthDTO $root) {
                     return $root->amount;
                 },

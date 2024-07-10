@@ -7,6 +7,7 @@ use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
+use App\GraphQL\Scalars\BigFloat;
 use App\Models\Company\Installment;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -93,11 +94,11 @@ class InstallmentGraphQLType extends GraphQLType
                 'resolve' => fn (Installment $root) => $root->type->value,
             ],
             'amount' => [
-                'type' => Type::nonNull(Type::float()),
+                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Installment $root) => $root->amount,
             ],
             'initial_fee' => [
-                'type' => Type::nonNull(Type::float()),
+                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Installment $root) => $root->initial_fee,
             ],
             'sms_notify' => [

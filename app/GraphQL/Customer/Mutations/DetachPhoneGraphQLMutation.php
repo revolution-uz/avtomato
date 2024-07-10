@@ -3,12 +3,14 @@
 namespace App\GraphQL\Customer\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
 class DetachPhoneGraphQLMutation extends Mutation
@@ -27,7 +29,7 @@ class DetachPhoneGraphQLMutation extends Mutation
             ],
             'phones' => [
                 'name' => 'phones',
-                'type' => Type::nonNull(Type::listOf(Type::nonNull(Type::string()))),
+                'type' => Type::nonNull(Type::listOf(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME))),
                 'rules' => ['required', 'array', 'distinct'],
             ],
         ];

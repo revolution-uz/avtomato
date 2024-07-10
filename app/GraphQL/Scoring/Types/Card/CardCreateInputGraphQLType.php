@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Scoring\Types\Card;
 
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class CardCreateInputGraphQLType extends InputType
@@ -18,7 +20,7 @@ class CardCreateInputGraphQLType extends InputType
         return [
             'number' => [
                 'name' => 'number',
-                'type' => Type::nonNull(Type::string()),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'rules' => 'required|integer|digits:16',
             ],
             'expiry' => [

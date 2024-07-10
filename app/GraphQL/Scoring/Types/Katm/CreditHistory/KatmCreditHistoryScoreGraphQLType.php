@@ -8,7 +8,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class KatmCreditHistoryScoreGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'KatmCreditHistoryScoreGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'KatmCreditHistoryScoreGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
