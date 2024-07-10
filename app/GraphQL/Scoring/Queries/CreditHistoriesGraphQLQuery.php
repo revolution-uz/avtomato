@@ -62,7 +62,7 @@ class CreditHistoriesGraphQLQuery extends Query
                 ->where('type', ScoringRequestTypeEnum::KATM_CREDIT_HISTORY)
                 ->select('id')->get() as $item
         ) {
-            dispatch(new UpdateScoringRequestStatusJob($item->id));
+            dispatch(new UpdateScoringRequestStatusJob($item->id))->onQueue('scoring');
         }
 
         return ScoringRequest::query()
