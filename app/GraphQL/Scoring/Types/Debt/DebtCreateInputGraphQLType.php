@@ -7,7 +7,7 @@ use Rebing\GraphQL\Support\InputType;
 
 class DebtCreateInputGraphQLType extends InputType
 {
-    public const GRAPHQL_TYPE_NAME = 'DebtCreateInputGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'DebtCreateInputGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
