@@ -9,7 +9,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class CardMonthlyAnalyticsGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'CardMonthlyAnalyticsGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'CardMonthlyAnalyticsGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -25,7 +25,7 @@ class CardMonthlyAnalyticsGraphQLType extends GraphQLType
                 },
             ],
             'full_amount' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(GraphQL::type('BigInteger')),
                 'resolve' => function (MonthlyAnalyticsDTO $root) {
                     return $root->full_amount;
                 },

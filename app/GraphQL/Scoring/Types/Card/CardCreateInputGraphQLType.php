@@ -7,7 +7,7 @@ use Rebing\GraphQL\Support\InputType;
 
 class CardCreateInputGraphQLType extends InputType
 {
-    public const GRAPHQL_TYPE_NAME = 'CardCreateInputGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'CardCreateInputGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
