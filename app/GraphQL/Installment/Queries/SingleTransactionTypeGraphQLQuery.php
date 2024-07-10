@@ -30,6 +30,8 @@ class SingleTransactionTypeGraphQLQuery extends Query
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', Rule::exists('transaction_types', 'id')->whereNull('deleted_at'),
+                ],
             ],
         ];
     }
@@ -42,16 +44,5 @@ class SingleTransactionTypeGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return TransactionType::query()->findOrFail($args['id']);
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'id' => [
-                'required',
-                Rule::exists('transaction_types', 'id')
-                    ->whereNull('deleted_at'),
-            ],
-        ];
     }
 }
