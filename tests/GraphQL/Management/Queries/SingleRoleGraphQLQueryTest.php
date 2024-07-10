@@ -106,6 +106,7 @@ class SingleRoleGraphQLQueryTest extends GraphQLTestCase
             'installment_delete_comment',
             'installment_upload_document',
             'installment_delete_document',
+            'dashboard_info_view',
             'tariff_view_all',
             'tariff_view',
             'tariff_edit',
