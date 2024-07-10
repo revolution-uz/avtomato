@@ -30,6 +30,7 @@ class SingleTariffGraphQLQuery extends Query
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', Rule::exists('tariffs', 'id')->whereNull('deleted_at')],
             ],
         ];
     }
@@ -42,16 +43,5 @@ class SingleTariffGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return Tariff::query()->findOrFail($args['id']);
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'id' => [
-                'required',
-                Rule::exists('tariffs', 'id')
-                    ->whereNull('deleted_at'),
-            ],
-        ];
     }
 }
