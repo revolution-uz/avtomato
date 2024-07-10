@@ -7,7 +7,7 @@ use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
-class TariffGraphQLQueryTest extends GraphQLTestCase
+class TariffsGraphQLQueryTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
