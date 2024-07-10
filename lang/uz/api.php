@@ -10,4 +10,6 @@ return [
     'User' => 'Foydalanuvchi',
     'success' => 'Muvaffaqiyatli',
     'otp_was_wrong' => 'Tasdiqlash kodi xato',
+    'till :days days' => ':days kungacha',
+    'above :days days' => ':days kundan yuqori',
 ];
