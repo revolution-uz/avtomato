@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\GraphQL\Scalars\BigFloat;
 use App\Models\Company\InstallmentGraph;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -31,11 +32,11 @@ class InstallmentGraphGraphQLType extends GraphQLType
                 'resolve' => fn (InstallmentGraph $root) => $root->installment_id,
             ],
             'amount' => [
-                'type' => Type::nonNull(Type::float()),
+                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (InstallmentGraph $root) => $root->amount,
             ],
             'paid_amount' => [
-                'type' => Type::float(),
+                'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (InstallmentGraph $root) => $root->paid_amount,
             ],
             'overdue_days' => [

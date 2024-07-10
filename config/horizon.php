@@ -180,14 +180,40 @@ return [
             'timeout' => 60,
             'nice' => 0,
         ],
+        'supervisor-2' => [
+            'connection' => 'redis',
+            'queue' => ['scoring'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 64,
+            'tries' => 1,
+            'timeout' => 60,
+            'nice' => 0,
+        ],
+        'supervisor-3' => [
+            'connection' => 'redis',
+            'queue' => ['installment-charge'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 60,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'maxProcesses' => 10,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'simple',
+                'memory' => 128,
+                'tries' => 1,
+                'nice' => 0,
+                'minProcesses' => 1,
+                'maxProcesses' => 1,
+                'timeout' => 900,
             ],
         ],
 

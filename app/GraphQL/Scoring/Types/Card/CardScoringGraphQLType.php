@@ -9,7 +9,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class CardScoringGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'CardScoringGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'CardScoringGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

@@ -103,6 +103,7 @@ return [
         // ExampleRelationType::class,
         \Rebing\GraphQL\Support\UploadType::class,
         \App\GraphQL\Scalars\BigInteger::class,
+        \App\GraphQL\Scalars\BigFloat::class,
     ],
 
     // This callable will be passed the Error object for each errors GraphQL catch.

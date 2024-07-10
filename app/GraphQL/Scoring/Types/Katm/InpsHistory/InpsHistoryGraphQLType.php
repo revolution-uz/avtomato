@@ -10,7 +10,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class InpsHistoryGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'InpsHistoryGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'InpsHistoryGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

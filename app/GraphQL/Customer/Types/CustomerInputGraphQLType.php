@@ -3,13 +3,15 @@
 namespace App\GraphQL\Customer\Types;
 
 use App\Enums\GenderEnum;
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class CustomerInputGraphQLType extends InputType
 {
-    public const GRAPHQL_TYPE_NAME = 'CustomerInputGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'CustomerInputGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -20,7 +22,7 @@ class CustomerInputGraphQLType extends InputType
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'string',
@@ -30,7 +32,7 @@ class CustomerInputGraphQLType extends InputType
             ],
             'tin' => [
                 'name' => 'tin',
-                'type' => Type::string(),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'rules' => [
                     'nullable',
                     'string',

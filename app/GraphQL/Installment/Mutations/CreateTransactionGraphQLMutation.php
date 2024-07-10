@@ -4,6 +4,7 @@ namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
+use App\GraphQL\Scalars\BigFloat;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
 use Carbon\Carbon;
@@ -58,7 +59,7 @@ class CreateTransactionGraphQLMutation extends Mutation
             ],
             'amount' => [
                 'name' => 'amount',
-                'type' => Type::nonNull(Type::float()),
+                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'numeric',

@@ -26,7 +26,7 @@ class CompanyAdminFactory extends Factory
             'status' => UserStatusEnum::ACTIVE,
             'template_theme' => [],
             'language' => $this->faker->word(),
-            'username' => $this->faker->userName(),
+            'username' => $this->faker->unique()->userName(),
             'password' => bcrypt($this->faker->password()),
             'role_id' => Role::factory(),
             'created_at' => Carbon::now(),
