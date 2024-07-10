@@ -19,7 +19,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const string HOME = '/home';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -47,11 +47,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api.php'));
         }
 
-        Route::middleware(['api', 'force.json'])
-            ->namespace($this->namespace)
-            ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
-            ->prefix('api/v1')
-            ->group(base_path('routes/partner-api.php'));
+//        Route::middleware(['api', 'force.json'])
+//            ->namespace($this->namespace)
+//            ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
+//            ->prefix('api/v1')
+//            ->group(base_path('routes/partner-api.php'));
     }
 
     protected function mapWebRoutes(): void

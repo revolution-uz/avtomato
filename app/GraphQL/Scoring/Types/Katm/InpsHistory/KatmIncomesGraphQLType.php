@@ -9,7 +9,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class KatmIncomesGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'KatmIncomesGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'KatmIncomesGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

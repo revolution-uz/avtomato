@@ -3,11 +3,13 @@
 namespace App\GraphQL\Common\Types;
 
 use App\Enums\Main\SettingsEnum;
+use App\GraphQL\Scalars\BigInteger;
 use App\Models\Settings;
 use App\Services\User\BalanceService;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class SettingsGraphQLType extends GraphQLType
@@ -47,7 +49,7 @@ class SettingsGraphQLType extends GraphQLType
                 },
             ],
             'balance' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'description' => 'Company balance',
                 'resolve' => function ($root) {
                     return Auth::check() ? (new BalanceService)->getBalance() : 0;

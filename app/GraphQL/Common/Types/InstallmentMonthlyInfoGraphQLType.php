@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Management\Types;
+namespace App\GraphQL\Common\Types;
 
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;

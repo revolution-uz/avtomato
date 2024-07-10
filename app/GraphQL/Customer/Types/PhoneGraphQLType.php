@@ -2,8 +2,10 @@
 
 namespace App\GraphQL\Customer\Types;
 
+use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\Phone;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class PhoneGraphQLType extends GraphQLType
@@ -22,7 +24,7 @@ class PhoneGraphQLType extends GraphQLType
                 'resolve' => fn (Phone $root) => $root->id,
             ],
             'phone' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Phone $root) => (string) $root->phone,
             ],
             'type' => [

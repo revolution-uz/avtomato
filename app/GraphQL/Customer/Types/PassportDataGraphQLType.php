@@ -4,13 +4,14 @@ namespace App\GraphQL\Customer\Types;
 
 use App\DTOs\PassportDataDTO;
 use App\Enums\GenderEnum;
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class PassportDataGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'PassportDataGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'PassportDataGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -21,14 +22,14 @@ class PassportDataGraphQLType extends GraphQLType
     {
         return [
             'pinfl' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'description' => 'Pinfl',
                 'resolve' => function (PassportDataDTO $root) {
                     return $root->pinfl;
                 },
             ],
             'tin' => [
-                'type' => Type::string(),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'description' => 'Tin',
                 'resolve' => function (PassportDataDTO $root) {
                     return $root->tin;

@@ -10,7 +10,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class KatmInpsHistoryResponseGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'KatmInpsHistoryResponseGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'KatmInpsHistoryResponseGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\GraphQL\Scalars\BigFloat;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class CalculatedGraphGraphQLType extends GraphQLType
@@ -25,15 +27,15 @@ class CalculatedGraphGraphQLType extends GraphQLType
                 'resolve' => fn (array $root) => $root['date'] ?? null,
             ],
             'amount' => [
-                'type' => Type::float(),
+                'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (array $root) => $root['amount'] ?? null,
             ],
             'portion' => [
-                'type' => Type::float(),
+                'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (array $root) => $root['portion'] ?? null,
             ],
             'monthly' => [
-                'type' => Type::float(),
+                'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (array $root) => $root['monthly'] ?? null,
             ],
         ];

@@ -8,7 +8,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class KatmPresenceReportGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'KatmPresenceReportGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'KatmPresenceReportGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

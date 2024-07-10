@@ -1,13 +1,13 @@
 <?php
 
-namespace App\GraphQL\Management\Types;
+namespace App\GraphQL\Common\Types;
 
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class InstallmentStatusInfoGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'InstallmentStatusInfoGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'InstallmentStatusInfoGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

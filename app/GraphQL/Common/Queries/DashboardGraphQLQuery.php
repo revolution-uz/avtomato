@@ -1,9 +1,9 @@
 <?php
 
-namespace App\GraphQL\Management\Queries;
+namespace App\GraphQL\Common\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Management\Types\DashboardGraphQLType;
+use App\GraphQL\Common\Types\DashboardGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Installment\InstallmentService;
 use Closure;
@@ -34,7 +34,7 @@ class DashboardGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_VIEW_ALL);
+        return auth()->check() && RbacHelper::checkPermission(PermissionEnum::DASHBOARD_INFO_VIEW);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
