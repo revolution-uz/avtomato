@@ -226,7 +226,7 @@ class SingleRoleGraphQLQueryTest extends GraphQLTestCase
         return $query;
     }
 
-    private function assertSuccessSingleRoleResponse(TestResponse $response, Role $role): void
+    private function assertSuccessSingleRoleResponse(TestResponse $response, ?Role $role): void
     {
         $response->assertOk();
         $response->assertJsonIsObject();
@@ -236,6 +236,7 @@ class SingleRoleGraphQLQueryTest extends GraphQLTestCase
             ],
         ]);
 
+        $this->assertNotNull($role);
         $this->assertEquals($role->id, $response->json('data.singleRole.id'));
         $this->assertEquals($role->name, $response->json('data.singleRole.name'));
         $this->assertEquals($role->created_at->timestamp, $response->json('data.singleRole.created_at'));

@@ -86,7 +86,7 @@ class SingleBranchGraphQLQueryTest extends GraphQLTestCase
         return $query;
     }
 
-    private function assertSuccessSingleBranchResponse(TestResponse $response, Branch $branch): void
+    private function assertSuccessSingleBranchResponse(TestResponse $response, ?Branch $branch): void
     {
         $response->assertOk();
         $response->assertJsonIsObject();
@@ -96,6 +96,7 @@ class SingleBranchGraphQLQueryTest extends GraphQLTestCase
             ],
         ]);
 
+        $this->assertNotNull($branch);
         $this->assertEquals($branch->id, $response->json('data.singleBranch.id'));
         $this->assertEquals($branch->name, $response->json('data.singleBranch.name'));
         $this->assertEquals($branch->address, $response->json('data.singleBranch.address'));

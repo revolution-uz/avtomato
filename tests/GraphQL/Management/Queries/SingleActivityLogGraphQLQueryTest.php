@@ -108,7 +108,7 @@ class SingleActivityLogGraphQLQueryTest extends GraphQLTestCase
         return $query;
     }
 
-    private function assertSuccessSingleActivityLogResponse(TestResponse $response, ActivityLog $activityLog): void
+    private function assertSuccessSingleActivityLogResponse(TestResponse $response, ?ActivityLog $activityLog): void
     {
         $response->assertOk();
         $response->assertJsonIsObject();
@@ -118,6 +118,7 @@ class SingleActivityLogGraphQLQueryTest extends GraphQLTestCase
             ],
         ]);
 
+        $this->assertNotNull($activityLog);
         $this->assertEquals($activityLog->id, $response->json('data.singleActivityLog.id'));
         $this->assertEquals($activityLog->causer_id, $response->json('data.singleActivityLog.admin_id'));
         $this->assertEquals($activityLog->created_at->timestamp, $response->json('data.singleActivityLog.created_at'));
