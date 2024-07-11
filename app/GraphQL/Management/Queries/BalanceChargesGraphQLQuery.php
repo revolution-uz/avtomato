@@ -31,18 +31,18 @@ class BalanceChargesGraphQLQuery extends Query
             'feature_id' => [
                 'name' => 'feature_id',
                 'type' => Type::int(),
-                'rules' => [Rule::exists('features', 'id')],
+                'rules' => ['nullable', Rule::exists('features', 'id')],
             ],
             'sort' => [
                 'name' => 'sort',
                 'type' => Type::string(),
                 'rules' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
             ],
-            //            'search' => [
-            //                'name' => 'search',
-            //                'type' => Type::string(),
-            //                'rules' => 'nullable|string|max:255',
-            //            ],
+            'search' => [
+                'name' => 'search',
+                'type' => Type::string(),
+                'rules' => 'nullable|string|max:255',
+            ],
             'page' => [
                 'name' => 'page',
                 'type' => Type::int(),
@@ -64,12 +64,12 @@ class BalanceChargesGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return BalanceCharge::query()
-//            ->when(isset($args['search']), function (Builder $q) use ($args) {
-//                $search = '%' . $args['search'] . '%';
-//                $q->where(function (Builder $query) use ($search) {
-//                    $query->where('feature_id', $search);
-//                });
-//            })
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
+                $search = '%' . $args['search'] . '%';
+                $q->where(function (Builder $query) use ($search) {
+                    $query->where('feature_id', $search);
+                });
+            })
             ->when(isset($args['feature_id']), fn (Builder $q) => $q->where('feature_id', $args['feature_id']))
             ->when(isset($args['sort']), fn (Builder|BalanceCharge $q) => $q->orderBySortable($args['sort']))
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);

@@ -31,7 +31,7 @@ class AdminActivityLogsGraphQLQuery extends Query
         return [
             'admin_id' => [
                 'name' => 'admin_id',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'rules' => [Rule::exists('admins', 'id')->whereNull('deleted_at')],
             ],
             'sort' => [
@@ -64,8 +64,9 @@ class AdminActivityLogsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return ActivityLog::query()->where('causer_id', $args['admin_id'])->where('causer_type', CompanyAdmin::class)
+        return ActivityLog::query()
             ->with('causer')
+            ->when(isset($args['admin_id']), fn ($q) => $q->where('causer_id', $args['admin_id'])->where('causer_type', CompanyAdmin::class))
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {

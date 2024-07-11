@@ -14,9 +14,7 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
 
     private int $_totalAdminActivityLogsCount = 30;
 
-    private CompanyAdmin $_admin;
-
-    private $_activityLogQuery;
+    private CompanyAdmin $_actingAdmin;
 
     private array $_structure = [
         'id',
@@ -179,20 +177,22 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $this->_admin = CompanyAdmin::factory()->create();
+        $this->_actingAdmin = $this->createAdminUser();
+
+        $admin = CompanyAdmin::factory()->create();
         ActivityLog::query()->forceDelete();
         ActivityLog::factory()->count($this->_totalAdminActivityLogsCount)->create([
-            'causer_id' => $this->_admin->id,
-            'causer_type' => get_class($this->_admin),
+            'causer_id' => $admin->id,
+            'causer_type' => get_class($admin),
         ]);
-        $this->_activityLogQuery = ActivityLog::query()->where('causer_id', $this->_admin->id)->where('causer_type', get_class($this->_admin));
+        ActivityLog::query()->whereNull('causer_id')->forceDelete();
     }
 
     #[Test]
     public function successWithoutArguments()
     {
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery()
@@ -202,12 +202,45 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successAdminId()
+    {
+        $admin = CompanyAdmin::factory()->create();
+        ActivityLog::factory()->count(5)->create([
+            'causer_id' => $admin->id,
+            'causer_type' => get_class($admin),
+        ]);
+        ActivityLog::query()->whereNull('causer_id')->forceDelete();
+
+        $response = $this
+            ->actingAs($this->_actingAdmin)
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery(['admin_id' => $admin->id])
+            );
+
+        $this->assertSuccessActivityLogsResponse($response, total: 5);
+
+        $this->assertEquals($admin->id, $response->json('data.adminActivityLogs.data.0.admin_id'));
+        $this->assertEquals($admin->id, $response->json('data.adminActivityLogs.data.0.admin.id'));
+        $this->assertEquals($admin->username, $response->json('data.adminActivityLogs.data.0.admin.username'));
+        $this->assertEquals($admin->first_name, $response->json('data.adminActivityLogs.data.0.admin.first_name'));
+        $this->assertEquals($admin->last_name, $response->json('data.adminActivityLogs.data.0.admin.last_name'));
+        $this->assertEquals($admin->phone, $response->json('data.adminActivityLogs.data.0.admin.phone'));
+        $this->assertEquals($admin->status->value, $response->json('data.adminActivityLogs.data.0.admin.status'));
+        $this->assertEquals($admin->language, $response->json('data.adminActivityLogs.data.0.admin.language'));
+        $this->assertEquals($admin->role_id, $response->json('data.adminActivityLogs.data.0.admin.role_id'));
+        $this->assertEquals($admin->created_at->timestamp, $response->json('data.adminActivityLogs.data.0.admin.created_at'));
+        $this->assertEquals($admin->updated_at?->timestamp, $response->json('data.adminActivityLogs.data.0.admin.updated_at'));
+        $this->assertEquals($admin->deleted_at?->timestamp, $response->json('data.adminActivityLogs.data.0.admin.deleted_at'));
+    }
+
+    #[Test]
     public function successPagination()
     {
         $page = 2;
 
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['page' => $page])
@@ -222,7 +255,7 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
         $perPage = 25;
 
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['per_page' => $perPage])
@@ -235,14 +268,14 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
     public function successSortAscending()
     {
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['sort' => 'id'])
             );
 
         $this->assertSuccessActivityLogsResponse($response);
-        $activityLogIds = $this->_activityLogQuery->orderBy('id')->limit(10)->pluck('id')->toArray();
+        $activityLogIds = ActivityLog::query()->orderBy('id')->limit(10)->pluck('id')->toArray();
         $this->assertEquals($activityLogIds, $response->json('data.adminActivityLogs.data.*.id'));
     }
 
@@ -250,23 +283,23 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
     public function successSortDescending()
     {
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['sort' => '-id'])
             );
 
         $this->assertSuccessActivityLogsResponse($response);
-        $activityLogIds = $this->_activityLogQuery->orderByDesc('id')->limit(10)->pluck('id')->toArray();
+        $activityLogIds = ActivityLog::query()->orderByDesc('id')->limit(10)->pluck('id')->toArray();
         $this->assertEquals($activityLogIds, $response->json('data.adminActivityLogs.data.*.id'));
     }
 
     #[Test]
     public function successSearch()
     {
-        $activityLog = $this->_activityLogQuery->with('causer')->first();
+        $activityLog = ActivityLog::query()->with('causer')->first();
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['search' => $activityLog->description])
@@ -292,11 +325,37 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function errorInvalidAdminId()
+    {
+        $id = CompanyAdmin::query()->orderByDesc('id')->first()->id;
+        $response = $this
+            ->actingAs($this->_actingAdmin)
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery(['admin_id' => $id + 1])
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+
+        $id = 'kjefnerw';
+        $response = $this
+            ->actingAs($this->_actingAdmin)
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery(['admin_id' => $id])
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals("Variable \"\$admin_id\" got invalid value \"{$id}\"; Int cannot represent non-integer value: \"{$id}\"", $response->json('errors.0.message'));
+    }
+
+    #[Test]
     public function errorPage()
     {
         $page = 'kjefnerw';
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['page' => $page])
@@ -307,7 +366,7 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
 
         $page = 0;
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['page' => $page])
@@ -323,7 +382,7 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
     {
         $per_page = 'kjefnerw';
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['per_page' => $per_page])
@@ -334,7 +393,7 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
 
         $per_page = 0;
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['per_page' => $per_page])
@@ -346,7 +405,7 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
 
         $per_page = 101;
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['per_page' => $per_page])
@@ -362,7 +421,7 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
     {
         $sort = 111;
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['sort' => $sort])
@@ -373,7 +432,7 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
 
         $sort = 'non-exist-column';
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($this->_actingAdmin)
             ->postJson(
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['sort' => $sort])
@@ -387,9 +446,9 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
     private function buildGraphQLQuery(array $variables = []): array
     {
         $query = [];
-        $query['variables'] = ['admin_id' => $this->_admin->id, ...$variables];
+        $query['variables'] = $variables;
         $query['query'] = '
-            query AdminActivityLogs($admin_id: Int! $sort: String, $search: String, $page: Int, $per_page: Int) {
+            query AdminActivityLogs($admin_id: Int, $sort: String, $search: String, $page: Int, $per_page: Int) {
                 adminActivityLogs(admin_id: $admin_id, sort: $sort, search: $search, page: $page, per_page: $per_page) {
                     total
                     per_page
