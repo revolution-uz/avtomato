@@ -40,7 +40,7 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery()
             );
 
-        $this->assertSuccesBalanceFundsResponse($response);
+        $this->assertSuccessBalanceFundsResponse($response);
     }
 
     #[Test]
@@ -55,7 +55,7 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery(['page' => $page])
             );
 
-        $this->assertSuccesBalanceFundsResponse($response, page: $page);
+        $this->assertSuccessBalanceFundsResponse($response, page: $page);
     }
 
     #[Test]
@@ -70,7 +70,7 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery(['per_page' => $perPage])
             );
 
-        $this->assertSuccesBalanceFundsResponse($response, perPage: $perPage);
+        $this->assertSuccessBalanceFundsResponse($response, perPage: $perPage);
     }
 
     #[Test]
@@ -83,7 +83,7 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery(['sort' => 'id'])
             );
 
-        $this->assertSuccesBalanceFundsResponse($response);
+        $this->assertSuccessBalanceFundsResponse($response);
         $balanceFundIds = BalanceFund::query()->orderBy('id')->limit(10)->pluck('id')->toArray();
         $this->assertEquals($balanceFundIds, $response->json('data.balanceFunds.data.*.id'));
     }
@@ -98,7 +98,7 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery(['sort' => '-id'])
             );
 
-        $this->assertSuccesBalanceFundsResponse($response);
+        $this->assertSuccessBalanceFundsResponse($response);
         $balanceFundIds = BalanceFund::query()->orderByDesc('id')->limit(10)->pluck('id')->toArray();
         $this->assertEquals($balanceFundIds, $response->json('data.balanceFunds.data.*.id'));
     }
@@ -113,7 +113,7 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['search' => $balanceFund->phone_number])
             );
-        $this->assertSuccesBalanceFundsResponse($response, total: 1);
+        $this->assertSuccessBalanceFundsResponse($response, total: 1);
         $this->assertEquals($balanceFund->id, $response->json('data.balanceFunds.data.0.id'));
         $this->assertEquals($balanceFund->amount, $response->json('data.balanceFunds.data.0.amount'));
         $this->assertEquals($balanceFund->phone_number, $response->json('data.balanceFunds.data.0.phone_number'));
@@ -127,7 +127,7 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
                 route('graphql.management'),
                 $this->buildGraphQLQuery(['search' => $balanceFund->card_number])
             );
-        $this->assertSuccesBalanceFundsResponse($response, total: 1);
+        $this->assertSuccessBalanceFundsResponse($response, total: 1);
         $this->assertEquals($balanceFund->id, $response->json('data.balanceFunds.data.0.id'));
         $this->assertEquals($balanceFund->amount, $response->json('data.balanceFunds.data.0.amount'));
         $this->assertEquals($balanceFund->phone_number, $response->json('data.balanceFunds.data.0.phone_number'));
@@ -252,7 +252,7 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
         return $query;
     }
 
-    private function assertSuccesBalanceFundsResponse(TestResponse $response, $total = null, $perPage = null, $page = null): void
+    private function assertSuccessBalanceFundsResponse(TestResponse $response, $total = null, $perPage = null, $page = null): void
     {
         $response->assertOk();
         $response->assertJsonIsObject();
