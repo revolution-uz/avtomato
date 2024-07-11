@@ -11,9 +11,9 @@ enum InstallmentStatusEnum: int
 
     case CANCELED = -2; // means disabled
     case FROZEN = -1; // means freeze don't allowed to withdraw payment
-    case DRAFT = 0; // means just created and need to run
-    case RUNNING = 1; // means active
-    case FINISHED = 2; // means closed
+    case IN_ACTIVE = 0; // means just created and need to run
+    case ACTIVE = 1; // means active
+    case CLOSED = 2; // means closed
 
     /**
      * @return self[]
@@ -22,11 +22,11 @@ enum InstallmentStatusEnum: int
     {
         return match ($statusEnum) {
             self::CANCELED,
-            self::RUNNING => [self::FROZEN, self::DRAFT],
-            self::FROZEN => [self::RUNNING, self::FINISHED],
-            self::DRAFT => [],
-            self::FINISHED => [self::RUNNING],
-            default => [self::CANCELED, self::DRAFT],
+            self::ACTIVE => [self::FROZEN, self::IN_ACTIVE],
+            self::FROZEN => [self::ACTIVE, self::CLOSED],
+            self::IN_ACTIVE => [],
+            self::CLOSED => [self::ACTIVE],
+            default => [self::CANCELED, self::IN_ACTIVE],
         };
     }
 
@@ -37,10 +37,10 @@ enum InstallmentStatusEnum: int
         }
 
         return match ($status) {
-            self::RUNNING => PermissionEnum::INSTALLMENT_START,
+            self::ACTIVE => PermissionEnum::INSTALLMENT_START,
             self::CANCELED => PermissionEnum::INSTALLMENT_CANCEL,
             self::FROZEN => PermissionEnum::INSTALLMENT_FREEZE,
-            self::FINISHED => PermissionEnum::INSTALLMENT_FINISH,
+            self::CLOSED => PermissionEnum::INSTALLMENT_FINISH,
             default => null,
         };
     }

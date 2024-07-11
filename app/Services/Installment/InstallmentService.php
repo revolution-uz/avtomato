@@ -30,7 +30,7 @@ class InstallmentService
 
     public function create(array $attributes): Installment
     {
-        $attributes['status'] = InstallmentStatusEnum::DRAFT;
+        $attributes['status'] = InstallmentStatusEnum::IN_ACTIVE;
         $attributes['admin_id'] = auth()->user()->id;
         $attributes['sms_notify'] = false;
         $attributes['any_card_charge'] = false;
@@ -85,7 +85,7 @@ class InstallmentService
      */
     public function changeStatus(Installment $installment, InstallmentStatusEnum $status): bool
     {
-        if ($status == InstallmentStatusEnum::RUNNING) {
+        if ($status == InstallmentStatusEnum::ACTIVE) {
             $this->running($installment);
         }
 
@@ -133,7 +133,7 @@ class InstallmentService
             $installmentGraph->installment_id = $installment->id;
             $installmentGraph->amount = $amount / $installment->period + $portion;
             $installmentGraph->starts_in = Carbon::make($period->timestamp);
-            $installmentGraph->status = InstallmentStatusEnum::RUNNING;
+            $installmentGraph->status = InstallmentStatusEnum::ACTIVE;
             $installmentGraph->paid_amount = 0;
             $installmentGraph->save();
         }
@@ -197,24 +197,20 @@ class InstallmentService
     private function getInstallmentInfoByStatus(): array
     {
         $timestamps = Utilities::getTimestampsOfMonthOfThisYear();
-        $monthNames = Utilities::getMonthNames();
         $result = [];
-        for ($i = 0; $i < 12; $i++) {
+        foreach (InstallmentStatusEnum::cases() as $status) {
             $data = [];
-            $query = Installment::query()->whereBetween('created_at', [
-                Carbon::createFromTimestamp($timestamps[$i]['start']),
-                Carbon::createFromTimestamp($timestamps[$i]['end']),
-            ]);
-            foreach (InstallmentStatusEnum::cases() as $status) {
-                $data[] = [
-                    'status' => $status->value,
-                    'status_name' => $status->name,
-                    'count' => (clone $query)->where('status', $status)->count('id'),
-                ];
+            for ($i = 0; $i < 12; $i++) {
+                $query = Installment::query()->whereBetween('created_at', [
+                    Carbon::createFromTimestamp($timestamps[$i]['start']),
+                    Carbon::createFromTimestamp($timestamps[$i]['end']),
+                ]);
+                $data[] = (clone $query)->where('status', $status)->count('id');
             }
             $result[] = [
-                'month_name' => $monthNames[$i],
-                'timestamp' => $timestamps[$i]['start'],
+                'name' => __('api.installment_status_' . $status->name),
+                'type' => 'line',
+                'stack' => 'Total',
                 'data' => $data,
             ];
         }

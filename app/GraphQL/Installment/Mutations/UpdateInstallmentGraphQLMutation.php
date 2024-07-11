@@ -30,7 +30,7 @@ class UpdateInstallmentGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('installments', 'id')->whereNull('deleted_at')->where('status', InstallmentStatusEnum::DRAFT),
+                    Rule::exists('installments', 'id')->whereNull('deleted_at')->where('status', InstallmentStatusEnum::IN_ACTIVE),
                 ],
             ],
             'installment' => [
@@ -54,7 +54,7 @@ class UpdateInstallmentGraphQLMutation extends Mutation
     {
         $installment = Installment::findOrFail($args['id']);
 
-        if ($installment->status == InstallmentStatusEnum::DRAFT) {
+        if ($installment->status == InstallmentStatusEnum::IN_ACTIVE) {
             $installment->updateOrFail($args['installment']);
         }
 

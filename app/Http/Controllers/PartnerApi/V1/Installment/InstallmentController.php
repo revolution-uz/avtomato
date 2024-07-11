@@ -143,7 +143,7 @@ class InstallmentController extends Controller
     {
         $installment = Installment::findOrFail($id);
 
-        if ($installment->status == InstallmentStatusEnum::DRAFT) {
+        if ($installment->status == InstallmentStatusEnum::IN_ACTIVE) {
             $installment->updateOrFail($request->validated());
         }
 
