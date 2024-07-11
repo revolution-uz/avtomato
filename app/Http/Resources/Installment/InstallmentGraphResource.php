@@ -17,7 +17,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'amount', type: 'float', example: '12000'),
         new OA\Property(property: 'paid_amount', type: 'float', example: '0'),
         new OA\Property(property: 'overdue_days', type: 'float', example: '0'),
-        new OA\Property(property: 'status', type: 'int', enum: [InstallmentStatusEnum::CANCELED, InstallmentStatusEnum::FROZEN, InstallmentStatusEnum::DRAFT, InstallmentStatusEnum::RUNNING, InstallmentStatusEnum::FINISHED], example: InstallmentStatusEnum::DRAFT),
+        new OA\Property(property: 'status', type: 'int', enum: [InstallmentStatusEnum::CANCELED, InstallmentStatusEnum::FROZEN, InstallmentStatusEnum::IN_ACTIVE, InstallmentStatusEnum::ACTIVE, InstallmentStatusEnum::CLOSED], example: InstallmentStatusEnum::IN_ACTIVE),
         new OA\Property(property: 'starts_in', type: 'float', example: '01-01-2021'),
     ],
 )]
