@@ -6,6 +6,7 @@ use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\ScoringRequest;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -35,6 +36,11 @@ class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successTaxCreate(): void
     {
+        Http::fake([
+            'https://api.abrand.uz/partner/katm/tax*' => Http::response([
+                'result' => ['debtBal' => 1],
+            ]),
+        ]);
         $response = $this->sendGraphQLRequest($this->_input, $this->taxType);
         $this->assertSuccessCreateDebtScoringResponse($response, $this->taxType);
     }
@@ -42,6 +48,11 @@ class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successMibCreate(): void
     {
+        Http::fake([
+            'https://api.abrand.uz/partner/katm/mib*' => Http::response([
+                'result' => ['debtBal' => 1],
+            ]),
+        ]);
         $inputWithPhone = array_merge($this->_input, ['phone' => $this->_phone]);
         $response = $this->sendGraphQLRequest($inputWithPhone, $this->mibType);
         $this->assertSuccessCreateDebtScoringResponse($response, $this->mibType);
