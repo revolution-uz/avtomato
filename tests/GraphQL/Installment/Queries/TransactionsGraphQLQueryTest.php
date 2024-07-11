@@ -8,12 +8,11 @@ use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
-class TransactionGraphQLQueryTest extends GraphQLTestCase
+class TransactionsGraphQLQueryTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
     private int $_totalTransactionsCount = 33;
-    private Transaction $transaction;
 
     protected function setUp(): void
     {
@@ -22,7 +21,6 @@ class TransactionGraphQLQueryTest extends GraphQLTestCase
         Installment::query()->forceDelete();
         Transaction::query()->forceDelete();
         Transaction::factory()->count($this->_totalTransactionsCount)->create();
-        $this->transaction = Transaction::query()->first();
     }
 
     #[Test]
@@ -59,7 +57,8 @@ class TransactionGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successId()
     {
-        $response = $this->sendToGraphQL(['id' => $this->transaction->id]);
+        $transaction = Transaction::query()->first();
+        $response = $this->sendToGraphQL(['id' => $transaction->id]);
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->id, $response->json('data.transactions.data.0.id'));
     }
@@ -74,7 +73,8 @@ class TransactionGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successInstallmentId()
     {
-        $response = $this->sendToGraphQL(['installment_id' => $this->transaction->installment_id]);
+        $transaction = Transaction::query()->first();
+        $response = $this->sendToGraphQL(['installment_id' => $transaction->installment_id]);
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->installment->id, $response->json('data.transactions.data.0.installment_id'));
     }
@@ -90,7 +90,8 @@ class TransactionGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successCustomerId()
     {
-        $response = $this->sendToGraphQL(['customer_id' => $this->transaction->customer_id]);
+        $transaction = Transaction::query()->first();
+        $response = $this->sendToGraphQL(['customer_id' => $transaction->customer_id]);
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->customer->id, $response->json('data.transactions.data.0.customer_id'));
     }
@@ -105,7 +106,8 @@ class TransactionGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successCardId()
     {
-        $response = $this->sendToGraphQL(['card_id' => $this->transaction->card->id]);
+        $transaction = Transaction::query()->first();
+        $response = $this->sendToGraphQL(['card_id' => $transaction->card->id]);
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->card_id, $response->json('data.transactions.data.0.card_id'));
     }
@@ -120,7 +122,8 @@ class TransactionGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successTransactionTypeId()
     {
-        $response = $this->sendToGraphQL(['transaction_type_id' => $this->transaction->transactionType->id]);
+        $transaction = Transaction::query()->first();
+        $response = $this->sendToGraphQL(['transaction_type_id' => $transaction->transactionType->id]);
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->transactionType->id, $response->json('data.transactions.data.0.transaction_type_id'));
     }
