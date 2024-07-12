@@ -7,4 +7,9 @@ return [
     'not found' => 'Not found',
     'success' => 'Success',
     'otp_was_wrong' => 'Confirmation code was wrong',
+    'installment_status_CANCELED' => 'Canceled',
+    'installment_status_FROZEN' => 'Frozen',
+    'installment_status_IN_ACTIVE' => 'In active',
+    'installment_status_ACTIVE' => 'Active',
+    'installment_status_CLOSED' => 'Closed',
 ];

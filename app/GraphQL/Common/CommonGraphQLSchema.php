@@ -13,7 +13,6 @@ use App\GraphQL\Common\Types\DistrictGraphQLType;
 use App\GraphQL\Common\Types\InstallmentAmountsGraphQLType;
 use App\GraphQL\Common\Types\InstallmentMonthlyInfoGraphQLType;
 use App\GraphQL\Common\Types\InstallmentOverdueGraphQLType;
-use App\GraphQL\Common\Types\InstallmentStatusInfoGraphQLType;
 use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\GraphQL\Common\Types\SettingsGraphQLType;
@@ -40,7 +39,6 @@ class CommonGraphQLSchema implements ConfigConvertible
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
                 InstallmentMonthlyInfoGraphQLType::class,
-                InstallmentStatusInfoGraphQLType::class,
                 DashboardGraphQLType::class,
                 InstallmentAmountsGraphQLType::class,
                 InstallmentOverdueGraphQLType::class,

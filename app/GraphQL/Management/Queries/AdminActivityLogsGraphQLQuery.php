@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\ActivityLogGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ActivityLog;
+use App\Models\Company\CompanyAdmin;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -30,7 +31,7 @@ class AdminActivityLogsGraphQLQuery extends Query
         return [
             'admin_id' => [
                 'name' => 'admin_id',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'rules' => [Rule::exists('admins', 'id')->whereNull('deleted_at')],
             ],
             'sort' => [
@@ -65,6 +66,7 @@ class AdminActivityLogsGraphQLQuery extends Query
     {
         return ActivityLog::query()
             ->with('causer')
+            ->when(isset($args['admin_id']), fn ($q) => $q->where('causer_id', $args['admin_id'])->where('causer_type', CompanyAdmin::class))
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {

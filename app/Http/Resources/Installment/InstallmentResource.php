@@ -18,7 +18,7 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'int', example: '1'),
         new OA\Property(property: 'customer_id', type: 'int', example: '1'),
-        new OA\Property(property: 'status', type: 'int', enum: InstallmentStatusEnum::class, example: InstallmentStatusEnum::DRAFT),
+        new OA\Property(property: 'status', type: 'int', enum: InstallmentStatusEnum::class, example: InstallmentStatusEnum::IN_ACTIVE),
         new OA\Property(property: 'customer', ref: '#/components/schemas/SingleCustomerResource'),
         new OA\Property(property: 'branch_id', type: 'int', example: '1'),
         new OA\Property(property: 'branch', ref: '#/components/schemas/BranchResource', nullable: true),

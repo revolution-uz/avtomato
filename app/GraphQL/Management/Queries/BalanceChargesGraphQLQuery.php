@@ -3,13 +3,14 @@
 namespace App\GraphQL\Management\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Management\Types\BalanceFundGraphQLType;
+use App\GraphQL\Management\Types\BalanceChargeGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\BalanceCharge;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -21,12 +22,17 @@ class BalanceChargesGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::paginate(BalanceFundGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(BalanceChargeGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
     {
         return [
+            'feature_id' => [
+                'name' => 'feature_id',
+                'type' => Type::int(),
+                'rules' => ['nullable', Rule::exists('features', 'id')],
+            ],
             'sort' => [
                 'name' => 'sort',
                 'type' => Type::string(),
@@ -64,6 +70,7 @@ class BalanceChargesGraphQLQuery extends Query
                     $query->where('feature_id', $search);
                 });
             })
+            ->when(isset($args['feature_id']), fn (Builder $q) => $q->where('feature_id', $args['feature_id']))
             ->when(isset($args['sort']), fn (Builder|BalanceCharge $q) => $q->orderBySortable($args['sort']))
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }

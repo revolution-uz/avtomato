@@ -10,8 +10,9 @@ class BalanceFundFactory extends Factory
     {
         return [
             'amount' => rand(1, 100),
-            'phone_number' => $this->faker->numberBetween(1, 100),
+            'phone_number' => $this->faker->numberBetween(100000, 999999),
             'external_transaction_id' => $this->faker->numberBetween(1, 100),
+            'card_number' => $this->faker->creditCardNumber(),
         ];
     }
 }

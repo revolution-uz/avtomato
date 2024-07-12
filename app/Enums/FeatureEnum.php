@@ -38,8 +38,8 @@ enum FeatureEnum: string
     public function getDefaultDescription(): ?string
     {
         return match ($this) {
-            self::ATMOS_PINFL_PAY,
-            self::ATMOS_CARD_PAY => '{"username" : "Consumer Key", "password" : "Consumer Secret", "store_id" : 1323, "expires_in": 0, "access_token" : "client_token", "token_type" : "Bearer"}',
+            self::ATMOS_PINFL_PAY => 'PINFL orqali pul yechish uchun ATMOS',
+            self::ATMOS_CARD_PAY => 'Karta orqali pul yechish uchun ATMOS',
             self::PROFILE_EDIT => 'Admin o\'z profilini o\'zgartira olish funksiyasi',
             self::BALANCE_FUND => 'Balansni to\'ldirish funksionali, agarda balansni to\'ldirishda muammo bo\'lsa ushbu feature o\'chirib yoqiladi',
             self::BALANCE_CHARGE => 'Balansdan pul yechish funksionali, agarda balansdan pul yechishda biron muammo bo\'lsa, ushbu feature ni o\'chirish orqali barcha pullik xizmatlarni cheklab qo\'yish mumkin',
@@ -52,8 +52,55 @@ enum FeatureEnum: string
             self::SCORING_INPS_HISTORY => 'Oyliklar tarixini KATM orqali olish',
             self::SCORING_UZCARD => 'UzCard kartalari yillik oborot skoringi',
             self::SCORING_HUMO => 'Humo kartalari yillik oborot skoringi',
+            self::SCORING_TAX_INFO => 'Soliq qarzdorligi skoringi',
+            self::SCORING_MIB_INFO => 'MIB qarzdorligi skoringi',
+            self::BRANCH_MANAGEMENT => 'Filiallar boshqaruvi',
+            self::TRANSACTION_TYPE_MANAGEMENT => 'Tranzaksiya turlari boshqaruvi',
+            self::TRANSACTION_MANAGEMENT => 'Tranzaksiyalar boshqaruvi',
+            self::TARIFF_MANAGEMENT => 'Tariflar boshqaruvi',
+            self::CUSTOMER_MANAGEMENT => 'Mijozlar bazasi boshqaruvi',
+            self::CUSTOMER_CARDS_MANAGEMENT => 'Mijozlar kartalari boshqaruvi',
+            self::CALCULATOR_INSTALLMENT => 'Muddatli to\'lov kalkulyatori',
+            self::INSTALLMENT_MANAGEMENT => 'Muddatli to\'lovlar boshqaruvi',
+            self::INSTALLMENT_GUARANTOR => 'Muddatli to\'lovlarga kafil qo\'shish imkoniyati',
+            self::INSTALLMENT_COMMENT => 'Muddatli to\'lovlarga izoh qo\'shish imkoniyati',
+            self::INSTALLMENT_DOCUMENT => 'Muddatli to\'lovlarga xujjat qo\'shish imkoniyati',
             self::SMS => 'Sms yuborish xizmati',
+            self::INSTALLMENT_AUTO_CHARGE => 'Muddatli to\'lovda kartadan avtomatik to\'lov',
+            self::INSTALLMENT_AUTO_CHARGE_BY_PINFL => 'Muddatli to\'lovda PINFL orqali avtomatik to\'lov',
+        };
+    }
+
+    public function getExampleData(): ?string
+    {
+        return match ($this) {
+            self::ATMOS_PINFL_PAY,
+            self::ATMOS_CARD_PAY => '{"username" : "Consumer Key", "password" : "Consumer Secret", "store_id" : 1323, "expires_in": 0, "access_token" : "client_token", "token_type" : "Bearer"}',
+            self::SCORING_CREDIT_HISTORY,
+            self::SCORING_PENSION_INFO,
+            self::SCORING_INPS_HISTORY,
+            self::SCORING_UZCARD,
+            self::SCORING_HUMO,
+            self::SCORING_TAX_INFO,
+            self::SCORING_MIB_INFO => '{"provider": "asaxiy", "username": "username", "password": "password"}',
+            self::SMS => '{"provider": "smsfly", "username": "username", "password": "password"}',
             default => null,
         };
+    }
+
+    public function isChargeable(): bool
+    {
+        return in_array($this, [
+            self::SCORING_CREDIT_HISTORY,
+            self::SCORING_PENSION_INFO,
+            self::SCORING_INPS_HISTORY,
+            self::SCORING_UZCARD,
+            self::SCORING_HUMO,
+            self::SCORING_TAX_INFO,
+            self::SCORING_MIB_INFO,
+            self::SMS,
+            self::INSTALLMENT_AUTO_CHARGE,
+            self::INSTALLMENT_AUTO_CHARGE_BY_PINFL,
+        ]);
     }
 }
