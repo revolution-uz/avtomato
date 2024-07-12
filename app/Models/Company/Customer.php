@@ -40,7 +40,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Installment[] $installments
  * @property Address[]|Collection<int,Address> $addresses
  * @property Phone[]|Collection<int,Phone> $phones
- * @property Card[]|Collection<int,Phone> $cards
+ * @property Card[]|Collection<int,Card> $cards
+ * @property ScoringRequest[]|Collection<int,ScoringRequest> $scoringRequests
  * @property-read  string $full_name
  *
  * @method static Builder|static query()
@@ -117,6 +118,11 @@ class Customer extends Model
     public function cards(): HasMany
     {
         return $this->hasMany(Card::class);
+    }
+
+    public function scoringRequests(): HasMany
+    {
+        return $this->hasMany(ScoringRequest::class);
     }
 
     public function installments(): HasMany
