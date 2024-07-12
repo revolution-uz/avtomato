@@ -13,7 +13,7 @@ class ActivityLogFactory extends Factory
     {
         return [
             'log_name' => $this->faker->word(),
-            'description' => $this->faker->word(),
+            'description' => $this->faker->text(50),
             'subject_type' => CompanyAdmin::class,
             'subject_id' => CompanyAdmin::factory(),
             'event' => LogType::randomValue(),

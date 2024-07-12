@@ -28,7 +28,7 @@ class SingleAdminGraphQLQuery extends Query
         return [
             'id' => [
                 'name' => 'id',
-                'type' => Type::int(),
+                'type' => Type::nonNull(Type::int()),
                 'rules' => ['required', 'exists:admins,id'],
             ],
         ];
