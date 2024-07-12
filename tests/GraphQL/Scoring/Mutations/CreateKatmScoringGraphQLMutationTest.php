@@ -7,7 +7,6 @@ use App\Models\Company\District;
 use App\Models\Company\Region;
 use App\Models\Company\ScoringRequest;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -26,20 +25,7 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successCreate(): void
     {
-        Http::fake([
-            'https://api.abrand.uz/partner/katm/create-request*' => Http::response([
-                'result' => [
-                    'Sep-2023' => 137096800,
-                    'Sep-2023_details' => [
-                        [
-                            'description' => 'Пополнение счета',
-                            'type_code' => 110,
-                            'amount' => 134657600,
-                        ],
-                    ],
-                ],
-            ]),
-        ]);
+        $this->mockUrl('https://api.abrand.uz/partner/katm/create-request*', json_decode(file_get_contents(storage_path('../JSON-for-testing/card-scoring-create-response.json')), true));
         $response = $this->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),

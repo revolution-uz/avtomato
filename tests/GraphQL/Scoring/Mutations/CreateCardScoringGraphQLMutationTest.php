@@ -7,7 +7,6 @@ use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\ScoringRequest;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -39,13 +38,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successHumeCardCreate(): void
     {
-        Http::fake([
-            'https://api.abrand.uz/partner/katm/humo*' => Http::response(
-                json_decode(file_get_contents(storage_path('../JSON-for-testing/atmos/card/bind-card-init.json')), true),
-                200, // Status code
-                ['Content-Type' => 'application/json'] // Headers
-            ),
-        ]);
+        $this->mockUrl('https://api.abrand.uz/partner/katm/humo*', json_decode(file_get_contents(storage_path('../JSON-for-testing/atmos/card/bind-card-init.json')), true));
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
@@ -58,13 +51,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successUzCardCreate(): void
     {
-        Http::fake([
-            'https://api.abrand.uz/partner/katm/humo*' => Http::response(
-                json_decode(file_get_contents(storage_path('../JSON-for-testing/atmos/card/bind-card-init.json')), true),
-                200, // Status code
-                ['Content-Type' => 'application/json'] // Headers
-            ),
-        ]);
+        $this->mockUrl('https://api.abrand.uz/partner/katm/uzcard*', json_decode(file_get_contents(storage_path('../JSON-for-testing/atmos/card/bind-card-init.json')), true));
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
