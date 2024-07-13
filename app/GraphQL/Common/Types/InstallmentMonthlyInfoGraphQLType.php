@@ -38,6 +38,13 @@ class InstallmentMonthlyInfoGraphQLType extends GraphQLType
                     return $root['stack'];
                 },
             ],
+            'count' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Count of Current Week',
+                'resolve' => function (array $root) {
+                    return $root['count'];
+                },
+            ],
             'data' => [
                 'type' => Type::nonNull(Type::listOf(Type::int())),
                 'description' => 'Data by status',
