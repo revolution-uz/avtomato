@@ -49,7 +49,7 @@ abstract class TestCase extends BaseTestCase
 
         tenancy()->initialize($tenant);
 
-        Artisan::call('tenants:migrate', [
+        Artisan::call('tenants:migrate-fresh', [
             '--tenants' => [$tenant->id],
         ]);
         Artisan::call('tenants:seed', [

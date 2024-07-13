@@ -34,7 +34,7 @@ jobs:
           php-version: '8.3'
           ini-values: memory_limit=8192M
           extensions: iconv, simplexml, pdo, pgsql, pdo_pgsql
-          coverage: pcov
+          coverage: none
       - name: Cache composer dependencies
         uses: actions/cache@v1
         with:
