@@ -136,9 +136,6 @@ class CustomerQLSchema implements ConfigConvertible
                 TransactionTypeGraphQLType::class,
 
                 //scoring
-
-                ScoringRequestUnionGraphQLType::class,
-
                 CardCreateInputGraphQLType::class,
                 CardMonthlyAnalyticsGraphQLType::class,
                 CardMonthlyDetailedAnalyticsGraphQLType::class,
@@ -178,6 +175,9 @@ class CustomerQLSchema implements ConfigConvertible
                 RegionGraphQLType::class,
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
+
+                // unions last
+                ScoringRequestUnionGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];

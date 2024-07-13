@@ -5,7 +5,7 @@
     "keywords": ["avtomato", "crm", "automation"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.2",
         "ext-iconv": "*",
         "ext-pdo": "*",
         "ext-simplexml": "*",
@@ -47,23 +47,30 @@
         }
     },
     "scripts": {
-        "cghooks": "vendor/bin/cghooks",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "[ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/captainhook install -f -s"
         ],
-        "dev-post-install-cmd": [
-            "cghooks add --ignore-lock"
-        ],
-        "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-            "cghooks update"
+        "post-install-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postInstall",
+            "@php artisan nova:publish",
+            "@php artisan horizon:publish --ansi",
+            "@php artisan log-viewer:publish"
         ],
         "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan package:discover --ansi"
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate --ansi"
+            "@php artisan key:generate --ansi",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "@php artisan nova:publish",
+            "@php artisan horizon:publish --ansi",
+            "@php artisan log-viewer:publish"
         ]
     },
     "extra": {
