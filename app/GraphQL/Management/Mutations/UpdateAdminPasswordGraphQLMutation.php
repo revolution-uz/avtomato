@@ -9,7 +9,6 @@ use App\Services\User\UserService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 
