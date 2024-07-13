@@ -8,7 +8,6 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Helpers\Utilities;
-use App\Http\Requests\Installment\InstallmentToggleRequest;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGraph;
 use App\Models\Company\InstallmentGuarantor;
@@ -43,15 +42,15 @@ class InstallmentService
      * @throws Throwable
      * @throws BalanceIsNotEnoughException
      */
-    public function toggleAutoCharge(Installment $installment, InstallmentToggleRequest $request): Installment
+    public function toggleAutoCharge(Installment $installment, bool $auto_charge, bool $any_card): Installment
     {
-        if ($request->auto_charge) {
+        if ($auto_charge) {
             $installment->type = InstallmentTypeEnum::WITH_CARD;
         } else {
             $installment->type = InstallmentTypeEnum::WITHOUT_CARD;
         }
-        if (isset($request->any_card)) {
-            $installment->any_card_charge = $request->any_card;
+        if ($any_card) {
+            $installment->any_card_charge = $any_card;
         }
 
         if ($installment->any_card_charge || $installment->type == InstallmentTypeEnum::WITH_CARD) {
@@ -66,9 +65,9 @@ class InstallmentService
      * @throws Throwable
      * @throws BalanceIsNotEnoughException
      */
-    public function toggleGuarantorAutoCharge(InstallmentGuarantor $installmentGuarantor, InstallmentToggleRequest $request): InstallmentGuarantor
+    public function toggleGuarantorAutoCharge(InstallmentGuarantor $installmentGuarantor, bool $auto_charge): InstallmentGuarantor
     {
-        if ($request->auto_charge) {
+        if ($auto_charge) {
             $installmentGuarantor->any_card_charge = true;
             $this->withdrawAutoCharge($installmentGuarantor->installment);
         } else {
