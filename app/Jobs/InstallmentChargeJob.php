@@ -32,8 +32,11 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
     {
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($this->installmentId);
-
+        $debt_amount = $installment->debt_amount;
         // TODO logic
+
+        $installment->setNextPayDate();
+        $installment->save();
     }
 
     /**

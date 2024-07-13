@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -32,6 +33,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $withdrawn_auto_charge
  * @property bool $auto_pay
  * @property int $period
+ * @property float $debt_amount
  * @property string $plum_id
  * @property Carbon|null $starts_in
  * @property Carbon|null $next_pay_date
@@ -153,6 +155,22 @@ class Installment extends Model
 
     public function autoPay(): Attribute
     {
-        return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
+        return Attribute::make(get: fn() => $this->type == InstallmentTypeEnum::WITH_CARD);
+    }
+
+    public function setNextPayDate(): void
+    {
+        $this->next_pay_date = InstallmentGraph::query()
+            ->where('installment_id', $this->id)
+            ->where(DB::raw('amount - paid_amount'), '>', 0)
+            ->min('starts_in');
+    }
+
+    public function getDebtAmount(): Attribute
+    {
+        return Attribute::make(get: fn() => InstallmentGraph::query()
+            ->where('installment_id', $this->id)
+            ->where('starts_in', Carbon::today())
+            ->sum(DB::raw('amount - paid_amount')));
     }
 }

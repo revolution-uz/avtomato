@@ -4,6 +4,7 @@ namespace App\GraphQL\Common\Types;
 
 use App\Enums\Main\SettingsEnum;
 use App\GraphQL\Scalars\BigInteger;
+use App\Models\Company\CompanySettings;
 use App\Models\Settings;
 use App\Services\User\BalanceService;
 use GraphQL\Type\Definition\Type;
@@ -53,6 +54,38 @@ class SettingsGraphQLType extends GraphQLType
                 'description' => 'Company balance',
                 'resolve' => function ($root) {
                     return Auth::check() ? (new BalanceService)->getBalance() : 0;
+                },
+            ],
+            'card_after_due_days' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Card After Due Days',
+                'resolve' => function (Collection $root) {
+                    /** @var Collection<int, CompanySettings> $root */
+                    return $root->first(fn (CompanySettings $settings) => $settings->name === SettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0;
+                },
+            ],
+            'pinfl_after_due_days' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Card After Due Days',
+                'resolve' => function (Collection $root) {
+                    /** @var Collection<int, CompanySettings> $root */
+                    return $root->first(fn (CompanySettings $settings) => $settings->name === SettingsEnum::PINFL_AFTER_DUE_DAYS)->value ?? 0;
+                },
+            ],
+            'guarantor_after_due_days' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Card After Due Days',
+                'resolve' => function (Collection $root) {
+                    /** @var Collection<int, CompanySettings> $root */
+                    return $root->first(fn (CompanySettings $settings) => $settings->name === SettingsEnum::GUARANTOR_AFTER_DUE_DAYS)->value ?? 0;
+                },
+            ],
+            'guarantor_pinfl_after_due_days' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Card After Due Days',
+                'resolve' => function (Collection $root) {
+                    /** @var Collection<int, CompanySettings> $root */
+                    return $root->first(fn (CompanySettings $settings) => $settings->name === SettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS)->value ?? 0;
                 },
             ],
         ];

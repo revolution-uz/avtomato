@@ -3,6 +3,7 @@
 namespace App\GraphQL\Common\Queries;
 
 use App\GraphQL\Common\Types\SettingsGraphQLType;
+use App\Models\Company\CompanySettings;
 use App\Models\Settings;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -28,6 +29,6 @@ class SettingsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return Settings::query()->get();
+        return array_merge(Settings::query()->get(), CompanySettings::query()->get());
     }
 }
