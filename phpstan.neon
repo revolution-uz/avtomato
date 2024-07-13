@@ -1,6 +1,7 @@
 includes:
     - ./vendor/larastan/larastan/extension.neon
 parameters:
+    tmpDir: storage/tmp/
     paths:
         - app
     phpVersion: 80300
