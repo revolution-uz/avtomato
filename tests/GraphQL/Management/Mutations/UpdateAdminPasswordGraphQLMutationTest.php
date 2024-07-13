@@ -15,17 +15,13 @@ class UpdateAdminPasswordGraphQLMutationTest extends GraphQLTestCase
 
     private CompanyAdmin $_adminInput;
 
-    private string $_oldPassword = 'old-password';
-
     private string $_password = 'password';
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->_adminInput = CompanyAdmin::factory()->create([
-            'password' => Hash::make($this->_oldPassword),
-        ]);
+        $this->_adminInput = CompanyAdmin::factory()->create();
     }
 
     #[Test]
@@ -37,7 +33,6 @@ class UpdateAdminPasswordGraphQLMutationTest extends GraphQLTestCase
                 route('graphql.management'),
                 $this->buildGraphQLQuery([
                     'id' => $this->_adminInput->id,
-                    'old_password' => $this->_oldPassword,
                     'password' => $this->_password,
                     'password_confirmation' => $this->_password,
                 ])
@@ -56,36 +51,6 @@ class UpdateAdminPasswordGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function errorWithWrongOldPassword()
-    {
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.management'),
-                $this->buildGraphQLQuery([
-                    'id' => $this->_adminInput->id,
-                    'old_password' => Str::random(8),
-                    'password' => $this->_password,
-                    'password_confirmation' => $this->_password,
-                ])
-            );
-        $response->assertOk();
-        $response->assertJsonStructure([
-            'errors' => [
-                [
-                    'message',
-                    'extensions' => [
-                        'validation' => [
-                            'old_password',
-                        ],
-                    ],
-                ],
-            ],
-        ]);
-        $this->assertEquals('The old password is incorrect.', $response->json('errors.0.extensions.validation.old_password.0'));
-    }
-
-    #[Test]
     public function errorWithWrongPasswordConfirmation()
     {
         $response = $this
@@ -94,7 +59,6 @@ class UpdateAdminPasswordGraphQLMutationTest extends GraphQLTestCase
                 route('graphql.management'),
                 $this->buildGraphQLQuery([
                     'id' => $this->_adminInput->id,
-                    'old_password' => $this->_oldPassword,
                     'password' => $this->_password,
                     'password_confirmation' => Str::random(8),
                 ])
@@ -124,7 +88,6 @@ class UpdateAdminPasswordGraphQLMutationTest extends GraphQLTestCase
                 route('graphql.management'),
                 $this->buildGraphQLQuery([
                     'id' => null,
-                    'old_password' => null,
                     'password' => null,
                     'password_confirmation' => null,
                 ])
@@ -132,7 +95,6 @@ class UpdateAdminPasswordGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$id" of non-null type "Int!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$old_password" of non-null type "String!" must not be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$password" of non-null type "String!" must not be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$password_confirmation" of non-null type "String!" must not be null.'));
 
@@ -143,7 +105,6 @@ class UpdateAdminPasswordGraphQLMutationTest extends GraphQLTestCase
                 route('graphql.management'),
                 $this->buildGraphQLQuery([
                     'id' => $this->_adminInput->id,
-                    'old_password' => $this->_oldPassword,
                     'password' => $password,
                     'password_confirmation' => $password,
                 ])
@@ -169,8 +130,8 @@ class UpdateAdminPasswordGraphQLMutationTest extends GraphQLTestCase
         $query = [];
         $query['variables'] = $variables;
         $query['query'] = '
-            mutation UpdateAdminPassword($id: Int!, $old_password: String!, $password: String!, $password_confirmation: String!) {
-                updateAdminPassword(id: $id , old_password: $old_password , password: $password, password_confirmation: $password_confirmation)
+            mutation UpdateAdminPassword($id: Int!, $password: String!, $password_confirmation: String!) {
+                updateAdminPassword(id: $id, password: $password, password_confirmation: $password_confirmation)
             }
         ';
 

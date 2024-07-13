@@ -31,10 +31,6 @@ class UpdateAdminPasswordGraphQLMutation extends Mutation
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
             ],
-            'old_password' => [
-                'name' => 'old_password',
-                'type' => Type::nonNull(Type::string()),
-            ],
             'password' => [
                 'name' => 'password',
                 'type' => Type::nonNull(Type::string()),
@@ -62,17 +58,6 @@ class UpdateAdminPasswordGraphQLMutation extends Mutation
     {
         return [
             'id' => ['required', Rule::exists('admins', 'id')->whereNull('deleted_at')],
-            'old_password' => [
-                'required',
-                'string',
-                'min:8',
-                function ($attribute, $value, $fail) use ($args) {
-                    $admin = CompanyAdmin::find($args['id']);
-                    if (! Hash::check($value, $admin->password)) {
-                        $fail('The old password is incorrect.');
-                    }
-                },
-            ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
