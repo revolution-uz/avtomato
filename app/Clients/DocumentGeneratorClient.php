@@ -18,17 +18,16 @@ class DocumentGeneratorClient extends BaseClient
         return ClientCodeEnum::DOCUMENT_GENERATOR;
     }
 
-    public function generate(string $document_name, string $document_template, array $data)
+    public function generateStream(string $document_name, string $document_template, array $data): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $templateProcessor = new TemplateProcessor(storage_path('../document_files/templates/' . $document_template));
         foreach ($data as $search => $value) {
             $templateProcessor->setValue($search, htmlspecialchars($value));
         }
         $fileName = 'documents/' . $document_name;
-        $templateProcessor->saveAs(storage_path('app/public/' . $fileName));
-        $filePath = Storage::disk('local')->path($document_name);
+        $filePath = Storage::disk('temp')->path($fileName);
         $templateProcessor->saveAs($filePath);
 
-        return $fileName;
+        return Storage::download('temp/' . $fileName);
     }
 }

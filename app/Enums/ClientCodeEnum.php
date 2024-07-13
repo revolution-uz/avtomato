@@ -11,6 +11,5 @@ enum ClientCodeEnum: int
     case SMS_FLY = 4;
     case ATMOS_CARD_PAY = 5;
     case ATMOS_PINFL_PAY = 6;
-
     case DOCUMENT_GENERATOR = 7;
 }

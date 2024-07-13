@@ -2,12 +2,14 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\Enums\Company\AttachmentTypeEnum;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\GraphQL\Scalars\BigFloat;
+use App\Models\Company\Attachment;
 use App\Models\Company\Installment;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -59,7 +61,32 @@ class InstallmentGraphQLType extends GraphQLType
             ],
             'documents' => [
                 'type' => Type::listOf(GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Installment $root) => $root->documents,
+                'resolve' => function (Installment $root) {
+                    $additionalDocuments = [
+                        (new Attachment)->fill([
+                            'id' => 0,
+                            'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
+                            'name' => 'Договор',
+                            'original_name' => 'Договор',
+                            'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'path' => route('document.downloadInstallmentAgreement', ['installment_id' => $root->id]),
+                            'created_at' => $root->created_at,
+                            'updated_at' => $root->updated_at,
+                        ]),
+                        (new Attachment)->fill([
+                            'id' => 0,
+                            'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
+                            'name' => 'Опросник',
+                            'original_name' => 'Опросник',
+                            'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'path' => route('document.downloadCustomerApplication', ['installment_id' => $root->customer_id]),
+                            'created_at' => $root->created_at,
+                            'updated_at' => $root->updated_at,
+                        ]),
+                    ];
+
+                    return array_merge($additionalDocuments, $root->documents ?? []);
+                },
             ],
             'status' => [
                 'type' => Type::nonNull(Type::int()),

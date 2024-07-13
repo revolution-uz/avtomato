@@ -47,11 +47,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api.php'));
         }
 
-        //        Route::middleware(['api', 'force.json'])
-        //            ->namespace($this->namespace)
-        //            ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
-        //            ->prefix('api/v1')
-        //            ->group(base_path('routes/partner-api.php'));
+        Route::middleware(['api', 'force.json'])
+            ->namespace($this->namespace)
+            ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
+            ->prefix('api/')
+            ->group(base_path('routes/partner-api.php'));
     }
 
     protected function mapWebRoutes(): void

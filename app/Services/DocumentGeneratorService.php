@@ -4,41 +4,21 @@ namespace App\Services;
 
 use App\Clients\DocumentGeneratorClient;
 use App\Enums\Company\AddressTypeEnum;
-use App\Enums\Company\AttachmentTypeEnum;
 use App\Models\Company\Address;
-use App\Models\Company\Attachment;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Phone;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class DocumentGeneratorService
+readonly class DocumentGeneratorService
 {
     public function __construct(
-        private readonly DocumentGeneratorClient $documentGeneratorClient
+        private DocumentGeneratorClient $documentGeneratorClient
     ) {}
 
-    public function findOrCreateInstallmentForm(Installment $installment)
-    {
-        if ($attachment = Attachment::query()->where('type', AttachmentTypeEnum::INSTALLMENT_FORM_DOCUMENT)->where('attachmentable_id', $installment->id)->first()) {
-            return $attachment;
-        }
-
-        return $this->saveAttachment($installment, $this->generateInstallmentForm($installment), AttachmentTypeEnum::INSTALLMENT_FORM_DOCUMENT);
-    }
-
-    public function findOrCreateCustomerApplication(Customer $customer)
-    {
-        if ($attachment = Attachment::query()->where('type', AttachmentTypeEnum::CUSTOMER_APPLICATION_DOCUMENT)->where('attachmentable_id', $customer->id)->first()) {
-            return $attachment;
-        }
-
-        return $this->saveAttachment($customer, $this->generateCustomerApplication($customer), AttachmentTypeEnum::CUSTOMER_APPLICATION_DOCUMENT);
-    }
-
-    private function generateCustomerApplication(Customer $customer)
+    public function generateCustomerApplicationStream(Customer $customer): StreamedResponse
     {
         $phones = [];
         foreach ($customer->phones as $phone) {
@@ -66,10 +46,10 @@ class DocumentGeneratorService
             'card' => $card->pan,
         ];
 
-        return $this->documentGeneratorClient->generate($customer->full_name . ' ' . date('d-m-Y--H-i-s.docx'), 'customer-application.docx', $data);
+        return $this->documentGeneratorClient->generateStream($customer->full_name . ' ' . date('d-m-Y--H-i-s.docx'), 'customer-application.docx', $data);
     }
 
-    private function generateInstallmentForm(Installment $installment)
+    public function generateInstallmentFormStream(Installment $installment): StreamedResponse
     {
         $customer = $installment->customer;
         $living_address = new Address;
@@ -106,21 +86,6 @@ class DocumentGeneratorService
         }
         $data[] = ['paid_price' => number_format($paid_sum, 2, ' ', '.')];
 
-        return $this->documentGeneratorClient->generate($customer->full_name . ' ' . date('d-m-Y--H-i-s.docx'), 'installment-form.docx', $data);
-    }
-
-    private function saveAttachment(Model $model, string $name, AttachmentTypeEnum $type)
-    {
-        $attachment = new Attachment;
-        $attachment->type = $type;
-        $attachment->path = storage_path('app/public/documents/') . $name;
-        $attachment->name = $name;
-        $attachment->original_name = $name;
-        $attachment->mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-        $attachment->attachmentable_type = $model::class;
-        $attachment->attachmentable_id = $model->getKey();
-        $attachment->saveOrFail();
-
-        return $attachment;
+        return $this->documentGeneratorClient->generateStream($customer->full_name . ' ' . date('d-m-Y--H-i-s.docx'), 'installment-form.docx', $data);
     }
 }

@@ -34,7 +34,6 @@ use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Queries\CalculateGraphQLQuery;
-use App\GraphQL\Installment\Queries\GenerateInstallmentFormDocumentGraphQLQuery;
 use App\GraphQL\Installment\Queries\InstallmentsGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleInstallmentGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTariffGraphQLQuery;
@@ -110,7 +109,6 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 SingleTransactionTypeGraphQLQuery::class,
                 TransactionsGraphQLQuery::class,
                 SingleTransactionGraphQLQuery::class,
-                GenerateInstallmentFormDocumentGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateInstallmentGraphQLMutation::class,
