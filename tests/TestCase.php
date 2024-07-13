@@ -4,7 +4,6 @@ namespace Tests;
 
 use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
-use App\Models\Company\Mahalla;
 use App\Models\Company\Rbac\Role;
 use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\FeatureSeeder;
@@ -70,11 +69,6 @@ abstract class TestCase extends BaseTestCase
             '--tenants' => [$tenant->id],
         ]);
 
-    }
-
-    public function seedAddress()
-    {
-        Mahalla::factory()->count(1)->create();
     }
 
     public function createAdminUser()

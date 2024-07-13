@@ -8,6 +8,7 @@
 /vendor
 /storage/api-docs
 /resources/views/vendor
+/build
 .env
 .env.backup
 .env.production
