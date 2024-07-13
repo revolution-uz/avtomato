@@ -26,7 +26,7 @@ class PermissionEditableItemGraphQLType extends GraphQLType
             'slug' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => function (array $root) {
-                    return $root['slug'];
+                    return $root['slug']->value;
                 },
             ],
             'name' => [

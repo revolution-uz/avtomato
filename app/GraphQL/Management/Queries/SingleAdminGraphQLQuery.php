@@ -5,7 +5,7 @@ namespace App\GraphQL\Management\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -28,8 +28,8 @@ class SingleAdminGraphQLQuery extends Query
         return [
             'id' => [
                 'name' => 'id',
-                'type' => Type::int(),
-                'rules' => ['required', 'exists:users,id'],
+                'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', 'exists:admins,id'],
             ],
         ];
     }
@@ -41,6 +41,6 @@ class SingleAdminGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return User::query()->findOrFail($args['id']);
+        return CompanyAdmin::query()->findOrFail($args['id']);
     }
 }

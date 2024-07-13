@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -22,7 +23,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
-    use OrderBySortable, SoftDeletes, TenantConnection;
+    use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id', 'name', 'device_ip', 'device_type', 'device_os', 'last_used_at'];
 

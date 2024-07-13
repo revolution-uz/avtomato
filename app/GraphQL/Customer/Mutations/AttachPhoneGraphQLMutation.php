@@ -5,6 +5,7 @@ namespace App\GraphQL\Customer\Mutations;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
+use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
@@ -31,7 +32,7 @@ class AttachPhoneGraphQLMutation extends Mutation
             ],
             'phone' => [
                 'name' => 'phone',
-                'type' => Type::nonNull(Type::string()),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'rules' => ['distinct', 'required', 'int', new PhoneRule],
             ],
             'type' => [

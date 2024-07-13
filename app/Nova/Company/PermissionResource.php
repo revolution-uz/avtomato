@@ -11,9 +11,9 @@ use Laravel\Nova\Fields\Text;
 
 class PermissionResource extends Resource
 {
-    public static $model = Permission::class;
+    public static string $model = Permission::class;
 
-    public static $title = 'slug';
+    public static $title = 'name';
 
     public static $search = [
         'id', 'slug', 'name',

@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Installment\Types;
 
-use App\GraphQL\Scalars\BigInteger;
+use App\GraphQL\Scalars\BigFloat;
 use App\Rules\TariffPartValidations;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
@@ -40,7 +40,7 @@ class InstallmentInputGraphQLType extends InputType
             ],
             'amount' => [
                 'name' => 'amount',
-                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'numeric',
@@ -49,7 +49,7 @@ class InstallmentInputGraphQLType extends InputType
             ],
             'initial_fee' => [
                 'name' => 'initial_fee',
-                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'required',
                     'numeric',

@@ -53,7 +53,7 @@ class SingleInpsHistoryGraphQLQuery extends Query
                 'required',
                 Rule::exists('scoring_requests', 'id')
                     ->where('status', ScoringRequestStatusEnum::SUCCESS)
-                    ->where('type', ScoringRequestTypeEnum::KATM_INPS_HISTORY),
+                    ->where('type', ScoringRequestTypeEnum::KATM_INPS_HISTORY)->whereNull('deleted_at'),
             ],
         ];
     }

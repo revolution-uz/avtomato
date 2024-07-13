@@ -2,8 +2,12 @@
 
 namespace App\Enums\Company;
 
+use App\Enums\EnumMethods;
+
 enum LogType: string
 {
+    use EnumMethods;
+
     case CREATE = 'created';
     case UPDATE = 'updated';
     case DELETE = 'deleted';

@@ -4,7 +4,6 @@ namespace Tests;
 
 use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
-use App\Models\Company\Mahalla;
 use App\Models\Company\Rbac\Role;
 use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\FeatureSeeder;
@@ -72,17 +71,20 @@ abstract class TestCase extends BaseTestCase
 
     }
 
-    public function seedAddress()
-    {
-        Mahalla::factory()->count(1)->create();
-    }
-
     public function createAdminUser()
     {
-        $admin = Company\User::query()->where('role_id', Role::getAdmin()->id)->first();
+        $admin = Company\CompanyAdmin::query()->where('role_id', Role::getAdmin()->id)->first();
 
-        return $admin ?? Company\User::factory()->create([
+        return $admin ?? Company\CompanyAdmin::factory()->create([
             'role_id' => Role::getAdmin()->id,
+            'password' => Hash::make('password'),
+        ]);
+    }
+
+    public function createSimpleAdminUser()
+    {
+        return Company\CompanyAdmin::factory()->create([
+            'role_id' => null,
             'password' => Hash::make('password'),
         ]);
     }

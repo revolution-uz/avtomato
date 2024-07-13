@@ -21,10 +21,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property TransactionType $transactionType
  * @property string|null $external_id
  * @property float $amount
- * @property int $employee_id
+ * @property int $admin_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read  User $employee
+ * @property-read  CompanyAdmin $admin
  * @property Carbon|null $paid_at
  */
 class Transaction extends Model
@@ -40,7 +40,7 @@ class Transaction extends Model
         'transaction_type_id',
         'external_id',
         'amount',
-        'employee_id',
+        'admin_id',
         'paid_at',
     ];
 
@@ -67,11 +67,11 @@ class Transaction extends Model
 
     public function transactionType(): BelongsTo
     {
-        return $this->belongsTo(TransactionType::class);
+        return $this->belongsTo(TransactionType::class)->withTrashed();
     }
 
-    public function employee(): BelongsTo
+    public function admin(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'employee_id', 'id');
+        return $this->belongsTo(CompanyAdmin::class, 'admin_id', 'id');
     }
 }

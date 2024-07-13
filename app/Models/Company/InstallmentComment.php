@@ -11,13 +11,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
- * @property int $user_id
+ * @property int $admin_id
  * @property int $installment_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property string $comment
- * @property User $user
+ * @property CompanyAdmin $admin
  * @property Installment $installment
  */
 class InstallmentComment extends Model
@@ -25,7 +25,7 @@ class InstallmentComment extends Model
     use HasFactory, LogsActivityDirtyOnlyTrait, SoftDeletes, TenantConnection;
 
     protected $fillable = [
-        'user_id',
+        'admin_id',
         'installment_id',
         'comment',
     ];
@@ -35,8 +35,8 @@ class InstallmentComment extends Model
         return $this->belongsTo(Installment::class);
     }
 
-    public function user()
+    public function admin()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(CompanyAdmin::class);
     }
 }

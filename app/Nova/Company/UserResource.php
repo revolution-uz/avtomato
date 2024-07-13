@@ -2,7 +2,7 @@
 
 namespace App\Nova\Company;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use App\Nova\Actions\ChangeUserPassword;
 use App\Nova\Actions\LoginAsUser;
 use App\Nova\Resource;
@@ -16,16 +16,16 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
- * @mixin User
+ * @mixin CompanyAdmin
  */
 class UserResource extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<User>
+     * @var class-string<CompanyAdmin>
      */
-    public static $model = User::class;
+    public static $model = CompanyAdmin::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

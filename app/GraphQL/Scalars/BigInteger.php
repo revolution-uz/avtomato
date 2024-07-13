@@ -29,7 +29,7 @@ final class BigInteger extends ScalarType implements TypeConvertible
      */
     public function serialize($value): mixed
     {
-        if (! preg_match('/\d+/', $value)) {
+        if (! preg_match('/\d+/', (string) $value)) {
             throw new Error($value . ' cannot represent a big integer.');
         }
 
@@ -48,7 +48,7 @@ final class BigInteger extends ScalarType implements TypeConvertible
      */
     public function parseValue($value)
     {
-        if (! preg_match('/\d+/', $value)) {
+        if (! preg_match('/\d+/', (string) $value)) {
             throw new Error($value . ' cannot represent a big integer.');
         }
 
@@ -74,7 +74,7 @@ final class BigInteger extends ScalarType implements TypeConvertible
             );
         }
 
-        if (! preg_match('/\d+/', $valueNode->value)) {
+        if (! preg_match('/\d+/', (string) ($valueNode->value))) {
             throw new Error($valueNode->value . ' cannot represent a big integer.');
         }
 

@@ -9,12 +9,12 @@ use App\Models\Company;
 use App\Nova\AdminResource;
 use App\Nova\BaseFeatureResource;
 use App\Nova\BaseModuleResource;
+use App\Nova\Company\BalanceChargeResource;
+use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
 use App\Nova\Company\FeatureResource;
-use App\Nova\Company\LogResource;
 use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
-use App\Nova\Company\TariffsResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
@@ -53,9 +53,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(ModuleResource::class),
                         MenuItem::resource(FeatureResource::class),
                         MenuItem::resource(BranchResource::class),
-                        MenuItem::resource(TariffsResource::class),
                         MenuItem::resource(RoleResource::class),
-                        MenuItem::resource(LogResource::class),
+                        MenuItem::resource(BalanceFundResource::class),
+                        MenuItem::resource(BalanceChargeResource::class),
                     ])->collapsable(),
                 ];
             }
@@ -134,8 +134,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     protected function gate(): void
     {
-        Gate::define('viewNova', function ($user) {
-            return in_array($user->email, [
+        Gate::define('viewNova', function ($admin) {
+            return in_array($admin->email, [
                 //
             ]);
         });

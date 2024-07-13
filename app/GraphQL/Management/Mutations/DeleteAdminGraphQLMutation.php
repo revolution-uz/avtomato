@@ -4,7 +4,7 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -38,7 +38,7 @@ class DeleteAdminGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        User::query()->whereIn('id', $args['ids'])->delete();
+        CompanyAdmin::query()->whereIn('id', $args['ids'])->delete();
 
         return true;
     }
@@ -52,9 +52,9 @@ class DeleteAdminGraphQLMutation extends Mutation
             ],
             'ids.*' => [
                 'required',
-                'array',
+                'integer',
                 function ($attribute, $value, $fail) {
-                    if (! User::query()->where('id', $value)->exists()) {
+                    if (! CompanyAdmin::query()->where('id', $value)->exists()) {
                         $fail(__('api.not found'));
                     }
                 },

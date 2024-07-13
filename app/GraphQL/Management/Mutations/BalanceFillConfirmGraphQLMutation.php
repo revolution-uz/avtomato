@@ -40,12 +40,12 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
             ],
             'number' => [
                 'name' => 'number',
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => 'required|string',
             ],
             'phone' => [
                 'name' => 'phone',
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => 'required|string',
             ],
         ];

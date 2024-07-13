@@ -55,7 +55,7 @@ class CreateInstallmentCommentGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $attributes = $args;
-        $attributes['user_id'] = auth()->id();
+        $attributes['admin_id'] = auth()->id();
 
         return InstallmentComment::create($attributes);
     }

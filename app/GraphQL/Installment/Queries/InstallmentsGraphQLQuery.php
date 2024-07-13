@@ -28,22 +28,18 @@ class InstallmentsGraphQLQuery extends Query
     {
         return [
             'sort' => [
-                'name' => 'sort',
                 'type' => Type::string(),
                 'rules' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
             ],
             'search' => [
-                'name' => 'search',
                 'type' => Type::string(),
                 'rules' => 'nullable|string|max:255',
             ],
             'page' => [
-                'name' => 'page',
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:1',
             ],
             'per_page' => [
-                'name' => 'per_page',
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
             ],

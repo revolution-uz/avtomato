@@ -6,7 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AdminInputGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -42,7 +42,7 @@ class CreateAdminGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $model = new User;
+        $model = new CompanyAdmin;
         $model->fill($args['admin']);
         $model->password = bcrypt($args['admin']['password']);
         $model->saveOrFail();
@@ -53,7 +53,7 @@ class CreateAdminGraphQLMutation extends Mutation
     protected function rules(array $args = []): array
     {
         return array_merge(parent::rules($args), [
-            'admin.username' => Rule::unique('users', 'username'),
+            'admin.username' => Rule::unique('admins', 'username'),
         ]);
     }
 }

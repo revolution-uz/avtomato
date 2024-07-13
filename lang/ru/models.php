@@ -30,7 +30,7 @@ return [
     'App\Models\Company\ScoringRequest' => 'Запрос на скоринг',
     'App\Models\Company\Tariff' => 'Тариф',
     'App\Models\Company\Transaction' => 'Транзакция',
-    'App\Models\Company\User' => 'Пользователь',
+    'App\Models\Company\CompanyAdmin' => 'Пользователь',
     'App\Models\Admin' => 'Админ',
     'App\Models\BaseFeature' => 'Базовая функция',
     'App\Models\BaseModule' => 'Базовый модуль',

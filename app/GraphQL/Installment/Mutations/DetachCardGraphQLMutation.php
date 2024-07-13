@@ -65,7 +65,7 @@ class DetachCardGraphQLMutation extends Mutation
             ],
             'ids.*' => [
                 'required',
-                'array',
+                'integer',
                 function ($attribute, $value, $fail) {
                     if (! Card::query()->where('id', $value)->exists()) {
                         $fail(__('api.not found'));

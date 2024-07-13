@@ -41,6 +41,8 @@ class TariffInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'numeric',
+                    'min:0',
+                    'max:100',
                 ],
             ],
             'min_period' => [
@@ -49,6 +51,8 @@ class TariffInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'int',
+                    'min:0',
+                    'max:24',
                 ],
             ],
             'max_period' => [
@@ -57,6 +61,8 @@ class TariffInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'int',
+                    'min:0',
+                    'max:24',
                 ],
             ],
             'min_amount' => [
@@ -65,6 +71,8 @@ class TariffInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'int',
+                    'min:0',
+                    'max:1000000000',
                 ],
             ],
             'max_amount' => [
@@ -73,6 +81,8 @@ class TariffInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'int',
+                    'min:0',
+                    'max:1000000000',
                 ],
             ],
             'min_initial_fee' => [
@@ -81,6 +91,8 @@ class TariffInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'int',
+                    'min:0',
+                    'max:1000000000',
                 ],
             ],
             'max_initial_fee' => [
@@ -89,6 +101,8 @@ class TariffInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'int',
+                    'min:0',
+                    'max:1000000000',
                 ],
             ],
         ];

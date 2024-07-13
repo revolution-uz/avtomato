@@ -4,7 +4,7 @@ namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Installment;
@@ -30,7 +30,7 @@ class UpdateInstallmentGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('installments', 'id')->whereNull('deleted_at')->where('status', InstallmentStatusEnum::DRAFT),
+                    Rule::exists('installments', 'id')->whereNull('deleted_at')->where('status', InstallmentStatusEnum::IN_ACTIVE),
                 ],
             ],
             'installment' => [
@@ -42,7 +42,7 @@ class UpdateInstallmentGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(InstallmentGraphGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -54,7 +54,7 @@ class UpdateInstallmentGraphQLMutation extends Mutation
     {
         $installment = Installment::findOrFail($args['id']);
 
-        if ($installment->status == InstallmentStatusEnum::DRAFT) {
+        if ($installment->status == InstallmentStatusEnum::IN_ACTIVE) {
             $installment->updateOrFail($args['installment']);
         }
 

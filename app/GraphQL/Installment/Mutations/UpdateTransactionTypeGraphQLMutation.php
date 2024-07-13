@@ -3,7 +3,7 @@
 namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Customer\Types\CustomerGraphQLType;
+use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\TransactionType;
 use Closure;
@@ -42,7 +42,7 @@ class UpdateTransactionTypeGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(TransactionTypeGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -58,9 +58,9 @@ class UpdateTransactionTypeGraphQLMutation extends Mutation
 
         /** @var TransactionType $transactionType */
         $transactionType = TransactionType::findOrFail($args['id']);
-        $transactionType->setNames($args['transactionType']['name']);
+        $transactionType->setNames($args['name']);
         $transactionType->saveOrFail();
 
-        return true;
+        return $transactionType;
     }
 }

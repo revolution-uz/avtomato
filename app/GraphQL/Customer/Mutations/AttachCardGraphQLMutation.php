@@ -4,6 +4,7 @@ namespace App\GraphQL\Customer\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\AttachCardGraphQLType;
+use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Services\CustomerCardService;
 use Closure;
@@ -33,13 +34,8 @@ class AttachCardGraphQLMutation extends Mutation
             ],
             'number' => [
                 'name' => 'number',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'string',
-                    'size:16',
-                    'regex:/^[0-9]{16}$/',
-                ],
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
+                'rules' => 'required|integer|digits:16',
             ],
             'expiry' => [
                 'name' => 'expiry',

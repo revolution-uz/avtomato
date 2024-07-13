@@ -5,7 +5,7 @@ namespace App\GraphQL\Management\Mutations;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -49,7 +49,7 @@ class UpdateAdminGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $model = User::findOrFail($args['id']);
+        $model = CompanyAdmin::findOrFail($args['id']);
         $model->updateOrFail($args);
         $model->saveOrFail();
 
@@ -62,7 +62,7 @@ class UpdateAdminGraphQLMutation extends Mutation
             'id' => [
                 'required',
                 'integer',
-                Rule::exists('users', 'id')
+                Rule::exists('admins', 'id')
                     ->where('id', $args['id']),
             ],
             'first_name' => [

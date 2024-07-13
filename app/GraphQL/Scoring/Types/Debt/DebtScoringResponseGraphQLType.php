@@ -9,7 +9,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class DebtScoringResponseGraphQLType extends GraphQLType
 {
-    public const GRAPHQL_TYPE_NAME = 'DebtScoringResponseGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'DebtScoringResponseGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

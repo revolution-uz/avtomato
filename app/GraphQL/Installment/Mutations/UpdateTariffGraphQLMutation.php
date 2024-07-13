@@ -3,7 +3,7 @@
 namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Customer\Types\CustomerGraphQLType;
+use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\GraphQL\Installment\Types\TariffInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Tariff;
@@ -36,7 +36,7 @@ class UpdateTariffGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(TariffGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -50,7 +50,7 @@ class UpdateTariffGraphQLMutation extends Mutation
         $tariff->fill($args['tariff']);
         $tariff->saveOrFail();
 
-        return true;
+        return $tariff;
     }
 
     protected function rules(array $args = []): array

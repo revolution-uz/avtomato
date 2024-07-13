@@ -31,13 +31,13 @@ class InstallmentCommentGraphQLType extends GraphQLType
                 'type' => Type::nonNull(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (InstallmentComment $root) => $root->installment_id,
             ],
-            'user_id' => [
+            'admin_id' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (InstallmentComment $root) => $root->user_id,
+                'resolve' => fn (InstallmentComment $root) => $root->admin_id,
             ],
-            'user' => [
+            'admin' => [
                 'type' => Type::nonNull(GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (InstallmentComment $root) => $root->user,
+                'resolve' => fn (InstallmentComment $root) => $root->admin,
             ],
             'comment' => [
                 'type' => Type::nonNull(Type::string()),

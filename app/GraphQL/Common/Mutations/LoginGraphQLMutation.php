@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Common\Mutations;
 
-use App\Models\Company\User;
+use App\Models\Company\CompanyAdmin;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -41,9 +41,9 @@ class LoginGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        /** @var User|null $user */
-        $user = User::query()->where('username', $args['username'])->first();
-        if (! $user || ! Hash::check($args['password'], $user->password)) {
+        /** @var CompanyAdmin|null $admin */
+        $admin = CompanyAdmin::query()->where('username', $args['username'])->first();
+        if (! $admin || ! Hash::check($args['password'], $admin->password)) {
             throw new AuthorizationError('Login or password is wrong');
         }
 
@@ -51,7 +51,7 @@ class LoginGraphQLMutation extends Mutation
             throw new AuthorizationError('Login or password is wrong');
         }
 
-        return $user->createTokenWithData(
+        return $admin->createTokenWithData(
             Str::substr(request()->header('Device-Name'), 0, 255),
             [
                 'device_type' => Str::substr(request()->header('Device-Type'), 0, 32),

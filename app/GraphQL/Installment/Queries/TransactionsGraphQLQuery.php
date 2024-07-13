@@ -29,41 +29,40 @@ class TransactionsGraphQLQuery extends Query
     {
         return [
             'sort' => [
-                'name' => 'sort',
                 'type' => Type::string(),
+                'rules' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
             ],
             'search' => [
-                'name' => 'search',
                 'type' => Type::string(),
+                'rules' => 'nullable|string|max:255',
             ],
             'page' => [
-                'name' => 'page',
                 'type' => Type::int(),
+                'rules' => 'nullable|int|min:1',
             ],
             'per_page' => [
-                'name' => 'per_page',
                 'type' => Type::int(),
+                'rules' => 'nullable|int|min:5|max:100',
             ],
-
             'id' => [
-                'name' => 'id',
                 'type' => Type::int(),
+                'rules' => 'int|min:1',
             ],
             'installment_id' => [
-                'name' => 'installment_id',
                 'type' => Type::int(),
+                'rules' => ['nullable', 'int', Rule::exists('installments', 'id')->whereNull('deleted_at')],
             ],
             'customer_id' => [
                 'name' => 'customer_id',
                 'type' => Type::int(),
             ],
             'card_id' => [
-                'name' => 'card_id',
                 'type' => Type::int(),
+                'rules' => ['nullable', 'int', Rule::exists('cards', 'id')->whereNull('deleted_at')],
             ],
             'transaction_type_id' => [
-                'name' => 'transaction_type_id',
                 'type' => Type::int(),
+                'rules' => ['nullable', 'int', Rule::exists('transaction_types', 'id')->whereNull('deleted_at')],
             ],
         ];
     }
@@ -78,44 +77,44 @@ class TransactionsGraphQLQuery extends Query
         $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_VIEW_ALL);
 
         return Transaction::query()
-            ->with(['installment', 'employee', 'customer', 'transactionType', 'installment.branch'])
+            ->with(['installment', 'admin', 'customer', 'transactionType', 'installment.branch'])
             ->when(
-                $args['amount'],
+                isset($args['amount']),
                 fn (Builder $q) => $q
                     ->where('amount', $args['amount'])
             )
             ->when(
-                $args['id'],
+                isset($args['id']),
                 fn (Builder $q) => $q
                     ->where('id', $args['id'])
             )
             ->when(
-                $args['branch_id'],
+                isset($args['branch_id']),
                 fn (Builder $q) => $q
                     ->whereHas('installment', fn (Builder $q) => $q->where('branch_id', $args['branch_id']))
             )
             ->when(
-                $args['admin_id'],
+                isset($args['admin_id']),
                 fn (Builder $q) => $q
                     ->where('id', $args['admin_id'])
             )
             ->when(
-                $args['installment_id'],
+                isset($args['installment_id']),
                 fn (Builder $q) => $q
                     ->where('installment_id', $args['installment_id'])
             )
             ->when(
-                $args['customer_id'],
+                isset($args['customer_id']),
                 fn (Builder $q) => $q
                     ->where('customer_id', $args['customer_id'])
             )
             ->when(
-                $args['card_id'],
+                isset($args['card_id']),
                 fn (Builder $q) => $q
                     ->where('card_id', $args['card_id'])
             )
             ->when(
-                $args['transaction_type_id'],
+                isset($args['transaction_type_id']),
                 fn (Builder $q) => $q
                     ->where('transaction_type_id', $args['transaction_type_id'])
             )
@@ -125,21 +124,14 @@ class TransactionsGraphQLQuery extends Query
                 ))
             ->when(isset($args['sort']), fn (Builder|Transaction $q) => $q->orderBySortable($args['sort']))
 
-            ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
-    }
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
+                $search = '%' . $args['search'] . '%';
+                $q->where(function (Builder $query) use ($search) {
+                    $query->where('id', 'ILIKE', $search)
+                        ->orWhere('external_id', 'ILIKE', $search);
+                });
+            })
 
-    protected function rules(array $args = []): array
-    {
-        return [
-            'sort' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
-            'search' => 'nullable|string|max:255',
-            'page' => 'nullable|int|min:1',
-            'per_page' => 'nullable|int|min:5|max:100',
-            'id' => 'int|min:1',
-            'installment_id' => ['nullable', 'int', Rule::exists('installments', 'id')],
-            'customer_id' => ['nullable', 'int', Rule::exists('customers', 'id')],
-            'card_id' => ['nullable', 'int', Rule::exists('cards', 'id')],
-            'transaction_type_id' => ['nullable', 'int', Rule::exists('transaction_types', 'id')],
-        ];
+            ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

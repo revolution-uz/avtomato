@@ -5,10 +5,10 @@ namespace Database\Factories\Company;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Tariff;
-use App\Models\Company\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
@@ -22,7 +22,7 @@ class InstallmentFactory extends Factory
             'customer_id' => Customer::factory(),
             'branch_id' => Branch::factory(),
             'tariff_id' => Tariff::factory(),
-            'user_id' => User::factory(),
+            'admin_id' => CompanyAdmin::factory(),
             'type' => InstallmentTypeEnum::randomValue(),
             'amount' => $this->faker->randomFloat(),
             'initial_fee' => $this->faker->randomFloat(),

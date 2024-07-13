@@ -10,4 +10,11 @@ return [
     'User' => 'Пользователь',
     'success' => 'Успешный',
     'otp_was_wrong' => 'Код подтверждения был неправильным',
+    'till :days days' => ':days до дня',
+    'above :days days' => 'более :days дней',
+    'installment_status_CANCELED' => 'Отменено',
+    'installment_status_FROZEN' => 'Замороженный',
+    'installment_status_IN_ACTIVE' => 'Неактивный',
+    'installment_status_ACTIVE' => 'Активный',
+    'installment_status_CLOSED' => 'Закрыто',
 ];
