@@ -17,9 +17,6 @@ su - www-data -s /bin/bash -c 'cd /var/www/automato && php artisan tenants:seed 
 echo "🧹 Clear cache"
 su - www-data -s /bin/bash -c 'cd /var/www/automato && php artisan optimize:clear'
 
-echo "🧹 Generate swagger docs"
-su - www-data -s /bin/bash -c 'cd /var/www/automato && php artisan l5-swagger:generate'
-
 echo "🔄 Restarting Supervisor"
 sudo supervisorctl restart all
 
