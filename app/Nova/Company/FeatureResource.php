@@ -6,6 +6,7 @@ use App\Models\Company\Feature;
 use App\Models\Company\Module;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
@@ -48,18 +49,19 @@ class FeatureResource extends Resource
     public function fields(NovaRequest $request): array
     {
         return [
-            ID::make()->sortable(),
             Heading::make($this->resource->description),
+            ID::make()->sortable(),
             Text::make(__('nova.feature.name'), 'name')->filterable()->exceptOnForms(),
+            Text::make(__('nova.feature.description'), 'description')->filterable()->onlyOnIndex()->displayUsing(fn ($item) => Str::limit($item, 50)),
             Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable()->exceptOnForms(),
-            Currency::make(__('nova.feature.amount'), 'amount')->currency('UZS')->filterable(),
+            Currency::make(__('nova.feature.amount'), 'amount')->currency('UZS')->filterable()->showOnUpdating(fn () => $this->resource->name->isChargeable() ?? false),
             Boolean::make(__('nova.feature.is_active'), 'is_active')->filterable()->showOnUpdating(function (NovaRequest $request, Feature $resource) {
                 return (bool) $resource->modules->first(fn (Module $module) => $module->is_active);
             }),
-            Code::make(__('nova.feature.original_data'), 'original_data')->json()->onlyOnDetail(),
-            Code::make(__('nova.feature.data'), 'data')->json()->help($this->resource->description),
-            DateTime::make(__('nova.feature.created_at'), 'created_at')->filterable()->exceptOnForms(),
-            DateTime::make(__('nova.feature.updated_at'), 'updated_at')->filterable()->exceptOnForms(),
+            ...($this->resource->name->getExampleData() ?? false ? [Code::make(__('nova.feature.original_data'), 'original_data')->json()->readonly()] : []),
+            ...($this->resource->name->getExampleData() ?? false ? [Code::make(__('nova.feature.data'), 'data')->json()->help($this->resource->name->getExampleData())] : []),
+            DateTime::make(__('nova.feature.created_at'), 'created_at')->filterable()->onlyOnDetail(),
+            DateTime::make(__('nova.feature.updated_at'), 'updated_at')->filterable()->onlyOnDetail(),
 
             BelongsToMany::make(__('nova.feature.modules'), 'modules', ModuleResource::class),
         ];

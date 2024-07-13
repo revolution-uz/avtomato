@@ -12,7 +12,6 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
 /**
  * @property int $id
  * @property ModuleEnum $name
- * @property string|null $description
  * @property int $original_amount
  * @property bool $is_default_active
  * @property Carbon $created_at
@@ -25,7 +24,6 @@ class BaseModule extends Model
 
     protected $fillable = [
         'name',
-        'description',
         'original_amount',
         'is_default_active',
     ];
