@@ -72,6 +72,8 @@ class AttachPermissionsToRoleGraphQLMutation extends Mutation
         foreach ($filtered as $permission) {
             $role->permissions()->attach($permission['permission_id'], ['branch_id' => $permission['branch_id']]);
         }
+        $role->refresh();
 
+        return $role;
     }
 }

@@ -58,6 +58,9 @@ class BalanceFillGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return (new AtmosService(new AtmosCardClient))->attachCard($args['number'], $args['expiry']);
+        $atmosService = (new AtmosService(new AtmosCardClient));
+        $atmosService->setRevolutionCredentials();
+
+        return $atmosService->attachCard($args['number'], $args['expiry']);
     }
 }

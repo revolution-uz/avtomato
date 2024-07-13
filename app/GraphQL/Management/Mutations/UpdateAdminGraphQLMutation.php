@@ -67,12 +67,12 @@ class UpdateAdminGraphQLMutation extends Mutation
             ],
             'first_name' => [
                 'nullable',
-                'first_name',
+                'string',
                 'max:50',
             ],
             'last_name' => [
                 'nullable',
-                'last_name',
+                'string',
                 'max:50',
             ],
         ];
