@@ -20,9 +20,7 @@ class DashboardGraphQLQuery extends Query
 
     public function __construct(
         private readonly InstallmentService $installmentService
-    )
-    {
-    }
+    ) {}
 
     public function type(): Type
     {
