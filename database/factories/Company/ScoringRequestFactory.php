@@ -57,7 +57,7 @@ class ScoringRequestFactory extends Factory
             ScoringRequestTypeEnum::PLUM_MIB_INFO->value => new MibInfoCreateRequestDTO('21710025140075', '+998938651719'),
             ScoringRequestTypeEnum::PLUM_TAX_INFO->value => new TaxInfoCreateRequestDTO('21710025140075'),
             ScoringRequestTypeEnum::UZCARD->value,
-            ScoringRequestTypeEnum::HUMO->value => new CardCreateRequestDTO('986012011463' . rand(1000, 9999), '2803'),
+            ScoringRequestTypeEnum::HUMO->value => new CardCreateRequestDTO($this->faker->creditCardNumber(), '2803'),
         };
     }
 
