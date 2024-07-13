@@ -3,8 +3,6 @@
 namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\Enums\Company\Rbac\UserRoleEnum;
-use App\Exceptions\ForbiddenException;
 use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Rbac\Role;
@@ -50,10 +48,6 @@ class UpdateRoleGraphQLMutation extends Mutation
         /** @var Role $role */
         $role = Role::findOrFail($args['id']);
 
-        if ($role->name === UserRoleEnum::ADMIN->value) {
-            throw new ForbiddenException('You can\'t update admin role');
-        }
-
         $role->name = $args['name'];
         $role->saveOrFail();
 
@@ -68,6 +62,11 @@ class UpdateRoleGraphQLMutation extends Mutation
                 'integer',
                 Rule::exists('roles', 'id')
                     ->where('id', $args['id']),
+                function ($attribute, $value, $fail) {
+                    if (Role::getAdmin()->id === $value) {
+                        $fail('You can\'t update admin role');
+                    }
+                },
             ],
             'name' => [
                 'required',

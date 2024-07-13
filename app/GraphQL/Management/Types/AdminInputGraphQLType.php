@@ -60,7 +60,6 @@ class AdminInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'integer',
-                    'size:7',
                     Rule::in(UserStatusEnum::values()),
                 ],
             ],
@@ -73,6 +72,10 @@ class AdminInputGraphQLType extends InputType
                     'max:128',
                     'confirmed',
                 ],
+            ],
+            'password_confirmation' => [
+                'name' => 'password_confirmation',
+                'type' => Type::nonNull(Type::string()),
             ],
         ];
     }

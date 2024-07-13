@@ -63,7 +63,9 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $result = (new AtmosService(new AtmosCardClient))->fundBalance(BalanceFundConfirmDTO::from($args));
+        $atmosService = (new AtmosService(new AtmosCardClient));
+        $atmosService->setRevolutionCredentials();
+        $result = $atmosService->fundBalance(BalanceFundConfirmDTO::from($args));
 
         if (! $result) {
             throw ValidationException::withMessages(['otp' => 'Error on confirming payment']);
