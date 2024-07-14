@@ -88,7 +88,7 @@ enum FeatureEnum: string
         };
     }
 
-    public function isChargeable(): bool
+    public function isChargeable(): ?bool
     {
         return in_array($this, [
             self::SCORING_CREDIT_HISTORY,

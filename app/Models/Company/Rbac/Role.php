@@ -4,6 +4,7 @@ namespace App\Models\Company\Rbac;
 
 use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\OrderBySortable;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 /**
  * App\Models\Company\Rbac\Role
@@ -23,6 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon|null $deleted_at
  * @property-read RolePermission[] $rolePermissions
  * @property-read Permission[] $permissions
+ * @property CompanyAdmin[]|Collection<int,CompanyAdmin> $admins
  */
 class Role extends Model
 {
@@ -51,6 +54,11 @@ class Role extends Model
     {
         return $this->belongsToMany(Permission::class, 'role_permissions', 'role_id', 'permission_id')
             ->withPivot('branch_id');
+    }
+
+    public function admins(): HasMany
+    {
+        return $this->hasMany(CompanyAdmin::class, 'role_id', 'id');
     }
 
     public function mapRolePermissionByBranch(): array

@@ -28,11 +28,11 @@ class ChangeProfileGraphQLMutation extends Mutation
         return [
             'first_name' => [
                 'name' => 'first_name',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
             ],
             'last_name' => [
                 'name' => 'last_name',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
             ],
         ];
     }
@@ -50,8 +50,8 @@ class ChangeProfileGraphQLMutation extends Mutation
     protected function rules(array $args = []): array
     {
         return [
-            'first_name' => 'nullable|string|max:50',
-            'last_name' => 'nullable|string|max:50',
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
         ];
     }
 }

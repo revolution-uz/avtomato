@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Common\Types;
 
-use App\GraphQL\Scalars\BigFloat;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -19,58 +18,44 @@ class InstallmentAmountsGraphQLType extends GraphQLType
     public function fields(): array
     {
         return [
-            'installment_count' => [
-                'type' => Type::nonNull(Type::int()),
-                'description' => 'The number of installments',
+            'transaction' => [
+                'type' => Type::nonNull(GraphQL::type(InstallmentAmountsByIncreasingValueGraphQLType::GRAPHQL_TYPE_NAME)),
+                'description' => 'The amount and count of transaction',
                 'resolve' => function (array $root) {
-                    return $root['installment_count'];
+                    return $root['transaction'];
                 },
             ],
-            'installment_amount' => [
-                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'description' => 'The sum of amount of installments',
+            'installment' => [
+                'type' => Type::nonNull(GraphQL::type(InstallmentAmountsByIncreasingValueGraphQLType::GRAPHQL_TYPE_NAME)),
+                'description' => 'The amount and count of installment',
                 'resolve' => function (array $root) {
-                    return $root['installment_amount'];
+                    return $root['installment'];
                 },
             ],
             'installment_future_profit' => [
-                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'description' => 'The sum of profit of future installments',
+                'type' => Type::nonNull(GraphQL::type(InstallmentAmountsByIncreasingValueGraphQLType::GRAPHQL_TYPE_NAME)),
+                'description' => 'The amount and count of installment future profit',
                 'resolve' => function (array $root) {
                     return $root['installment_future_profit'];
                 },
             ],
-            'installment_total_amount' => [
-                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'description' => 'The sum of amount of all installments',
+            'installment_overdue' => [
+                'type' => Type::nonNull(GraphQL::type(InstallmentAmountsByIncreasingValueGraphQLType::GRAPHQL_TYPE_NAME)),
+                'description' => 'The amount and count of overdue installment ',
                 'resolve' => function (array $root) {
-                    return $root['installment_total_amount'];
-                },
-            ],
-            'installment_overdue_count' => [
-                'type' => Type::nonNull(Type::int()),
-                'description' => 'The number of overdue installment',
-                'resolve' => function (array $root) {
-                    return $root['installment_overdue_count'];
-                },
-            ],
-            'installment_overdue_amount' => [
-                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'description' => 'The sum of amount of overdue installment',
-                'resolve' => function (array $root) {
-                    return $root['installment_overdue_amount'];
+                    return $root['installment_overdue'];
                 },
             ],
             'npl' => [
-                'type' => Type::nonNull(Type::float()),
-                'description' => 'NPL',
+                'type' => Type::nonNull(GraphQL::type(InstallmentNplByIncreasingValueGraphQLType::GRAPHQL_TYPE_NAME)),
+                'description' => 'The NPL of overdue installment ',
                 'resolve' => function (array $root) {
                     return $root['npl'];
                 },
             ],
             'enpl' => [
-                'type' => Type::nonNull(Type::float()),
-                'description' => 'eNPL',
+                'type' => Type::nonNull(GraphQL::type(InstallmentNplByIncreasingValueGraphQLType::GRAPHQL_TYPE_NAME)),
+                'description' => 'The eNPL of overdue installment ',
                 'resolve' => function (array $root) {
                     return $root['enpl'];
                 },

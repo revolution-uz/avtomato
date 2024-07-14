@@ -33,6 +33,10 @@ class ChangeProfilePasswordGraphQLMutation extends Mutation
                 'name' => 'password',
                 'type' => Type::nonNull(Type::string()),
             ],
+            'password_confirmation' => [
+                'name' => 'password_confirmation',
+                'type' => Type::nonNull(Type::string()),
+            ],
         ];
     }
 
@@ -51,8 +55,8 @@ class ChangeProfilePasswordGraphQLMutation extends Mutation
     protected function rules(array $args = []): array
     {
         return [
-            'old_password' => ['required', 'string', 'min:8'],
-            'password' => ['required', 'string', 'min:8', 'confirmed', new CheckCurrentPassword],
+            'old_password' => ['required', 'string', 'min:8', new CheckCurrentPassword],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
 }
