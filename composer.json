@@ -16,6 +16,7 @@
         "laravel/nova": "^4.33.3",
         "laravel/sanctum": "^4.0.2",
         "opcodesio/log-viewer": "^3.10.1",
+        "phpoffice/phpword": "^1.2",
         "rebing/graphql-laravel": "^9.5",
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-data": "^4.7.1",

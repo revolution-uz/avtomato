@@ -6,6 +6,7 @@ use App\Enums\GenderEnum;
 use App\Models\Company\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class CustomerFactory extends Factory
 {
@@ -21,12 +22,12 @@ class CustomerFactory extends Factory
             'passport_given_date' => Carbon::now(),
             'passport_expiration_date' => Carbon::now(),
             'passport_given_place' => $this->faker->city(),
-            'passport_citizenship' => $this->faker->city(),
-            'first_name' => $this->faker->firstName(),
-            'last_name' => $this->faker->lastName(),
-            'middle_name' => $this->faker->name(),
+            'passport_citizenship' => Str::substr($this->faker->country(), 0, 32),
+            'first_name' => Str::substr($this->faker->firstName(), 0, 32),
+            'last_name' => Str::substr($this->faker->lastName(), 0, 32),
+            'middle_name' => Str::substr($this->faker->name(), 0, 32),
             'birth_date' => Carbon::now(),
-            'birth_place' => $this->faker->city(),
+            'birth_place' => Str::substr($this->faker->city(), 0, 32),
             'gender' => array_rand(GenderEnum::cases()),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

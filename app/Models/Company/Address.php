@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\Company\AddressTypeEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property AddressTypeEnum $type
  * @property string|null $address
+ * @property string|null $full_address
  * @property int|null $region_id
  * @property int|null $district_id
  * @property int|null $mahalla_id
@@ -56,5 +58,10 @@ class Address extends Model
     public function mahalla(): BelongsTo
     {
         return $this->belongsTo(Mahalla::class);
+    }
+
+    public function fullAddress(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->region?->name . ', ' . $this->district?->name . ', ' . $this->mahalla?->name . ', ' . $this->address);
     }
 }
