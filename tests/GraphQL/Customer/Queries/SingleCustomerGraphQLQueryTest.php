@@ -651,14 +651,14 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customer->installments[0]->guarantorList[0]->updated_at->timestamp, $response->json('data.singleCustomer.installments.0.guarantors.0.updated_at'));
 
         // installment documents
-        $this->assertEquals($customer->installments[0]->documents[0]->created_at->timestamp, $response->json('data.singleCustomer.installments.0.documents.0.created_at'));
-        $this->assertEquals($customer->installments[0]->documents[0]->deleted_at, $response->json('data.singleCustomer.installments.0.documents.0.deleted_at'));
-        $this->assertEquals($customer->installments[0]->documents[0]->id, $response->json('data.singleCustomer.installments.0.documents.0.id'));
-        $this->assertEquals($customer->installments[0]->documents[0]->mime, $response->json('data.singleCustomer.installments.0.documents.0.mime'));
-        $this->assertEquals($customer->installments[0]->documents[0]->name, $response->json('data.singleCustomer.installments.0.documents.0.name'));
-        $this->assertEquals($customer->installments[0]->documents[0]->original_name, $response->json('data.singleCustomer.installments.0.documents.0.original_name'));
-        $this->assertEquals($customer->installments[0]->documents[0]->type->value, $response->json('data.singleCustomer.installments.0.documents.0.type'));
-        $this->assertEquals($customer->installments[0]->documents[0]->updated_at->timestamp, $response->json('data.singleCustomer.installments.0.documents.0.updated_at'));
-        $this->assertEquals($customer->installments[0]->documents[0]->url, $response->json('data.singleCustomer.installments.0.documents.0.url'));
+        $this->assertEquals($customer->installments[0]->documents[0]->created_at->timestamp, $response->json('data.singleCustomer.installments.0.documents.2.created_at'));
+        $this->assertEquals($customer->installments[0]->documents[0]->deleted_at, $response->json('data.singleCustomer.installments.0.documents.2.deleted_at'));
+        $this->assertEquals($customer->installments[0]->documents[0]->id, $response->json('data.singleCustomer.installments.0.documents.2.id'));
+        $this->assertEquals($customer->installments[0]->documents[0]->mime, $response->json('data.singleCustomer.installments.0.documents.2.mime'));
+        $this->assertEquals($customer->installments[0]->documents[0]->name, $response->json('data.singleCustomer.installments.0.documents.2.name'));
+        $this->assertEquals($customer->installments[0]->documents[0]->original_name, $response->json('data.singleCustomer.installments.0.documents.2.original_name'));
+        $this->assertEquals($customer->installments[0]->documents[0]->type->value, $response->json('data.singleCustomer.installments.0.documents.2.type'));
+        $this->assertEquals($customer->installments[0]->documents[0]->updated_at->timestamp, $response->json('data.singleCustomer.installments.0.documents.2.updated_at'));
+        $this->assertEquals($customer->installments[0]->documents[0]->url, $response->json('data.singleCustomer.installments.0.documents.2.url'));
     }
 }

@@ -116,7 +116,7 @@ class PensionInfosGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successSearch()
+    public function successSearchPensionInfos()
     {
         $scoring = ScoringRequest::query()->first();
         $response = $this

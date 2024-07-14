@@ -12,6 +12,7 @@ use App\GraphQL\Scalars\BigFloat;
 use App\Models\Company\Attachment;
 use App\Models\Company\Installment;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Support\Carbon;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
@@ -62,30 +63,38 @@ class InstallmentGraphQLType extends GraphQLType
             'documents' => [
                 'type' => Type::listOf(GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => function (Installment $root) {
-                    $additionalDocuments = [
-                        (new Attachment)->fill([
-                            'id' => 0,
-                            'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
-                            'name' => 'Договор',
-                            'original_name' => 'Договор',
-                            'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                            'path' => route('document.downloadInstallmentAgreement', ['installment_id' => $root->id]),
-                            'created_at' => $root->created_at,
-                            'updated_at' => $root->updated_at,
-                        ]),
-                        (new Attachment)->fill([
-                            'id' => 0,
-                            'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
-                            'name' => 'Опросник',
-                            'original_name' => 'Опросник',
-                            'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                            'path' => route('document.downloadCustomerApplication', ['installment_id' => $root->customer_id]),
-                            'created_at' => $root->created_at,
-                            'updated_at' => $root->updated_at,
-                        ]),
-                    ];
+                    $installmentAgreement = (new Attachment)->fill([
+                        'id' => 0,
+                        'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
+                        'name' => 'Договор',
+                        'original_name' => 'Договор',
+                        'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'path' => route('document.downloadInstallmentAgreement', ['installment_id' => $root->id]),
+                        'attachmentable_id' => $root->id,
+                        'attachmentable_type' => Installment::class,
+                    ]);
+                    $installmentAgreement->created_at = Carbon::now();
+                    $installmentAgreement->updated_at = Carbon::now();
 
-                    return array_merge($additionalDocuments, $root->documents ?? []);
+                    $customerApplication = (new Attachment)->fill([
+                        'id' => 0,
+                        'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
+                        'name' => 'Опросник',
+                        'original_name' => 'Опросник',
+                        'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'path' => route('document.downloadCustomerApplication', ['customer_id' => $root->customer_id]),
+                        'attachmentable_id' => $root->id,
+                        'attachmentable_type' => Installment::class,
+                    ]);
+                    $customerApplication->created_at = Carbon::now();
+                    $customerApplication->updated_at = Carbon::now();
+                    $documents = [$installmentAgreement, $customerApplication];
+
+                    foreach ($root->documents as $document) {
+                        $documents[] = $document;
+                    }
+
+                    return $documents;
                 },
             ],
             'status' => [
