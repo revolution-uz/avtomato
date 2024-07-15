@@ -63,21 +63,22 @@ class CalculateGraphQLQuery extends Query
         /** @var Tariff $tariff */
         $tariff = Tariff::query()->where('id', $args['tariff_id'])->firstOrFail();
         $amount = $args['amount'];
+        $period = $args['period'];
         $amount -= $args['initial_fee'];
-        $portion = $amount * $tariff->percent / 100;
+        $portion = $amount * $tariff->percent / 100 / $period;
 
         $currentDate = Carbon::now();
-        $periods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($args['period'] - 1));
+        $carbonPeriods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($period - 1));
 
         $calculated = [];
         $i = 1;
-        foreach ($periods as $period) {
+        foreach ($carbonPeriods as $carbonPeriod) {
             $calculated[] = [
                 'id' => $i,
-                'date' => $period->format('Y-m-d'),
-                'amount' => $amount / $args['period'],
+                'date' => $carbonPeriod->format('Y-m-d'),
+                'amount' => $amount / $period,
                 'portion' => $portion,
-                'monthly' => $amount / $args['period'] + $portion,
+                'monthly' => $amount / $period + $portion,
             ];
             $i++;
         }

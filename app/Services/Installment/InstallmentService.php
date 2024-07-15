@@ -122,7 +122,7 @@ class InstallmentService
         $tariff = Tariff::findOrFail($installment->tariff_id);
         $amount = $installment->amount;
         $amount -= $installment->initial_fee;
-        $portion = $amount * $tariff->percent / 100;
+        $portion = $amount * $tariff->percent / 100 / $installment->period;
 
         $currentDate = new Carbon;
         $currentDate->timestamp = $installment->starts_in->timestamp;
