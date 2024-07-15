@@ -29,7 +29,7 @@ class InstallmentCommentGraphQLType extends GraphQLType
             ],
             'installment' => [
                 'type' => Type::nonNull(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (InstallmentComment $root) => $root->installment_id,
+                'resolve' => fn (InstallmentComment $root) => $root->installment,
             ],
             'admin_id' => [
                 'type' => Type::nonNull(Type::int()),
