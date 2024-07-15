@@ -74,12 +74,13 @@ class ChangesStatusGraphQLMutation extends Mutation
                 'required',
                 'integer',
                 function ($attribute, $value, $fail) use ($args) {
-                    $installment = Installment::findOrFail($args['installment_id']);
+                    $installment = Installment::find($args['installment_id']);
                     $status = InstallmentStatusEnum::tryFrom($value);
+
                     if (! $status) {
                         $fail('Status is not valid');
                     }
-                    if (! in_array($installment->status, InstallmentStatusEnum::getStatusListByStatus($status))) {
+                    if ($installment && ! in_array($installment->status, InstallmentStatusEnum::getStatusListByStatus($status))) {
                         $fail('Status is not valid for this installment');
                     }
                 },
