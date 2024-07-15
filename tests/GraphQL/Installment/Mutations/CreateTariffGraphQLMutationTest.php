@@ -2,8 +2,7 @@
 
 namespace GraphQL\Installment\Mutations;
 
-use App\Models\Company\Installment;
-use App\Models\Company\InstallmentComment;
+use App\Models\Company\Tariff;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -29,8 +28,7 @@ class CreateTariffGraphQLMutationTest extends GraphQLTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Installment::query()->forceDelete();
-        InstallmentComment::query()->forceDelete();
+        Tariff::query()->forceDelete();
     }
 
     #[Test]
