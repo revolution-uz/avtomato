@@ -144,8 +144,8 @@ class AttachGuarantorGraphQLMutationTest extends GraphQLTestCase
             }',
             'variables' => [
                 'installment_id' => $installment_id,
-                'customer_id' => $customer_id
-            ]
+                'customer_id' => $customer_id,
+            ],
         ];
     }
 
