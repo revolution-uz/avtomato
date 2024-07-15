@@ -8,4 +8,9 @@ return [
     'not found' => 'Топилмади',
     'success' => 'Муваффақиятли',
     'otp_was_wrong' => 'Тасдиқлаш коди хато',
+    'installment_status_CANCELED' => 'Бекор қилинган',
+    'installment_status_FROZEN' => 'Музлатилган',
+    'installment_status_IN_ACTIVE' => 'Фаол эмас',
+    'installment_status_ACTIVE' => 'Фаол',
+    'installment_status_CLOSED' => 'Ёпилган',
 ];

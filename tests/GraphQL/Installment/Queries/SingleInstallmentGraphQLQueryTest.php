@@ -705,7 +705,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertCustomerFields($response->json('data.singleInstallment.customer'));
 
         // documents
-        $this->assertEquals($installment->documents->count(), count($response->json('data.singleInstallment.documents')));
+        $this->assertEquals($installment->documents->count() + 2, count($response->json('data.singleInstallment.documents')));
         foreach ($installment->documents as $document) {
             $documentResponse = collect($response->json('data.singleInstallment.documents'))->first(fn ($item) => $item['id'] === $document->id);
             $this->assertNotNull($documentResponse);

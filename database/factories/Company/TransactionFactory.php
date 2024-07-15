@@ -21,7 +21,7 @@ class TransactionFactory extends Factory
             'customer_id' => Customer::factory(),
             'card_id' => Card::factory(),
             'transaction_type_id' => TransactionType::factory(),
-            'external_id' => $this->faker->word(),
+            'external_id' => $this->faker->unique()->uuid(),
             'amount' => $this->faker->randomFloat(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

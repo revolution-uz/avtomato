@@ -7,7 +7,6 @@ use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Exceptions\AtmosException;
-use App\Http\Resources\Customer\CardRemoveResource;
 use App\Models\Company\BalanceFund;
 use App\Models\Company\Card;
 use App\Models\Company\Transaction;
@@ -95,19 +94,19 @@ class AtmosService
         }
     }
 
-    public function removeCard(Card $card): CardRemoveResource
+    public function removeCard(Card $card)
     {
         if (! $card->is_connected) {
-            return new CardRemoveResource(true, 'The card was not binded');
+            return [true, 'The card was not binded'];
         }
         if ($card->isBindedWithInstallment()) {
-            return new CardRemoveResource(false, 'The card was binded with installment');
+            return [false, 'The card was binded with installment'];
         }
         $response = $this->atmosCardClient->removeCard($card->external_id);
         if ($response->result->isSucces()) {
             $card->delete();
         }
 
-        return new CardRemoveResource(true, 'The card was successfully removed');
+        return [true, 'The card was successfully removed'];
     }
 }

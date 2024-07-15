@@ -53,11 +53,11 @@ class ScoringRequestFactory extends Factory
         return match ($type) {
             ScoringRequestTypeEnum::KATM_CREDIT_HISTORY->value,
             ScoringRequestTypeEnum::KATM_INPS_HISTORY->value,
-            ScoringRequestTypeEnum::KATM_PENSION_INFO->value => new KatmCreateRequestDTO('30906997180039', 'AB', '4143286', Carbon::createFromDate('15-06-2016'), 'Akmal', 'Baxodirov', 'Azamat', '998882019909', '998882019909', Carbon::createFromDate('09-06-1999'), 13, 114),
-            ScoringRequestTypeEnum::PLUM_MIB_INFO->value => new MibInfoCreateRequestDTO('21710025140075', '+998938651719'),
-            ScoringRequestTypeEnum::PLUM_TAX_INFO->value => new TaxInfoCreateRequestDTO('21710025140075'),
+            ScoringRequestTypeEnum::KATM_PENSION_INFO->value => new KatmCreateRequestDTO($this->faker->unique()->randomNumber(14), 'AB', '4143286', Carbon::createFromDate('15-06-2016'), 'Akmal', 'Baxodirov', 'Azamat', '998882019909', '998882019909', Carbon::createFromDate('09-06-1999'), 13, 114),
+            ScoringRequestTypeEnum::PLUM_MIB_INFO->value => new MibInfoCreateRequestDTO($this->faker->unique()->randomNumber(14), '+998938651719'),
+            ScoringRequestTypeEnum::PLUM_TAX_INFO->value => new TaxInfoCreateRequestDTO($this->faker->unique()->randomNumber(14)),
             ScoringRequestTypeEnum::UZCARD->value,
-            ScoringRequestTypeEnum::HUMO->value => new CardCreateRequestDTO('986012011463' . rand(1000, 9999), '2803'),
+            ScoringRequestTypeEnum::HUMO->value => new CardCreateRequestDTO($this->faker->creditCardNumber(), '2803'),
         };
     }
 

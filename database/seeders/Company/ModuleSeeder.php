@@ -18,7 +18,6 @@ class ModuleSeeder extends Seeder
             if ($module) {
                 $module->update([
                     'name' => $baseModule->name,
-                    'description' => $baseModule->description,
                     'original_amount' => $baseModule->original_amount,
                 ]);
             } else {
@@ -26,7 +25,6 @@ class ModuleSeeder extends Seeder
                     'id' => $baseModule->id,
                     'is_active' => $baseModule->is_default_active,
                     'name' => $baseModule->name,
-                    'description' => $baseModule->description,
                     'original_amount' => $baseModule->original_amount,
                 ]);
             }

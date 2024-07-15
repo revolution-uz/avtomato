@@ -55,7 +55,7 @@ class DeleteInstallmentGraphQLMutation extends Mutation
                 'required',
                 'integer',
                 function ($attribute, $value, $fail) {
-                    if (! Installment::query()->where('id', $value)->where('status', InstallmentStatusEnum::DRAFT)->exists()) {
+                    if (! Installment::query()->where('id', $value)->where('status', InstallmentStatusEnum::IN_ACTIVE)->exists()) {
                         $fail(__('api.not found'));
                     }
                 },

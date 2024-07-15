@@ -36,7 +36,7 @@ class AttachmentGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'Attachment url',
                 'resolve' => function (Attachment $root) {
-                    return $root->url;
+                    return $root->id ? $root->url : $root->path;
                 },
             ],
             'name' => [

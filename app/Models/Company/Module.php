@@ -13,7 +13,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  *
  * @property-read int $id
  * @property-read ModuleEnum $name
- * @property-read string|null $description
  * @property bool $is_active
  * @property-read int $original_amount
  * @property int|null $amount

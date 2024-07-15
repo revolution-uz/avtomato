@@ -77,4 +77,11 @@ class Feature extends Model
             get: fn () => $this->amount !== null ? $this->amount : $this->original_amount
         );
     }
+
+    public function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->name->getDefaultDescription()
+        );
+    }
 }

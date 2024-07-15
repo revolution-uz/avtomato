@@ -40,4 +40,9 @@ class Utilities
 
         return $months;
     }
+
+    public static function preventDivideByZero(float|int $numerator, float|int $denominator): float|int
+    {
+        return $numerator / ($denominator != 0 ? $denominator : 1);
+    }
 }

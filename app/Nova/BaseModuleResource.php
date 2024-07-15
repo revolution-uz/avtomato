@@ -30,7 +30,7 @@ class BaseModuleResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'description',
+        'id', 'name',
     ];
 
     public static function authorizedToCreate(Request $request): bool
@@ -46,7 +46,6 @@ class BaseModuleResource extends Resource
         return [
             ID::make()->sortable(),
             Text::make(__('nova.module.name'), 'name')->filterable()->exceptOnForms(),
-            Text::make(__('nova.module.description'), 'description')->filterable(),
             Boolean::make(__('nova.module.is_default_active'), 'is_default_active')->filterable(),
             Currency::make(__('nova.module.original_amount'), 'original_amount')->currency('UZS')->filterable(),
             DateTime::make(__('nova.module.created_at'), 'created_at')->filterable()->exceptOnForms(),

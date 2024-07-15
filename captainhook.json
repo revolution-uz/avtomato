@@ -18,18 +18,17 @@
                 "options": {
                     "regex": "/^AVTO+(-)(\\d)+[a-zA-Z0-9_-]+/i"
                 }
-            }
-        ]
-    },
-    "pre-commit": {
-        "enabled": true,
-        "actions": [
+            },
             {
                 "action": "./vendor/bin/duster lint",
                 "options": [],
                 "conditions": []
             }
         ]
+    },
+    "pre-commit": {
+        "enabled": false,
+        "actions": []
     },
     "prepare-commit-msg": {
         "enabled": false,

@@ -3,7 +3,6 @@
 namespace App\GraphQL\Common\Types;
 
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class InstallmentMonthlyInfoGraphQLType extends GraphQLType
@@ -18,22 +17,36 @@ class InstallmentMonthlyInfoGraphQLType extends GraphQLType
     public function fields(): array
     {
         return [
-            'month_name' => [
+            'name' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'Name of Month',
+                'description' => 'Status Name',
                 'resolve' => function (array $root) {
-                    return $root['month_name'];
+                    return $root['name'];
                 },
             ],
-            'timestamp' => [
-                'type' => Type::nonNull(Type::int()),
-                'description' => 'Timestamp of Month',
+            'type' => [
+                'type' => Type::nonNull(Type::string()),
+                'description' => 'Type of Diagram',
                 'resolve' => function (array $root) {
-                    return $root['timestamp'];
+                    return $root['type'];
+                },
+            ],
+            'stack' => [
+                'type' => Type::nonNull(Type::string()),
+                'description' => 'Stack',
+                'resolve' => function (array $root) {
+                    return $root['stack'];
+                },
+            ],
+            'count' => [
+                'type' => Type::nonNull(Type::int()),
+                'description' => 'Count of Current Week',
+                'resolve' => function (array $root) {
+                    return $root['count'];
                 },
             ],
             'data' => [
-                'type' => Type::nonNull(Type::listOf(GraphQL::type(InstallmentStatusInfoGraphQLType::GRAPHQL_TYPE_NAME))),
+                'type' => Type::nonNull(Type::listOf(Type::int())),
                 'description' => 'Data by status',
                 'resolve' => function (array $root) {
                     return $root['data'];
