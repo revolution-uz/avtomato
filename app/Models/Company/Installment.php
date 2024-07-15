@@ -155,7 +155,7 @@ class Installment extends Model
 
     public function autoPay(): Attribute
     {
-        return Attribute::make(get: fn() => $this->type == InstallmentTypeEnum::WITH_CARD);
+        return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
     }
 
     public function setNextPayDate(): void
@@ -168,7 +168,7 @@ class Installment extends Model
 
     public function getDebtAmount(): Attribute
     {
-        return Attribute::make(get: fn() => InstallmentGraph::query()
+        return Attribute::make(get: fn () => InstallmentGraph::query()
             ->where('installment_id', $this->id)
             ->where('starts_in', Carbon::today())
             ->sum(DB::raw('amount - paid_amount')));

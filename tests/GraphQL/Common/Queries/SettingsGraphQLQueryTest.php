@@ -41,7 +41,7 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
                     'card_after_due_days',
                     'pinfl_after_due_days',
                     'guarantor_after_due_days',
-                    'guarantor_pinfl_after_due_days'
+                    'guarantor_pinfl_after_due_days',
                 ],
             ],
         ]);
@@ -81,7 +81,7 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
                     'card_after_due_days',
                     'pinfl_after_due_days',
                     'guarantor_after_due_days',
-                    'guarantor_pinfl_after_due_days'
+                    'guarantor_pinfl_after_due_days',
                 ],
             ],
         ]);
