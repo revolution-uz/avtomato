@@ -28,6 +28,7 @@ class CreateTransactionTypeGraphQLMutation extends Mutation
                     'required',
                     'string',
                     'max:32',
+                    'min:3',
                 ],
             ],
         ];
