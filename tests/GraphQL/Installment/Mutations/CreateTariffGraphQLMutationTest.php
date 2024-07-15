@@ -34,7 +34,7 @@ class CreateTariffGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successComment()
+    public function successTariff()
     {
         $response = $this->sendGraphQLRequest(
             tariff: $this->_input,
