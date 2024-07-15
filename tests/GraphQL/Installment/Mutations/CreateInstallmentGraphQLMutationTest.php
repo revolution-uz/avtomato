@@ -57,7 +57,7 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
             'description' => 'test',
             'starts_in' => '2022-01-01',
         ]);
-        $this->assertSuccessCreateDebtScoringResponse($response);
+        $this->assertSuccessCreateInstallmentResponse($response);
     }
 
     #[Test]
@@ -710,7 +710,7 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
         ];
     }
 
-    private function assertSuccessCreateDebtScoringResponse(TestResponse $response): void
+    private function assertSuccessCreateInstallmentResponse(TestResponse $response): void
     {
         $response->assertOk();
         $response->assertJsonIsObject();
