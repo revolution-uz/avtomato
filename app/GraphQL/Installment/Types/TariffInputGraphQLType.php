@@ -25,6 +25,7 @@ class TariffInputGraphQLType extends InputType
                     'required',
                     'string',
                     'max:40',
+                    'min:3',
                 ],
             ],
             'is_annual' => [
