@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Management\Mutations;
 
-use App\Clients\AtmosCardClient;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
@@ -58,6 +57,6 @@ class BalanceFillGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return (new AtmosService(new AtmosCardClient))->attachCard($args['number'], $args['expiry']);
+        return (new AtmosService)->attachCard($args['number'], $args['expiry']);
     }
 }

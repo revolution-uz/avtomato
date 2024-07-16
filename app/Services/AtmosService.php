@@ -20,7 +20,14 @@ use Throwable;
 
 class AtmosService
 {
-    public function __construct(private readonly AtmosCardClient $atmosCardClient, private readonly AtmosPinflClient $atmosPinflClient) {}
+    private readonly AtmosCardClient $atmosCardClient;
+    private readonly AtmosPinflClient $atmosPinflClient;
+
+    public function __construct()
+    {
+        $this->atmosCardClient = new AtmosCardClient;
+        $this->atmosPinflClient = new AtmosPinflClient;
+    }
 
     /**
      * @throws AtmosException
