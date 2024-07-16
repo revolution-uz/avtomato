@@ -37,6 +37,10 @@ class UpdateInstallmentGraphQLMutation extends Mutation
                 'name' => 'installment',
                 'type' => Type::nonNull(GraphQL::type(InstallmentInputGraphQLType::GRAPHQL_TYPE_NAME)),
             ],
+            'any_card_charge' => [
+                'name' => 'any_card_charge',
+                'type' => Type::boolean(),
+            ],
         ];
     }
 
@@ -56,6 +60,11 @@ class UpdateInstallmentGraphQLMutation extends Mutation
 
         if ($installment->status == InstallmentStatusEnum::IN_ACTIVE) {
             $installment->updateOrFail($args['installment']);
+        }
+
+        if (isset($args['any_card_charge'])) {
+            $installment->any_card_charge = $args['any_card_charge'];
+            $installment->save();
         }
 
         return $installment;
