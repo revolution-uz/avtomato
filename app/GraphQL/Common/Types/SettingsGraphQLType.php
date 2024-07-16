@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Common\Types;
 
+use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Main\SettingsEnum;
 use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\CompanySettings;
@@ -61,7 +62,7 @@ class SettingsGraphQLType extends GraphQLType
                 'description' => 'Card After Due Days',
                 'resolve' => function (Collection $root) {
                     /** @var Collection<int, CompanySettings> $root */
-                    return $root->first(fn (CompanySettings $settings) => $settings->name === SettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0;
+                    return $root->first(fn (CompanySettings $settings) => $settings->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0;
                 },
             ],
             'pinfl_after_due_days' => [
@@ -69,7 +70,7 @@ class SettingsGraphQLType extends GraphQLType
                 'description' => 'Card After Due Days',
                 'resolve' => function (Collection $root) {
                     /** @var Collection<int, CompanySettings> $root */
-                    return $root->first(fn (CompanySettings $settings) => $settings->name === SettingsEnum::PINFL_AFTER_DUE_DAYS)->value ?? 0;
+                    return $root->first(fn (CompanySettings $settings) => $settings->name === CompanySettingsEnum::PINFL_AFTER_DUE_DAYS)->value ?? 0;
                 },
             ],
             'guarantor_after_due_days' => [
@@ -77,7 +78,7 @@ class SettingsGraphQLType extends GraphQLType
                 'description' => 'Card After Due Days',
                 'resolve' => function (Collection $root) {
                     /** @var Collection<int, CompanySettings> $root */
-                    return $root->first(fn (CompanySettings $settings) => $settings->name === SettingsEnum::GUARANTOR_AFTER_DUE_DAYS)->value ?? 0;
+                    return $root->first(fn (CompanySettings $settings) => $settings->name === CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS)->value ?? 0;
                 },
             ],
             'guarantor_pinfl_after_due_days' => [
@@ -85,7 +86,7 @@ class SettingsGraphQLType extends GraphQLType
                 'description' => 'Card After Due Days',
                 'resolve' => function (Collection $root) {
                     /** @var Collection<int, CompanySettings> $root */
-                    return $root->first(fn (CompanySettings $settings) => $settings->name === SettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS)->value ?? 0;
+                    return $root->first(fn (CompanySettings $settings) => $settings->name === CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS)->value ?? 0;
                 },
             ],
         ];
