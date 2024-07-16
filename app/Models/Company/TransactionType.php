@@ -27,6 +27,9 @@ class TransactionType extends Model
 
     public static array $sortables = ['id', 'name', 'is_system', 'created_at', 'updated_at'];
 
+    const ATMOS_WITH_CARD = 1;
+    const ATMOS_WITH_PINFL = 2;
+
     protected $fillable = [
         'name_uz',
         'name_ru',

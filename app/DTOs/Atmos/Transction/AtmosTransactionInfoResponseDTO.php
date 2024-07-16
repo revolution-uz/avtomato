@@ -15,4 +15,9 @@ class AtmosTransactionInfoResponseDTO extends Data
         #[DataCollectionOf(AtmosTransactionDetailDTO::class)]
         public ?DataCollection $details,
     ) {}
+
+    public function isSucces(): bool
+    {
+        return $this->transaction_status == 'SUCCESS';
+    }
 }

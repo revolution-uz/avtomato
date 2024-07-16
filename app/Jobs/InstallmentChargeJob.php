@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\Company\Installment;
+use App\Services\AtmosService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -23,7 +25,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
      */
     public int $uniqueFor = 5 * 60;
 
-    public function __construct(private readonly int $installmentId) {}
+    public function __construct(private readonly int $installmentId, private readonly AtmosService $atmosService) {}
 
     /**
      * @throws Exception
@@ -32,7 +34,37 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
     {
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($this->installmentId);
-        $debt_amount = $installment->debt_amount;
+        if ($installment->debt_amount > 0 && $installment->next_pay_date < Carbon::today()) {
+            if ($installment->isAvailableCustomerCard()) {
+                foreach ($installment->cards as $card) {
+                    if ($card->customer_id == $installment->customer_id) {
+                        if ($transaction = $this->atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debt_amount)) {
+                            $transaction->setInstallmentGraphData($transaction->amount);
+                        }
+                    }
+                }
+            }
+
+            if ($installment->isAvailableCustomerPinfl()) {
+                $this->atmosService->withdrawAmountAndCreatePINFLTransaction($installment, $installment->customer, $installment->debt_amount);
+            }
+
+            if ($installment->isAvailableGurantorCard()) {
+                foreach ($installment->cards as $card) {
+                    if ($card->customer_id != $installment->customer_id) {
+                        if ($transaction = $this->atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debt_amount)) {
+                            $transaction->setInstallmentGraphData($transaction->amount);
+                        }
+                    }
+                }
+            }
+
+            if ($installment->isAvailableGuarantorPinfl()) {
+                foreach ($installment->guarantors as $guarantor) {
+                    $this->atmosService->withdrawAmountAndCreatePINFLTransaction($installment, $guarantor, $installment->debt_amount);
+                }
+            }
+        }
         // TODO logic
 
         $installment->setNextPayDate();

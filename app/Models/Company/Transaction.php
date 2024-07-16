@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -50,6 +51,20 @@ class Transaction extends Model
         'updated_at' => 'datetime',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (self $transaction) {
+            if ($transaction->paid_at === null) {
+                $transaction->paid_at = Carbon::now();
+            }
+            if (auth()->check()) {
+                $transaction->admin_id = auth()->user()->id;
+            }
+        });
+    }
+
     public function installment(): BelongsTo
     {
         return $this->belongsTo(Installment::class);
@@ -73,5 +88,19 @@ class Transaction extends Model
     public function admin(): BelongsTo
     {
         return $this->belongsTo(CompanyAdmin::class, 'admin_id', 'id');
+    }
+
+    public function setInstallmentGraphData(float $amount)
+    {
+        $installmentGraph = InstallmentGraph::query()->where('installment_id', $this->installment_id)
+            ->where(DB::raw('amount - paid_amount'), '>', 0)
+            ->orderBy('starts_in')->firstOrFail();
+        /** @var InstallmentGraph $installmentGraph */
+        $min_amount = min($amount, $installmentGraph->debt_amount);
+        $installmentGraph->paid_amount += $min_amount;
+        $amount -= $min_amount;
+        $installmentGraph->save();
+
+        return $amount > 0 ? $this->setInstallmentGraphData($amount) : true;
     }
 }

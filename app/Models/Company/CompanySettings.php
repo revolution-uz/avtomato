@@ -2,14 +2,14 @@
 
 namespace App\Models\Company;
 
-use App\Enums\Main\SettingsEnum;
+use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Main\SettingsTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
- * @property SettingsEnum $name
+ * @property CompanySettingsEnum $name
  * @property string $value
  * @property SettingsTypeEnum|null $type
  * @property string $description
@@ -31,10 +31,10 @@ class CompanySettings extends Model
 
     protected $casts = [
         'type' => SettingsTypeEnum::class,
-        'name' => SettingsEnum::class,
+        'name' => CompanySettingsEnum::class,
     ];
 
-    public static function getConfig(SettingsEnum $settings): ?string
+    public static function getConfig(CompanySettingsEnum $settings): ?string
     {
         if (! self::$_cache) {
             self::$_cache = self::query()

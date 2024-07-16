@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Company;
 
-use App\Enums\Main\SettingsEnum;
+use App\Enums\Company\CompanySettingsEnum;
 use App\Models\Company\CompanySettings;
 use Illuminate\Database\Seeder;
 
@@ -13,12 +13,12 @@ class CompanySettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (SettingsEnum::cases() as $case) {
+        foreach (CompanySettingsEnum::cases() as $case) {
             CompanySettings::query()->firstOrCreate([
                 'name' => $case->value,
             ], [
-                'value' => SettingsEnum::getDefaultValue($case),
-                'type' => SettingsEnum::getType($case),
+                'value' => CompanySettingsEnum::getDefaultValue($case),
+                'type' => CompanySettingsEnum::getType($case),
             ]);
         }
     }

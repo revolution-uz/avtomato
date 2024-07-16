@@ -14,4 +14,9 @@ class AtmosTransactionCreateResponseDTO extends Data
         public string $middle_name,
         public string $last_name,
     ) {}
+
+    public function isSucces(): bool
+    {
+        return $this->transaction_status == 'CREATED';
+    }
 }
