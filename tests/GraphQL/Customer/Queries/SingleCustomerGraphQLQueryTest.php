@@ -3,6 +3,7 @@
 namespace Tests\GraphQL\Customer\Queries;
 
 use App\Enums\Company\AttachmentTypeEnum;
+use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Models\Company\Address;
 use App\Models\Company\Attachment;
@@ -43,7 +44,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
         Card::query()->forceDelete();
-        Card::factory()->create(['customer_id' => $installment->customer_id]);
+        Card::factory()->create(['customer_id' => $installment->customer_id, 'status' => CardStatusEnum::ACTIVE]);
         Card::factory()->create(['customer_id' => $guarantor->id]);
         $installment->cards()->attach(Card::first());
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->createAdminUser(), 'photo1.jpg');

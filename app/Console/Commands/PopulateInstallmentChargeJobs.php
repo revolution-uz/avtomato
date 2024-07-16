@@ -36,7 +36,7 @@ class PopulateInstallmentChargeJobs extends Command
             /** @var Installment[] $installments */
             $installments = Installment::query()
                 ->where('status', InstallmentStatusEnum::ACTIVE)
-                ->where('next_pay_date', '<=', Carbon::today())
+                ->where('next_pay_date', '<=', Carbon::now())
                 ->select('id')
                 ->get()
                 ->all();
