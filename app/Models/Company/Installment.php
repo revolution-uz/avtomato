@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -32,6 +34,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $withdrawn_auto_charge
  * @property bool $auto_pay
  * @property int $period
+ * @property float $debt_amount
  * @property string $plum_id
  * @property Carbon|null $starts_in
  * @property Carbon|null $next_pay_date
@@ -39,6 +42,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property Carbon|null $canceled_at
+ * @property int $card_after_due_days
+ * @property int $pinfl_after_due_days
+ * @property int $guarantor_after_due_days
+ * @property int $guarantor_pinfl_after_due_days
  * @property string $cancellation_details
  * @property InstallmentTypeEnum $type
  * @property InstallmentStatusEnum $status
@@ -79,6 +86,10 @@ class Installment extends Model
         'starts_in',
         'next_pay_date',
         'withdrawn_auto_charge',
+        'card_after_due_days',
+        'pinfl_after_due_days',
+        'guarantor_after_due_days',
+        'guarantor_pinfl_after_due_days',
     ];
 
     protected $casts = [
@@ -154,5 +165,49 @@ class Installment extends Model
     public function autoPay(): Attribute
     {
         return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
+    }
+
+    public function setNextPayDate(): void
+    {
+        $this->next_pay_date = InstallmentGraph::query()
+            ->where('installment_id', $this->id)
+            ->where(DB::raw('amount - paid_amount'), '>', 0)
+            ->min('starts_in');
+    }
+
+    public function getDebtAmount(): Attribute
+    {
+        return Attribute::make(get: fn () => InstallmentGraph::query()
+            ->where('installment_id', $this->id)
+            ->where('starts_in', Carbon::today())
+            ->sum(DB::raw('amount - paid_amount')));
+    }
+
+    public function isAvailableCustomerCard()
+    {
+        $card_after_due_days = $this->card_after_due_days != null ? $this->card_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->firstOrFail()->value;
+
+        return $this->next_pay_date <= Carbon::today()->addDays($card_after_due_days);
+    }
+
+    public function isAvailableCustomerPinfl()
+    {
+        $pinfl_after_due_days = $this->pinfl_after_due_days != null ? $this->pinfl_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::PINFL_AFTER_DUE_DAYS)->firstOrFail()->value;
+
+        return $this->next_pay_date <= Carbon::today()->addDays($pinfl_after_due_days);
+    }
+
+    public function isAvailableGurantorCard()
+    {
+        $guarantor_after_due_days = $this->guarantor_after_due_days != null ? $this->guarantor_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS)->firstOrFail()->value;
+
+        return $this->next_pay_date <= Carbon::today()->addDays($guarantor_after_due_days);
+    }
+
+    public function isAvailableGuarantorPinfl()
+    {
+        $guarantor_pinfl_after_due_days = $this->guarantor_pinfl_after_due_days != null ? $this->guarantor_pinfl_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS)->firstOrFail()->value;
+
+        return $this->next_pay_date <= Carbon::today()->addDays($guarantor_pinfl_after_due_days);
     }
 }

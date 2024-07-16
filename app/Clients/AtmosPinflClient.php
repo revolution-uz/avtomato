@@ -8,6 +8,7 @@ use App\DTOs\Atmos\Transction\AtmosTransactionInfoResponseDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\AtmosException;
+use App\Models\Company\Customer;
 use Throwable;
 
 class AtmosPinflClient extends BaseAtmosClient
@@ -45,18 +46,18 @@ class AtmosPinflClient extends BaseAtmosClient
     /**
      * @throws AtmosException
      */
-    public function payWithPinfl(string $ext_id, string $first_name, string $last_name, string $middle_name, string $pinfl, string $passer, string $pasnum, string $contract_number, int $amount): mixed
+    public function payWithPinfl(string $ext_id, Customer $customer, string $contract_number, int $amount): mixed
     {
         $data = [
             'ext_id' => $ext_id,
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'middle_name' => $middle_name,
-            'pinfl' => $pinfl,
-            'passport_series' => $passer,
-            'passport_number' => $pasnum,
+            'first_name' => $customer->first_name,
+            'last_name' => $customer->last_name,
+            'middle_name' => $customer->middle_name,
+            'pinfl' => $customer->pinfl,
+            'passport_series' => $customer->passport_series,
+            'passport_number' => $customer->passport_number,
             'contract_number' => $contract_number,
-            'amount' => $amount,
+            'amount' => $amount * 100,
         ];
 
         $res = $this->makeRequest(self::PAYMENT_CREATE, $data);
