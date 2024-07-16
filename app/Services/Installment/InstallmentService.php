@@ -35,6 +35,7 @@ class InstallmentService
         $attributes['sms_notify'] = false;
         $attributes['any_card_charge'] = false;
         $attributes['type'] = InstallmentTypeEnum::WITHOUT_CARD;
+        $attributes['next_pay_date'] = $attributes['starts_in'];
 
         return Installment::create($attributes);
     }
@@ -132,7 +133,7 @@ class InstallmentService
             $installmentGraph = new InstallmentGraph;
             $installmentGraph->installment_id = $installment->id;
             $installmentGraph->amount = $amount / $installment->period + $portion;
-            $installmentGraph->starts_in = Carbon::make($period->timestamp);
+            $installmentGraph->starts_in = $period;
             $installmentGraph->status = InstallmentStatusEnum::ACTIVE;
             $installmentGraph->paid_amount = 0;
             $installmentGraph->save();
