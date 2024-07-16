@@ -71,6 +71,7 @@ class Installment extends Model
         'customer_id',
         'branch_id',
         'tariff_id',
+        'admin_id',
         'type',
         'amount',
         'initial_fee',
