@@ -44,7 +44,7 @@ class ConfirmCardGraphQLMutation extends Mutation
             ],
             'otp' => [
                 'name' => 'otp',
-                'type' => Type::int(),
+                'type' => Type::string(),
             ],
         ];
     }
