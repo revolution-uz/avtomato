@@ -77,7 +77,7 @@ class ConfirmCardGraphQLMutation extends Mutation
                 'required',
                 'int',
                 Rule::exists('cards', 'id')
-                    ->where('customer_id', $args['id']),
+                    ->where('customer_id', $args['customer_id']),
             ],
             'transaction_id' => [
                 'nullable',
