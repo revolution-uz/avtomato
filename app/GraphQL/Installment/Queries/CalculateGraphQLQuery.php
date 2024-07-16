@@ -50,6 +50,14 @@ class CalculateGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => 'required|int',
             ],
+            'starts_in' => [
+                'name' => 'starts_in',
+                'type' => Type::string(),
+                'rules' => [
+                    'nullable',
+                    'date',
+                ],
+            ],
         ];
     }
 
@@ -68,6 +76,9 @@ class CalculateGraphQLQuery extends Query
         $portion = $amount * $tariff->percent / 100 / $period;
 
         $currentDate = Carbon::now();
+        if (isset($args['starts_in'])) {
+            $currentDate->timestamp = Carbon::make($args['starts_in'])->getTimestamp();
+        }
         $carbonPeriods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($period - 1));
 
         $calculated = [];

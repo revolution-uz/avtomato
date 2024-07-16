@@ -118,6 +118,9 @@ class InstallmentService
      */
     private function running(Installment $installment): void
     {
+        if (is_array($installment->graphs) && count($installment->graphs)) {
+            return;
+        }
         $this->balanceService->chargeAmount(PermissionEnum::getFeature(PermissionEnum::INSTALLMENT_START), $installment);
         /** @var Tariff $tariff */
         $tariff = Tariff::findOrFail($installment->tariff_id);
@@ -133,7 +136,7 @@ class InstallmentService
             $installmentGraph = new InstallmentGraph;
             $installmentGraph->installment_id = $installment->id;
             $installmentGraph->amount = $amount / $installment->period + $portion;
-            $installmentGraph->starts_in = $period;
+            $installmentGraph->starts_in = $period->format('Y-m-d');
             $installmentGraph->status = InstallmentStatusEnum::ACTIVE;
             $installmentGraph->paid_amount = 0;
             $installmentGraph->save();
