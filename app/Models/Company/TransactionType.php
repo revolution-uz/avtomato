@@ -37,6 +37,16 @@ class TransactionType extends Model
         'is_system',
     ];
 
+    public static function isAutopay($value)
+    {
+        return in_array($value, self::autopayList());
+    }
+
+    private static function autopayList()
+    {
+        return [self::ATMOS_WITH_CARD, self::ATMOS_WITH_PINFL];
+    }
+
     public function setNames(string $name)
     {
         $this->name_uz = $name;

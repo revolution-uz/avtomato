@@ -40,7 +40,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
     {
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($this->installmentId);
-        if ($installment->debt_amount > 0 && $installment->next_pay_date < Carbon::today()) {
+        if ($installment->debt_amount > 0 && $installment->next_pay_date <= Carbon::now()) {
             if ($installment->isAvailableCustomerCard()) {
                 foreach ($installment->cards as $card) {
                     if ($card->customer_id == $installment->customer_id) {

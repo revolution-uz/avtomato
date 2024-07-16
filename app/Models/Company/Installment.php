@@ -180,7 +180,7 @@ class Installment extends Model
     {
         return Attribute::make(get: fn () => InstallmentGraph::query()
             ->where('installment_id', $this->id)
-            ->where('starts_in', Carbon::today())
+            ->where('starts_in', '<=', Carbon::today())
             ->sum(DB::raw('amount - paid_amount')));
     }
 

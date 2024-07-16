@@ -7,6 +7,7 @@ use App\GraphQL\Installment\Types\TransactionGraphQLType;
 use App\GraphQL\Scalars\BigFloat;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
 use Carbon\Carbon;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -51,7 +52,7 @@ class CreateTransactionGraphQLMutation extends Mutation
                     'int',
                     Rule::exists('transaction_types', 'id'),
                     function ($attribute, $value, $fail) {
-                        if ($value < 100) {
+                        if (TransactionType::isAutopay($value)) {
                             $fail(__('api.You cannot create system payment manually'));
                         }
                     },
