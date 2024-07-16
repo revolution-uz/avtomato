@@ -28,6 +28,6 @@ class DocumentGeneratorClient extends BaseClient
         $filePath = Storage::disk('temp')->path($fileName);
         $templateProcessor->saveAs($filePath);
 
-        return Storage::download('temp/' . $fileName);
+        return Storage::disk('temp')->download($fileName);
     }
 }
