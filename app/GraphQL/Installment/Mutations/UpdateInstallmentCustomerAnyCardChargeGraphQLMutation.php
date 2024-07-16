@@ -14,10 +14,10 @@ use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
-class UpdateInstallmentAnyCardChargeGraphQLMutation extends Mutation
+class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'updateInstallmentAnyCardCharge',
+        'name' => 'updateInstallmentCustomerAnyCardCharge',
     ];
 
     public function args(): array
