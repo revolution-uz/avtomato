@@ -40,6 +40,11 @@ class PopulateInstallmentChargeJobs extends Command
                 ->select('id')
                 ->get()
                 ->all();
+
+            if (count($installments)) {
+                continue;
+            }
+
             $threshold = 5 * 60.0 / count($installments);
             foreach ($installments as $index => $installment) {
                 dispatch(new InstallmentChargeJob($installment->id))
