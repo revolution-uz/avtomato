@@ -65,6 +65,7 @@ class CreateInstallmentGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $args['admin_id'] = auth()->id();
+
         return (new InstallmentService(new BalanceService))->create($args['installment'] + Arr::except($args, ['installments']));
     }
 }

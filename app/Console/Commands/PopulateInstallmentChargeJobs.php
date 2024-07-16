@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Jobs\InstallmentChargeJob;
+use App\Models\Company;
 use App\Models\Company\Installment;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -30,18 +31,21 @@ class PopulateInstallmentChargeJobs extends Command
      */
     public function handle(): int
     {
-        /** @var Installment[] $installments */
-        $installments = Installment::query()
-            ->where('status', InstallmentStatusEnum::ACTIVE)
-            ->where('next_pay_date', '<', Carbon::today())
-            ->select('id')
-            ->get()
-            ->all();
-        $threshold = 5 * 60.0 / count($installments);
-        foreach ($installments as $index => $installment) {
-            dispatch(new InstallmentChargeJob($installment->id))
-                ->delay(intval($threshold * $index))
-                ->onQueue('installment-charge');
+        foreach (Company::get() as $company) {
+            tenancy()->initialize($company);
+            /** @var Installment[] $installments */
+            $installments = Installment::query()
+                ->where('status', InstallmentStatusEnum::ACTIVE)
+                ->where('next_pay_date', '<', Carbon::today())
+                ->select('id')
+                ->get()
+                ->all();
+            $threshold = 5 * 60.0 / count($installments);
+            foreach ($installments as $index => $installment) {
+                dispatch(new InstallmentChargeJob($installment->id))
+                    ->delay(intval($threshold * $index))
+                    ->onQueue('installment-charge');
+            }
         }
 
         return CommandAlias::SUCCESS;
