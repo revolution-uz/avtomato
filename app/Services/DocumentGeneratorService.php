@@ -84,7 +84,7 @@ readonly class DocumentGeneratorService
                 'sum#' . $i => number_format($graph->amount, 2, ' ', '.') . ' / ' . number_format($graph->paid_amount, 2, ' ', '.'),
             ]);
         }
-        $data[] = ['paid_price' => number_format($paid_sum, 2, ' ', '.')];
+        $data['paid_price'] = number_format($paid_sum, 2, ' ', '.');
 
         return $this->documentGeneratorClient->generateStream($customer->full_name . ' ' . date('d-m-Y--H-i-s.docx'), 'installment-form.docx', $data);
     }
