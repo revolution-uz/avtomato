@@ -51,7 +51,7 @@ class BaseFeature extends Model
     public function description(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->name->getDefaultDescription()
+            get: fn () => $this->name->getDefaultDescription() ?? ''
         );
     }
 }
