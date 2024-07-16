@@ -25,7 +25,12 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
      */
     public int $uniqueFor = 5 * 60;
 
-    public function __construct(private readonly int $installmentId, private readonly AtmosService $atmosService) {}
+    private readonly AtmosService $atmosService;
+
+    public function __construct(private readonly int $installmentId)
+    {
+        $this->atmosService = new AtmosService;
+    }
 
     /**
      * @throws Exception
