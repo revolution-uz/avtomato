@@ -137,6 +137,8 @@ class InstallmentService
             $installmentGraph->paid_amount = 0;
             $installmentGraph->save();
         }
+        $installment->setNextPayDate();
+        $installment->save();
     }
 
     private function getInstallmentAmounts(): array
