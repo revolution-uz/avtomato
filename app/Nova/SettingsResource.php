@@ -30,7 +30,7 @@ class SettingsResource extends Resource
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'name.value';
 
     /**
      * The columns that should be searched.
