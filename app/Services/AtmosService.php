@@ -20,12 +20,10 @@ use Throwable;
 
 class AtmosService
 {
-    private readonly AtmosCardClient $atmosCardClient;
     private readonly AtmosPinflClient $atmosPinflClient;
 
-    public function __construct()
+    public function __construct(private readonly AtmosCardClient $atmosCardClient)
     {
-        $this->atmosCardClient = new AtmosCardClient;
         $this->atmosPinflClient = new AtmosPinflClient;
     }
 

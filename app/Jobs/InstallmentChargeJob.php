@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Clients\AtmosCardClient;
 use App\Models\Company\Installment;
 use App\Services\AtmosService;
 use Carbon\Carbon;
@@ -29,7 +30,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
 
     public function __construct(private readonly int $installmentId)
     {
-        $this->atmosService = new AtmosService;
+        $this->atmosService = new AtmosService(new AtmosCardClient);
     }
 
     /**
