@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,6 +64,10 @@ class Transaction extends Model
                 $transaction->admin_id = auth()->user()->id;
             }
         });
+
+        static::created(function (self $transaction) {
+            $transaction->setInstallmentGraphData($transaction->amount);
+        });
     }
 
     public function installment(): BelongsTo
@@ -99,6 +104,9 @@ class Transaction extends Model
         $min_amount = min($amount, $installmentGraph->debt_amount);
         $installmentGraph->paid_amount += $min_amount;
         $amount -= $min_amount;
+        if (! $installmentGraph->debt_amount) {
+            $installmentGraph->status = InstallmentStatusEnum::CLOSED;
+        }
         $installmentGraph->save();
 
         return $amount > 0 ? $this->setInstallmentGraphData($amount) : true;

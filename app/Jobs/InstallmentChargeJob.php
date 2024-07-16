@@ -44,9 +44,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
             if ($installment->isAvailableCustomerCard()) {
                 foreach ($installment->cards as $card) {
                     if ($card->customer_id == $installment->customer_id) {
-                        if ($transaction = $this->atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debt_amount)) {
-                            $transaction->setInstallmentGraphData($transaction->amount);
-                        }
+                        $this->atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debt_amount);
                     }
                 }
             }
@@ -58,9 +56,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
             if ($installment->isAvailableGurantorCard()) {
                 foreach ($installment->cards as $card) {
                     if ($card->customer_id != $installment->customer_id) {
-                        if ($transaction = $this->atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debt_amount)) {
-                            $transaction->setInstallmentGraphData($transaction->amount);
-                        }
+                        $this->atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debt_amount);
                     }
                 }
             }

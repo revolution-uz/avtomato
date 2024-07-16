@@ -179,7 +179,6 @@ class AtmosService
             $transaction->installment_id = $installment->id;
             $transaction->customer_id = $customer->id;
             $transaction->save();
-            $transaction->setInstallmentGraphData($transaction->amount);
             $total_amount += $transaction->amount;
         }
 

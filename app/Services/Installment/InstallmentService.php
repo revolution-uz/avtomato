@@ -205,7 +205,7 @@ class InstallmentService
                 ])->sum('amount');
             }
             $result[] = [
-                'name' => __('api.installment_status_' . $status->name),
+                'name' => $status->getLabel(),
                 'type' => 'line',
                 'stack' => 'Total',
                 'count' => (clone $query)->where('created_at', '>=', Carbon::today()->startOfWeek())->count('id'),
