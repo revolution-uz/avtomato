@@ -41,7 +41,7 @@ class PopulateInstallmentChargeJobs extends Command
                 ->get()
                 ->all();
 
-            if (count($installments)) {
+            if (! count($installments)) {
                 continue;
             }
 
