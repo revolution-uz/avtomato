@@ -186,7 +186,7 @@ class Installment extends Model
 
     public function isAvailableCustomerCard()
     {
-        $card_after_due_days = $this->card_after_due_days != null ? $this->card_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->firstOrFail()->value;
+        $card_after_due_days = intval($this->card_after_due_days != null ? $this->card_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->firstOrFail()->value);
 
         return $this->next_pay_date <= Carbon::today()->addDays($card_after_due_days);
     }
