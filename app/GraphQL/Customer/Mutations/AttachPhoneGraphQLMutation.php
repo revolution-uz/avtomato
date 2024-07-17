@@ -32,7 +32,7 @@ class AttachPhoneGraphQLMutation extends Mutation
             ],
             'phone' => [
                 'name' => 'phone',
-                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => ['distinct', 'required', 'int', new PhoneRule],
             ],
             'type' => [
@@ -43,7 +43,7 @@ class AttachPhoneGraphQLMutation extends Mutation
             'comment' => [
                 'name' => 'comment',
                 'type' => Type::string(),
-                'rules' => 'string|max:64',
+                'rules' => 'nullable|string|max:64',
             ],
         ];
     }

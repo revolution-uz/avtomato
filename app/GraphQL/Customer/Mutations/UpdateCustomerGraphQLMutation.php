@@ -53,9 +53,24 @@ class UpdateCustomerGraphQLMutation extends Mutation
     protected function rules(array $args = []): array
     {
         return array_merge(parent::rules($args), [
-            'customer.pinfl' => Rule::unique('customers', 'pinfl')->ignore($args['id'], 'id'),
-            'customer.tin' => Rule::unique('customers', 'tin')->ignore($args['id'], 'id'),
-            'customer.passport_number' => Rule::unique('customers', 'passport_number')->where('passport_series', $args['customer']['passport_series'])->ignore($args['id'], 'id'),
+            'customer.pinfl' => [
+                'required',
+                'string',
+                'digits:14',
+                Rule::unique('customers', 'pinfl')->ignore($args['id'], 'id'),
+            ],
+            'customer.tin' => [
+                'nullable',
+                'string',
+                'digits:9',
+                Rule::unique('customers', 'tin')->ignore($args['id'], 'id'),
+            ],
+            'customer.passport_number' => [
+                'required',
+                'string',
+                'digits:7',
+                Rule::unique('customers', 'passport_number')->where('passport_series', $args['customer']['passport_series'])->ignore($args['id'], 'id'),
+            ],
         ]);
     }
 }

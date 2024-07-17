@@ -73,6 +73,11 @@ class ConfirmCardGraphQLMutation extends Mutation
     protected function rules(array $args = []): array
     {
         return [
+            'customer_id' => [
+                'required',
+                'integer',
+                Rule::exists('customers', 'id'),
+            ],
             'card_id' => [
                 'required',
                 'int',

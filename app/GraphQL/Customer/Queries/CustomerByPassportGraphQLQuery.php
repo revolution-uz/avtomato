@@ -53,9 +53,9 @@ class CustomerByPassportGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return Customer::query()
-            ->when($args['pinfl'], fn (Builder $q) => $q->where('pinfl', $args['pinfl']))
+            ->when(isset($args['pinfl']), fn (Builder $q) => $q->where('pinfl', $args['pinfl']))
             ->when(
-                $args['passport_series'] && $args['passport_number'],
+                (isset($args['passport_series']) && isset($args['passport_number'])),
                 fn (Builder $q) => $q
                     ->where('passport_series', $args['passport_series'])
                     ->where('passport_number', $args['passport_number'])
