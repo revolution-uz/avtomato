@@ -18,6 +18,8 @@ class SingleCardScoringRequestGraphQLQueryTest extends GraphQLTestCase
         parent::setUp();
         ScoringRequest::query()->forceDelete();
         $this->_scoring_request = ScoringRequest::factory()->create(['status' => 2]);
+        $this->mockUrl('https://api.abrand.uz/partner/katm/get-request*', json_decode(file_get_contents(storage_path('../JSON-for-testing/credit-history-create-response.json')), true));
+
     }
 
     #[Test]

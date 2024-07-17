@@ -25,6 +25,7 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successCreate(): void
     {
+        $this->mockUrl('https://api.abrand.uz/partner/katm/create-request*', json_decode(file_get_contents(storage_path('../JSON-for-testing/card-scoring-create-response.json')), true));
         $response = $this->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),

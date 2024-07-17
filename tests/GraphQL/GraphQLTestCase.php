@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL;
 
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 abstract class GraphQLTestCase extends TestCase
@@ -24,5 +25,16 @@ abstract class GraphQLTestCase extends TestCase
         }
 
         return 'Object';
+    }
+
+    protected function mockUrl($url, $response, $status = 200): void
+    {
+        Http::fake([
+            $url => Http::response(
+                $response,
+                $status, // Status code
+                ['Content-Type' => 'application/json']
+            ),
+        ]);
     }
 }

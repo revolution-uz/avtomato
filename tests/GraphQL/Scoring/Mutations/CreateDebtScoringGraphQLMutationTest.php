@@ -35,6 +35,9 @@ class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successTaxCreate(): void
     {
+        $this->mockUrl('https://api.abrand.uz/partner/katm/tax*', [
+            'result' => ['debtBal' => 1],
+        ]);
         $response = $this->sendGraphQLRequest($this->_input, $this->taxType);
         $this->assertSuccessCreateDebtScoringResponse($response, $this->taxType);
     }
@@ -42,6 +45,9 @@ class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successMibCreate(): void
     {
+        $this->mockUrl('https://api.abrand.uz/partner/katm/mib*', [
+            'result' => ['debtBal' => 1],
+        ]);
         $inputWithPhone = array_merge($this->_input, ['phone' => $this->_phone]);
         $response = $this->sendGraphQLRequest($inputWithPhone, $this->mibType);
         $this->assertSuccessCreateDebtScoringResponse($response, $this->mibType);

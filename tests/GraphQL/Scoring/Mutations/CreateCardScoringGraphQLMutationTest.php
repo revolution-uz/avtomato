@@ -15,12 +15,17 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
-    private array $_input = [
-        'number' => '9860350106916132',
-        'expiry' => '0427',
+    private array $_humoInput = [
+        'number' => '9860353506066262',
+        'expiry' => '0430',
+    ];
+    private array $_uzInput = [
+        'number' => '8600353506066262',
+        'expiry' => '0430',
     ];
 
-    private int $_type = ScoringRequestTypeEnum::HUMO->value;
+    private int $_humoType = ScoringRequestTypeEnum::HUMO->value;
+    private int $_uzType = ScoringRequestTypeEnum::UZCARD->value;
 
     protected function setUp(): void
     {
@@ -33,27 +38,27 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successHumeCardCreate(): void
     {
+        $this->mockUrl('https://api.abrand.uz/partner/katm/humo*', json_decode(file_get_contents(storage_path('../JSON-for-testing/atmos/card/bind-card-init.json')), true));
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(data: $this->_input, type: $this->_type)
+                $this->buildGraphQLQuery(data: $this->_humoInput, type: $this->_humoType)
             );
-        $this->assertSuccessCreateCardScoringResponse($response);
+        $this->assertSuccessCreateHumoCardScoringResponse($response);
     }
 
+    #[Test]
     public function successUzCardCreate(): void
     {
+        $this->mockUrl('https://api.abrand.uz/partner/katm/uzcard*', json_decode(file_get_contents(storage_path('../JSON-for-testing/atmos/card/bind-card-init.json')), true));
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
-                $this->buildGraphQLQuery(data: [
-                    'number' => '8600353506066262',
-                    'expiry' => '0427',
-                ], type: ScoringRequestTypeEnum::UZCARD->value)
+                $this->buildGraphQLQuery(data: $this->_uzInput, type: ScoringRequestTypeEnum::UZCARD->value)
             );
-        $this->assertSuccessCreateCardScoringResponse($response);
+        $this->assertSuccessCreateUzCardScoringResponse($response);
     }
 
     #[Test]
@@ -66,7 +71,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
                 $this->buildGraphQLQuery(data: [
                     'number' => '9860353506066262',
                     'expiry' => 1231,
-                ], type: $this->_type)
+                ], type: $this->_humoType)
             );
 
         $response->assertOk();
@@ -93,7 +98,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
                 $this->buildGraphQLQuery([
                     'number' => '315039531300',
                     'expiry' => '123',
-                ], $this->_type)
+                ], $this->_humoType)
             );
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -115,7 +120,27 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         return $query;
     }
 
-    private function assertSuccessCreateCardScoringResponse(TestResponse $response): void
+    private function assertSuccessCreateUzCardScoringResponse(TestResponse $response): void
+    {
+        $this->assertResponse($response);
+        $scoringRequest = ScoringRequest::query()->find($response->json('data.createCardScoring'));
+        $this->assertNotNull($scoringRequest);
+        $this->assertEquals($this->_uzType, $scoringRequest->type->value);
+        $this->assertEquals($this->_uzInput['number'], $scoringRequest->request->number);
+        $this->assertEquals($this->_uzInput['expiry'], $scoringRequest->request->expiry);
+    }
+
+    private function assertSuccessCreateHumoCardScoringResponse(TestResponse $response): void
+    {
+        $this->assertResponse($response);
+        $scoringRequest = ScoringRequest::query()->find($response->json('data.createCardScoring'));
+        $this->assertNotNull($scoringRequest);
+        $this->assertEquals($this->_humoType, $scoringRequest->type->value);
+        $this->assertEquals($this->_humoInput['number'], $scoringRequest->request->number);
+        $this->assertEquals($this->_humoInput['expiry'], $scoringRequest->request->expiry);
+    }
+
+    private function assertResponse($response): void
     {
         $response->assertOk();
         $response->assertJsonIsObject();
@@ -124,10 +149,5 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
                 'createCardScoring',
             ],
         ]);
-        $scoringRequest = ScoringRequest::query()->find($response->json('data.createCardScoring'));
-        $this->assertNotNull($scoringRequest);
-        $this->assertEquals($this->_type, $scoringRequest->type->value);
-        $this->assertEquals($this->_input['number'], $scoringRequest->request->number);
-        $this->assertEquals($this->_input['expiry'], $scoringRequest->request->expiry);
     }
 }
