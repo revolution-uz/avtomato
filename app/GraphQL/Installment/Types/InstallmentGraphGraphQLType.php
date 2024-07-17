@@ -47,6 +47,10 @@ class InstallmentGraphGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (InstallmentGraph $root) => $root->status->value,
             ],
+            'status_name' => [
+                'type' => Type::string(),
+                'resolve' => fn (InstallmentGraph $root) => __('api.installment_status_' . $root->status->name),
+            ],
             'starts_in' => [
                 'type' => Type::int(),
                 'resolve' => fn (InstallmentGraph $root) => $root->starts_in?->timestamp,
