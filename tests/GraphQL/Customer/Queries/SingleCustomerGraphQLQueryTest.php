@@ -11,7 +11,6 @@ use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentComment;
-use App\Models\Company\InstallmentGraph;
 use App\Models\Company\Phone;
 use App\Models\Company\Transaction;
 use Illuminate\Http\UploadedFile;
@@ -50,7 +49,6 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->createAdminUser(), 'photo1.jpg');
         InstallmentComment::factory()->create(['installment_id' => $installment->id, 'admin_id' => $installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $installment, 'photo1.jpg');
-        InstallmentGraph::factory()->create(['installment_id' => $installment->id]);
         Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $installment->customer_id, 'admin_id' => $installment->admin_id]);
         Transaction::factory()->count(1)->create(['installment_id' => $installment->id, 'customer_id' => $guarantor->id, 'admin_id' => $installment->admin_id]);
     }
@@ -267,7 +265,6 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                         graphs {
                             amount
                             id
-                            installment_id
                             overdue_days
                             paid_amount
                             starts_in
@@ -510,7 +507,6 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
                                 '*' => [
                                     'amount',
                                     'id',
-                                    'installment_id',
                                     'overdue_days',
                                     'paid_amount',
                                     'starts_in',
@@ -617,7 +613,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customer->installments[0]->id, $response->json('data.singleCustomer.installments.0.id'));
         $this->assertEquals($customer->installments[0]->initial_fee, $response->json('data.singleCustomer.installments.0.initial_fee'));
         $this->assertEquals($customer->installments[0]->is_blacklist, $response->json('data.singleCustomer.installments.0.is_blacklist'));
-        $this->assertEquals($customer->installments[0]->next_pay_date?->timestamp, $response->json('data.singleCustomer.installments.0.next_pay_date'));
+        $this->assertEquals($customer->installments[0]->nextPaymentDate->timestamp, $response->json('data.singleCustomer.installments.0.next_pay_date'));
         $this->assertEquals($customer->installments[0]->period, $response->json('data.singleCustomer.installments.0.period'));
         $this->assertEquals($customer->installments[0]->sms_notify, $response->json('data.singleCustomer.installments.0.sms_notify'));
         $this->assertEquals($customer->installments[0]->starts_in?->timestamp, $response->json('data.singleCustomer.installments.0.starts_in'));

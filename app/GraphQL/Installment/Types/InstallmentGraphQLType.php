@@ -9,6 +9,7 @@ use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\GraphQL\Scalars\BigFloat;
+use App\Helpers\InstallmentGraphHelper;
 use App\Models\Company\Attachment;
 use App\Models\Company\Installment;
 use GraphQL\Type\Definition\Type;
@@ -46,7 +47,7 @@ class InstallmentGraphQLType extends GraphQLType
             ],
             'graphs' => [
                 'type' => Type::listOf(GraphQL::type(InstallmentGraphGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Installment $root) => $root->graphs,
+                'resolve' => fn (Installment $root) => InstallmentGraphHelper::getGraphs($root),
             ],
             'transactions' => [
                 'type' => Type::listOf(GraphQL::type(TransactionGraphQLType::GRAPHQL_TYPE_NAME)),
@@ -171,7 +172,7 @@ class InstallmentGraphQLType extends GraphQLType
             ],
             'next_pay_date' => [
                 'type' => Type::int(),
-                'resolve' => fn (Installment $root) => $root->next_pay_date?->timestamp,
+                'resolve' => fn (Installment $root) => $root->nextPaymentDate->timestamp,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),

@@ -15,14 +15,9 @@ use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Carbon\Carbon;
 
-readonly class AtmosService
+class AtmosService
 {
-    private AtmosPinflClient $atmosPinflClient;
-
-    public function __construct(private AtmosCardClient $atmosCardClient)
-    {
-        $this->atmosPinflClient = new AtmosPinflClient;
-    }
+    public function __construct(private AtmosCardClient $atmosCardClient, private AtmosPinflClient $atmosPinflClient) {}
 
     /**
      * @throws AtmosException

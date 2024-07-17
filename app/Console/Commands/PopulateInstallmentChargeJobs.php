@@ -6,8 +6,8 @@ use App\Enums\Company\InstallmentStatusEnum;
 use App\Jobs\InstallmentChargeJob;
 use App\Models\Company;
 use App\Models\Company\Installment;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class PopulateInstallmentChargeJobs extends Command
@@ -36,7 +36,7 @@ class PopulateInstallmentChargeJobs extends Command
             /** @var Installment[] $installments */
             $installments = Installment::query()
                 ->where('status', InstallmentStatusEnum::ACTIVE)
-                ->where('next_pay_date', '<=', Carbon::now())
+                ->where(DB::raw("(amount - initial_fee) * (percent + 100) / 100 * ABS(DATE_PART('month', AGE(starts_in, NOW()))) + initial_fee - paid_amount"), '>', 0)
                 ->select('id')
                 ->get()
                 ->all();

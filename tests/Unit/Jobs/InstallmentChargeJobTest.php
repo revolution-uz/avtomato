@@ -1,0 +1,225 @@
+<?php
+
+namespace Tests\Unit\Jobs;
+
+use App\Enums\Company\CardStatusEnum;
+use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Main\SettingsTypeEnum;
+use App\Jobs\InstallmentChargeJob;
+use App\Models\Company\Card;
+use App\Models\Company\CompanySettings;
+use App\Models\Company\Customer;
+use App\Models\Company\Installment;
+use App\Services\AtmosService;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
+
+class InstallmentChargeJobTest extends TestCase
+{
+    protected bool $tenancy = true;
+
+    #[Test]
+    public function dontChargeIfNotNeed(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now()->addDay(),
+            'card_after_due_days' => 0,
+            'pinfl_after_due_days' => 0,
+            'guarantor_after_due_days' => 0,
+            'guarantor_pinfl_after_due_days' => 0,
+            'any_card_charge' => true,
+        ]);
+        $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $installment->cards()->attach($card);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $job->handle($mock);
+        $this->assertTrue(true);
+    }
+
+    #[Test]
+    public function dontChargeDueDays(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'card_after_due_days' => 1,
+            'pinfl_after_due_days' => 1,
+            'guarantor_after_due_days' => 1,
+            'guarantor_pinfl_after_due_days' => 1,
+            'any_card_charge' => true,
+        ]);
+        $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $installment->cards()->attach($card);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $job->handle($mock);
+        $this->assertTrue(true);
+    }
+
+    #[Test]
+    public function dontChargeDueDaysFromConfig(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'card_after_due_days' => null,
+            'pinfl_after_due_days' => null,
+            'guarantor_after_due_days' => null,
+            'guarantor_pinfl_after_due_days' => null,
+            'any_card_charge' => true,
+        ]);
+        $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $installment->cards()->attach($card);
+        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::CARD_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
+        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::PINFL_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
+        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
+        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $job->handle($mock);
+        $this->assertTrue(true);
+    }
+
+    #[Test]
+    public function fullChargeFromCustomerAndGuarantor(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'card_after_due_days' => 0,
+            'pinfl_after_due_days' => 0,
+            'guarantor_after_due_days' => 0,
+            'guarantor_pinfl_after_due_days' => 0,
+            'any_card_charge' => true,
+        ]);
+        $customerCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $guarantor = Customer::factory()->create();
+        $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
+        $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
+        $installment->cards()->attach($customerCard);
+        $installment->cards()->attach($guarantorCard);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
+        $job->handle($mock);
+    }
+
+    #[Test]
+    public function fullChargeFromCustomerAndGuarantorByConfig(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'card_after_due_days' => null,
+            'pinfl_after_due_days' => null,
+            'guarantor_after_due_days' => null,
+            'guarantor_pinfl_after_due_days' => null,
+            'any_card_charge' => true,
+        ]);
+        $customerCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $guarantor = Customer::factory()->create();
+        $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
+        $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
+        $installment->cards()->attach($customerCard);
+        $installment->cards()->attach($guarantorCard);
+        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::CARD_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
+        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::PINFL_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
+        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
+        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
+        $job->handle($mock);
+    }
+
+    #[Test]
+    public function doesntChargeByPinflIfNotEnabled(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'card_after_due_days' => 0,
+            'pinfl_after_due_days' => 0,
+            'guarantor_after_due_days' => 0,
+            'guarantor_pinfl_after_due_days' => 0,
+            'any_card_charge' => false,
+        ]);
+        $customerCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $guarantor = Customer::factory()->create();
+        $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
+        $installment->guarantors()->attach($guarantor, ['any_card_charge' => false]);
+        $installment->cards()->attach($customerCard);
+        $installment->cards()->attach($guarantorCard);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
+        $job->handle($mock);
+    }
+
+    #[Test]
+    public function triesToChargeByCard(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'card_after_due_days' => 0,
+            'pinfl_after_due_days' => 2,
+            'guarantor_after_due_days' => 2,
+            'guarantor_pinfl_after_due_days' => 2,
+            'any_card_charge' => true,
+        ]);
+        $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $installment->cards()->attach($card);
+        //        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::CARD_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
+        //        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::PINFL_AFTER_DUE_DAYS], ['value' => 2, 'type' => SettingsTypeEnum::INT]);
+        //        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS], ['value' => 2, 'type' => SettingsTypeEnum::INT]);
+        //        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 2, 'type' => SettingsTypeEnum::INT]);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->once()->withAnyArgs();
+        $job->handle($mock);
+    }
+
+    #[Test]
+    public function triesToChargeByTwoCard(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'card_after_due_days' => 0,
+            'pinfl_after_due_days' => 1,
+            'guarantor_after_due_days' => 1,
+            'guarantor_pinfl_after_due_days' => 1,
+            'any_card_charge' => true,
+        ]);
+        $card1 = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $card2 = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $installment->cards()->attach($card1);
+        $installment->cards()->attach($card2);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs();
+        $job->handle($mock);
+    }
+}

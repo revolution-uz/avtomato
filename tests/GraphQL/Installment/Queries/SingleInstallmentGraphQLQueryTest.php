@@ -5,13 +5,13 @@ namespace Tests\GraphQL\Installment\Queries;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
+use App\Helpers\InstallmentGraphHelper;
 use App\Models\Company\Address;
 use App\Models\Company\Attachment;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentComment;
-use App\Models\Company\InstallmentGraph;
 use App\Models\Company\Phone;
 use App\Models\Company\Transaction;
 use Illuminate\Http\UploadedFile;
@@ -51,7 +51,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         }
         InstallmentComment::factory()->create(['installment_id' => $this->_installment->id, 'admin_id' => $this->_installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $this->_installment, 'photo1.jpg');
-        InstallmentGraph::factory()->create(['installment_id' => $this->_installment->id]);
         Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_installment->customer_id, 'admin_id' => $this->_installment->admin_id]);
         Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_guarantor->id, 'admin_id' => $this->_installment->admin_id]);
     }
@@ -284,7 +283,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     graphs {
                         amount
                         id
-                        installment_id
                         overdue_days
                         paid_amount
                         starts_in
@@ -558,7 +556,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                         '*' => [
                             'amount',
                             'id',
-                            'installment_id',
                             'overdue_days',
                             'paid_amount',
                             'starts_in',
@@ -638,7 +635,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installment->id, $response->json('data.singleInstallment.id'));
         $this->assertEquals($installment->initial_fee, $response->json('data.singleInstallment.initial_fee'));
         $this->assertEquals($installment->is_blacklist, $response->json('data.singleInstallment.is_blacklist'));
-        $this->assertEquals($installment->next_pay_date?->timestamp, $response->json('data.singleInstallment.next_pay_date'));
+        $this->assertEquals($installment->nextPaymentDate->timestamp, $response->json('data.singleInstallment.next_pay_date'));
         $this->assertEquals($installment->period, $response->json('data.singleInstallment.period'));
         $this->assertEquals($installment->sms_notify, $response->json('data.singleInstallment.sms_notify'));
         $this->assertEquals($installment->starts_in?->timestamp, $response->json('data.singleInstallment.starts_in'));
@@ -722,13 +719,12 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         }
 
         // graphs
-        $this->assertEquals($installment->graphs->count(), count($response->json('data.singleInstallment.graphs')));
-        foreach ($installment->graphs as $graph) {
+        $this->assertEquals(count(InstallmentGraphHelper::getGraphs($installment)), count($response->json('data.singleInstallment.graphs')));
+        foreach (InstallmentGraphHelper::getGraphs($installment) as $graph) {
             $graphResponse = collect($response->json('data.singleInstallment.graphs'))->first(fn ($item) => $item['id'] === $graph->id);
             $this->assertNotNull($graphResponse);
             $this->assertEquals($graph->amount, $graphResponse['amount']);
             $this->assertEquals($graph->id, $graphResponse['id']);
-            $this->assertEquals($graph->installment_id, $graphResponse['installment_id']);
             $this->assertEquals($graph->overdue_days, $graphResponse['overdue_days']);
             $this->assertEquals($graph->paid_amount, $graphResponse['paid_amount']);
             $this->assertEquals($graph->starts_in->timestamp, $graphResponse['starts_in']);
