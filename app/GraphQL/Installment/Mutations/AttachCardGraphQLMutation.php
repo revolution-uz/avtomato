@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Installment;
@@ -60,9 +61,9 @@ class AttachCardGraphQLMutation extends Mutation
             'card_id' => [
                 'required',
                 'integer',
-                Rule::exists('cards', 'id')->whereNull('deleted_at'),
+                Rule::exists('cards', 'id')->whereNull('deleted_at')->where('status', CardStatusEnum::ACTIVE),
                 Rule::unique('installment_cards', 'card_id')
-                    ->where('installment_id', $args['installment_id']),
+                    ->where('installment_id', $args['installment_id'])->whereNull('deleted_at'),
             ],
         ];
     }
