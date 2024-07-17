@@ -34,7 +34,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $withdrawn_auto_charge
  * @property bool $auto_pay
  * @property int $period
- * @property float $debt_amount
  * @property string $plum_id
  * @property Carbon|null $starts_in
  * @property Carbon|null $next_pay_date
@@ -60,6 +59,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Transaction[] $transactions
  * @property InstallmentGuarantor[] $guarantorList
  * @property-read  CompanyAdmin $admin
+ * @property-read float $debtAmount
  */
 class Installment extends Model
 {
@@ -176,7 +176,7 @@ class Installment extends Model
             ->min('starts_in');
     }
 
-    public function getDebtAmount(): Attribute
+    public function debtAmount(): Attribute
     {
         return Attribute::make(get: fn () => InstallmentGraph::query()
             ->where('installment_id', $this->id)
