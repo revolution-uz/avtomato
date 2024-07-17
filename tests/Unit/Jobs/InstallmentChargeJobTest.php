@@ -25,6 +25,8 @@ class InstallmentChargeJobTest extends TestCase
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now()->addDay(),
+            'amount' => 1000000000,
+            'period' => 1,
             'card_after_due_days' => 0,
             'pinfl_after_due_days' => 0,
             'guarantor_after_due_days' => 0,
@@ -47,6 +49,8 @@ class InstallmentChargeJobTest extends TestCase
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now(),
+            'amount' => 1000000000,
+            'period' => 1,
             'card_after_due_days' => 1,
             'pinfl_after_due_days' => 1,
             'guarantor_after_due_days' => 1,
@@ -69,6 +73,8 @@ class InstallmentChargeJobTest extends TestCase
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now(),
+            'amount' => 1000000000,
+            'period' => 1,
             'card_after_due_days' => null,
             'pinfl_after_due_days' => null,
             'guarantor_after_due_days' => null,
@@ -97,6 +103,8 @@ class InstallmentChargeJobTest extends TestCase
             'starts_in' => now(),
             'card_after_due_days' => 0,
             'pinfl_after_due_days' => 0,
+            'amount' => 1000000000,
+            'period' => 1,
             'guarantor_after_due_days' => 0,
             'guarantor_pinfl_after_due_days' => 0,
             'any_card_charge' => true,
@@ -122,6 +130,8 @@ class InstallmentChargeJobTest extends TestCase
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now(),
+            'amount' => 1000000000,
+            'period' => 1,
             'card_after_due_days' => null,
             'pinfl_after_due_days' => null,
             'guarantor_after_due_days' => null,
@@ -153,6 +163,8 @@ class InstallmentChargeJobTest extends TestCase
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now(),
+            'amount' => 1000000000,
+            'period' => 1,
             'card_after_due_days' => 0,
             'pinfl_after_due_days' => 0,
             'guarantor_after_due_days' => 0,
@@ -179,6 +191,8 @@ class InstallmentChargeJobTest extends TestCase
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now(),
+            'amount' => 1000000000,
+            'period' => 1,
             'card_after_due_days' => 0,
             'pinfl_after_due_days' => 2,
             'guarantor_after_due_days' => 2,
@@ -187,10 +201,6 @@ class InstallmentChargeJobTest extends TestCase
         ]);
         $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
         $installment->cards()->attach($card);
-        //        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::CARD_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
-        //        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::PINFL_AFTER_DUE_DAYS], ['value' => 2, 'type' => SettingsTypeEnum::INT]);
-        //        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS], ['value' => 2, 'type' => SettingsTypeEnum::INT]);
-        //        CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 2, 'type' => SettingsTypeEnum::INT]);
         $job = new InstallmentChargeJob($installment->id);
         $mock = $this->mock(
             AtmosService::class,
@@ -205,6 +215,8 @@ class InstallmentChargeJobTest extends TestCase
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now(),
+            'amount' => 1000000000,
+            'period' => 1,
             'card_after_due_days' => 0,
             'pinfl_after_due_days' => 1,
             'guarantor_after_due_days' => 1,
