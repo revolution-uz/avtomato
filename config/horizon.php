@@ -187,7 +187,7 @@ return [
             'maxProcesses' => 1,
             'memory' => 64,
             'tries' => 1,
-            'timeout' => 60,
+            'timeout' => 600,
             'nice' => 0,
         ],
         'supervisor-3' => [
