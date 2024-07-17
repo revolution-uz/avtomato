@@ -66,7 +66,9 @@ class Transaction extends Model
         });
 
         static::created(function (self $transaction) {
-            $transaction->setInstallmentGraphData($transaction->amount);
+            if ($transaction->installment->status == InstallmentStatusEnum::ACTIVE) {
+                $transaction->setInstallmentGraphData($transaction->amount);
+            }
         });
     }
 
@@ -97,18 +99,23 @@ class Transaction extends Model
 
     public function setInstallmentGraphData(float $amount)
     {
-        $installmentGraph = InstallmentGraph::query()->where('installment_id', $this->installment_id)
+        $query = InstallmentGraph::query()->where('installment_id', $this->installment_id)
             ->where(DB::raw('amount - paid_amount'), '>', 0)
-            ->orderBy('starts_in')->firstOrFail();
-        /** @var InstallmentGraph $installmentGraph */
-        $min_amount = min($amount, $installmentGraph->debt_amount);
-        $installmentGraph->paid_amount += $min_amount;
-        $amount -= $min_amount;
-        if (! $installmentGraph->debt_amount) {
-            $installmentGraph->status = InstallmentStatusEnum::CLOSED;
-        }
-        $installmentGraph->save();
+            ->orderBy('starts_in');
+        if ($query->exists()) {
+            $installmentGraph = $query->firstOrFail();
+            /** @var InstallmentGraph $installmentGraph */
+            $min_amount = min($amount, $installmentGraph->debt_amount);
+            $installmentGraph->paid_amount += $min_amount;
+            $amount -= $min_amount;
+            if (! $installmentGraph->debt_amount) {
+                $installmentGraph->status = InstallmentStatusEnum::CLOSED;
+            }
+            $installmentGraph->save();
 
-        return $amount > 0 ? $this->setInstallmentGraphData($amount) : true;
+            return $amount > 0 ? $this->setInstallmentGraphData($amount) : true;
+        }
+
+        return false;
     }
 }

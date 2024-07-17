@@ -44,9 +44,4 @@ enum InstallmentStatusEnum: int
             default => null,
         };
     }
-
-    public function getLabel()
-    {
-        return __('api.installment_status_' . $this->name);
-    }
 }
