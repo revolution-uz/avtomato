@@ -27,7 +27,6 @@ class CustomerInputGraphQLType extends InputType
                     'required',
                     'string',
                     'digits:14',
-                    'regex:/^[0-9]+$/',
                 ],
             ],
             'tin' => [
@@ -37,7 +36,6 @@ class CustomerInputGraphQLType extends InputType
                     'nullable',
                     'string',
                     'digits:9',
-                    'regex:/^[0-9]+$/',
                 ],
             ],
             'passport_series' => [
@@ -56,8 +54,7 @@ class CustomerInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'string',
-                    'size:7',
-                    'regex:/^[0-9]+$/',
+                    'digits:7',
                 ],
             ],
             'passport_given_date' => [

@@ -18,7 +18,7 @@ class CustomerFactory extends Factory
             'pinfl' => $this->faker->regexify('[0-9]{14}'),
             'tin' => $this->faker->randomNumber(9),
             'passport_series' => $this->faker->regexify('[A-Z]{2}'),
-            'passport_number' => $this->faker->randomNumber(7),
+            'passport_number' => $this->faker->regexify('[0-9]{7}'),
             'passport_given_date' => Carbon::now(),
             'passport_expiration_date' => Carbon::now(),
             'passport_given_place' => $this->faker->city(),

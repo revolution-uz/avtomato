@@ -32,32 +32,40 @@ class PlumFaker
         ]);
     }
 
-    public static function get_info_by_passport($name): void
+    public static function getInfoByPassport(): void
     {
         Http::fake([
             'https://api.oilakredit.uz/*' => Http::response([
                 'data' => [
                     'info' => [
                         'data' => [
-                            'pinfl' => '12345678901234',
-                            'tin' => '123456789',
-                            'series' => 'AA',
-                            'number' => '1234567',
-                            'sur_name' => 'John',
-                            'name' => $name,
-                            'patronymic_name' => 'Alex',
-                            'full_name' => 'John Doe Alex',
-                            'birth_date' => '1996-01-01',
-                            'birth_place' => 'Urganch shahar',
-                            'given_date' => '2021-01-01',
-                            'expiration_date' => '2031-01-01',
-                            'given_place' => 'Urganch shahar',
-                            'address' => 'Test address',
-                            'region_id' => 1,
-                            'district_id' => 1,
+                            'pinfl' => 31503953130027,
+                            'tin' => 520212090,
+                            'series' => 'AD',
+                            'number' => '3119359',
+                            'document' => 'AD3119359',
+                            'sur_name' => 'SULTONOV',
+                            'name' => 'YO‘LDOSHBOY',
+                            'patronymic_name' => 'O‘RAZMETBOYEVICH',
+                            'full_name' => 'SULTONOV YO‘LDOSHBOY O‘RAZMETBOYEVICH',
+                            'birth_date' => '1995-03-15',
+                            'birth_place' => 'URGANCH SHAHRI',
+                            'living_place' => null,
+                            'address' => 'Yangibozor tumani Хорезмская область, Янгибазарский район, Чўболончи ССГ, Олтинкул МСГ, ул. Огайнилар, дом 21',
+                            'region_id' => 33,
+                            'district_id' => 3313,
+                            'status' => 1,
                             'gender' => 1,
-                            'citizenship_id' => 1,
-                            'citizenship' => 'Uzbekistan',
+                            'nationality_id' => 44,
+                            'citizenship_id' => 182,
+                            'doc_status' => 2,
+                            'doc_status_name' => 'Yaroqli hujjat',
+                            'given_place' => 'XORAZM VILOYATI YANGIBOZOR TUMANI IIB',
+                            'given_date' => '2023-04-25',
+                            'expiration_date' => '2033-04-24',
+                            'citizenship' => 'O‘ZBEKISTON',
+                            'nationality' => 'O‘ZBEK',
+                            'is_itd' => false,
                         ],
                     ],
                 ],

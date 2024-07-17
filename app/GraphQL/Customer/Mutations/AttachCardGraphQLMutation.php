@@ -34,18 +34,13 @@ class AttachCardGraphQLMutation extends Mutation
             ],
             'number' => [
                 'name' => 'number',
-                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => 'required|integer|digits:16',
             ],
             'expiry' => [
                 'name' => 'expiry',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'string',
-                    'size:4',
-                    'regex:/^[0-9]{4}$/',
-                ],
+                'rules' => 'required|integer|digits:4',
             ],
         ];
     }
