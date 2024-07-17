@@ -44,7 +44,6 @@ class DetachPhoneGraphQLMutationTest extends GraphQLTestCase
                     'phones' => $this->_phonesInput,
                 ])
             );
-
         $this->assertSuccessDetachPhoneResponse($response);
     }
 
@@ -80,7 +79,7 @@ class DetachPhoneGraphQLMutationTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('No query results for model [' . Phone::class . '].', $response->json('errors.0.extensions.debugMessage'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'phones.0']), $response->json('errors.0.extensions.validation')['phones.0'][0]);
     }
 
     private function buildGraphQLQuery(array $variables = []): array

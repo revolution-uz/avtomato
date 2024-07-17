@@ -2,10 +2,9 @@
 
 namespace Tests\GraphQL\Common\Queries;
 
-use App\Enums\Company\CompanySettingsEnum;
+use App\Clients\AtmosBalanceClient;
 use App\Enums\Main\SettingsEnum;
 use App\Models\Company\BalanceFund;
-use App\Models\Company\CompanySettings;
 use App\Models\Settings;
 use App\Services\User\BalanceService;
 use PHPUnit\Framework\Attributes\Test;
@@ -91,9 +90,9 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
         //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.pinfl_after_due_days'));
         //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_after_due_days'));
         //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_pinfl_after_due_days'));
-        $this->assertNotEquals(0, (new BalanceService)->getBalance());
+        $this->assertNotEquals(0, (new BalanceService(new AtmosBalanceClient))->getBalance());
         $this->assertNotEquals(0, $response->json('data.settings.balance'));
-        $this->assertEquals((new BalanceService)->getBalance(), $response->json('data.settings.balance'));
+        $this->assertEquals((new BalanceService(new AtmosBalanceClient))->getBalance(), $response->json('data.settings.balance'));
     }
 
     private function buildGraphQLQuery(): array

@@ -7,9 +7,11 @@ use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Customer;
 use App\Models\Company\Phone;
+use App\Models\Company\Phoneable;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
@@ -55,5 +57,27 @@ class DetachPhoneGraphQLMutation extends Mutation
         }
 
         return true;
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return array_merge(parent::rules($args), [
+            'phones.*' => [
+                'required',
+                'int',
+                Rule::exists('phones', 'phone')->whereNull('deleted_at'),
+                function ($attribute, $value, $fail) use ($args) {
+                    $phone = Phone::query()->where('phone', $value)->select('id')->first();
+                    if (
+                        $phone && Phoneable::where('phoneable_type', Customer::class)
+                            ->where('phone_id', $phone->id)
+                            ->where('phoneable_id', $args['customer_id'])
+                            ->doesntExist()
+                    ) {
+                        $fail('The selected phone does not exist.');
+                    }
+                },
+            ],
+        ]);
     }
 }
