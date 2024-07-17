@@ -25,7 +25,7 @@ class InfoByPassportGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(PassportDataGraphQLType::GRAPHQL_TYPE_NAME));
+        return GraphQL::type(PassportDataGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
