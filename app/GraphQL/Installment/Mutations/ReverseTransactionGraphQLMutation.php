@@ -5,6 +5,7 @@ namespace App\GraphQL\Installment\Mutations;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
 use App\Services\AtmosService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -51,8 +52,11 @@ class ReverseTransactionGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $this->atmosCardService->reversePayment(Transaction::findOrFail($args['id']));
-
-        return true;
+        $transaction = Transaction::findOrFail($args['id']);
+        if ($transaction->transaction_type_id === TransactionType::ATMOS_WITH_CARD || $transaction->transaction_type_id === TransactionType::ATMOS_WITH_PINFL) {
+            return $this->atmosCardService->reversePayment($transaction);
+        } else {
+            return $transaction->delete();
+        }
     }
 }

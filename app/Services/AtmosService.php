@@ -40,12 +40,14 @@ readonly class AtmosService
         return $this->atmosCardClient->confirmCard($transaction_id, $otp);
     }
 
-    public function reversePayment(Transaction $transaction): void
+    public function reversePayment(Transaction $transaction): bool
     {
         $response = $this->atmosCardClient->reversePayment($transaction->external_id);
         if ($response->result->isSucces()) {
-            $transaction->delete();
+            return $transaction->delete();
         }
+
+        return false;
     }
 
     public function removeCard(Card $card)
