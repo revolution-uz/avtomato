@@ -43,33 +43,36 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
         if ($installment->debtAmount > 0 && $installment->next_pay_date <= Carbon::now()) {
             if ($installment->isAvailableCustomerCard()) {
                 foreach ($installment->cards as $card) {
-                    if ($card->customer_id == $installment->customer_id) {
+                    if ($card->customer_id == $installment->customer_id && $installment->debtAmount > 0) {
                         $this->atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debtAmount);
+                        $installment->refresh();
                     }
                 }
             }
 
-            if ($installment->any_card_charge && $installment->isAvailableCustomerPinfl()) {
+            if ($installment->any_card_charge && $installment->debtAmount > 0 && $installment->isAvailableCustomerPinfl()) {
                 $this->atmosService->withdrawAmountAndCreatePINFLTransaction($installment, $installment->customer, $installment->debtAmount);
+                $installment->refresh();
             }
 
-            if ($installment->isAvailableGurantorCard()) {
+            if ($installment->debtAmount > 0 && $installment->isAvailableGurantorCard()) {
                 foreach ($installment->cards as $card) {
-                    if ($card->customer_id != $installment->customer_id) {
+                    if ($card->customer_id != $installment->customer_id && $installment->debtAmount > 0) {
                         $this->atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debtAmount);
+                        $installment->refresh();
                     }
                 }
             }
 
-            if ($installment->any_card_charge && $installment->isAvailableGuarantorPinfl()) {
+            if ($installment->debtAmount > 0 && $installment->isAvailableGuarantorPinfl()) {
                 foreach ($installment->guarantorList as $guarantor) {
                     if ($guarantor->any_card_charge) {
                         $this->atmosService->withdrawAmountAndCreatePINFLTransaction($installment, $guarantor->customer, $installment->debtAmount);
+                        $installment->refresh();
                     }
                 }
             }
         }
-        // TODO logic
 
         $installment->setNextPayDate();
         $installment->save();
