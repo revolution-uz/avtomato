@@ -10,7 +10,6 @@ use App\DTOs\Atmos\Transction\AtmosTransactionDetailDTO;
 use App\Exceptions\AtmosException;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
-use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Carbon\Carbon;
@@ -61,52 +60,55 @@ class AtmosService
         return [true, 'The card was successfully removed'];
     }
 
-    public function withdrawAmountAndCreateCardTransaction(Installment $installment, Card $card, $amount): ?Transaction
+    public function withdrawAmountAndCreateCardTransaction(Card $card, int $installmentId, float &$amount): void
     {
-        $uniqueId = uniqid($installment->id . '-installment-id-');
+        $uniqueId = uniqid($installmentId . '-installment-id-');
         $createPayResponseDTO = $this->atmosCardClient->createPayment($uniqueId, $amount, $uniqueId);
         if (! $createPayResponseDTO->result->isSucces()) {
-            return null;
+            return;
         }
 
         $preConfirmPayResponseDTO = $this->atmosCardClient->preConfirmPayment($card->external_id, $createPayResponseDTO->transaction_id);
 
         if (! $preConfirmPayResponseDTO->result->isSucces()) {
-            return null;
+            return;
         }
 
         $confirmPayResponseDTO = $this->atmosCardClient->confirmPayment($createPayResponseDTO->transaction_id);
 
         if (! $confirmPayResponseDTO->result->isSucces()) {
-            return null;
+            return;
         }
 
         $transaction = new Transaction;
         $transaction->transaction_type_id = TransactionType::ATMOS_WITH_CARD;
         $transaction->external_id = (string) $confirmPayResponseDTO->store_transaction->success_trans_id;
-        $transaction->amount = $confirmPayResponseDTO->store_transaction->total / 100;
+        $transaction->amount = $confirmPayResponseDTO->store_transaction->amount / 100;
         $transaction->card_id = $card->id;
-        $transaction->installment_id = $installment->id;
+        $transaction->installment_id = $installmentId;
         $transaction->customer_id = $card->customer_id;
         $transaction->paid_at = Carbon::createFromTimestamp($confirmPayResponseDTO->store_transaction->confirm_time);
-        $transaction->save();
 
-        return $transaction;
+        if ($transaction->save()) {
+            $amount -= $transaction->amount;
+        } else {
+            $this->atmosCardClient->reversePayment($createPayResponseDTO->transaction_id);
+        }
     }
 
-    public function withdrawAmountAndCreatePINFLTransaction(Installment $installment, Customer $customer, $amount): float|int|null
+    public function withdrawAmountAndCreatePINFLTransaction(Customer $customer, int $installmentId, float &$amount): void
     {
         $paid_at = Carbon::now();
-        $ext_id = $installment->id . '-' . $paid_at->getTimestamp();
-        $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment->id, $amount);
+        $ext_id = $installmentId . '-' . $paid_at->getTimestamp();
+        $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installmentId, $amount);
         if (! $createPayResponseDTO->isSucces()) {
-            return null;
+            return;
         }
 
         $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $createPayResponseDTO->transaction_id);
 
         if (! $confirmWithPinfl->isSucces()) {
-            return null;
+            return;
         }
         $total_amount = 0;
         foreach ($confirmWithPinfl->details as $detail) {
@@ -116,12 +118,10 @@ class AtmosService
             $transaction->transaction_type_id = TransactionType::ATMOS_WITH_PINFL;
             $transaction->external_id = (string) $confirmWithPinfl->transaction_id;
             $transaction->amount = $detail->amount / 100;
-            $transaction->installment_id = $installment->id;
+            $transaction->installment_id = $installmentId;
             $transaction->customer_id = $customer->id;
             $transaction->save();
-            $total_amount += $transaction->amount;
+            $amount -= $transaction->amount;
         }
-
-        return $total_amount;
     }
 }

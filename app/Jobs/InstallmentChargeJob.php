@@ -19,6 +19,8 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    const MINIMUM_WITHDRAW_AMOUNT = 500;
+
     /**
      * The number of seconds after which the job's unique lock will be released.
      */
@@ -33,35 +35,32 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
     {
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($this->installmentId);
-        if ($installment->debtAmount > 1) {
+        $debt_amount = $installment->debtAmount;
+        if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT) {
             if ($installment->isAvailableCustomerCard()) {
                 foreach ($installment->cards as $card) {
-                    if ($card->customer_id == $installment->customer_id && $installment->debtAmount > 1) {
-                        $atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debtAmount);
-                        $installment->refresh();
+                    if ($card->customer_id == $installment->customer_id && $debt_amount > self::MINIMUM_WITHDRAW_AMOUNT) {
+                        $atmosService->withdrawAmountAndCreateCardTransaction($card, $installment->id, $debt_amount);
                     }
                 }
             }
 
-            if ($installment->any_card_charge && $installment->debtAmount > 1 && $installment->isAvailableCustomerPinfl()) {
-                $atmosService->withdrawAmountAndCreatePINFLTransaction($installment, $installment->customer, $installment->debtAmount);
-                $installment->refresh();
+            if ($installment->any_card_charge && $debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->isAvailableCustomerPinfl()) {
+                $atmosService->withdrawAmountAndCreatePINFLTransaction($installment->customer, $installment->id, $debt_amount);
             }
 
-            if ($installment->debtAmount > 1 && $installment->isAvailableGurantorCard()) {
+            if ($debt_amount > 1 && $installment->isAvailableGurantorCard()) {
                 foreach ($installment->cards as $card) {
-                    if ($card->customer_id != $installment->customer_id && $installment->debtAmount > 1) {
-                        $atmosService->withdrawAmountAndCreateCardTransaction($installment, $card, $installment->debtAmount);
-                        $installment->refresh();
+                    if ($card->customer_id != $installment->customer_id && $debt_amount > self::MINIMUM_WITHDRAW_AMOUNT) {
+                        $atmosService->withdrawAmountAndCreateCardTransaction($card, $installment->id, $debt_amount);
                     }
                 }
             }
 
-            if ($installment->debtAmount > 1 && $installment->isAvailableGuarantorPinfl()) {
+            if ($debt_amount > 1 && $installment->isAvailableGuarantorPinfl()) {
                 foreach ($installment->guarantorList as $guarantor) {
-                    if ($guarantor->any_card_charge && $installment->debtAmount > 1) {
-                        $atmosService->withdrawAmountAndCreatePINFLTransaction($installment, $guarantor->customer, $installment->debtAmount);
-                        $installment->refresh();
+                    if ($guarantor->any_card_charge && $debt_amount > self::MINIMUM_WITHDRAW_AMOUNT) {
+                        $atmosService->withdrawAmountAndCreatePINFLTransaction($guarantor->customer, $installment->id, $debt_amount);
                     }
                 }
             }

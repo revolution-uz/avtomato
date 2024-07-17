@@ -51,6 +51,7 @@ class AtmosPinflClient extends BaseAtmosClient
             'passport_number' => $customer->passport_number,
             'contract_number' => $contract_number,
             'amount' => $amount * 100,
+            'partial_debit' => true,
         ];
 
         $res = $this->makeRequest(self::PAYMENT_CREATE, $data);
