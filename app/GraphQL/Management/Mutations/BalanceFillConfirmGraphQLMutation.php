@@ -2,13 +2,12 @@
 
 namespace App\GraphQL\Management\Mutations;
 
-use App\Clients\AtmosCardClient;
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
-use App\Services\AtmosService;
+use App\Services\User\BalanceService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -21,6 +20,10 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
     protected $attributes = [
         'name' => 'balanceFillConfirm',
     ];
+
+    public function __construct(
+        private readonly BalanceService $balanceService
+    ) {}
 
     public function args(): array
     {
@@ -63,9 +66,7 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $atmosService = (new AtmosService(new AtmosCardClient));
-        $atmosService->setRevolutionCredentials();
-        $result = $atmosService->fundBalance(BalanceFundConfirmDTO::from($args));
+        $result = $this->balanceService->fundBalance(BalanceFundConfirmDTO::from($args));
 
         if (! $result) {
             throw ValidationException::withMessages(['otp' => 'Error on confirming payment']);

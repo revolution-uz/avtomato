@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Scoring\Mutations;
 
-use App\Clients\AsaxiyClient;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
@@ -23,6 +22,11 @@ class CreateKatmScoringGraphQLMutation extends Mutation
     protected $attributes = [
         'name' => 'createKatmScoring',
     ];
+
+    public function __construct(
+        private readonly BalanceService $balanceService,
+        private readonly KatmService $katmService,
+    ) {}
 
     public function args(): array
     {
@@ -62,7 +66,7 @@ class CreateKatmScoringGraphQLMutation extends Mutation
             default => throw new Exception('Unexpected match value'),
         };
 
-        return RbacHelper::checkPermission($permission) && (new BalanceService)->isBalanceEnoughForFeature($permission->getMyFeature());
+        return RbacHelper::checkPermission($permission) && $this->balanceService->isBalanceEnoughForFeature($permission->getMyFeature());
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
@@ -70,6 +74,6 @@ class CreateKatmScoringGraphQLMutation extends Mutation
         $dto = KatmCreateRequestDTO::from($args['data']);
         $type = ScoringRequestTypeEnum::from($args['type']);
 
-        return (new KatmService(new AsaxiyClient))->createRequest($dto, $type)->id;
+        return $this->katmService->createRequest($dto, $type)->id;
     }
 }

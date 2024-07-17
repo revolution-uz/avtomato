@@ -224,7 +224,6 @@ class CustomerByPassportGraphQLQueryTest extends GraphQLTestCase
             'passport_series' => $this->_customer->passport_series,
             'passport_number' => (string) $this->_customer->passport_number,
         ];
-
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
@@ -247,7 +246,7 @@ class CustomerByPassportGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('No query results for model [' . Customer::class . '].', $response->json('errors.0.extensions.debugMessage'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'pinfl']), $response->json('errors.0.extensions.validation.pinfl.0'));
 
         $this->_customer->delete();
         $response = $this
@@ -259,7 +258,7 @@ class CustomerByPassportGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('No query results for model [' . Customer::class . '].', $response->json('errors.0.extensions.debugMessage'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'pinfl']), $response->json('errors.0.extensions.validation.pinfl.0'));
     }
 
     #[Test]
@@ -277,7 +276,7 @@ class CustomerByPassportGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('No query results for model [' . Customer::class . '].', $response->json('errors.0.extensions.debugMessage'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'passport_number']), $response->json('errors.0.extensions.validation.passport_number.0'));
 
         $this->_customer->delete();
         $response = $this
@@ -292,7 +291,7 @@ class CustomerByPassportGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('No query results for model [' . Customer::class . '].', $response->json('errors.0.extensions.debugMessage'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'passport_number']), $response->json('errors.0.extensions.validation.passport_number.0'));
     }
 
     #[Test]

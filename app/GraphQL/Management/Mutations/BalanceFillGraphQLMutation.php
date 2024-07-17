@@ -2,12 +2,11 @@
 
 namespace App\GraphQL\Management\Mutations;
 
-use App\Clients\AtmosCardClient;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
-use App\Services\AtmosService;
+use App\Services\User\BalanceService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -20,10 +19,9 @@ class BalanceFillGraphQLMutation extends Mutation
         'name' => 'balanceFill',
     ];
 
-    public function type(): Type
-    {
-        return Type::nonNull(GraphQL::type(AttachCardDataGraphQLType::GRAPHQL_TYPE_NAME));
-    }
+    public function __construct(
+        private readonly BalanceService $balanceService
+    ) {}
 
     public function args(): array
     {
@@ -51,6 +49,11 @@ class BalanceFillGraphQLMutation extends Mutation
         ];
     }
 
+    public function type(): Type
+    {
+        return Type::nonNull(GraphQL::type(AttachCardDataGraphQLType::GRAPHQL_TYPE_NAME));
+    }
+
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
         return RbacHelper::checkPermission(PermissionEnum::BALANCE_FUND_CREATE);
@@ -58,9 +61,6 @@ class BalanceFillGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $atmosService = (new AtmosService(new AtmosCardClient));
-        $atmosService->setRevolutionCredentials();
-
-        return $atmosService->attachCard($args['number'], $args['expiry']);
+        return $this->balanceService->requestFillBalance($args['number'], $args['expiry']);
     }
 }

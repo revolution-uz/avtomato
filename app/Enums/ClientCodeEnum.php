@@ -12,4 +12,5 @@ enum ClientCodeEnum: int
     case ATMOS_CARD_PAY = 5;
     case ATMOS_PINFL_PAY = 6;
     case DOCUMENT_GENERATOR = 7;
+    case ATMOS_BALANCE_PAY = 8;
 }

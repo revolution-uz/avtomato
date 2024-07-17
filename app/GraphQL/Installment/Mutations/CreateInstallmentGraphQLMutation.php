@@ -25,6 +25,11 @@ class CreateInstallmentGraphQLMutation extends Mutation
         'name' => 'createInstallment',
     ];
 
+    public function __construct(
+        private readonly BalanceService $balanceService,
+        private readonly InstallmentService $installmentService,
+    ) {}
+
     public function args(): array
     {
         return [
@@ -59,11 +64,11 @@ class CreateInstallmentGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE) && (new BalanceService)->isBalanceEnoughForFeature(PermissionEnum::INSTALLMENT_CREATE->getMyFeature());
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE) && $this->balanceService->isBalanceEnoughForFeature(PermissionEnum::INSTALLMENT_CREATE->getMyFeature());
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return (new InstallmentService(new BalanceService))->create($args['installment'] + Arr::except($args, ['installments']));
+        return $this->installmentService->create($args['installment'] + Arr::except($args, ['installments']));
     }
 }

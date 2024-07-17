@@ -11,6 +11,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -52,14 +53,25 @@ class CustomerByPassportGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return Customer::query()
+        $customer = Customer::query()
             ->when(isset($args['pinfl']), fn (Builder $q) => $q->where('pinfl', $args['pinfl']))
             ->when(
                 (isset($args['passport_series']) && isset($args['passport_number'])),
                 fn (Builder $q) => $q
                     ->where('passport_series', $args['passport_series'])
                     ->where('passport_number', $args['passport_number'])
-            )->firstOrFail();
+            )->first();
+
+        if (! $customer) {
+            if (isset($args['pinfl'])) {
+                throw ValidationException::withMessages(['pinfl' => trans('validation.exists', ['attribute' => 'pinfl'])]);
+            }
+            if (isset($args['passport_number'])) {
+                throw ValidationException::withMessages(['passport_number' => trans('validation.exists', ['attribute' => 'passport_number'])]);
+            }
+        }
+
+        return $customer;
     }
 
     protected function rules(array $args = []): array

@@ -18,13 +18,10 @@ use Throwable;
 
 class KatmService
 {
-    private BalanceService $balanceService;
-
     public function __construct(
         private readonly AsaxiyClient $asaxiyClient,
-    ) {
-        $this->balanceService = new BalanceService;
-    }
+        private readonly BalanceService $balanceService,
+    ) {}
 
     /**
      * @throws Throwable

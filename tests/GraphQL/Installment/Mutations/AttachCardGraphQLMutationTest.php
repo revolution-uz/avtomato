@@ -2,6 +2,7 @@
 
 namespace GraphQL\Installment\Mutations;
 
+use App\Enums\Company\CardStatusEnum;
 use App\Models\Company\Card;
 use App\Models\Company\Installment;
 use Illuminate\Testing\TestResponse;
@@ -23,7 +24,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
         Installment::query()->forceDelete();
         Card::query()->forceDelete();
 
-        $this->_card = Card::factory()->create();
+        $this->_card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE]);
         $this->_installment = Installment::factory()->create();
     }
 

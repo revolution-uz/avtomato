@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Clients\AsaxiyClient;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
@@ -32,7 +31,7 @@ class UpdateScoringRequestStatusJob implements ShouldBeUnique, ShouldQueue
     /**
      * @throws Exception
      */
-    public function handle(): void
+    public function handle(KatmService $katmService): void
     {
         /** @var ScoringRequest $scoringRequest */
         $scoringRequest = ScoringRequest::query()->findOrFail($this->scoringRequestId);
@@ -48,7 +47,6 @@ class UpdateScoringRequestStatusJob implements ShouldBeUnique, ShouldQueue
                     ]
                 )
             ) {
-                $katmService = new KatmService(new AsaxiyClient);
                 $katmService->syncRemoteStatus($scoringRequest);
             }
         }

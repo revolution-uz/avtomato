@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Scoring\Mutations;
 
-use App\Clients\AsaxiyClient;
 use App\DTOs\Scoring\Card\CardCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
@@ -23,6 +22,11 @@ class CreateCardScoringGraphQLMutation extends Mutation
     protected $attributes = [
         'name' => 'createCardScoring',
     ];
+
+    public function __construct(
+        private readonly BalanceService $balanceService,
+        private readonly CardScoringService $cardScoringService,
+    ) {}
 
     public function args(): array
     {
@@ -60,7 +64,7 @@ class CreateCardScoringGraphQLMutation extends Mutation
             default => throw new Exception('Unexpected match value'),
         };
 
-        return RbacHelper::checkPermission($permission) && (new BalanceService)->isBalanceEnoughForFeature($permission->getMyFeature());
+        return RbacHelper::checkPermission($permission) && $this->balanceService->isBalanceEnoughForFeature($permission->getMyFeature());
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
@@ -69,7 +73,7 @@ class CreateCardScoringGraphQLMutation extends Mutation
         $dto = CardCreateRequestDTO::from($args['data']);
 
         return $type === ScoringRequestTypeEnum::HUMO
-            ? (new CardScoringService(new AsaxiyClient, new BalanceService))->scoringHumo($dto)->id
-            : (new CardScoringService(new AsaxiyClient, new BalanceService))->scoringUzcard($dto)->id;
+            ? $this->cardScoringService->scoringHumo($dto)->id
+            : $this->cardScoringService->scoringUzcard($dto)->id;
     }
 }

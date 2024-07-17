@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Scoring\Mutations;
 
-use App\Clients\AsaxiyClient;
 use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
@@ -25,6 +24,12 @@ class CreateDebtScoringGraphQLMutation extends Mutation
     protected $attributes = [
         'name' => 'createDebtScoring',
     ];
+
+    public function __construct(
+        private readonly BalanceService $balanceService,
+        private readonly MibService $mibService,
+        private readonly TaxService $taxService,
+    ) {}
 
     public function args(): array
     {
@@ -62,7 +67,7 @@ class CreateDebtScoringGraphQLMutation extends Mutation
             default => throw new Exception('Unexpected match value'),
         };
 
-        return RbacHelper::checkPermission($permission) && (new BalanceService)->isBalanceEnoughForFeature($permission->getMyFeature());
+        return RbacHelper::checkPermission($permission) && $this->balanceService->isBalanceEnoughForFeature($permission->getMyFeature());
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
@@ -70,8 +75,8 @@ class CreateDebtScoringGraphQLMutation extends Mutation
         $type = ScoringRequestTypeEnum::from($args['type']);
 
         return $type === ScoringRequestTypeEnum::PLUM_MIB_INFO
-            ? (new MibService(new AsaxiyClient, new BalanceService))->scoringMib(MibInfoCreateRequestDTO::from($args['data']))->id
-            : (new TaxService(new AsaxiyClient, new BalanceService))->scoringTax(TaxInfoCreateRequestDTO::from($args['data']))->id;
+            ? $this->mibService->scoringMib(MibInfoCreateRequestDTO::from($args['data']))->id
+            : $this->taxService->scoringTax(TaxInfoCreateRequestDTO::from($args['data']))->id;
     }
 
     protected function rules(array $args = []): array
