@@ -17,7 +17,6 @@ abstract class BaseAtmosClient extends BaseClient
 
     protected ?FeatureEnum $featureName = null;
     protected ?string $baseUrl;
-    protected ?int $store_id = null;
 
     protected function getNewToken(string $username, string $password): AtmosAuthTokenDTO
     {
@@ -114,5 +113,20 @@ abstract class BaseAtmosClient extends BaseClient
         }
 
         return $credentials->token_type . ' ' . $credentials->access_token;
+    }
+
+    protected function getStoreId(): ?int
+    {
+        if (! tenancy()->initialized) {
+            return null;
+        }
+
+        $feature = Feature::findByName($this->featureName);
+
+        if (! $feature->is_active || ! $feature->data) {
+            return null;
+        }
+
+        return AtmosCredentialsDTO::from($feature->data)->store_id;
     }
 }

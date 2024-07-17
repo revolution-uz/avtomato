@@ -10,6 +10,6 @@ class AtmosConfirmPaymentResponseDTO extends BaseScoringRequest
 {
     public function __construct(
         public AtmosResultDTO $result,
-        public AtmosStoreTransactionDTO $store_transaction
+        public ?AtmosStoreTransactionDTO $store_transaction
     ) {}
 }

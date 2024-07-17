@@ -15,7 +15,6 @@ class AtmosBalanceClient extends AtmosCardClient
         $this->baseUrl = config('clients.atmos.card.base_url');
         $this->channel = 'atmos-balance-client';
         $this->featureName = FeatureEnum::ATMOS_CARD_PAY;
-        $this->store_id = (int) config('clients.atmos.card.store_id');
     }
 
     public function getClientCode(): ClientCodeEnum
@@ -38,5 +37,10 @@ class AtmosBalanceClient extends AtmosCardClient
         }
 
         return $existingToken->token_type . ' ' . $existingToken->access_token;
+    }
+
+    protected function getStoreId(): int
+    {
+        return (int) config('clients.atmos.card.store_id');
     }
 }

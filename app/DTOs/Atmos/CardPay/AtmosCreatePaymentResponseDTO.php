@@ -11,6 +11,6 @@ class AtmosCreatePaymentResponseDTO extends BaseScoringRequest
     public function __construct(
         public AtmosResultDTO $result,
         public ?int $transaction_id,
-        public AtmosStoreTransactionDTO $store_transaction
+        public ?AtmosStoreTransactionDTO $store_transaction
     ) {}
 }

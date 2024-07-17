@@ -119,7 +119,7 @@ class AtmosCardClient extends BaseAtmosClient
     public function createPayment(string $account, int $amount, string $details): AtmosCreatePaymentResponseDTO
     {
         $data = [
-            'store_id' => $this->store_id,
+            'store_id' => $this->getStoreId(),
             'account' => $account,
             'amount' => $amount * 100, // tiyin
             'details' => $details,
@@ -135,7 +135,7 @@ class AtmosCardClient extends BaseAtmosClient
     public function preConfirmPayment(string $card_token, int $transaction_id): AtmosPreConfirmPaymentResponseDTO
     {
         $data = [
-            'store_id' => $this->store_id,
+            'store_id' => $this->getStoreId(),
             'card_token' => $card_token,
             'transaction_id' => $transaction_id,
         ];
@@ -149,7 +149,7 @@ class AtmosCardClient extends BaseAtmosClient
     public function confirmPayment(int $transaction_id): AtmosConfirmPaymentResponseDTO
     {
         $data = [
-            'store_id' => $this->store_id,
+            'store_id' => $this->getStoreId(),
             'transaction_id' => $transaction_id,
         ];
 
@@ -162,7 +162,7 @@ class AtmosCardClient extends BaseAtmosClient
     public function getPayment(int $transaction_id): AtmosCreatePaymentResponseDTO
     {
         $data = [
-            'store_id' => $this->store_id,
+            'store_id' => $this->getStoreId(),
             'transaction_id' => $transaction_id,
         ];
 
@@ -175,7 +175,7 @@ class AtmosCardClient extends BaseAtmosClient
     public function reversePayment(int $transaction_id, string $reason = 'Wrong payment', int $hold_amount = 0): AtmosTransactionReversePaymentDto
     {
         $data = [
-            'store_id' => $this->store_id,
+            'store_id' => $this->getStoreId(),
             'transaction_id' => $transaction_id,
             'reason' => $reason,
             'hold_amount' => $hold_amount,
