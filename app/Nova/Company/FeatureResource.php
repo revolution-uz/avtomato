@@ -58,8 +58,10 @@ class FeatureResource extends Resource
             Boolean::make(__('nova.feature.is_active'), 'is_active')->filterable()->showOnUpdating(function (NovaRequest $request, Feature $resource) {
                 return (bool) $resource->modules->first(fn (Module $module) => $module->is_active);
             }),
-            ...($this->resource->name->getExampleData() ?? false ? [Code::make(__('nova.feature.original_data'), 'original_data')->json()->readonly()] : []),
-            ...($this->resource->name->getExampleData() ?? false ? [Code::make(__('nova.feature.data'), 'data')->json()->help($this->resource->name->getExampleData())] : []),
+            // @phpstan-ignore-next-line
+            ...($this->resource->name?->getExampleData() ?? false ? [Code::make(__('nova.feature.original_data'), 'original_data')->json()->readonly()] : []),
+            // @phpstan-ignore-next-line
+            ...($this->resource->name?->getExampleData() ?? false ? [Code::make(__('nova.feature.data'), 'data')->json()->help($this->resource->name->getExampleData())] : []),
             DateTime::make(__('nova.feature.created_at'), 'created_at')->filterable()->onlyOnDetail(),
             DateTime::make(__('nova.feature.updated_at'), 'updated_at')->filterable()->onlyOnDetail(),
 
