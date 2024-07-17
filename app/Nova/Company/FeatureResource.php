@@ -54,7 +54,8 @@ class FeatureResource extends Resource
             Text::make(__('nova.feature.name'), 'name')->filterable()->exceptOnForms(),
             Text::make(__('nova.feature.description'), 'description')->filterable()->onlyOnIndex()->displayUsing(fn ($item) => Str::limit($item, 50)),
             Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable()->exceptOnForms(),
-            Currency::make(__('nova.feature.amount'), 'amount')->currency('UZS')->filterable()->showOnUpdating(fn () => $this->resource->name->isChargeable() ?? false),
+            // @phpstan-ignore-next-line
+            Currency::make(__('nova.feature.amount'), 'amount')->currency('UZS')->filterable()->showOnUpdating(fn () => $this->resource->name?->isChargeable() ?? false),
             Boolean::make(__('nova.feature.is_active'), 'is_active')->filterable()->showOnUpdating(function (NovaRequest $request, Feature $resource) {
                 return (bool) $resource->modules->first(fn (Module $module) => $module->is_active);
             }),
