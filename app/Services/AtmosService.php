@@ -87,7 +87,7 @@ readonly class AtmosService
         $transaction = new Transaction;
         $transaction->transaction_type_id = TransactionType::ATMOS_WITH_CARD;
         $transaction->external_id = (string) $confirmPayResponseDTO->store_transaction->success_trans_id;
-        $transaction->amount = $confirmPayResponseDTO->store_transaction->total;
+        $transaction->amount = $confirmPayResponseDTO->store_transaction->total / 100;
         $transaction->card_id = $card->id;
         $transaction->installment_id = $installment->id;
         $transaction->customer_id = $card->customer_id;

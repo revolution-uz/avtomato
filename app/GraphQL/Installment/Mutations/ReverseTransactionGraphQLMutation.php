@@ -37,7 +37,7 @@ class ReverseTransactionGraphQLMutation extends Mutation
                     'required',
                     'int',
                     Rule::exists('transactions', 'id')->where(function ($query) {
-                        $query->where('transaction_type_id', '>=', 100);
+//                        $query->where('transaction_type_id', '>=', 100);
                     }),
                 ],
             ],
