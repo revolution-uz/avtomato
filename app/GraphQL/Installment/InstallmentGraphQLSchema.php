@@ -21,7 +21,6 @@ use App\GraphQL\Installment\Mutations\CreateTransactionGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteDocumentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteInstallmentCommentGraphQLMutation;
-use App\GraphQL\Installment\Mutations\DeleteInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTariffGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTransactionGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTransactionTypeGraphQLMutation;
@@ -121,7 +120,6 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 DetachPhoneGraphQLMutation::class,
                 CreateInstallmentGraphQLMutation::class,
                 UpdateInstallmentGraphQLMutation::class,
-                DeleteInstallmentGraphQLMutation::class,
                 CreateTariffGraphQLMutation::class,
                 UpdateTariffGraphQLMutation::class,
                 DeleteTariffGraphQLMutation::class,
