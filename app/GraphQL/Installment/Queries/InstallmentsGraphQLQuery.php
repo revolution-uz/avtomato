@@ -76,7 +76,11 @@ class InstallmentsGraphQLQuery extends Query
                     ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
                 )
                 ->when(isset($args['status']), fn (Builder $q) => $q->where('status', $args['status']))
-                ->when(isset($args['sort']), fn (Builder|Installment $q) => $q->orderBySortable($args['sort']))
+                ->when(
+                    isset($args['sort']),
+                    fn (Builder|Installment $q) => $q->orderBySortable($args['sort']),
+                    fn (Builder|Installment $q) => $q->orderByDesc('id')
+                )
                 ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

@@ -27,7 +27,7 @@ class AttachPhoneGraphQLMutationTest extends GraphQLTestCase
         $this->_input = [
             'customer_id' => $this->_customer->id,
             'phone' => '99893' . rand(1000000, 9999999),
-            'type' => (int) PhoneTypeEnum::randomValue(),
+            'type' => Arr::random(PhoneTypeEnum::customerValues()),
             'comment' => null,
         ];
     }

@@ -27,7 +27,7 @@ class InstallmentGraphHelper
             $paidSumBeforeNow = 0;
             foreach ($transactions as $transaction) {
                 $paidSumBeforeNow += $transaction->amount;
-                if (round(($index + 1) * $installment->monthlyPayment + $installment->initial_fee, 2) <= round($paidSumBeforeNow, 2)) {
+                if (round(($index + 1) * $installment->monthlyPayment + $installment->initial_fee) <= round($paidSumBeforeNow)) {
                     $paidDateForMonth = $transaction->created_at;
                     break;
                 }
