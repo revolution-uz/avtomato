@@ -103,6 +103,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::TARIFF_CREATE,
             ],
             self::TRANSACTION_MANAGEMENT => [
+                PermissionEnum::TRANSACTION_ATTEMPT_VIEW_ALL,
                 PermissionEnum::TRANSACTION_VIEW_ALL,
                 PermissionEnum::TRANSACTION_VIEW,
                 PermissionEnum::TRANSACTION_CREATE,
