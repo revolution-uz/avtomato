@@ -38,7 +38,7 @@ class AttachPhoneGraphQLMutation extends Mutation
             'type' => [
                 'name' => 'type',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => 'required|int|in:' . implode(',', PhoneTypeEnum::values()),
+                'rules' => 'required|int|in:' . implode(',', PhoneTypeEnum::customerValues()),
             ],
             'comment' => [
                 'name' => 'comment',

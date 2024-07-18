@@ -200,6 +200,16 @@ return [
             'timeout' => 60,
             'nice' => 0,
         ],
+        'supervisor-4' => [
+            'connection' => 'redis',
+            'queue' => ['sms'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 60,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [

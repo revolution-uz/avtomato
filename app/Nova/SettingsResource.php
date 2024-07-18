@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use App\Enums\Main\SettingsTypeEnum;
-use App\Enums\Main\SmsProviderEnum;
 use App\Models\Settings;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
@@ -69,8 +68,6 @@ class SettingsResource extends Resource
             SettingsTypeEnum::TEXT => Textarea::make('Value')->rules(['required', 'max:2014']),
             SettingsTypeEnum::DATETIME => DateTime::make('Value')->rules(['required', 'datetime']),
             SettingsTypeEnum::DATE => DateTime::make('Value')->rules(['required', 'date']),
-            SettingsTypeEnum::SMS_PROVIDER => Select::make('Value')->options(SmsProviderEnum::getAllProviderItemsForDropdown())
-                ->displayUsingLabels()->rules(['required']),
             SettingsTypeEnum::STRING, null => Text::make('Value')->rules(['required', 'max:255']),
         };
 

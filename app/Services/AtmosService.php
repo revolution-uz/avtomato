@@ -103,6 +103,7 @@ class AtmosService
         $transaction->card_id = $card->id;
         $transaction->installment_id = $installment_id;
         $transaction->customer_id = $card->customer_id;
+        $transaction->pan = $card->pan;
         $transaction->paid_at = Carbon::createFromTimestamp($confirmPayResponseDTO->store_transaction->confirm_time);
 
         if ($transaction->save()) {
@@ -148,6 +149,7 @@ class AtmosService
             $transaction->paid_at = $paid_at;
             $transaction->transaction_type_id = TransactionType::ATMOS_WITH_PINFL;
             $transaction->external_id = (string) $confirmWithPinfl->transaction_id;
+            $transaction->pan = $detail->pan;
             $transaction->amount = $detail->amount / 100;
             $transaction->installment_id = $installment_id;
             $transaction->customer_id = $customer->id;

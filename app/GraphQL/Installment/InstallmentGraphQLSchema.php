@@ -11,6 +11,7 @@ use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Installment\Mutations\AttachCardGraphQLMutation;
 use App\GraphQL\Installment\Mutations\AttachGuarantorGraphQLMutation;
+use App\GraphQL\Installment\Mutations\AttachPhoneGraphQLMutation;
 use App\GraphQL\Installment\Mutations\ChangesStatusGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateDocumentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateInstallmentCommentGraphQLMutation;
@@ -26,6 +27,7 @@ use App\GraphQL\Installment\Mutations\DeleteTransactionGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DeleteTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DetachCardGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DetachGuarantorGraphQLMutation;
+use App\GraphQL\Installment\Mutations\DetachPhoneGraphQLMutation;
 use App\GraphQL\Installment\Mutations\ReverseTransactionGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateGuarantorGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentCommentGraphQLMutation;
@@ -115,6 +117,8 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 SingleTransactionGraphQLQuery::class,
             ],
             'mutation' => [
+                AttachPhoneGraphQLMutation::class,
+                DetachPhoneGraphQLMutation::class,
                 CreateInstallmentGraphQLMutation::class,
                 UpdateInstallmentGraphQLMutation::class,
                 DeleteInstallmentGraphQLMutation::class,

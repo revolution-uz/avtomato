@@ -3,6 +3,7 @@
 namespace App\GraphQL\Installment\Types;
 
 use App\DTOs\Installment\InstallmentGraphDTO;
+use App\Enums\Company\InstallmentGraphStatusEnum;
 use App\GraphQL\Scalars\BigFloat;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -31,6 +32,10 @@ class InstallmentGraphGraphQLType extends GraphQLType
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (InstallmentGraphDTO $root) => $root->paid_amount,
             ],
+            'debt' => [
+                'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (InstallmentGraphDTO $root) => $root->status === InstallmentGraphStatusEnum::DELAY ? $root->amount - $root->paid_amount : 0,
+            ],
             'overdue_days' => [
                 'type' => Type::int(),
                 'resolve' => fn (InstallmentGraphDTO $root) => $root->overdue_days,
@@ -38,10 +43,6 @@ class InstallmentGraphGraphQLType extends GraphQLType
             'status' => [
                 'type' => Type::int(),
                 'resolve' => fn (InstallmentGraphDTO $root) => $root->status->value,
-            ],
-            'status_name' => [
-                'type' => Type::string(),
-                'resolve' => fn (InstallmentGraphDTO $root) => __('api.installment_status_' . $root->status->name),
             ],
             'starts_in' => [
                 'type' => Type::int(),

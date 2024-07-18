@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\CardStatusEnum;
+use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\GenderEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -107,6 +108,7 @@ class Customer extends Model
     public function phones(): MorphToMany
     {
         return $this->morphToMany(Phone::class, 'phoneable')
+            ->wherePivotIn('type', PhoneTypeEnum::customerValues())
             ->withPivot(['id', 'type', 'comment', 'created_at', 'updated_at']); //->withTimestamps();
     }
 

@@ -36,7 +36,7 @@ class PhoneInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'integer',
-                    Rule::in(PhoneTypeEnum::values()),
+                    Rule::in(PhoneTypeEnum::customerValues()),
                 ],
             ],
             'comment' => [

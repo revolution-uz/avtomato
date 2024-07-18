@@ -2,14 +2,16 @@
 
 namespace App\Services;
 
-use App\Clients\SmsFlyClient;
-use App\DTOs\Sms\SendMessageDTO;
 use App\Models\Company\CardConfirmationSms;
 use Carbon\Carbon;
 use Exception;
 
 class ConfirmationService
 {
+    public function __construct(
+        private readonly SmsService $smsService
+    ) {}
+
     /**
      * @throws Exception
      */
@@ -26,13 +28,12 @@ class ConfirmationService
         }
 
         $code = $this->generateCode();
-        CardConfirmationSms::query()->create([
+        $confirmationSms = CardConfirmationSms::query()->create([
             'phone' => $phone,
             'code' => $code,
         ]);
 
-        // todo: message template
-        (new SmsFlyClient)->send(new SendMessageDTO($phone, "Your code: {$code}"));
+        $this->smsService->sendConfirmationSms($confirmationSms);
 
         return true;
     }
@@ -61,7 +62,6 @@ class ConfirmationService
         $length = 6;
         do {
             $random = (string) rand(10 ** ($length - 1), 10 ** $length - 1);
-
         } while (str_contains($random, '0'));
 
         return $random;
