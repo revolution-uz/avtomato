@@ -34,7 +34,7 @@ class InstallmentFactory extends Factory
             'status' => InstallmentStatusEnum::randomValue(),
             'period' => $this->faker->randomDigitNot(0),
             'plum_id' => $this->faker->word(),
-            'starts_in' => Carbon::now(),
+            'starts_in' => Carbon::tomorrow(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
