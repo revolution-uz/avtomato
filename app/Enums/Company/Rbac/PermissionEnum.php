@@ -109,6 +109,7 @@ enum PermissionEnum: string
 
     // Manage transactions
     case TRANSACTION_VIEW_ALL = 'transaction_view_all';
+    case TRANSACTION_ATTEMPT_VIEW_ALL = 'transaction_attempt_view_all';
     case TRANSACTION_VIEW = 'transaction_view';
     case TRANSACTION_CREATE = 'transaction_create';
     case TRANSACTION_EDIT = 'transaction_edit';
@@ -318,6 +319,7 @@ enum PermissionEnum: string
 
             self::INSTALLMENT_CREATE_TRANSACTION,
 
+            self::TRANSACTION_ATTEMPT_VIEW_ALL,
             self::TRANSACTION_VIEW_ALL,
             self::TRANSACTION_VIEW,
             self::TRANSACTION_CREATE,
@@ -398,6 +400,7 @@ enum PermissionEnum: string
                 self::TARIFF_CREATE->value,
             ],
             PermissionGroupEnum::TRANSACTION_MANAGEMENT->value => [
+                self::TRANSACTION_ATTEMPT_VIEW_ALL->value,
                 self::TRANSACTION_VIEW_ALL->value,
                 self::TRANSACTION_VIEW->value,
                 self::TRANSACTION_CREATE->value,
@@ -582,6 +585,7 @@ enum PermissionEnum: string
             self::TARIFF_DELETE,
             self::TARIFF_CREATE => FeatureEnum::TARIFF_MANAGEMENT,
 
+            self::TRANSACTION_ATTEMPT_VIEW_ALL,
             self::TRANSACTION_VIEW_ALL,
             self::TRANSACTION_VIEW,
             self::TRANSACTION_CREATE,

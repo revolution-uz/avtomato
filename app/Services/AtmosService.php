@@ -7,10 +7,13 @@ use App\Clients\AtmosPinflClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\Transction\AtmosTransactionDetailDTO;
+use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Exceptions\AtmosException;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
+use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
+use App\Models\Company\TransactionAttempt;
 use App\Models\Company\TransactionType;
 use Carbon\Carbon;
 
@@ -60,23 +63,37 @@ class AtmosService
         return [true, 'The card was successfully removed'];
     }
 
-    public function withdrawAmountAndCreateCardTransaction(Card $card, int $installmentId, float &$amount): void
+    public function withdrawAmountAndCreateCardTransaction(Card $card, Installment $installment, float &$amount): void
     {
-        $uniqueId = uniqid($installmentId . '-installment-id-');
-        $createPayResponseDTO = $this->atmosCardClient->createPayment($uniqueId, $amount, $uniqueId);
+        /** @var TransactionAttempt $transactionAttempt */
+        $transactionAttempt = TransactionAttempt::create([
+            'installment_id' => $installment->id,
+            'customer_id' => $installment->customer_id,
+            'status' => TransactionAttemptStatusEnum::CREATED,
+            'amount' => $amount,
+            'card_id' => $card->id,
+        ]);
+
+        $createPayResponseDTO = $this->atmosCardClient->createPayment($transactionAttempt->id, $amount, $transactionAttempt->id);
         if (! $createPayResponseDTO->result->isSucces()) {
+            $transactionAttempt->failed();
+
             return;
         }
 
         $preConfirmPayResponseDTO = $this->atmosCardClient->preConfirmPayment($card->external_id, $createPayResponseDTO->transaction_id);
 
         if (! $preConfirmPayResponseDTO->result->isSucces()) {
+            $transactionAttempt->failed();
+
             return;
         }
 
         $confirmPayResponseDTO = $this->atmosCardClient->confirmPayment($createPayResponseDTO->transaction_id);
 
         if (! $confirmPayResponseDTO->result->isSucces()) {
+            $transactionAttempt->failed();
+
             return;
         }
 
@@ -85,32 +102,47 @@ class AtmosService
         $transaction->external_id = (string) $confirmPayResponseDTO->store_transaction->success_trans_id;
         $transaction->amount = $confirmPayResponseDTO->store_transaction->amount / 100;
         $transaction->card_id = $card->id;
-        $transaction->installment_id = $installmentId;
+        $transaction->installment_id = $installment->id;
         $transaction->customer_id = $card->customer_id;
         $transaction->paid_at = Carbon::createFromTimestamp($confirmPayResponseDTO->store_transaction->confirm_time);
 
         if ($transaction->save()) {
             $amount -= $transaction->amount;
+            $transactionAttempt->success($transaction->id);
         } else {
             $this->atmosCardClient->reversePayment($createPayResponseDTO->transaction_id);
+            $transactionAttempt->failed();
         }
     }
 
-    public function withdrawAmountAndCreatePINFLTransaction(Customer $customer, int $installmentId, float &$amount): void
+    public function withdrawAmountAndCreatePINFLTransaction(Customer $customer, Installment $installment, float &$amount): void
     {
+
         $paid_at = Carbon::now();
-        $ext_id = $installmentId . '-' . $paid_at->getTimestamp();
-        $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installmentId, $amount);
+        $ext_id = $installment->id . '-' . $paid_at->getTimestamp();
+        /** @var TransactionAttempt $transactionAttempt */
+        $transactionAttempt = TransactionAttempt::create([
+            'installment_id' => $installment->id,
+            'customer_id' => $customer->id,
+            'status' => TransactionAttemptStatusEnum::CREATED,
+            'amount' => $amount,
+        ]);
+
+        $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment->id, $amount);
         if (! $createPayResponseDTO->isSucces()) {
+            $transactionAttempt->failed();
+
             return;
         }
 
         $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $createPayResponseDTO->transaction_id);
 
         if (! $confirmWithPinfl->isSucces()) {
+            $transactionAttempt->failed();
+
             return;
         }
-        $total_amount = 0;
+        $detailCount = count($confirmWithPinfl->details);
         foreach ($confirmWithPinfl->details as $detail) {
             /** @var AtmosTransactionDetailDTO $detail */
             $transaction = new Transaction;
@@ -118,10 +150,20 @@ class AtmosService
             $transaction->transaction_type_id = TransactionType::ATMOS_WITH_PINFL;
             $transaction->external_id = (string) $confirmWithPinfl->transaction_id;
             $transaction->amount = $detail->amount / 100;
-            $transaction->installment_id = $installmentId;
+            $transaction->installment_id = $installment->id;
             $transaction->customer_id = $customer->id;
             $transaction->save();
             $amount -= $transaction->amount;
+            $transactionAttempt->success($transaction->id);
+            $detailCount--;
+            if ($detailCount) {
+                $transactionAttempt = TransactionAttempt::create([
+                    'installment_id' => $installment->id,
+                    'customer_id' => $customer->id,
+                    'status' => TransactionAttemptStatusEnum::CREATED,
+                    'amount' => $amount,
+                ]);
+            }
         }
     }
 }

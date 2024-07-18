@@ -41,6 +41,7 @@ use App\GraphQL\Installment\Queries\SingleTariffGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTransactionGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTransactionTypeGraphQLQuery;
 use App\GraphQL\Installment\Queries\TariffsGraphQLQuery;
+use App\GraphQL\Installment\Queries\TransactionAttemptsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionTypesGraphQLQuery;
 use App\GraphQL\Installment\Types\CalculatedGraphGraphQLType;
@@ -51,6 +52,7 @@ use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
 use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\GraphQL\Installment\Types\TariffInputGraphQLType;
+use App\GraphQL\Installment\Types\TransactionAttemptGraphQLType;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
 use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
@@ -108,6 +110,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 SingleTariffGraphQLQuery::class,
                 TransactionTypesGraphQLQuery::class,
                 SingleTransactionTypeGraphQLQuery::class,
+                TransactionAttemptsGraphQLQuery::class,
                 TransactionsGraphQLQuery::class,
                 SingleTransactionGraphQLQuery::class,
             ],
@@ -162,6 +165,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 CustomerGraphQLType::class,
                 CardGraphQLType::class,
                 AttachmentGraphQLType::class,
+                TransactionAttemptGraphQLType::class,
                 TransactionGraphQLType::class,
                 InstallmentCommentGraphQLType::class,
                 InstallmentGuarantorGraphQLType::class,
