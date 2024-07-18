@@ -51,11 +51,11 @@ class TransactionAttemptGraphQLType extends GraphQLType
                 'resolve' => fn (TransactionAttempt $root) => $root->customer,
             ],
             'transaction_id' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'resolve' => fn (TransactionAttempt $root) => $root->transaction_id,
             ],
             'transaction' => [
-                'type' => Type::nonNull(GraphQL::type(TransactionGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => GraphQL::type(TransactionGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (TransactionAttempt $root) => $root->transaction,
             ],
             'card_id' => [
@@ -77,6 +77,18 @@ class TransactionAttemptGraphQLType extends GraphQLType
             'updated_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (TransactionAttempt $root) => $root->updated_at->timestamp,
+            ],
+            'customer_type' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (TransactionAttempt $root) => $root->customer_type,
+            ],
+            'transaction_type_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (TransactionAttempt $root) => $root->transaction_type_id,
+            ],
+            'transaction_type' => [
+                'type' => Type::nonNull(GraphQL::type(TransactionTypeGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (TransactionAttempt $root) => $root->transactionType,
             ],
         ];
     }

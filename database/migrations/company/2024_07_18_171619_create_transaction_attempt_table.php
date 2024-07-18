@@ -18,11 +18,6 @@ return new class extends Migration
             $table->unsignedBigInteger('transaction_id')->nullable();
             $table->decimal('amount', 12);
             $table->timestamps();
-
-            $table->foreign('customer_id')->references('id')->on('customers')->cascadeOnDelete();
-            $table->foreign('installment_id')->references('id')->on('installments')->cascadeOnDelete();
-            $table->foreign('card_id')->references('id')->on('cards')->restrictOnDelete();
-            $table->foreign('transaction_id')->references('id')->on('transactions')->restrictOnDelete();
         });
     }
 
