@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Clients\DocumentGeneratorClient;
 use App\Enums\Company\AddressTypeEnum;
+use App\Helpers\InstallmentGraphHelper;
 use App\Models\Company\Address;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
@@ -75,12 +76,12 @@ readonly class DocumentGeneratorService
             'total' => number_format($total_amount, 2, ' ', '.') . ' / ' . number_format($paid_sum, 2, ' ', '.'),
         ];
         $i = 0;
-        foreach ($installment->graphs as $graph) {
+        foreach (InstallmentGraphHelper::getGraphs($installment) as $graph) {
             $i++;
             $paid_sum += $graph->paid_amount;
             $data = array_merge($data, [
                 'i#' . $i => $i,
-                'starts_in#' . $i => $graph->starts_in?->format('d.m.Y'),
+                'starts_in#' . $i => $graph->starts_in->format('d.m.Y'),
                 'sum#' . $i => number_format($graph->amount, 2, ' ', '.') . ' / ' . number_format($graph->paid_amount, 2, ' ', '.'),
             ]);
         }

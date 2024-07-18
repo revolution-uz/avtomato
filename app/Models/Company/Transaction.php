@@ -2,13 +2,11 @@
 
 namespace App\Models\Company;
 
-use App\Enums\Company\InstallmentStatusEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -66,9 +64,9 @@ class Transaction extends Model
         });
 
         static::created(function (self $transaction) {
-            if ($transaction->installment->status == InstallmentStatusEnum::ACTIVE) {
-                $transaction->setInstallmentGraphData($transaction->amount);
-            }
+            Installment::query()
+                ->where('id', $transaction->installment_id)
+                ->increment('paid_amount', $transaction->amount);
         });
     }
 
@@ -95,27 +93,5 @@ class Transaction extends Model
     public function admin(): BelongsTo
     {
         return $this->belongsTo(CompanyAdmin::class, 'admin_id', 'id');
-    }
-
-    public function setInstallmentGraphData(float $amount)
-    {
-        $query = InstallmentGraph::query()->where('installment_id', $this->installment_id)
-            ->where(DB::raw('amount - paid_amount'), '>', 0)
-            ->orderBy('starts_in');
-        if ($query->exists()) {
-            $installmentGraph = $query->firstOrFail();
-            /** @var InstallmentGraph $installmentGraph */
-            $min_amount = min($amount, $installmentGraph->debt_amount);
-            $installmentGraph->paid_amount += $min_amount;
-            $amount -= $min_amount;
-            if (! $installmentGraph->debt_amount) {
-                $installmentGraph->status = InstallmentStatusEnum::CLOSED;
-            }
-            $installmentGraph->save();
-
-            return $amount > 0 ? $this->setInstallmentGraphData($amount) : true;
-        }
-
-        return false;
     }
 }

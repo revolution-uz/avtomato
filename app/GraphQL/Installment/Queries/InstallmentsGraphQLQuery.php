@@ -55,7 +55,7 @@ class InstallmentsGraphQLQuery extends Query
     {
         return
             Installment::query()
-                ->with(['customer', 'branch', 'tariff', 'graphs', 'cards', 'guarantors', 'documents', 'comments', 'transactions'])
+                ->with(['customer', 'branch', 'tariff', 'cards', 'guarantors', 'documents', 'comments', 'transactions'])
                 ->when(isset($args['search']), fn (Builder $q) => $q
                     ->whereHas('customer', fn (Builder $q) => $q
                         ->where('first_name', 'like', "%{$args['search']}%")

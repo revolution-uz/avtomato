@@ -134,7 +134,7 @@ class AttachPhoneGraphQLMutationTest extends GraphQLTestCase
                 route('graphql.customer'),
                 $this->buildGraphQLQuery([
                     'customer_id' => Customer::query()->orderByDesc('id')->first()->id + 1,
-                    'phone' => Str::random(12),
+                    'phone' => '99893',
                     'type' => 1000,
                     'comment' => Str::random(65),
                 ])
@@ -144,7 +144,7 @@ class AttachPhoneGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'customer id']), $response->json('errors.0.extensions.validation.customer_id.0'));
-        $this->assertEquals(trans('validation.integer', ['attribute' => 'Телефон']), $response->json('errors.0.extensions.validation.phone.0'));
+        $this->assertEquals('The phone is invalid phone number.', $response->json('errors.0.extensions.validation.phone.0'));
         $this->assertEquals(trans('validation.in', ['attribute' => 'type']), $response->json('errors.0.extensions.validation.type.0'));
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'comment', 'max' => 64]), $response->json('errors.0.extensions.validation.comment.0'));
     }

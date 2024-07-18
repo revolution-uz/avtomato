@@ -156,7 +156,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
                     }
                     graphs  {
                         id
-                        installment_id
                         amount
                         paid_amount
                         overdue_days
@@ -720,7 +719,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $installment = [];
         $graph = [
             'id',
-            'installment_id',
             'amount',
             'paid_amount',
             'overdue_days',

@@ -4,18 +4,17 @@ namespace App\Services\Installment;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
-use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Helpers\Utilities;
 use App\Models\Company\Installment;
-use App\Models\Company\InstallmentGraph;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
 use App\Models\Company\Transaction;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
+use Illuminate\Contracts\Database\Query\Expression;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -35,7 +34,7 @@ class InstallmentService
         $attributes['sms_notify'] = false;
         $attributes['any_card_charge'] = false;
         $attributes['type'] = InstallmentTypeEnum::WITHOUT_CARD;
-        $attributes['next_pay_date'] = $attributes['starts_in'];
+        $attributes['percent'] = Tariff::findOrFail($attributes['tariff_id'])->percent;
 
         return Installment::create($attributes);
     }
@@ -82,12 +81,11 @@ class InstallmentService
 
     /**
      * @throws Throwable
-     * @throws BalanceIsNotEnoughException
      */
     public function changeStatus(Installment $installment, InstallmentStatusEnum $status): bool
     {
         if ($status == InstallmentStatusEnum::ACTIVE) {
-            $this->running($installment);
+            // TODO charge balance
         }
 
         $installment->status = $status;
@@ -95,7 +93,7 @@ class InstallmentService
         return $installment->save();
     }
 
-    public function getDashboardInfo()
+    public function getDashboardInfo(): array
     {
         return [
             'installment_amounts' => $this->getInstallmentAmounts(),
@@ -113,82 +111,65 @@ class InstallmentService
         $installment->saveOrFail();
     }
 
-    /**
-     * @throws BalanceIsNotEnoughException
-     */
-    private function running(Installment $installment): void
-    {
-        if (is_array($installment->graphs) && count($installment->graphs)) {
-            return;
-        }
-        $this->balanceService->chargeAmount(PermissionEnum::getFeature(PermissionEnum::INSTALLMENT_START), $installment);
-        /** @var Tariff $tariff */
-        $tariff = Tariff::findOrFail($installment->tariff_id);
-        $amount = $installment->amount;
-        $amount -= $installment->initial_fee;
-        $portion = $amount * $tariff->percent / 100 / $installment->period;
-
-        $currentDate = new Carbon;
-        $currentDate->timestamp = $installment->starts_in->timestamp;
-        $periods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($installment->period - 1));
-
-        foreach ($periods as $period) {
-            $installmentGraph = new InstallmentGraph;
-            $installmentGraph->installment_id = $installment->id;
-            $installmentGraph->amount = $amount / $installment->period + $portion;
-            $installmentGraph->starts_in = $period->format('Y-m-d');
-            $installmentGraph->status = InstallmentStatusEnum::ACTIVE;
-            $installmentGraph->paid_amount = 0;
-            $installmentGraph->save();
-        }
-        $installment->setNextPayDate();
-        $installment->save();
-    }
-
     private function getInstallmentAmounts(): array
     {
+        $nextPayDateSql = DB::raw("starts_in + (FLOOR(paid_amount / (amount - initial_fee) * (percent * 100) / 100 / period)::text || ' month')::interval");
+
         return [
             'transaction' => $this->calculateByIncreasingPercent(Transaction::query(), 'id', 'amount'),
             'installment' => $this->calculateByIncreasingPercent(Installment::query(), 'id', 'amount'),
-            'installment_future_profit' => $this->calculateByIncreasingPercent(Installment::join('tariffs', 'installments.tariff_id', '=', 'tariffs.id')
-                ->where('status', '>', InstallmentStatusEnum::IN_ACTIVE), 'installments.id', DB::raw('installments.amount / (1 + tariffs.percent / 100)'), 'installments.created_at'),
-            'installment_overdue' => $this->calculateByIncreasingPercent(Installment::join('installment_graphs', 'installments.id', '=', 'installment_graphs.installment_id')
-                ->where('installment_graphs.starts_in', '<', Carbon::now()), 'installments.id', DB::raw('installment_graphs.amount - installment_graphs.paid_amount'), 'installments.created_at'),
+            'installment_future_profit' => $this->calculateByIncreasingPercent(
+                Installment::query()->join('tariffs', 'installments.tariff_id', '=', 'tariffs.id')
+                    ->where('status', '>', InstallmentStatusEnum::IN_ACTIVE),
+                'installments.id',
+                DB::raw('installments.amount / (1 + tariffs.percent / 100)'),
+                'installments.created_at'
+            ),
+            'installment_overdue' => $this->calculateByIncreasingPercent(
+                Installment::query()
+                    ->where($nextPayDateSql, '<', Carbon::now()),
+                'installments.id',
+                DB::raw('(amount - initial_fee) * (percent + 100) / 100 + initial_fee - paid_amount'),
+                'installments.created_at'
+            ),
             'npl' => $this->calculateNpl(60, 7),
             'enpl' => $this->calculateNpl(30, 7),
 
         ];
     }
 
-    private function getInstallmentOverdues(): array
+    private function calculateByIncreasingPercent(Builder $query, Expression|string $fieldCount, Expression|string $fieldAmount, string $created_at = 'created_at'): array
     {
-        $result = [];
-        $query = InstallmentGraph::query()->where(DB::raw('amount - paid_amount'), '>', 0);
-        $total_amount = (clone $query)->where('starts_in', '<=', Carbon::now())->sum(DB::raw('amount - paid_amount'));
-        $total_count = (clone $query)->where('starts_in', '<=', Carbon::now())->count('id');
-        for ($i = 10; $i < 70; $i += 10) {
-            $subQuery = (clone $query)->where('starts_in', '>', Carbon::now()->subDays($i))->where('starts_in', '<=', Carbon::now()->subDays($i - 10));
-            $count = (clone $subQuery)->count('id');
-            $amount = (clone $subQuery)->sum('amount');
-            $total_count -= $count;
-            $total_amount -= $amount;
-            $result[] = [
-                'overdue_days' => __('api.till :days days', [
-                    'days' => $i,
-                ]),
-                'amount' => $amount,
-                'count' => $count,
-            ];
-        }
-        $result[] = [
-            'overdue_days' => __('api.above :days days', [
-                'days' => 60,
-            ]),
-            'amount' => $total_amount,
-            'count' => $total_count,
-        ];
+        $beforeWeekQuery = (clone $query)->where($created_at, '<', Carbon::today()->startOfWeek());
+        $count = $query->count($fieldCount);
+        $beforeWeekCount = $beforeWeekQuery->count($fieldCount);
+        $amount = $query->sum($fieldAmount);
+        $beforeWeekAmount = $beforeWeekQuery->sum($fieldAmount);
 
-        return $result;
+        return [
+            'count' => $count,
+            'count_increasing_percent' => max(0, Utilities::preventDivideByZero($count, $beforeWeekCount) * 100 - 100),
+            'amount' => $amount,
+            'amount_increasing_percent' => max(0, Utilities::preventDivideByZero($amount, $beforeWeekAmount) * 100 - 100),
+        ];
+    }
+
+    private function calculateNpl(int $overdueDays, int $beforeDays): array
+    {
+        $query = Installment::query();
+        $installment_total_amount = Installment::query()->sum(DB::raw('amount - initial_fee'));
+        $nextPayDateSql = DB::raw("starts_in + (FLOOR(paid_amount / (amount - initial_fee) * (percent * 100) / 100 / period)::text || ' month')::interval");
+        $profitSql = DB::raw('(amount - initial_fee) * percent / 100 - paid_amount');
+        $nplQuery = (clone $query)->where($nextPayDateSql, '<', Carbon::now()->subDays($overdueDays));
+        $nplBeforeWeekQuery = (clone $query)->where($nextPayDateSql, '<', Carbon::now()->subDays($overdueDays - $beforeDays));
+        $npl = $installment_total_amount === 0 ? 0 : $nplQuery->sum($profitSql) / $installment_total_amount * 100;
+        $nplBefore = $installment_total_amount === 0 ? 0 : $nplBeforeWeekQuery->sum($profitSql) / $installment_total_amount * 100;
+
+        return [
+            'value' => $npl,
+            'value_of_last_week' => $nplBefore,
+            'value_increasing_percent' => max(0, Utilities::preventDivideByZero($npl, $nplBefore) * 100 - 100),
+        ];
     }
 
     private function getInstallmentInfoByStatus(): array
@@ -216,35 +197,35 @@ class InstallmentService
         return $result;
     }
 
-    private function calculateByIncreasingPercent(\Illuminate\Database\Eloquent\Builder $query, \Illuminate\Contracts\Database\Query\Expression|string $fieldCount, \Illuminate\Contracts\Database\Query\Expression|string $fieldAmount, string $created_at = 'created_at'): array
+    private function getInstallmentOverdues(): array
     {
-        $beforeWeekQuery = (clone $query)->where($created_at, '<', Carbon::today()->startOfWeek());
-        $count = $query->count($fieldCount);
-        $beforeWeekCount = $beforeWeekQuery->count($fieldCount);
-        $amount = $query->sum($fieldAmount);
-        $beforeWeekAmount = $beforeWeekQuery->sum($fieldAmount);
-
-        return [
-            'count' => $count,
-            'count_increasing_percent' => max(0, Utilities::preventDivideByZero($count, $beforeWeekCount) * 100 - 100),
-            'amount' => $amount,
-            'amount_increasing_percent' => max(0, Utilities::preventDivideByZero($amount, $beforeWeekAmount) * 100 - 100),
+        $result = [];
+        $query = Installment::query()->where(DB::raw('(amount - initial_fee) * (percent + 100) / 100 - paid_amount'), '>', 0);
+        $nextPayDateSql = DB::raw("starts_in + (FLOOR(paid_amount / (amount - initial_fee) * (percent * 100) / 100 / period)::text || ' month')::interval");
+        $total_amount = (clone $query)->where($nextPayDateSql, '<=', Carbon::now())->sum(DB::raw('(amount - initial_fee) * percent / 100 - paid_amount'));
+        $total_count = (clone $query)->where($nextPayDateSql, '<=', Carbon::now())->count('id');
+        for ($i = 10; $i < 70; $i += 10) {
+            $subQuery = (clone $query)->where($nextPayDateSql, '>', Carbon::now()->subDays($i))->where($nextPayDateSql, '<=', Carbon::now()->subDays($i - 10));
+            $count = (clone $subQuery)->count('id');
+            $amount = (clone $subQuery)->sum(DB::raw('(amount - initial_fee) * (percent + 100) / 100'));
+            $total_count -= $count;
+            $total_amount -= $amount;
+            $result[] = [
+                'overdue_days' => __('api.till :days days', [
+                    'days' => $i,
+                ]),
+                'amount' => $amount,
+                'count' => $count,
+            ];
+        }
+        $result[] = [
+            'overdue_days' => __('api.above :days days', [
+                'days' => 60,
+            ]),
+            'amount' => $total_amount,
+            'count' => $total_count,
         ];
-    }
 
-    private function calculateNpl(int $overdueDays, int $beforeDays): array
-    {
-        $query = InstallmentGraph::query();
-        $installment_total_amount = Installment::query()->sum('amount');
-        $nplQuery = (clone $query)->where('starts_in', '<', Carbon::now()->subDays($overdueDays));
-        $nplBeforeWeekQuery = (clone $query)->where('starts_in', '<', Carbon::now()->subDays($overdueDays - $beforeDays));
-        $npl = $nplQuery->sum(DB::raw('installment_graphs.amount - installment_graphs.paid_amount')) / $installment_total_amount * 100;
-        $nplBefore = $nplBeforeWeekQuery->sum(DB::raw('installment_graphs.amount - installment_graphs.paid_amount')) / $installment_total_amount * 100;
-
-        return [
-            'value' => $npl,
-            'value_of_last_week' => $nplBefore,
-            'value_increasing_percent' => max(0, Utilities::preventDivideByZero($npl, $nplBefore) * 100 - 100),
-        ];
+        return $result;
     }
 }
