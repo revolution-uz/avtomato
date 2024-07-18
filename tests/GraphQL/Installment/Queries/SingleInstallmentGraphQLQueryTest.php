@@ -32,7 +32,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         parent::setUp();
 
         Installment::query()->forceDelete();
-        $this->_installment = Installment::factory()->create();
+        $this->_installment = Installment::factory()->create(['starts_in' => now()->addDays(5)]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->_installment->admin, 'photo1.jpg');
         $this->_guarantor = Customer::factory()->create();
         $this->_installment->guarantors()->attach($this->_guarantor, ['any_card_charge' => true]);
