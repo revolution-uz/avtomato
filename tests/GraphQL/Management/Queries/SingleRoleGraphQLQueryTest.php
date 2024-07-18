@@ -112,6 +112,7 @@ class SingleRoleGraphQLQueryTest extends GraphQLTestCase
             'tariff_edit',
             'tariff_delete',
             'tariff_create',
+            'transaction_attempt_view_all',
             'transaction_view_all',
             'transaction_view',
             'transaction_create',
