@@ -5,12 +5,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('transaction_attempts', function (Blueprint $table) {
-            $table->id();
             $table->id();
             $table->unsignedBigInteger('installment_id');
             $table->unsignedBigInteger('customer_id');
