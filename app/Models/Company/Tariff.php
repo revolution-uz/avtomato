@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -19,6 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $max_amount
  * @property int $min_initial_fee
  * @property int $max_initial_fee
+ * @property-read Installment[] $installments
  */
 class Tariff extends Model
 {
@@ -37,4 +39,9 @@ class Tariff extends Model
         'min_initial_fee',
         'max_initial_fee',
     ];
+
+    public function installments(): HasMany
+    {
+        return $this->hasMany(Installment::class);
+    }
 }

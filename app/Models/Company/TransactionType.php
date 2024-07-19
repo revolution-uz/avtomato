@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -20,6 +21,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read Transaction[] $transactions
  */
 class TransactionType extends Model
 {
@@ -57,5 +59,10 @@ class TransactionType extends Model
     public function name(): Attribute
     {
         return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

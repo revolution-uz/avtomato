@@ -66,7 +66,7 @@ class DetachGuarantorGraphQLMutation extends Mutation
                 'required',
                 'integer',
                 function ($attribute, $value, $fail) {
-                    if (! InstallmentGuarantor::query()->where('id', $value)->exists()) {
+                    if (! InstallmentGuarantor::query()->where('customer_id', $value)->exists()) {
                         $fail(__('api.not found'));
                     }
                 },

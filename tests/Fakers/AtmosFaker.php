@@ -53,6 +53,6 @@ class AtmosFaker
 
     public static function reversePayment()
     {
-        self::fakeResponse(AtmosCardClient::PAYMENT_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-reverse.json');
+        self::fakeResponse(AtmosCardClient::PAYMENT_CANCEL, '../JSON-for-testing/atmos/card-pay/pay-reverse.json');
     }
 }
