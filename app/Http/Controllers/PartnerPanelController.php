@@ -6,6 +6,6 @@ class PartnerPanelController extends Controller
 {
     public function index()
     {
-        return response()->redirect('/panel');
+        return redirect('/panel');
     }
 }
