@@ -16,6 +16,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $phone_id
  * @property int $phoneable_id
  * @property string $phoneable_type
+ * @property bool $installment_notifications
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Phone $phone
@@ -30,6 +31,7 @@ class Phoneable extends Model
         'phone_id',
         'phoneable_id',
         'phoneable_type',
+        'installment_notifications',
     ];
 
     protected $casts = [

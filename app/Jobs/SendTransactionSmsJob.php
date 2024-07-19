@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Helpers\SmsTemplateHelper;
 use App\Models\Company;
@@ -43,20 +42,24 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
         $company = tenancy()->model();
         $transaction = Transaction::findOrFail($this->transactionId);
 
-        foreach ($transaction->installment->phones as $phone) {
-            if ($phone->pivot->type === PhoneTypeEnum::INSTALLMENT_AUTO_CHARGE) {
-                $message = new SmsMessage;
-                $message->phone = $phone->phone;
-                $message->message = SmsTemplateHelper::getAutoChargeTemplate(
-                    pan: $transaction->pan,
-                    amount: $transaction->amount,
-                    credit_number: $transaction->installment_id,
-                    company: $company->name,
-                    phone: $company->owner_phone,
-                );
-                $message->saveOrFail();
-                $balanceService->chargeAmount($feature->name, $message);
-                $smsService->sendSms($feature, $message);
+        $customers = clone $transaction->installment->guarantors;
+        $customers->push($transaction->customer);
+        foreach ($customers as $customer) {
+            foreach ($customer->phones as $phone) {
+                if ($phone->pivot->installment_notifications) {
+                    $message = new SmsMessage;
+                    $message->phone = $phone->phone;
+                    $message->message = SmsTemplateHelper::getAutoChargeTemplate(
+                        pan: $transaction->pan,
+                        amount: $transaction->amount,
+                        credit_number: $transaction->installment_id,
+                        company: $company->name,
+                        phone: $company->owner_phone,
+                    );
+                    $message->saveOrFail();
+                    $balanceService->chargeAmount($feature->name, $message);
+                    $smsService->sendSms($feature, $message);
+                }
             }
         }
     }

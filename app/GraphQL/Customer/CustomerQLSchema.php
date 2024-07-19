@@ -13,6 +13,7 @@ use App\GraphQL\Customer\Mutations\CreateCustomerGraphQLMutation;
 use App\GraphQL\Customer\Mutations\DetachAddressGraphQLMutation;
 use App\GraphQL\Customer\Mutations\DetachCardGraphQLMutation;
 use App\GraphQL\Customer\Mutations\DetachPhoneGraphQLMutation;
+use App\GraphQL\Customer\Mutations\TogglePhoneInstallmentNotificationsGraphQLMutation;
 use App\GraphQL\Customer\Mutations\UpdateCustomerGraphQLMutation;
 use App\GraphQL\Customer\Queries\CustomerByPassportGraphQLQuery;
 use App\GraphQL\Customer\Queries\CustomersGraphQLQuery;
@@ -98,6 +99,7 @@ class CustomerQLSchema implements ConfigConvertible
                 DetachAddressGraphQLMutation::class,
                 DetachCardGraphQLMutation::class,
                 DetachPhoneGraphQLMutation::class,
+                TogglePhoneInstallmentNotificationsGraphQLMutation::class,
                 UpdateCustomerGraphQLMutation::class,
             ],
             'types' => [

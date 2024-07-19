@@ -23,7 +23,7 @@ class CustomerFactory extends Factory
             'passport_expiration_date' => Carbon::now(),
             'passport_given_place' => $this->faker->city(),
             'passport_citizenship' => Str::substr($this->faker->country(), 0, 32),
-            'first_name' => Str::substr($this->faker->firstName(), 0, 32),
+            'first_name' => Str::substr($this->faker->unique()->firstName(), 0, 32),
             'last_name' => Str::substr($this->faker->lastName(), 0, 32),
             'middle_name' => Str::substr($this->faker->name(), 0, 32),
             'birth_date' => Carbon::now(),

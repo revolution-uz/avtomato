@@ -48,7 +48,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         foreach (Phone::factory()->count(1)->create() as $phone) {
             $this->_installment->customer->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::customerValues())]);
             $this->_guarantor->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::customerValues())]);
-            $this->_installment->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::installmentValues())]);
         }
         InstallmentComment::factory()->create(['installment_id' => $this->_installment->id, 'admin_id' => $this->_installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $this->_installment, 'photo1.jpg');
@@ -353,14 +352,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     admin {
                         {$adminFields}
                     }
-                    phones {
-                        id
-                        phone
-                        type
-                        comment
-                        created_at
-                        updated_at
-                    }
                 }
             }
         ";
@@ -627,16 +618,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                         ],
                     ],
                     'admin' => $adminFields,
-                    'phones' => [
-                        '*' => [
-                            'id',
-                            'phone',
-                            'type',
-                            'comment',
-                            'created_at',
-                            'updated_at',
-                        ],
-                    ],
                 ],
             ],
         ]);

@@ -35,6 +35,10 @@ class PhoneGraphQLType extends GraphQLType
                 'type' => Type::string(),
                 'resolve' => fn (Phone $root) => $root->pivot->comment,
             ],
+            'installment_notifications' => [
+                'type' => Type::nonNull(Type::boolean()),
+                'resolve' => fn (Phone $root) => $root->pivot->installment_notifications,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Phone $root) => $root->pivot->created_at->timestamp,

@@ -5,7 +5,6 @@ namespace App\GraphQL\Installment\Types;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
-use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
@@ -194,10 +193,6 @@ class InstallmentGraphQLType extends GraphQLType
             'debt' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (Installment $root) => $root->debtAmount,
-            ],
-            'phones' => [
-                'type' => Type::nonNull(Type::listOf(GraphQL::type(PhoneGraphQLType::GRAPHQL_TYPE_NAME))),
-                'resolve' => fn (Installment $root) => $root->phones,
             ],
         ];
     }
