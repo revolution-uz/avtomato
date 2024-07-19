@@ -11,6 +11,7 @@ use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
@@ -45,6 +46,10 @@ class InstallmentsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
             ],
+            'debt_only' => [
+                'type' => Type::boolean(),
+                'rules' => 'nullable|boolean',
+            ],
             'status' => [
                 'type' => Type::int(),
                 'rules' => [
@@ -74,6 +79,15 @@ class InstallmentsGraphQLQuery extends Query
                     )
                     ->orWhereHas('branch', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
                     ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
+                )
+                ->when(
+                    isset($args['debt_only']) && $args['debt_only'],
+                    fn (Builder $q) => $q
+                        ->where(
+                            DB::raw("(amount - initial_fee) * (percent + 100) / 100 * ABS(DATE_PART('month', AGE(starts_in, NOW()))) + initial_fee - paid_amount"),
+                            '>',
+                            0
+                        )
                 )
                 ->when(isset($args['status']), fn (Builder $q) => $q->where('status', $args['status']))
                 ->when(
