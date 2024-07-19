@@ -72,6 +72,12 @@ class Transaction extends Model
                 ->increment('paid_amount', $transaction->amount);
             dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
         });
+
+        static::deleted(function (self $transaction) {
+            Installment::query()
+                ->where('id', $transaction->installment_id)
+                ->decrement('paid_amount', $transaction->amount);
+        });
     }
 
     public function installment(): BelongsTo
