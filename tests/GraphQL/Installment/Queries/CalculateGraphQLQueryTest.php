@@ -83,10 +83,10 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff_id" of non-null type "Int!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$amount" of non-null type "BigInteger!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$initial_fee" of non-null type "BigInteger!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$period" of non-null type "Int!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff_id" of non-null type "Int!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$amount" of non-null type "BigInteger!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$initial_fee" of non-null type "BigInteger!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$period" of non-null type "Int!" must not be null.'));
 
         // validation errors
         $response = $this

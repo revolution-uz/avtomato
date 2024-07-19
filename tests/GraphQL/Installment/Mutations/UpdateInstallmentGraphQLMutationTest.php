@@ -101,8 +101,8 @@ class UpdateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($this->_installment->admin_id, $response->json('data.updateInstallment.admin_id'));
         $this->assertEquals($this->_installment->tariff_id, $response->json('data.updateInstallment.tariff_id'));
         $this->assertEquals($this->_installment->type->value, $response->json('data.updateInstallment.type'));
-        $this->assertEquals((float)$this->_installment->amount, (float)$response->json('data.updateInstallment.amount'));
-        $this->assertEquals((float)$this->_installment->initial_fee, (float)$response->json('data.updateInstallment.initial_fee'));
+        $this->assertEquals((float) $this->_installment->amount, (float) $response->json('data.updateInstallment.amount'));
+        $this->assertEquals((float) $this->_installment->initial_fee, (float) $response->json('data.updateInstallment.initial_fee'));
         $this->assertEquals($this->_installment->sms_notify, $response->json('data.updateInstallment.sms_notify'));
         $this->assertEquals($this->_installment->auto_pay, $response->json('data.updateInstallment.auto_pay'));
         $this->assertEquals($this->_installment->any_card_charge, $response->json('data.updateInstallment.auto_pay_by_pinfl'));
@@ -141,13 +141,13 @@ class UpdateInstallmentGraphQLMutationTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$id" of non-null type "Int!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.tariff_id"; Expected non-nullable type "Int!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.period"; Expected non-nullable type "Int!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.amount"; Expected non-nullable type "BigFloat!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.initial_fee"; Expected non-nullable type "BigFloat!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.description"; Expected non-nullable type "String!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.starts_in"; Expected non-nullable type "String!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$id" of non-null type "Int!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.tariff_id"; Expected non-nullable type "Int!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.period"; Expected non-nullable type "Int!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.amount"; Expected non-nullable type "BigFloat!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.initial_fee"; Expected non-nullable type "BigFloat!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.description"; Expected non-nullable type "String!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$installment" got invalid value null at "installment.starts_in"; Expected non-nullable type "String!" not to be null.'));
 
         // rule errors
         $installmentInput = [

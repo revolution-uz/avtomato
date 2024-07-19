@@ -58,7 +58,7 @@ class DeleteTransactionGraphQLMutationTest extends GraphQLTestCase
                 route('graphql.installment'),
                 $this->buildGraphQLQuery([
                     'ids' => Transaction::query()->where('transaction_type_id', '<', 100)
-                        ->inRandomOrder()->limit(1)->pluck('id')->toArray()
+                        ->inRandomOrder()->limit(1)->pluck('id')->toArray(),
                 ])
             );
 
@@ -67,7 +67,6 @@ class DeleteTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('api.it is system payment'), $response->json('errors.0.extensions.validation')['ids.0'][0]);
     }
-
 
     #[Test]
     public function errorValidation(): void
@@ -82,7 +81,7 @@ class DeleteTransactionGraphQLMutationTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$ids" of non-null type "[Int]!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$ids" of non-null type "[Int]!" must not be null.'));
 
         // rule errors
         $response = $this

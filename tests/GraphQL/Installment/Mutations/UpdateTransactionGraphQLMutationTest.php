@@ -86,7 +86,7 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($transaction->transaction_type_id, $response->json('data.updateTransaction.transaction_type_id'));
         $this->assertEquals($transaction->card_id, $response->json('data.updateTransaction.card_id'));
         $this->assertEquals($transaction->external_id, $response->json('data.updateTransaction.external_id'));
-        $this->assertEquals((float)$transaction->amount, (float)$response->json('data.updateTransaction.amount'));
+        $this->assertEquals((float) $transaction->amount, (float) $response->json('data.updateTransaction.amount'));
         $this->assertEquals($transaction->paid_at->timestamp, $response->json('data.updateTransaction.paid_at'));
         $this->assertEquals($transaction->created_at->timestamp, $response->json('data.updateTransaction.created_at'));
         $this->assertEquals($transaction->updated_at->timestamp, $response->json('data.updateTransaction.updated_at'));
@@ -114,7 +114,6 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
     }
 
-
     #[Test]
     public function errorValidation(): void
     {
@@ -135,8 +134,8 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$id" of non-null type "Int!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$amount" of non-null type "BigFloat!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$id" of non-null type "Int!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$amount" of non-null type "BigFloat!" must not be null.'));
 
         // rule errors
         $response = $this

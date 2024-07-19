@@ -114,16 +114,16 @@ class UpdateTariffGraphQLMutationTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$id" of non-null type "Int!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.name"; Expected non-nullable type "String!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.is_annual"; Expected non-nullable type "Boolean!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.percent"; Expected non-nullable type "Float!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.min_period"; Expected non-nullable type "Int!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.max_period"; Expected non-nullable type "Int!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.min_amount"; Expected non-nullable type "BigInteger!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.max_amount"; Expected non-nullable type "BigInteger!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.min_initial_fee"; Expected non-nullable type "BigInteger!" not to be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.max_initial_fee"; Expected non-nullable type "BigInteger!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$id" of non-null type "Int!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.name"; Expected non-nullable type "String!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.is_annual"; Expected non-nullable type "Boolean!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.percent"; Expected non-nullable type "Float!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.min_period"; Expected non-nullable type "Int!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.max_period"; Expected non-nullable type "Int!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.min_amount"; Expected non-nullable type "BigInteger!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.max_amount"; Expected non-nullable type "BigInteger!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.min_initial_fee"; Expected non-nullable type "BigInteger!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff" got invalid value null at "tariff.max_initial_fee"; Expected non-nullable type "BigInteger!" not to be null.'));
 
         // rule errors
         $response = $this
