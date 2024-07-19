@@ -71,7 +71,11 @@ class BalanceChargesGraphQLQuery extends Query
                 });
             })
             ->when(isset($args['feature_id']), fn (Builder $q) => $q->where('feature_id', $args['feature_id']))
-            ->when(isset($args['sort']), fn (Builder|BalanceCharge $q) => $q->orderBySortable($args['sort']))
+            ->when(
+                isset($args['sort']),
+                fn (Builder|BalanceCharge $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|BalanceCharge $q) => $q->orderByDesc('id')
+            )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

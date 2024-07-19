@@ -14,6 +14,7 @@ use App\Models\Company\InstallmentComment;
 use App\Models\Company\Phone;
 use App\Models\Company\Transaction;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -37,7 +38,7 @@ class SingleCustomerGraphQLQueryTest extends GraphQLTestCase
         Address::factory()->count(1)->create(['addressable_type' => Customer::class, 'addressable_id' => $this->_customer->id]);
         Phone::query()->forceDelete();
         foreach (Phone::factory()->count(1)->create() as $phone) {
-            $this->_customer->phones()->attach($phone->id, ['type' => PhoneTypeEnum::randomValue()]);
+            $this->_customer->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::customerValues())]);
         }
         Installment::query()->forceDelete();
         $installment = Installment::factory()->create(['customer_id' => $this->_customer->id, 'admin_id' => $this->createAdminUser()->id, 'starts_in' => Carbon::now(), 'amount' => 100000000, 'period' => 1]);

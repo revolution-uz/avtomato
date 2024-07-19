@@ -83,7 +83,7 @@ enum FeatureEnum: string
             self::SCORING_HUMO,
             self::SCORING_TAX_INFO,
             self::SCORING_MIB_INFO => '{"provider": "asaxiy", "username": "username", "password": "password"}',
-            self::SMS => '{"provider": "smsfly", "username": "username", "password": "password"}',
+            self::SMS => '{"provider": "sms_fly", "username": "username", "secret": "secret"}',
             default => null,
         };
     }

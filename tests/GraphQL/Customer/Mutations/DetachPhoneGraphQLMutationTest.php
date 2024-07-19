@@ -26,7 +26,7 @@ class DetachPhoneGraphQLMutationTest extends GraphQLTestCase
         $this->_customer = Customer::factory()->create();
         Phone::query()->forceDelete();
         foreach (Phone::factory()->count(5)->create() as $phone) {
-            $this->_customer->phones()->attach($phone->id, ['type' => PhoneTypeEnum::randomValue()]);
+            $this->_customer->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::customerCases())]);
         }
     }
 

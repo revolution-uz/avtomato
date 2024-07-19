@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
+use App\Enums\Company\PhoneTypeEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -57,6 +59,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Customer[] $guarantors
  * @property Transaction[] $transactions
  * @property InstallmentGuarantor[] $guarantorList
+ * @property Phone[]|Collection<int,Phone> $phones
  * @property-read  CompanyAdmin $admin
  * @property-read float $debtAmount
  * @property-read float $monthlyPayment
@@ -127,6 +130,13 @@ class Installment extends Model
             ->whereNull('installment_guarantors.deleted_at')
             ->select('customers.*')
             ->withTimestamps();
+    }
+
+    public function phones(): MorphToMany
+    {
+        return $this->morphToMany(Phone::class, 'phoneable')
+            ->wherePivotIn('type', PhoneTypeEnum::installmentCases())
+            ->withPivot(['id', 'type', 'comment', 'created_at', 'updated_at']);
     }
 
     public function documents(): MorphMany

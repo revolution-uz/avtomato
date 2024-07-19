@@ -122,8 +122,11 @@ class TransactionsGraphQLQuery extends Query
                 fn (Builder $q) => $q->whereHas('installment',
                     fn (Builder $q) => $q->whereIn('branch_id', $branches)
                 ))
-            ->when(isset($args['sort']), fn (Builder|Transaction $q) => $q->orderBySortable($args['sort']))
-
+            ->when(
+                isset($args['sort']),
+                fn (Builder|Transaction $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|Transaction $q) => $q->orderByDesc('paid_at')
+            )
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
@@ -131,7 +134,6 @@ class TransactionsGraphQLQuery extends Query
                         ->orWhere('external_id', 'ILIKE', $search);
                 });
             })
-
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

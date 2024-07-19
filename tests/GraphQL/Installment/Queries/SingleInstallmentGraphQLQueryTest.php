@@ -32,7 +32,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         parent::setUp();
 
         Installment::query()->forceDelete();
-        $this->_installment = Installment::factory()->create();
+        $this->_installment = Installment::factory()->create(['starts_in' => now()->addDays(5)]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->_installment->admin, 'photo1.jpg');
         $this->_guarantor = Customer::factory()->create();
         $this->_installment->guarantors()->attach($this->_guarantor, ['any_card_charge' => true]);
@@ -46,8 +46,9 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         Phone::query()->forceDelete();
         /** @var Phone $phone */
         foreach (Phone::factory()->count(1)->create() as $phone) {
-            $this->_installment->customer->phones()->attach($phone->id, ['type' => PhoneTypeEnum::randomValue()]);
-            $this->_guarantor->phones()->attach($phone->id, ['type' => PhoneTypeEnum::randomValue()]);
+            $this->_installment->customer->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::customerValues())]);
+            $this->_guarantor->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::customerValues())]);
+            $this->_installment->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::installmentValues())]);
         }
         InstallmentComment::factory()->create(['installment_id' => $this->_installment->id, 'admin_id' => $this->_installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $this->_installment, 'photo1.jpg');
@@ -352,6 +353,14 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     admin {
                         {$adminFields}
                     }
+                    phones {
+                        id
+                        phone
+                        type
+                        comment
+                        created_at
+                        updated_at
+                    }
                 }
             }
         ";
@@ -618,6 +627,16 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                         ],
                     ],
                     'admin' => $adminFields,
+                    'phones' => [
+                        '*' => [
+                            'id',
+                            'phone',
+                            'type',
+                            'comment',
+                            'created_at',
+                            'updated_at',
+                        ],
+                    ],
                 ],
             ],
         ]);
@@ -757,6 +776,19 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installment->tariff->min_period, $response->json('data.singleInstallment.tariff.min_period'));
         $this->assertEquals($installment->tariff->name, $response->json('data.singleInstallment.tariff.name'));
         $this->assertEquals($installment->tariff->percent, $response->json('data.singleInstallment.tariff.percent'));
+
+        // phones
+        $this->assertEquals($installment->customer->phones->count(), count($response->json('data.singleInstallment.customer.phones')));
+        foreach ($installment->customer->phones as $phone) {
+            $phoneResponse = collect($response->json('data.singleInstallment.customer.phones'))->first(fn ($item) => $item['id'] === $phone->id);
+            $this->assertNotNull($phoneResponse);
+            $this->assertEquals($phone->id, $phoneResponse['id']);
+            $this->assertEquals($phone->phone, $phoneResponse['phone']);
+            $this->assertEquals($phone->pivot->type, $phoneResponse['type']);
+            $this->assertEquals($phone->pivot->comment, $phoneResponse['comment']);
+            $this->assertEquals($phone->created_at->timestamp, $phoneResponse['created_at']);
+            $this->assertEquals($phone->updated_at->timestamp, $phoneResponse['updated_at']);
+        }
 
         // transactions
         $this->assertEquals($installment->transactions->count(), count($response->json('data.singleInstallment.transactions')));

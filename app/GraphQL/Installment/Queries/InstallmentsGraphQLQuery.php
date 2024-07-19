@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Installment\Queries;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\Helpers\RbacHelper;
@@ -10,6 +11,7 @@ use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -43,6 +45,14 @@ class InstallmentsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
             ],
+            'status' => [
+                'type' => Type::int(),
+                'rules' => [
+                    'nullable',
+                    'int',
+                    Rule::in(InstallmentStatusEnum::values()),
+                ],
+            ],
         ];
     }
 
@@ -58,14 +68,19 @@ class InstallmentsGraphQLQuery extends Query
                 ->with(['customer', 'branch', 'tariff', 'cards', 'guarantors', 'documents', 'comments', 'transactions'])
                 ->when(isset($args['search']), fn (Builder $q) => $q
                     ->whereHas('customer', fn (Builder $q) => $q
-                        ->where('first_name', 'like', "%{$args['search']}%")
+                        ->where('first_name', 'ilike', "%{$args['search']}%")
                         ->orWhere('last_name', 'ilike', "%{$args['search']}%")
                         ->orWhere('middle_name', 'ilike', "%{$args['search']}%")
                     )
                     ->orWhereHas('branch', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
                     ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
                 )
-                ->when(isset($args['sort']), fn (Builder|Installment $q) => $q->orderBySortable($args['sort']))
+                ->when(isset($args['status']), fn (Builder $q) => $q->where('status', $args['status']))
+                ->when(
+                    isset($args['sort']),
+                    fn (Builder|Installment $q) => $q->orderBySortable($args['sort']),
+                    fn (Builder|Installment $q) => $q->orderByDesc('id')
+                )
                 ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

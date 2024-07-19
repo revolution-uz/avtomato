@@ -59,6 +59,8 @@ return [
     */
     'sms_fly' => [
         'base_url' => 'https://api.smsfly.uz',
-        'token' => env('SMS_FLY_TOKEN', ''),
+    ],
+    'sms_sayqal' => [
+        'base_url' => 'https://routee.sayqal.uz',
     ],
 ];

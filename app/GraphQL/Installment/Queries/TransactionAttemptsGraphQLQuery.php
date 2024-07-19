@@ -122,7 +122,11 @@ class TransactionAttemptsGraphQLQuery extends Query
                 fn (Builder $q) => $q->whereHas('installment',
                     fn (Builder $q) => $q->whereIn('branch_id', $branches)
                 ))
-            ->when(isset($args['sort']), fn (Builder|TransactionAttempt $q) => $q->orderBySortable($args['sort']))
+            ->when(
+                isset($args['sort']),
+                fn (Builder|TransactionAttempt $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|TransactionAttempt $q) => $q->orderByDesc('id')
+            )
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {

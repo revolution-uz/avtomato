@@ -62,7 +62,11 @@ class TransactionTypesGraphQLQuery extends Query
                         ->orWhere('name_en', 'ILIKE', $search);
                 });
             })
-            ->when(isset($args['sort']), fn (Builder|TransactionType $q) => $q->orderBySortable($args['sort']))
+            ->when(
+                isset($args['sort']),
+                fn (Builder|TransactionType $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|TransactionType $q) => $q->orderByDesc('id')
+            )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

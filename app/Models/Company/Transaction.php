@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Jobs\SendTransactionSmsJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +18,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Customer $customer
  * @property int $card_id
  * @property Card $card
+ * @property string|null $pan
  * @property int $transaction_type_id
  * @property TransactionType $transactionType
  * @property string|null $external_id
@@ -42,6 +44,7 @@ class Transaction extends Model
         'amount',
         'admin_id',
         'paid_at',
+        'pan',
     ];
 
     protected $casts = [
@@ -67,6 +70,7 @@ class Transaction extends Model
             Installment::query()
                 ->where('id', $transaction->installment_id)
                 ->increment('paid_amount', $transaction->amount);
+            dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
         });
     }
 
