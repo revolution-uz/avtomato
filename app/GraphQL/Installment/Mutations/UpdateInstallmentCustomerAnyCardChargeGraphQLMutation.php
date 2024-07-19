@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Installment\Mutations;
 
-use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\Helpers\RbacHelper;
