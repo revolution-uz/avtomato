@@ -14,7 +14,7 @@
     <meta content="Avtomato partner panel" name="description" />
     <link href="./static/css/loading.css" rel="stylesheet" />
     <script type="module" crossorigin src="./static/js/index.js"></script>
-    <link rel="stylesheet" href="./static/assets/index.css">
+    <link rel="stylesheet" href="./static/css/index.css">
     <link rel="manifest" href="./manifest.webmanifest">
 </head>
 <body>
