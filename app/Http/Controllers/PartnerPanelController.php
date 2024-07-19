@@ -6,6 +6,6 @@ class PartnerPanelController extends Controller
 {
     public function index()
     {
-        return view('layouts.partnerPanelLayout');
+        return response()->redirect('/panel');
     }
 }
