@@ -50,7 +50,7 @@ abstract class BaseAtmosClient extends BaseClient
             'Authorization' => $token,
             'Content-Type' => 'application/json',
             'Connection' => 'close',
-        ])
+        ])->timeout(300)
             ->$method($this->baseUrl . $path, $data);
 
         if (
