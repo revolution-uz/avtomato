@@ -29,7 +29,7 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('installments', 'id')->whereNull('deleted_at')->where('status', InstallmentStatusEnum::IN_ACTIVE),
+                    Rule::exists('installments', 'id')->whereNull('deleted_at'),
                 ],
             ],
             'any_card_charge' => [

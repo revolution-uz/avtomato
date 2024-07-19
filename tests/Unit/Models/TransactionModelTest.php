@@ -96,4 +96,20 @@ class TransactionModelTest extends TestCase
 
         $this->assertEquals($oldPaidAmount + 1000, $this->_installment->refresh()->paid_amount);
     }
+
+    #[Test]
+    public function decrementsInstallmentsPaidAmount()
+    {
+        $transaction = Transaction::factory()->create([
+            'installment_id' => $this->_installment->id,
+            'transaction_type_id' => $this->_transactionType->id,
+            'customer_id' => $this->_customer->id,
+            'amount' => 1000,
+        ]);
+        $this->_installment->refresh();
+        $oldPaidAmount = $this->_installment->paid_amount;
+        $transaction->delete();
+
+        $this->assertEquals($oldPaidAmount - 1000, $this->_installment->refresh()->paid_amount);
+    }
 }

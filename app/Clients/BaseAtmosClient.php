@@ -23,7 +23,7 @@ abstract class BaseAtmosClient extends BaseClient
         $response = Http::withHeaders([
             'Authorization' => 'Basic ' . base64_encode($username . ':' . $password),
             'Content-Type' => 'application/x-www-form-urlencoded',
-        ])->post($this->baseUrl . self::GET_TOKEN_URI);
+        ])->timeout(150)->connectTimeout(150)->post($this->baseUrl . self::GET_TOKEN_URI);
 
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',
@@ -50,7 +50,7 @@ abstract class BaseAtmosClient extends BaseClient
             'Authorization' => $token,
             'Content-Type' => 'application/json',
             'Connection' => 'close',
-        ])
+        ])->timeout(150)->connectTimeout(150)
             ->$method($this->baseUrl . $path, $data);
 
         if (
