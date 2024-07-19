@@ -13,8 +13,8 @@
     <meta content="avtomato, crm" name="keywords" />
     <meta content="Avtomato partner panel" name="description" />
     <link href="./static/css/loading.css" rel="stylesheet" />
-    <script type="module" crossorigin src="./static/js/index.js"></script>
-    <link rel="stylesheet" href="./static/css/index.css">
+    <script type="module" crossorigin src="./js/index.js"></script>
+    <link rel="stylesheet" href="./assets/index.css">
     <link rel="manifest" href="./manifest.webmanifest">
 </head>
 <body>
