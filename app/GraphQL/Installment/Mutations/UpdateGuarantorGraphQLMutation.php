@@ -61,7 +61,7 @@ class UpdateGuarantorGraphQLMutation extends Mutation
     {
         $installmentGuarantor = InstallmentGuarantor::query()
             ->where('installment_id', $args['installment_id'])
-            ->where('id', $args['guarantor_id'])
+            ->where('customer_id', $args['guarantor_id'])
             ->firstOrFail();
         $installmentGuarantor->updateOrFail($args);
 

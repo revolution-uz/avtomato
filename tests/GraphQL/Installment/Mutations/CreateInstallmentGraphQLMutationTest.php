@@ -51,9 +51,9 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
     {
         $response = $this->sendGraphQLRequest($this->_customer->id, $this->_branch->id, [
             'tariff_id' => $this->_tariff->id,
-            'period' => 12,
-            'amount' => 1000,
-            'initial_fee' => 100,
+            'period' => rand($this->_tariff->min_period, $this->_tariff->max_period),
+            'amount' => rand($this->_tariff->min_amount, $this->_tariff->max_amount),
+            'initial_fee' => rand($this->_tariff->min_initial_fee, $this->_tariff->max_initial_fee),
             'description' => 'test',
             'starts_in' => '2022-01-01',
         ]);

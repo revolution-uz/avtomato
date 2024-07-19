@@ -53,7 +53,7 @@ class UpdateTransactionTypeGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         if ($args['id'] < 100) {
-            throw ValidationException::withMessages(['ids' => 'You can not edit system transaction types']);
+            throw ValidationException::withMessages(['id' => 'You can not edit system transaction types']);
         }
 
         /** @var TransactionType $transactionType */
