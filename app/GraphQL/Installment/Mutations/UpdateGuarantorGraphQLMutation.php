@@ -63,7 +63,7 @@ class UpdateGuarantorGraphQLMutation extends Mutation
             ->where('installment_id', $args['installment_id'])
             ->where('customer_id', $args['guarantor_id'])
             ->firstOrFail();
-        $installmentGuarantor->updateOrFail($args);
+        $installmentGuarantor->updateOrFail(['any_card_charge' => $args['any_card_charge']]);
 
         return $installmentGuarantor;
     }

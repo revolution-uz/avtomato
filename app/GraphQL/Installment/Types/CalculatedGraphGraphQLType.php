@@ -28,15 +28,15 @@ class CalculatedGraphGraphQLType extends GraphQLType
             ],
             'amount' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (array $root) => $root['amount'] ?? null,
+                'resolve' => fn (array $root) => round($root['amount'], 2) ?? null,
             ],
             'portion' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (array $root) => $root['portion'] ?? null,
+                'resolve' => fn (array $root) => round($root['portion'], 2) ?? null,
             ],
             'monthly' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (array $root) => $root['monthly'] ?? null,
+                'resolve' => fn (array $root) => round($root['monthly'], 2) ?? null,
             ],
         ];
     }
