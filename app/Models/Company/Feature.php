@@ -42,6 +42,8 @@ class Feature extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'name' => FeatureEnum::class,
+        'data' => 'encrypted:json',
+        'original_data' => 'encrypted:json',
     ];
 
     public static function findByName($name): Feature
