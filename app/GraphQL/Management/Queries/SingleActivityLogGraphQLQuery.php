@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\ActivityLogGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ActivityLog;
+use App\Models\Company\CompanyAdmin;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -40,7 +41,7 @@ class SingleActivityLogGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return ActivityLog::query()->findOrFail($args['id']);
+        return ActivityLog::query()->where('causer_type', CompanyAdmin::class)->findOrFail($args['id']);
     }
 
     protected function rules(array $args = []): array
