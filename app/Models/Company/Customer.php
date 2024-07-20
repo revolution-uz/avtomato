@@ -109,7 +109,7 @@ class Customer extends Model
     {
         return $this->morphToMany(Phone::class, 'phoneable')
             ->wherePivotIn('type', PhoneTypeEnum::customerValues())
-            ->withPivot(['id', 'type', 'comment', 'created_at', 'updated_at']); //->withTimestamps();
+            ->withPivot(['id', 'type', 'comment', 'created_at', 'updated_at', 'installment_notifications']); //->withTimestamps();
     }
 
     public function addresses(): MorphMany
