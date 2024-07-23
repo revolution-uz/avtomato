@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\Models;
 
+use App\Enums\Company\InstallmentStatusEnum;
+use App\Helpers\InstallmentGraphHelper;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
@@ -95,6 +97,25 @@ class TransactionModelTest extends TestCase
         $transaction->save();
 
         $this->assertEquals($oldPaidAmount + 1000, $this->_installment->refresh()->paid_amount);
+    }
+
+    #[Test]
+    public function changesInstallmentStatusWhenAllAmountPaid(): void
+    {
+        $graphs = InstallmentGraphHelper::getGraphs($this->_installment);
+        $amount = 0;
+        foreach ($graphs as $graph) {
+            $amount += $graph->amount - $graph->paid_amount;
+        }
+        $transaction = new Transaction;
+        $transaction->installment_id = $this->_installment->id;
+        $transaction->transaction_type_id = $this->_transactionType->id;
+        $transaction->customer_id = $this->_customer->id;
+        $transaction->amount = $amount;
+
+        $transaction->save();
+
+        $this->assertEquals(InstallmentStatusEnum::CLOSED, $this->_installment->refresh()->status);
     }
 
     #[Test]

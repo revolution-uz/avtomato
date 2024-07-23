@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Jobs\SendTransactionSmsJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -71,6 +72,10 @@ class Transaction extends Model
                 ->where('id', $transaction->installment_id)
                 ->increment('paid_amount', $transaction->amount);
             dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
+            $installment = Installment::findOrFail($transaction->installment_id);
+            if ($installment->debtAmount <= 1) {
+                $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
+            }
         });
 
         static::deleted(function (self $transaction) {

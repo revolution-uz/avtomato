@@ -80,6 +80,25 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
         );
     }
 
+    #[Test]
+    public function dontCreateTransactionIfAmountIsLarge(): void
+    {
+        $response = $this->sendGraphQLRequest(
+            $this->_installment->id,
+            $this->_customer->id,
+            $this->_transactionType->id,
+            $this->_installment->amount * 2,
+            '2021-01-01'
+        );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertStringContainsString('validation', $response->json('errors.0.message'));
+        $this->assertEquals(
+            'The amount must not be greater than the installment amount.',
+            $response->json('errors.0.extensions.validation')['amount'][0]
+        );
+    }
+
     private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at): TestResponse
     {
         return $this

@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
 use App\GraphQL\Scalars\BigFloat;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
@@ -91,6 +93,12 @@ class CreateTransactionGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
+        $installment = Installment::findOrFail($args['installment_id']);
+
+        if ($installment->debtAmount < $args['amount']) {
+            throw ValidationException::withMessages(['amount' => 'The amount must not be greater than the installment amount.']);
+        }
+
         $model = new Transaction;
         $model->fill($args);
         $model->external_id = 'local_' . Str::random();
