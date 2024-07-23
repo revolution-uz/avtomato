@@ -36,14 +36,14 @@ class PassportDataGraphQLType extends GraphQLType
                 },
             ],
             'passport_series' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::string(),
                 'description' => 'Passport Series',
                 'resolve' => function (PassportDataDTO $root) {
                     return $root->series;
                 },
             ],
             'passport_number' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::string(),
                 'description' => 'Passport Number',
                 'resolve' => function (PassportDataDTO $root) {
                     return $root->number;

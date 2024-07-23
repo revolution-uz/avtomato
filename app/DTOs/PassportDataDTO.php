@@ -12,8 +12,9 @@ class PassportDataDTO extends Data
     public function __construct(
         public int $pinfl,
         public ?int $tin,
-        public string $series,
-        public string $number,
+        public ?string $series,
+        public ?string $number,
+        public ?string $document,
         public string $sur_name,
         public string $name,
         public string $patronymic_name,
@@ -34,5 +35,10 @@ class PassportDataDTO extends Data
         public int $gender,
         public int $citizenship_id,
         public string $citizenship,
-    ) {}
+    ) {
+        if ($this->document !== null) {
+            $this->series ??= substr($this->document, 0, 2);
+            $this->number ??= substr($this->document, -7);
+        }
+    }
 }
