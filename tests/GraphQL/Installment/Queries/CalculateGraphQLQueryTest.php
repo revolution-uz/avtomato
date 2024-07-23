@@ -3,6 +3,7 @@
 namespace Installment\Queries;
 
 use App\Models\Company\Tariff;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -12,22 +13,130 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
-    private Tariff $_tariff;
-
     private array $_input;
+
+    private Tariff $_annualTariff;
+    private Tariff $_differentialTariff;
+
+    private array $_annualTestData = [
+        [
+            'amount' => 12498.75,
+            'portion' => 94493.62,
+            'monthly' => 106992.37,
+        ],
+        [
+            'amount' => 11317.58,
+            'portion' => 95674.79,
+            'monthly' => 106992.37,
+        ],
+        [
+            'amount' => 10121.64,
+            'portion' => 96870.73,
+            'monthly' => 106992.37,
+        ],
+        [
+            'amount' => 8910.76,
+            'portion' => 98081.61,
+            'monthly' => 106992.37,
+        ],
+        [
+            'amount' => 7684.74,
+            'portion' => 99307.63,
+            'monthly' => 106992.37,
+        ],
+        [
+            'amount' => 6443.4,
+            'portion' => 100548.98,
+            'monthly' => 106992.37,
+        ],
+        [
+            'amount' => 5186.53,
+            'portion' => 101805.84,
+            'monthly' => 106992.37,
+        ],
+        [
+            'amount' => 3913.96,
+            'portion' => 103078.41,
+            'monthly' => 106992.37,
+        ],
+        [
+            'amount' => 2625.48,
+            'portion' => 104366.89,
+            'monthly' => 106992.37,
+        ],
+        [
+            'amount' => 1320.89,
+            'portion' => 105671.48,
+            'monthly' => 106992.37,
+        ],
+    ];
+
+    private array $_differentialTestData = [
+        [
+            'amount' => 99990,
+            'portion' => 12498.75,
+            'monthly' => 112488.75,
+        ],
+        [
+            'amount' => 99990,
+            'portion' => 11248.88,
+            'monthly' => 111238.88,
+        ],
+        [
+            'amount' => 99990,
+            'portion' => 9999,
+            'monthly' => 109989,
+        ],
+        [
+            'amount' => 99990,
+            'portion' => 8749.13,
+            'monthly' => 108739.13,
+        ],
+        [
+            'amount' => 99990,
+            'portion' => 7499.25,
+            'monthly' => 107489.25,
+        ],
+        [
+            'amount' => 99990,
+            'portion' => 6249.38,
+            'monthly' => 106239.38,
+        ],
+        [
+            'amount' => 99990,
+            'portion' => 4999.5,
+            'monthly' => 104989.5,
+        ],
+        [
+            'amount' => 99990,
+            'portion' => 3749.63,
+            'monthly' => 103739.63,
+        ],
+        [
+            'amount' => 99990,
+            'portion' => 2499.75,
+            'monthly' => 102489.75,
+        ],
+        [
+            'amount' => 99990,
+            'portion' => 1249.88,
+            'monthly' => 101239.88,
+        ],
+    ];
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->_tariff = Tariff::factory()->create(['percent' => 15]);
+        $this->_annualTariff = Tariff::factory()->create(['is_annual' => true, 'percent' => 15]);
+        $this->_differentialTariff = Tariff::factory()->create(['is_annual' => false, 'percent' => 15]);
     }
 
     #[Test]
-    public function successWithoutArguments()
+    public function successAnnualAndWithoutStartsIn()
     {
         $this->_input = [
-            'tariff_id' => $this->_tariff->id,
+            'tariff_id' => $this->_annualTariff->id,
             'amount' => 1000000,
             'initial_fee' => 100,
             'period' => 10,
@@ -40,14 +149,34 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery($this->_input)
             );
 
-        $this->assertSuccessCalculateResponse($response);
+        $this->assertSuccessCalculateResponse($response, $this->_annualTariff);
     }
 
     #[Test]
-    public function successWithStartsIn()
+    public function successDifferentialAndWithoutStartsIn()
     {
         $this->_input = [
-            'tariff_id' => $this->_tariff->id,
+            'tariff_id' => $this->_differentialTariff->id,
+            'amount' => 1000000,
+            'initial_fee' => 100,
+            'period' => 10,
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+
+        $this->assertSuccessCalculateResponse($response, $this->_differentialTariff);
+    }
+
+    #[Test]
+    public function successAnnualAndWithStartsIn()
+    {
+        $this->_input = [
+            'tariff_id' => $this->_annualTariff->id,
             'amount' => 1000000,
             'initial_fee' => 100,
             'period' => 10,
@@ -61,7 +190,28 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery($this->_input)
             );
 
-        $this->assertSuccessCalculateResponse($response);
+        $this->assertSuccessCalculateResponse($response, $this->_annualTariff);
+    }
+
+    #[Test]
+    public function successDifferentialAndWithStartsIn()
+    {
+        $this->_input = [
+            'tariff_id' => $this->_differentialTariff->id,
+            'amount' => 1000000,
+            'initial_fee' => 100,
+            'period' => 10,
+            'starts_in' => '2007-07-07',
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+
+        $this->assertSuccessCalculateResponse($response, $this->_differentialTariff);
     }
 
     #[Test]
@@ -140,7 +290,7 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
         return $query;
     }
 
-    private function assertSuccessCalculateResponse(TestResponse $response): void
+    private function assertSuccessCalculateResponse(TestResponse $response, Tariff $tariff): void
     {
         $response->assertOk();
         $response->assertJsonIsObject();
@@ -159,10 +309,16 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
         ]);
 
         $this->assertEquals($this->_input['period'], count($response->json('data.calculate')));
-        $this->assertEquals(1, $response->json('data.calculate.0.id'));
-        $this->assertEquals($this->_input['starts_in'] ?? date('Y-m-d'), $response->json('data.calculate.0.date'));
-        $this->assertEquals(99990, $response->json('data.calculate.0.amount'));
-        $this->assertEquals(14998.5, $response->json('data.calculate.0.portion'));
-        $this->assertEquals(114988.5, $response->json('data.calculate.0.monthly'));
+
+        $data = $tariff->is_annual ? $this->_annualTestData : $this->_differentialTestData;
+        $date = Carbon::parse($this->_input['starts_in'] ?? now()->format('Y-m-d'));
+
+        for ($i = 0; $i < $this->_input['period']; $i++) {
+            $this->assertEquals($i + 1, $response->json("data.calculate.{$i}.id"));
+            $this->assertEquals($date->addMonths($i > 0 ? 1 : $i)->format('Y-m-d'), $response->json("data.calculate.{$i}.date"));
+            $this->assertEquals($data[$i]['amount'], $response->json("data.calculate.{$i}.amount"));
+            $this->assertEquals($data[$i]['portion'], $response->json("data.calculate.{$i}.portion"));
+            $this->assertEquals($data[$i]['monthly'], $response->json("data.calculate.{$i}.monthly"));
+        }
     }
 }

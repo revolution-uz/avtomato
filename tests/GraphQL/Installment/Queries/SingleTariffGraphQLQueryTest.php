@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Queries;
 
+use App\Models\Company\Installment;
 use App\Models\Company\Tariff;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -19,6 +20,7 @@ class SingleTariffGraphQLQueryTest extends GraphQLTestCase
 
         Tariff::query()->forceDelete();
         $this->_tariff = Tariff::factory()->create();
+        Installment::factory()->count(5)->create(['tariff_id' => $this->_tariff->id]);
     }
 
     #[Test]
@@ -64,6 +66,31 @@ class SingleTariffGraphQLQueryTest extends GraphQLTestCase
                     max_amount
                     min_initial_fee
                     max_initial_fee
+                    installments {
+                        id
+                        customer_id
+                        status
+                        branch_id
+                        admin_id
+                        tariff_id
+                        type
+                        amount
+                        initial_fee
+                        sms_notify
+                        auto_pay
+                        auto_pay_by_pinfl
+                        is_blacklist
+                        period
+                        description
+                        cancellation_details
+                        starts_in
+                        next_pay_date
+                        created_at
+                        updated_at
+                        canceled_at
+                        deleted_at
+                        debt
+                    }
                 }
             }
         ';
@@ -88,6 +115,33 @@ class SingleTariffGraphQLQueryTest extends GraphQLTestCase
                     'max_amount',
                     'min_initial_fee',
                     'max_initial_fee',
+                    'installments' => [
+                        '*' => [
+                            'id',
+                            'customer_id',
+                            'status',
+                            'branch_id',
+                            'admin_id',
+                            'tariff_id',
+                            'type',
+                            'amount',
+                            'initial_fee',
+                            'sms_notify',
+                            'auto_pay',
+                            'auto_pay_by_pinfl',
+                            'is_blacklist',
+                            'period',
+                            'description',
+                            'cancellation_details',
+                            'starts_in',
+                            'next_pay_date',
+                            'created_at',
+                            'updated_at',
+                            'canceled_at',
+                            'deleted_at',
+                            'debt',
+                        ],
+                    ],
                 ],
             ],
         ]);
@@ -103,6 +157,31 @@ class SingleTariffGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($tariff->max_amount, $response->json('data.singleTariff.max_amount'));
         $this->assertEquals($tariff->min_initial_fee, $response->json('data.singleTariff.min_initial_fee'));
         $this->assertEquals($tariff->max_initial_fee, $response->json('data.singleTariff.max_initial_fee'));
+
+        $this->assertEquals(5, count($response->json('data.singleTariff.installments')));
+        $this->assertEquals($tariff->installments[0]->id, $response->json('data.singleTariff.installments.0.id'));
+        $this->assertEquals($tariff->installments[0]->customer_id, $response->json('data.singleTariff.installments.0.customer_id'));
+        $this->assertEquals($tariff->installments[0]->status->value, $response->json('data.singleTariff.installments.0.status'));
+        $this->assertEquals($tariff->installments[0]->branch_id, $response->json('data.singleTariff.installments.0.branch_id'));
+        $this->assertEquals($tariff->installments[0]->admin_id, $response->json('data.singleTariff.installments.0.admin_id'));
+        $this->assertEquals($tariff->installments[0]->tariff_id, $response->json('data.singleTariff.installments.0.tariff_id'));
+        $this->assertEquals($tariff->installments[0]->type->value, $response->json('data.singleTariff.installments.0.type'));
+        $this->assertEquals($tariff->installments[0]->amount, $response->json('data.singleTariff.installments.0.amount'));
+        $this->assertEquals($tariff->installments[0]->initial_fee, $response->json('data.singleTariff.installments.0.initial_fee'));
+        $this->assertEquals($tariff->installments[0]->sms_notify, $response->json('data.singleTariff.installments.0.sms_notify'));
+        $this->assertEquals($tariff->installments[0]->auto_pay, $response->json('data.singleTariff.installments.0.auto_pay'));
+        $this->assertEquals($tariff->installments[0]->any_card_charge, $response->json('data.singleTariff.installments.0.auto_pay_by_pinfl'));
+        $this->assertEquals($tariff->installments[0]->is_blacklist, $response->json('data.singleTariff.installments.0.is_blacklist'));
+        $this->assertEquals($tariff->installments[0]->period, $response->json('data.singleTariff.installments.0.period'));
+        $this->assertEquals($tariff->installments[0]->description, $response->json('data.singleTariff.installments.0.description'));
+        $this->assertEquals($tariff->installments[0]->cancellation_details, $response->json('data.singleTariff.installments.0.cancellation_details'));
+        $this->assertEquals($tariff->installments[0]->starts_in?->timestamp, $response->json('data.singleTariff.installments.0.starts_in'));
+        $this->assertEquals($tariff->installments[0]->nextPaymentDate->timestamp, $response->json('data.singleTariff.installments.0.next_pay_date'));
+        $this->assertEquals($tariff->installments[0]->created_at->timestamp, $response->json('data.singleTariff.installments.0.created_at'));
+        $this->assertEquals($tariff->installments[0]->updated_at->timestamp, $response->json('data.singleTariff.installments.0.updated_at'));
+        $this->assertEquals($tariff->installments[0]->canceled_at?->timestamp, $response->json('data.singleTariff.installments.0.canceled_at'));
+        $this->assertEquals($tariff->installments[0]->deleted_at?->timestamp, $response->json('data.singleTariff.installments.0.deleted_at'));
+        $this->assertEquals($tariff->installments[0]->debtAmount, $response->json('data.singleTariff.installments.0.debt'));
     }
 
     private function sendToGraphQL($id): TestResponse

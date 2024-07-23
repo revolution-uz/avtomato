@@ -4,6 +4,7 @@ namespace App\GraphQL\Installment\Types;
 
 use App\Models\Company\TransactionType;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class TransactionTypeGraphQLType extends GraphQLType
@@ -52,6 +53,10 @@ class TransactionTypeGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (TransactionType $root) => $root->deleted_at?->timestamp,
+            ],
+            'transactions' => [
+                'type' => Type::listOf(GraphQL::type(TransactionGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (TransactionType $root) => $root->transactions,
             ],
         ];
     }

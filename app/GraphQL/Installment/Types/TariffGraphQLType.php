@@ -59,6 +59,10 @@ class TariffGraphQLType extends GraphQLType
                 'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Tariff $root) => $root->max_initial_fee,
             ],
+            'installments' => [
+                'type' => Type::listOf(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Tariff $root) => $root->installments,
+            ],
         ];
     }
 }

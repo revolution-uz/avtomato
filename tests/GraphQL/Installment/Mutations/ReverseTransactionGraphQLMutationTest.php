@@ -42,6 +42,29 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         AtmosFaker::getToken();
         AtmosFaker::reversePayment();
 
+        $transaction_id = Transaction::query()->where('transaction_type_id', '<', 100)->inRandomOrder()->first()->id;
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['id' => $transaction_id])
+            );
+
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure([
+            'data' => [
+                'reverseTransaction',
+            ],
+        ]);
+        $this->assertTrue($response->json('data.reverseTransaction'));
+        $this->assertTrue(Transaction::query()->where('id', $transaction_id)->doesntExist());
+    }
+
+    #[Test]
+    public function successReverseSimpleTransaction()
+    {
         $transaction_id = Transaction::query()->where('transaction_type_id', '>=', 100)->inRandomOrder()->first()->id;
 
         $response = $this
