@@ -4,7 +4,7 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
+use App\GraphQL\Management\Types\BalanceFundGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Services\User\BalanceService;
@@ -48,15 +48,15 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
             ],
             'phone' => [
                 'name' => 'phone',
-                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
-                'rules' => 'required|string',
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
+                'rules' => 'nullable|string',
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(AttachCardDataGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(BalanceFundGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -68,7 +68,7 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
     {
         $result = $this->balanceService->fundBalance(BalanceFundConfirmDTO::from($args));
 
-        if (! $result) {
+        if (!$result) {
             throw ValidationException::withMessages(['otp' => 'Error on confirming payment']);
         }
 
