@@ -38,7 +38,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             $this->_installment->id,
             $this->_customer->id,
             $this->_transactionType->id,
-            1000,
+            rand(0, $this->_installment->debtAmount),
             '2021-01-01'
         );
         $this->assertSuccessResponse($response);
