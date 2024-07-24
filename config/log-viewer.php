@@ -91,7 +91,7 @@ return [
         \Opcodes\LogViewer\Http\Middleware\AuthorizeLogViewer::class,
     ],
 
-    'api_stateful_domains' => env('LOG_VIEWER_API_STATEFUL_DOMAINS') ? explode(',', env('LOG_VIEWER_API_STATEFUL_DOMAINS')) : [env('APP_URL', 'https://avtomato.uz')],
+    'api_stateful_domains' => env('LOG_VIEWER_API_STATEFUL_DOMAINS') ? explode(',', env('LOG_VIEWER_API_STATEFUL_DOMAINS')) : ['avtomato.uz'],
 
     /*
     |--------------------------------------------------------------------------
