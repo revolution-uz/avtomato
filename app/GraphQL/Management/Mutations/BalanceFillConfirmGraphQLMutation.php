@@ -68,7 +68,7 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
     {
         $result = $this->balanceService->fundBalance(BalanceFundConfirmDTO::from($args));
 
-        if (!$result) {
+        if (! $result) {
             throw ValidationException::withMessages(['otp' => 'Error on confirming payment']);
         }
 
