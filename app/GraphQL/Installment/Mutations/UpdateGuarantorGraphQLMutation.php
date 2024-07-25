@@ -37,7 +37,7 @@ class UpdateGuarantorGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('installment_guarantors', 'id'),
+                    Rule::exists('installment_guarantors', 'customer_id'),
                 ],
             ],
             'any_card_charge' => [

@@ -58,7 +58,7 @@ class UpdateGuarantorGraphQLMutationTest extends GraphQLTestCase
         ]);
 
         $installmentGuarantor->refresh();
-        $this->assertEquals($installmentGuarantor->comment, $input['any_card_charge']);
+        $this->assertEquals($installmentGuarantor->any_card_charge, $input['any_card_charge']);
 
         $this->assertEquals($installmentGuarantor->id, $response->json('data.updateGuarantor.id'));
         $this->assertEquals($installmentGuarantor->installment_id, $response->json('data.updateGuarantor.installment_id'));
