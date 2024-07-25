@@ -8,7 +8,7 @@ class AtmosTransactionCreateResponseDTO extends Data
 {
     public function __construct(
         public string $transaction_status,
-        public int $transaction_id,
+        public string $transaction_id,
         public int $ext_id,
         public string $first_name,
         public string $middle_name,

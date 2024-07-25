@@ -11,8 +11,7 @@ use Spatie\LaravelData\DataCollection;
 class KatmIncomesDTO extends BaseScoringResponse
 {
     public function __construct(
-        #[WithCast(MarkNullIfNotCollection::class)]
-        #[DataCollectionOf(KatmIncomeDTO::class)]
+        #[DataCollectionOf(KatmIncomeDTO::class)]#[WithCast(MarkNullIfNotCollection::class)]
         public ?DataCollection $income,
     ) {}
 }
