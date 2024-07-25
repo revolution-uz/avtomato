@@ -39,7 +39,7 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
         }
 
         /** @var Company $company */
-        $company = tenancy()->model();
+        $company = tenancy()->tenant;
         $transaction = Transaction::findOrFail($this->transactionId);
 
         $customers = clone $transaction->installment->guarantors;
