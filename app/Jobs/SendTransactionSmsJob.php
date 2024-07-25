@@ -50,7 +50,7 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
                     $message = new SmsMessage;
                     $message->phone = $phone->phone;
                     $message->message = SmsTemplateHelper::getAutoChargeTemplate(
-                        pan: $transaction->pan,
+                        pan: $transaction->card_pan,
                         amount: $transaction->amount,
                         credit_number: $transaction->installment_id,
                         company: $company->name,
