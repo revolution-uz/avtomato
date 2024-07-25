@@ -25,11 +25,14 @@ class FeatureSeeder extends Seeder
                     'original_data' => $baseFeature->original_data,
                 ]);
             } else {
-                $feature->update([
+                $data = [
                     'name' => $baseFeature->name,
                     'original_amount' => $baseFeature->original_amount,
-                    'original_data' => $baseFeature->original_data,
-                ]);
+                ];
+                if ($baseFeature->original_data) {
+                    $data['original_data'] = $baseFeature->original_data;
+                }
+                $feature->update($data);
             }
 
             $feature->modules()->sync(
