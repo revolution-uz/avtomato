@@ -87,6 +87,7 @@ return [
     */
 
     'api_middleware' => [
+        'auth:admin',
         \Opcodes\LogViewer\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         \Opcodes\LogViewer\Http\Middleware\AuthorizeLogViewer::class,
     ],
