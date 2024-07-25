@@ -23,7 +23,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('viewLogViewer', function (?Admin $user) {
+        Gate::define('viewLogViewer', function ($user) {
             return (bool) $user;
         });
     }
