@@ -9,8 +9,8 @@ use Spatie\LaravelData\DataCollection;
 class AtmosTransactionInfoResponseDTO extends Data
 {
     public function __construct(
-        public int $transaction_id,
-        public int $ext_id,
+        public string $transaction_id,
+        public string $ext_id,
         public string $transaction_status,
         #[DataCollectionOf(AtmosTransactionDetailDTO::class)]
         public ?DataCollection $details,
