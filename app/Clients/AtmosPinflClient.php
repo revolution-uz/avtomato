@@ -63,7 +63,7 @@ class AtmosPinflClient extends BaseAtmosClient
     /**
      * @throws AtmosException
      */
-    public function payConfirmWithPinfl(string $ext_id, int $transaction_id): AtmosTransactionInfoResponseDTO
+    public function payConfirmWithPinfl(string $ext_id, string $transaction_id): AtmosTransactionInfoResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,
@@ -97,7 +97,7 @@ class AtmosPinflClient extends BaseAtmosClient
     /**
      * @throws AtmosException
      */
-    public function payCancelWithPinfl(string $ext_id, int $transaction_id): AtmosTransactionCancelResponseDTO
+    public function payCancelWithPinfl(string $ext_id, string $transaction_id): AtmosTransactionCancelResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,

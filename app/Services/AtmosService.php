@@ -121,7 +121,6 @@ class AtmosService
     {
 
         $paid_at = Carbon::now();
-        $ext_id = $installment_id . '-' . $paid_at->getTimestamp();
         /** @var TransactionAttempt $transactionAttempt */
         $transactionAttempt = TransactionAttempt::create([
             'installment_id' => $installment_id,
@@ -130,6 +129,7 @@ class AtmosService
             'amount' => $amount,
             'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL,
         ]);
+        $ext_id = tenancy()->model()->id . '_' . $transactionAttempt->id;
 
         $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment_id, $amount);
         if (! $createPayResponseDTO->isSucces()) {
