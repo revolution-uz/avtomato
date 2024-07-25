@@ -79,24 +79,9 @@ class TransactionAttemptsGraphQLQuery extends Query
         return TransactionAttempt::query()
             ->with(['installment', 'admin', 'customer', 'transaction', 'installment.branch'])
             ->when(
-                isset($args['amount']),
-                fn (Builder $q) => $q
-                    ->where('amount', $args['amount'])
-            )
-            ->when(
                 isset($args['id']),
                 fn (Builder $q) => $q
                     ->where('id', $args['id'])
-            )
-            ->when(
-                isset($args['branch_id']),
-                fn (Builder $q) => $q
-                    ->whereHas('installment', fn (Builder $q) => $q->where('branch_id', $args['branch_id']))
-            )
-            ->when(
-                isset($args['admin_id']),
-                fn (Builder $q) => $q
-                    ->where('id', $args['admin_id'])
             )
             ->when(
                 isset($args['installment_id']),

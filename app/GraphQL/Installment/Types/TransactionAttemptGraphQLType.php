@@ -26,6 +26,10 @@ class TransactionAttemptGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (TransactionAttempt $root) => $root->id,
             ],
+            'type' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (TransactionAttempt $root) => $root->type->value,
+            ],
             'branch_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (TransactionAttempt $root) => $root->installment->branch_id,

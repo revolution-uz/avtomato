@@ -8,6 +8,7 @@ use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\Transction\AtmosTransactionDetailDTO;
 use App\Enums\Company\TransactionAttemptStatusEnum;
+use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Exceptions\AtmosException;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
@@ -71,6 +72,7 @@ class AtmosService
             'status' => TransactionAttemptStatusEnum::CREATED,
             'amount' => $amount,
             'card_id' => $card->id,
+            'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_CARD,
         ]);
 
         $createPayResponseDTO = $this->atmosCardClient->createPayment($transactionAttempt->id, $amount, $transactionAttempt->id);
@@ -126,6 +128,7 @@ class AtmosService
             'customer_id' => $customer->id,
             'status' => TransactionAttemptStatusEnum::CREATED,
             'amount' => $amount,
+            'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL,
         ]);
 
         $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment_id, $amount);
@@ -148,7 +151,7 @@ class AtmosService
             $transaction = new Transaction;
             $transaction->paid_at = $paid_at;
             $transaction->transaction_type_id = TransactionType::ATMOS_WITH_PINFL;
-            $transaction->external_id = (string) $confirmWithPinfl->transaction_id;
+            $transaction->external_id = $confirmWithPinfl->transaction_id;
             $transaction->pan = $detail->pan;
             $transaction->amount = $detail->amount / 100;
             $transaction->installment_id = $installment_id;
@@ -163,6 +166,7 @@ class AtmosService
                     'customer_id' => $customer->id,
                     'status' => TransactionAttemptStatusEnum::CREATED,
                     'amount' => $amount,
+                    'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL,
                 ]);
             }
         }

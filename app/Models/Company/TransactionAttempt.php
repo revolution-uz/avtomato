@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\TransactionAttemptStatusEnum;
+use App\Enums\Company\TransactionAttemptTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,6 +13,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
+ * @property TransactionAttemptTypeEnum $type
  * @property int $installment_id
  * @property Installment $installment
  * @property int $customer_id
@@ -41,12 +43,14 @@ class TransactionAttempt extends Model
         'transaction_id',
         'amount',
         'status',
+        'type',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'status' => TransactionAttemptStatusEnum::class,
+        'type' => TransactionAttemptTypeEnum::class,
     ];
 
     public function installment(): BelongsTo
