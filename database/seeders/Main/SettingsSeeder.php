@@ -21,5 +21,7 @@ class SettingsSeeder extends Seeder
                 'type' => SettingsEnum::getType($case),
             ]);
         }
+
+        Settings::query()->whereNotIn('name', SettingsEnum::cases())->delete();
     }
 }
