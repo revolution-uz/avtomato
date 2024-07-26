@@ -68,6 +68,3 @@ class AttachCardGraphQLMutation extends Mutation
         ];
     }
 }
-
-
-
