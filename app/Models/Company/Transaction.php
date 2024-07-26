@@ -19,7 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Customer $customer
  * @property int $card_id
  * @property Card $card
- * @property string|null $pan
+ * @property string|null $card_pan
  * @property int $transaction_type_id
  * @property TransactionType $transactionType
  * @property string|null $external_id
@@ -45,7 +45,7 @@ class Transaction extends Model
         'amount',
         'admin_id',
         'paid_at',
-        'pan',
+        'card_pan',
     ];
 
     protected $casts = [
