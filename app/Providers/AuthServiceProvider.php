@@ -25,8 +25,5 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('viewLogViewer', function ($user) {
             return (bool) $user;
         });
-        Gate::define('viewHorizon', function ($user) {
-            return (bool) $user;
-        });
     }
 }
