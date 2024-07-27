@@ -166,7 +166,8 @@ class Installment extends Model
 
     public function debtAmount(): Attribute
     {
-        return Attribute::make(get: fn () => ($this->amount - $this->initial_fee) * ($this->percent + 100) / 100 - $this->paid_amount);
+        return Attribute::make(get: fn () => ($this->amount - $this->initial_fee) * ($this->percent + 100) / 100 * min(ceil($this->starts_in->diffInMonths()), $this->period) / $this->period - $this->paid_amount
+        );
     }
 
     public function isAvailableCustomerCard()
