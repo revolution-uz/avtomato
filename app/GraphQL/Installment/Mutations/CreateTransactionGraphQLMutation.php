@@ -94,9 +94,10 @@ class CreateTransactionGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $installment = Installment::findOrFail($args['installment_id']);
+        $maxAmount = ($installment->amount - $installment->initial_fee) * ($installment->percent + 100) / 100 - $installment->paid_amount;
 
-        if ($installment->debtAmount < $args['amount']) {
-            throw ValidationException::withMessages(['amount' => 'The amount must not be greater than the installment amount.']);
+        if ($maxAmount < $args['amount']) {
+            throw ValidationException::withMessages(['amount' => "The amount must not be greater than {$maxAmount}."]);
         }
 
         $model = new Transaction;
