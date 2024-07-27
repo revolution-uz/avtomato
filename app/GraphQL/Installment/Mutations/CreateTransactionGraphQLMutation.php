@@ -96,7 +96,7 @@ class CreateTransactionGraphQLMutation extends Mutation
         $installment = Installment::findOrFail($args['installment_id']);
 
         if ($installment->debtAmount < $args['amount']) {
-            throw ValidationException::withMessages(['amount' => 'The amount must not be greater than the installment amount.']);
+            throw ValidationException::withMessages(['amount' => "The amount must not be greater than {$installment->debtAmount}."]);
         }
 
         $model = new Transaction;

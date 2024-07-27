@@ -87,14 +87,14 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             $this->_installment->id,
             $this->_customer->id,
             $this->_transactionType->id,
-            $this->_installment->amount * 2,
+            $this->_installment->debtAmount + 1,
             '2021-01-01'
         );
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertStringContainsString('validation', $response->json('errors.0.message'));
         $this->assertEquals(
-            'The amount must not be greater than the installment amount.',
+            "The amount must not be greater than {$this->_installment->debtAmount}.",
             $response->json('errors.0.extensions.validation')['amount'][0]
         );
     }
