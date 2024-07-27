@@ -99,7 +99,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertStringContainsString('validation', $response->json('errors.0.message'));
         $this->assertEquals(
-            "The amount must not be greater than 935000.",
+            'The amount must not be greater than 935000.',
             $response->json('errors.0.extensions.validation')['amount'][0]
         );
     }
