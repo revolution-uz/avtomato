@@ -129,7 +129,7 @@ class AtmosService
             'amount' => $amount,
             'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL,
         ]);
-        $ext_id = tenant()->id . '_' . $transactionAttempt->id;
+        $ext_id = tenancy()->tenant->id . '_' . $transactionAttempt->id;
 
         $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment_id, $amount);
         if (! $createPayResponseDTO->isSucces()) {
