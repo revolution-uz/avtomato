@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Helpers\CardHelper;
 use App\Traits\LogsActivityDirtyOnlyTrait;
@@ -121,5 +122,14 @@ class Card extends Model
     public function installments(): BelongsToMany
     {
         return $this->belongsToMany(Installment::class, 'installment_cards', 'card_id', 'installment_id')->select('installments.*');
+    }
+
+    public function fillData(AtmosCardDTO $data, CardStatusEnum $status)
+    {
+        $this->external_id = $data->card_token;
+        $this->owner = $data->card_holder;
+        $this->phone = '+' . $data->phone;
+        $this->status = $status;
+        $this->saveOrFail();
     }
 }
