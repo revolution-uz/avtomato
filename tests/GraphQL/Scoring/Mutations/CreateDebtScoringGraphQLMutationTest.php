@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Scoring\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
@@ -72,6 +73,19 @@ class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
             $this->assertStringContainsString('validation', $response->json('errors.0.message'));
             $this->assertValidationErrors($response);
         }
+    }
+
+    #[Test]
+    public function errorCreateWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this->sendGraphQLRequest($this->_input, $this->taxType);
+
+        $response->assertOk();
+        $this->assertEquals('Unauthorized', $response->json('errors.0.message'));
+
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
     }
 
     private function sendGraphQLRequest(array $data, int $type): TestResponse

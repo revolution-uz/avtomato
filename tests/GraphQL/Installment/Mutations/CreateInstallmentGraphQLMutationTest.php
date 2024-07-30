@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Customer;
@@ -75,6 +76,26 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertStringContainsString('validation', $response->json('errors.0.message'));
         $this->assertValidationErrors($response);
+    }
+
+    #[Test]
+    public function errorCreateWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this->sendGraphQLRequest($this->_customer->id, $this->_branch->id, [
+            'tariff_id' => $this->_tariff->id,
+            'period' => rand($this->_tariff->min_period, $this->_tariff->max_period),
+            'amount' => rand($this->_tariff->min_amount, $this->_tariff->max_amount),
+            'initial_fee' => rand($this->_tariff->min_initial_fee, $this->_tariff->max_initial_fee),
+            'description' => 'test',
+            'starts_in' => '2022-01-01',
+        ]);
+
+        $response->assertOk();
+        $this->assertEquals('Unauthorized', $response->json('errors.0.message'));
+
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
     }
 
     private function sendGraphQLRequest(int $customer_id, ?int $branch_id, array $installment = []): TestResponse

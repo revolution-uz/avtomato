@@ -5,6 +5,7 @@ namespace App\Services\User;
 use App\Clients\AtmosBalanceClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Management\BalanceFundConfirmDTO;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\AtmosException;
 use App\Exceptions\BalanceIsNotEnoughException;
@@ -19,15 +20,8 @@ readonly class BalanceService
         private AtmosBalanceClient $atmosBalanceClient
     ) {}
 
-    /**
-     * @throws BalanceIsNotEnoughException
-     */
     public function chargeAmount(FeatureEnum $featureName, Model $model): BalanceCharge
     {
-        if (! $this->isBalanceEnoughForFeature($featureName)) {
-            throw new BalanceIsNotEnoughException;
-        }
-
         /** @var Feature $feature */
         $feature = Feature::query()->where('name', $featureName)->firstOrFail();
 
@@ -49,7 +43,12 @@ readonly class BalanceService
 
     public function getBalance(): int
     {
-        return BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
+        $balance = BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
+        if ($balance <= -100000) {
+            tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+        }
+
+        return $balance;
     }
 
     /**
