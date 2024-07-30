@@ -21,8 +21,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
     private Customer $_customer;
     private Tariff $_tariff;
     private Branch $_branch;
-    private Installment $_installment;
-    private CompanyAdmin $_admin;
 
     protected function setUp(): void
     {
@@ -36,15 +34,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $this->_customer = Customer::factory()->create();
         $this->_tariff = Tariff::factory()->create();
         $this->_branch = Branch::factory()->create();
-        $this->_admin = CompanyAdmin::factory()->create();
-        $this->_installment = Installment::factory()->create(
-            [
-                'customer_id' => $this->_customer->id,
-                'tariff_id' => $this->_tariff->id,
-                'branch_id' => $this->_branch->id,
-                'admin_id' => $this->_admin->id,
-            ]
-        );
     }
 
     #[Test]
