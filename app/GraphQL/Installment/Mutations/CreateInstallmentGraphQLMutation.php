@@ -10,7 +10,6 @@ use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Feature;
 use App\Services\Installment\InstallmentService;
-use App\Services\User\BalanceService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -27,7 +26,6 @@ class CreateInstallmentGraphQLMutation extends Mutation
     ];
 
     public function __construct(
-        private readonly BalanceService $balanceService,
         private readonly InstallmentService $installmentService,
     ) {}
 

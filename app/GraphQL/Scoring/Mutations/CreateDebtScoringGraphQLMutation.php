@@ -11,7 +11,6 @@ use App\GraphQL\Scoring\Types\Debt\DebtCreateInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Scoring\MibService;
 use App\Services\Scoring\TaxService;
-use App\Services\User\BalanceService;
 use Closure;
 use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -27,7 +26,6 @@ class CreateDebtScoringGraphQLMutation extends Mutation
     ];
 
     public function __construct(
-        private readonly BalanceService $balanceService,
         private readonly MibService $mibService,
         private readonly TaxService $taxService,
     ) {}

@@ -9,7 +9,6 @@ use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\GraphQL\Scoring\Types\Katm\KatmCreateInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Scoring\KatmService;
-use App\Services\User\BalanceService;
 use Closure;
 use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -25,7 +24,6 @@ class CreateKatmScoringGraphQLMutation extends Mutation
     ];
 
     public function __construct(
-        private readonly BalanceService $balanceService,
         private readonly KatmService $katmService,
     ) {}
 
