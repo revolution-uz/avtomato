@@ -7,6 +7,7 @@ use App\GraphQL\Installment\Types\CalculatedGraphGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Tariff;
+use App\Services\Installment\InstallmentService;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Closure;
@@ -77,19 +78,19 @@ class CalculateGraphQLQuery extends Query
 
         $currentDate = Carbon::now();
         if (isset($args['starts_in'])) {
-            $currentDate->timestamp = Carbon::make($args['starts_in'])->getTimestamp();
+            $currentDate = Carbon::make($args['starts_in']);
         }
-        $carbonPeriods = CarbonPeriod::create($currentDate, '1 month', $currentDate->copy()->addMonths($period - 1));
+        $periods = InstallmentService::generatePeriods($currentDate, $period);
 
         $calculated = [];
         $i = 1;
 
         if ($tariff->is_annual) {
             $monthly = ($amount * $rate * pow(1 + $rate, $period)) / (pow(1 + $rate, $period) - 1);
-            foreach ($carbonPeriods as $carbonPeriod) {
+            foreach ($periods as $period) {
                 $calculated[] = [
                     'id' => $i,
-                    'date' => $carbonPeriod->format('Y-m-d'),
+                    'date' => $period->format('Y-m-d'),
                     'amount' => $amount * $rate,
                     'portion' => $monthly - $amount * $rate,
                     'monthly' => $monthly,
@@ -99,10 +100,10 @@ class CalculateGraphQLQuery extends Query
             }
         } else {
             $monthlyAmount = $amount / $period;
-            foreach ($carbonPeriods as $carbonPeriod) {
+            foreach ($periods as $period) {
                 $calculated[] = [
                     'id' => $i,
-                    'date' => $carbonPeriod->format('Y-m-d'),
+                    'date' => $period->format('Y-m-d'),
                     'amount' => $monthlyAmount,
                     'portion' => $amount * $rate,
                     'monthly' => $monthlyAmount + $amount * $rate,

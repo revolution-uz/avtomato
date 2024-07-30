@@ -228,4 +228,22 @@ class InstallmentService
 
         return $result;
     }
+
+    public static function generatePeriods(?Carbon $startDate, $period): array
+    {
+        if (!$startDate) {
+            $startDate = Carbon::now();
+        }
+
+        $dates = [];
+        for ($i = 0; $i < $period; $i++) {
+            $currentDate = $startDate->copy()->addMonths($i);
+            if ($currentDate->day != $startDate->day) {
+                $currentDate = $currentDate->subMonth()->endOfMonth();
+            }
+            $dates[] = $currentDate;
+        }
+
+        return $dates;
+    }
 }

@@ -3,6 +3,7 @@
 namespace Installment\Queries;
 
 use App\Models\Company\Tariff;
+use App\Services\Installment\InstallmentService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
@@ -233,10 +234,10 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$tariff_id" of non-null type "Int!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$amount" of non-null type "BigInteger!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$initial_fee" of non-null type "BigInteger!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$period" of non-null type "Int!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$tariff_id" of non-null type "Int!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$amount" of non-null type "BigInteger!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$initial_fee" of non-null type "BigInteger!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$period" of non-null type "Int!" must not be null.'));
 
         // validation errors
         $response = $this
@@ -311,11 +312,11 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($this->_input['period'], count($response->json('data.calculate')));
 
         $data = $tariff->is_annual ? $this->_annualTestData : $this->_differentialTestData;
-        $date = Carbon::parse($this->_input['starts_in'] ?? now()->format('Y-m-d'));
+        $periods = InstallmentService::generatePeriods(Carbon::parse($this->_input['starts_in'] ?? now()->format('Y-m-d')), $this->_input['period']);
 
         for ($i = 0; $i < $this->_input['period']; $i++) {
             $this->assertEquals($i + 1, $response->json("data.calculate.{$i}.id"));
-            $this->assertEquals($date->addMonths($i > 0 ? 1 : $i)->format('Y-m-d'), $response->json("data.calculate.{$i}.date"));
+            $this->assertEquals($periods[$i]?->format('Y-m-d'), $response->json("data.calculate.{$i}.date"));
             $this->assertEquals($data[$i]['amount'], $response->json("data.calculate.{$i}.amount"));
             $this->assertEquals($data[$i]['portion'], $response->json("data.calculate.{$i}.portion"));
             $this->assertEquals($data[$i]['monthly'], $response->json("data.calculate.{$i}.monthly"));
