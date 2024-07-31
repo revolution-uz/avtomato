@@ -39,7 +39,7 @@ class AtmosPinflClient extends BaseAtmosClient
     /**
      * @throws AtmosException
      */
-    public function payWithPinfl(string $ext_id, Customer $customer, string $contract_number, int $amount): mixed
+    public function payWithPinfl(string $ext_id, Customer $customer, string $contract_number, int $amount): AtmosTransactionCreateResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,
@@ -54,9 +54,7 @@ class AtmosPinflClient extends BaseAtmosClient
             'partial_debit' => true,
         ];
 
-        $res = $this->makeRequest(self::PAYMENT_CREATE, $data);
-
-        return AtmosTransactionCreateResponseDTO::from($res['payload']);
+        return AtmosTransactionCreateResponseDTO::from($this->makeRequest(self::PAYMENT_CREATE, $data));
 
     }
 
@@ -70,9 +68,7 @@ class AtmosPinflClient extends BaseAtmosClient
             'transaction_id' => $transaction_id,
         ];
 
-        $res = $this->makeRequest(self::PAYMENT_CONFIRM, $data);
-
-        return AtmosTransactionInfoResponseDTO::from($res['payload']);
+        return AtmosTransactionInfoResponseDTO::from($this->makeRequest(self::PAYMENT_CONFIRM, $data));
     }
 
     /**
@@ -89,9 +85,7 @@ class AtmosPinflClient extends BaseAtmosClient
             'amount' => $amount,
         ];
 
-        $res = $this->makeRequest(self::PAYMENT_CHECK, $data);
-
-        return AtmosTransactionInfoResponseDTO::from($res['payload']);
+        return AtmosTransactionInfoResponseDTO::from($this->makeRequest(self::PAYMENT_CHECK, $data));
     }
 
     /**
@@ -104,9 +98,7 @@ class AtmosPinflClient extends BaseAtmosClient
             'transaction_id' => $transaction_id,
         ];
 
-        $res = $this->makeRequest(self::PAYMENT_CANCEL, $data);
-
-        return AtmosTransactionCancelResponseDTO::from($res['payload']);
+        return AtmosTransactionCancelResponseDTO::from($this->makeRequest(self::PAYMENT_CANCEL, $data));
     }
     /*
      * ------------- PINFL Payment module end --------------
