@@ -2,22 +2,18 @@
 
 namespace App\DTOs\Atmos\Transction;
 
-use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
 
 class AtmosTransactionInfoResponseDTO extends Data
 {
     public function __construct(
-        public string $transaction_id,
-        public string $ext_id,
-        public string $transaction_status,
-        #[DataCollectionOf(AtmosTransactionDetailDTO::class)]
-        public ?DataCollection $details,
+        public string $code,
+        public string $description,
+        public ?AtmosTransactionInfoPayloadDTO $payload
     ) {}
 
     public function isSucces(): bool
     {
-        return $this->transaction_status == 'SUCCESS';
+        return $this->code == '200';
     }
 }

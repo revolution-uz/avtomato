@@ -138,20 +138,20 @@ class AtmosService
             return;
         }
 
-        $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $createPayResponseDTO->transaction_id);
+        $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $createPayResponseDTO->payload->transaction_id);
 
         if (! $confirmWithPinfl->isSucces()) {
             $transactionAttempt->failed();
 
             return;
         }
-        $detailCount = count($confirmWithPinfl->details);
-        foreach ($confirmWithPinfl->details as $detail) {
+        $detailCount = count($confirmWithPinfl->payload->details);
+        foreach ($confirmWithPinfl->payload->details as $detail) {
             /** @var AtmosTransactionDetailDTO $detail */
             $transaction = new Transaction;
             $transaction->paid_at = $paid_at;
             $transaction->transaction_type_id = TransactionType::ATMOS_WITH_PINFL;
-            $transaction->external_id = $confirmWithPinfl->transaction_id;
+            $transaction->external_id = $confirmWithPinfl->payload->transaction_id;
             $transaction->card_pan = $detail->pan;
             $transaction->amount = $detail->amount / 100;
             $transaction->installment_id = $installment_id;
