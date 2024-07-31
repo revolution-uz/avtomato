@@ -5,7 +5,7 @@ namespace App\Helpers;
 use App\DTOs\Installment\InstallmentGraphDTO;
 use App\Enums\Company\InstallmentGraphStatusEnum;
 use App\Models\Company\Installment;
-use Carbon\CarbonPeriod;
+use App\Services\Installment\InstallmentService;
 use Illuminate\Support\Carbon;
 
 class InstallmentGraphHelper
@@ -18,7 +18,7 @@ class InstallmentGraphHelper
         $transactions = $installment->transactions()->orderBy('id')->select('amount', 'created_at')->get();
         $paidAmount = max(round($transactions->sum('amount') - $installment->initial_fee, 2), 0);
         $graphs = [];
-        $months = CarbonPeriod::create($installment->starts_in, '1 month', $installment->starts_in->addMonths($installment->period - 1));
+        $months = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
         /** @var Carbon $monthlyPaymentDate */
         foreach ($months as $index => $monthlyPaymentDate) {
             $paidForMonth = min($paidAmount, $installment->monthlyPayment);
