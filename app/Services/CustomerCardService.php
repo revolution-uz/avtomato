@@ -34,7 +34,7 @@ class CustomerCardService
                 $newCard->fillData($response->data, CardStatusEnum::INACTIVE);
 
                 $this->confirmationService->send($newCard->phone);
-                $customResponse = AtmosAttachCardResponseDTO::from(['phone' => $newCard->phone, 'transaction_id' => $newCard->id]);
+                $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $newCard->phone, 'transaction_id' => $newCard->id]);
 
                 return [$card, $customResponse];
             } else {
@@ -55,7 +55,7 @@ class CustomerCardService
         $card = $this->createOrGetCard($customerId, $request);
 
         $this->confirmationService->send($card->phone);
-        $customResponse = AtmosAttachCardResponseDTO::from(['phone' => $card->phone, 'transaction_id' => $card->id]);
+        $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $card->phone, 'transaction_id' => $card->id]);
 
         return [$card, $customResponse];
     }
