@@ -26,7 +26,12 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
         Installment::query()->forceDelete();
         Customer::query()->forceDelete();
         TransactionType::query()->forceDelete();
-        $this->_installment = Installment::factory()->create();
+        $this->_installment = Installment::factory()->create([
+            'amount' => 1000000,
+            'initial_fee' => 100000,
+            'percent' => 15,
+            'paid_amount' => 100000,
+        ]);
         $this->_customer = Customer::factory()->create();
         $this->_transactionType = TransactionType::factory()->create();
     }
@@ -38,7 +43,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             $this->_installment->id,
             $this->_customer->id,
             $this->_transactionType->id,
-            rand(0, $this->_installment->debtAmount),
+            rand(0, 935000),
             '2021-01-01'
         );
         $this->assertSuccessResponse($response);
@@ -87,14 +92,14 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             $this->_installment->id,
             $this->_customer->id,
             $this->_transactionType->id,
-            $this->_installment->amount * 2,
+            935001,
             '2021-01-01'
         );
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertStringContainsString('validation', $response->json('errors.0.message'));
         $this->assertEquals(
-            'The amount must not be greater than the installment amount.',
+            'The amount must not be greater than 935000.',
             $response->json('errors.0.extensions.validation')['amount'][0]
         );
     }

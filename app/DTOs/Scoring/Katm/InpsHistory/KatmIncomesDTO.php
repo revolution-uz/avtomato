@@ -13,6 +13,6 @@ class KatmIncomesDTO extends BaseScoringResponse
     public function __construct(
         #[WithCast(MarkNullIfNotCollection::class, class: KatmIncomeDTO::class)]
         #[DataCollectionOf(KatmIncomeDTO::class)]
-        public DataCollection|array|null $income,
+        public ?DataCollection $income,
     ) {}
 }
