@@ -11,6 +11,7 @@ use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Installment\Mutations\AttachCardGraphQLMutation;
 use App\GraphQL\Installment\Mutations\AttachGuarantorGraphQLMutation;
+use App\GraphQL\Installment\Mutations\ChangeSettingsGraphQLMutation;
 use App\GraphQL\Installment\Mutations\ChangesStatusGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateDocumentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateInstallmentCommentGraphQLMutation;
@@ -35,6 +36,7 @@ use App\GraphQL\Installment\Mutations\UpdateTransactionGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Queries\CalculateGraphQLQuery;
 use App\GraphQL\Installment\Queries\InstallmentsGraphQLQuery;
+use App\GraphQL\Installment\Queries\SettingsGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleInstallmentGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTariffGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTransactionGraphQLQuery;
@@ -49,6 +51,7 @@ use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
+use App\GraphQL\Installment\Types\SettingsGraphQLType;
 use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\GraphQL\Installment\Types\TariffInputGraphQLType;
 use App\GraphQL\Installment\Types\TransactionAttemptGraphQLType;
@@ -112,6 +115,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 TransactionAttemptsGraphQLQuery::class,
                 TransactionsGraphQLQuery::class,
                 SingleTransactionGraphQLQuery::class,
+                SettingsGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateInstallmentGraphQLMutation::class,
@@ -138,6 +142,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 DeleteDocumentGraphQLMutation::class,
                 ChangesStatusGraphQLMutation::class,
                 UpdateInstallmentCustomerAnyCardChargeGraphQLMutation::class,
+                ChangeSettingsGraphQLMutation::class,
             ],
             'types' => [
                 InstallmentInputGraphQLType::class,
@@ -167,6 +172,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 TransactionGraphQLType::class,
                 InstallmentCommentGraphQLType::class,
                 InstallmentGuarantorGraphQLType::class,
+                SettingsGraphQLType::class,
 
                 //scoring
                 CardCreateInputGraphQLType::class,
