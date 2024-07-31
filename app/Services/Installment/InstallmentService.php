@@ -34,7 +34,7 @@ class InstallmentService
         }
 
         $dates = [];
-        for ($i = 1; $i <= $period; $i++) {
+        for ($i = 0; $i < $period; $i++) {
             $currentDate = $startDate->copy()->addMonths($i);
             if ($currentDate->day != $startDate->day) {
                 $currentDate = $currentDate->subMonth()->endOfMonth();
