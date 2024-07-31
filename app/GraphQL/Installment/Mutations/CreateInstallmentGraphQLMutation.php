@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\FeatureEnum;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
@@ -9,7 +10,6 @@ use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Feature;
 use App\Services\Installment\InstallmentService;
-use App\Services\User\BalanceService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -26,7 +26,6 @@ class CreateInstallmentGraphQLMutation extends Mutation
     ];
 
     public function __construct(
-        private readonly BalanceService $balanceService,
         private readonly InstallmentService $installmentService,
     ) {}
 
@@ -64,7 +63,7 @@ class CreateInstallmentGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE) && $this->balanceService->isBalanceEnoughForFeature(PermissionEnum::INSTALLMENT_CREATE->getMyFeature());
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE) && (tenant()->status == CompanyStatusEnum::ACTIVE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

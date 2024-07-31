@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Scoring\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\District;
 use App\Models\Company\Region;
@@ -71,6 +72,23 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.date', ['attribute' => 'data.birth date']), $response->json('errors.0.extensions.validation')['data.birth_date'][0]);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'data.region id']), $response->json('errors.0.extensions.validation')['data.region_id'][0]);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'data.district id']), $response->json('errors.0.extensions.validation')['data.district_id'][0]);
+    }
+
+    #[Test]
+    public function errorCreateWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery($this->input(), $this->_type)
+            );
+
+        $response->assertOk();
+        $this->assertEquals('Unauthorized', $response->json('errors.0.message'));
+
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
     }
 
     private function input(): array

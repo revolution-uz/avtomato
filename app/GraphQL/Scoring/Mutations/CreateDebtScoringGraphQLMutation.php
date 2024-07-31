@@ -4,13 +4,13 @@ namespace App\GraphQL\Scoring\Mutations;
 
 use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\GraphQL\Scoring\Types\Debt\DebtCreateInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Scoring\MibService;
 use App\Services\Scoring\TaxService;
-use App\Services\User\BalanceService;
 use Closure;
 use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -26,7 +26,6 @@ class CreateDebtScoringGraphQLMutation extends Mutation
     ];
 
     public function __construct(
-        private readonly BalanceService $balanceService,
         private readonly MibService $mibService,
         private readonly TaxService $taxService,
     ) {}
@@ -67,7 +66,7 @@ class CreateDebtScoringGraphQLMutation extends Mutation
             default => throw new Exception('Unexpected match value'),
         };
 
-        return RbacHelper::checkPermission($permission) && $this->balanceService->isBalanceEnoughForFeature($permission->getMyFeature());
+        return RbacHelper::checkPermission($permission) && (tenant()->status == CompanyStatusEnum::ACTIVE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

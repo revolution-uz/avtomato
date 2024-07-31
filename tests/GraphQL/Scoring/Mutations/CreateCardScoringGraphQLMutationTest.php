@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Scoring\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
@@ -105,6 +106,24 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.digits', ['attribute' => 'data.number', 'digits' => 16]), $response->json('errors.0.extensions.validation')['data.number'][0]);
         $this->assertEquals(trans('validation.digits', ['attribute' => 'data.expiry', 'digits' => 4]), $response->json('errors.0.extensions.validation')['data.expiry'][0]);
+    }
+
+    #[Test]
+    public function errorCreateWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(data: $this->_humoInput, type: $this->_humoType)
+            );
+
+        $response->assertOk();
+        $this->assertEquals('Unauthorized', $response->json('errors.0.message'));
+
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
     }
 
     private function buildGraphQLQuery(array $data, int $type): array

@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Customer;
@@ -20,8 +21,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
     private Customer $_customer;
     private Tariff $_tariff;
     private Branch $_branch;
-    private Installment $_installment;
-    private CompanyAdmin $_admin;
 
     protected function setUp(): void
     {
@@ -35,15 +34,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $this->_customer = Customer::factory()->create();
         $this->_tariff = Tariff::factory()->create();
         $this->_branch = Branch::factory()->create();
-        $this->_admin = CompanyAdmin::factory()->create();
-        $this->_installment = Installment::factory()->create(
-            [
-                'customer_id' => $this->_customer->id,
-                'tariff_id' => $this->_tariff->id,
-                'branch_id' => $this->_branch->id,
-                'admin_id' => $this->_admin->id,
-            ]
-        );
     }
 
     #[Test]
@@ -75,6 +65,26 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertStringContainsString('validation', $response->json('errors.0.message'));
         $this->assertValidationErrors($response);
+    }
+
+    #[Test]
+    public function errorCreateWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this->sendGraphQLRequest($this->_customer->id, $this->_branch->id, [
+            'tariff_id' => $this->_tariff->id,
+            'period' => rand($this->_tariff->min_period, $this->_tariff->max_period),
+            'amount' => rand($this->_tariff->min_amount, $this->_tariff->max_amount),
+            'initial_fee' => rand($this->_tariff->min_initial_fee, $this->_tariff->max_initial_fee),
+            'description' => 'test',
+            'starts_in' => '2022-01-01',
+        ]);
+
+        $response->assertOk();
+        $this->assertEquals('Unauthorized', $response->json('errors.0.message'));
+
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
     }
 
     private function sendGraphQLRequest(int $customer_id, ?int $branch_id, array $installment = []): TestResponse

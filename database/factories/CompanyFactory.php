@@ -18,7 +18,7 @@ class CompanyFactory extends Factory
             'name' => $name,
             'owner_phone' => $this->faker->phoneNumber(),
             'owner_name' => $this->faker->name(),
-            'is_active' => CompanyStatusEnum::CREATED,
+            'status' => CompanyStatusEnum::CREATED,
         ];
     }
 }

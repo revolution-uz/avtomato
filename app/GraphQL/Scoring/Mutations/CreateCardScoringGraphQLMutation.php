@@ -3,12 +3,12 @@
 namespace App\GraphQL\Scoring\Mutations;
 
 use App\DTOs\Scoring\Card\CardCreateRequestDTO;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\GraphQL\Scoring\Types\Card\CardCreateInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Scoring\CardScoringService;
-use App\Services\User\BalanceService;
 use Closure;
 use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -24,7 +24,6 @@ class CreateCardScoringGraphQLMutation extends Mutation
     ];
 
     public function __construct(
-        private readonly BalanceService $balanceService,
         private readonly CardScoringService $cardScoringService,
     ) {}
 
@@ -64,7 +63,7 @@ class CreateCardScoringGraphQLMutation extends Mutation
             default => throw new Exception('Unexpected match value'),
         };
 
-        return RbacHelper::checkPermission($permission) && $this->balanceService->isBalanceEnoughForFeature($permission->getMyFeature());
+        return RbacHelper::checkPermission($permission) && (tenant()->status == CompanyStatusEnum::ACTIVE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

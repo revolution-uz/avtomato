@@ -44,7 +44,7 @@ abstract class TestCase extends BaseTestCase
             'name' => 'Test Company',
             'owner_phone' => '0123456789',
             'owner_name' => 'Test Owner',
-            'is_active' => CompanyStatusEnum::ACTIVE,
+            'status' => CompanyStatusEnum::ACTIVE,
         ]);
 
         tenancy()->initialize($tenant);
