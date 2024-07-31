@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
+use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Models\Company\Card;
@@ -28,12 +29,22 @@ class CustomerCardService
         // if connected card not exists create it and send request to card service
         if (! $card->exists()) {
             $response = $this->atmosCardService->attachCard($request['number'], $request['expiry']);
-            if (! $response->result->isSucces()) {
-                throw new BadRequestHttpException($response->result->description);
-            }
-            $newCard = $this->createOrGetCard($customerId, $request);
+            if ($response->data instanceof AtmosCardDTO) {
+                $newCard = $this->createOrGetCard($customerId, $request);
+                $newCard->fillData($response->data, CardStatusEnum::INACTIVE);
 
-            return [$newCard, $response];
+                $this->confirmationService->send($newCard->phone);
+                $customResponse = AtmosAttachCardResponseDTO::from(['phone' => $newCard->phone, 'transaction_id' => $newCard->id]);
+
+                return [$card, $customResponse];
+            } else {
+                if (! $response->result->isSucces()) {
+                    throw new BadRequestHttpException($response->result->description);
+                }
+                $newCard = $this->createOrGetCard($customerId, $request);
+
+                return [$newCard, $response];
+            }
         }
 
         // check that the card is connected to this customer
@@ -74,11 +85,7 @@ class CustomerCardService
 
         $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request['transaction_id'], $request['otp']);
         if ($atmosConfirmCardDto->result->isSucces()) {
-            $card->external_id = $atmosConfirmCardDto->data->card_token;
-            $card->owner = $atmosConfirmCardDto->data->card_holder;
-            $card->phone = '+' . $atmosConfirmCardDto->data->phone;
-            $card->status = CardStatusEnum::ACTIVE;
-            $card->saveOrFail();
+            $card->fillData($atmosConfirmCardDto->data, CardStatusEnum::ACTIVE);
         }
 
         return [$card, $atmosConfirmCardDto];
