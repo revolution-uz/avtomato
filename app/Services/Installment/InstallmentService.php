@@ -27,6 +27,24 @@ class InstallmentService
         $this->balanceService = $balanceService;
     }
 
+    public static function generatePeriods(?Carbon $startDate, $period): array
+    {
+        if (! $startDate) {
+            $startDate = Carbon::now();
+        }
+
+        $dates = [];
+        for ($i = 0; $i < $period; $i++) {
+            $currentDate = $startDate->copy()->addMonths($i);
+            if ($currentDate->day != $startDate->day) {
+                $currentDate = $currentDate->subMonth()->endOfMonth();
+            }
+            $dates[] = $currentDate;
+        }
+
+        return $dates;
+    }
+
     public function create(array $attributes): Installment
     {
         $attributes['status'] = InstallmentStatusEnum::IN_ACTIVE;

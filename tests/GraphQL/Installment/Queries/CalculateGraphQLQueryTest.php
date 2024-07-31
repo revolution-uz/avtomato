@@ -3,6 +3,7 @@
 namespace Installment\Queries;
 
 use App\Models\Company\Tariff;
+use App\Services\Installment\InstallmentService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
@@ -130,6 +131,46 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
 
         $this->_annualTariff = Tariff::factory()->create(['is_annual' => true, 'percent' => 15]);
         $this->_differentialTariff = Tariff::factory()->create(['is_annual' => false, 'percent' => 15]);
+    }
+
+    #[Test]
+    public function successAnnualAndWithoutStartsIn()
+    {
+        $this->_input = [
+            'tariff_id' => $this->_annualTariff->id,
+            'amount' => 1000000,
+            'initial_fee' => 100,
+            'period' => 10,
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+
+        $this->assertSuccessCalculateResponse($response, $this->_annualTariff);
+    }
+
+    #[Test]
+    public function successDifferentialAndWithoutStartsIn()
+    {
+        $this->_input = [
+            'tariff_id' => $this->_differentialTariff->id,
+            'amount' => 1000000,
+            'initial_fee' => 100,
+            'period' => 10,
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+
+        $this->assertSuccessCalculateResponse($response, $this->_differentialTariff);
     }
 
     #[Test]
@@ -271,11 +312,11 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($this->_input['period'], count($response->json('data.calculate')));
 
         $data = $tariff->is_annual ? $this->_annualTestData : $this->_differentialTestData;
-        $date = Carbon::parse($this->_input['starts_in'] ?? Carbon::now()->format('Y-m-d'));
+        $periods = InstallmentService::generatePeriods(Carbon::parse($this->_input['starts_in'] ?? now()->format('Y-m-d')), $this->_input['period']);
 
         for ($i = 0; $i < $this->_input['period']; $i++) {
             $this->assertEquals($i + 1, $response->json("data.calculate.{$i}.id"));
-            $this->assertEquals($date->addMonths($i > 0 ? 1 : $i)->format('Y-m-d'), $response->json("data.calculate.{$i}.date"));
+            $this->assertEquals($periods[$i]?->format('Y-m-d'), $response->json("data.calculate.{$i}.date"));
             $this->assertEquals($data[$i]['amount'], $response->json("data.calculate.{$i}.amount"));
             $this->assertEquals($data[$i]['portion'], $response->json("data.calculate.{$i}.portion"));
             $this->assertEquals($data[$i]['monthly'], $response->json("data.calculate.{$i}.monthly"));

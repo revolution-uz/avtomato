@@ -6,6 +6,7 @@ use App\Enums\Company\InstallmentGraphStatusEnum;
 use App\Helpers\InstallmentGraphHelper;
 use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
+use App\Services\Installment\InstallmentService;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -14,24 +15,25 @@ class InstallmentGraphHelperTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    #[test]
+    #[Test]
     public function getInstallmentGraphForNewInstallment(): void
     {
         Transaction::query()->delete();
         $installment = Installment::factory()->create(['starts_in' => Carbon::now()->addMonth()]);
         $graphs = InstallmentGraphHelper::getGraphs($installment);
+        $months = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
 
         $this->assertEquals($installment->period, count($graphs));
         foreach ($graphs as $index => $graph) {
             $this->assertEquals(InstallmentGraphStatusEnum::NOT_STARTED, $graph->status);
             $this->assertEquals(0, $graph->paid_amount);
             $this->assertEquals(round(($installment->amount - $installment->initial_fee) * ($installment->percent + 100) / 100 / $installment->period, 2), $graph->amount);
-            $this->assertEquals($installment->starts_in->addMonths($index), $graph->starts_in);
+            $this->assertEquals($months[$index], $graph->starts_in);
             $this->assertEquals(0, $graph->overdue_days);
         }
     }
 
-    #[test]
+    #[Test]
     public function getInstallmentGraphForNewInstallmentWithInitialFee(): void
     {
         Transaction::query()->delete();
@@ -39,18 +41,19 @@ class InstallmentGraphHelperTest extends TestCase
         $graphs = InstallmentGraphHelper::getGraphs($installment);
         // initial fee
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'created_at' => $installment->starts_in->subMonths(4)->subDays(5)]);
+        $months = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
 
         $this->assertEquals($installment->period, count($graphs));
         foreach ($graphs as $index => $graph) {
             $this->assertEquals(InstallmentGraphStatusEnum::NOT_STARTED, $graph->status);
             $this->assertEquals(0, $graph->paid_amount);
             $this->assertEquals(round(($installment->amount - $installment->initial_fee) * ($installment->percent + 100) / 100 / $installment->period, 2), $graph->amount);
-            $this->assertEquals($installment->starts_in->addMonths($index), $graph->starts_in);
+            $this->assertEquals($months[$index], $graph->starts_in);
             $this->assertEquals(0, $graph->overdue_days);
         }
     }
 
-    #[test]
+    #[Test]
     public function getInstallmentGraphForLastMonthPaymentInstallment(): void
     {
         Transaction::query()->delete();
@@ -89,7 +92,7 @@ class InstallmentGraphHelperTest extends TestCase
         $this->assertEquals(5, $graphs[2]->overdue_days);
     }
 
-    #[test]
+    #[Test]
     public function getInstallmentGraphForWellClosedInstallment(): void
     {
         Transaction::query()->delete();
