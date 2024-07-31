@@ -134,6 +134,46 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successAnnualAndWithoutStartsIn()
+    {
+        $this->_input = [
+            'tariff_id' => $this->_annualTariff->id,
+            'amount' => 1000000,
+            'initial_fee' => 100,
+            'period' => 10,
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+
+        $this->assertSuccessCalculateResponse($response, $this->_annualTariff);
+    }
+
+    #[Test]
+    public function successDifferentialAndWithoutStartsIn()
+    {
+        $this->_input = [
+            'tariff_id' => $this->_differentialTariff->id,
+            'amount' => 1000000,
+            'initial_fee' => 100,
+            'period' => 10,
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+
+        $this->assertSuccessCalculateResponse($response, $this->_differentialTariff);
+    }
+
+    #[Test]
     public function successAnnualAndWithStartsIn()
     {
         $this->_input = [
