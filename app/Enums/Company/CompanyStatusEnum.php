@@ -16,5 +16,4 @@ enum CompanyStatusEnum: int
             self::INACTIVE->value => 'Inactive',
         ];
     }
-
 }
