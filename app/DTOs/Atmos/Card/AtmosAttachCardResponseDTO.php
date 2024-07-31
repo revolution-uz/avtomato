@@ -8,7 +8,7 @@ use App\DTOs\Scoring\Base\BaseScoringRequest;
 class AtmosAttachCardResponseDTO extends BaseScoringRequest
 {
     public function __construct(
-        public AtmosResultDTO $result,
+        public ?AtmosResultDTO $result,
         public ?int $transaction_id,
         public ?string $phone,
         public ?AtmosCardDTO $data,
