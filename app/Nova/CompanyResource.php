@@ -2,10 +2,11 @@
 
 namespace App\Nova;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -44,7 +45,7 @@ class CompanyResource extends Resource
             Text::make(__('nova.company.name'), 'name')->filterable(),
             Text::make(__('nova.company.owner_name'), 'owner_name')->filterable(),
             Text::make(__('nova.company.owner_phone'), 'owner_phone')->filterable(),
-            Boolean::make(__('nova.status'), 'is_active')->filterable(),
+            Select::make(__('nova.status'), 'status')->options(CompanyStatusEnum::getAllCasesForDropdown())->displayUsingLabels(),
             HasMany::make('Domains', 'domains', DomainResource::class),
         ];
     }
