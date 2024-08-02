@@ -30,13 +30,13 @@ class CustomerCardService
         if (! $card->exists()) {
             $response = $this->atmosCardService->attachCard($request['number'], $request['expiry']);
             if ($response->data instanceof AtmosCardDTO) {
-                $newCard = $this->createOrGetCard($customerId, $request);
-                $newCard->fillData($response->data, CardStatusEnum::INACTIVE);
+                $oldCard = $this->createOrGetCard($customerId, $request);
+                $oldCard->fillData($response->data, CardStatusEnum::INACTIVE);
 
-                $this->confirmationService->send($newCard->phone);
-                $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $newCard->phone, 'transaction_id' => $newCard->id]);
+                $this->confirmationService->send($oldCard->phone);
+                $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $oldCard->phone, 'transaction_id' => $oldCard->id]);
 
-                return [$card, $customResponse];
+                return [$oldCard, $customResponse];
             } else {
                 if (! $response->result->isSucces()) {
                     throw new BadRequestHttpException($response->result->description);
