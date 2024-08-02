@@ -9,11 +9,12 @@ class AtmosTransactionCancelResponseDTO extends Data
     public function __construct(
         public string $code,
         public ?string $description,
+        public ?string $message,
         public ?AtmosTransactionCancelPayloadDTO $payload,
     ) {}
 
     public function isSucces(): bool
     {
-        return $this->code == '200';
+        return (int) $this->code == 200;
     }
 }
