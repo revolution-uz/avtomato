@@ -4,8 +4,9 @@ namespace App\GraphQL\Scoring\Types;
 
 use App\Models\Company\ScoringRequest;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class ScoringRequestGraphQLType
+class ScoringRequestGraphQLType extends GraphQLType
 {
     public const GRAPHQL_TYPE_NAME = 'ScoringRequestGraphQLType';
 

@@ -96,6 +96,7 @@ use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionInfoResponseGraphQL
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionRowGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionSizePensionGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\PensionInfoGraphQLType;
+use App\GraphQL\Scoring\Types\ScoringRequestGraphQLType;
 use App\GraphQL\Scoring\Types\ScoringRequestUnionGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
@@ -217,6 +218,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
 
                 // unions last
                 ScoringRequestUnionGraphQLType::class,
+                ScoringRequestGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
