@@ -130,7 +130,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
                     'updated_at',
                     'deleted_at',
                 ],
-            ]
+            ],
         ],
     ];
 
@@ -353,7 +353,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery(['search' => (string)$transactionAttempt->id])
+                $this->buildGraphQLQuery(['search' => (string) $transactionAttempt->id])
             );
         $this->assertSuccessTransactionAttemptsResponse($response, total: 1);
         $this->assertEquals($transactionAttempt->id, $response->json('data.transactionAttempts.data.0.id'));
@@ -480,7 +480,6 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
         return $query;
     }
 
-
     private function assertSuccessTransactionAttemptsResponse(TestResponse $response, $total = null, $perPage = null, $page = null): void
     {
         $response->assertOk();
@@ -488,7 +487,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
         $response->assertJsonStructure([
             'data' => [
                 'transactionAttempts' => $this->_structure,
-            ]
+            ],
         ]);
 
         $totalCount = $total ?? $this->_totalTransactionAttemptsCount;
