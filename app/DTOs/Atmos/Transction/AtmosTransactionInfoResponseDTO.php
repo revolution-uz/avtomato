@@ -8,7 +8,7 @@ class AtmosTransactionInfoResponseDTO extends Data
 {
     public function __construct(
         public string $code,
-        public string $description,
+        public ?string $description,
         public ?AtmosTransactionInfoPayloadDTO $payload
     ) {}
 
