@@ -93,8 +93,8 @@ class TransactionAttempt extends Model
         return Attribute::make(get: fn () => $this->card_id === null ? TransactionType::ATMOS_WITH_PINFL : TransactionType::ATMOS_WITH_CARD);
     }
 
-    public function transactionType(): TransactionType
+    public function getTransactionTypeAttribute(): TransactionType
     {
-        return TransactionType::findOrFail($this->transaction_type_id);
+        return TransactionType::query()->findOrFail($this->transaction_type_id);
     }
 }

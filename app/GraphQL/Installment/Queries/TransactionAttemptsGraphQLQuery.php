@@ -62,7 +62,7 @@ class TransactionAttemptsGraphQLQuery extends Query
             ],
             'transaction_id' => [
                 'type' => Type::int(),
-                'rules' => ['nullable', 'int', Rule::exists('transactions', 'id')->whereNull('deleted_at')],
+                'rules' => ['nullable', 'int', Rule::exists('transactions', 'id')],
             ],
         ];
     }
@@ -77,7 +77,7 @@ class TransactionAttemptsGraphQLQuery extends Query
         $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_ATTEMPT_VIEW_ALL);
 
         return TransactionAttempt::query()
-            ->with(['installment', 'admin', 'customer', 'transaction', 'installment.branch'])
+            ->with(['installment', 'customer', 'transaction', 'installment.branch'])
             ->when(
                 isset($args['id']),
                 fn (Builder $q) => $q
