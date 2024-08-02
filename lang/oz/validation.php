@@ -252,6 +252,7 @@ return [
     'attributes' => [
         'name' => 'Исм',
         'avatar' => 'Аватар',
+        'amount' => 'миқдор',
     ],
 
 ];

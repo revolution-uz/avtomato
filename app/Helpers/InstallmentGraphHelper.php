@@ -21,7 +21,7 @@ class InstallmentGraphHelper
         $months = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
         /** @var Carbon $monthlyPaymentDate */
         foreach ($months as $index => $monthlyPaymentDate) {
-            $paidForMonth = min($paidAmount, $installment->monthlyPayment);
+            $paidForMonth = round(min($paidAmount, $installment->monthlyPayment), 2);
             $paidAmount -= $paidForMonth;
             $paidDateForMonth = Carbon::now();
             $paidSumBeforeNow = 0;
@@ -35,7 +35,7 @@ class InstallmentGraphHelper
             $graphs[] = new InstallmentGraphDTO(
                 id: $index + 1,
                 amount: round($installment->monthlyPayment, 2),
-                paid_amount: round($paidForMonth, 2),
+                paid_amount: $paidForMonth,
                 overdue_days: $monthlyPaymentDate->isPast() ? max(round($monthlyPaymentDate->diffInDays($paidDateForMonth)), 0) : 0,
                 starts_in: $monthlyPaymentDate,
                 status: $monthlyPaymentDate->isPast()
