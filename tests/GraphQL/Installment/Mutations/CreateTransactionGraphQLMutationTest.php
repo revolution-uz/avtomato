@@ -88,29 +88,41 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function dontCreateTransactionIfAmountIsLarge(): void
     {
-        $response = $this->sendGraphQLRequest(
-            $this->_installment->id,
-            $this->_customer->id,
-            $this->_transactionType->id,
-            935001,
-            '2021-01-01'
-        );
-        $response->assertOk();
-        $this->assertArrayHasKey('errors', $response->json());
-        $this->assertStringContainsString('validation', $response->json('errors.0.message'));
-        $this->assertEquals(
-            'Поле количество не может быть более 935000.',
-            $response->json('errors.0.extensions.validation')['amount'][0]
-        );
+        $msgs = [
+            'ru' => 'Сумма не может быть более 935000.',
+            'en' => 'Amount must not be greater than 935000.',
+            'uz' => 'Kiritiladigan miqdor 935000 dan katta bo‘lmasligi kerak.',
+            'oz' => 'Киритиладиган миқдор 935000 дан катта бўлмаслиги керак.',
+        ];
+
+        foreach (config('app.supported_locales') as $locale) {
+            $response = $this->sendGraphQLRequest(
+                $this->_installment->id,
+                $this->_customer->id,
+                $this->_transactionType->id,
+                935001,
+                '2021-01-01',
+                ['Accept-Language' => $locale],
+            );
+
+            $response->assertOk();
+            $this->assertArrayHasKey('errors', $response->json());
+            $this->assertStringContainsString('validation', $response->json('errors.0.message'));
+            $this->assertEquals(
+                $msgs[$locale],
+                $response->json('errors.0.extensions.validation.amount.0')
+            );
+        }
     }
 
-    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at): TestResponse
+    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at, array $headers = []): TestResponse
     {
         return $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route(self::GRAPHQL_ROUTE),
-                $this->buildGraphQLQuery($installment_id, $customer_id, $transaction_type_id, $amount, $paid_at)
+                $this->buildGraphQLQuery($installment_id, $customer_id, $transaction_type_id, $amount, $paid_at),
+                $headers
             );
     }
 

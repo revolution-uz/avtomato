@@ -17,4 +17,5 @@ return [
     'installment_status_IN_ACTIVE' => 'Faol emas',
     'installment_status_ACTIVE' => 'Faol',
     'installment_status_CLOSED' => 'Yopilgan',
+    'max_amount' => 'Kiritiladigan miqdor :amount dan katta bo‘lmasligi kerak.',
 ];

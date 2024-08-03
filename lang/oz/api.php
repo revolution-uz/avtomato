@@ -13,4 +13,5 @@ return [
     'installment_status_IN_ACTIVE' => 'Фаол эмас',
     'installment_status_ACTIVE' => 'Фаол',
     'installment_status_CLOSED' => 'Ёпилган',
+    'max_amount' => 'Киритиладиган миқдор :amount дан катта бўлмаслиги керак.',
 ];

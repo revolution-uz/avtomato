@@ -17,4 +17,5 @@ return [
     'installment_status_IN_ACTIVE' => 'Неактивный',
     'installment_status_ACTIVE' => 'Активный',
     'installment_status_CLOSED' => 'Закрыто',
+    'max_amount' => 'Сумма не может быть более :amount.',
 ];
