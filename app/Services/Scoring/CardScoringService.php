@@ -28,7 +28,7 @@ class CardScoringService
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
-        $this->balanceService->chargeAmount(FeatureEnum::SCORING_UZCARD, $model);
+        $this->balanceService->chargeAmount(FeatureEnum::SCORING_HUMO, $model);
         try {
             $model->response = CardScoringResponseDTO::parseFromUnired(
                 $this->asaxiyClient->scoringHumo(
