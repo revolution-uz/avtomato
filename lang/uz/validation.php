@@ -159,7 +159,6 @@ return [
         'mobile' => 'Mobil telefon',
         'age' => 'Yosh',
         'avatar' => 'Avatar',
-        'amount' => 'miqdor',
     ],
 
 ];

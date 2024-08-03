@@ -97,7 +97,7 @@ class CreateTransactionGraphQLMutation extends Mutation
         $maxAmount = ($installment->amount - $installment->initial_fee) * ($installment->percent + 100) / 100 - $installment->paid_amount;
 
         if ($maxAmount < $args['amount']) {
-            throw ValidationException::withMessages(['amount' => __('validation.max.numeric', ['attribute' => __('validation.attributes.amount'), 'max' => $maxAmount])]);
+            throw ValidationException::withMessages(['amount' => __('api.max_amount', ['amount' => $maxAmount])]);
         }
 
         $model = new Transaction;
