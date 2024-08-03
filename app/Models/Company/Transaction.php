@@ -71,7 +71,9 @@ class Transaction extends Model
             Installment::query()
                 ->where('id', $transaction->installment_id)
                 ->increment('paid_amount', $transaction->amount);
-            dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
+            if ($transaction->card_pan) {
+                dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
+            }
             $installment = Installment::findOrFail($transaction->installment_id);
             if ($installment->debtAmount <= 1) {
                 $installment->update(['status' => InstallmentStatusEnum::CLOSED]);

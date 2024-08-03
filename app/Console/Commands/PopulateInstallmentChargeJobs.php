@@ -36,7 +36,7 @@ class PopulateInstallmentChargeJobs extends Command
             /** @var Installment[] $installments */
             $installments = Installment::query()
                 ->where('status', InstallmentStatusEnum::ACTIVE)
-                ->where(DB::raw("(amount - initial_fee) * (percent + 100) / 100 * ABS(DATE_PART('month', AGE(starts_in, NOW()))) + initial_fee - paid_amount"), '>', 0)
+                ->where(DB::raw("(amount - initial_fee) * (percent + 100) / 100 * ABS(DATE_PART('month', AGE(starts_in - interval '1 month', NOW()))) + initial_fee - paid_amount"), '>', 0)
                 ->select('id')
                 ->get()
                 ->all();
