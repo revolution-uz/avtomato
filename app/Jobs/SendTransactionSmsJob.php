@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\Company\SmsMessageStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Helpers\SmsTemplateHelper;
 use App\Models\Company;
@@ -56,6 +57,7 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
                         company: $company->name,
                         phone: $company->owner_phone,
                     );
+                    $message->status = SmsMessageStatusEnum::ACCEPTED;
                     $message->saveOrFail();
                     $balanceService->chargeAmount($feature->name, $message);
                     $smsService->sendSms($feature, $message);
