@@ -68,27 +68,28 @@ class InstallmentGraphHelperTest extends TestCase
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => round($amountPerMonth / 2, 2), 'created_at' => $installment->starts_in->addMonth()->addDays(3)]);
         // third month not paid yet
         $graphs = InstallmentGraphHelper::getGraphs($installment);
+        $monthlyPaymentDates = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
 
         // first month check
         $this->assertEquals($installment->period, count($graphs));
         $this->assertEquals(InstallmentGraphStatusEnum::PAID, $graphs[0]->status);
         $this->assertEquals($amountPerMonth, $graphs[0]->paid_amount);
         $this->assertEquals($amountPerMonth, $graphs[0]->amount);
-        $this->assertEquals($installment->starts_in->addMonths(0), $graphs[0]->starts_in);
+        $this->assertEquals($monthlyPaymentDates[0], $graphs[0]->starts_in);
         $this->assertEquals(0, $graphs[0]->overdue_days);
 
         // second month check
         $this->assertEquals(InstallmentGraphStatusEnum::PAID, $graphs[1]->status);
         $this->assertEquals($amountPerMonth, $graphs[1]->paid_amount);
         $this->assertEquals($amountPerMonth, $graphs[1]->amount);
-        $this->assertEquals($installment->starts_in->addMonths(1), $graphs[1]->starts_in);
+        $this->assertEquals($monthlyPaymentDates[1], $graphs[1]->starts_in);
         $this->assertEquals(3, $graphs[1]->overdue_days);
 
         // third month check
         $this->assertEquals(InstallmentGraphStatusEnum::DELAY, $graphs[2]->status);
         $this->assertLessThanOrEqual(0.01, $graphs[2]->paid_amount);
         $this->assertEquals($amountPerMonth, $graphs[2]->amount);
-        $this->assertEquals($installment->starts_in->addMonths(2), $graphs[2]->starts_in);
+        $this->assertEquals($monthlyPaymentDates[2], $graphs[2]->starts_in);
         $this->assertEquals(5, $graphs[2]->overdue_days);
     }
 
@@ -108,27 +109,28 @@ class InstallmentGraphHelperTest extends TestCase
         // third month paid 15 days early
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => round($amountPerMonth, 2), 'created_at' => Carbon::now()->subDays(20)]);
         $graphs = InstallmentGraphHelper::getGraphs($installment);
+        $monthlyPaymentDates = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
 
         // first month check
         $this->assertEquals($installment->period, count($graphs));
         $this->assertEquals(InstallmentGraphStatusEnum::PAID, $graphs[0]->status);
         $this->assertEquals($amountPerMonth, $graphs[0]->paid_amount);
         $this->assertEquals($amountPerMonth, $graphs[0]->amount);
-        $this->assertEquals($installment->starts_in->addMonths(0), $graphs[0]->starts_in);
+        $this->assertEquals($monthlyPaymentDates[0], $graphs[0]->starts_in);
         $this->assertEquals(0, $graphs[0]->overdue_days);
 
         // second month check
         $this->assertEquals(InstallmentGraphStatusEnum::PAID, $graphs[1]->status);
         $this->assertEquals($amountPerMonth, $graphs[1]->paid_amount);
         $this->assertEquals($amountPerMonth, $graphs[1]->amount);
-        $this->assertEquals($installment->starts_in->addMonths(1), $graphs[1]->starts_in);
+        $this->assertEquals($monthlyPaymentDates[1], $graphs[1]->starts_in);
         $this->assertEquals(0, $graphs[1]->overdue_days);
 
         // third month check
         $this->assertEquals(InstallmentGraphStatusEnum::PAID, $graphs[2]->status);
         $this->assertEquals($amountPerMonth, $graphs[2]->paid_amount);
         $this->assertEquals($amountPerMonth, $graphs[2]->amount);
-        $this->assertEquals($installment->starts_in->addMonths(2), $graphs[2]->starts_in);
+        $this->assertEquals($monthlyPaymentDates[2], $graphs[2]->starts_in);
         $this->assertEquals(0, $graphs[2]->overdue_days);
     }
 }
