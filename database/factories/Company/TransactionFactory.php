@@ -20,6 +20,7 @@ class TransactionFactory extends Factory
             'installment_id' => Installment::factory(),
             'customer_id' => Customer::factory(),
             'card_id' => Card::factory(),
+            'card_pan' => substr_replace($this->faker->creditCardNumber(), '******', 6, 6),
             'transaction_type_id' => TransactionType::factory(),
             'external_id' => $this->faker->unique()->numberBetween(1000, 9999),
             'amount' => $this->faker->randomFloat(),

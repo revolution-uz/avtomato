@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Queries;
 
+use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Models\Company\TransactionAttempt;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Support\Facades\Artisan;
@@ -32,6 +33,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
                 'customer_id',
                 'transaction_id',
                 'card_id',
+                'card_pan',
                 'amount',
                 'created_at',
                 'updated_at',
@@ -99,6 +101,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
                     'customer_id',
                     'transaction_type_id',
                     'card_id',
+                    'card_pan',
                     'external_id',
                     'amount',
                     'paid_at',
@@ -443,6 +446,52 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.regex', ['attribute' => 'sort']), $response->json('errors.0.extensions.validation.sort.0'));
+    }
+
+    #[Test]
+    public function successOnTypePayWithCard()
+    {
+        $transactionAttempt = TransactionAttempt::factory()->create([
+            'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_CARD,
+        ]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['id' => $transactionAttempt->id])
+            );
+
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $this->assertEquals(1, $response->json('data.transactionAttempts.total'));
+        $this->assertEquals($transactionAttempt->id, $response->json('data.transactionAttempts.data.0.id'));
+        $this->assertNotNull($response->json('data.transactionAttempts.data.0.card_id'));
+        $this->assertEquals($transactionAttempt->card_id, $response->json('data.transactionAttempts.data.0.card_id'));
+        $this->assertEquals($transactionAttempt->card->pan, $response->json('data.transactionAttempts.data.0.card_pan'));
+    }
+
+    #[Test]
+    public function successOnTypePayWithPinfl()
+    {
+        $transactionAttempt = TransactionAttempt::factory()->create([
+            'card_id' => null,
+            'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL,
+        ]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['id' => $transactionAttempt->id])
+            );
+
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $this->assertEquals(1, $response->json('data.transactionAttempts.total'));
+        $this->assertEquals($transactionAttempt->id, $response->json('data.transactionAttempts.data.0.id'));
+        $this->assertEquals($transactionAttempt->card_id, $response->json('data.transactionAttempts.data.0.card_id'));
+        $this->assertEquals($transactionAttempt->transaction->card_pan, $response->json('data.transactionAttempts.data.0.card_pan'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array
