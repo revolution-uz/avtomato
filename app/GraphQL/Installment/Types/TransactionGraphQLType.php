@@ -75,6 +75,10 @@ class TransactionGraphQLType extends GraphQLType
                 'type' => GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (Transaction $root) => $root->card,
             ],
+            'card_pan' => [
+                'type' => Type::string(),
+                'resolve' => fn (Transaction $root) => $root->card_pan,
+            ],
             'external_id' => [
                 'type' => Type::string(),
                 'resolve' => fn (Transaction $root) => $root->external_id,

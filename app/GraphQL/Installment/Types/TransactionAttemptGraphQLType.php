@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
@@ -69,6 +70,10 @@ class TransactionAttemptGraphQLType extends GraphQLType
             'card' => [
                 'type' => GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (TransactionAttempt $root) => $root->card,
+            ],
+            'card_pan' => [
+                'type' => Type::string(),
+                'resolve' => fn (TransactionAttempt $root) => $root->type == TransactionAttemptTypeEnum::ATMOS_PAY_WITH_CARD ? $root->card->pan : $root->transaction->card_pan,
             ],
             'amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
