@@ -19,13 +19,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $customer_id
  * @property Customer $customer
  * @property int $card_id
- * @property Card $card
+ * @property Card|null $card
  * @property int $transaction_id
  * @property TransactionAttemptStatusEnum $status
  * @property string $customer_type
  * @property int $transaction_type_id
  * @property TransactionType $transactionType
- * @property Transaction $transaction
+ * @property Transaction|null $transaction
  * @property float $amount
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
