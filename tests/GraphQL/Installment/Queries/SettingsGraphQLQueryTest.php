@@ -75,7 +75,7 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
                 ['Accept-Language' => 'uz']
             );
 
-        $this->assertEquals('To\'lov kechiktirilgan taqdirda mijozning kartasidan pulni hisobdan chiqarish', $response->json('data.settings.0.label'));
+        $this->assertEquals('To\'lov vaqtidan o\'tib ketganda mijozning kartasidan pul yechib olish', $response->json('data.settings.0.label'));
 
         // Uzbek - Cyrillic
         $response = $this

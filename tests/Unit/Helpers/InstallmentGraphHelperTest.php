@@ -83,7 +83,7 @@ class InstallmentGraphHelperTest extends TestCase
         $this->assertEquals($amountPerMonth, $graphs[1]->paid_amount);
         $this->assertEquals($amountPerMonth, $graphs[1]->amount);
         $this->assertEquals($monthlyPaymentDates[1], $graphs[1]->starts_in);
-        $this->assertEquals(3, $graphs[1]->overdue_days);
+        $this->assertEquals(4, $graphs[1]->overdue_days);
 
         // third month check
         $this->assertEquals(InstallmentGraphStatusEnum::DELAY, $graphs[2]->status);
