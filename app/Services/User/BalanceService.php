@@ -8,6 +8,7 @@ use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\AtmosException;
+use App\Models\Company;
 use App\Models\Company\BalanceCharge;
 use App\Models\Company\BalanceFund;
 use App\Models\Company\Feature;
@@ -43,8 +44,11 @@ readonly class BalanceService
     public function getBalance(): int
     {
         $balance = BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
-        if ($balance <= -100000) {
+
+        if (tenant()->status == CompanyStatusEnum::ACTIVE and $balance <= -100000) {
             tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance >= 0) {
+            tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
         }
 
         return $balance;
