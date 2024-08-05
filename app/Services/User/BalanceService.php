@@ -8,7 +8,6 @@ use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\AtmosException;
-use App\Models\Company;
 use App\Models\Company\BalanceCharge;
 use App\Models\Company\BalanceFund;
 use App\Models\Company\Feature;
