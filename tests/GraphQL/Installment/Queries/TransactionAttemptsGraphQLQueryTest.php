@@ -38,6 +38,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
                 'card_id',
                 'card_pan',
                 'amount',
+                'status',
                 'created_at',
                 'updated_at',
                 'customer_type',
@@ -604,6 +605,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($transactionAttempt->transaction_id, $response->json('data.transactionAttempts.data.0.transaction_id'));
         $this->assertEquals($transactionAttempt->card_id, $response->json('data.transactionAttempts.data.0.card_id'));
         $this->assertEquals($transactionAttempt->amount, $response->json('data.transactionAttempts.data.0.amount'));
+        $this->assertEquals($transactionAttempt->status->value, $response->json('data.transactionAttempts.data.0.status'));
         $this->assertEquals($transactionAttempt->created_at->timestamp, $response->json('data.transactionAttempts.data.0.created_at'));
         $this->assertEquals($transactionAttempt->updated_at->timestamp, $response->json('data.transactionAttempts.data.0.updated_at'));
         $this->assertEquals($transactionAttempt->customer_type, $response->json('data.transactionAttempts.data.0.customer_type'));
