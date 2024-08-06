@@ -3,8 +3,11 @@
 namespace Tests\GraphQL\Installment\Queries;
 
 use App\Enums\Company\TransactionAttemptTypeEnum;
+use App\Models\Company\Installment;
+use App\Models\Company\Transaction;
 use App\Models\Company\TransactionAttempt;
 use Database\Seeders\Company\TransactionTypeSeeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -35,6 +38,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
                 'card_id',
                 'card_pan',
                 'amount',
+                'status',
                 'created_at',
                 'updated_at',
                 'customer_type',
@@ -72,6 +76,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
                     'canceled_at',
                     'deleted_at',
                     'debt',
+                    'monthly_payment',
                 ],
                 'customer' => [
                     'id',
@@ -363,6 +368,42 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successMonthlyPayment()
+    {
+        $installment = Installment::factory()->create([
+            'amount' => 1000000,
+            'percent' => 15,
+            'initial_fee' => 100,
+            'period' => 10,
+            'paid_amount' => 0,
+            'starts_in' => Carbon::now(),
+        ]);
+
+        $transaction = Transaction::factory()->create([
+            'installment_id' => $installment->id,
+            'amount' => 50000,
+        ]);
+
+        $transactionAttempt = TransactionAttempt::factory()->create([
+            'installment_id' => $installment->id,
+            'transaction_id' => $transaction->id,
+            'amount' => 50000,
+        ]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['id' => $transactionAttempt->id])
+            );
+
+        $this->assertSuccessTransactionAttemptsResponse($response, total: 1);
+        $this->assertEquals(50000, $response->json('data.transactionAttempts.data.0.amount'));
+        $this->assertEquals(64988.5, $response->json('data.transactionAttempts.data.0.installment.debt'));
+        $this->assertEquals(114988.5, $response->json('data.transactionAttempts.data.0.installment.monthly_payment'));
+    }
+
+    #[Test]
     public function errorPage()
     {
         $response = $this
@@ -564,6 +605,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($transactionAttempt->transaction_id, $response->json('data.transactionAttempts.data.0.transaction_id'));
         $this->assertEquals($transactionAttempt->card_id, $response->json('data.transactionAttempts.data.0.card_id'));
         $this->assertEquals($transactionAttempt->amount, $response->json('data.transactionAttempts.data.0.amount'));
+        $this->assertEquals($transactionAttempt->status->value, $response->json('data.transactionAttempts.data.0.status'));
         $this->assertEquals($transactionAttempt->created_at->timestamp, $response->json('data.transactionAttempts.data.0.created_at'));
         $this->assertEquals($transactionAttempt->updated_at->timestamp, $response->json('data.transactionAttempts.data.0.updated_at'));
         $this->assertEquals($transactionAttempt->customer_type, $response->json('data.transactionAttempts.data.0.customer_type'));
@@ -601,7 +643,8 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($transactionAttempt->installment->updated_at?->timestamp, $response->json('data.transactionAttempts.data.0.installment.updated_at'));
         $this->assertEquals($transactionAttempt->installment->canceled_at?->timestamp, $response->json('data.transactionAttempts.data.0.installment.canceled_at'));
         $this->assertEquals($transactionAttempt->installment->deleted_at?->timestamp, $response->json('data.transactionAttempts.data.0.installment.deleted_at'));
-        $this->assertEquals($transactionAttempt->installment->debt, $response->json('data.transactionAttempts.data.0.installment.debt'));
+        $this->assertEquals($transactionAttempt->installment->debtAmount, $response->json('data.transactionAttempts.data.0.installment.debt'));
+        $this->assertEquals($transactionAttempt->installment->monthlyPayment, $response->json('data.transactionAttempts.data.0.installment.monthly_payment'));
 
         // customer
         $this->assertEquals($transactionAttempt->customer->id, $response->json('data.transactionAttempts.data.0.customer.id'));

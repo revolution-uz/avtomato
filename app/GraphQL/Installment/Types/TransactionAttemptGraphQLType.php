@@ -73,11 +73,15 @@ class TransactionAttemptGraphQLType extends GraphQLType
             ],
             'card_pan' => [
                 'type' => Type::string(),
-                'resolve' => fn (TransactionAttempt $root) => $root->type == TransactionAttemptTypeEnum::ATMOS_PAY_WITH_CARD ? $root->card->pan : $root->transaction->card_pan,
+                'resolve' => fn (TransactionAttempt $root) => $root->type == TransactionAttemptTypeEnum::ATMOS_PAY_WITH_CARD ? $root->card?->pan : $root->transaction?->card_pan,
             ],
             'amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (TransactionAttempt $root) => $root->amount,
+            ],
+            'status' => [
+                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (TransactionAttempt $root) => $root->status->value,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
