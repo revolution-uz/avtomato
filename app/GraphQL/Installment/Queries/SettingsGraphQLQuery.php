@@ -29,6 +29,6 @@ class SettingsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return CompanySettings::query()->whereIn('name', CompanySettingsEnum::installmentSettings())->get();
+        return CompanySettings::query()->whereIn('name', CompanySettingsEnum::installmentSettings())->orderBy('id')->get();
     }
 }
