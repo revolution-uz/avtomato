@@ -23,7 +23,7 @@ class CustomerCardService
         // check has already connected card
         $card = Card::query()
             ->withTrashed()
-            ->where('number_hash', Hash::make($request['number']))
+            ->where('number', Hash::make($request['number']))
             ->whereNotNull('external_id');
 
         // if connected card not exists create it and send request to card service
@@ -67,14 +67,10 @@ class CustomerCardService
             ->where('customer_id', $customerId)
             ->findOrFail($request['card_id']);
 
-        if ($request['transaction_id'] === $card->id && ! empty($card->phone)) {
+        if ($request['transaction_id'] == $card->id && ! empty($card->phone)) {
             $confirmed = $this->confirmationService->confirm($card->phone, $request['otp']);
-            if ($confirmed) {
-                $card = Card::query()
-                    ->withTrashed()
-                    ->where('number_hash', Hash::make($card->number))
-                    ->whereNotNull('external_id');
-            }
+            $card->status = CardStatusEnum::ACTIVE;
+            $card->saveOrFail();
             $customResponse = AtmosConfirmCardResponseDTO::from(['result' => new AtmosResultDTO(
                 $confirmed ? 'OK' : 'FAILED',
                 $confirmed ? __('api.success') : __('api.otp_was_wrong')

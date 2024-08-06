@@ -45,7 +45,7 @@ class ConfirmationService
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if ($authAttempt && $authAttempt->code === $otp && $authAttempt->created_at->gt(Carbon::now()->subMinutes(2))) {
+        if ($authAttempt && $authAttempt->code == $otp && $authAttempt->created_at->gt(Carbon::now()->subMinutes(2))) {
             $authAttempt->delete();
 
             return true;
