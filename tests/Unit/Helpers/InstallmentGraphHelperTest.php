@@ -65,7 +65,7 @@ class InstallmentGraphHelperTest extends TestCase
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => round($amountPerMonth, 2), 'created_at' => $installment->starts_in->subDay()]);
         // second month with three days delay
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => round($amountPerMonth / 2, 2), 'created_at' => $installment->starts_in->addMonth()->addDays(2)]);
-        Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => round($amountPerMonth / 2, 2), 'created_at' => $installment->starts_in->addMonth()->addDays(3)]);
+        $secondMonthTransaction = Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => round($amountPerMonth / 2, 2), 'created_at' => $installment->starts_in->addMonth()->addDays(3)]);
         // third month not paid yet
         $graphs = InstallmentGraphHelper::getGraphs($installment);
         $monthlyPaymentDates = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
@@ -83,14 +83,14 @@ class InstallmentGraphHelperTest extends TestCase
         $this->assertEquals($amountPerMonth, $graphs[1]->paid_amount);
         $this->assertEquals($amountPerMonth, $graphs[1]->amount);
         $this->assertEquals($monthlyPaymentDates[1], $graphs[1]->starts_in);
-        $this->assertEquals(4, $graphs[1]->overdue_days);
+        $this->assertEquals(round($monthlyPaymentDates[1]?->diffInDays($secondMonthTransaction->created_at)), $graphs[1]->overdue_days);
 
         // third month check
         $this->assertEquals(InstallmentGraphStatusEnum::DELAY, $graphs[2]->status);
         $this->assertLessThanOrEqual(0.01, $graphs[2]->paid_amount);
         $this->assertEquals($amountPerMonth, $graphs[2]->amount);
         $this->assertEquals($monthlyPaymentDates[2], $graphs[2]->starts_in);
-        $this->assertEquals(5, $graphs[2]->overdue_days);
+        $this->assertEquals(round($monthlyPaymentDates[2]?->diffInDays(Carbon::now())), $graphs[2]->overdue_days);
     }
 
     #[Test]
