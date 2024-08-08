@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOs\Atmos\Transction;
+namespace App\DTOs\Atmos\Transaction;
 
 use Spatie\LaravelData\Data;
 

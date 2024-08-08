@@ -1,0 +1,8 @@
+{
+  "result": {
+    "code": "FAIL",
+    "description": "Ошибка"
+  },
+  "transaction_id": null,
+  "store_transaction": null
+}
