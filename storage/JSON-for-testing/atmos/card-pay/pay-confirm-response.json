@@ -4,33 +4,35 @@
     "description": "Нет ошибок"
   },
   "store_transaction": {
-    "success_trans_id": 0,
-    "trans_id": 11111,
+    "success_trans_id": 13745301,
+    "trans_id": 519422068,
     "store": {
-      "id": 0,
-      "name": "XXXXX",
+      "id": 1622,
+      "name": "Revolution Global",
       "desc": "",
       "logo": null,
       "ga_id": null
     },
-    "terminal_id": "00000000",
-    "account": "0001",
-    "amount": 5000000,
+    "terminal_id": "19610GCI",
+    "account": "2230",
+    "amount": 200000,
     "confirmed": true,
-    "prepay_time": 1656326498000,
-    "confirm_time": 1656326529324,
+    "prepay_time": 1722945005000,
+    "confirm_time": 1722945005887,
     "label": {
       "type_id": 64,
       "label_ru": "Номер инвойса",
-      "label_uz": "Invoys raqami",
-      "label_en": "Number of Invoice"
+      "label_uz": "Invoice raqami",
+      "label_en": "Number of invoice"
     },
-    "details": null,
+    "details": "2230",
     "commission_value": "0",
     "commission_type": "0",
-    "total": 5000000,
-    "card_id": "XXXXXX",
+    "total": 200000,
+    "card_id": "a96f22de-84d8-3940-abea-09de5d926ec7",
     "status_code": "0",
     "status_message": "Success"
-  }
+  },
+  "ofd_url": null,
+  "ofd_url_commission": null
 }

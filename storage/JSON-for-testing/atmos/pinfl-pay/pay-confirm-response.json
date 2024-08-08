@@ -1,0 +1,23 @@
+{
+  "payload": {
+    "transaction_id": "12345678",
+    "ext_id": "12345789",
+    "transaction_status": "SUCCESS",
+    "details": [
+      {
+        "pan": "860066******5544",
+        "amount": "100000",
+        "upper_commission": "1",
+        "status": "SUCCESS"
+      },
+      {
+        "pan": "860066******5555",
+        "amount": "100000",
+        "upper_commission": "1",
+        "status": "SUCCESS"
+      }
+    ]
+  },
+  "code": "200",
+  "description": "Transaction confirmed"
+}

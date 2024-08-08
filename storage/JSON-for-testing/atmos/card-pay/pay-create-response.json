@@ -3,33 +3,33 @@
     "code": "OK",
     "description": "Нет ошибок"
   },
-  "transaction_id": 111111,
+  "transaction_id": 519422068,
   "store_transaction": {
-    "success_trans_id": 1,
-    "trans_id": 222222,
+    "success_trans_id": null,
+    "trans_id": 519422068,
     "store": {
-      "id": 0,
-      "name": "Store name",
+      "id": 1622,
+      "name": "Revolution Global",
       "desc": "",
       "logo": null,
       "ga_id": null
     },
-    "terminal_id": "00000000",
-    "account": "000000000",
-    "amount": 5000000,
+    "terminal_id": null,
+    "account": "2230",
+    "amount": 200000,
     "confirmed": false,
     "prepay_time": null,
     "confirm_time": null,
     "label": {
       "type_id": 64,
       "label_ru": "Номер инвойса",
-      "label_uz": "Invoys raqami",
-      "label_en": "Number of Invoice"
+      "label_uz": "Invoice raqami",
+      "label_en": "Number of invoice"
     },
-    "details": null,
+    "details": "2230",
     "commission_value": "0",
     "commission_type": "0",
-    "total": 5000000,
+    "total": 200000,
     "card_id": null,
     "status_code": null,
     "status_message": null

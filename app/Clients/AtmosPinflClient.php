@@ -2,9 +2,9 @@
 
 namespace App\Clients;
 
-use App\DTOs\Atmos\Transction\AtmosTransactionCancelResponseDTO;
-use App\DTOs\Atmos\Transction\AtmosTransactionCreateResponseDTO;
-use App\DTOs\Atmos\Transction\AtmosTransactionInfoResponseDTO;
+use App\DTOs\Atmos\Transaction\AtmosTransactionCancelResponseDTO;
+use App\DTOs\Atmos\Transaction\AtmosTransactionCreateResponseDTO;
+use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\AtmosException;

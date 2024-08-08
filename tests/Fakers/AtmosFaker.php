@@ -29,9 +29,13 @@ class AtmosFaker
         self::fakeResponse(AtmosCardClient::CARD_BIND_CONFIRM, '../JSON-for-testing/atmos/card/bind-card-confirm.json');
     }
 
-    public static function createPayment()
+    public static function createPayment($is_failed = false): void
     {
-        self::fakeResponse(AtmosCardClient::PAYMENT_CREATE, '../JSON-for-testing/atmos/card-pay/pay-create-response.json');
+        if (! $is_failed) {
+            self::fakeResponse(AtmosCardClient::PAYMENT_CREATE, '../JSON-for-testing/atmos/card-pay/pay-create-response.json');
+        } else {
+            self::fakeResponse(AtmosCardClient::PAYMENT_CREATE, '../JSON-for-testing/atmos/card-pay/pay-create-failed-response.json');
+        }
     }
 
     public static function preConfirmPayment()

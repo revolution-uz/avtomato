@@ -1,16 +1,16 @@
 <?php
 
-namespace App\DTOs\Atmos\Transction;
+namespace App\DTOs\Atmos\Transaction;
 
 use Spatie\LaravelData\Data;
 
-class AtmosTransactionInfoResponseDTO extends Data
+class AtmosTransactionCreateResponseDTO extends Data
 {
     public function __construct(
         public string $code,
         public ?string $description,
         public ?string $message,
-        public ?AtmosTransactionInfoPayloadDTO $payload
+        public ?AtmosTransactionCreatePayloadDTO $payload
     ) {}
 
     public function isSucces(): bool

@@ -6,7 +6,7 @@ use App\Clients\AtmosCardClient;
 use App\Clients\AtmosPinflClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
-use App\DTOs\Atmos\Transction\AtmosTransactionDetailDTO;
+use App\DTOs\Atmos\Transaction\AtmosTransactionDetailDTO;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Exceptions\AtmosException;
@@ -106,7 +106,7 @@ class AtmosService
         $transaction->installment_id = $installment_id;
         $transaction->customer_id = $card->customer_id;
         $transaction->card_pan = $card->pan;
-        $transaction->paid_at = Carbon::createFromTimestamp($confirmPayResponseDTO->store_transaction->confirm_time);
+        $transaction->paid_at = Carbon::createFromTimestampMs($confirmPayResponseDTO->store_transaction->confirm_time);
 
         if ($transaction->save()) {
             $amount -= $transaction->amount;
@@ -119,7 +119,6 @@ class AtmosService
 
     public function withdrawAmountAndCreatePINFLTransaction(Customer $customer, int $installment_id, float &$amount): void
     {
-
         $paid_at = Carbon::now();
         /** @var TransactionAttempt $transactionAttempt */
         $transactionAttempt = TransactionAttempt::create([
@@ -129,7 +128,7 @@ class AtmosService
             'amount' => $amount,
             'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL,
         ]);
-        $ext_id = tenant()->id . '_' . $transactionAttempt->id;
+        $ext_id = tenant('id') . '_' . $transactionAttempt->id;
 
         $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment_id, $amount);
         if (! $createPayResponseDTO->isSucces()) {
