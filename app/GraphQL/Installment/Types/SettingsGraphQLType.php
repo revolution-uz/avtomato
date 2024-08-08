@@ -21,6 +21,10 @@ class SettingsGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (CompanySettings $root) => $root->id,
             ],
+            'name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (CompanySettings $root) => $root->name->value,
+            ],
             'label' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (CompanySettings $root) => $root->name->getLabel(),

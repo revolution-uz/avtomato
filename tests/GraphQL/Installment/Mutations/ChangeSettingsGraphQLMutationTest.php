@@ -96,22 +96,24 @@ class ChangeSettingsGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successUpdateSmsInstallmentAutoCharge()
+    public function successCannotUpdateSmsInstallmentAutoCharge()
     {
         $companySettings = CompanySettings::query()->firstWhere('name', CompanySettingsEnum::SMS_INSTALLMENT_AUTO_CHARGE);
-        $input = [
-            'settings_id' => $companySettings->id,
-            'value' => (string) (! $companySettings->value),
-        ];
 
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery($input),
+                $this->buildGraphQLQuery([
+                    'settings_id' => $companySettings->id,
+                    'value' => (string) (! $companySettings->value),
+                ]),
             );
 
-        $this->assertSuccessChangeSettingsResponse($response, $input);
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals('Cannot edit SMS installment auto charge setting.', $response->json('errors.0.extensions.validation.settings_id.0'));
     }
 
     #[Test]
@@ -208,6 +210,7 @@ class ChangeSettingsGraphQLMutationTest extends GraphQLTestCase
             mutation ChangeSettings($settings_id: Int!, $value: String!) {
                 changeSettings(settings_id: $settings_id, value: $value) {
                     id
+                    name
                     label
                     type
                     value
@@ -227,6 +230,7 @@ class ChangeSettingsGraphQLMutationTest extends GraphQLTestCase
                 'changeSettings' => [
                     '*' => [
                         'id',
+                        'name',
                         'label',
                         'type',
                         'value',

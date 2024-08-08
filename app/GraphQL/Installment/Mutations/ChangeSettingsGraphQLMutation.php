@@ -9,6 +9,7 @@ use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
@@ -49,8 +50,12 @@ class ChangeSettingsGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
+        if ($args['settings_id'] === CompanySettings::query()->firstWhere('name', CompanySettingsEnum::SMS_INSTALLMENT_AUTO_CHARGE)->getKey()) {
+            throw ValidationException::withMessages(['settings_id' => 'Cannot edit SMS installment auto charge setting.']);
+        }
+
         CompanySettings::query()->where('id', $args['settings_id'])->update(['value' => $args['value']]);
 
-        return CompanySettings::query()->whereIn('name', CompanySettingsEnum::installmentSettings())->get();
+        return CompanySettings::query()->whereIn('name', CompanySettingsEnum::installmentSettings())->orderBy('id')->get();
     }
 }
