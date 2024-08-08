@@ -99,7 +99,7 @@ class AtmosServiceTest extends TestCase
         $this->assertEquals($this->_installment->id, $transaction->installment_id);
         $this->assertEquals($this->_card->customer_id, $transaction->customer_id);
         $this->assertEquals($this->_card->pan, $transaction->card_pan);
-        $this->assertEquals(Carbon::createFromTimestampMs(1722945005887)->format('Y-m-d H:i:s'), $transaction->paid_at->format('Y-m-d H:i:s'));
+        $this->assertEquals('2024-08-06 11:50:05', $transaction->paid_at->format('Y-m-d H:i:s'));
 
         $this->_installment->refresh();
         $this->assertEquals(343000, $debtAmount);

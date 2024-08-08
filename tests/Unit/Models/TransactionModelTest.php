@@ -49,7 +49,7 @@ class TransactionModelTest extends TestCase
         $this->assertEquals($this->createAdminUser()->id, $transaction->admin_id);
         $this->assertEquals($cardId, $transaction->card_id);
         $this->assertEquals(1000, $transaction->amount);
-        $this->assertEquals($paidAt->setTime(0, 0), $transaction->paid_at);
+        $this->assertEquals($paidAt->format('Y-m-d H:i:s'), $transaction->paid_at->format('Y-m-d H:i:s'));
         $this->assertNotNull($transaction->created_at);
         $this->assertNotNull($transaction->updated_at);
     }
