@@ -1,10 +1,14 @@
 <?php
 
-namespace Customer\Mutations;
+namespace Tests\GraphQL\Customer\Mutations;
 
+use App\Enums\Company\CardStatusEnum;
+use App\Enums\FeatureEnum;
 use App\Models\Company\Card;
+use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -58,27 +62,47 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
+        AtmosFaker::getToken();
+        AtmosFaker::confirmCard();
+
         Customer::query()->forceDelete();
         $this->_customer = Customer::factory()->create();
         Card::query()->forceDelete();
         $this->_card = Card::factory()->create(['customer_id' => $this->_customer->id]);
-        $feature = Feature::findByName('atmos_card_pay');
-        $feature->data = json_encode([
+        $feature = Feature::findByName(FeatureEnum::ATMOS_CARD_PAY);
+        $feature->data = [
             'username' => 'username',
             'password' => 'password',
             'store_id' => '1',
             'expires_in' => 3600,
             'access_token' => 'access_token',
             'token_type' => 'token_type',
-        ]);
+        ];
         $feature->saveOrFail();
     }
 
     #[Test]
     public function successConfirmCard()
     {
-        AtmosFaker::getToken();
-        AtmosFaker::confirmCard();
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery([
+                    'customer_id' => $this->_customer->id,
+                    'card_id' => $this->_card->id,
+                    'transaction_id' => 999999,
+                    'otp' => '1',
+                ])
+            );
+
+        $this->assertSuccessConfirmCardResponse($response);
+    }
+
+    #[Test]
+    public function successConfirmAlreadyAttachedCard()
+    {
+        $authAttempt = CardConfirmationSms::query()->create(['phone' => $this->_card->phone, 'code' => rand(100000, 999999)]);
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -87,8 +111,8 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
                 $this->buildGraphQLQuery([
                     'customer_id' => $this->_customer->id,
                     'card_id' => $this->_card->id,
-                    'transaction_id' => 1,
-                    'otp' => '1',
+                    'transaction_id' => $this->_card->id,
+                    'otp' => $authAttempt->code,
                 ])
             );
 
@@ -156,6 +180,50 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === "Variable \"\$otp\" got invalid value {$inp['otp']}; String cannot represent a non string value: {$inp['otp']}"));
     }
 
+    #[Test]
+    public function failConfirmAlreadyAttachedCard()
+    {
+        // wrong otp
+        $authAttempt = CardConfirmationSms::query()->create(['phone' => $this->_card->phone, 'code' => '111111']);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery([
+                    'customer_id' => $this->_customer->id,
+                    'card_id' => $this->_card->id,
+                    'transaction_id' => $this->_card->id,
+                    'otp' => '222222',
+                ])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('api.otp_was_wrong'), $response->json('errors.0.extensions.validation.otp.0'));
+
+        // expired otp
+        $authAttempt->created_at = Carbon::now()->subMinutes(3);
+        $authAttempt->saveOrFail();
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery([
+                    'customer_id' => $this->_customer->id,
+                    'card_id' => $this->_card->id,
+                    'transaction_id' => $this->_card->id,
+                    'otp' => $authAttempt->code,
+                ])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('api.otp_was_wrong'), $response->json('errors.0.extensions.validation.otp.0'));
+    }
+
     private function buildGraphQLQuery(array $variables = []): array
     {
         $query = [];
@@ -199,9 +267,9 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($card->card_type, $response->json('data.confirmCard.card_type'));
         $this->assertEquals($card->owner, $response->json('data.confirmCard.owner'));
         $this->assertEquals($card->expiry, $response->json('data.confirmCard.expiry'));
-        $this->assertEquals($card->is_connected, $response->json('data.confirmCard.is_connected'));
+        $this->assertTrue($response->json('data.confirmCard.is_connected'));
         $this->assertEquals($card->phone, $response->json('data.confirmCard.phone'));
-        $this->assertEquals($card->status->value, $response->json('data.confirmCard.status'));
+        $this->assertEquals(CardStatusEnum::ACTIVE->value, $response->json('data.confirmCard.status'));
         $this->assertEquals((float) $card->balance, $response->json('data.confirmCard.balance'));
         $this->assertEquals($card->created_at->timestamp, $response->json('data.confirmCard.created_at'));
         $this->assertEquals($card->updated_at->timestamp, $response->json('data.confirmCard.updated_at'));

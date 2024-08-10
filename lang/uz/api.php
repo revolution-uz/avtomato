@@ -18,4 +18,5 @@ return [
     'installment_status_ACTIVE' => 'Faol',
     'installment_status_CLOSED' => 'Yopilgan',
     'max_amount' => 'Kiritiladigan miqdor :amount dan katta bo‘lmasligi kerak.',
+    'already_attached_card' => 'Karta allaqachon bu mijozga ulangan',
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Casts\Encrypted;
 use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Helpers\CardHelper;
@@ -39,6 +40,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @method static self findOrFail(int $id)
  * @method static self first()
  * @method static self firstOrFail()
+ * @method self whereNumber(int $cardNumber)
  * @method self saveOrFail(array $array = [])
  */
 class Card extends Model
@@ -60,7 +62,7 @@ class Card extends Model
 
     protected $casts = [
         'status' => CardStatusEnum::class,
-        'number' => 'encrypted',
+        'number_hash' => Encrypted::class,
     ];
 
     protected $hidden = [
@@ -87,11 +89,6 @@ class Card extends Model
     {
         $this->pan = substr_replace($this->number, '******', 6, 6);
     }
-    //
-    //    public function setNumber(): void
-    //    {
-    //        $this->number = Crypt::encryptString($this->number);
-    //    }
 
     public function customer(): BelongsTo
     {
@@ -101,6 +98,7 @@ class Card extends Model
     public function computingBeforeInsert(): void
     {
         $this->status = CardStatusEnum::INACTIVE;
+        $this->number_hash = $this->number;
         $this->setPan();
     }
 
@@ -131,5 +129,10 @@ class Card extends Model
         $this->phone = '+' . $data->phone;
         $this->status = $status;
         $this->saveOrFail();
+    }
+
+    public function scopeWhereNumber($query, $cardNumber)
+    {
+        return $query->where('number_hash', hash('sha256', $cardNumber));
     }
 }
