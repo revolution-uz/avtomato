@@ -2,7 +2,6 @@
 
 namespace App\Models\Company;
 
-use App\Casts\Encrypted;
 use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Helpers\CardHelper;
@@ -62,7 +61,6 @@ class Card extends Model
 
     protected $casts = [
         'status' => CardStatusEnum::class,
-        'number_hash' => Encrypted::class,
     ];
 
     protected $hidden = [
@@ -107,6 +105,11 @@ class Card extends Model
         return Attribute::make(get: fn () => CardHelper::getNameByCardNumber($this->number));
     }
 
+    public function numberHash(): Attribute
+    {
+        return Attribute::make(get: fn($value) => $value, set: fn($value) => self::hash($value));
+    }
+
     public function isConnected(): Attribute
     {
         return Attribute::make(get: fn () => $this->external_id !== null);
@@ -133,6 +136,15 @@ class Card extends Model
 
     public function scopeWhereNumber($query, $cardNumber)
     {
-        return $query->where('number_hash', hash('sha256', $cardNumber));
+        return $query->where('number_hash', self::hash($cardNumber));
+    }
+
+    public static function hash(string $value, int $prime = 1000000007, int $base = 37): int
+    {
+        $hashValue = 0;
+        for ($i = 0; $i < strlen($value); $i++) {
+            $hashValue = ($hashValue * $base + ord($value[$i])) % $prime;
+        }
+        return $hashValue;
     }
 }
