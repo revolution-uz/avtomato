@@ -67,6 +67,16 @@ class Card extends Model
         'number_hash',
     ];
 
+    public static function hash(string $value, int $prime = 1000000007, int $base = 37): int
+    {
+        $hashValue = 0;
+        for ($i = 0; $i < strlen($value); $i++) {
+            $hashValue = ($hashValue * $base + ord($value[$i])) % $prime;
+        }
+
+        return $hashValue;
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -107,7 +117,7 @@ class Card extends Model
 
     public function numberHash(): Attribute
     {
-        return Attribute::make(get: fn($value) => $value, set: fn($value) => self::hash($value));
+        return Attribute::make(get: fn ($value) => $value, set: fn ($value) => self::hash($value));
     }
 
     public function isConnected(): Attribute
@@ -137,14 +147,5 @@ class Card extends Model
     public function scopeWhereNumber($query, $cardNumber)
     {
         return $query->where('number_hash', self::hash($cardNumber));
-    }
-
-    public static function hash(string $value, int $prime = 1000000007, int $base = 37): int
-    {
-        $hashValue = 0;
-        for ($i = 0; $i < strlen($value); $i++) {
-            $hashValue = ($hashValue * $base + ord($value[$i])) % $prime;
-        }
-        return $hashValue;
     }
 }
