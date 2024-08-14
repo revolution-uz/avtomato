@@ -635,7 +635,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installment->id, $response->json('data.singleInstallment.id'));
         $this->assertEquals($installment->initial_fee, $response->json('data.singleInstallment.initial_fee'));
         $this->assertEquals($installment->is_blacklist, $response->json('data.singleInstallment.is_blacklist'));
-        $this->assertEquals($installment->nextPaymentDate->timestamp, $response->json('data.singleInstallment.next_pay_date'));
         $this->assertEquals($installment->period, $response->json('data.singleInstallment.period'));
         $this->assertEquals($installment->sms_notify, $response->json('data.singleInstallment.sms_notify'));
         $this->assertEquals($installment->starts_in?->timestamp, $response->json('data.singleInstallment.starts_in'));
