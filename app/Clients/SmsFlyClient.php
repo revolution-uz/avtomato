@@ -27,7 +27,7 @@ class SmsFlyClient extends BaseSmsClient
     {
         return SmsFlyResponseDTO::from(
             $this->request([
-                'phone' => $phone,
+                'phone' => $this->format($phone),
                 'message' => $text,
             ])
         );

@@ -61,6 +61,7 @@ class Card extends Model
 
     protected $casts = [
         'status' => CardStatusEnum::class,
+        'number' => 'encrypted',
     ];
 
     protected $hidden = [

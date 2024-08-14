@@ -33,7 +33,7 @@ class SmsSayqalClient extends BaseSmsClient
             ],
             'message' => [
                 'smsid' => $id,
-                'phone' => $phone,
+                'phone' => $this->format($phone),
                 'text' => $text,
             ],
         ], '/sms/TransmitSMS'));
