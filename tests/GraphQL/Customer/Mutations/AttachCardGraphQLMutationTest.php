@@ -71,9 +71,6 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        AtmosFaker::getToken();
-        AtmosFaker::attachCard();
-
         Card::query()->forceDelete();
         $this->_customer = Customer::factory()->create();
         $feature = Feature::findByName(FeatureEnum::ATMOS_CARD_PAY);
@@ -91,6 +88,9 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successAttachCard()
     {
+        AtmosFaker::getToken();
+        AtmosFaker::attachCard();
+
         $this->_input = [
             'customer_id' => $this->_customer->id,
             'number' => 9860082443467252,
@@ -109,7 +109,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function cannotAttachAlreadyAttachedCardToThisCustomer()
+    public function cannotAttachAlreadyAttachedCardToTheCustomer()
     {
         $card = Card::factory()->create(['customer_id' => $this->_customer->id]);
 
@@ -127,7 +127,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successAttachAlreadyAttachedCard()
+    public function successAttachAlreadyAttachedCardToAnotherCustomer()
     {
         $feature = BaseFeature::where('name', FeatureEnum::SMS)->firstOrFail();
         $feature->original_data = [
@@ -158,6 +158,41 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
 
         $this->assertEquals($response->json('data.attachCard.card.id'), $response->json('data.attachCard.attachData.transaction_id'));
         $this->assertEquals($card->phone, $response->json('data.attachCard.attachData.phone'));
+        $this->assertEquals('OK', $response->json('data.attachCard.attachData.result_code'));
+        $this->assertNull($response->json('data.attachCard.attachData.result_description'));
+    }
+
+    #[Test]
+    public function successAttachAlreadyAttachedCardToAtmos()
+    {
+        AtmosFaker::getToken();
+        AtmosFaker::attachCard(partner_has_card: true);
+        $feature = BaseFeature::query()->where('name', FeatureEnum::SMS)->firstOrFail();
+        $feature->original_data = [
+            'provider' => SmsProviderEnum::randomValue(),
+            'username' => 'username',
+            'secret' => 'secret',
+        ];
+        $feature->saveOrFail();
+        SmsFaker::fly();
+        SmsFaker::sayqal();
+
+        $this->_input = [
+            'customer_id' => $this->_customer->id,
+            'number' => 9860082443467252,
+            'expiry' => '2808',
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+
+        $this->assertSuccessAttachCardResponse($response);
+
+        $this->assertEquals($response->json('data.attachCard.card.id'), $response->json('data.attachCard.attachData.transaction_id'));
         $this->assertEquals('OK', $response->json('data.attachCard.attachData.result_code'));
         $this->assertNull($response->json('data.attachCard.attachData.result_description'));
     }

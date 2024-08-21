@@ -118,7 +118,7 @@ class Card extends Model
 
     public function numberHash(): Attribute
     {
-        return Attribute::make(get: fn ($value) => $value, set: fn ($value) => self::hash($value));
+        return Attribute::make(set: fn ($value) => self::hash($value));
     }
 
     public function isConnected(): Attribute

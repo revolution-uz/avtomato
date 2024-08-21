@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
+use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Models\Company\Card;
@@ -25,18 +26,22 @@ readonly class CustomerCardService
         // if connected card not exists create it and send request to card service
         if ((clone $cardQuery)->doesntExist()) {
             $response = $this->atmosCardService->attachCard($request['number'], $request['expiry']);
+            if ($response->data instanceof AtmosCardDTO) {
+                $oldCard = $this->createOrGetCard($customerId, $request);
+                $oldCard->fillData($response->data, CardStatusEnum::INACTIVE);
 
-            if (! $response->result->isSucces()) {
-                throw new BadRequestHttpException($response->result->description);
+                $this->confirmationService->send($oldCard->phone);
+                $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $oldCard->phone, 'transaction_id' => $oldCard->id]);
+
+                return [$oldCard, $customResponse];
+            } else {
+                if (! $response->result->isSucces()) {
+                    throw new BadRequestHttpException($response->result->description);
+                }
+                $newCard = $this->createOrGetCard($customerId, $request);
+
+                return [$newCard, $response];
             }
-
-            $newCard = new Card;
-            $newCard->fill($request);
-            $newCard->customer_id = $customerId;
-            $newCard->computingBeforeInsert();
-            $newCard->saveOrFail();
-
-            return [$newCard, $response];
         }
 
         // check that the card is connected to this customer
@@ -81,5 +86,24 @@ readonly class CustomerCardService
         }
 
         return [$card, $atmosConfirmCardDto];
+    }
+
+    private function createOrGetCard(int $customerId, array $request)
+    {
+        $card = Card::query()->where('customer_id', $customerId)->whereNumber($request['number'])
+            ->where('expiry', $request['expiry'])->withTrashed()->first();
+
+        if ($card) {
+            return $card;
+        }
+
+        $card = new Card;
+        $card->fill($request);
+        $card->computingBeforeInsert();
+        $card->customer_id = $customerId;
+        $card->status = CardStatusEnum::INACTIVE;
+        $card->saveOrFail();
+
+        return $card;
     }
 }

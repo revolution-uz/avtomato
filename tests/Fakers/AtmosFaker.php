@@ -14,9 +14,13 @@ class AtmosFaker
         self::fakeResponse(AtmosCardClient::GET_TOKEN_URI, '../JSON-for-testing/atmos/get-token-response.json');
     }
 
-    public static function attachCard()
+    public static function attachCard($partner_has_card = false): void
     {
-        self::fakeResponse(AtmosCardClient::CARD_BIND_INIT, '../JSON-for-testing/atmos/card/bind-card-init.json');
+        if (! $partner_has_card) {
+            self::fakeResponse(AtmosCardClient::CARD_BIND_INIT, '../JSON-for-testing/atmos/card/bind-card-init.json');
+        } else {
+            self::fakeResponse(AtmosCardClient::CARD_BIND_INIT, '../JSON-for-testing/atmos/card/bind-card-init-partner-has-card.json');
+        }
     }
 
     public static function removeCard()
