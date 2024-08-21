@@ -85,7 +85,12 @@ class CalculateGraphQLQuery extends Query
         $i = 1;
 
         if ($tariff->is_annual) {
-            $monthly = ($amount * $rate * pow(1 + $rate, $period)) / (pow(1 + $rate, $period) - 1);
+            if ($rate == 0) {
+                $monthly = $amount / $period;
+            } else {
+                $monthly = ($amount * $rate * pow(1 + $rate, $period)) / (pow(1 + $rate, $period) - 1);
+            }
+
             foreach ($periods as $period) {
                 $calculated[] = [
                     'id' => $i,

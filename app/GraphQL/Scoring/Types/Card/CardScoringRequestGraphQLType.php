@@ -16,9 +16,10 @@ class CardScoringRequestGraphQLType extends GraphQLType
     public function fields(): array
     {
         return [
-            'number' => [
-                'name' => 'number',
+            'pan' => [
+                'name' => 'pan',
                 'type' => Type::nonNull(Type::string()),
+                'resolve' => fn ($root) => substr_replace($root->number, '******', 6, 6),
             ],
             'expiry' => [
                 'name' => 'expiry',
