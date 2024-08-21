@@ -70,34 +70,35 @@ class SingleCardScoringRequestGraphQLQueryTest extends GraphQLTestCase
         $query = [];
         $query['variables'] = ['id' => $id];
         $query['query'] = '
-    query ($id: Int!) {
-        singleCardScoringRequest(id: $id) {
-            id
-            ext_id
-            status
-            type
-            client_code
-            customer_id
-            card_id
-            created_at
-            updated_at
-            request {
-                number
-                expiry
-            }
-             response {
-                report {
-                    month
-                    full_amount
-                    details {
-                        description
-                        type_code
-                        amount
+            query ($id: Int!) {
+                singleCardScoringRequest(id: $id) {
+                    id
+                    ext_id
+                    status
+                    type
+                    client_code
+                    customer_id
+                    card_id
+                    created_at
+                    updated_at
+                    request {
+                        pan
+                        expiry
+                    }
+                     response {
+                        report {
+                            month
+                            full_amount
+                            details {
+                                description
+                                type_code
+                                amount
+                            }
+                        }
                     }
                 }
             }
-        }
-    }';
+        ';
 
         return $query;
     }
@@ -119,7 +120,7 @@ class SingleCardScoringRequestGraphQLQueryTest extends GraphQLTestCase
                     'created_at',
                     'updated_at',
                     'request' => [
-                        'number',
+                        'pan',
                         'expiry',
                     ],
                     'response' => [

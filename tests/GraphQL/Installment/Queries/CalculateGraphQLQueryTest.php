@@ -1,6 +1,6 @@
 <?php
 
-namespace Installment\Queries;
+namespace Tests\GraphQL\Installment\Queries;
 
 use App\Models\Company\Tariff;
 use App\Services\Installment\InstallmentService;
