@@ -100,7 +100,7 @@ class SmsService
             'status' => $request->status,
             'updated_at' => $request->statusdate,
         ]);
-        if ($request->status == SmsMessageStatusEnum::DELIVERED) {
+        if ($request->status == SmsMessageStatusEnum::DELIVERED->value) {
             $smsCount = $request->smsCount() - 1;
             $feature = Feature::findByName(FeatureEnum::SMS);
             $balanceService = new BalanceService(new AtmosBalanceClient);
