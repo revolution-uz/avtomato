@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SayqalSmsCallbackRequest;
 use App\Http\Requests\SayqalVoiceCallbackRequest;
 use App\Models\Company;
-use App\Models\Company\Installment;
 use App\Services\SmsService;
 
 class SayqalController extends Controller
@@ -16,21 +15,27 @@ class SayqalController extends Controller
 
     public function sms(SayqalSmsCallbackRequest $request)
     {
-        if ($company = Company::findOrFail($request->getCompanyId())) {
-            tenancy()->initialize($company);
+        if ($companyId = $request->getCompanyId()) {
+            tenancy()->initialize(Company::findOrFail($companyId));
 
-            return $this->smsService->callbackSayqalSms($request);
+            if ($this->smsService->callbackSayqalSms($request)) {
+                return response()->json(['success'], 200);
+            }
         }
+
+        return response()->json(['message' => 'Message was not found'], 501);
     }
 
     public function voice(SayqalVoiceCallbackRequest $request)
     {
-        if ($company = Company::findOrFail($request->getCompanyId())) {
-            tenancy()->initialize($company);
+        if ($companyId = $request->getCompanyId()) {
+            tenancy()->initialize(Company::findOrFail($companyId));
 
-            return $this->smsService->callbackSayqalVoice($request);
+            if ($this->smsService->callbackSayqalVoice($request)) {
+                return response()->json(['success'], 200);
+            }
         }
 
-        return $this->smsService->generateInstallmentFormStream(Installment::find($request->installment_id));
+        return response()->json(['message' => 'Message was not found'], 501);
     }
 }

@@ -92,10 +92,9 @@ class SmsService
         $client->sendMessage(id: $confirmationSms->id, phone: $confirmationSms->phone, text: SmsTemplateHelper::getCardConfirmationTemplate($confirmationSms->code));
     }
 
-    public function callbackSayqalSms(SayqalSmsCallbackRequest $request)
+    public function callbackSayqalSms(SayqalSmsCallbackRequest $request): bool
     {
         $message = SmsMessage::findOrFail($request->getSmsId());
-        /** @var SmsMessage $message */
         $message->update([
             'status' => $request->status,
             'updated_at' => $request->statusdate,
@@ -107,9 +106,11 @@ class SmsService
             while ($smsCount-- > 0) {
                 $balanceService->chargeAmount($feature->name, $message);
             }
+
+            return true;
         }
 
-        return $message;
+        return false;
     }
 
     public function callbackSayqalVoice(SayqalVoiceCallbackRequest $request)
