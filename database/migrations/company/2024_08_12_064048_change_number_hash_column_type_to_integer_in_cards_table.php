@@ -6,12 +6,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::table('cards', function (Blueprint $table) {
-            Card::all()->each(function ($card) {
+            Card::query()->withTrashed()->get()->each(function ($card) {
                 $card->number_hash = Card::hash($card->number);
                 $card->save();
             });
