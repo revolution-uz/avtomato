@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Clients\AtmosBalanceClient;
 use App\Clients\SmsFlyClient;
 use App\Clients\SmsSayqalClient;
 use App\DTOs\FeatureData\FeatureSmsData;
@@ -22,8 +23,6 @@ use Exception;
 
 class SmsService
 {
-    public function __construct(BalanceService $balanceService) {}
-
     /**
      * @throws Exception
      */
@@ -101,11 +100,12 @@ class SmsService
             'status' => $request->status,
             'updated_at' => $request->statusdate,
         ]);
-        if ($request->status == SmsMessageStatusEnum::DELIVERED) {
+        if ($request->status === SmsMessageStatusEnum::DELIVERED) {
             $smsCount = $request->smsCount() - 1;
             $feature = Feature::findByName(FeatureEnum::SMS);
+            $balanceService = new BalanceService(new AtmosBalanceClient);
             while ($smsCount-- > 0) {
-                $this->balanceService->chargeAmount($feature->name, $message);
+                $balanceService->chargeAmount($feature->name, $message);
             }
         }
 
