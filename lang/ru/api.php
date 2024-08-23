@@ -18,4 +18,5 @@ return [
     'installment_status_ACTIVE' => 'Активный',
     'installment_status_CLOSED' => 'Закрыто',
     'max_amount' => 'Сумма не может быть более :amount.',
+    'already_attached_card' => 'Карта уже привязана к этому клиенту',
 ];

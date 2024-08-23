@@ -1,0 +1,15 @@
+{
+  "result": {
+    "code": "STPIMS-ERR-133",
+    "description": "The partner has the specified card"
+  },
+  "data": {
+    "card_id": 5062761,
+    "pan": "986028******5292",
+    "expiry": "2610",
+    "card_holder": "JOHN DOE",
+    "balance": null,
+    "phone": "998900222222",
+    "card_token": "card-token"
+  }
+}

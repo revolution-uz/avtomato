@@ -1,7 +1,11 @@
 <?php
 
-namespace Customer\Mutations;
+namespace Tests\GraphQL\Customer\Mutations;
 
+use App\Enums\Company\CardStatusEnum;
+use App\Enums\FeatureEnum;
+use App\Enums\SmsProviderEnum;
+use App\Models\BaseFeature;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
@@ -9,6 +13,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\AtmosFaker;
+use Tests\Fakers\SmsFaker;
 use Tests\GraphQL\GraphQLTestCase;
 
 class AttachCardGraphQLMutationTest extends GraphQLTestCase
@@ -66,16 +71,17 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
+        Card::query()->forceDelete();
         $this->_customer = Customer::factory()->create();
-        $feature = Feature::findByName('atmos_card_pay');
-        $feature->data = json_encode([
+        $feature = Feature::findByName(FeatureEnum::ATMOS_CARD_PAY);
+        $feature->data = [
             'username' => 'username',
             'password' => 'password',
             'store_id' => '1',
             'expires_in' => 3600,
             'access_token' => 'access_token',
             'token_type' => 'token_type',
-        ]);
+        ];
         $feature->saveOrFail();
     }
 
@@ -99,6 +105,96 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
             );
 
         $this->assertSuccessAttachCardResponse($response);
+        $this->assertFalse($response->json('data.attachCard.card.is_connected'));
+    }
+
+    #[Test]
+    public function cannotAttachAlreadyAttachedCardToTheCustomer()
+    {
+        $card = Card::factory()->create(['customer_id' => $this->_customer->id]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery(['customer_id' => $this->_customer->id, 'number' => $card->number, 'expiry' => $card->expiry])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals('Карта уже привязана к этому клиенту', $response->json('errors.0.extensions.validation.number.0'));
+    }
+
+    #[Test]
+    public function successAttachAlreadyAttachedCardToAnotherCustomer()
+    {
+        $feature = BaseFeature::where('name', FeatureEnum::SMS)->firstOrFail();
+        $feature->original_data = [
+            'provider' => SmsProviderEnum::randomValue(),
+            'username' => 'username',
+            'secret' => 'secret',
+        ];
+        $feature->saveOrFail();
+        SmsFaker::fly();
+        SmsFaker::sayqal();
+
+        $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE]);
+
+        $this->_input = [
+            'customer_id' => $this->_customer->id,
+            'number' => $card->number,
+            'expiry' => $card->expiry,
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+
+        $this->assertSuccessAttachCardResponse($response);
+
+        $this->assertEquals($response->json('data.attachCard.card.id'), $response->json('data.attachCard.attachData.transaction_id'));
+        $this->assertEquals($card->phone, $response->json('data.attachCard.attachData.phone'));
+        $this->assertEquals('OK', $response->json('data.attachCard.attachData.result_code'));
+        $this->assertNull($response->json('data.attachCard.attachData.result_description'));
+    }
+
+    #[Test]
+    public function successAttachAlreadyAttachedCardToAtmos()
+    {
+        AtmosFaker::getToken();
+        AtmosFaker::attachCard(partner_has_card: true);
+        $feature = BaseFeature::query()->where('name', FeatureEnum::SMS)->firstOrFail();
+        $feature->original_data = [
+            'provider' => SmsProviderEnum::randomValue(),
+            'username' => 'username',
+            'secret' => 'secret',
+        ];
+        $feature->saveOrFail();
+        SmsFaker::fly();
+        SmsFaker::sayqal();
+
+        $this->_input = [
+            'customer_id' => $this->_customer->id,
+            'number' => 9860082443467252,
+            'expiry' => '2808',
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+
+        $this->assertSuccessAttachCardResponse($response);
+
+        $this->assertEquals($response->json('data.attachCard.card.id'), $response->json('data.attachCard.attachData.transaction_id'));
+        $this->assertEquals('OK', $response->json('data.attachCard.attachData.result_code'));
+        $this->assertNull($response->json('data.attachCard.attachData.result_description'));
     }
 
     #[Test]
@@ -167,8 +263,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
             ],
         ]);
 
-        $card = Card::query()->find($response->json('data.attachCard.card.id'));
-        $this->assertNotNull($card);
+        $card = Card::query()->findOrFail($response->json('data.attachCard.card.id'));
         $this->assertEquals($card->id, $response->json('data.attachCard.card.id'));
         $this->assertEquals($card->customer_id, $response->json('data.attachCard.card.customer_id'));
         $this->assertEquals($card->pan, $response->json('data.attachCard.card.number'));
@@ -177,7 +272,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($card->expiry, $response->json('data.attachCard.card.expiry'));
         $this->assertEquals($card->is_connected, $response->json('data.attachCard.card.is_connected'));
         $this->assertEquals($card->phone, $response->json('data.attachCard.card.phone'));
-        $this->assertEquals($card->status->value, $response->json('data.attachCard.card.status'));
+        $this->assertEquals(CardStatusEnum::INACTIVE->value, $response->json('data.attachCard.card.status'));
         $this->assertEquals((float) $card->balance, $response->json('data.attachCard.card.balance'));
         $this->assertEquals($card->created_at->timestamp, $response->json('data.attachCard.card.created_at'));
         $this->assertEquals($card->updated_at->timestamp, $response->json('data.attachCard.card.updated_at'));

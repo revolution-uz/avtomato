@@ -23,11 +23,11 @@ class SmsFlyClient extends BaseSmsClient
         return ClientCodeEnum::SMS_FLY;
     }
 
-    public function sendMessage(int $id, int $phone, string $text): SmsFlyResponseDTO
+    public function sendMessage(int $id, string $phone, string $text): SmsFlyResponseDTO
     {
         return SmsFlyResponseDTO::from(
             $this->request([
-                'phone' => $phone,
+                'phone' => $this->format($phone),
                 'message' => $text,
             ])
         );
