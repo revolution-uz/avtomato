@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::table('cards', function (Blueprint $table) {
             $table->unsignedBigInteger('hash')->nullable()->after('number');
-            $table->dropColumn('number_hash');
         });
     }
 
@@ -18,7 +17,6 @@ return new class extends Migration
     {
         Schema::table('cards', function (Blueprint $table) {
             $table->dropColumn('hash');
-            $table->string('number_hash')->nullable()->after('number');
         });
     }
 };
