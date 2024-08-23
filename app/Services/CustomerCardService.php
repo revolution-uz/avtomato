@@ -8,26 +8,23 @@ use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Models\Company\Card;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class CustomerCardService
+readonly class CustomerCardService
 {
     public function __construct(
-        private readonly AtmosService $atmosCardService,
-        private readonly ConfirmationService $confirmationService
+        private AtmosService $atmosCardService,
+        private ConfirmationService $confirmationService
     ) {}
 
-    public function attachCard(int $customerId, array $request)
+    public function attachCard(int $customerId, array $request): array
     {
         // check has already connected card
-        $card = Card::query()
-            ->withTrashed()
-            ->where('number', Hash::make($request['number']))
-            ->whereNotNull('external_id');
+        $cardQuery = Card::query()->whereNumber($request['number'])->where('expiry', $request['expiry'])->whereNotNull('external_id')->withTrashed();
 
         // if connected card not exists create it and send request to card service
-        if (! $card->exists()) {
+        if ((clone $cardQuery)->doesntExist()) {
             $response = $this->atmosCardService->attachCard($request['number'], $request['expiry']);
             if ($response->data instanceof AtmosCardDTO) {
                 $oldCard = $this->createOrGetCard($customerId, $request);
@@ -48,16 +45,20 @@ class CustomerCardService
         }
 
         // check that the card is connected to this customer
-        if ($card->where('customer_id', $customerId)->exists()) {
-            throw new BadRequestHttpException('The card already connected to this customer');
+        if ((clone $cardQuery)->where('customer_id', $customerId)->exists()) {
+            throw ValidationException::withMessages(['number' => __('api.already_attached_card')]);
         }
 
-        $card = $this->createOrGetCard($customerId, $request);
+        $newCard = new Card;
+        $newCard->fill($cardQuery->first()->toArray());
+        $newCard->customer_id = $customerId;
+        $newCard->computingBeforeInsert();
+        $newCard->saveOrFail();
 
-        $this->confirmationService->send($card->phone);
-        $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $card->phone, 'transaction_id' => $card->id]);
+        $this->confirmationService->send($newCard->phone);
+        $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $newCard->phone, 'transaction_id' => $newCard->id]);
 
-        return [$card, $customResponse];
+        return [$newCard, $customResponse];
     }
 
     public function confirmCard(int $customerId, array $request): array
@@ -89,10 +90,8 @@ class CustomerCardService
 
     private function createOrGetCard(int $customerId, array $request)
     {
-        $card = Card::query()
-            ->where('customer_id', $customerId)
-            ->where('number_hash', Hash::make($request['number']))
-            ->first();
+        $card = Card::query()->where('customer_id', $customerId)->whereNumber($request['number'])
+            ->where('expiry', $request['expiry'])->withTrashed()->first();
 
         if ($card) {
             return $card;

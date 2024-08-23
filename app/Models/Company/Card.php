@@ -39,6 +39,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @method static self findOrFail(int $id)
  * @method static self first()
  * @method static self firstOrFail()
+ * @method self whereNumber(int $cardNumber)
  * @method self saveOrFail(array $array = [])
  */
 class Card extends Model
@@ -67,6 +68,16 @@ class Card extends Model
         'number_hash',
     ];
 
+    public static function hash(string $value, int $prime = 1000000007, int $base = 37): int
+    {
+        $hashValue = 0;
+        for ($i = 0; $i < strlen($value); $i++) {
+            $hashValue = ($hashValue * $base + ord($value[$i])) % $prime;
+        }
+
+        return $hashValue;
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -87,11 +98,6 @@ class Card extends Model
     {
         $this->pan = substr_replace($this->number, '******', 6, 6);
     }
-    //
-    //    public function setNumber(): void
-    //    {
-    //        $this->number = Crypt::encryptString($this->number);
-    //    }
 
     public function customer(): BelongsTo
     {
@@ -101,12 +107,18 @@ class Card extends Model
     public function computingBeforeInsert(): void
     {
         $this->status = CardStatusEnum::INACTIVE;
+        $this->number_hash = $this->number;
         $this->setPan();
     }
 
     public function cardType(): Attribute
     {
         return Attribute::make(get: fn () => CardHelper::getNameByCardNumber($this->number));
+    }
+
+    public function numberHash(): Attribute
+    {
+        return Attribute::make(set: fn ($value) => self::hash($value));
     }
 
     public function isConnected(): Attribute
@@ -131,5 +143,10 @@ class Card extends Model
         $this->phone = '+' . $data->phone;
         $this->status = $status;
         $this->saveOrFail();
+    }
+
+    public function scopeWhereNumber($query, $cardNumber)
+    {
+        return $query->where('number_hash', self::hash($cardNumber));
     }
 }

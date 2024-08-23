@@ -24,7 +24,7 @@ class SmsSayqalClient extends BaseSmsClient
         return ClientCodeEnum::SMS_SAYQAL;
     }
 
-    public function sendMessage(int $id, int $phone, string $text): SmsSayqalSendMessageResponseDTO
+    public function sendMessage(int $id, string $phone, string $text): SmsSayqalSendMessageResponseDTO
     {
         return SmsSayqalSendMessageResponseDTO::from($this->request([
             'username' => $this->username,
@@ -33,7 +33,7 @@ class SmsSayqalClient extends BaseSmsClient
             ],
             'message' => [
                 'smsid' => $id,
-                'phone' => $phone,
+                'phone' => $this->format($phone),
                 'text' => $text,
             ],
         ], '/sms/TransmitSMS'));

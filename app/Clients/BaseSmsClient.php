@@ -6,7 +6,12 @@ use App\Models\Company\SmsMessage;
 
 abstract class BaseSmsClient extends BaseClient
 {
-    abstract public function sendMessage(int $id, int $phone, string $text): mixed;
+    abstract public function sendMessage(int $id, string $phone, string $text): mixed;
 
     abstract public function getStatus(SmsMessage $message): mixed;
+
+    protected function format(string $value)
+    {
+        return preg_replace('/\D/', '', $value);
+    }
 }
