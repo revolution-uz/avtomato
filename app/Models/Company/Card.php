@@ -56,7 +56,7 @@ class Card extends Model
         'balance',
         'external_id',
         'owner',
-        'number_hash',
+        'hash',
     ];
 
     protected $casts = [
@@ -65,10 +65,10 @@ class Card extends Model
     ];
 
     protected $hidden = [
-        'number_hash',
+        'hash',
     ];
 
-    public static function hash(string $value, int $prime = 1000000007, int $base = 37): int
+    public static function hashing(string $value, int $prime = 1000000007, int $base = 37): int
     {
         $hashValue = 0;
         for ($i = 0; $i < strlen($value); $i++) {
@@ -107,7 +107,7 @@ class Card extends Model
     public function computingBeforeInsert(): void
     {
         $this->status = CardStatusEnum::INACTIVE;
-        $this->number_hash = $this->number;
+        $this->hash = (int) $this->number;
         $this->setPan();
     }
 
@@ -116,9 +116,9 @@ class Card extends Model
         return Attribute::make(get: fn () => CardHelper::getNameByCardNumber($this->number));
     }
 
-    public function numberHash(): Attribute
+    public function hash(): Attribute
     {
-        return Attribute::make(set: fn ($value) => self::hash($value));
+        return Attribute::make(set: fn ($value) => self::hashing($value));
     }
 
     public function isConnected(): Attribute
@@ -147,6 +147,6 @@ class Card extends Model
 
     public function scopeWhereNumber($query, $cardNumber)
     {
-        return $query->where('number_hash', self::hash($cardNumber));
+        return $query->where('hash', self::hashing($cardNumber));
     }
 }
