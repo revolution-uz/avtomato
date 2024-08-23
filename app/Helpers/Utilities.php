@@ -6,6 +6,8 @@ use Carbon\Carbon;
 
 class Utilities
 {
+    public const TENANT_SEPARATOR = '_';
+
     public static function getTimestampsOfMonthOfThisYear()
     {
         $currentYear = Carbon::now()->year;
@@ -44,5 +46,10 @@ class Utilities
     public static function preventDivideByZero(float|int $numerator, float|int $denominator): float|int
     {
         return $numerator / ($denominator != 0 ? $denominator : 1);
+    }
+
+    public static function generateIdByTenancy(int $id): string
+    {
+        return tenant('id') . self::TENANT_SEPARATOR . $id;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Clients\AtmosBalanceClient;
 use App\Clients\SmsFlyClient;
 use App\Clients\SmsSayqalClient;
 use App\DTOs\FeatureData\FeatureSmsData;
@@ -11,10 +12,13 @@ use App\Enums\Company\SmsMessageStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Enums\SmsProviderEnum;
 use App\Helpers\SmsTemplateHelper;
+use App\Http\Requests\SayqalSmsCallbackRequest;
+use App\Http\Requests\SayqalVoiceCallbackRequest;
 use App\Models\BaseFeature;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\Feature;
 use App\Models\Company\SmsMessage;
+use App\Services\User\BalanceService;
 use Exception;
 
 class SmsService
@@ -86,5 +90,31 @@ class SmsService
         };
 
         $client->sendMessage(id: $confirmationSms->id, phone: $confirmationSms->phone, text: SmsTemplateHelper::getCardConfirmationTemplate($confirmationSms->code));
+    }
+
+    public function callbackSayqalSms(SayqalSmsCallbackRequest $request): bool
+    {
+        $message = SmsMessage::findOrFail($request->getSmsId());
+        $message->update([
+            'status' => $request->status,
+            'updated_at' => $request->statusdate,
+        ]);
+        if ($request->status == SmsMessageStatusEnum::DELIVERED->value) {
+            $smsCount = $request->smsCount() - 1;
+            $feature = Feature::findByName(FeatureEnum::SMS);
+            $balanceService = new BalanceService(new AtmosBalanceClient);
+            while ($smsCount-- > 0) {
+                $balanceService->chargeAmount($feature->name, $message);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function callbackSayqalVoice(SayqalVoiceCallbackRequest $request)
+    {
+        return $request->getRequestId();
     }
 }

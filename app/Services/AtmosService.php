@@ -10,6 +10,7 @@ use App\DTOs\Atmos\Transaction\AtmosTransactionDetailDTO;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Exceptions\AtmosException;
+use App\Helpers\Utilities;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Transaction;
@@ -128,7 +129,7 @@ class AtmosService
             'amount' => $amount,
             'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL,
         ]);
-        $ext_id = tenant('id') . '_' . $transactionAttempt->id;
+        $ext_id = Utilities::generateIdByTenancy($transactionAttempt->id);
 
         $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment_id, $amount);
         if (! $createPayResponseDTO->isSucces()) {

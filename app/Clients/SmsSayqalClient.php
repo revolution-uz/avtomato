@@ -6,6 +6,7 @@ use App\DTOs\HttpRequestLogDTO;
 use App\DTOs\Sms\SmsSayqal\SmsSayqalGetStatusResponseDTO;
 use App\DTOs\Sms\SmsSayqal\SmsSayqalSendMessageResponseDTO;
 use App\Enums\ClientCodeEnum;
+use App\Helpers\Utilities;
 use App\Models\Company\SmsMessage;
 use Illuminate\Support\Facades\Http;
 
@@ -32,7 +33,7 @@ class SmsSayqalClient extends BaseSmsClient
                 'service' => 4,
             ],
             'message' => [
-                'smsid' => $id,
+                'smsid' => Utilities::generateIdByTenancy($id),
                 'phone' => $this->format($phone),
                 'text' => $text,
             ],
@@ -43,7 +44,7 @@ class SmsSayqalClient extends BaseSmsClient
     {
         return SmsSayqalGetStatusResponseDTO::from([
             'transactionid' => $message->ext_id,
-            'smsid' => $message->id,
+            'smsid' => Utilities::generateIdByTenancy($message->id),
         ], '/sms/StatusSMS');
     }
 
