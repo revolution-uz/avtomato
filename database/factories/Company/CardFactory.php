@@ -19,7 +19,7 @@ class CardFactory extends Factory
             'customer_id' => Customer::factory(),
             'pan' => substr_replace($cardNumber, '******', 6, 6),
             'number' => $cardNumber,
-            'number_hash' => $cardNumber,
+            'hash' => $cardNumber,
             'expiry' => $this->faker->regexify('[1-9]{4}'),
             'phone' => $this->faker->phoneNumber(),
             'status' => CardStatusEnum::randomValue(),
