@@ -17,10 +17,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read string $template
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property mixed $description
  */
 class SmsTemplate extends Model
 {
-    use HasFactory, TenantConnection;
+    use HasFactory, TenantConnection, OrderBySortable;
+
+    public static array $sortables = ['id'];
 
     private static ?array $features = null;
 
@@ -39,6 +42,11 @@ class SmsTemplate extends Model
         }
 
         return $message;
+    }
+
+    public function getExampleMessage(): string
+    {
+        return $this->getMessage(SmsTemplateEnum::tryFrom($this->id)->getExampleData());
     }
 
     public function description(): Attribute
