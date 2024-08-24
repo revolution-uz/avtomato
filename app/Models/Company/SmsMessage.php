@@ -5,7 +5,9 @@ namespace App\Models\Company;
 use App\Enums\Company\SmsMessageStatusEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -19,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class SmsMessage extends Model
 {
-    use LogsActivityDirtyOnlyTrait, TenantConnection;
+    use LogsActivityDirtyOnlyTrait, TenantConnection, HasFactory;
 
     protected $fillable = [
         'phone',
@@ -31,4 +33,9 @@ class SmsMessage extends Model
     protected $casts = [
         'status' => SmsMessageStatusEnum::class,
     ];
+
+    public function charge(): MorphOne
+    {
+        return $this->morphOne(BalanceCharge::class, 'chargeable');
+    }
 }

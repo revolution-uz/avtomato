@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Clients\AtmosBalanceClient;
 use App\Clients\SmsFlyClient;
 use App\Clients\SmsSayqalClient;
 use App\DTOs\FeatureData\FeatureSmsData;
@@ -18,7 +17,6 @@ use App\Models\BaseFeature;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\Feature;
 use App\Models\Company\SmsMessage;
-use App\Services\User\BalanceService;
 use Exception;
 
 class SmsService
@@ -100,12 +98,8 @@ class SmsService
             'updated_at' => $request->statusdate,
         ]);
         if ($request->status == SmsMessageStatusEnum::DELIVERED->value) {
-            $smsCount = $request->smsCount() - 1;
             $feature = Feature::findByName(FeatureEnum::SMS);
-            $balanceService = new BalanceService(new AtmosBalanceClient);
-            while ($smsCount-- > 0) {
-                $balanceService->chargeAmount($feature->name, $message);
-            }
+            $message->charge->update(['amount' => $feature->amount * $request->smsCount()]);
 
             return true;
         }

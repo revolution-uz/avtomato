@@ -51,6 +51,6 @@ class SayqalSmsCallbackRequest extends FormRequest
     {
         $arr = explode(':', $this->partinfo);
 
-        return $arr[1] ?? 1;
+        return $arr[0] ?? 1;
     }
 }
