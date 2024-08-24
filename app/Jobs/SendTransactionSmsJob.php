@@ -4,10 +4,11 @@ namespace App\Jobs;
 
 use App\Enums\Company\SmsMessageStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Helpers\SmsTemplateHelper;
+use App\Enums\SmsTemplateEnum;
 use App\Models\Company;
 use App\Models\Company\Feature;
 use App\Models\Company\SmsMessage;
+use App\Models\Company\SmsTemplate;
 use App\Models\Company\Transaction;
 use App\Services\SmsService;
 use App\Services\User\BalanceService;
@@ -34,6 +35,7 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
     public function handle(SmsService $smsService, BalanceService $balanceService): void
     {
         $feature = Feature::findByName(FeatureEnum::SMS);
+        $template = SmsTemplate::query()->findOrFail(SmsTemplateEnum::TEMPLATE_AUTO_CHARGE);
 
         if (! $feature->is_active) {
             return;
@@ -50,13 +52,13 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
                 if ($phone->pivot->installment_notifications) {
                     $message = new SmsMessage;
                     $message->phone = $phone->phone;
-                    $message->message = SmsTemplateHelper::getAutoChargeTemplate(
-                        pan: $transaction->card_pan,
-                        amount: $transaction->amount,
-                        credit_number: $transaction->installment_id,
-                        company: $company->name,
-                        phone: $company->owner_phone,
-                    );
+                    $message->message = $template->getMessage([
+                        'pan' => $transaction->card_pan,
+                        'amount' => $transaction->amount,
+                        'credit_number' => $transaction->installment_id,
+                        'company' => $company->name,
+                        'phone' => $company->owner_phone,
+                    ]);
                     $message->status = SmsMessageStatusEnum::ACCEPTED;
                     $message->saveOrFail();
                     $balanceService->chargeAmount($feature->name, $message);

@@ -10,13 +10,14 @@ use App\DTOs\Sms\SmsSayqal\SmsSayqalSendMessageResponseDTO;
 use App\Enums\Company\SmsMessageStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Enums\SmsProviderEnum;
-use App\Helpers\SmsTemplateHelper;
+use App\Enums\SmsTemplateEnum;
 use App\Http\Requests\SayqalSmsCallbackRequest;
 use App\Http\Requests\SayqalVoiceCallbackRequest;
 use App\Models\BaseFeature;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\Feature;
 use App\Models\Company\SmsMessage;
+use App\Models\Company\SmsTemplate;
 use Exception;
 
 class SmsService
@@ -79,6 +80,7 @@ class SmsService
     public function sendConfirmationSms(CardConfirmationSms $confirmationSms): void
     {
         $feature = BaseFeature::where('name', FeatureEnum::SMS)->firstOrFail();
+        $template = SmsTemplate::query()->findOrFail(SmsTemplateEnum::TEMPLATE_CARD_CONFIRMATION);
 
         $data = FeatureSmsData::from($feature->original_data);
 
@@ -87,7 +89,7 @@ class SmsService
             SmsProviderEnum::SMS_FLY => new SmsFlyClient($data->secret),
         };
 
-        $client->sendMessage(id: $confirmationSms->id, phone: $confirmationSms->phone, text: SmsTemplateHelper::getCardConfirmationTemplate($confirmationSms->code));
+        $client->sendMessage(id: $confirmationSms->id, phone: $confirmationSms->phone, text: $template->getMessage(['code' => $confirmationSms->code]));
     }
 
     public function callbackSayqalSms(SayqalSmsCallbackRequest $request): bool

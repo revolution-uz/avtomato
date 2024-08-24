@@ -9,6 +9,7 @@ use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\ModuleSeeder;
 use Database\Seeders\Company\PermissionSeeder;
+use Database\Seeders\Company\SmsTemplateSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
@@ -66,6 +67,10 @@ abstract class TestCase extends BaseTestCase
         ]);
         Artisan::call('tenants:seed', [
             '--class' => AdminRoleSeeder::class,
+            '--tenants' => [$tenant->id],
+        ]);
+        Artisan::call('tenants:seed', [
+            '--class' => SmsTemplateSeeder::class,
             '--tenants' => [$tenant->id],
         ]);
 
