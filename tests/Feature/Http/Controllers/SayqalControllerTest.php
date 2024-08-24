@@ -30,7 +30,7 @@ class SayqalControllerTest extends TestCase
         $baseFeature->original_data = [
             'provider' => 'sms_sayqal',
             'username' => 'username',
-            'secret' => 'secret'
+            'secret' => 'secret',
         ];
         $baseFeature->save();
 
@@ -49,7 +49,7 @@ class SayqalControllerTest extends TestCase
             'status' => 0,
             'description' => 'DELIVERED',
             'statusdate' => '2019-10-17 12:01:03',
-            'partinfo' => '1:1'
+            'partinfo' => '1:1',
         ];
 
         $this->_token = md5("TransmitSMS {$baseFeature->original_data['username']} {$baseFeature->original_data['secret']} {$this->_input['statusdate']}");

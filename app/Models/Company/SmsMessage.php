@@ -21,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class SmsMessage extends Model
 {
-    use LogsActivityDirtyOnlyTrait, TenantConnection, HasFactory;
+    use HasFactory, LogsActivityDirtyOnlyTrait, TenantConnection;
 
     protected $fillable = [
         'phone',
