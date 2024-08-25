@@ -13,6 +13,7 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property int $original_template
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property mixed $description
  */
 class BaseSmsTemplate extends Model
 {

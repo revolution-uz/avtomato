@@ -4,6 +4,8 @@ namespace App\Nova;
 
 use App\Models\BaseSmsTemplate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -40,9 +42,11 @@ class BaseSmsTemplateResource extends Resource
     public function fields(NovaRequest $request): array
     {
         return [
-//            Heading::make($this->resource->description),
             ID::make()->sortable(),
-            Text::make(__('nova.template.original_template'), 'original_template')->filterable()->exceptOnForms(),
+            Text::make(__('nova.template.original_template'), 'original_template')->filterable(),
+            Text::make(__('nova.template.description'), 'description')->filterable()->onlyOnIndex()->displayUsing(fn($item) => Str::limit($item, 50)),
+            DateTime::make(__('nova.template.created_at'), 'created_at')->filterable()->onlyOnDetail(),
+            DateTime::make(__('nova.template.updated_at'), 'updated_at')->filterable()->onlyOnDetail(),
         ];
     }
 
@@ -78,10 +82,10 @@ class BaseSmsTemplateResource extends Resource
         return [];
     }
 
-//    public function title(): string
-//    {
-//        return $this->resource->name->value;
-//    }
+    public function title(): string
+    {
+        return $this->resource->description;
+    }
 
     public function authorizedToDelete(Request $request): bool
     {
