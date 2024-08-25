@@ -44,13 +44,13 @@ class SmsTemplatesGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return SmsTemplate::query()
-            ->when(isset($args['search']), fn(Builder|SmsTemplate $q) => $q
+            ->when(isset($args['search']), fn (Builder|SmsTemplate $q) => $q
                 ->where('template', 'ILIKE', "%{$args['search']}%")
                 ->orWhere('original_template', 'ILIKE', "%{$args['search']}%"))
             ->when(
                 isset($args['sort']),
-                fn(Builder|SmsTemplate $q) => $q->orderBySortable($args['sort']),
-                fn(Builder|SmsTemplate $q) => $q->orderByDesc('id')
+                fn (Builder|SmsTemplate $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|SmsTemplate $q) => $q->orderByDesc('id')
             )
             ->get();
     }

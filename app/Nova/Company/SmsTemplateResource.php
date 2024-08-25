@@ -46,7 +46,7 @@ class SmsTemplateResource extends Resource
             ID::make()->sortable(),
             Text::make(__('nova.template.original_template'), 'original_template')->filterable()->exceptOnForms(),
             Text::make(__('nova.template.template'), 'template')->filterable(),
-            Text::make(__('nova.template.description'), 'description')->filterable()->exceptOnForms()->displayUsing(fn($item) => Str::limit($item, 50)),
+            Text::make(__('nova.template.description'), 'description')->filterable()->exceptOnForms()->displayUsing(fn ($item) => Str::limit($item, 50)),
             DateTime::make(__('nova.template.created_at'), 'created_at')->filterable()->onlyOnDetail(),
             DateTime::make(__('nova.template.updated_at'), 'updated_at')->filterable()->onlyOnDetail(),
         ];

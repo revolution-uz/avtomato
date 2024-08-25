@@ -21,11 +21,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class SmsTemplate extends Model
 {
-    use HasFactory, TenantConnection, OrderBySortable;
+    use HasFactory, OrderBySortable, TenantConnection;
 
     public static array $sortables = ['id'];
-
-    private static ?array $features = null;
 
     protected $fillable = [
         'id',
@@ -51,6 +49,6 @@ class SmsTemplate extends Model
 
     public function description(): Attribute
     {
-        return Attribute::make(get: fn() => SmsTemplateEnum::tryFrom($this->id)->getDefaultDescription());
+        return Attribute::make(get: fn () => SmsTemplateEnum::tryFrom($this->id)->getDefaultDescription());
     }
 }
