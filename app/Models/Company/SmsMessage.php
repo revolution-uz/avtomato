@@ -21,7 +21,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class SmsMessage extends Model
 {
-    use HasFactory, LogsActivityDirtyOnlyTrait, TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
+
+    public static array $sortables = ['id', 'phone', 'message'];
 
     protected $fillable = [
         'phone',

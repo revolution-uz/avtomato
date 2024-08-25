@@ -40,6 +40,7 @@ use App\GraphQL\Management\Queries\SingleActivityLogGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleAdminGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleBranchGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleRoleGraphQLQuery;
+use App\GraphQL\Management\Queries\SmsMessagesGraphQLQuery;
 use App\GraphQL\Management\Types\ActivityLogGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AdminInputGraphQLType;
@@ -54,6 +55,7 @@ use App\GraphQL\Management\Types\PermissionGraphQLType;
 use App\GraphQL\Management\Types\PermissionGroupGraphQLType;
 use App\GraphQL\Management\Types\PermissionInputGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
+use App\GraphQL\Management\Types\SmsMessageGraphQLType;
 use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
@@ -102,6 +104,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 RolesGraphQLQuery::class,
                 BranchesGraphQLQuery::class,
                 SingleBranchGraphQLQuery::class,
+                SmsMessagesGraphQLQuery::class,
             ],
             'types' => [
                 AdminGraphQLType::class,
@@ -120,6 +123,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 PermissionEditableItemGraphQLType::class,
                 PermissionGroupGraphQLType::class,
                 BranchGraphQLType::class,
+                SmsMessageGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum'],
         ];
