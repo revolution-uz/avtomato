@@ -12,6 +12,7 @@ use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\LocationSeeder;
 use Database\Seeders\Company\ModuleSeeder;
 use Database\Seeders\Company\PermissionSeeder;
+use Database\Seeders\Company\SmsTemplateSeeder;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Database\Seeder;
 
@@ -30,6 +31,7 @@ class CompanySeeder extends Seeder
         $this->call(AdminRoleSeeder::class);
         $this->call(TransactionTypeSeeder::class);
         $this->call(CompanySettingsSeeder::class);
+        $this->call(SmsTemplateSeeder::class);
         // TODO remove before production
         /** @var CompanyAdmin $admin */
         $admin = CompanyAdmin::query()->firstOrCreate(
