@@ -80,7 +80,7 @@ class SmsService
     public function sendConfirmationSms(CardConfirmationSms $confirmationSms): void
     {
         $feature = BaseFeature::where('name', FeatureEnum::SMS)->firstOrFail();
-        $template = SmsTemplate::query()->findOrFail(SmsTemplateEnum::TEMPLATE_CARD_CONFIRMATION);
+        $template = SmsTemplate::query()->findOrFail(SmsTemplateEnum::CARD_CONFIRMATION->value);
 
         $data = FeatureSmsData::from($feature->original_data);
 

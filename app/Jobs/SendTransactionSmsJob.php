@@ -35,7 +35,7 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
     public function handle(SmsService $smsService, BalanceService $balanceService): void
     {
         $feature = Feature::findByName(FeatureEnum::SMS);
-        $template = SmsTemplate::query()->findOrFail(SmsTemplateEnum::TEMPLATE_AUTO_CHARGE);
+        $template = SmsTemplate::query()->findOrFail(SmsTemplateEnum::AUTO_CHARGE->value);
 
         if (! $feature->is_active) {
             return;

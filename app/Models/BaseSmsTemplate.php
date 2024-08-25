@@ -37,6 +37,6 @@ class BaseSmsTemplate extends Model
 
     public function description(): Attribute
     {
-        return Attribute::make(get: fn () => SmsTemplateEnum::tryFrom($this->id)->getDefaultDescription());
+        return Attribute::make(get: fn () => SmsTemplateEnum::from($this->id)->getDefaultDescription());
     }
 }

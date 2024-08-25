@@ -44,11 +44,11 @@ class SmsTemplate extends Model
 
     public function getExampleMessage(): string
     {
-        return $this->getMessage(SmsTemplateEnum::tryFrom($this->id)->getExampleData());
+        return $this->getMessage(SmsTemplateEnum::from($this->id)->getExampleData());
     }
 
     public function description(): Attribute
     {
-        return Attribute::make(get: fn () => SmsTemplateEnum::tryFrom($this->id)->getDefaultDescription());
+        return Attribute::make(get: fn () => SmsTemplateEnum::from($this->id)->getDefaultDescription());
     }
 }
