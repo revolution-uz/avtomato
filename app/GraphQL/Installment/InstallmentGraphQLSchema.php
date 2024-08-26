@@ -220,7 +220,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 ScoringRequestUnionGraphQLType::class,
                 ScoringRequestGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum'],
+            'middleware' => ['auth:sanctum', 'is_soft_delete_token'],
         ];
     }
 }
