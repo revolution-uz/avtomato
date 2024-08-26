@@ -7,6 +7,7 @@ use App\Enums\FeatureEnum;
 use App\Enums\SmsProviderEnum;
 use App\Models\BaseFeature;
 use App\Models\Company\Card;
+use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use Illuminate\Support\Arr;
@@ -73,6 +74,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
 
         Card::query()->forceDelete();
         $this->_customer = Customer::factory()->create();
+
         $feature = Feature::findByName(FeatureEnum::ATMOS_CARD_PAY);
         $feature->data = [
             'username' => 'username',
@@ -83,6 +85,14 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
             'token_type' => 'token_type',
         ];
         $feature->saveOrFail();
+
+        $baseFeature = BaseFeature::where('name', FeatureEnum::SMS)->firstOrFail();
+        $baseFeature->original_data = [
+            'provider' => SmsProviderEnum::randomValue(),
+            'username' => 'username',
+            'secret' => 'secret',
+        ];
+        $baseFeature->saveOrFail();
     }
 
     #[Test]
@@ -129,13 +139,6 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successAttachAlreadyAttachedCardToAnotherCustomer()
     {
-        $feature = BaseFeature::where('name', FeatureEnum::SMS)->firstOrFail();
-        $feature->original_data = [
-            'provider' => SmsProviderEnum::randomValue(),
-            'username' => 'username',
-            'secret' => 'secret',
-        ];
-        $feature->saveOrFail();
         SmsFaker::fly();
         SmsFaker::sayqal();
 
@@ -167,13 +170,6 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
     {
         AtmosFaker::getToken();
         AtmosFaker::attachCard(partner_has_card: true);
-        $feature = BaseFeature::query()->where('name', FeatureEnum::SMS)->firstOrFail();
-        $feature->original_data = [
-            'provider' => SmsProviderEnum::randomValue(),
-            'username' => 'username',
-            'secret' => 'secret',
-        ];
-        $feature->saveOrFail();
         SmsFaker::fly();
         SmsFaker::sayqal();
 
@@ -195,6 +191,44 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($response->json('data.attachCard.card.id'), $response->json('data.attachCard.attachData.transaction_id'));
         $this->assertEquals('OK', $response->json('data.attachCard.attachData.result_code'));
         $this->assertNull($response->json('data.attachCard.attachData.result_description'));
+    }
+
+    #[Test]
+    public function successAttemptToAttachSecondTime()
+    {
+        SmsFaker::fly();
+        SmsFaker::sayqal();
+        $card = Card::factory()->create(['status' => CardStatusEnum::INACTIVE, 'customer_id' => $this->_customer->id]);
+
+        $this->_input = [
+            'customer_id' => $this->_customer->id,
+            'number' => $card->number,
+            'expiry' => $card->expiry,
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery($this->_input)
+            );
+        $this->assertSuccessAttachCardResponse($response);
+        $sms = CardConfirmationSms::query()->latest()->firstOrFail();
+        $this->assertEquals($card->phone, $sms->phone);
+
+        // Check for not sending second confirmation code
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery([
+                    'customer_id' => $this->_customer->id,
+                    'number' => $card->number,
+                    'expiry' => $card->expiry,
+                ])
+            );
+        $this->assertSuccessAttachCardResponse($response);
+        $this->assertEquals(1, CardConfirmationSms::query()->count());
     }
 
     #[Test]

@@ -31,7 +31,7 @@ class UpdateCardHashes extends Command
 
         Company::all()->runForEach(function ($company) {
             Card::query()->withTrashed()->get()->each(function ($card) {
-                $card->hash = Card::hashing($card->number);
+                $card->hash = (int) $card->number;
                 $card->save();
             });
 
