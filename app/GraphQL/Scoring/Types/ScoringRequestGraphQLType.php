@@ -19,7 +19,7 @@ class ScoringRequestGraphQLType extends GraphQLType
     {
         return BaseScoringRequestGraphQLType::fields() + [
             'type_name' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::string()),
                 'description' => 'Type Name of scoring',
                 'resolve' => function (ScoringRequest $root) {
                     return $root->type->name;
