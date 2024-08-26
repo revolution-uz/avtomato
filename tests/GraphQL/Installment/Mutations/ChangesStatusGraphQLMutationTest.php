@@ -2,7 +2,6 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
-
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Models\Company\Installment;
 use Illuminate\Testing\TestResponse;

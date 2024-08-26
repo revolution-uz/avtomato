@@ -2,7 +2,6 @@
 
 namespace Tests\GraphQL\Customer\Mutations;
 
-
 use App\Models\Company\Address;
 use App\Models\Company\Customer;
 use Illuminate\Support\Arr;

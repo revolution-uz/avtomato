@@ -2,7 +2,6 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
-
 use App\Enums\Company\CompanySettingsEnum;
 use App\Models\Company\CompanySettings;
 use Database\Seeders\Company\CompanySettingsSeeder;

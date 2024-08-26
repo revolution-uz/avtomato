@@ -2,7 +2,6 @@
 
 namespace Tests\GraphQL\Customer\Mutations;
 
-
 use App\Enums\Company\PhoneTypeEnum;
 use App\Models\Company\Customer;
 use Illuminate\Support\Arr;

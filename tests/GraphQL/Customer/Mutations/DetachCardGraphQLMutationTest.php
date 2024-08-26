@@ -2,7 +2,6 @@
 
 namespace Tests\GraphQL\Customer\Mutations;
 
-
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;

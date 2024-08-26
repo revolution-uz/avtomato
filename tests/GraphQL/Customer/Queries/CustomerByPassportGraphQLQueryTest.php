@@ -2,7 +2,6 @@
 
 namespace Tests\GraphQL\Customer\Queries;
 
-
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Models\Company\Address;
