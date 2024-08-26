@@ -248,9 +248,9 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$customer_id" of non-null type "Int!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$number" of non-null type "BigInteger!" must not be null.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$expiry" of non-null type "String!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer_id" of non-null type "Int!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$number" of non-null type "BigInteger!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$expiry" of non-null type "String!" must not be null.'));
 
         // validation errors
         $response = $this
@@ -307,7 +307,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($card->is_connected, $response->json('data.attachCard.card.is_connected'));
         $this->assertEquals($card->phone, $response->json('data.attachCard.card.phone'));
         $this->assertEquals(CardStatusEnum::INACTIVE->value, $response->json('data.attachCard.card.status'));
-        $this->assertEquals((float)$card->balance, $response->json('data.attachCard.card.balance'));
+        $this->assertEquals((float) $card->balance, $response->json('data.attachCard.card.balance'));
         $this->assertEquals($card->created_at->timestamp, $response->json('data.attachCard.card.created_at'));
         $this->assertEquals($card->updated_at->timestamp, $response->json('data.attachCard.card.updated_at'));
 
