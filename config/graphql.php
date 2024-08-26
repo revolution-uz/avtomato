@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\GraphQL\Base\GraphQLPaginationType;
-use App\GraphQL\Common\CommonGraphQLSchema;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -83,10 +82,11 @@ return [
     //
     'schemas' => [
         'management' => \App\GraphQL\Management\ManagementGraphQLSchema::class,
-        'common' => CommonGraphQLSchema::class,
+        'common' => \App\GraphQL\Common\CommonGraphQLSchema::class,
         'customer' => \App\GraphQL\Customer\CustomerQLSchema::class,
         'scoring' => \App\GraphQL\Scoring\ScoringGraphQLSchema::class,
         'installment' => \App\GraphQL\Installment\InstallmentGraphQLSchema::class,
+        'marketing' => \App\GraphQL\Marketing\MarketingGraphQLSchema::class,
     ],
 
     // The global types available to all schemas.
