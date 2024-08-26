@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Mutations;
+namespace Tests\GraphQL\Common\Mutations;
 
 use App\Models\Company\CompanyAdmin;
 use Illuminate\Support\Facades\Hash;

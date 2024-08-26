@@ -1,6 +1,6 @@
 <?php
 
-namespace Management\Mutations;
+namespace Tests\GraphQL\Management\Mutations;
 
 use App\Models\Company\BalanceFund;
 use Illuminate\Testing\TestResponse;

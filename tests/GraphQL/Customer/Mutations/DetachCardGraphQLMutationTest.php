@@ -1,6 +1,6 @@
 <?php
 
-namespace Customer\Mutations;
+namespace Tests\GraphQL\Customer\Mutations;
 
 use App\Models\Company\Card;
 use App\Models\Company\Customer;

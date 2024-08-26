@@ -1,6 +1,6 @@
 <?php
 
-namespace Customer\Mutations;
+namespace Tests\GraphQL\Customer\Mutations;
 
 use App\Enums\Company\PhoneTypeEnum;
 use App\Models\Company\Customer;

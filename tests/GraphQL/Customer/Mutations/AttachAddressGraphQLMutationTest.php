@@ -1,6 +1,6 @@
 <?php
 
-namespace Customer\Mutations;
+namespace Tests\GraphQL\Customer\Mutations;
 
 use App\Enums\Company\AddressTypeEnum;
 use App\Models\Company\Address;

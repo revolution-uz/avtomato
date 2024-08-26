@@ -1,6 +1,6 @@
 <?php
 
-namespace Installment\Mutations;
+namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Models\Company\Tariff;
 use Illuminate\Support\Arr;

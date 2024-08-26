@@ -1,6 +1,6 @@
 <?php
 
-namespace Management\Mutations;
+namespace Tests\GraphQL\Management\Mutations;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;

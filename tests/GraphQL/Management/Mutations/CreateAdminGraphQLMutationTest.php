@@ -1,6 +1,6 @@
 <?php
 
-namespace Management\Mutations;
+namespace Tests\GraphQL\Management\Mutations;
 
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\CompanyAdmin;

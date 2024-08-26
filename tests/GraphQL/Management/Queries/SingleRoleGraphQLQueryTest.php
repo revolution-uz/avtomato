@@ -1,6 +1,6 @@
 <?php
 
-namespace Management\Queries;
+namespace Tests\GraphQL\Management\Queries;
 
 use App\Models\Company\Rbac\Role;
 use Illuminate\Testing\TestResponse;
