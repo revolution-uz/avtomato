@@ -8,7 +8,7 @@ class SmsSayqalSendMessageResponseDTO extends BaseScoringRequest
 {
     public function __construct(
         public int $transactionid,
-        public int $smsid,
+        public string $smsid,
         public int $parts
     ) {}
 }
