@@ -1,6 +1,7 @@
 <?php
 
-namespace Management\Mutations;
+namespace Tests\GraphQL\Management\Mutations;
+
 
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\AtmosFaker;

@@ -1,6 +1,7 @@
 <?php
 
-namespace Customer\Queries;
+namespace Tests\GraphQL\Customer\Queries;
+
 
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\PhoneTypeEnum;

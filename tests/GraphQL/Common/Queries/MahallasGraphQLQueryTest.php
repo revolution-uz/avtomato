@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Queries;
+namespace Tests\GraphQL\Common\Queries;
 
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;

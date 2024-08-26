@@ -1,6 +1,6 @@
 <?php
 
-namespace Installment\Mutations;
+namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Models\Company\Card;
 use App\Models\Company\Installment;

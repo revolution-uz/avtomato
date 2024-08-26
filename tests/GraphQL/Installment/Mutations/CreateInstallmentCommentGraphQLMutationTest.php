@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Installment\Mutations;
+namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentComment;

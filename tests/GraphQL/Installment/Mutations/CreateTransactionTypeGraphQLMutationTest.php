@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Installment\Mutations;
+namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Models\Company\TransactionType;
 use Illuminate\Support\Str;

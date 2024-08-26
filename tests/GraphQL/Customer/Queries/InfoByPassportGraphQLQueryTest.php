@@ -1,6 +1,6 @@
 <?php
 
-namespace Customer\Queries;
+namespace Tests\GraphQL\Customer\Queries;
 
 use Database\Seeders\Company\LocationSeeder;
 use Illuminate\Support\Facades\Artisan;

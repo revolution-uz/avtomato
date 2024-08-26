@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Common\Queries;
+namespace Tests\GraphQL\Common\Queries;
 
 use App\Enums\Company\CompanySettingsEnum;
 use App\Models\Company\BalanceFund;

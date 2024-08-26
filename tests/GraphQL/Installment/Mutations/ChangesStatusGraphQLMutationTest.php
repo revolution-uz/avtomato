@@ -1,6 +1,7 @@
 <?php
 
-namespace GraphQL\Installment\Mutations;
+namespace Tests\GraphQL\Installment\Mutations;
+
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Models\Company\Installment;
