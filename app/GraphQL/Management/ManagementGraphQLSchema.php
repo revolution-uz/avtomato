@@ -125,7 +125,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 BranchGraphQLType::class,
                 SmsMessageGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum'],
+            'middleware' => ['auth:sanctum', 'is_soft_delete_token'],
         ];
     }
 }
