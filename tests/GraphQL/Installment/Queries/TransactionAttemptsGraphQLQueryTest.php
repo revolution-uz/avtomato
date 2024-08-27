@@ -705,19 +705,4 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($transactionAttempt->transaction_type->updated_at?->timestamp, $response->json('data.transactionAttempts.data.0.transaction_type.updated_at'));
         $this->assertEquals($transactionAttempt->transaction_type->deleted_at?->timestamp, $response->json('data.transactionAttempts.data.0.transaction_type.deleted_at'));
     }
-
-    private function convertIntoQuery(array $structure): string
-    {
-        foreach ($structure as $key => $value) {
-            if (is_array($value)) {
-                if ($key == '*') {
-                    $structure[$key] = $this->convertIntoQuery($value);
-                } else {
-                    $structure[$key] = "{$key} {{$this->convertIntoQuery($value)}}";
-                }
-            }
-        }
-
-        return implode(' ', $structure);
-    }
 }

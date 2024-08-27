@@ -377,19 +377,4 @@ class CustomerByPassportGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customer->updated_at->timestamp, $response->json('data.customerByPassport.updated_at'));
         $this->assertEquals($customer?->deleted_at, $response->json('data.customerByPassport.deleted_at'));
     }
-
-    private function convertIntoQuery(array $structure): string
-    {
-        foreach ($structure as $key => $value) {
-            if (is_array($value)) {
-                if ($key == '*') {
-                    $structure[$key] = $this->convertIntoQuery($value);
-                } else {
-                    $structure[$key] = "{$key} {{$this->convertIntoQuery($value)}}";
-                }
-            }
-        }
-
-        return implode(' ', $structure);
-    }
 }

@@ -228,19 +228,4 @@ class UpdateAdminGraphQLMutationTest extends GraphQLTestCase
             $this->assertEquals($this->_adminInput->last_name, $response->json('data.updateAdmin.last_name'));
         }
     }
-
-    private function convertIntoQuery(array $structure): string
-    {
-        foreach ($structure as $key => $value) {
-            if (is_array($value)) {
-                if ($key == '*') {
-                    $structure[$key] = $this->convertIntoQuery($value);
-                } else {
-                    $structure[$key] = "{$key} {{$this->convertIntoQuery($value)}}";
-                }
-            }
-        }
-
-        return implode(' ', $structure);
-    }
 }
