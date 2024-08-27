@@ -18,17 +18,34 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
 
     private array $_customerInput;
 
+    private array $_structure = [
+        'id',
+        'pinfl',
+        'tin',
+        'passport_series',
+        'passport_number',
+        'passport_given_date',
+        'passport_expiration_date',
+        'passport_given_place',
+        'passport_citizenship',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'birth_date',
+        'birth_place',
+        'gender',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     protected function setUp(): void
     {
         parent::setUp();
 
         Customer::query()->forceDelete();
         $this->_customer = Customer::factory()->create();
-    }
 
-    #[Test]
-    public function successUpdateCustomer()
-    {
         $this->_customerInput = [
             'pinfl' => rand(10000000000000, 99999999999999),
             'tin' => rand(100000000, 999999999),
@@ -45,7 +62,11 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
             'birth_place' => Str::random(32),
             'gender' => (int) GenderEnum::randomValue(),
         ];
+    }
 
+    #[Test]
+    public function successUpdateCustomer()
+    {
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
@@ -60,26 +81,36 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successUpdateWithDuplicateTin()
+    {
+        $customer = Customer::factory()->create();
+        $this->_customerInput['tin'] = $customer->tin;
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery([
+                    'id' => $this->_customer->id,
+                    'customer' => $this->_customerInput,
+                ])
+            );
+
+        $this->assertSuccessUpdateCustomerResponse($response);
+        $this->_customer->refresh();
+        $this->assertEquals($customer->tin, $this->_customer->tin);
+    }
+
+    #[Test]
     public function errorUnique()
     {
         $newCustomer = Customer::factory()->create();
 
-        $this->_customerInput = [
+        $this->_customerInput = array_merge($this->_customerInput, [
             'pinfl' => $newCustomer->pinfl,
-            'tin' => $newCustomer->tin,
             'passport_series' => $newCustomer->passport_series,
             'passport_number' => (string) $newCustomer->passport_number,
-            'passport_given_date' => now()->format('d-m-Y'),
-            'passport_expiration_date' => now()->format('d-m-Y'),
-            'passport_given_place' => Str::random(128),
-            'passport_citizenship' => Str::random(32),
-            'first_name' => Str::random(32),
-            'last_name' => Str::random(32),
-            'middle_name' => Str::random(32),
-            'birth_date' => now()->format('d-m-Y'),
-            'birth_place' => Str::random(32),
-            'gender' => (int) GenderEnum::randomValue(),
-        ];
+        ]);
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -95,7 +126,6 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.unique', ['attribute' => 'customer.pinfl']), $response->json('errors.0.extensions.validation')['customer.pinfl'][0]);
-        $this->assertEquals(trans('validation.unique', ['attribute' => 'customer.tin']), $response->json('errors.0.extensions.validation')['customer.tin'][0]);
         $this->assertEquals(trans('validation.unique', ['attribute' => 'customer.passport number']), $response->json('errors.0.extensions.validation')['customer.passport_number'][0]);
     }
 
@@ -169,26 +199,7 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
         $query['variables'] = $variables;
         $query['query'] = '
             mutation UpdateCustomer($id: Int!, $customer: CustomerInputGraphQLType!) {
-                updateCustomer(id: $id, customer: $customer) {
-                    id
-                    pinfl
-                    tin
-                    passport_series
-                    passport_number
-                    passport_given_date
-                    passport_expiration_date
-                    passport_given_place
-                    passport_citizenship
-                    first_name
-                    last_name
-                    middle_name
-                    birth_date
-                    birth_place
-                    gender
-                    created_at
-                    updated_at
-                    deleted_at
-                }
+                updateCustomer(id: $id, customer: $customer) {' . $this->convertIntoQuery($this->_structure) . '}
             }
         ';
 
@@ -201,26 +212,7 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
         $response->assertJsonIsObject();
         $response->assertJsonStructure([
             'data' => [
-                'updateCustomer' => [
-                    'id',
-                    'pinfl',
-                    'tin',
-                    'passport_series',
-                    'passport_number',
-                    'passport_given_date',
-                    'passport_expiration_date',
-                    'passport_given_place',
-                    'passport_citizenship',
-                    'first_name',
-                    'last_name',
-                    'middle_name',
-                    'birth_date',
-                    'birth_place',
-                    'gender',
-                    'created_at',
-                    'updated_at',
-                    'deleted_at',
-                ],
+                'updateCustomer' => $this->_structure,
             ],
         ]);
 

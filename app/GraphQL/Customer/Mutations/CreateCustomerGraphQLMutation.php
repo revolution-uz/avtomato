@@ -85,7 +85,6 @@ class CreateCustomerGraphQLMutation extends Mutation
     {
         return array_merge(parent::rules($args), [
             'customer.pinfl' => Rule::unique('customers', 'pinfl'),
-            'customer.tin' => Rule::unique('customers', 'tin'),
             'customer.passport_number' => Rule::unique('customers', 'passport_number')->where('passport_series', $args['customer']['passport_series']),
         ]);
     }
