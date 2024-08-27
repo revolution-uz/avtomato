@@ -42,10 +42,15 @@ class CompanyResource extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make(__('nova.company.name'), 'name')->filterable(),
-            Text::make(__('nova.company.owner_name'), 'owner_name')->filterable(),
-            Text::make(__('nova.company.owner_phone'), 'owner_phone')->filterable(),
-            Select::make(__('nova.status'), 'status')->options(CompanyStatusEnum::getAllCasesForDropdown())->displayUsingLabels(),
+            Text::make(__('nova.company.name'), 'name')->rules('required', 'max:32', 'unique:companies,name')->filterable(),
+            Text::make(__('nova.company.owner_name'), 'owner_name')->rules('required', 'max:32')->filterable(),
+            Text::make(__('nova.company.owner_phone'), 'owner_phone')->rules('required', 'max:16')->filterable(),
+            Text::make(__('nova.company.address'), 'address')->rules('required', 'max:255')->filterable(),
+            Text::make(__('nova.company.bank_name'), 'bank_name')->rules('required', 'max:255')->filterable(),
+            Text::make(__('nova.company.bank_code'), 'bank_code')->rules('required', 'regex:/^[0-9]+$/', 'max:255')->filterable(),
+            Text::make(__('nova.company.account_number'), 'account_number')->rules('required', 'regex:/^[0-9]+$/', 'max:255')->filterable(),
+            Text::make(__('nova.company.tin'), 'tin')->rules('required', 'regex:/^[0-9]+$/', 'max:255')->filterable(),
+            Select::make(__('nova.status'), 'status')->options(CompanyStatusEnum::getAllCasesForDropdown())->displayUsingLabels()->default(CompanyStatusEnum::CREATED),
             HasMany::make('Domains', 'domains', DomainResource::class),
         ];
     }

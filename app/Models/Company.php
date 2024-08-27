@@ -28,6 +28,11 @@ class Company extends Tenant implements TenantWithDatabase
         'status',
         'owner_name',
         'owner_phone',
+        'address',
+        'bank_name',
+        'bank_code',
+        'account_number',
+        'tin',
     ];
 
     protected $casts = [
