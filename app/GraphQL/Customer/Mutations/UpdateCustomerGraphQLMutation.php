@@ -63,7 +63,6 @@ class UpdateCustomerGraphQLMutation extends Mutation
                 'nullable',
                 'string',
                 'digits:9',
-                Rule::unique('customers', 'tin')->ignore($args['id'], 'id'),
             ],
             'customer.passport_number' => [
                 'required',

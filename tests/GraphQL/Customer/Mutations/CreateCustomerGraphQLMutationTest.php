@@ -16,7 +16,7 @@ use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
-class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
+class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
@@ -105,6 +105,25 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successCreateWithDuplicateTin()
+    {
+        $customer = Customer::factory()->create();
+        $this->_customerInput['tin'] = $customer->tin;
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery(array_merge($this->_customerInput))
+            );
+
+        $this->assertSuccessCreateCustomerResponse($response);
+        $duplicateTinCustomer = Customer::query()->findOrFail($response->json('data.createCustomer.id'));
+        $this->assertNotEquals($customer->id, $duplicateTinCustomer->id);
+        $this->assertEquals($customer->tin, $duplicateTinCustomer->tin);
+    }
+
+    #[Test]
     public function errorUnique()
     {
         // unique pinfl
@@ -120,21 +139,6 @@ class CreateCustomerGraphQLQueryTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.unique', ['attribute' => 'customer.pinfl']), $response->json('errors.0.extensions.validation')['customer.pinfl'][0]);
-
-        // unique tin
-        Customer::query()->forceDelete();
-        Customer::factory()->create(['tin' => $this->_customerInput['tin']]);
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.customer'),
-                $this->buildGraphQLQuery($this->_customerInput)
-            );
-
-        $response->assertOk();
-        $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('validation.unique', ['attribute' => 'customer.tin']), $response->json('errors.0.extensions.validation')['customer.tin'][0]);
 
         // unique passport
         Customer::query()->forceDelete();

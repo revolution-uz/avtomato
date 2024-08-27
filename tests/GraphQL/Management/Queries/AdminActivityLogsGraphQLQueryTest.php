@@ -499,21 +499,6 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
         $this->assertCount(min($totalCount - ($currentPage - 1) * $currentPerPage, $currentPerPage), $response->json('data.adminActivityLogs.data'));
     }
 
-    private function convertIntoQuery(array $structure): string
-    {
-        foreach ($structure as $key => $value) {
-            if (is_array($value)) {
-                if ($key == '*') {
-                    $structure[$key] = $this->convertIntoQuery($value);
-                } else {
-                    $structure[$key] = "{$key} {{$this->convertIntoQuery($value)}}";
-                }
-            }
-        }
-
-        return implode(' ', $structure);
-    }
-
     private function logMessageBuilder($modelName, $modelId, $event): string
     {
         $modelName = trans('models.' . $modelName);

@@ -37,4 +37,19 @@ abstract class GraphQLTestCase extends TestCase
             ),
         ]);
     }
+
+    protected function convertIntoQuery(array $structure): string
+    {
+        foreach ($structure as $key => $value) {
+            if (is_array($value)) {
+                if ($key == '*') {
+                    $structure[$key] = $this->convertIntoQuery($value);
+                } else {
+                    $structure[$key] = "{$key} {{$this->convertIntoQuery($value)}}";
+                }
+            }
+        }
+
+        return implode(' ', $structure);
+    }
 }

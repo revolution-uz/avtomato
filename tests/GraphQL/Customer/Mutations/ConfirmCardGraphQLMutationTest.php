@@ -274,19 +274,4 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($card->created_at->timestamp, $response->json('data.confirmCard.created_at'));
         $this->assertEquals($card->updated_at->timestamp, $response->json('data.confirmCard.updated_at'));
     }
-
-    private function convertIntoQuery(array $structure): string
-    {
-        foreach ($structure as $key => $value) {
-            if (is_array($value)) {
-                if ($key == '*') {
-                    $structure[$key] = $this->convertIntoQuery($value);
-                } else {
-                    $structure[$key] = "{$key} {{$this->convertIntoQuery($value)}}";
-                }
-            }
-        }
-
-        return implode(' ', $structure);
-    }
 }

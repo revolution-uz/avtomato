@@ -106,19 +106,4 @@ class SingleBranchGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($branch->deleted_at?->timestamp, $response->json('data.singleBranch.deleted_at'));
 
     }
-
-    private function convertIntoQuery(array $structure): string
-    {
-        foreach ($structure as $key => $value) {
-            if (is_array($value)) {
-                if ($key == '*') {
-                    $structure[$key] = $this->convertIntoQuery($value);
-                } else {
-                    $structure[$key] = "{$key} {{$this->convertIntoQuery($value)}}";
-                }
-            }
-        }
-
-        return implode(' ', $structure);
-    }
 }
