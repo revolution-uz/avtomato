@@ -3,10 +3,13 @@
 namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\CompanyStatusEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use App\Models\Company\Tariff;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -14,7 +17,7 @@ use Tests\GraphQL\GraphQLTestCase;
 
 class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
 {
-    private const GRAPHQL_ROUTE = 'graphql.installment';
+    private const string GRAPHQL_ROUTE = 'graphql.installment';
 
     protected bool $tenancy = true;
 
@@ -34,33 +37,35 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $this->_customer = Customer::factory()->create();
         $this->_tariff = Tariff::factory()->create();
         $this->_branch = Branch::factory()->create();
-    }
 
-    #[Test]
-    public function successCreate(): void
-    {
-        $response = $this->sendGraphQLRequest($this->_customer->id, $this->_branch->id, [
+        $this->_input = [
             'tariff_id' => $this->_tariff->id,
             'period' => rand($this->_tariff->min_period, $this->_tariff->max_period),
             'amount' => rand($this->_tariff->min_amount, $this->_tariff->max_amount),
             'initial_fee' => rand($this->_tariff->min_initial_fee, $this->_tariff->max_initial_fee),
             'description' => 'test',
             'starts_in' => '2022-01-01',
-        ]);
+        ];
+    }
+
+    #[Test]
+    public function successCreate(): void
+    {
+        $response = $this->sendGraphQLRequest($this->_customer->id, $this->_branch->id, $this->_input);
         $this->assertSuccessCreateInstallmentResponse($response);
     }
 
     #[Test]
     public function errorValidation(): void
     {
-        $response = $this->sendGraphQLRequest(9999, null, [
+        $this->_input = array_merge($this->_input, [
             'tariff_id' => $this->_tariff->id,
             'period' => 12,
             'amount' => 1000,
             'initial_fee' => 100,
-            'description' => 'test',
-            'starts_in' => '2022-01-01',
         ]);
+
+        $response = $this->sendGraphQLRequest(9999, null, $this->_input);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertStringContainsString('validation', $response->json('errors.0.message'));
@@ -72,19 +77,40 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
     {
         tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
 
-        $response = $this->sendGraphQLRequest($this->_customer->id, $this->_branch->id, [
-            'tariff_id' => $this->_tariff->id,
-            'period' => rand($this->_tariff->min_period, $this->_tariff->max_period),
-            'amount' => rand($this->_tariff->min_amount, $this->_tariff->max_amount),
-            'initial_fee' => rand($this->_tariff->min_initial_fee, $this->_tariff->max_initial_fee),
-            'description' => 'test',
-            'starts_in' => '2022-01-01',
-        ]);
-
+        $response = $this->sendGraphQLRequest($this->_customer->id, $this->_branch->id, $this->_input);
         $response->assertOk();
         $this->assertEquals('Unauthorized', $response->json('errors.0.message'));
 
         tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_CREATE)->firstOrFail();
+        $branches = Branch::factory()->count(2)->create();
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route(self::GRAPHQL_ROUTE),
+                $this->buildGraphQLQuery($this->_customer->id, $branches[1]->id, $this->_input)
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('validation.exists', ['attribute' => 'branch id']), $response->json('errors.0.extensions.validation.branch_id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route(self::GRAPHQL_ROUTE),
+                $this->buildGraphQLQuery($this->_customer->id, $branches[1]->id, $this->_input)
+            );
+        $this->assertSuccessCreateInstallmentResponse($response);
     }
 
     private function sendGraphQLRequest(int $customer_id, ?int $branch_id, array $installment = []): TestResponse

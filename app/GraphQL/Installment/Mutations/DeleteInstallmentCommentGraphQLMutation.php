@@ -45,6 +45,8 @@ class DeleteInstallmentCommentGraphQLMutation extends Mutation
 
     protected function rules(array $args = []): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_DELETE_COMMENT);
+
         return [
             'ids' => [
                 'required',
@@ -53,9 +55,12 @@ class DeleteInstallmentCommentGraphQLMutation extends Mutation
             'ids.*' => [
                 'required',
                 'integer',
-                function ($attribute, $value, $fail) {
-                    if (! InstallmentComment::query()->where('id', $value)->exists()) {
-                        $fail(__('api.not found'));
+                function ($attribute, $value, $fail) use ($branches) {
+                    $exists = InstallmentComment::query()->where('id', $value)
+                        ->when($branches, fn ($q) => $q->whereHas('installment', fn ($q) => $q->whereIn('branch_id', $branches)))
+                        ->exists();
+                    if (! $exists) {
+                        $fail(__('validation.exists', ['attribute' => $attribute]));
                     }
                 },
             ],

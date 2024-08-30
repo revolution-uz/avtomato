@@ -3,15 +3,20 @@
 namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\CardStatusEnum;
+use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Card;
 use App\Models\Company\Installment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class AttachCardGraphQLMutationTest extends GraphQLTestCase
 {
-    private const GRAPHQL_ROUTE = 'graphql.installment';
+    private const string GRAPHQL_ROUTE = 'graphql.installment';
 
     protected bool $tenancy = true;
 
@@ -36,16 +41,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
             card_id: $this->_card->id,
         );
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-
-        $response->assertJsonStructure(
-            [
-                'data' => [
-                    'attachCard',
-                ],
-            ]
-        );
+        $this->assertSuccessResponse($response);
     }
 
     #[Test]
@@ -83,6 +79,32 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
         );
     }
 
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_ATTACH_CARD)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::ACTIVE]);
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery($installment->id, $this->_card->id));
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery($installment->id, $this->_card->id));
+        $this->assertSuccessResponse($response);
+    }
+
     private function sendGraphQLRequest(int $installment_id, ?int $card_id): TestResponse
     {
         return $this
@@ -103,5 +125,19 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
             }
         ',
         ];
+    }
+
+    private function assertSuccessResponse(TestResponse $response): void
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+
+        $response->assertJsonStructure(
+            [
+                'data' => [
+                    'attachCard',
+                ],
+            ]
+        );
     }
 }

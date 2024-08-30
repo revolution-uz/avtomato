@@ -2,7 +2,11 @@
 
 namespace Tests\GraphQL\Installment\Queries;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Installment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -202,6 +206,32 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.regex', ['attribute' => 'sort']), $response->json('errors.0.extensions.validation.sort.0'));
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW_ALL)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        Installment::factory()->count(5)->create(['branch_id' => $branches[1]->id]);
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery());
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $this->assertArrayHasKey('total', $response->json('data.installments'));
+        $this->assertEquals(0, $response->json('data.installments.total'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery());
+        $this->assertSuccessInstallmentsResponse($response, total: 5);
     }
 
     private function buildGraphQLQuery(array $variables = []): array

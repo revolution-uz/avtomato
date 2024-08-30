@@ -10,7 +10,7 @@ use App\Services\AtmosService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Mutation;
 
 class ReverseTransactionGraphQLMutation extends Mutation
@@ -30,6 +30,8 @@ class ReverseTransactionGraphQLMutation extends Mutation
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_REVERSE);
+
         return [
             'id' => [
                 'name' => 'id',
@@ -37,9 +39,18 @@ class ReverseTransactionGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('transactions', 'id')->where(function ($query) {
-                        //                        $query->where('transaction_type_id', '>=', 100);
-                    }),
+                    function ($attribute, $value, $fail) use ($branches) {
+                        /** @var Builder $transactionQuery */
+                        $transactionQuery = Transaction::query()->where('id', $value)
+                            ->when($branches, fn ($q) => $q->whereHas('installment', fn ($q) => $q->whereIn('branch_id', $branches)));
+
+                        if ($transactionQuery->doesntExist()) {
+                            $fail(__('validation.exists', ['attribute' => $attribute]));
+                        }
+                        //                        elseif ($transactionQuery->where('transaction_type_id', '<', 100)->exists()) {
+                        //                            $fail(__('api.it is system payment'));
+                        //                        }
+                    },
                 ],
             ],
         ];

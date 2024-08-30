@@ -86,10 +86,10 @@ abstract class TestCase extends BaseTestCase
         ]);
     }
 
-    public function createSimpleAdminUser()
+    public function createSimpleAdminUser($roleId = null)
     {
         return Company\CompanyAdmin::factory()->create([
-            'role_id' => null,
+            'role_id' => $roleId,
             'password' => Hash::make('password'),
         ]);
     }

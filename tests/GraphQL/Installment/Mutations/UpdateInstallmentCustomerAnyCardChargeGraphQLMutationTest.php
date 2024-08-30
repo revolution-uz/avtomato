@@ -3,98 +3,66 @@
 namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Installment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Support\Arr;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLTestCase
 {
+    private const array STRUCTURE = [
+        'id',
+        'customer_id',
+        'status',
+        'branch_id',
+        'admin_id',
+        'tariff_id',
+        'type',
+        'amount',
+        'initial_fee',
+        'sms_notify',
+        'auto_pay',
+        'auto_pay_by_pinfl',
+        'is_blacklist',
+        'period',
+        'description',
+        'cancellation_details',
+        'starts_in',
+        'next_pay_date',
+        'created_at',
+        'updated_at',
+        'canceled_at',
+        'deleted_at',
+    ];
+
     protected bool $tenancy = true;
+
+    private Installment $_installment;
+    private array $_input;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        Installment::factory()->count(5)->create([
-            'status' => InstallmentStatusEnum::IN_ACTIVE,
-            'any_card_charge' => false,
-        ]);
+        Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::IN_ACTIVE, 'any_card_charge' => false]);
+
+        $this->_installment = Installment::query()->inRandomOrder()->first();
+        $this->_input = ['id' => $this->_installment->id, 'any_card_charge' => true];
     }
 
     #[Test]
     public function successUpdateInstallmentCustomerAnyCardCharge()
     {
-        $installment = Installment::query()->inRandomOrder()->first();
-
-        $input = [
-            'id' => $installment->id,
-            'any_card_charge' => true,
-        ];
-
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery($input)
-            );
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_input));
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'updateInstallmentCustomerAnyCardCharge' => [
-                    'id',
-                    'customer_id',
-                    'status',
-                    'branch_id',
-                    'admin_id',
-                    'tariff_id',
-                    'type',
-                    'amount',
-                    'initial_fee',
-                    'sms_notify',
-                    'auto_pay',
-                    'auto_pay_by_pinfl',
-                    'is_blacklist',
-                    'period',
-                    'description',
-                    'cancellation_details',
-                    'starts_in',
-                    'next_pay_date',
-                    'created_at',
-                    'updated_at',
-                    'canceled_at',
-                    'deleted_at',
-                ],
-            ],
-        ]);
-
-        $installment->refresh();
-        $this->assertEquals($installment->any_card_charge, $input['any_card_charge']);
-
-        $this->assertEquals($installment->id, $response->json('data.updateInstallmentCustomerAnyCardCharge.id'));
-        $this->assertEquals($installment->customer_id, $response->json('data.updateInstallmentCustomerAnyCardCharge.customer_id'));
-        $this->assertEquals($installment->status->value, $response->json('data.updateInstallmentCustomerAnyCardCharge.status'));
-        $this->assertEquals($installment->branch_id, $response->json('data.updateInstallmentCustomerAnyCardCharge.branch_id'));
-        $this->assertEquals($installment->admin_id, $response->json('data.updateInstallmentCustomerAnyCardCharge.admin_id'));
-        $this->assertEquals($installment->tariff_id, $response->json('data.updateInstallmentCustomerAnyCardCharge.tariff_id'));
-        $this->assertEquals($installment->type->value, $response->json('data.updateInstallmentCustomerAnyCardCharge.type'));
-        $this->assertEquals($installment->amount, $response->json('data.updateInstallmentCustomerAnyCardCharge.amount'));
-        $this->assertEquals($installment->initial_fee, $response->json('data.updateInstallmentCustomerAnyCardCharge.initial_fee'));
-        $this->assertEquals($installment->sms_notify, $response->json('data.updateInstallmentCustomerAnyCardCharge.sms_notify'));
-        $this->assertEquals($installment->auto_pay, $response->json('data.updateInstallmentCustomerAnyCardCharge.auto_pay'));
-        $this->assertEquals($installment->any_card_charge, $response->json('data.updateInstallmentCustomerAnyCardCharge.auto_pay_by_pinfl'));
-        $this->assertEquals($installment->is_blacklist, $response->json('data.updateInstallmentCustomerAnyCardCharge.is_blacklist'));
-        $this->assertEquals($installment->period, $response->json('data.updateInstallmentCustomerAnyCardCharge.period'));
-        $this->assertEquals($installment->description, $response->json('data.updateInstallmentCustomerAnyCardCharge.description'));
-        $this->assertEquals($installment->cancellation_details, $response->json('data.updateInstallmentCustomerAnyCardCharge.cancellation_details'));
-        $this->assertEquals($installment->starts_in?->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.starts_in'));
-        $this->assertEquals($installment->nextPaymentDate?->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.next_pay_date'));
-        $this->assertEquals($installment->created_at->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.created_at'));
-        $this->assertEquals($installment->updated_at->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.updated_at'));
-        $this->assertEquals($installment->canceled_at?->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.canceled_at'));
-        $this->assertNull($response->json('data.updateInstallmentCustomerAnyCardCharge.deleted_at'));
+        $this->assertSuccessResponse($response);
     }
 
     #[Test]
@@ -105,10 +73,7 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery([
-                    'id' => null,
-                    'any_card_charge' => null,
-                ])
+                $this->buildGraphQLQuery(['id' => null, 'any_card_charge' => null])
             );
 
         $response->assertOk();
@@ -121,16 +86,39 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery([
-                    'id' => 999999999,
-                    'any_card_charge' => true,
-                ])
+                $this->buildGraphQLQuery(['id' => 999999999, 'any_card_charge' => true])
             );
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_EDIT)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::IN_ACTIVE, 'any_card_charge' => false]);
+        $this->_input = array_merge($this->_input, ['id' => $this->_installment->id]);
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_input));
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_input));
+        $this->assertSuccessResponse($response);
     }
 
     private function buildGraphQLQuery(array $variables = []): array
@@ -145,33 +133,47 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
                 updateInstallmentCustomerAnyCardCharge(
                     id: $id
                     any_card_charge: $any_card_charge
-                ) {
-                    id
-                    customer_id
-                    status
-                    branch_id
-                    admin_id
-                    tariff_id
-                    type
-                    amount
-                    initial_fee
-                    sms_notify
-                    auto_pay
-                    auto_pay_by_pinfl
-                    is_blacklist
-                    period
-                    description
-                    cancellation_details
-                    starts_in
-                    next_pay_date
-                    created_at
-                    updated_at
-                    canceled_at
-                    deleted_at
-                }
+                ) {' . $this->convertIntoQuery(self::STRUCTURE) . '}
             }
         ';
 
         return $query;
+    }
+
+    private function assertSuccessResponse(TestResponse $response): void
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure([
+            'data' => [
+                'updateInstallmentCustomerAnyCardCharge' => self::STRUCTURE,
+            ],
+        ]);
+
+        $this->_installment->refresh();
+        $this->assertEquals($this->_installment->any_card_charge, $this->_input['any_card_charge']);
+
+        $this->assertEquals($this->_installment->id, $response->json('data.updateInstallmentCustomerAnyCardCharge.id'));
+        $this->assertEquals($this->_installment->customer_id, $response->json('data.updateInstallmentCustomerAnyCardCharge.customer_id'));
+        $this->assertEquals($this->_installment->status->value, $response->json('data.updateInstallmentCustomerAnyCardCharge.status'));
+        $this->assertEquals($this->_installment->branch_id, $response->json('data.updateInstallmentCustomerAnyCardCharge.branch_id'));
+        $this->assertEquals($this->_installment->admin_id, $response->json('data.updateInstallmentCustomerAnyCardCharge.admin_id'));
+        $this->assertEquals($this->_installment->tariff_id, $response->json('data.updateInstallmentCustomerAnyCardCharge.tariff_id'));
+        $this->assertEquals($this->_installment->type->value, $response->json('data.updateInstallmentCustomerAnyCardCharge.type'));
+        $this->assertEquals($this->_installment->amount, $response->json('data.updateInstallmentCustomerAnyCardCharge.amount'));
+        $this->assertEquals($this->_installment->initial_fee, $response->json('data.updateInstallmentCustomerAnyCardCharge.initial_fee'));
+        $this->assertEquals($this->_installment->sms_notify, $response->json('data.updateInstallmentCustomerAnyCardCharge.sms_notify'));
+        $this->assertEquals($this->_installment->auto_pay, $response->json('data.updateInstallmentCustomerAnyCardCharge.auto_pay'));
+        $this->assertEquals($this->_installment->any_card_charge, $response->json('data.updateInstallmentCustomerAnyCardCharge.auto_pay_by_pinfl'));
+        $this->assertEquals($this->_installment->is_blacklist, $response->json('data.updateInstallmentCustomerAnyCardCharge.is_blacklist'));
+        $this->assertEquals($this->_installment->period, $response->json('data.updateInstallmentCustomerAnyCardCharge.period'));
+        $this->assertEquals($this->_installment->description, $response->json('data.updateInstallmentCustomerAnyCardCharge.description'));
+        $this->assertEquals($this->_installment->cancellation_details, $response->json('data.updateInstallmentCustomerAnyCardCharge.cancellation_details'));
+        $this->assertEquals($this->_installment->starts_in?->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.starts_in'));
+        $this->assertEquals($this->_installment->nextPaymentDate?->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.next_pay_date'));
+        $this->assertEquals($this->_installment->created_at->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.created_at'));
+        $this->assertEquals($this->_installment->updated_at->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.updated_at'));
+        $this->assertEquals($this->_installment->canceled_at?->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.canceled_at'));
+        $this->assertNull($response->json('data.updateInstallmentCustomerAnyCardCharge.deleted_at'));
     }
 }

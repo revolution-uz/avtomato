@@ -19,6 +19,8 @@ class DetachGuarantorGraphQLMutation extends Mutation
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_DETACH_GUARANTOR);
+
         return [
             'installment_id' => [
                 'name' => 'installment_id',
@@ -26,7 +28,7 @@ class DetachGuarantorGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('installments', 'id')->whereNull('deleted_at'),
+                    Rule::exists('installments', 'id')->whereNull('deleted_at')->when($branches, fn ($q) => $q->whereIn('branch_id', $branches)),
                 ],
             ],
             'ids' => [

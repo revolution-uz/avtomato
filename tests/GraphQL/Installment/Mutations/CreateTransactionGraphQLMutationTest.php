@@ -2,8 +2,12 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Illuminate\Testing\TestResponse;
@@ -12,7 +16,7 @@ use Tests\GraphQL\GraphQLTestCase;
 
 class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
 {
-    private const GRAPHQL_ROUTE = 'graphql.installment';
+    private const string GRAPHQL_ROUTE = 'graphql.installment';
 
     protected bool $tenancy = true;
 
@@ -113,6 +117,50 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
                 $response->json('errors.0.extensions.validation.amount.0')
             );
         }
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::TRANSACTION_CREATE)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route(self::GRAPHQL_ROUTE),
+                $this->buildGraphQLQuery(
+                    $this->_installment->id,
+                    $this->_customer->id,
+                    $this->_transactionType->id,
+                    rand(0, 935000),
+                    '2021-01-01'
+                ),
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route(self::GRAPHQL_ROUTE),
+                $this->buildGraphQLQuery(
+                    $this->_installment->id,
+                    $this->_customer->id,
+                    $this->_transactionType->id,
+                    rand(0, 935000),
+                    '2021-01-01'
+                ),
+            );
+        $this->assertSuccessResponse($response);
     }
 
     private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at, array $headers = []): TestResponse

@@ -2,16 +2,25 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Support\Arr;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class UpdateGuarantorGraphQLMutationTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
+
+    private InstallmentGuarantor $_installmentGuarantor;
+    private array $_input;
 
     protected function setUp(): void
     {
@@ -21,52 +30,26 @@ class UpdateGuarantorGraphQLMutationTest extends GraphQLTestCase
         foreach (Installment::all() as $installment) {
             $installment->guarantors()->attach(Customer::factory()->count(5)->create(), ['any_card_charge' => true]);
         }
+
+        $this->_installmentGuarantor = InstallmentGuarantor::query()->inRandomOrder()->first();
+        $this->_input = [
+            'installment_id' => $this->_installmentGuarantor->installment_id,
+            'guarantor_id' => $this->_installmentGuarantor->customer_id,
+            'any_card_charge' => false,
+        ];
     }
 
     #[Test]
     public function successUpdateGuarantor()
     {
-        $installmentGuarantor = InstallmentGuarantor::query()->inRandomOrder()->first();
-
-        $input = [
-            'installment_id' => $installmentGuarantor->installment_id,
-            'guarantor_id' => $installmentGuarantor->customer_id,
-            'any_card_charge' => false,
-        ];
-
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery($input)
+                $this->buildGraphQLQuery($this->_input)
             );
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'updateGuarantor' => [
-                    'id',
-                    'installment_id',
-                    'customer_id',
-                    'any_card_charge',
-                    'created_at',
-                    'updated_at',
-                    'deleted_at',
-                ],
-            ],
-        ]);
-
-        $installmentGuarantor->refresh();
-        $this->assertEquals($installmentGuarantor->any_card_charge, $input['any_card_charge']);
-
-        $this->assertEquals($installmentGuarantor->id, $response->json('data.updateGuarantor.id'));
-        $this->assertEquals($installmentGuarantor->installment_id, $response->json('data.updateGuarantor.installment_id'));
-        $this->assertEquals($installmentGuarantor->customer_id, $response->json('data.updateGuarantor.customer_id'));
-        $this->assertEquals($installmentGuarantor->any_card_charge, $response->json('data.updateGuarantor.any_card_charge'));
-        $this->assertEquals($installmentGuarantor->created_at->timestamp, $response->json('data.updateGuarantor.created_at'));
-        $this->assertEquals($installmentGuarantor->updated_at->timestamp, $response->json('data.updateGuarantor.updated_at'));
-        $this->assertNull($response->json('data.updateGuarantor.deleted_at'));
+        $this->assertSuccessResponse($response);
     }
 
     #[Test]
@@ -109,6 +92,38 @@ class UpdateGuarantorGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.exists', ['attribute' => 'guarantor id']), $response->json('errors.0.extensions.validation.guarantor_id.0'));
     }
 
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_UPDATE_GUARANTOR)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::ACTIVE]);
+        $installment->guarantors()->attach(Customer::factory()->create(), ['any_card_charge' => true]);
+        $this->_installmentGuarantor = InstallmentGuarantor::query()->where('installment_id', $installment->id)->first();
+        $this->_input = array_merge($this->_input, [
+            'installment_id' => $installment->id,
+            'guarantor_id' => $installment->guarantors()->first()->id,
+        ]);
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_input));
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_input));
+        $this->assertSuccessResponse($response);
+    }
+
     private function buildGraphQLQuery(array $variables = []): array
     {
         $query = [];
@@ -136,5 +151,35 @@ class UpdateGuarantorGraphQLMutationTest extends GraphQLTestCase
         ';
 
         return $query;
+    }
+
+    private function assertSuccessResponse(TestResponse $response): void
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure([
+            'data' => [
+                'updateGuarantor' => [
+                    'id',
+                    'installment_id',
+                    'customer_id',
+                    'any_card_charge',
+                    'created_at',
+                    'updated_at',
+                    'deleted_at',
+                ],
+            ],
+        ]);
+
+        $this->_installmentGuarantor->refresh();
+        $this->assertEquals($this->_installmentGuarantor->any_card_charge, $this->_input['any_card_charge']);
+
+        $this->assertEquals($this->_installmentGuarantor->id, $response->json('data.updateGuarantor.id'));
+        $this->assertEquals($this->_installmentGuarantor->installment_id, $response->json('data.updateGuarantor.installment_id'));
+        $this->assertEquals($this->_installmentGuarantor->customer_id, $response->json('data.updateGuarantor.customer_id'));
+        $this->assertEquals($this->_installmentGuarantor->any_card_charge, $response->json('data.updateGuarantor.any_card_charge'));
+        $this->assertEquals($this->_installmentGuarantor->created_at->timestamp, $response->json('data.updateGuarantor.created_at'));
+        $this->assertEquals($this->_installmentGuarantor->updated_at->timestamp, $response->json('data.updateGuarantor.updated_at'));
+        $this->assertNull($response->json('data.updateGuarantor.deleted_at'));
     }
 }

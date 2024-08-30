@@ -21,6 +21,8 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_EDIT);
+
         return [
             'id' => [
                 'name' => 'id',
@@ -28,7 +30,7 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('installments', 'id')->whereNull('deleted_at'),
+                    Rule::exists('installments', 'id')->whereNull('deleted_at')->when($branches, fn ($q) => $q->where('branch_id', $branches)),
                 ],
             ],
             'any_card_charge' => [

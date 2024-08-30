@@ -20,6 +20,8 @@ class DeleteDocumentGraphQLMutation extends Mutation
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_DELETE_DOCUMENT);
+
         return [
             'installment_id' => [
                 'name' => 'installment_id',
@@ -27,7 +29,7 @@ class DeleteDocumentGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('installments', 'id')->whereNull('deleted_at'),
+                    Rule::exists('installments', 'id')->when($branches, fn ($q) => $q->whereIn('branch_id', $branches)),
                 ],
             ],
             'ids' => [
@@ -49,7 +51,6 @@ class DeleteDocumentGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-
         Attachment::query()
             ->where('attachmentable_id', $args['installment_id'])
             ->where('attachmentable_type', Installment::class)

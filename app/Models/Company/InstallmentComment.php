@@ -6,6 +6,7 @@ use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -30,12 +31,12 @@ class InstallmentComment extends Model
         'comment',
     ];
 
-    public function installment()
+    public function installment(): BelongsTo
     {
         return $this->belongsTo(Installment::class);
     }
 
-    public function admin()
+    public function admin(): BelongsTo
     {
         return $this->belongsTo(CompanyAdmin::class);
     }

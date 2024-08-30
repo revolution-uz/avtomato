@@ -2,8 +2,12 @@
 
 namespace Tests\GraphQL\Installment\Queries;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Installment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionAttempt;
 use Database\Seeders\Company\TransactionTypeSeeder;
@@ -533,6 +537,42 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($transactionAttempt->id, $response->json('data.transactionAttempts.data.0.id'));
         $this->assertEquals($transactionAttempt->card_id, $response->json('data.transactionAttempts.data.0.card_id'));
         $this->assertEquals($transactionAttempt->transaction->card_pan, $response->json('data.transactionAttempts.data.0.card_pan'));
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::TRANSACTION_ATTEMPT_VIEW_ALL)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
+        TransactionAttempt::factory()->count(10)->create(['installment_id' => $installment->id]);
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery()
+            );
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $this->assertArrayHasKey('total', $response->json('data.transactionAttempts'));
+        $this->assertEquals(0, $response->json('data.transactionAttempts.total'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery()
+            );
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $this->assertArrayHasKey('total', $response->json('data.transactionAttempts'));
+        $this->assertEquals(10, $response->json('data.transactionAttempts.total'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

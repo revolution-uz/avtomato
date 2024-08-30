@@ -2,15 +2,23 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Branch;
+use App\Models\Company\Installment;
 use App\Models\Company\InstallmentComment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class UpdateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
+
+    private InstallmentComment $_installmentComment;
 
     protected function setUp(): void
     {
@@ -22,11 +30,10 @@ class UpdateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successUpdateInstallmentComment()
     {
-        $installmentComment = InstallmentComment::query()->inRandomOrder()->first();
-
-        $installmentInput = [
-            'installment_id' => $installmentComment->installment_id,
-            'comment_id' => $installmentComment->id,
+        $this->_installmentComment = InstallmentComment::query()->inRandomOrder()->first();
+        $input = [
+            'installment_id' => $this->_installmentComment->installment_id,
+            'comment_id' => $this->_installmentComment->id,
             'comment' => Str::random(10),
         ];
 
@@ -34,35 +41,10 @@ class UpdateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery($installmentInput)
+                $this->buildGraphQLQuery($input)
             );
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'updateInstallmentComment' => [
-                    'id',
-                    'installment_id',
-                    'admin_id',
-                    'comment',
-                    'created_at',
-                    'updated_at',
-                    'deleted_at',
-                ],
-            ],
-        ]);
-
-        $installmentComment->refresh();
-        $this->assertEquals($installmentComment->comment, $installmentInput['comment']);
-
-        $this->assertEquals($installmentComment->id, $response->json('data.updateInstallmentComment.id'));
-        $this->assertEquals($installmentComment->installment_id, $response->json('data.updateInstallmentComment.installment_id'));
-        $this->assertEquals($installmentComment->admin_id, $response->json('data.updateInstallmentComment.admin_id'));
-        $this->assertEquals($installmentComment->comment, $response->json('data.updateInstallmentComment.comment'));
-        $this->assertEquals($installmentComment->created_at->timestamp, $response->json('data.updateInstallmentComment.created_at'));
-        $this->assertEquals($installmentComment->updated_at->timestamp, $response->json('data.updateInstallmentComment.updated_at'));
-        $this->assertNull($response->json('data.updateInstallmentComment.deleted_at'));
+        $this->assertSuccessResponse($response, $input);
     }
 
     #[Test]
@@ -105,6 +87,38 @@ class UpdateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.exists', ['attribute' => 'comment id']), $response->json('errors.0.extensions.validation.comment_id.0'));
     }
 
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_UPDATE_COMMENT)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
+        $this->_installmentComment = InstallmentComment::factory()->create(['installment_id' => $installment->id]);
+        $input = [
+            'installment_id' => $installment->id,
+            'comment_id' => $this->_installmentComment->id,
+            'comment' => Str::random(10),
+        ];
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($input));
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($input));
+        $this->assertSuccessResponse($response, $input);
+    }
+
     private function buildGraphQLQuery(array $variables = []): array
     {
         $query = [];
@@ -132,5 +146,35 @@ class UpdateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
         ';
 
         return $query;
+    }
+
+    private function assertSuccessResponse(TestResponse $response, array $input): void
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure([
+            'data' => [
+                'updateInstallmentComment' => [
+                    'id',
+                    'installment_id',
+                    'admin_id',
+                    'comment',
+                    'created_at',
+                    'updated_at',
+                    'deleted_at',
+                ],
+            ],
+        ]);
+
+        $this->_installmentComment->refresh();
+        $this->assertEquals($this->_installmentComment->comment, $input['comment']);
+
+        $this->assertEquals($this->_installmentComment->id, $response->json('data.updateInstallmentComment.id'));
+        $this->assertEquals($this->_installmentComment->installment_id, $response->json('data.updateInstallmentComment.installment_id'));
+        $this->assertEquals($this->_installmentComment->admin_id, $response->json('data.updateInstallmentComment.admin_id'));
+        $this->assertEquals($this->_installmentComment->comment, $response->json('data.updateInstallmentComment.comment'));
+        $this->assertEquals($this->_installmentComment->created_at->timestamp, $response->json('data.updateInstallmentComment.created_at'));
+        $this->assertEquals($this->_installmentComment->updated_at->timestamp, $response->json('data.updateInstallmentComment.updated_at'));
+        $this->assertNull($response->json('data.updateInstallmentComment.deleted_at'));
     }
 }

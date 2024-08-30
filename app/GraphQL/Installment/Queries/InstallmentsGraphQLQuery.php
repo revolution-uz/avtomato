@@ -68,6 +68,8 @@ class InstallmentsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW_ALL);
+
         return
             Installment::query()
                 ->with(['customer', 'branch', 'tariff', 'cards', 'guarantors', 'documents', 'comments', 'transactions'])
@@ -95,6 +97,7 @@ class InstallmentsGraphQLQuery extends Query
                     fn (Builder|Installment $q) => $q->orderBySortable($args['sort']),
                     fn (Builder|Installment $q) => $q->orderByDesc('id')
                 )
+                ->when($branches, fn ($q) => $q->whereIn('branch_id', $branches))
                 ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

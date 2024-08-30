@@ -2,15 +2,22 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Card;
 use App\Models\Company\Installment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Support\Arr;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class DetachCardGraphQLMutationTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
+
+    private Installment $_installment;
 
     protected function setUp(): void
     {
@@ -25,29 +32,17 @@ class DetachCardGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successDetachCard()
     {
-        $installment = Installment::query()->inRandomOrder()->first();
-        $idsInput = $installment->cards()->inRandomOrder()->limit(3)->pluck('id')->toArray();
+        $this->_installment = Installment::query()->inRandomOrder()->first();
+        $idsInput = $this->_installment->cards()->inRandomOrder()->limit(3)->pluck('id')->toArray();
 
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery([
-                    'installment_id' => $installment->id,
-                    'ids' => $idsInput,
-                ])
+                $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'ids' => $idsInput])
             );
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'detachCard',
-            ],
-        ]);
-
-        $this->assertTrue($response->json('data.detachCard'));
-        $this->assertTrue($installment->cards()->whereIn('id', $idsInput)->doesntExist());
+        $this->assertSuccessResponse($response, $idsInput);
     }
 
     #[Test]
@@ -87,6 +82,40 @@ class DetachCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('api.not found'), $response->json('errors.0.extensions.validation')['ids.0'][0]);
     }
 
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_DETACH_CARD)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
+        $this->_installment->cards()->attach(Card::factory()->count(5)->create());
+        $idsInput = $this->_installment->cards()->inRandomOrder()->limit(3)->pluck('id')->toArray();
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'ids' => $idsInput])
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'ids' => $idsInput])
+            );
+        $this->assertSuccessResponse($response, $idsInput);
+    }
+
     private function buildGraphQLQuery(array $variables = []): array
     {
         $query = [];
@@ -98,5 +127,18 @@ class DetachCardGraphQLMutationTest extends GraphQLTestCase
         ';
 
         return $query;
+    }
+
+    private function assertSuccessResponse(TestResponse $response, array $idsInput)
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure([
+            'data' => [
+                'detachCard',
+            ],
+        ]);
+        $this->assertTrue($response->json('data.detachCard'));
+        $this->assertTrue($this->_installment->cards()->whereIn('id', $idsInput)->doesntExist());
     }
 }

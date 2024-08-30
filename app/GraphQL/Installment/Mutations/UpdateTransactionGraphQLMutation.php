@@ -22,6 +22,8 @@ class UpdateTransactionGraphQLMutation extends Mutation
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_EDIT);
+
         return [
             'id' => [
                 'name' => 'id',
@@ -40,7 +42,7 @@ class UpdateTransactionGraphQLMutation extends Mutation
                 'rules' => [
                     'nullable',
                     'int',
-                    Rule::exists('installments', 'id'),
+                    Rule::exists('installments', 'id')->when($branches, fn ($q) => $q->whereIn('branch_id', $branches)),
                 ],
             ],
             'customer_id' => [
