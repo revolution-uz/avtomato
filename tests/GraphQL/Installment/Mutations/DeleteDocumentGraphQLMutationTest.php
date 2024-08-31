@@ -2,15 +2,22 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Attachment;
+use App\Models\Company\Branch;
 use App\Models\Company\Installment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Support\Arr;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class DeleteDocumentGraphQLMutationTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
+
+    private Installment $_installment;
 
     protected function setUp(): void
     {
@@ -28,9 +35,9 @@ class DeleteDocumentGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successDeleteDocument()
     {
-        $installment = Installment::query()->inRandomOrder()->first();
+        $this->_installment = Installment::query()->inRandomOrder()->first();
         $idsInput = Attachment::query()
-            ->where('attachmentable_id', $installment->id)
+            ->where('attachmentable_id', $this->_installment->id)
             ->where('attachmentable_type', Installment::class)
             ->inRandomOrder()->limit(3)->pluck('id')->toArray();
 
@@ -38,26 +45,10 @@ class DeleteDocumentGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery([
-                    'installment_id' => $installment->id,
-                    'ids' => $idsInput,
-                ])
+                $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'ids' => $idsInput])
             );
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'deleteDocument',
-            ],
-        ]);
-        $this->assertTrue($response->json('data.deleteDocument'));
-        $this->assertTrue(
-            Attachment::query()
-                ->where('attachmentable_id', $installment->id)
-                ->where('attachmentable_type', Installment::class)
-                ->whereIn('id', $idsInput)->doesntExist()
-        );
+        $this->assertSuccessResponse($response, $idsInput);
     }
 
     #[Test]
@@ -68,10 +59,7 @@ class DeleteDocumentGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery([
-                    'installment_id' => null,
-                    'ids' => null,
-                ])
+                $this->buildGraphQLQuery(['installment_id' => null, 'ids' => null])
             );
 
         $response->assertOk();
@@ -84,16 +72,47 @@ class DeleteDocumentGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery([
-                    'installment_id' => 999999999,
-                    'ids' => [999999999],
-                ])
+                $this->buildGraphQLQuery(['installment_id' => 999999999, 'ids' => [999999999]])
             );
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_DELETE_DOCUMENT)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
+        $attachments = Attachment::factory()->count(5)->create(['attachmentable_id' => $this->_installment->id, 'attachmentable_type' => get_class($this->_installment)]);
+        $idsInput = $attachments->take(3)->pluck('id')->toArray();
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'ids' => $idsInput])
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'ids' => $idsInput])
+            );
+        $this->assertSuccessResponse($response, $idsInput);
     }
 
     private function buildGraphQLQuery(array $variables = []): array
@@ -107,5 +126,23 @@ class DeleteDocumentGraphQLMutationTest extends GraphQLTestCase
         ';
 
         return $query;
+    }
+
+    private function assertSuccessResponse(TestResponse $response, array $idsInput): void
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure([
+            'data' => [
+                'deleteDocument',
+            ],
+        ]);
+        $this->assertTrue($response->json('data.deleteDocument'));
+        $this->assertTrue(
+            Attachment::query()
+                ->where('attachmentable_id', $this->_installment->id)
+                ->where('attachmentable_type', Installment::class)
+                ->whereIn('id', $idsInput)->doesntExist()
+        );
     }
 }

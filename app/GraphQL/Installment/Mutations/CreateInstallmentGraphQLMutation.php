@@ -31,6 +31,8 @@ class CreateInstallmentGraphQLMutation extends Mutation
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_CREATE);
+
         return [
             'customer_id' => [
                 'name' => 'customer_id',
@@ -45,8 +47,9 @@ class CreateInstallmentGraphQLMutation extends Mutation
                 'name' => 'branch_id',
                 'type' => Type::int(),
                 'rules' => [
-                    new RequiredIf(Feature::isFeatureActive(FeatureEnum::BRANCH_MANAGEMENT)),
                     'int',
+                    new RequiredIf(Feature::isFeatureActive(FeatureEnum::BRANCH_MANAGEMENT)),
+                    Rule::exists('branches', 'id')->whereNull('deleted_at')->when($branches, fn ($q) => $q->where('id', $branches)),
                 ],
             ],
             'installment' => [

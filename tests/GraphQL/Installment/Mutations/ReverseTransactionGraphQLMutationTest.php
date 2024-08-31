@@ -2,19 +2,29 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Feature;
+use App\Models\Company\Installment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\AtmosFaker;
 use Tests\GraphQL\GraphQLTestCase;
 
 class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
 {
+    private const string GRAPHQL_ROUTE = 'graphql.installment';
+
     protected bool $tenancy = true;
+
+    private Transaction $_transaction;
 
     protected function setUp(): void
     {
@@ -42,47 +52,25 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         AtmosFaker::getToken();
         AtmosFaker::reversePayment();
 
-        $transaction_id = Transaction::query()->where('transaction_type_id', '<', 100)->inRandomOrder()->first()->id;
+        $this->_transaction = Transaction::query()->where('transaction_type_id', '<', 100)->inRandomOrder()->first();
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(['id' => $transaction_id])
-            );
+            ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery(['id' => $this->_transaction->id]));
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'reverseTransaction',
-            ],
-        ]);
-        $this->assertTrue($response->json('data.reverseTransaction'));
-        $this->assertTrue(Transaction::query()->where('id', $transaction_id)->doesntExist());
+        $this->assertSuccessResponse($response);
     }
 
     #[Test]
     public function successReverseSimpleTransaction()
     {
-        $transaction_id = Transaction::query()->where('transaction_type_id', '>=', 100)->inRandomOrder()->first()->id;
+        $this->_transaction = Transaction::query()->where('transaction_type_id', '>=', 100)->inRandomOrder()->first();
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(['id' => $transaction_id])
-            );
+            ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery(['id' => $this->_transaction->id]));
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'reverseTransaction',
-            ],
-        ]);
-        $this->assertTrue($response->json('data.reverseTransaction'));
-        $this->assertTrue(Transaction::query()->where('id', $transaction_id)->doesntExist());
+        $this->assertSuccessResponse($response);
     }
 
     #[Test]
@@ -92,7 +80,7 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
-                route('graphql.installment'),
+                route(self::GRAPHQL_ROUTE),
                 $this->buildGraphQLQuery(['id' => null])
             );
 
@@ -104,7 +92,7 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
-                route('graphql.installment'),
+                route(self::GRAPHQL_ROUTE),
                 $this->buildGraphQLQuery(['id' => 999999999])
             );
 
@@ -112,6 +100,33 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::TRANSACTION_REVERSE)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
+        $this->_transaction = Transaction::factory()->create(['installment_id' => $installment->id]);
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery(['id' => $this->_transaction->id]));
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery(['id' => $this->_transaction->id]));
+        $this->assertSuccessResponse($response);
     }
 
     private function buildGraphQLQuery(array $variables = []): array
@@ -125,5 +140,18 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         ';
 
         return $query;
+    }
+
+    private function assertSuccessResponse(TestResponse $response): void
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure([
+            'data' => [
+                'reverseTransaction',
+            ],
+        ]);
+        $this->assertTrue($response->json('data.reverseTransaction'));
+        $this->assertTrue(Transaction::query()->where('id', $this->_transaction->id)->doesntExist());
     }
 }

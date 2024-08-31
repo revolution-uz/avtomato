@@ -29,6 +29,8 @@ class ChangesStatusGraphQLMutation extends Mutation
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_ATTACH_CARD);
+
         return [
             'installment_id' => [
                 'name' => 'installment_id',
@@ -36,7 +38,7 @@ class ChangesStatusGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('installments', 'id')->whereNull('deleted_at'),
+                    Rule::exists('installments', 'id')->whereNull('deleted_at')->when($branches, fn ($q) => $q->whereIn('branch_id', $branches)),
                 ],
             ],
             'status' => [

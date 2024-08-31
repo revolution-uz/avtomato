@@ -5,14 +5,18 @@ namespace Tests\GraphQL\Installment\Queries;
 use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\InstallmentGraphHelper;
 use App\Models\Company\Address;
 use App\Models\Company\Attachment;
+use App\Models\Company\Branch;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentComment;
 use App\Models\Company\Phone;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -25,7 +29,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
     protected bool $tenancy = true;
 
     private Installment $_installment;
-    private Customer $_guarantor;
 
     protected function setUp(): void
     {
@@ -34,25 +37,25 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         Installment::query()->forceDelete();
         $this->_installment = Installment::factory()->create(['starts_in' => now()->addDays(5)]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->_installment->admin, 'photo1.jpg');
-        $this->_guarantor = Customer::factory()->create();
-        $this->_installment->guarantors()->attach($this->_guarantor, ['any_card_charge' => true]);
+        $guarantor = Customer::factory()->create();
+        $this->_installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
         Card::query()->forceDelete();
         Card::factory()->create(['customer_id' => $this->_installment->customer_id, 'status' => CardStatusEnum::ACTIVE]);
-        Card::factory()->create(['customer_id' => $this->_guarantor->id, 'status' => CardStatusEnum::ACTIVE]);
+        Card::factory()->create(['customer_id' => $guarantor->id, 'status' => CardStatusEnum::ACTIVE]);
         $this->_installment->cards()->attach(Card::first());
         Address::query()->forceDelete();
         Address::factory()->count(1)->create(['addressable_type' => Customer::class, 'addressable_id' => $this->_installment->customer_id]);
-        Address::factory()->count(1)->create(['addressable_type' => Customer::class, 'addressable_id' => $this->_guarantor->id]);
+        Address::factory()->count(1)->create(['addressable_type' => Customer::class, 'addressable_id' => $guarantor->id]);
         Phone::query()->forceDelete();
         /** @var Phone $phone */
         foreach (Phone::factory()->count(1)->create() as $phone) {
             $this->_installment->customer->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::customerValues())]);
-            $this->_guarantor->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::customerValues())]);
+            $guarantor->phones()->attach($phone->id, ['type' => Arr::random(PhoneTypeEnum::customerValues())]);
         }
         InstallmentComment::factory()->create(['installment_id' => $this->_installment->id, 'admin_id' => $this->_installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $this->_installment, 'photo1.jpg');
         Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_installment->customer_id, 'admin_id' => $this->_installment->admin_id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_guarantor->id, 'admin_id' => $this->_installment->admin_id]);
+        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $guarantor->id, 'admin_id' => $this->_installment->admin_id]);
     }
 
     #[Test]
@@ -97,6 +100,32 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $this->_installment->update(['branch_id' => $branches[1]->id]);
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_installment->id));
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_installment->id));
+        $this->assertSuccessSingleInstallmentResponse($response);
     }
 
     private function buildGraphQLQuery($id): array

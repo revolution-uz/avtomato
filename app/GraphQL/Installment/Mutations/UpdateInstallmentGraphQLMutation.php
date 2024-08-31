@@ -23,6 +23,8 @@ class UpdateInstallmentGraphQLMutation extends Mutation
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_EDIT);
+
         return [
             'id' => [
                 'name' => 'id',
@@ -30,7 +32,10 @@ class UpdateInstallmentGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('installments', 'id')->whereNull('deleted_at')->where('status', InstallmentStatusEnum::IN_ACTIVE),
+                    Rule::exists('installments', 'id')
+                        ->whereNull('deleted_at')
+                        ->where('status', InstallmentStatusEnum::IN_ACTIVE)
+                        ->when($branches, fn ($q) => $q->whereIn('branch_id', $branches)),
                 ],
             ],
             'installment' => [

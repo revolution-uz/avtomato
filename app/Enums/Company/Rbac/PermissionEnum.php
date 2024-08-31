@@ -292,9 +292,8 @@ enum PermissionEnum: string
 
             self::DASHBOARD_INFO_VIEW,
 
-            self::INSTALLMENT_VIEW_ALL => false,
-
             // branch related
+            self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_START,

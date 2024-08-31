@@ -2,8 +2,13 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Branch;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentComment;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -66,6 +71,60 @@ class CreateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(
             trans('validation.exists', ['attribute' => 'installment id']),
             $response->json('errors.0.extensions.validation')['installment_id'][0]
+        );
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_CREATE_COMMENT)->firstOrFail();
+
+        $branches = Branch::factory()->count(2)->create();
+        $installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::ACTIVE]);
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route(self::GRAPHQL_ROUTE),
+                $this->buildGraphQLQuery($installment->id, $this->_comment)
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
+
+        $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(
+                route(self::GRAPHQL_ROUTE),
+                $this->buildGraphQLQuery($installment->id, $this->_comment)
+            );
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure(
+            [
+                'data' => [
+                    'createInstallmentComment' => [
+                        'id',
+                        'installment_id',
+                        'installment' => [
+                            'id',
+                        ],
+                        'admin_id',
+                        'admin' => [
+                            'id',
+                        ],
+                        'comment',
+                        'created_at',
+                        'updated_at',
+                        'deleted_at',
+                    ],
+                ],
+            ]
         );
     }
 

@@ -21,16 +21,21 @@ class SingleInstallmentGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME));
+        return GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_VIEW);
+
         return [
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', Rule::exists('installments', 'id')->whereNull('deleted_at')],
+                'rules' => [
+                    'required',
+                    Rule::exists('installments', 'id')->whereNull('deleted_at')->when($branches, fn ($q) => $q->where('branch_id', $branches)),
+                ],
             ],
         ];
     }

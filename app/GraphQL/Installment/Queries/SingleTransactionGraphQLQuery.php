@@ -25,11 +25,24 @@ class SingleTransactionGraphQLQuery extends Query
 
     public function args(): array
     {
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_VIEW);
+
         return [
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:transactions,id'],
+                'rules' => [
+                    'required',
+                    function ($attribute, $value, $fail) use ($branches) {
+                        $exists = Transaction::query()->where('id', $value)
+                            ->when($branches, fn ($q) => $q->whereHas('installment', fn ($q) => $q->whereIn('branch_id', $branches)))
+                            ->exists();
+
+                        if (! $exists) {
+                            $fail(trans('validation.exists', ['attribute' => $attribute]));
+                        }
+                    },
+                ],
             ],
         ];
     }
