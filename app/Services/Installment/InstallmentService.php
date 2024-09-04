@@ -102,7 +102,7 @@ class InstallmentService
      */
     public function changeStatus(Installment $installment, InstallmentStatusEnum $status): bool
     {
-        if ($status == InstallmentStatusEnum::ACTIVE) {
+        if ($status === InstallmentStatusEnum::ACTIVE) {
             if ($installment->isPaidInitialFee()) {
                 if ($this->withdrawAutoCharge($installment)) {
                     $installment->status = $status;
@@ -113,7 +113,7 @@ class InstallmentService
             throw ValidationException::withMessages(['status' => __('api.You cannot activate an installment without withdrawing initial fee')]);
         }
 
-        if ($status == InstallmentStatusEnum::CLOSED) {
+        if ($status === InstallmentStatusEnum::CLOSED) {
             if (! $installment->is_fully_paid) {
                 throw ValidationException::withMessages(['status' => __('api.You cannot close an installment without withdrawing amount')]);
             }
