@@ -29,7 +29,7 @@ class InstallmentService
 
     public static function generatePeriods(?Carbon $startDate, $period): array
     {
-        if (! $startDate) {
+        if (!$startDate) {
             $startDate = Carbon::now();
         }
 
@@ -114,7 +114,7 @@ class InstallmentService
         }
 
         if ($status == InstallmentStatusEnum::CLOSED) {
-            if (! $installment->is_fully_paid) {
+            if (!$installment->is_fully_paid) {
                 throw ValidationException::withMessages(['status' => __('api.You cannot close an installment without withdrawing amount')]);
             }
         }
@@ -135,7 +135,7 @@ class InstallmentService
 
     private function withdrawAutoCharge(Installment $installment): bool
     {
-        if (($installment->any_card_charge || $installment->auto_pay) && ! $installment->withdrawn_auto_charge) {
+        if (($installment->any_card_charge || $installment->auto_pay) && !$installment->withdrawn_auto_charge) {
             if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
                 $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
                 $installment->withdrawn_auto_charge = true;
@@ -193,8 +193,8 @@ class InstallmentService
         $installment_total_amount = Installment::query()->sumInstallmentAmount();
         $nplQuery = (clone $query)->whereNextPayDate('<', Carbon::now()->subDays($overdueDays));
         $nplBeforeWeekQuery = (clone $query)->whereNextPayDate('<', Carbon::now()->subDays($overdueDays - $beforeDays));
-        $npl = $installment_total_amount === 0 ? 0 : $nplQuery->sumProfit() / $installment_total_amount * 100;
-        $nplBefore = $installment_total_amount === 0 ? 0 : $nplBeforeWeekQuery->sumProfit() / $installment_total_amount * 100;
+        $npl = !$installment_total_amount ? 0 : $nplQuery->sumProfit() / $installment_total_amount * 100;
+        $nplBefore = !$installment_total_amount ? 0 : $nplBeforeWeekQuery->sumProfit() / $installment_total_amount * 100;
 
         return [
             'value' => $npl,
