@@ -17,7 +17,6 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
     private array $_input;
 
     private Tariff $_annualTariff;
-    private Tariff $_differentialTariff;
 
     private array $_annualTestData = [
         [
@@ -72,65 +71,11 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
         ],
     ];
 
-    private array $_differentialTestData = [
-        [
-            'amount' => 99990,
-            'portion' => 12498.75,
-            'monthly' => 112488.75,
-        ],
-        [
-            'amount' => 99990,
-            'portion' => 11248.88,
-            'monthly' => 111238.88,
-        ],
-        [
-            'amount' => 99990,
-            'portion' => 9999,
-            'monthly' => 109989,
-        ],
-        [
-            'amount' => 99990,
-            'portion' => 8749.13,
-            'monthly' => 108739.13,
-        ],
-        [
-            'amount' => 99990,
-            'portion' => 7499.25,
-            'monthly' => 107489.25,
-        ],
-        [
-            'amount' => 99990,
-            'portion' => 6249.38,
-            'monthly' => 106239.38,
-        ],
-        [
-            'amount' => 99990,
-            'portion' => 4999.5,
-            'monthly' => 104989.5,
-        ],
-        [
-            'amount' => 99990,
-            'portion' => 3749.63,
-            'monthly' => 103739.63,
-        ],
-        [
-            'amount' => 99990,
-            'portion' => 2499.75,
-            'monthly' => 102489.75,
-        ],
-        [
-            'amount' => 99990,
-            'portion' => 1249.88,
-            'monthly' => 101239.88,
-        ],
-    ];
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->_annualTariff = Tariff::factory()->create(['is_annual' => true, 'percent' => 15]);
-        $this->_differentialTariff = Tariff::factory()->create(['is_annual' => false, 'percent' => 15]);
+        $this->_annualTariff = Tariff::factory()->create(['percent' => 15]);
     }
 
     #[Test]
@@ -154,26 +99,6 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successDifferentialAndWithoutStartsIn()
-    {
-        $this->_input = [
-            'tariff_id' => $this->_differentialTariff->id,
-            'amount' => 1000000,
-            'initial_fee' => 100,
-            'period' => 10,
-        ];
-
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery($this->_input)
-            );
-
-        $this->assertSuccessCalculateResponse($response, $this->_differentialTariff);
-    }
-
-    #[Test]
     public function successAnnualAndWithStartsIn()
     {
         $this->_input = [
@@ -192,27 +117,6 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
             );
 
         $this->assertSuccessCalculateResponse($response, $this->_annualTariff);
-    }
-
-    #[Test]
-    public function successDifferentialAndWithStartsIn()
-    {
-        $this->_input = [
-            'tariff_id' => $this->_differentialTariff->id,
-            'amount' => 1000000,
-            'initial_fee' => 100,
-            'period' => 10,
-            'starts_in' => '2007-07-07',
-        ];
-
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery($this->_input)
-            );
-
-        $this->assertSuccessCalculateResponse($response, $this->_differentialTariff);
     }
 
     #[Test]
@@ -311,7 +215,7 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
 
         $this->assertEquals($this->_input['period'], count($response->json('data.calculate')));
 
-        $data = $tariff->is_annual ? $this->_annualTestData : $this->_differentialTestData;
+        $data = $this->_annualTestData;
         $periods = InstallmentService::generatePeriods(Carbon::parse($this->_input['starts_in'] ?? now()->format('Y-m-d')), $this->_input['period']);
 
         for ($i = 0; $i < $this->_input['period']; $i++) {

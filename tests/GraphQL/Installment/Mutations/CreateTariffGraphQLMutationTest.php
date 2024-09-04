@@ -15,7 +15,6 @@ class CreateTariffGraphQLMutationTest extends GraphQLTestCase
 
     private array $_input = [
         'name' => 'test',
-        'is_annual' => true,
         'percent' => 10.5,
         'min_period' => 1,
         'max_period' => 12,
@@ -45,7 +44,6 @@ class CreateTariffGraphQLMutationTest extends GraphQLTestCase
                     'createTariff' => [
                         'id',
                         'name',
-                        'is_annual',
                         'percent',
                         'min_period',
                         'max_period',
@@ -65,7 +63,6 @@ class CreateTariffGraphQLMutationTest extends GraphQLTestCase
         $response = $this->sendGraphQLRequest(
             [
                 'name' => '2',
-                'is_annual' => true,
                 'percent' => 123,
                 'min_period' => 123,
                 'max_period' => 12,

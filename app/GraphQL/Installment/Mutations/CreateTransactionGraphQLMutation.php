@@ -39,6 +39,15 @@ class CreateTransactionGraphQLMutation extends Mutation
                     Rule::exists('installments', 'id')->when($branches, fn ($q) => $q->whereIn('branch_id', $branches)),
                 ],
             ],
+            'branch_id' => [
+                'name' => 'branch_id',
+                'type' => Type::int(),
+                'rules' => [
+                    'required',
+                    'int',
+                    Rule::exists('branches', 'id'),
+                ],
+            ],
             'customer_id' => [
                 'name' => 'customer_id',
                 'type' => Type::nonNull(Type::int()),
@@ -108,6 +117,9 @@ class CreateTransactionGraphQLMutation extends Mutation
         $model->admin_id = auth()->id();
         if (! $model->paid_at) {
             $model->paid_at = Carbon::now();
+        }
+        if (! $model->branch_id) {
+            $model->branch_id = $model->installment->branch_id;
         }
         $model->saveOrFail();
 

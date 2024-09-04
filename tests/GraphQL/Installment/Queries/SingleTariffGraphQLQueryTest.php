@@ -107,7 +107,6 @@ class SingleTariffGraphQLQueryTest extends GraphQLTestCase
                 'singleTariff' => [
                     'id',
                     'name',
-                    'is_annual',
                     'percent',
                     'min_period',
                     'max_period',
@@ -149,7 +148,6 @@ class SingleTariffGraphQLQueryTest extends GraphQLTestCase
         $this->assertNotNull($tariff);
         $this->assertEquals($tariff->id, $response->json('data.singleTariff.id'));
         $this->assertEquals($tariff->name, $response->json('data.singleTariff.name'));
-        $this->assertEquals($tariff->is_annual, $response->json('data.singleTariff.is_annual'));
         $this->assertEquals($tariff->percent, $response->json('data.singleTariff.percent'));
         $this->assertEquals($tariff->min_period, $response->json('data.singleTariff.min_period'));
         $this->assertEquals($tariff->max_period, $response->json('data.singleTariff.max_period'));

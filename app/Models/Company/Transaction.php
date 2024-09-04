@@ -13,6 +13,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
+ * @property int|null $branch_id
+ * @property Branch $branch
  * @property int $installment_id
  * @property Installment $installment
  * @property int $customer_id
@@ -38,6 +40,7 @@ class Transaction extends Model
 
     protected $fillable = [
         'installment_id',
+        'branch_id',
         'customer_id',
         'card_id',
         'transaction_type_id',

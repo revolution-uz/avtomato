@@ -79,42 +79,25 @@ class CalculateGraphQLQuery extends Query
         if (isset($args['starts_in'])) {
             $currentDate = Carbon::make($args['starts_in']);
         }
-        $periods = InstallmentService::generatePeriods($currentDate, $period);
+        $periodCarbons = InstallmentService::generatePeriods($currentDate, $period);
 
         $calculated = [];
         $i = 1;
+        $installmentAmount = $amount * ($rate / 100);
 
-        if ($tariff->is_annual) {
-            if ($rate == 0) {
-                $monthly = $amount / $period;
-            } else {
-                $monthly = ($amount * $rate * pow(1 + $rate, $period)) / (pow(1 + $rate, $period) - 1);
-            }
-
-            foreach ($periods as $period) {
-                $calculated[] = [
-                    'id' => $i,
-                    'date' => $period->format('Y-m-d'),
-                    'amount' => $amount * $rate,
-                    'portion' => $monthly - $amount * $rate,
-                    'monthly' => $monthly,
-                ];
-                $amount -= $monthly - $amount * $rate;
-                $i++;
-            }
-        } else {
+        foreach ($periodCarbons as $periodCarbon) {
             $monthlyAmount = $amount / $period;
-            foreach ($periods as $period) {
-                $calculated[] = [
-                    'id' => $i,
-                    'date' => $period->format('Y-m-d'),
-                    'amount' => $monthlyAmount,
-                    'portion' => $amount * $rate,
-                    'monthly' => $monthlyAmount + $amount * $rate,
-                ];
-                $amount -= $monthlyAmount;
-                $i++;
-            }
+            $monthlyInstallmentAmount = $installmentAmount / $period;
+            $monthly = $monthlyAmount + $monthlyInstallmentAmount;
+            $calculated[] = [
+                'id' => $i,
+                'date' => $periodCarbon->format('Y-m-d'),
+                'amount' => $monthlyAmount,
+                'portion' => $monthlyInstallmentAmount,
+                'monthly' => $monthly,
+            ];
+            $amount -= $monthly;
+            $i++;
         }
 
         return $calculated;
