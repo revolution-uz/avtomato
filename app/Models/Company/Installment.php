@@ -26,6 +26,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $tariff_id
  * @property float $percent
  * @property float $amount
+ * @property float $installment_amount
  * @property float $paid_amount
  * @property float $initial_fee
  * @property string $description
@@ -60,6 +61,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read  CompanyAdmin $admin
  * @property-read float $debtAmount
  * @property-read float $monthlyPayment
+ * @property-read float $is_active
+ * @property-read float $is_fully_paid
  * @property-read Carbon $nextPaymentDate
  */
 class Installment extends Model
@@ -166,7 +169,7 @@ class Installment extends Model
 
     public function debtAmount(): Attribute
     {
-        return Attribute::make(get: fn () => ($this->amount - $this->initial_fee) * ($this->percent / 100 + 1) - $this->paid_amount);
+        return Attribute::make(get: fn () => $this->installment_amount - $this->paid_amount);
     }
 
     public function isAvailableCustomerCard()
@@ -207,7 +210,31 @@ class Installment extends Model
     public function monthlyPayment(): Attribute
     {
         return Attribute::make(
-            get: fn () => round(($this->amount - $this->initial_fee) * ($this->percent / 100 + 1) / $this->period, 2)
+            get: fn () => round($this->installment_amount / $this->period, 2)
         );
+    }
+
+    public function installmentAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => round(($this->amount - $this->initial_fee) * ($this->percent / 100 + 1), 2)
+        );
+    }
+
+    public function isActive(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->status == InstallmentStatusEnum::ACTIVE
+        );
+    }
+
+    public function isPaidInitialFee(): bool
+    {
+        return (float) $this->transactions()->where('is_initial_fee', true)->sum('amount') == $this->initial_fee;
+    }
+
+    public function isFullyPaid(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->paid_amount >= $this->installment_amount);
     }
 }

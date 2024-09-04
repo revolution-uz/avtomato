@@ -26,6 +26,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property TransactionType $transactionType
  * @property string|null $external_id
  * @property float $amount
+ * @property bool $is_initial_fee
  * @property int $admin_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -36,7 +37,7 @@ class Transaction extends Model
 {
     use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
 
-    public static array $sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created'];
+    public static array $sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created', 'is_initial_fee'];
 
     protected $fillable = [
         'installment_id',
@@ -49,6 +50,7 @@ class Transaction extends Model
         'admin_id',
         'paid_at',
         'card_pan',
+        'is_initial_fee',
     ];
 
     protected $casts = [

@@ -73,7 +73,6 @@ class CalculateGraphQLQuery extends Query
         $amount = $args['amount'];
         $period = $args['period'];
         $amount -= $args['initial_fee'];
-        $rate = $tariff->percent / 100 / 12;
 
         $currentDate = Carbon::now();
         if (isset($args['starts_in'])) {
@@ -83,7 +82,7 @@ class CalculateGraphQLQuery extends Query
 
         $calculated = [];
         $i = 1;
-        $installmentAmount = $amount * ($rate / 100);
+        $installmentAmount = $amount * ($tariff->percent / 100);
 
         foreach ($periodCarbons as $periodCarbon) {
             $monthlyAmount = $amount / $period;

@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class InstallmentService
@@ -71,11 +72,9 @@ class InstallmentService
         if ($any_card) {
             $installment->any_card_charge = $any_card;
         }
-
-        if ($installment->any_card_charge || $installment->type == InstallmentTypeEnum::WITH_CARD) {
-            $this->withdrawAutoCharge($installment);
+        if ($this->withdrawAutoCharge($installment)) {
+            $installment->saveOrFail();
         }
-        $installment->saveOrFail();
 
         return $installment;
     }
@@ -88,11 +87,13 @@ class InstallmentService
     {
         if ($auto_charge) {
             $installmentGuarantor->any_card_charge = true;
-            $this->withdrawAutoCharge($installmentGuarantor->installment);
+            if ($this->withdrawAutoCharge($installmentGuarantor->installment)) {
+                $installmentGuarantor->saveOrFail();
+            }
         } else {
             $installmentGuarantor->any_card_charge = false;
+            $installmentGuarantor->saveOrFail();
         }
-        $installmentGuarantor->saveOrFail();
 
         return $installmentGuarantor;
     }
@@ -103,7 +104,20 @@ class InstallmentService
     public function changeStatus(Installment $installment, InstallmentStatusEnum $status): bool
     {
         if ($status == InstallmentStatusEnum::ACTIVE) {
-            // TODO charge balance
+            if ($installment->isPaidInitialFee()) {
+                if ($this->withdrawAutoCharge($installment)) {
+                    $installment->status = $status;
+                }
+
+                return $installment->save();
+            }
+            throw ValidationException::withMessages(['status' => __('api.You cannot activate an installment without withdrawing initial fee')]);
+        }
+
+        if ($status == InstallmentStatusEnum::CLOSED) {
+            if (! $installment->is_fully_paid) {
+                throw ValidationException::withMessages(['status' => __('api.You cannot close an installment without withdrawing amount')]);
+            }
         }
 
         $installment->status = $status;
@@ -120,13 +134,20 @@ class InstallmentService
         ];
     }
 
-    private function withdrawAutoCharge(Installment $installment)
+    private function withdrawAutoCharge(Installment $installment): bool
     {
-        if (! $installment->withdrawn_auto_charge) {
-            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
-            $installment->withdrawn_auto_charge = true;
+        if (($installment->any_card_charge || $installment->auto_pay) && ! $installment->withdrawn_auto_charge) {
+            if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
+                $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
+                $installment->withdrawn_auto_charge = true;
+
+                return $installment->saveOrFail();
+            }
+
+            return false;
         }
-        $installment->saveOrFail();
+
+        return true;
     }
 
     private function getInstallmentAmounts(): array
