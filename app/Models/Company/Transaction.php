@@ -73,9 +73,11 @@ class Transaction extends Model
         });
 
         static::created(function (self $transaction) {
-            Installment::query()
-                ->where('id', $transaction->installment_id)
-                ->increment('paid_amount', $transaction->amount);
+            if (! $transaction->is_initial_fee) {
+                Installment::query()
+                    ->where('id', $transaction->installment_id)
+                    ->increment('paid_amount', $transaction->amount);
+            }
             if ($transaction->card_pan) {
                 dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
             }
