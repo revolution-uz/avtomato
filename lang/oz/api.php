@@ -15,4 +15,5 @@ return [
     'installment_status_CLOSED' => 'Ёпилган',
     'max_amount' => 'Киритиладиган миқдор :amount дан катта бўлмаслиги керак.',
     'already_attached_card' => 'Карта аллақачон бу мижозга уланган',
+    'inactive_company' => 'Компания ҳозирда фаол эмас',
 ];

@@ -86,9 +86,7 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
             );
 
         $response->assertOk();
-        $this->assertEquals('Unauthorized', $response->json('errors.0.message'));
-
-        tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function input(): array

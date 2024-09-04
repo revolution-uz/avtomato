@@ -79,9 +79,7 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
 
         $response = $this->sendGraphQLRequest($this->_customer->id, $this->_branch->id, $this->_input);
         $response->assertOk();
-        $this->assertEquals('Unauthorized', $response->json('errors.0.message'));
-
-        tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     #[Test]
@@ -111,6 +109,18 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
                 $this->buildGraphQLQuery($this->_customer->id, $branches[1]->id, $this->_input)
             );
         $this->assertSuccessCreateInstallmentResponse($response);
+    }
+
+    #[Test]
+    public function errorCreateInstallmentWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this->sendGraphQLRequest($this->_customer->id, $this->_branch->id, $this->_input);
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function sendGraphQLRequest(int $customer_id, ?int $branch_id, array $installment = []): TestResponse

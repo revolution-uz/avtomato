@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
@@ -55,10 +56,10 @@ class UpdateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $this->_tariff = Tariff::factory()->create([
             'min_period' => 1,
             'max_period' => 10,
-            'min_amount' => 1,
-            'max_amount' => 10,
-            'min_initial_fee' => 1,
-            'max_initial_fee' => 10,
+            'min_amount' => 100000,
+            'max_amount' => 1000000,
+            'min_initial_fee' => 10000,
+            'max_initial_fee' => 100000,
         ]);
 
         $this->_installmentInput = [
@@ -179,6 +180,23 @@ class UpdateInstallmentGraphQLMutationTest extends GraphQLTestCase
                 ])
             );
         $this->assertSuccessResponse($response);
+    }
+
+    #[Test]
+    public function errorUpdateInstallmentWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['id' => $this->_installment->id, 'installment' => $this->_installmentInput])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

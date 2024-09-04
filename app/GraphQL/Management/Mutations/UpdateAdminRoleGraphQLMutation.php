@@ -41,7 +41,7 @@ class UpdateAdminRoleGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::ADMIN_CHANGE_PASSWORD);
+        return RbacHelper::checkPermission(PermissionEnum::ADMIN_CHANGE_ROLE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

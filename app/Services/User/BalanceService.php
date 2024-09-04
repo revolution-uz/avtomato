@@ -21,6 +21,8 @@ readonly class BalanceService
 
     public function chargeAmount(FeatureEnum $featureName, Model $model): BalanceCharge
     {
+        $this->getBalance();
+
         /** @var Feature $feature */
         $feature = Feature::query()->where('name', $featureName)->firstOrFail();
 
