@@ -47,7 +47,7 @@ class InstallmentService
 
     public function create(array $attributes): Installment
     {
-        $attributes['status'] = InstallmentStatusEnum::IN_ACTIVE;
+        $attributes['status'] = InstallmentStatusEnum::INACTIVE;
         $attributes['admin_id'] = auth()->user()->id;
         $attributes['sms_notify'] = false;
         $attributes['any_card_charge'] = false;
@@ -138,7 +138,7 @@ class InstallmentService
             'installment' => $this->calculateByIncreasingPercent(Installment::query(), 'id', 'amount'),
             'installment_future_profit' => $this->calculateByIncreasingPercent(
                 Installment::query()->join('tariffs', 'installments.tariff_id', '=', 'tariffs.id')
-                    ->where('status', '>', InstallmentStatusEnum::IN_ACTIVE),
+                    ->where('status', '>', InstallmentStatusEnum::INACTIVE),
                 'installments.id',
                 DB::raw('installments.amount / (1 + tariffs.percent / 100)'),
                 'installments.created_at'

@@ -11,7 +11,7 @@ enum InstallmentStatusEnum: int
 
     case CANCELED = -2; // means disabled
     case FROZEN = -1; // means freeze don't allowed to withdraw payment
-    case IN_ACTIVE = 0; // means just created and need to run
+    case INACTIVE = 0; // means just created and need to run
     case ACTIVE = 1; // means active
     case CLOSED = 2; // means closed
 
@@ -22,11 +22,11 @@ enum InstallmentStatusEnum: int
     {
         return match ($statusEnum) {
             self::CANCELED,
-            self::ACTIVE => [self::FROZEN, self::IN_ACTIVE],
+            self::ACTIVE => [self::FROZEN, self::INACTIVE],
             self::FROZEN => [self::ACTIVE, self::CLOSED],
-            self::IN_ACTIVE => [],
+            self::INACTIVE => [],
             self::CLOSED => [self::ACTIVE],
-            default => [self::CANCELED, self::IN_ACTIVE],
+            default => [self::CANCELED, self::INACTIVE],
         };
     }
 

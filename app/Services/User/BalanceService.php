@@ -48,7 +48,7 @@ readonly class BalanceService
 
         if (tenant()->status == CompanyStatusEnum::ACTIVE and $balance <= -100000) {
             tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
-        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance >= 0) {
+        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance > -100000) {
             tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
         }
 
