@@ -14,46 +14,6 @@ class InfoByPassportGraphQLQueryTest extends GraphQLTestCase
     protected bool $tenancy = true;
 
     private array $_input;
-    private array $_structure = [
-        'pinfl',
-        'tin',
-        'passport_series',
-        'passport_number',
-        'passport_given_date',
-        'passport_expiration_date',
-        'passport_given_place',
-        'passport_given_org',
-        'passport_citizenship_id',
-        'passport_citizenship',
-        'passport_living_place',
-        'first_name',
-        'last_name',
-        'middle_name',
-        'full_name',
-        'birth_date',
-        'birth_place',
-        'gender',
-        'address' => [
-            'address',
-            'region_id',
-            'district_id',
-            'mahalla_id',
-            'region' => [
-                'id',
-                'name',
-            ],
-            'district' => [
-                'id',
-                'region_id',
-                'name',
-            ],
-            'mahalla' => [
-                'id',
-                'district_id',
-                'name',
-            ],
-        ],
-    ];
 
     protected function setUp(): void
     {
@@ -84,7 +44,42 @@ class InfoByPassportGraphQLQueryTest extends GraphQLTestCase
         $response->assertJsonIsObject();
         $response->assertJsonStructure([
             'data' => [
-                'infoByPassport' => $this->_structure,
+                'infoByPassport' => [
+                    'pinfl',
+                    'tin',
+                    'passport_series',
+                    'passport_number',
+                    'passport_given_date',
+                    'passport_expiration_date',
+                    'passport_given_place',
+                    'passport_given_org',
+                    'passport_citizenship_id',
+                    'passport_citizenship',
+                    'passport_living_place',
+                    'first_name',
+                    'last_name',
+                    'middle_name',
+                    'full_name',
+                    'birth_date',
+                    'birth_place',
+                    'gender',
+                    'address' => [
+                        'address',
+                        'region_id',
+                        'district_id',
+                        'mahalla_id',
+                        'region' => [
+                            'id',
+                            'name',
+                        ],
+                        'district' => [
+                            'id',
+                            'region_id',
+                            'name',
+                        ],
+                        'mahalla',
+                    ],
+                ],
             ],
         ]);
     }
@@ -145,7 +140,44 @@ class InfoByPassportGraphQLQueryTest extends GraphQLTestCase
                     passport_number: $passport_number
                     birth_date: $birth_date
                 ) {
-                    ' . $this->convertIntoQuery($this->_structure) . '
+                    pinfl
+                    tin
+                    passport_series
+                    passport_number
+                    passport_given_date
+                    passport_expiration_date
+                    passport_given_place
+                    passport_given_org
+                    passport_citizenship_id
+                    passport_citizenship
+                    passport_living_place
+                    first_name
+                    last_name
+                    middle_name
+                    full_name
+                    birth_date
+                    birth_place
+                    gender
+                    address {
+                        address
+                        region_id
+                        district_id
+                        mahalla_id
+                        region {
+                            id
+                            name
+                        }
+                        district {
+                            id
+                            region_id
+                            name
+                        }
+                        mahalla {
+                            id
+                            district_id
+                            name
+                        }
+                    }
                 }
             }
         ';
