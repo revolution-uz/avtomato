@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
@@ -105,6 +106,18 @@ class AttachGuarantorGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $response->assertJsonIsObject();
         $this->assertSuccessResponse($response);
+    }
+
+    #[Test]
+    public function errorAttachGuarantorWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this->sendGraphQLRequest($this->_installment->id, $this->_customer->id);
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function sendGraphQLRequest(int $installment_id, int $customer_id): TestResponse

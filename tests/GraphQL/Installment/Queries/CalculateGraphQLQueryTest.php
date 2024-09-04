@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Queries;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\Tariff;
 use App\Services\Installment\InstallmentService;
 use Carbon\Carbon;
@@ -258,6 +259,28 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'tariff id']), $response->json('errors.0.extensions.validation.tariff_id.0'));
         $this->assertEquals(trans('validation.date', ['attribute' => 'starts in']), $response->json('errors.0.extensions.validation.starts_in.0'));
+    }
+
+    #[Test]
+    public function errorCalculateWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery([
+                    'tariff_id' => $this->_annualTariff->id,
+                    'amount' => 1000000,
+                    'initial_fee' => 100,
+                    'period' => 10,
+                ])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

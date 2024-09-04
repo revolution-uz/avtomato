@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Management\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\CompanyAdmin;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -123,6 +124,27 @@ class UpdateAdminPasswordGraphQLMutationTest extends GraphQLTestCase
             ],
         ]);
         $this->assertEquals(trans('validation.min.string', ['attribute' => 'Пароль', 'min' => 8]), $response->json('errors.0.extensions.validation.password.0'));
+    }
+
+    #[Test]
+    public function errorUpdateAdminPasswordWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery([
+                    'id' => $this->_adminInput->id,
+                    'password' => $this->_password,
+                    'password_confirmation' => $this->_password,
+                ])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

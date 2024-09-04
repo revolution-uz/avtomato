@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Installment\Mutations;
 
-use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\FeatureEnum;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
@@ -66,7 +65,7 @@ class CreateInstallmentGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE) && (tenant()->status == CompanyStatusEnum::ACTIVE);
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_CREATE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

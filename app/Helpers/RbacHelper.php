@@ -2,13 +2,19 @@
 
 namespace App\Helpers;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Rbac\RolePermission;
+use GraphQL\Error\Error;
 
 class RbacHelper
 {
     public static function checkPermission(PermissionEnum $permission): bool
     {
+        if ($permission->isRelatedToCompanyStatus() and tenant('status') != CompanyStatusEnum::ACTIVE) {
+            throw new Error(__('api.inactive_company'));
+        }
+
         return RolePermission::query()
             ->join('permissions', 'role_permissions.permission_id', '=', 'permissions.id')
             ->join('features', 'permissions.feature_id', '=', 'features.id')

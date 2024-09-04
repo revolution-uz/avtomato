@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Management\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Support\Arr;
@@ -159,6 +160,22 @@ class DeleteRoleGraphQLMutationTest extends GraphQLTestCase
         ]);
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('api.are used', ['item' => __('api.Role'), 'element' => __('api.User')]), $response->json('errors.0.extensions.validation')['ids.0'][0]);
+    }
+
+    #[Test]
+    public function errorDeleteRoleWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $idsInput = Role::query()->whereNot('id', Role::getAdmin()->id)->doesntHave('admins')->inRandomOrder()->limit(3)->pluck('id')->toArray();
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery(['ids' => $idsInput]));
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

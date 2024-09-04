@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Management\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\CompanyAdmin;
 use Illuminate\Support\Arr;
 use PHPUnit\Framework\Attributes\Test;
@@ -100,6 +101,22 @@ class DeleteAdminGraphQLMutationTest extends GraphQLTestCase
         ]);
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('api.not found', ['attribute' => 'ids.0']), $response->json('errors.0.extensions.validation')['ids.0'][0]);
+    }
+
+    #[Test]
+    public function errorDeleteAdminWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $idsInput = CompanyAdmin::query()->whereNot('id', $this->_actingAdmin->id)->inRandomOrder()->limit(3)->pluck('id')->toArray();
+
+        $response = $this
+            ->actingAs($this->_actingAdmin)
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery(['ids' => $idsInput]));
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

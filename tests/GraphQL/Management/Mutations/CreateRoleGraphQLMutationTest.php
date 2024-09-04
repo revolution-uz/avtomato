@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Management\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -268,6 +269,20 @@ class CreateRoleGraphQLMutationTest extends GraphQLTestCase
         ]);
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'Имя', 'max' => 255]), $response->json('errors.0.extensions.validation.name.0'));
+    }
+
+    #[Test]
+    public function errorCreateRoleWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery(['name' => Str::random(255)]));
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

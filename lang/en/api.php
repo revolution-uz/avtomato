@@ -14,4 +14,5 @@ return [
     'installment_status_CLOSED' => 'Closed',
     'max_amount' => 'Amount must not be greater than :amount.',
     'already_attached_card' => 'The card already connected to this customer',
+    'inactive_company' => 'The company is currently inactive',
 ];

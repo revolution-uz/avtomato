@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Management\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\Attachment;
 use App\Models\Company\CompanyAdmin;
 use Illuminate\Support\Str;
@@ -165,6 +166,20 @@ class UpdateAdminGraphQLMutationTest extends GraphQLTestCase
         ]);
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
+    }
+
+    #[Test]
+    public function errorUpdateAdminWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery(['id' => $this->_adminInput->id]));
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

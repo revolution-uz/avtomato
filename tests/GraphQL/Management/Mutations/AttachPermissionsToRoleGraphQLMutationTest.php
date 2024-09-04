@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Management\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
@@ -251,6 +252,23 @@ class AttachPermissionsToRoleGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$permissions" got invalid value null at "permissions[0].permission_id"; Expected non-nullable type "Int!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$permissions" got invalid value null at "permissions[0].enabled"; Expected non-nullable type "Boolean!" not to be null.'));
+    }
+
+    #[Test]
+    public function errorAttachPermissionsToRoleWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery($this->_role->id, $this->_permissionInput)
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(?int $roleId = null, array $permission = []): array
