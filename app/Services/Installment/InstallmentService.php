@@ -29,7 +29,7 @@ class InstallmentService
 
     public static function generatePeriods(?Carbon $startDate, $period): array
     {
-        if (!$startDate) {
+        if (! $startDate) {
             $startDate = Carbon::now();
         }
 
@@ -114,7 +114,7 @@ class InstallmentService
         }
 
         if ($status == InstallmentStatusEnum::CLOSED) {
-            if (!$installment->is_fully_paid) {
+            if (! $installment->is_fully_paid) {
                 throw ValidationException::withMessages(['status' => __('api.You cannot close an installment without withdrawing amount')]);
             }
         }
@@ -135,7 +135,7 @@ class InstallmentService
 
     private function withdrawAutoCharge(Installment $installment): bool
     {
-        if (($installment->any_card_charge || $installment->auto_pay) && !$installment->withdrawn_auto_charge) {
+        if (($installment->any_card_charge || $installment->auto_pay) && ! $installment->withdrawn_auto_charge) {
             if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
                 $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
                 $installment->withdrawn_auto_charge = true;
@@ -155,7 +155,7 @@ class InstallmentService
             'transaction' => $this->calculateByIncreasingPercent(Transaction::query(), 'id', 'amount'),
             'installment' => $this->calculateByIncreasingPercent(Installment::query(), 'id', 'amount'),
             'installment_future_profit' => $this->calculateByIncreasingPercent(
-                Installment::query()->whereStatus('>', InstallmentStatusEnum::IN_ACTIVE),
+                Installment::query()->where('status', '>', InstallmentStatusEnum::IN_ACTIVE),
                 'id',
                 Installment::getProfitAmountRaw()
             ),
@@ -190,11 +190,11 @@ class InstallmentService
     private function calculateNpl(int $overdueDays, int $beforeDays): array
     {
         $query = Installment::query();
-        $installment_total_amount = Installment::query()->sumInstallmentAmount();
+        $installment_total_amount = (float) Installment::query()->sum(Installment::getInstallmentAmountRaw());
         $nplQuery = (clone $query)->whereNextPayDate('<', Carbon::now()->subDays($overdueDays));
         $nplBeforeWeekQuery = (clone $query)->whereNextPayDate('<', Carbon::now()->subDays($overdueDays - $beforeDays));
-        $npl = !$installment_total_amount ? 0 : $nplQuery->sumProfit() / $installment_total_amount * 100;
-        $nplBefore = !$installment_total_amount ? 0 : $nplBeforeWeekQuery->sumProfit() / $installment_total_amount * 100;
+        $npl = $installment_total_amount > 0 ? $nplQuery->sum(Installment::getProfitAmountRaw()) / $installment_total_amount * 100 : 0;
+        $nplBefore = $installment_total_amount > 0 ? $nplBeforeWeekQuery->sum(Installment::getProfitAmountRaw()) / $installment_total_amount * 100 : 0;
 
         return [
             'value' => $npl,
@@ -220,7 +220,7 @@ class InstallmentService
                 'name' => __('api.installment_status_' . $status->name),
                 'type' => 'line',
                 'stack' => 'Total',
-                'count' => (clone $query)->where('created_at', '>=', Carbon::today()->startOfWeek())->count('id'),
+                'count' => (clone $query)->where('created_at', '>=', Carbon::today()->startOfWeek())->countId(),
                 'data' => $data,
             ];
         }

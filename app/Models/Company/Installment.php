@@ -264,11 +264,6 @@ class Installment extends Model
         return $query->where(DB::raw("starts_in + (FLOOR(paid_amount / ((amount - initial_fee) * (percent + 100) / 100) / period)::text || ' month')::interval"), $expression, $date);
     }
 
-    public function scopeWhereStatus($query, $expression, InstallmentStatusEnum $statusEnum)
-    {
-        return $query->where('status', $expression, $statusEnum);
-    }
-
     public function scopeCountId($query)
     {
         return $query->count('id');
