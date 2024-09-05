@@ -73,7 +73,7 @@ class CalculateGraphQLQuery extends Query
         $amount = $args['amount'];
         $period = $args['period'];
         $amount -= $args['initial_fee'];
-        $installmentAmount = $amount * ($tariff->percent / 100 + 1);
+        $installmentAmount = $amount * ($tariff->percent + 100) / 100;
         $monthlyAmount = $amount / $period;
         $monthlyInstallmentAmount = $installmentAmount / $period;
 

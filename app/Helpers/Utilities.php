@@ -52,9 +52,4 @@ class Utilities
     {
         return tenant('id') . self::TENANT_SEPARATOR . $id;
     }
-
-    public static function percentIntoPartial(float $percent): float
-    {
-        return ($percent + 100) / 100;
-    }
 }
