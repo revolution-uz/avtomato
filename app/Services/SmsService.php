@@ -7,10 +7,12 @@ use App\Clients\SmsSayqalClient;
 use App\DTOs\FeatureData\FeatureSmsData;
 use App\DTOs\Sms\SmsSayqal\SmsSayqalGetStatusResponseDTO;
 use App\DTOs\Sms\SmsSayqal\SmsSayqalSendMessageResponseDTO;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\SmsMessageStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Enums\SmsProviderEnum;
 use App\Enums\SmsTemplateEnum;
+use App\Exceptions\CompanyIsNotActiveException;
 use App\Http\Requests\SayqalSmsCallbackRequest;
 use App\Http\Requests\SayqalVoiceCallbackRequest;
 use App\Models\BaseFeature;
@@ -29,6 +31,8 @@ class SmsService
     {
         if ($feature->name !== FeatureEnum::SMS) {
             throw new Exception('Feature not allowed');
+        } elseif (tenant('status') != CompanyStatusEnum::ACTIVE) {
+            throw new CompanyIsNotActiveException;
         }
 
         $data = FeatureSmsData::from($feature->data ?? $feature->original_data);

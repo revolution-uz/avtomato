@@ -83,9 +83,7 @@ class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
         $response = $this->sendGraphQLRequest($this->_input, $this->taxType);
 
         $response->assertOk();
-        $this->assertEquals('Unauthorized', $response->json('errors.0.message'));
-
-        tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function sendGraphQLRequest(array $data, int $type): TestResponse

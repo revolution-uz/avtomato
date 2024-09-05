@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Customer\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\GenderEnum;
 use App\Models\Company\Customer;
 use Illuminate\Support\Arr;
@@ -191,6 +192,23 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.date', ['attribute' => 'customer.birth date']), $response->json('errors.0.extensions.validation')['customer.birth_date'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'customer.birth place', 'max' => 32]), $response->json('errors.0.extensions.validation')['customer.birth_place'][0]);
         $this->assertEquals(trans('validation.in', ['attribute' => 'customer.gender']), $response->json('errors.0.extensions.validation')['customer.gender'][0]);
+    }
+
+    #[Test]
+    public function errorUpdateCustomerWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery(['id' => $this->_customer->id, 'customer' => $this->_customerInput])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

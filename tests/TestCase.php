@@ -20,6 +20,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
+
     protected bool $tenancy = false;
 
     protected function setUp(): void
@@ -41,12 +42,17 @@ abstract class TestCase extends BaseTestCase
      */
     public function initializeTenancy(): void
     {
-        $tenant = Company::first() ?? Company::factory()->create([
+        /** @var Company $tenant */
+        $tenant = Company::query()->first() ?? Company::factory()->create([
             'name' => 'Test Company',
             'owner_phone' => '0123456789',
             'owner_name' => 'Test Owner',
             'status' => CompanyStatusEnum::ACTIVE,
         ]);
+
+        if ($tenant->status !== CompanyStatusEnum::ACTIVE) {
+            $tenant->update(['status' => CompanyStatusEnum::ACTIVE]);
+        }
 
         tenancy()->initialize($tenant);
 

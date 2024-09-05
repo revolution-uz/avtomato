@@ -3,7 +3,6 @@
 namespace App\GraphQL\Scoring\Mutations;
 
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
-use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\GraphQL\Scoring\Types\Katm\KatmCreateInputGraphQLType;
@@ -65,7 +64,7 @@ class CreateKatmScoringGraphQLMutation extends Mutation
             default => throw new Exception('Unexpected match value'),
         };
 
-        return RbacHelper::checkPermission($permission) && (tenant()->status == CompanyStatusEnum::ACTIVE);
+        return RbacHelper::checkPermission($permission);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
