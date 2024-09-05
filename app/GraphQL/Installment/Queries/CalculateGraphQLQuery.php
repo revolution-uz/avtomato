@@ -73,6 +73,9 @@ class CalculateGraphQLQuery extends Query
         $amount = $args['amount'];
         $period = $args['period'];
         $amount -= $args['initial_fee'];
+        $installmentAmount = $amount * ($tariff->percent / 100 + 1);
+        $monthlyAmount = $amount / $period;
+        $monthlyInstallmentAmount = $installmentAmount / $period;
 
         $currentDate = Carbon::now();
         if (isset($args['starts_in'])) {
@@ -82,20 +85,15 @@ class CalculateGraphQLQuery extends Query
 
         $calculated = [];
         $i = 1;
-        $installmentAmount = $amount * ($tariff->percent / 100);
 
         foreach ($periodCarbons as $periodCarbon) {
-            $monthlyAmount = $amount / $period;
-            $monthlyInstallmentAmount = $installmentAmount / $period;
-            $monthly = $monthlyAmount + $monthlyInstallmentAmount;
             $calculated[] = [
                 'id' => $i,
                 'date' => $periodCarbon->format('Y-m-d'),
                 'amount' => $monthlyAmount,
-                'portion' => $monthlyInstallmentAmount,
-                'monthly' => $monthly,
+                'portion' => $monthlyInstallmentAmount - $monthlyAmount,
+                'monthly' => $monthlyInstallmentAmount,
             ];
-            $amount -= $monthly;
             $i++;
         }
 
