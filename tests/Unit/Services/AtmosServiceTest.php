@@ -64,7 +64,7 @@ class AtmosServiceTest extends TestCase
             'amount' => 1000000,
             'initial_fee' => 100000,
             'percent' => 15,
-            'starts_in' => Carbon::createFromTimestampMs(1722945005887)->subDay(),
+            'starts_in' => Carbon::now()->subDay(),
             'period' => 3,
             'paid_amount' => 0,
         ]);
