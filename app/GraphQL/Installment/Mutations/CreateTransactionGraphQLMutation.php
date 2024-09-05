@@ -80,14 +80,6 @@ class CreateTransactionGraphQLMutation extends Mutation
                     'min:0',
                 ],
             ],
-            'is_initial_fee' => [
-                'name' => 'is_initial_fee',
-                'type' => Type::nonNull(Type::boolean()),
-                'rules' => [
-                    'required',
-                    'boolean',
-                ],
-            ],
             'paid_at' => [
                 'name' => 'paid_at',
                 'type' => Type::string(),
@@ -123,11 +115,11 @@ class CreateTransactionGraphQLMutation extends Mutation
         $model->fill($args);
         $model->external_id = 'local_' . Str::random();
         $model->admin_id = auth()->id();
-        if ($model->installment->is_active && $model->is_initial_fee) {
-            throw ValidationException::withMessages(['is_initial_fee' => __('api.You cannot create transaction as an initial fee for active installments')]);
-        }
-        if (! $model->installment->is_active && ! $model->is_initial_fee) {
-            throw ValidationException::withMessages(['is_initial_fee' => __('api.You cannot create transaction as a monthly for inactive installments')]);
+        if (! $model->installment->is_active && ! $model->installment->isPaidInitialFee()) {
+            if ($model->amount != $model->installment->initial_fee) {
+                throw ValidationException::withMessages(['amount' => __('api.Please create initial fee amount first')]);
+            }
+            $model->is_initial_fee = true;
         }
         if (! $model->paid_at) {
             $model->paid_at = Carbon::now();
