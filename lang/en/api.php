@@ -15,6 +15,5 @@ return [
     'max_amount' => 'Amount must not be greater than :amount.',
     'already_attached_card' => 'The card already connected to this customer',
     'inactive_company' => 'The company is currently inactive',
-    'You cannot create transaction as an initial fee for active installments' => 'You cannot create transaction as an initial fee for active installments',
-    'You cannot create transaction as a monthly for inactive installments' => 'You cannot create transaction as a monthly for inactive installments',
+    'Please create initial fee amount first' => 'Please, create initial fee amount first',
 ];

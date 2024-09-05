@@ -56,6 +56,20 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successCreateTransactionWithInactiveInstallment()
+    {
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::IN_ACTIVE]);
+        $response = $this->sendGraphQLRequest(
+            $this->_installment->id,
+            $this->_customer->id,
+            $this->_transactionType->id,
+            $this->_installment->initial_fee,
+            '2021-01-01'
+        );
+        $this->assertSuccessResponse($response);
+    }
+
+    #[Test]
     public function errorValidation(): void
     {
         $response = $this->sendGraphQLRequest(
@@ -121,6 +135,42 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function errorCreateTransactionWithInactiveInstallment()
+    {
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::IN_ACTIVE]);
+
+        $response = $this->sendGraphQLRequest(
+            $this->_installment->id,
+            $this->_customer->id,
+            $this->_transactionType->id,
+            $this->_installment->initial_fee - 1,
+            '2021-01-01'
+        );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(
+            __('api.Please create initial fee amount first'),
+            $response->json('errors.0.extensions.validation.amount.0')
+        );
+
+        $response = $this->sendGraphQLRequest(
+            $this->_installment->id,
+            $this->_customer->id,
+            $this->_transactionType->id,
+            $this->_installment->initial_fee + 1,
+            '2021-01-01'
+        );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(
+            __('api.Please create initial fee amount first'),
+            $response->json('errors.0.extensions.validation.amount.0')
+        );
+    }
+
+    #[Test]
     public function successCheckForPermission()
     {
         $role = Role::factory()->create();
@@ -158,35 +208,13 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
                     $this->_customer->id,
                     $this->_transactionType->id,
                     rand(0, 935000),
-                    false,
                     '2021-01-01'
                 ),
             );
         $this->assertSuccessResponse($response);
     }
 
-    #[Test]
-    public function errorCreateTransactionWithInitialFeeWhenInstallmentIsActive()
-    {
-        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE]);
-
-        $response = $this->sendGraphQLRequest(
-            $this->_installment->id,
-            $this->_customer->id,
-            $this->_transactionType->id,
-            rand(0, 935000),
-            '2021-01-01'
-        );
-        $response->assertOk();
-        $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(
-            __('api.Please create initial fee amount first'),
-            $response->json('errors.0.extensions.validation.amount.0')
-        );
-    }
-
-    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at, array $headers = []): TestResponse
+    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, float $amount, ?string $paid_at, array $headers = []): TestResponse
     {
         return $this
             ->actingAs($this->createAdminUser())
@@ -197,7 +225,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             );
     }
 
-    private function buildGraphQLQuery(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at): array
+    private function buildGraphQLQuery(int $installment_id, int $customer_id, int $transaction_type_id, float $amount, ?string $paid_at): array
     {
         return [
             'variables' => [
