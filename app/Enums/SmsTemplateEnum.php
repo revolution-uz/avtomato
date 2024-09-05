@@ -11,7 +11,7 @@ enum SmsTemplateEnum: int
     {
         return match ($this) {
             self::AUTO_CHARGE => ':pan kartadan :amount so\'m N:credit_number shartnomaga asosan :company ga yechildi. Ma\'lumot uchun: :phone',
-            self::CARD_CONFIRMATION => "Avtomato tizimida kartangizni muddatli to'lovga biriktirish tasdiqlash kodi- code",
+            self::CARD_CONFIRMATION => 'Avtomato tizimida kartangizni muddatli to\'lovga biriktirish tasdiqlash kodi- :code',
         };
     }
 
