@@ -12,7 +12,7 @@ class BaseSmsTemplateSeeder extends Seeder
     {
         foreach (SmsTemplateEnum::cases() as $case) {
             /** @var BaseSmsTemplate $template */
-            BaseSmsTemplate::query()->firstOrCreate([
+            BaseSmsTemplate::query()->updateOrCreate([
                 'id' => $case->value,
             ], [
                 'original_template' => $case->getDefaultTemplate(),
