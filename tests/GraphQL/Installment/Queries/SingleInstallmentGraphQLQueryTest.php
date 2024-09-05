@@ -331,7 +331,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     }
                     tariff {
                         id
-                        is_annual
                         max_amount
                         max_initial_fee
                         max_period

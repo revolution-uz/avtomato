@@ -165,7 +165,6 @@ class TariffsGraphQLQueryTest extends GraphQLTestCase
                     data {
                         id
                         name
-                        is_annual
                         percent
                         min_period
                         max_period

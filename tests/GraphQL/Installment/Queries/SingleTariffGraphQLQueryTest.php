@@ -58,7 +58,6 @@ class SingleTariffGraphQLQueryTest extends GraphQLTestCase
                 singleTariff(id: $id) {
                     id
                     name
-                    is_annual
                     percent
                     min_period
                     max_period

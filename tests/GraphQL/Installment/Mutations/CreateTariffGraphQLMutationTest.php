@@ -110,7 +110,6 @@ class CreateTariffGraphQLMutationTest extends GraphQLTestCase
                 createTariff(tariff: $tariff){
                     id
                     name
-                    is_annual
                     percent
                     min_period
                     max_period

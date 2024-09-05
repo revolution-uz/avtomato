@@ -36,7 +36,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             'starts_in' => now()->addDay(),
         ]);
         (new PopulateInstallmentChargeJobs)->handle();
-        Bus::assertDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeJob::class);
     }
 
     #[Test]

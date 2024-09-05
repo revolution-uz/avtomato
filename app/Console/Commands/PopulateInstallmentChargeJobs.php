@@ -34,12 +34,10 @@ class PopulateInstallmentChargeJobs extends Command
         foreach (Company::get() as $company) {
             tenancy()->initialize($company);
             /** @var Installment[] $installments */
-            $installments = Installment::query()
+            $installments = Installment::query()->select('id')
                 ->where('status', InstallmentStatusEnum::ACTIVE)
                 ->whereNextPayDate('<=', Carbon::now())
-                ->select('id')
-                ->get()
-                ->all();
+                ->get();
 
             if (! count($installments)) {
                 continue;

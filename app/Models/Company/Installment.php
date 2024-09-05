@@ -183,9 +183,14 @@ class Installment extends Model
         return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
     }
 
-    public function debtAmount(): Attribute
+    public function wholeDebtAmount(): Attribute
     {
         return Attribute::make(get: fn () => $this->installment_amount - $this->paid_amount);
+    }
+
+    public function debtAmount(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->monthlyPayment * max(ceil($this->starts_in->diffInMonths()), 0) - $this->paid_amount);
     }
 
     public function isAvailableCustomerCard()
@@ -261,7 +266,7 @@ class Installment extends Model
 
     public function scopeWhereNextPayDate($query, string $expression, Carbon $date)
     {
-        return $query->where(DB::raw("starts_in + (FLOOR(paid_amount / ((amount - initial_fee) * (percent + 100) / 100) / period)::text || ' month')::interval"), $expression, $date);
+        return $query->where(DB::raw("starts_in + (FLOOR(paid_amount / ROUND(((amount - initial_fee) * (percent / 100 + 1) / period)::numeric, 2))::text || ' month')::interval"), $expression, $date);
     }
 
     public function scopeCountId($query)
