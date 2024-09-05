@@ -65,6 +65,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read float $is_active
  * @property-read float $is_fully_paid
  * @property-read Carbon $nextPaymentDate
+ * @property mixed $wholeDebtAmount
  */
 class Installment extends Model
 {

@@ -19,4 +19,6 @@ return [
     'installment_status_CLOSED' => 'Yopilgan',
     'max_amount' => 'Kiritiladigan miqdor :amount dan katta bo‘lmasligi kerak.',
     'already_attached_card' => 'Karta allaqachon bu mijozga ulangan',
+    'You cannot create transaction as an initial fee for active installments' => 'Сиз фаол тўлов учун дастлабки тўлов сифатида транзакция ярата олмайсиз',
+    'You cannot create transaction as a monthly for inactive installments' => 'Сиз нофаол тўловлар учун ойлик транзакция ярата олмайсиз',
 ];
