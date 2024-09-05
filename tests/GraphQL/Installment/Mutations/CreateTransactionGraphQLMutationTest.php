@@ -50,7 +50,6 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             $this->_customer->id,
             $this->_transactionType->id,
             rand(0, 935000),
-            false,
             '2021-01-01'
         );
         $this->assertSuccessResponse($response);
@@ -64,7 +63,6 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             234,
             123,
             '1000',
-            'kjhghj',
             '0000-01-01'
         );
         $response->assertOk();
@@ -108,7 +106,6 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
                 $this->_customer->id,
                 $this->_transactionType->id,
                 935001,
-                false,
                 '2021-01-01',
                 ['Accept-Language' => $locale],
             );
@@ -143,7 +140,6 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
                     $this->_customer->id,
                     $this->_transactionType->id,
                     rand(0, 935000),
-                    false,
                     '2021-01-01'
                 ),
             );
@@ -179,53 +175,29 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             $this->_customer->id,
             $this->_transactionType->id,
             rand(0, 935000),
-            true,
             '2021-01-01'
         );
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(
-            __('api.You cannot create transaction as an initial fee for active installments'),
-            $response->json('errors.0.extensions.validation.is_initial_fee.0')
+            __('api.Please create initial fee amount first'),
+            $response->json('errors.0.extensions.validation.amount.0')
         );
     }
 
-    #[Test]
-    public function errorCreateTransactionWithoutInitialFeeWhenInstallmentIsInactive()
-    {
-        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::IN_ACTIVE]);
-
-        $response = $this->sendGraphQLRequest(
-            $this->_installment->id,
-            $this->_customer->id,
-            $this->_transactionType->id,
-            rand(0, 935000),
-            false,
-            '2021-01-01'
-        );
-
-        $response->assertOk();
-        $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(
-            __('api.You cannot create transaction as a monthly for inactive installments'),
-            $response->json('errors.0.extensions.validation.is_initial_fee.0')
-        );
-    }
-
-    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, bool $is_initial_fee, ?string $paid_at, array $headers = []): TestResponse
+    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at, array $headers = []): TestResponse
     {
         return $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route(self::GRAPHQL_ROUTE),
-                $this->buildGraphQLQuery($installment_id, $customer_id, $transaction_type_id, $amount, $is_initial_fee, $paid_at),
+                $this->buildGraphQLQuery($installment_id, $customer_id, $transaction_type_id, $amount, $paid_at),
                 $headers
             );
     }
 
-    private function buildGraphQLQuery(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, bool $is_initial_fee, ?string $paid_at): array
+    private function buildGraphQLQuery(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at): array
     {
         return [
             'variables' => [
@@ -233,17 +205,15 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
                 'customer_id' => $customer_id,
                 'transaction_type_id' => $transaction_type_id,
                 'amount' => $amount,
-                'is_initial_fee' => $is_initial_fee,
                 'paid_at' => $paid_at,
             ],
             'query' => '
-            mutation ($installment_id: Int!, $customer_id: Int!, $transaction_type_id: Int!, $amount: BigFloat!, $is_initial_fee: Boolean!, $paid_at: String!) {
+            mutation ($installment_id: Int!, $customer_id: Int!, $transaction_type_id: Int!, $amount: BigFloat!, $paid_at: String!) {
                 createTransaction(
                     installment_id: $installment_id,
                     customer_id: $customer_id,
                     transaction_type_id: $transaction_type_id,
                     amount: $amount,
-                    is_initial_fee: $is_initial_fee,
                     paid_at: $paid_at
                 ) {
                     id
