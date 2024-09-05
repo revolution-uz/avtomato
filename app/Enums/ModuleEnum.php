@@ -22,6 +22,7 @@ enum ModuleEnum: string
         return match ($feature) {
             FeatureEnum::USER_MANAGEMENT,
             FeatureEnum::BRANCH_MANAGEMENT,
+            FeatureEnum::COMPANY_MANAGEMENT,
             FeatureEnum::ACTIVITY_LOG,
             FeatureEnum::ROLE_MANAGEMENT => [self::MULTIBRANCH_2, self::MULTIBRANCH_3, self::MULTIBRANCH_4],
             FeatureEnum::SMS => [self::INSTALLMENT, self::MARKETING],

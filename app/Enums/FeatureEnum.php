@@ -23,6 +23,7 @@ enum FeatureEnum: string
     case TRANSACTION_MANAGEMENT = 'transaction_management';
     case TRANSACTION_TYPE_MANAGEMENT = 'transaction_type_management';
     case BRANCH_MANAGEMENT = 'branch_management';
+    case COMPANY_MANAGEMENT = 'company_management';
     case ROLE_MANAGEMENT = 'role_management';
     case SCORING_CREDIT_HISTORY = 'scoring_credit_history';
     case SCORING_INPS_HISTORY = 'scoring_inps_history';
@@ -55,6 +56,7 @@ enum FeatureEnum: string
             self::SCORING_TAX_INFO => 'Soliq qarzdorligi skoringi',
             self::SCORING_MIB_INFO => 'MIB qarzdorligi skoringi',
             self::BRANCH_MANAGEMENT => 'Filiallar boshqaruvi',
+            self::COMPANY_MANAGEMENT => 'Kompaniya boshqaruvi',
             self::TRANSACTION_TYPE_MANAGEMENT => 'Tranzaksiya turlari boshqaruvi',
             self::TRANSACTION_MANAGEMENT => 'Tranzaksiyalar boshqaruvi',
             self::TARIFF_MANAGEMENT => 'Tariflar boshqaruvi',

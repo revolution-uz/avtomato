@@ -3,7 +3,9 @@
 namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\SettingsGraphQLType;
+use App\Helpers\RbacHelper;
 use App\Models\Company\CompanySettings;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -43,10 +45,10 @@ class ChangeSettingsGraphQLMutation extends Mutation
 
     }
 
-    // public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    // {
-    //     return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_ATTACH_CARD);
-    // }
+    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::SETTINGS_EDIT);
+    }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {

@@ -3,6 +3,7 @@
 namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\CompanySettings;
 use Database\Seeders\Company\CompanySettingsSeeder;
 use Illuminate\Support\Arr;
@@ -200,6 +201,25 @@ class ChangeSettingsGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'settings id']), $response->json('errors.0.extensions.validation.settings_id.0'));
+    }
+
+    #[Test]
+    public function errorCreateWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $companySettings = CompanySettings::query()->firstWhere('name', CompanySettingsEnum::randomValue());
+        $input = [
+            'settings_id' => $companySettings->id,
+            'value' => (string) ($companySettings->value + 1),
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($input));
+
+        $response->assertOk();
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array
