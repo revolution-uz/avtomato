@@ -27,10 +27,6 @@ class TariffGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Tariff $root) => $root->name,
             ],
-            'is_annual' => [
-                'type' => Type::nonNull(Type::boolean()),
-                'resolve' => fn (Tariff $root) => $root->is_annual,
-            ],
             'percent' => [
                 'type' => Type::nonNull(Type::float()),
                 'resolve' => fn (Tariff $root) => $root->percent,

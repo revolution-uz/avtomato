@@ -20,4 +20,6 @@ return [
     'max_amount' => 'Сумма не может быть более :amount.',
     'already_attached_card' => 'Карта уже привязана к этому клиенту',
     'inactive_company' => 'В настоящее время компания неактивна',
+    'You cannot create transaction as an initial fee for active installments' => 'Вы не можете создать транзакцию в качестве первоначального взноса для активных взносов',
+    'You cannot create transaction as a monthly for inactive installments' => 'Вы не можете создать транзакцию как ежемесячную для неактивных платежей',
 ];

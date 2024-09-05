@@ -7,11 +7,11 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Installment;
+use Carbon\Carbon;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
@@ -85,11 +85,7 @@ class InstallmentsGraphQLQuery extends Query
                 ->when(
                     isset($args['debt_only']) && $args['debt_only'],
                     fn (Builder $q) => $q
-                        ->where(
-                            DB::raw("(amount - initial_fee) * (percent + 100) / 100 * ABS(DATE_PART('month', AGE(starts_in, NOW()))) + initial_fee - paid_amount"),
-                            '>',
-                            0
-                        )
+                        ->whereNextPayDate('<=', Carbon::now())
                 )
                 ->when(isset($args['status']), fn (Builder $q) => $q->where('status', $args['status']))
                 ->when(

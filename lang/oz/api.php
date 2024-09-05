@@ -16,4 +16,6 @@ return [
     'max_amount' => 'Киритиладиган миқдор :amount дан катта бўлмаслиги керак.',
     'already_attached_card' => 'Карта аллақачон бу мижозга уланган',
     'inactive_company' => 'Компания ҳозирда фаол эмас',
+    'You cannot create transaction as an initial fee for active installments' => 'Siz faol to\'lov uchun dastlabki to\'lov sifatida tranzaksiya yarata olmaysiz',
+    'You cannot create transaction as a monthly for inactive installments' => 'Siz nofaol to\'lovlar uchun oylik tranzaksiya yarata olmaysiz',
 ];

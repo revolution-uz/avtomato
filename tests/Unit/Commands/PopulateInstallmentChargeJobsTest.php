@@ -36,7 +36,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             'starts_in' => now()->addDay(),
         ]);
         (new PopulateInstallmentChargeJobs)->handle();
-        Bus::assertDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeJob::class);
     }
 
     #[Test]
@@ -47,7 +47,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now()->addDay(),
         ]);
-        Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee]);
+        Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
         (new PopulateInstallmentChargeJobs)->handle();
         Bus::assertNotDispatched(InstallmentChargeJob::class);
     }
@@ -60,7 +60,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now()->subDay(),
         ]);
-        Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee]);
+        Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->monthlyPayment]);
         (new PopulateInstallmentChargeJobs)->handle();
         Bus::assertNotDispatched(InstallmentChargeJob::class);

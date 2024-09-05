@@ -39,6 +39,15 @@ class CreateTransactionGraphQLMutation extends Mutation
                     Rule::exists('installments', 'id')->when($branches, fn ($q) => $q->whereIn('branch_id', $branches)),
                 ],
             ],
+            'branch_id' => [
+                'name' => 'branch_id',
+                'type' => Type::int(),
+                'rules' => [
+                    'nullable',
+                    'int',
+                    Rule::exists('branches', 'id'),
+                ],
+            ],
             'customer_id' => [
                 'name' => 'customer_id',
                 'type' => Type::nonNull(Type::int()),
@@ -71,6 +80,14 @@ class CreateTransactionGraphQLMutation extends Mutation
                     'min:0',
                 ],
             ],
+            'is_initial_fee' => [
+                'name' => 'is_initial_fee',
+                'type' => Type::nonNull(Type::boolean()),
+                'rules' => [
+                    'required',
+                    'boolean',
+                ],
+            ],
             'paid_at' => [
                 'name' => 'paid_at',
                 'type' => Type::string(),
@@ -95,19 +112,28 @@ class CreateTransactionGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $installment = Installment::findOrFail($args['installment_id']);
-        $maxAmount = ($installment->amount - $installment->initial_fee) * ($installment->percent + 100) / 100 - $installment->paid_amount;
+        /** @var Installment $installment */
+        $installment = Installment::query()->findOrFail($args['installment_id']);
 
-        if ($maxAmount < $args['amount']) {
-            throw ValidationException::withMessages(['amount' => __('api.max_amount', ['amount' => $maxAmount])]);
+        if ($installment->wholeDebtAmount < $args['amount']) {
+            throw ValidationException::withMessages(['amount' => __('api.max_amount', ['amount' => $installment->wholeDebtAmount])]);
         }
 
         $model = new Transaction;
         $model->fill($args);
         $model->external_id = 'local_' . Str::random();
         $model->admin_id = auth()->id();
+        if ($model->installment->is_active && $model->is_initial_fee) {
+            throw ValidationException::withMessages(['is_initial_fee' => __('api.You cannot create transaction as an initial fee for active installments')]);
+        }
+        if (! $model->installment->is_active && ! $model->is_initial_fee) {
+            throw ValidationException::withMessages(['is_initial_fee' => __('api.You cannot create transaction as a monthly for inactive installments')]);
+        }
         if (! $model->paid_at) {
             $model->paid_at = Carbon::now();
+        }
+        if (! $model->branch_id) {
+            $model->branch_id = $model->installment->branch_id;
         }
         $model->saveOrFail();
 
