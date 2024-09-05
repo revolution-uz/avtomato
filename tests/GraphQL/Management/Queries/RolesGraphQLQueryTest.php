@@ -160,6 +160,7 @@ class RolesGraphQLQueryTest extends GraphQLTestCase
             'activity_log_view',
             'activity_log_view_all',
             'activity_log_view_own',
+            'settings_edit',
         ],
     ];
 
