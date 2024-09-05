@@ -191,7 +191,7 @@ class Installment extends Model
 
     public function debtAmount(): Attribute
     {
-        return Attribute::make(get: fn () => $this->monthlyPayment * max(ceil($this->starts_in->diffInMonths()), 0) - $this->paid_amount);
+        return Attribute::make(get: fn () => $this->monthlyPayment * min(max(ceil($this->starts_in->diffInMonths()), 0), $this->period) - $this->paid_amount);
     }
 
     public function isAvailableCustomerCard()
