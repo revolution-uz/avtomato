@@ -21,7 +21,7 @@ class SingleInstallmentGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME);
+        return Type::nonNull(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array

@@ -58,7 +58,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successCreateTransactionWithInactiveInstallment()
     {
-        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::IN_ACTIVE]);
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
         $response = $this->sendGraphQLRequest(
             $this->_installment->id,
             $this->_customer->id,
@@ -137,7 +137,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function errorCreateTransactionWithInactiveInstallment()
     {
-        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::IN_ACTIVE]);
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
 
         $response = $this->sendGraphQLRequest(
             $this->_installment->id,

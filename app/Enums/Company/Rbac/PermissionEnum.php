@@ -177,6 +177,9 @@ enum PermissionEnum: string
     case ACTIVITY_LOG_VIEW_ALL = 'activity_log_view_all';
     case ACTIVITY_LOG_VIEW_OWN = 'activity_log_view_own';
 
+    // Company Settings
+    case SETTINGS_EDIT = 'settings_edit';
+
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
         return match ($permission) {
@@ -291,6 +294,8 @@ enum PermissionEnum: string
             self::ACTIVITY_LOG_VIEW_OWN,
 
             self::DASHBOARD_INFO_VIEW,
+
+            self::SETTINGS_EDIT,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL,
@@ -420,6 +425,9 @@ enum PermissionEnum: string
                 self::BRANCH_EDIT->value,
                 self::BRANCH_DELETE->value,
                 self::BRANCH_CREATE->value,
+            ],
+            PermissionGroupEnum::COMPANY_MANAGEMENT->value => [
+                self::SETTINGS_EDIT->value,
             ],
             PermissionGroupEnum::SCORING_CREDIT_HISTORY->value => [
                 self::SCORING_CREDIT_HISTORY_VIEW_ALL->value,
@@ -604,6 +612,8 @@ enum PermissionEnum: string
             self::BRANCH_DELETE,
             self::BRANCH_CREATE => FeatureEnum::BRANCH_MANAGEMENT,
 
+            self::SETTINGS_EDIT => FeatureEnum::COMPANY_MANAGEMENT,
+
             self::SCORING_CREDIT_HISTORY_VIEW_ALL,
             self::SCORING_CREDIT_HISTORY_VIEW,
             self::SCORING_CREDIT_HISTORY_CREATE,
@@ -718,6 +728,8 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE,
+
+            self::SETTINGS_EDIT,
 
             self::SCORING_CREDIT_HISTORY_CREATE,
             self::SCORING_CREDIT_HISTORY_DELETE,

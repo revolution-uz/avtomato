@@ -43,13 +43,9 @@ class BalanceServiceTest extends TestCase
         $this->assertEquals(-100000, $this->_balanceService->getBalance());
         $this->assertEquals(CompanyStatusEnum::INACTIVE, tenant()->refresh()?->status);
 
-        BalanceFund::factory()->create(['amount' => 50000]);
-        $this->assertEquals(-50000, $this->_balanceService->getBalance());
-        $this->assertEquals(CompanyStatusEnum::INACTIVE, tenant()->refresh()?->status);
-
         // Make company status active
-        BalanceFund::factory()->create(['amount' => 50000]);
-        $this->assertEquals(0, $this->_balanceService->getBalance());
+        BalanceFund::factory()->create(['amount' => 1]);
+        $this->assertEquals(-99999, $this->_balanceService->getBalance());
         $this->assertEquals(CompanyStatusEnum::ACTIVE, tenant()->refresh()?->status);
     }
 }

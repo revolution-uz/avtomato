@@ -2,10 +2,13 @@
 
 namespace App\Enums\Company;
 
+use App\Enums\EnumMethods;
 use App\Enums\Main\SettingsTypeEnum;
 
 enum CompanySettingsEnum: string
 {
+    use EnumMethods;
+
     case CARD_AFTER_DUE_DAYS = 'card_after_due_days';
     case PINFL_AFTER_DUE_DAYS = 'pinfl_after_due_days';
     case GUARANTOR_AFTER_DUE_DAYS = 'guarantor_after_due_days';

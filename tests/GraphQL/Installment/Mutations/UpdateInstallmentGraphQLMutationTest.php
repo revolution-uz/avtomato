@@ -52,7 +52,7 @@ class UpdateInstallmentGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::IN_ACTIVE]);
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
         $this->_tariff = Tariff::factory()->create([
             'min_period' => 1,
             'max_period' => 10,
@@ -152,7 +152,7 @@ class UpdateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_EDIT)->firstOrFail();
 
         $branches = Branch::factory()->count(2)->create();
-        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::IN_ACTIVE]);
+        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::INACTIVE]);
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this

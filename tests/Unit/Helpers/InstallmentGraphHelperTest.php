@@ -19,6 +19,7 @@ class InstallmentGraphHelperTest extends TestCase
     public function getInstallmentGraphForNewInstallment(): void
     {
         Transaction::query()->delete();
+        /** @var Installment $installment */
         $installment = Installment::factory()->create(['starts_in' => Carbon::now()->addMonth()]);
         $graphs = InstallmentGraphHelper::getGraphs($installment);
         $months = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
@@ -27,7 +28,7 @@ class InstallmentGraphHelperTest extends TestCase
         foreach ($graphs as $index => $graph) {
             $this->assertEquals(InstallmentGraphStatusEnum::NOT_STARTED, $graph->status);
             $this->assertEquals(0, $graph->paid_amount);
-            $this->assertEquals(round(($installment->amount - $installment->initial_fee) * $installment->portion / $installment->period, 2), $graph->amount);
+            $this->assertEquals($installment->monthlyPayment, $graph->amount);
             $this->assertEquals($months[$index], $graph->starts_in);
             $this->assertEquals(0, $graph->overdue_days);
         }
