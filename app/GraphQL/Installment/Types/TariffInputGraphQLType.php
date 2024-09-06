@@ -28,14 +28,6 @@ class TariffInputGraphQLType extends InputType
                     'min:3',
                 ],
             ],
-            'is_annual' => [
-                'name' => 'is_annual',
-                'type' => Type::nonNull(Type::boolean()),
-                'rules' => [
-                    'required',
-                    'boolean',
-                ],
-            ],
             'percent' => [
                 'name' => 'percent',
                 'type' => Type::nonNull(Type::float()),

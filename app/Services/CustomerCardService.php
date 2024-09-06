@@ -78,8 +78,9 @@ readonly class CustomerCardService
 
         if ($request['transaction_id'] == $card->id && ! empty($card->phone)) {
             $confirmed = $this->confirmationService->confirm($card->phone, $request['otp']);
-            $card->status = CardStatusEnum::ACTIVE;
-            $card->saveOrFail();
+            if ($confirmed) {
+                $card->update(['status' => CardStatusEnum::ACTIVE]);
+            }
             $customResponse = AtmosConfirmCardResponseDTO::from(['result' => new AtmosResultDTO(
                 $confirmed ? 'OK' : 'FAILED',
                 $confirmed ? __('api.success') : __('api.otp_was_wrong')

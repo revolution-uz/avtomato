@@ -318,7 +318,6 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                                 tariff {
                                     id
                                     name
-                                    is_annual
                                     percent
                                     min_period
                                     max_period
@@ -440,7 +439,6 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                                 'tariff' => [
                                     'id',
                                     'name',
-                                    'is_annual',
                                     'percent',
                                     'min_period',
                                     'max_period',

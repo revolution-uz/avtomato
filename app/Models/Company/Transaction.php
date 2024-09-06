@@ -13,6 +13,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
+ * @property int|null $branch_id
+ * @property Branch $branch
  * @property int $installment_id
  * @property Installment $installment
  * @property int $customer_id
@@ -24,6 +26,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property TransactionType $transactionType
  * @property string|null $external_id
  * @property float $amount
+ * @property bool $is_initial_fee
  * @property int $admin_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -34,10 +37,11 @@ class Transaction extends Model
 {
     use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, TenantConnection;
 
-    public static array $sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created'];
+    public static array $sortables = ['id', 'installment_id', 'customer_id', 'card_id', 'transaction_type_id', 'amount', 'on_created', 'is_initial_fee'];
 
     protected $fillable = [
         'installment_id',
+        'branch_id',
         'customer_id',
         'card_id',
         'transaction_type_id',
@@ -46,6 +50,7 @@ class Transaction extends Model
         'admin_id',
         'paid_at',
         'card_pan',
+        'is_initial_fee',
     ];
 
     protected $casts = [
@@ -68,9 +73,11 @@ class Transaction extends Model
         });
 
         static::created(function (self $transaction) {
-            Installment::query()
-                ->where('id', $transaction->installment_id)
-                ->increment('paid_amount', $transaction->amount);
+            if (! $transaction->is_initial_fee) {
+                Installment::query()
+                    ->where('id', $transaction->installment_id)
+                    ->increment('paid_amount', $transaction->amount);
+            }
             if ($transaction->card_pan) {
                 dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
             }

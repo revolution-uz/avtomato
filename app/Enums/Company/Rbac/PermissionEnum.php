@@ -181,6 +181,9 @@ enum PermissionEnum: string
     case ACTIVITY_LOG_VIEW_ALL = 'activity_log_view_all';
     case ACTIVITY_LOG_VIEW_OWN = 'activity_log_view_own';
 
+    // Company Settings
+    case SETTINGS_EDIT = 'settings_edit';
+
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
         return match ($permission) {
@@ -299,6 +302,8 @@ enum PermissionEnum: string
             self::ACTIVITY_LOG_VIEW_OWN,
 
             self::DASHBOARD_INFO_VIEW,
+
+            self::SETTINGS_EDIT,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL,
@@ -432,6 +437,9 @@ enum PermissionEnum: string
                 self::BRANCH_EDIT->value,
                 self::BRANCH_DELETE->value,
                 self::BRANCH_CREATE->value,
+            ],
+            PermissionGroupEnum::COMPANY_MANAGEMENT->value => [
+                self::SETTINGS_EDIT->value,
             ],
             PermissionGroupEnum::SCORING_CREDIT_HISTORY->value => [
                 self::SCORING_CREDIT_HISTORY_VIEW_ALL->value,
@@ -620,6 +628,8 @@ enum PermissionEnum: string
             self::BRANCH_DELETE,
             self::BRANCH_CREATE => FeatureEnum::BRANCH_MANAGEMENT,
 
+            self::SETTINGS_EDIT => FeatureEnum::COMPANY_MANAGEMENT,
+
             self::SCORING_CREDIT_HISTORY_VIEW_ALL,
             self::SCORING_CREDIT_HISTORY_VIEW,
             self::SCORING_CREDIT_HISTORY_CREATE,
@@ -664,5 +674,101 @@ enum PermissionEnum: string
     public function getMyFeature(): FeatureEnum
     {
         return self::getFeature($this);
+    }
+
+    public function isRelatedToCompanyStatus(): bool
+    {
+        return match ($this) {
+            self::BALANCE_FUND_DELETE,
+            self::BALANCE_FUND_CREATE,
+            self::BALANCE_FUND_CONFIRM,
+
+            self::BALANCE_CHARGE_DELETE,
+            self::BALANCE_CHARGE_CREATE,
+            self::BALANCE_CHARGE_CONFIRM,
+
+            self::ADMIN_CREATE,
+            self::ADMIN_EDIT,
+            self::ADMIN_DELETE,
+            self::ADMIN_CHANGE_PASSWORD,
+            self::ADMIN_CHANGE_AVATAR,
+            self::ADMIN_CHANGE_ROLE,
+            self::ADMIN_CHANGE_THEME,
+
+            self::ROLE_CREATE,
+            self::ROLE_EDIT,
+            self::ROLE_DELETE,
+            self::ROLE_PERMISSIONS,
+
+            self::CUSTOMER_CREATE,
+            self::CUSTOMER_EDIT,
+            self::CUSTOMER_CARD_EDIT,
+            self::CUSTOMER_CARD_REMOVE,
+
+            self::CALCULATE_INSTALLMENT,
+            self::CALCULATOR_EXPORT,
+
+            self::INSTALLMENT_START,
+            self::INSTALLMENT_CANCEL,
+            self::INSTALLMENT_FREEZE,
+            self::INSTALLMENT_FINISH,
+            self::INSTALLMENT_CREATE,
+            self::INSTALLMENT_EDIT,
+            self::INSTALLMENT_DELETE,
+            self::INSTALLMENT_ATTACH_CARD,
+            self::INSTALLMENT_DETACH_CARD,
+            self::INSTALLMENT_ATTACH_GUARANTOR,
+            self::INSTALLMENT_UPDATE_GUARANTOR,
+            self::INSTALLMENT_DETACH_GUARANTOR,
+            self::INSTALLMENT_CREATE_COMMENT,
+            self::INSTALLMENT_CREATE_TRANSACTION,
+            self::INSTALLMENT_UPDATE_COMMENT,
+            self::INSTALLMENT_DELETE_COMMENT,
+
+            self::INSTALLMENT_UPLOAD_DOCUMENT,
+            self::INSTALLMENT_DELETE_DOCUMENT,
+
+            self::TARIFF_EDIT,
+            self::TARIFF_DELETE,
+            self::TARIFF_CREATE,
+
+            self::TRANSACTION_CREATE,
+            self::TRANSACTION_EDIT,
+            self::TRANSACTION_DELETE,
+            self::TRANSACTION_REVERSE,
+
+            self::TRANSACTION_TYPE_CREATE,
+            self::TRANSACTION_TYPE_EDIT,
+            self::TRANSACTION_TYPE_DELETE,
+
+            self::BRANCH_EDIT,
+            self::BRANCH_DELETE,
+            self::BRANCH_CREATE,
+
+            self::SETTINGS_EDIT,
+
+            self::SCORING_CREDIT_HISTORY_CREATE,
+            self::SCORING_CREDIT_HISTORY_DELETE,
+
+            self::SCORING_INPS_HISTORY_CREATE,
+            self::SCORING_INPS_HISTORY_DELETE,
+
+            self::SCORING_PENSION_INFO_CREATE,
+            self::SCORING_PENSION_INFO_DELETE,
+
+            self::SCORING_MIB_INFO_CREATE,
+            self::SCORING_MIB_INFO_DELETE,
+
+            self::SCORING_TAX_INFO_CREATE,
+            self::SCORING_TAX_INFO_DELETE,
+
+            self::SCORING_HUMO_CREATE,
+            self::SCORING_HUMO_DELETE,
+
+            self::SCORING_UZCARD_CREATE,
+            self::SCORING_UZCARD_DELETE => true,
+
+            default => false,
+        };
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\Card;
@@ -114,6 +115,26 @@ class DetachCardGraphQLMutationTest extends GraphQLTestCase
                 $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'ids' => $idsInput])
             );
         $this->assertSuccessResponse($response, $idsInput);
+    }
+
+    #[Test]
+    public function errorDetachCardWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $this->_installment = Installment::query()->inRandomOrder()->first();
+        $idsInput = $this->_installment->cards()->inRandomOrder()->limit(3)->pluck('id')->toArray();
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'ids' => $idsInput])
+            );
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

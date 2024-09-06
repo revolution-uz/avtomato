@@ -45,6 +45,15 @@ class UpdateTransactionGraphQLMutation extends Mutation
                     Rule::exists('installments', 'id')->when($branches, fn ($q) => $q->whereIn('branch_id', $branches)),
                 ],
             ],
+            'branch_id' => [
+                'name' => 'branch_id',
+                'type' => Type::int(),
+                'rules' => [
+                    'nullable',
+                    'int',
+                    Rule::exists('branches', 'id'),
+                ],
+            ],
             'customer_id' => [
                 'name' => 'customer_id',
                 'type' => Type::int(),

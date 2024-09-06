@@ -3,6 +3,7 @@
 namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\CardStatusEnum;
+use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
@@ -103,6 +104,18 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($simpleAdmin)
             ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery($installment->id, $this->_card->id));
         $this->assertSuccessResponse($response);
+    }
+
+    #[Test]
+    public function errorAttachCardWithInactiveCompany(): void
+    {
+        tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+
+        $response = $this->sendGraphQLRequest(installment_id: $this->_installment->id, card_id: $this->_card->id);
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     private function sendGraphQLRequest(int $installment_id, ?int $card_id): TestResponse

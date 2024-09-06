@@ -68,7 +68,7 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
         Customer::query()->forceDelete();
         $this->_customer = Customer::factory()->create();
         Card::query()->forceDelete();
-        $this->_card = Card::factory()->create(['customer_id' => $this->_customer->id]);
+        $this->_card = Card::factory()->create(['customer_id' => $this->_customer->id, 'status' => CardStatusEnum::INACTIVE]);
         $feature = Feature::findByName(FeatureEnum::ATMOS_CARD_PAY);
         $feature->data = [
             'username' => 'username',
@@ -201,6 +201,8 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(__('api.otp_was_wrong'), $response->json('errors.0.extensions.validation.otp.0'));
+        $this->_card->refresh();
+        $this->assertEquals(CardStatusEnum::INACTIVE, $this->_card->status);
 
         // expired otp
         $authAttempt->created_at = Carbon::now()->subMinutes(3);
@@ -222,6 +224,8 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(__('api.otp_was_wrong'), $response->json('errors.0.extensions.validation.otp.0'));
+        $this->_card->refresh();
+        $this->assertEquals(CardStatusEnum::INACTIVE, $this->_card->status);
     }
 
     private function buildGraphQLQuery(array $variables = []): array

@@ -21,6 +21,8 @@ readonly class BalanceService
 
     public function chargeAmount(FeatureEnum $featureName, Model $model): BalanceCharge
     {
+        $this->getBalance();
+
         /** @var Feature $feature */
         $feature = Feature::query()->where('name', $featureName)->firstOrFail();
 
@@ -46,7 +48,7 @@ readonly class BalanceService
 
         if (tenant()->status == CompanyStatusEnum::ACTIVE and $balance <= -100000) {
             tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
-        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance >= 0) {
+        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance > -100000) {
             tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
         }
 
