@@ -331,7 +331,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     }
                     tariff {
                         id
-                        is_annual
                         max_amount
                         max_initial_fee
                         max_period
@@ -605,7 +604,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     ],
                     'tariff' => [
                         'id',
-                        'is_annual',
                         'max_amount',
                         'max_initial_fee',
                         'max_period',
@@ -776,7 +774,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
 
         // tariff
         $this->assertEquals($installment->tariff->id, $response->json('data.singleInstallment.tariff.id'));
-        $this->assertEquals($installment->tariff->is_annual, $response->json('data.singleInstallment.tariff.is_annual'));
         $this->assertEquals($installment->tariff->max_amount, $response->json('data.singleInstallment.tariff.max_amount'));
         $this->assertEquals($installment->tariff->max_initial_fee, $response->json('data.singleInstallment.tariff.max_initial_fee'));
         $this->assertEquals($installment->tariff->max_period, $response->json('data.singleInstallment.tariff.max_period'));

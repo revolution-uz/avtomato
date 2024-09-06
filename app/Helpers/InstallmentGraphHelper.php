@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\DTOs\Installment\InstallmentGraphDTO;
 use App\Enums\Company\InstallmentGraphStatusEnum;
 use App\Models\Company\Installment;
+use App\Models\Company\Transaction;
 use App\Services\Installment\InstallmentService;
 use Illuminate\Support\Carbon;
 
@@ -26,6 +27,7 @@ class InstallmentGraphHelper
             $paidDateForMonth = Carbon::now();
             $paidSumBeforeNow = 0;
             foreach ($transactions as $transaction) {
+                /** @var Transaction $transaction */
                 $paidSumBeforeNow += $transaction->amount;
                 if (round(($index + 1) * $installment->monthlyPayment + $installment->initial_fee) <= round($paidSumBeforeNow)) {
                     $paidDateForMonth = $transaction->created_at;

@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\Customer;
@@ -35,6 +36,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             'initial_fee' => 100000,
             'percent' => 15,
             'paid_amount' => 100000,
+            'status' => InstallmentStatusEnum::ACTIVE,
         ]);
         $this->_customer = Customer::factory()->create();
         $this->_transactionType = TransactionType::factory()->create();
@@ -51,7 +53,20 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             '2021-01-01'
         );
         $this->assertSuccessResponse($response);
+    }
 
+    #[Test]
+    public function successCreateTransactionWithInactiveInstallment()
+    {
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::IN_ACTIVE]);
+        $response = $this->sendGraphQLRequest(
+            $this->_installment->id,
+            $this->_customer->id,
+            $this->_transactionType->id,
+            $this->_installment->initial_fee,
+            '2021-01-01'
+        );
+        $this->assertSuccessResponse($response);
     }
 
     #[Test]
@@ -120,6 +135,42 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function errorCreateTransactionWithInactiveInstallment()
+    {
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::IN_ACTIVE]);
+
+        $response = $this->sendGraphQLRequest(
+            $this->_installment->id,
+            $this->_customer->id,
+            $this->_transactionType->id,
+            $this->_installment->initial_fee - 1,
+            '2021-01-01'
+        );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(
+            __('api.Please create initial fee amount first'),
+            $response->json('errors.0.extensions.validation.amount.0')
+        );
+
+        $response = $this->sendGraphQLRequest(
+            $this->_installment->id,
+            $this->_customer->id,
+            $this->_transactionType->id,
+            $this->_installment->initial_fee + 1,
+            '2021-01-01'
+        );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(
+            __('api.Please create initial fee amount first'),
+            $response->json('errors.0.extensions.validation.amount.0')
+        );
+    }
+
+    #[Test]
     public function successCheckForPermission()
     {
         $role = Role::factory()->create();
@@ -127,7 +178,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
         $permission = Permission::query()->where('slug', PermissionEnum::TRANSACTION_CREATE)->firstOrFail();
 
         $branches = Branch::factory()->count(2)->create();
-        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
+        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::ACTIVE]);
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this
@@ -163,7 +214,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertSuccessResponse($response);
     }
 
-    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at, array $headers = []): TestResponse
+    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, float $amount, ?string $paid_at, array $headers = []): TestResponse
     {
         return $this
             ->actingAs($this->createAdminUser())
@@ -174,7 +225,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             );
     }
 
-    private function buildGraphQLQuery(int $installment_id, int $customer_id, int $transaction_type_id, int $amount, ?string $paid_at): array
+    private function buildGraphQLQuery(int $installment_id, int $customer_id, int $transaction_type_id, float $amount, ?string $paid_at): array
     {
         return [
             'variables' => [

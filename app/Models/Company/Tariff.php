@@ -12,7 +12,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property string $name
- * @property bool $is_annual
  * @property float $percent
  * @property int $min_period
  * @property int $max_period
@@ -26,11 +25,10 @@ class Tariff extends Model
 {
     use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
-    public static array $sortables = ['id', 'name', 'is_annual', 'percent'];
+    public static array $sortables = ['id', 'name', 'percent'];
 
     protected $fillable = [
         'name',
-        'is_annual',
         'percent',
         'min_period',
         'max_period',

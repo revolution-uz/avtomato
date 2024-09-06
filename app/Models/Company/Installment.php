@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -26,6 +27,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $tariff_id
  * @property float $percent
  * @property float $amount
+ * @property float $installment_amount
  * @property float $paid_amount
  * @property float $initial_fee
  * @property string $description
@@ -60,7 +62,11 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read  CompanyAdmin $admin
  * @property-read float $debtAmount
  * @property-read float $monthlyPayment
+ * @property-read float $is_active
+ * @property-read float $is_fully_paid
  * @property-read Carbon $nextPaymentDate
+ * @property mixed $wholeDebtAmount
+ * @property float $portion
  */
 class Installment extends Model
 {
@@ -101,6 +107,21 @@ class Installment extends Model
         'status' => InstallmentStatusEnum::class,
         'type' => InstallmentTypeEnum::class,
     ];
+
+    public static function getDebtAmountRaw(): \Illuminate\Contracts\Database\Query\Expression
+    {
+        return DB::raw('(amount - initial_fee) * ((percent + 100) / 100) - paid_amount');
+    }
+
+    public static function getInstallmentAmountRaw(): \Illuminate\Contracts\Database\Query\Expression
+    {
+        return DB::raw('(amount - initial_fee) * (percent + 100) / 100');
+    }
+
+    public static function getProfitAmountRaw(): \Illuminate\Contracts\Database\Query\Expression
+    {
+        return DB::raw('(amount - initial_fee) * percent / 100 - paid_amount');
+    }
 
     public function tariff(): BelongsTo
     {
@@ -164,10 +185,14 @@ class Installment extends Model
         return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
     }
 
+    public function wholeDebtAmount(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->installment_amount - $this->paid_amount);
+    }
+
     public function debtAmount(): Attribute
     {
-        return Attribute::make(get: fn () => ($this->amount - $this->initial_fee) * ($this->percent + 100) / 100 * min(ceil($this->starts_in->diffInMonths()), $this->period) / $this->period - $this->paid_amount
-        );
+        return Attribute::make(get: fn () => $this->monthlyPayment * min(max(ceil($this->starts_in->diffInMonths()), 0), $this->period) - $this->paid_amount);
     }
 
     public function isAvailableCustomerCard()
@@ -208,7 +233,66 @@ class Installment extends Model
     public function monthlyPayment(): Attribute
     {
         return Attribute::make(
-            get: fn () => round(($this->amount - $this->initial_fee) * ($this->percent + 100) / 100 / $this->period, 2)
+            get: fn () => round($this->installment_amount / $this->period, 2)
         );
+    }
+
+    public function installmentAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => round(($this->amount - $this->initial_fee) * $this->portion, 2)
+        );
+    }
+
+    public function isActive(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->status == InstallmentStatusEnum::ACTIVE
+        );
+    }
+
+    public function portion(): Attribute
+    {
+        return Attribute::make(get: fn () => ($this->percent + 100) / 100);
+    }
+
+    public function isPaidInitialFee(): bool
+    {
+        return (float) $this->transactions()->where('is_initial_fee', true)->sum('amount') == $this->initial_fee;
+    }
+
+    public function isFullyPaid(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->paid_amount >= $this->installment_amount);
+    }
+
+    public function scopeWhereHasDebt($query)
+    {
+        return $query->where(DB::raw('(amount - initial_fee) * (percent + 100) / 100 - paid_amount'), '>', 0);
+    }
+
+    public function scopeWhereNextPayDate($query, string $expression, Carbon $date)
+    {
+        return $query->where(DB::raw("starts_in + (FLOOR(paid_amount / ROUND(((amount - initial_fee) * (percent / 100 + 1) / period)::numeric, 2))::text || ' month')::interval"), $expression, $date);
+    }
+
+    public function scopeCountId($query)
+    {
+        return $query->count('id');
+    }
+
+    public function scopeSumDebt($query)
+    {
+        return $query->sum(self::getDebtAmountRaw());
+    }
+
+    public function scopeSumInstallmentAmount($query)
+    {
+        return $query->sum(self::getInstallmentAmountRaw());
+    }
+
+    public function scopeSumProfit($query)
+    {
+        return $query->sumCustomRaw(self::getProfitAmountRaw());
     }
 }

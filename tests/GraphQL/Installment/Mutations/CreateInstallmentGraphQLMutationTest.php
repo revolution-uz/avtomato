@@ -295,7 +295,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
                                 tariff {
                                     id
                                     name
-                                    is_annual
                                     percent
                                     min_period
                                     max_period
@@ -551,7 +550,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
                                 tariff {
                                     id
                                     name
-                                    is_annual
                                     percent
                                     min_period
                                     max_period
@@ -622,7 +620,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
                             tariff {
                                 id
                                 name
-                                is_annual
                                 percent
                                 min_period
                                 max_period
@@ -724,7 +721,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
                     tariff {
                         id
                         name
-                        is_annual
                         percent
                         min_period
                         max_period
@@ -888,7 +884,6 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $tariff = [
             'id',
             'name',
-            'is_annual',
             'percent',
             'min_period',
             'max_period',

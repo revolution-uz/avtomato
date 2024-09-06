@@ -27,7 +27,7 @@ class InstallmentGraphHelperTest extends TestCase
         foreach ($graphs as $index => $graph) {
             $this->assertEquals(InstallmentGraphStatusEnum::NOT_STARTED, $graph->status);
             $this->assertEquals(0, $graph->paid_amount);
-            $this->assertEquals(round(($installment->amount - $installment->initial_fee) * ($installment->percent + 100) / 100 / $installment->period, 2), $graph->amount);
+            $this->assertEquals(round(($installment->amount - $installment->initial_fee) * $installment->portion / $installment->period, 2), $graph->amount);
             $this->assertEquals($months[$index], $graph->starts_in);
             $this->assertEquals(0, $graph->overdue_days);
         }
@@ -47,7 +47,7 @@ class InstallmentGraphHelperTest extends TestCase
         foreach ($graphs as $index => $graph) {
             $this->assertEquals(InstallmentGraphStatusEnum::NOT_STARTED, $graph->status);
             $this->assertEquals(0, $graph->paid_amount);
-            $this->assertEquals(round(($installment->amount - $installment->initial_fee) * ($installment->percent + 100) / 100 / $installment->period, 2), $graph->amount);
+            $this->assertEquals(round(($installment->amount - $installment->initial_fee) * $installment->portion / $installment->period, 2), $graph->amount);
             $this->assertEquals($months[$index], $graph->starts_in);
             $this->assertEquals(0, $graph->overdue_days);
         }
@@ -58,7 +58,7 @@ class InstallmentGraphHelperTest extends TestCase
     {
         Transaction::query()->delete();
         $installment = Installment::factory()->create(['starts_in' => Carbon::now()->subMonths(2)->subDays(5), 'period' => 3]);
-        $amountPerMonth = round((($installment->amount - $installment->initial_fee) * ($installment->percent + 100) / 100.0) / $installment->period, 2);
+        $amountPerMonth = round((($installment->amount - $installment->initial_fee) * $installment->portion) / $installment->period, 2);
         // initial fee
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'created_at' => $installment->starts_in->subMonths(4)->subDays(5)]);
         // first month at time, one day before
@@ -98,7 +98,7 @@ class InstallmentGraphHelperTest extends TestCase
     {
         Transaction::query()->delete();
         $installment = Installment::factory()->create(['starts_in' => Carbon::now()->subMonths(2)->subDays(5), 'period' => 3]);
-        $amountPerMonth = round((($installment->amount - $installment->initial_fee) * ($installment->percent + 100) / 100.0) / $installment->period, 2);
+        $amountPerMonth = round((($installment->amount - $installment->initial_fee) * $installment->portion) / $installment->period, 2);
         // initial fee
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'created_at' => $installment->starts_in->subMonths(4)->subDays(5)]);
         // first month at time, one day before
