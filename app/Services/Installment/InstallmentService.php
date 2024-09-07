@@ -88,19 +88,12 @@ class InstallmentService
     {
         $installmentGuarantor->any_card_charge = $auto_charge;
         if (! $auto_charge) {
-            $installmentGuarantor->any_card_charge = $auto_charge;
             $installmentGuarantor->saveOrFail();
 
             return $installmentGuarantor;
         }
-        $installment = $installmentGuarantor->installment;
-        if ($auto_charge && ! ($installment->type->value & InstallmentTypeEnum::WITH_PINFL->value) && $this->withdrawAnyCardCharge($installment)) {
-            $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_PINFL->value);
-            $installment->saveOrFail();
-            $installmentGuarantor->saveOrFail();
-        } else {
-            throw ValidationException::withMessages(['any_card_charge' => __('api.You do not have enough balance to update installment type')]);
-        }
+        $this->toggleAutoAndAnyCardCharge($installmentGuarantor->installment, false, true);
+        $installmentGuarantor->saveOrFail();
 
         return $installmentGuarantor;
     }
