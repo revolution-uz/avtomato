@@ -34,7 +34,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $sms_notify
  * @property bool $any_card_charge
  * @property bool $is_blacklist
- * @property bool $withdrawn_auto_charge
  * @property bool $auto_pay
  * @property int $period
  * @property string $plum_id
@@ -93,7 +92,6 @@ class Installment extends Model
         'canceled_at',
         'cancellation_details',
         'starts_in',
-        'withdrawn_auto_charge',
         'card_after_due_days',
         'pinfl_after_due_days',
         'guarantor_after_due_days',
@@ -182,7 +180,7 @@ class Installment extends Model
 
     public function autoPay(): Attribute
     {
-        return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
+        return Attribute::make(get: fn () => $this->type->value & InstallmentTypeEnum::WITH_CARD->value);
     }
 
     public function wholeDebtAmount(): Attribute
