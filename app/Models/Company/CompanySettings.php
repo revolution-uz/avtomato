@@ -48,4 +48,9 @@ class CompanySettings extends Model
 
         return self::$_cache[$settings->value] ?? null;
     }
+
+    public static function getValue(CompanySettingsEnum $name)
+    {
+        return CompanySettings::query()->where('name', $name)->firstOrFail()->value;
+    }
 }

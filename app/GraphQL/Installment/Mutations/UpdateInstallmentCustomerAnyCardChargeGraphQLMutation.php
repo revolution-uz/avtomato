@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Installment;
+use App\Services\Installment\InstallmentService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -18,6 +19,13 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
     protected $attributes = [
         'name' => 'updateInstallmentCustomerAnyCardCharge',
     ];
+
+    private InstallmentService $installmentService;
+
+    public function __construct(InstallmentService $installmentService)
+    {
+        $this->installmentService = $installmentService;
+    }
 
     public function args(): array
     {
@@ -54,10 +62,6 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
     {
         $installment = Installment::findOrFail($args['id']);
 
-        $installment->updateOrFail([
-            'any_card_charge' => $args['any_card_charge'],
-        ]);
-
-        return $installment;
+        return $this->installmentService->toggleAutoAndAnyCardCharge($installment, false, $args['any_card_charge']);
     }
 }

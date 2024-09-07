@@ -12,7 +12,7 @@ use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Installment\Mutations\AttachCardGraphQLMutation;
 use App\GraphQL\Installment\Mutations\AttachGuarantorGraphQLMutation;
 use App\GraphQL\Installment\Mutations\ChangeSettingsGraphQLMutation;
-use App\GraphQL\Installment\Mutations\ChangesStatusGraphQLMutation;
+use App\GraphQL\Installment\Mutations\ChangeStatusGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateDocumentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateInstallmentGraphQLMutation;
@@ -141,7 +141,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 DeleteTransactionGraphQLMutation::class,
                 CreateDocumentGraphQLMutation::class,
                 DeleteDocumentGraphQLMutation::class,
-                ChangesStatusGraphQLMutation::class,
+                ChangeStatusGraphQLMutation::class,
                 UpdateInstallmentCustomerAnyCardChargeGraphQLMutation::class,
                 ChangeSettingsGraphQLMutation::class,
             ],

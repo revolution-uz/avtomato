@@ -34,7 +34,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $sms_notify
  * @property bool $any_card_charge
  * @property bool $is_blacklist
- * @property bool $withdrawn_auto_charge
  * @property bool $auto_pay
  * @property int $period
  * @property string $plum_id
@@ -93,7 +92,6 @@ class Installment extends Model
         'canceled_at',
         'cancellation_details',
         'starts_in',
-        'withdrawn_auto_charge',
         'card_after_due_days',
         'pinfl_after_due_days',
         'guarantor_after_due_days',
@@ -182,7 +180,7 @@ class Installment extends Model
 
     public function autoPay(): Attribute
     {
-        return Attribute::make(get: fn () => $this->type == InstallmentTypeEnum::WITH_CARD);
+        return Attribute::make(get: fn () => $this->type->value & InstallmentTypeEnum::WITH_CARD->value);
     }
 
     public function wholeDebtAmount(): Attribute
@@ -195,32 +193,24 @@ class Installment extends Model
         return Attribute::make(get: fn () => $this->monthlyPayment * min(max(ceil($this->starts_in->diffInMonths()), 0), $this->period) - $this->paid_amount);
     }
 
-    public function isAvailableCustomerCard()
+    public function isAvailableCustomerCard(): bool
     {
-        $card_after_due_days = intval($this->card_after_due_days !== null ? $this->card_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->firstOrFail()->value);
-
-        return $this->nextPaymentDate->addDays($card_after_due_days) <= Carbon::today();
+        return $this->isAvailablePaymentDate(intval($this->card_after_due_days !== null ? $this->card_after_due_days : CompanySettings::getValue(CompanySettingsEnum::CARD_AFTER_DUE_DAYS)));
     }
 
-    public function isAvailableCustomerPinfl()
+    public function isAvailableCustomerPinfl(): bool
     {
-        $pinfl_after_due_days = intval($this->pinfl_after_due_days !== null ? $this->pinfl_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::PINFL_AFTER_DUE_DAYS)->firstOrFail()->value);
-
-        return $this->nextPaymentDate->addDays($pinfl_after_due_days) <= Carbon::today();
+        return $this->isAvailablePaymentDate(intval($this->pinfl_after_due_days !== null ? $this->pinfl_after_due_days : CompanySettings::getValue(CompanySettingsEnum::PINFL_AFTER_DUE_DAYS)));
     }
 
-    public function isAvailableGurantorCard()
+    public function isAvailableGurantorCard(): bool
     {
-        $guarantor_after_due_days = intval($this->guarantor_after_due_days !== null ? $this->guarantor_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS)->firstOrFail()->value);
-
-        return $this->nextPaymentDate->addDays($guarantor_after_due_days) <= Carbon::today();
+        return $this->isAvailablePaymentDate(intval($this->guarantor_after_due_days !== null ? $this->guarantor_after_due_days : CompanySettings::getValue(CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS)));
     }
 
-    public function isAvailableGuarantorPinfl()
+    public function isAvailableGuarantorPinfl(): bool
     {
-        $guarantor_pinfl_after_due_days = intval($this->guarantor_pinfl_after_due_days !== null ? $this->guarantor_pinfl_after_due_days : CompanySettings::query()->where('name', CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS)->firstOrFail()->value);
-
-        return $this->nextPaymentDate->addDays($guarantor_pinfl_after_due_days) <= Carbon::today();
+        return $this->isAvailablePaymentDate(intval($this->guarantor_pinfl_after_due_days !== null ? $this->guarantor_pinfl_after_due_days : CompanySettings::getValue(CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS)));
     }
 
     public function nextPaymentDate(): Attribute
@@ -294,5 +284,10 @@ class Installment extends Model
     public function scopeSumProfit($query)
     {
         return $query->sumCustomRaw(self::getProfitAmountRaw());
+    }
+
+    private function isAvailablePaymentDate(int $delay): bool
+    {
+        return $this->nextPaymentDate->addDays($delay) <= Carbon::now();
     }
 }
