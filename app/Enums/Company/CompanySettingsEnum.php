@@ -32,7 +32,8 @@ enum CompanySettingsEnum: string
             self::PINFL_AFTER_DUE_DAYS => 5,
             self::GUARANTOR_AFTER_DUE_DAYS => 10,
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS => 15,
-            self::SMS_INSTALLMENT_AUTO_CHARGE, self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT => false,
+            self::SMS_INSTALLMENT_AUTO_CHARGE => true,
+            self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT => false,
         };
     }
 
