@@ -29,7 +29,7 @@ class InstallmentService
 
     public static function generatePeriods(?Carbon $startDate, $period): array
     {
-        if (! $startDate) {
+        if (!$startDate) {
             $startDate = Carbon::now();
         }
 
@@ -58,25 +58,27 @@ class InstallmentService
     }
 
     /**
+     * 01
+     * 10
      * @throws Throwable
      * @throws BalanceIsNotEnoughException
      */
     public function toggleAutoAndAnyCardCharge(Installment $installment, bool $auto_charge, bool $any_card): Installment
     {
-        if ($auto_charge && ! ($installment->type->value & InstallmentTypeEnum::WITH_CARD->value)) {
+        if ($auto_charge && !($installment->type->value & InstallmentTypeEnum::WITH_CARD->value)) {
             $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_CARD->value);
-            if (! $this->withdrawAutoCharge($installment)) {
+            if (!$this->withdrawAutoCharge($installment)) {
                 throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
             }
         }
-        if ($any_card && ! ($installment->type->value & InstallmentTypeEnum::WITH_PINFL->value)) {
+        if ($any_card && !($installment->type->value & InstallmentTypeEnum::WITH_PINFL->value)) {
             $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_PINFL->value);
             $installment->any_card_charge = $any_card;
-            if (! $this->withdrawAnyCardCharge($installment)) {
+            if (!$this->withdrawAnyCardCharge($installment)) {
                 throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
             }
         }
-
+        $installment->saveOrFail();
         return $installment;
     }
 
@@ -87,7 +89,7 @@ class InstallmentService
     public function toggleGuarantorAutoCharge(InstallmentGuarantor $installmentGuarantor, bool $auto_charge): InstallmentGuarantor
     {
         $installmentGuarantor->any_card_charge = $auto_charge;
-        if (! $auto_charge) {
+        if (!$auto_charge) {
             $installmentGuarantor->saveOrFail();
 
             return $installmentGuarantor;
@@ -115,7 +117,7 @@ class InstallmentService
         }
 
         if ($status == InstallmentStatusEnum::CLOSED) {
-            if (! $installment->is_fully_paid) {
+            if (!$installment->is_fully_paid) {
                 throw ValidationException::withMessages(['status' => __('api.You cannot close an installment without withdrawing amount')]);
             }
         }
@@ -197,7 +199,7 @@ class InstallmentService
     private function calculateNpl(int $overdueDays, int $beforeDays): array
     {
         $query = Installment::query();
-        $installment_total_amount = (float) Installment::query()->sum(Installment::getInstallmentAmountRaw());
+        $installment_total_amount = (float)Installment::query()->sum(Installment::getInstallmentAmountRaw());
         $nplQuery = (clone $query)->whereNextPayDate('<', Carbon::now()->subDays($overdueDays));
         $nplBeforeWeekQuery = (clone $query)->whereNextPayDate('<', Carbon::now()->subDays($overdueDays - $beforeDays));
         $npl = $installment_total_amount > 0 ? $nplQuery->sum(Installment::getProfitAmountRaw()) / $installment_total_amount * 100 : 0;
