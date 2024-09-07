@@ -43,7 +43,7 @@ class AttachTagGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_EDIT);
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_TAG_ATTACH);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

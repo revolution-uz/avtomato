@@ -16,4 +16,5 @@ return [
     'already_attached_card' => 'The card already connected to this customer',
     'inactive_company' => 'The company is currently inactive',
     'Please create initial fee amount first' => 'Please, create initial fee amount first',
+    'tag' => 'Tag',
 ];

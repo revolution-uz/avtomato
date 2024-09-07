@@ -11,7 +11,6 @@ use App\GraphQL\Customer\Mutations\AttachPhoneGraphQLMutation;
 use App\GraphQL\Customer\Mutations\AttachTagGraphQLMutation;
 use App\GraphQL\Customer\Mutations\ConfirmCardGraphQLMutation;
 use App\GraphQL\Customer\Mutations\CreateCustomerGraphQLMutation;
-use App\GraphQL\Customer\Mutations\CreateTagGraphQLMutation;
 use App\GraphQL\Customer\Mutations\DetachAddressGraphQLMutation;
 use App\GraphQL\Customer\Mutations\DetachCardGraphQLMutation;
 use App\GraphQL\Customer\Mutations\DetachPhoneGraphQLMutation;
@@ -111,7 +110,6 @@ class CustomerQLSchema implements ConfigConvertible
                 TogglePhoneInstallmentNotificationsGraphQLMutation::class,
                 UpdateCustomerGraphQLMutation::class,
                 AttachTagGraphQLMutation::class,
-                CreateTagGraphQLMutation::class,
                 DetachTagGraphQLMutation::class,
             ],
             'types' => [

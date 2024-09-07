@@ -26,10 +26,10 @@ class DetachTagGraphQLMutation extends Mutation
                 'type' => Type::nonNull(Type::int()),
                 'rules' => ['required', 'int', 'exists:customers,id'],
             ],
-            'ids' => [
-                'name' => 'ids',
-                'type' => Type::nonNull(Type::listOf(Type::nonNull(Type::int()))),
-                'rules' => ['required', 'array'],
+            'tag_id' => [
+                'name' => 'tag_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', 'int', 'exists:tags,id'],
             ],
         ];
     }
@@ -41,20 +41,20 @@ class DetachTagGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_TAG_EDIT);
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_TAG_DETACH);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
 
-        $customer = Customer::query()->where('id', $args['customer_id'])->firstOrFail();
+        $customer = Customer::query()->findOrFail($args['customer_id']);
         // Check if each tag exists for the customer
-        foreach ($args['ids'] as $tagId) {
-            if (! $customer->tags()->where('tag_id', $tagId)->exists()) {
-                throw ValidationException::withMessages(['tag_id' => __('api.not found')]);
-            }
+
+        if (! $customer->tags()->where('tag_id', $args['tag_id'])->exists()) {
+            throw ValidationException::withMessages(['tag_id' => __('api.not found')]);
         }
-        $customer->tags()->whereIn('tag_id', $args['ids'])->detach();
+
+        $customer->tags()->where('tag_id', $args['tag_id'])->detach();
 
         return true;
     }

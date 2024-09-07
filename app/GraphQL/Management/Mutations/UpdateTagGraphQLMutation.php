@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Customer\Mutations;
+namespace App\GraphQL\Management\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\TagGraphQLType;
@@ -15,15 +15,20 @@ use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
-class CreateTagGraphQLMutation extends Mutation
+class UpdateTagGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'createTag',
+        'name' => 'updateTag',
     ];
 
     public function args(): array
     {
         return [
+            'tag_id' => [
+                'name' => 'tag_id',
+                'type' => Type::int(),
+                'rules' => ['required', 'exists:tags,id'],
+            ],
             'tags' => [
                 'name' => 'tags',
                 'type' => Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(TagInputGraphQLType::GRAPHQL_TYPE_NAME)))),
@@ -34,34 +39,34 @@ class CreateTagGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(Type::listOf(GraphQL::type(TagGraphQLType::GRAPHQL_TYPE_NAME)));
+        return Type::nonNull(GraphQL::type(TagGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_TAG_CREATE);
+        return RbacHelper::checkPermission(PermissionEnum::TAG_EDIT);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         DB::beginTransaction();
 
         try {
-            $tagsData = array_map(fn ($tagData) => [
-                'name_uz' => $tagData['name_uz'],
-                'name_ru' => $tagData['name_ru'],
-                'name_en' => $tagData['name_en'],
-                'name_oz' => $tagData['name_oz'],
-            ], $args['tags']);
-
-            // Insert all tags at once
-            Tag::query()->insert($tagsData);
-
-            $createdTags = Tag::query()->latest()->get();
+            $tag = Tag::query()->findOrFail($args['tag_id']);
+            $tag->update([
+                'name_oz' => $args['tags'][0]['name_oz'],
+                'name_en' => $args['tags'][0]['name_en'],
+                'name_ru' => $args['tags'][0]['name_ru'],
+                'name_uz' => $args['tags'][0]['name_uz'],
+            ]);
+            $tag->refresh();
 
             DB::commit();
 
-            return $createdTags;
+            return $tag;
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;

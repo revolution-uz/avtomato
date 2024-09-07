@@ -25,6 +25,22 @@ class TagGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Tag $root) => $root->name,
             ],
+            'name_en' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Tag $root) => $root->name_en,
+            ],
+            'name_uz' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Tag $root) => $root->name_uz,
+            ],
+            'name_ru' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Tag $root) => $root->name_ru,
+            ],
+            'name_oz' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Tag $root) => $root->name_oz,
+            ],
         ];
     }
 }

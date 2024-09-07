@@ -69,10 +69,14 @@ enum PermissionEnum: string
     case CUSTOMER_CARD_VIEW = 'customer_card_view';
     case CUSTOMER_CARD_EDIT = 'customer_card_edit';
     case CUSTOMER_CARD_REMOVE = 'customer_card_remove';
-    case CUSTOMER_TAG_CREATE = 'customer_tag_create';
-    case CUSTOMER_TAG_EDIT = 'customer_tag_edit';
-    case CUSTOMER_TAG_REMOVE = 'customer_tag_remove';
+    case CUSTOMER_TAG_ATTACH = 'customer_tag_attach';
+    case CUSTOMER_TAG_DETACH = 'customer_tag_detach';
     case CUSTOMER_TAG_VIEW = 'customer_tag_view';
+    case TAG_CREATE = 'tag_create';
+    case TAG_EDIT = 'tag_edit';
+    case TAG_DELETE = 'tag_delete';
+    case TAG_VIEW = 'tag_view';
+    case TAG_VIEW_ALL = 'tag_view_all';
 
     // Calculator installment
     case CALCULATE_INSTALLMENT = 'calculate_installment';
@@ -229,10 +233,14 @@ enum PermissionEnum: string
             self::CUSTOMER_CARD_VIEW,
             self::CUSTOMER_CARD_EDIT,
             self::CUSTOMER_CARD_REMOVE,
-            self::CUSTOMER_TAG_CREATE,
-            self::CUSTOMER_TAG_EDIT,
-            self::CUSTOMER_TAG_REMOVE,
             self::CUSTOMER_TAG_VIEW,
+            self::CUSTOMER_TAG_ATTACH,
+            self::CUSTOMER_TAG_DETACH,
+            self::TAG_VIEW_ALL,
+            self::TAG_VIEW,
+            self::TAG_CREATE,
+            self::TAG_EDIT,
+            self::TAG_DELETE,
 
             self::ROLE_VIEW_ALL,
             self::ROLE_VIEW,
@@ -367,10 +375,14 @@ enum PermissionEnum: string
                 self::CUSTOMER_CARD_VIEW->value,
                 self::CUSTOMER_CARD_EDIT->value,
                 self::CUSTOMER_CARD_REMOVE->value,
-                self::CUSTOMER_TAG_VIEW,
-                self::CUSTOMER_TAG_CREATE,
-                self::CUSTOMER_TAG_EDIT,
-                self::CUSTOMER_TAG_REMOVE,
+                self::CUSTOMER_TAG_VIEW->value,
+                self::CUSTOMER_TAG_ATTACH->value,
+                self::CUSTOMER_TAG_DETACH->value,
+                self::TAG_CREATE->value,
+                self::TAG_EDIT->value,
+                self::TAG_DELETE->value,
+                self::TAG_VIEW_ALL->value,
+                self::TAG_VIEW->value,
             ],
             PermissionGroupEnum::ROLE_MANAGEMENT->value => [
                 self::ROLE_VIEW_ALL->value,
@@ -566,10 +578,14 @@ enum PermissionEnum: string
             self::CUSTOMER_CARD_EDIT,
             self::CUSTOMER_CARD_REMOVE,
             self::CUSTOMER_INFO_BY_PASSPORT,
-            self::CUSTOMER_TAG_CREATE,
-            self::CUSTOMER_TAG_EDIT,
-            self::CUSTOMER_TAG_REMOVE,
-            self::CUSTOMER_TAG_VIEW => FeatureEnum::CUSTOMER_MANAGEMENT,
+            self::CUSTOMER_TAG_VIEW,
+            self::CUSTOMER_TAG_ATTACH,
+            self::CUSTOMER_TAG_DETACH,
+            self::TAG_VIEW_ALL,
+            self::TAG_VIEW,
+            self::TAG_CREATE,
+            self::TAG_EDIT,
+            self::TAG_DELETE => FeatureEnum::CUSTOMER_MANAGEMENT,
 
             self::CALCULATE_INSTALLMENT,
             self::CALCULATOR_EXPORT => FeatureEnum::CALCULATOR_INSTALLMENT,

@@ -21,4 +21,5 @@ return [
     'already_attached_card' => 'Карта уже привязана к этому клиенту',
     'inactive_company' => 'В настоящее время компания неактивна',
     'Please create initial fee amount first' => 'Сначала создайте сумму первоначального взноса',
+    'tag' => 'Тег',
 ];
