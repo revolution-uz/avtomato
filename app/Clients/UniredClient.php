@@ -3,6 +3,14 @@
 namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
+use App\DTOs\Unired\Base\BaseUniredDTO;
+use App\DTOs\Unired\Branch\ToggleBranchAutoRequestDTO;
+use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
+use App\DTOs\Unired\Branch\UniredFindBranchRequestDTO;
+use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
+use App\DTOs\Unired\System\UniredSetTokenRequestDTO;
+use App\DTOs\Unired\UniredPaginationRequestDTO;
+use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\ClientCodeEnum;
 use Illuminate\Support\Facades\Http;
 
@@ -23,76 +31,68 @@ class UniredClient extends BaseClient
         return ClientCodeEnum::ASAXIY;
     }
 
-    // Method for pinging the server to check token validity
-    public function ping(): array
+    public function ping(): UniredResponseDTO
     {
-        return $this->httpRequest([], 'get', '/ping');
+        return $this->httpRequest([], '', '/ping');
     }
 
-    // Method for setting or updating token
-    public function setToken(string $newToken): array
+    public function setToken(UniredSetTokenRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('system.set.token', ['token' => $newToken]);
+        return $this->makeRequest('system.set.token', $params);
     }
 
-    // Method for creating a new branch
-    public function createBranch(array $filialData): array
+    public function createBranch(UniredCreateBranchRequestDTO $filialData): UniredResponseDTO
     {
         return $this->makeRequest('filial.create', $filialData);
     }
 
-    // Method for updating a branch
-    public function updateFilial(array $filialData): array
+    public function updateFilial(UniredUpdateBranchRequestDTO $filialData): UniredResponseDTO
     {
-        return $this->makeRequest('/api/filial/update', $filialData);
+        return $this->makeRequest('filial.update', $filialData);
     }
 
-    // Method for finding a branch
-    public function findFilial(string $name): array
+    public function findFilial(UniredFindBranchRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('/api/filial/find', ['name' => $name]);
+        return $this->makeRequest('filial.find', $params);
     }
 
-    // Method for getting all branches
-    public function getAllFilials(int $pageSize, int $page): array
+    public function getAllFilials(UniredPaginationRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('/api/filial/all', ['page_size' => $pageSize, 'page' => $page]);
+        return $this->makeRequest('filial.all', $params);
     }
 
-    // Method for toggling autopay for a branch
-    public function toggleFilialAuto(int $filialId, bool $auto): array
+    public function toggleFilialAuto(ToggleBranchAutoRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('/api/filial/toggle.auto', ['filial_id' => $filialId, 'auto' => $auto]);
+        return $this->makeRequest('filial.toggle.all', $params);
     }
 
-    // Method for creating a client
-    public function createClient(array $clientData): array
+    public function createClient(array $clientData): UniredResponseDTO
     {
-        return $this->makeRequest('/api/client/create', $clientData);
+        return $this->makeRequest('client.create', $clientData);
     }
 
     // Method for updating or creating clients in bulk
-    public function createOrUpdateClients(array $clientsData): array
+    public function createOrUpdateClients(array $clientsData): UniredResponseDTO
     {
-        return $this->makeRequest('/api/client/createOrUpdate', $clientsData);
+        return $this->makeRequest('client.createOrUpdate', $clientsData);
     }
 
     // Method for finding a client by loan_id
     public function findClient(string $loanId): array
     {
-        return $this->makeRequest('/api/client/find', ['loan_id' => $loanId]);
+        return $this->makeRequest('client.find', ['loan_id' => $loanId]);
     }
 
     // Method for finding multiple clients by loan_ids
     public function findMultipleClients(array $loanIds): array
     {
-        return $this->makeRequest('/api/client/find.multiple', ['loan_ids' => $loanIds]);
+        return $this->makeRequest('client.find.multiple', ['loan_ids' => $loanIds]);
     }
 
     // Method for adding a phone number to a client
     public function addClientPhone(string $pinfl, string $phone): array
     {
-        return $this->makeRequest('/api/client/phone.add', ['pinfl' => $pinfl, 'phone' => $phone]);
+        return $this->makeRequest('client.phone.add', ['pinfl' => $pinfl, 'phone' => $phone]);
     }
 
     // Method for getting all clients
@@ -103,40 +103,40 @@ class UniredClient extends BaseClient
             $params['filial_id'] = $filialId;
         }
 
-        return $this->makeRequest('/api/client/all', $params);
+        return $this->makeRequest('client.all', $params);
     }
 
     // Method for toggling autopay for a single client
     public function toggleClientAuto(string $loanId, bool $auto): array
     {
-        return $this->makeRequest('/api/client/auto.toggle', ['loan_id' => $loanId, 'auto' => $auto]);
+        return $this->makeRequest('client.auto.toggle', ['loan_id' => $loanId, 'auto' => $auto]);
     }
 
     // Method for registering a payment
     public function registerPayment(array $paymentData): array
     {
-        return $this->makeRequest('/api/payment/register', $paymentData);
+        return $this->makeRequest('payment.register', $paymentData);
     }
 
     // Method for canceling a payment
     public function cancelPayment(array $paymentData): array
     {
-        return $this->makeRequest('/api/payment/cancel', $paymentData);
+        return $this->makeRequest('payment.cancel', $paymentData);
     }
 
     // Method for checking webhook
     public function getWebhook(): array
     {
-        return $this->makeRequest('/api/payment/get.webhook', []);
+        return $this->makeRequest('payment.get.webhook', []);
     }
 
     // Method for setting webhook
     public function setWebhook(string $webhookUrl): array
     {
-        return $this->makeRequest('/api/payment/set.webhook', ['webhook' => $webhookUrl]);
+        return $this->makeRequest('payment.set.webhook', ['webhook' => $webhookUrl]);
     }
 
-    private function httpRequest(array $data, string $httpMethod, string $path): array
+    private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO
     {
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
             ->$httpMethod($this->baseUrl . $path, $data);
@@ -149,10 +149,10 @@ class UniredClient extends BaseClient
             body: $data,
         ));
 
-        return $response->json();
+        return UniredResponseDTO::from($response->json());
     }
 
-    private function makeRequest(string $method, array $params, string $httpMethod = 'post'): array
+    private function makeRequest(string $method, BaseUniredDTO $params, string $httpMethod = 'post'): UniredResponseDTO
     {
         return $this->httpRequest(['method' => $method, 'params' => $params], $httpMethod, '');
     }

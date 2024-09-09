@@ -2,22 +2,22 @@
 
 namespace App\DTOs\Unired\Branch;
 
-use App\DTOs\Scoring\Base\BaseScoringRequest;
+use App\DTOs\Unired\Base\BaseUniredDTO;
 
 /**
- * Class CardCreateRequestDTO
+ * Class UniredCreateBranchRequestDTO
  *
- * @property string $number
+ * @property string $name
  * @property string $merchant_uzcard
  * @property string $terminal_uzcard
  * @property string $merchant_humo
  * @property string $terminal_humo
  * @property string $phone
  */
-class CreateBranchDTO extends BaseScoringRequest
+class UniredCreateBranchRequestDTO extends BaseUniredDTO
 {
     public function __construct(
-        public string $number,
+        public string $name,
         public string $merchant_uzcard,
         public string $terminal_uzcard,
         public string $merchant_humo,
