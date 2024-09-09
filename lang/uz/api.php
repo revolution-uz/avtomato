@@ -21,4 +21,5 @@ return [
     'already_attached_card' => 'Karta allaqachon bu mijozga ulangan',
     'inactive_company' => 'Kompaniya hozirda faol emas',
     'Please create initial fee amount first' => 'Iltimos, avval boshlang\'ich to\'lov miqdorini yarating',
+    'tag' => 'Teg',
 ];

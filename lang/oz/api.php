@@ -17,4 +17,5 @@ return [
     'already_attached_card' => 'Карта аллақачон бу мижозга уланган',
     'inactive_company' => 'Компания ҳозирда фаол эмас',
     'Please create initial fee amount first' => 'Илтимос, аввал бошланғич тўлов миқдорини яратинг',
+    'tag' => 'Тег',
 ];
