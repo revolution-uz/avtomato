@@ -17,7 +17,7 @@ use Rebing\GraphQL\Support\Query;
 class TagsGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'Tags',
+        'name' => 'tags',
     ];
 
     public function type(): Type

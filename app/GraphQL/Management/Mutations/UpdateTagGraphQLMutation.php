@@ -10,10 +10,8 @@ use App\Models\Company\Tag;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Facades\DB;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
-use Throwable;
 
 class UpdateTagGraphQLMutation extends Mutation
 {
@@ -29,9 +27,9 @@ class UpdateTagGraphQLMutation extends Mutation
                 'type' => Type::int(),
                 'rules' => ['required', 'exists:tags,id'],
             ],
-            'tags' => [
-                'name' => 'tags',
-                'type' => Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(TagInputGraphQLType::GRAPHQL_TYPE_NAME)))),
+            'tag' => [
+                'name' => 'tag',
+                'type' => Type::nonNull(GraphQL::type(TagInputGraphQLType::GRAPHQL_TYPE_NAME)),
                 'required' => 'array',
             ],
         ];
@@ -47,29 +45,17 @@ class UpdateTagGraphQLMutation extends Mutation
         return RbacHelper::checkPermission(PermissionEnum::TAG_EDIT);
     }
 
-    /**
-     * @throws Throwable
-     */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        DB::beginTransaction();
+        $tag = Tag::query()->findOrFail($args['tag_id']);
+        $tag->update([
+            'name_oz' => $args['tag']['name_oz'],
+            'name_en' => $args['tag']['name_en'],
+            'name_ru' => $args['tag']['name_ru'],
+            'name_uz' => $args['tag']['name_uz'],
+        ]);
+        $tag->refresh();
 
-        try {
-            $tag = Tag::query()->findOrFail($args['tag_id']);
-            $tag->update([
-                'name_oz' => $args['tags'][0]['name_oz'],
-                'name_en' => $args['tags'][0]['name_en'],
-                'name_ru' => $args['tags'][0]['name_ru'],
-                'name_uz' => $args['tags'][0]['name_uz'],
-            ]);
-            $tag->refresh();
-
-            DB::commit();
-
-            return $tag;
-        } catch (Throwable $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return $tag;
     }
 }

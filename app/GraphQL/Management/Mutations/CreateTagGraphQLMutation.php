@@ -10,7 +10,6 @@ use App\Models\Company\Tag;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Facades\DB;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
@@ -24,9 +23,9 @@ class CreateTagGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
-            'tags' => [
-                'name' => 'tags',
-                'type' => Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(TagInputGraphQLType::GRAPHQL_TYPE_NAME)))),
+            'tag' => [
+                'name' => 'tag',
+                'type' => Type::nonNull(GraphQL::type(TagInputGraphQLType::GRAPHQL_TYPE_NAME)),
                 'required' => 'array',
             ],
         ];
@@ -34,7 +33,7 @@ class CreateTagGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(Type::listOf(GraphQL::type(TagGraphQLType::GRAPHQL_TYPE_NAME)));
+        return Type::nonNull(GraphQL::type(TagGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -47,25 +46,10 @@ class CreateTagGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        DB::beginTransaction();
+        $tag = new Tag;
+        $tag->fill($args['tag']);
+        $tag->save();
 
-        try {
-            // Insert all tags at once
-            Tag::query()->create([
-                'name_oz' => $args['tags'][0]['name_oz'],
-                'name_en' => $args['tags'][0]['name_en'],
-                'name_ru' => $args['tags'][0]['name_ru'],
-                'name_uz' => $args['tags'][0]['name_uz'],
-            ]);
-
-            $createdTags = Tag::query()->orderByDesc('id')->get();
-
-            DB::commit();
-
-            return $createdTags;
-        } catch (Throwable $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return $tag;
     }
 }

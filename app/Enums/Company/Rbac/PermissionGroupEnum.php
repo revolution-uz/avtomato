@@ -66,6 +66,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::TAG_CREATE,
                 PermissionEnum::TAG_EDIT,
                 PermissionEnum::TAG_DELETE,
+                PermissionEnum::TAG_VIEW_ALL,
             ],
             self::ROLE_MANAGEMENT => [
                 PermissionEnum::ROLE_VIEW_ALL,
