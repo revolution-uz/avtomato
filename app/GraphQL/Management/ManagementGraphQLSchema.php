@@ -3,6 +3,8 @@
 namespace App\GraphQL\Management;
 
 use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
+use App\GraphQL\Customer\Types\TagGraphQLType;
+use App\GraphQL\Customer\Types\TagInputGraphQLType;
 use App\GraphQL\Management\Mutations\AttachPermissionsToRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\BalanceFillConfirmGraphQLMutation;
 use App\GraphQL\Management\Mutations\BalanceFillGraphQLMutation;
@@ -14,9 +16,11 @@ use App\GraphQL\Management\Mutations\ChangeProfileThemeGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\CreateRoleGraphQLMutation;
+use App\GraphQL\Management\Mutations\CreateTagGraphQLMutation;
 use App\GraphQL\Management\Mutations\DeleteAdminGraphQLMutation;
 use App\GraphQL\Management\Mutations\DeleteBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\DeleteRoleGraphQLMutation;
+use App\GraphQL\Management\Mutations\DeleteTagGraphQLMutation;
 use App\GraphQL\Management\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\Management\Mutations\RevokeAdminDeviceGraphQLMutation;
 use App\GraphQL\Management\Mutations\RevokeDeviceGraphQLMutation;
@@ -25,6 +29,7 @@ use App\GraphQL\Management\Mutations\UpdateAdminPasswordGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateAdminRoleGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateBranchGraphQLMutation;
 use App\GraphQL\Management\Mutations\UpdateRoleGraphQLMutation;
+use App\GraphQL\Management\Mutations\UpdateTagGraphQLMutation;
 use App\GraphQL\Management\Queries\ActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\AdminActivityLogsGraphQLQuery;
 use App\GraphQL\Management\Queries\AdminDevicesGraphQLQuery;
@@ -40,7 +45,9 @@ use App\GraphQL\Management\Queries\SingleActivityLogGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleAdminGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleBranchGraphQLQuery;
 use App\GraphQL\Management\Queries\SingleRoleGraphQLQuery;
+use App\GraphQL\Management\Queries\SingleTagGraphQLQuery;
 use App\GraphQL\Management\Queries\SmsMessagesGraphQLQuery;
+use App\GraphQL\Management\Queries\TagsGraphQLQuery;
 use App\GraphQL\Management\Types\ActivityLogGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AdminInputGraphQLType;
@@ -87,6 +94,9 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 UpdateAdminRoleGraphQLMutation::class,
                 UpdateBranchGraphQLMutation::class,
                 UpdateRoleGraphQLMutation::class,
+                CreateTagGraphQLMutation::class,
+                UpdateTagGraphQLMutation::class,
+                DeleteTagGraphQLMutation::class,
             ],
             'query' => [
                 AdminsGraphQLQuery::class,
@@ -105,6 +115,8 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 BranchesGraphQLQuery::class,
                 SingleBranchGraphQLQuery::class,
                 SmsMessagesGraphQLQuery::class,
+                TagsGraphQLQuery::class,
+                SingleTagGraphQLQuery::class,
             ],
             'types' => [
                 AdminGraphQLType::class,
@@ -124,6 +136,8 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 PermissionGroupGraphQLType::class,
                 BranchGraphQLType::class,
                 SmsMessageGraphQLType::class,
+                TagInputGraphQLType::class,
+                TagGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token'],
         ];

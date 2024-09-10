@@ -58,22 +58,28 @@ class InstallmentService
     }
 
     /**
+     * 01
+     * 10
+     *
      * @throws Throwable
      * @throws BalanceIsNotEnoughException
      */
-    public function toggleAutoCharge(Installment $installment, bool $auto_charge, bool $any_card): Installment
+    public function toggleAutoAndAnyCardCharge(Installment $installment, bool $auto_charge, bool $any_card): Installment
     {
-        if ($auto_charge) {
-            $installment->type = InstallmentTypeEnum::WITH_CARD;
-        } else {
-            $installment->type = InstallmentTypeEnum::WITHOUT_CARD;
+        if ($auto_charge && ! ($installment->type->value & InstallmentTypeEnum::WITH_CARD->value)) {
+            $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_CARD->value);
+            if (! $this->withdrawAutoCharge($installment)) {
+                throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
+            }
         }
-        if ($any_card) {
+        if ($any_card && ! ($installment->type->value & InstallmentTypeEnum::WITH_PINFL->value)) {
+            $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_PINFL->value);
             $installment->any_card_charge = $any_card;
+            if (! $this->withdrawAnyCardCharge($installment)) {
+                throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
+            }
         }
-        if ($this->withdrawAutoCharge($installment)) {
-            $installment->saveOrFail();
-        }
+        $installment->saveOrFail();
 
         return $installment;
     }
@@ -84,15 +90,14 @@ class InstallmentService
      */
     public function toggleGuarantorAutoCharge(InstallmentGuarantor $installmentGuarantor, bool $auto_charge): InstallmentGuarantor
     {
-        if ($auto_charge) {
-            $installmentGuarantor->any_card_charge = true;
-            if ($this->withdrawAutoCharge($installmentGuarantor->installment)) {
-                $installmentGuarantor->saveOrFail();
-            }
-        } else {
-            $installmentGuarantor->any_card_charge = false;
+        $installmentGuarantor->any_card_charge = $auto_charge;
+        if (! $auto_charge) {
             $installmentGuarantor->saveOrFail();
+
+            return $installmentGuarantor;
         }
+        $this->toggleAutoAndAnyCardCharge($installmentGuarantor->installment, false, true);
+        $installmentGuarantor->saveOrFail();
 
         return $installmentGuarantor;
     }
@@ -104,7 +109,7 @@ class InstallmentService
     {
         if ($status == InstallmentStatusEnum::ACTIVE) {
             if ($installment->isPaidInitialFee()) {
-                if ($this->withdrawAutoCharge($installment)) {
+                if ($this->withdrawAutoCharge($installment) && $this->withdrawAnyCardCharge($installment)) {
                     $installment->status = $status;
                 }
 
@@ -135,18 +140,24 @@ class InstallmentService
 
     private function withdrawAutoCharge(Installment $installment): bool
     {
-        if (($installment->any_card_charge || $installment->auto_pay) && ! $installment->withdrawn_auto_charge) {
-            if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
-                $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
-                $installment->withdrawn_auto_charge = true;
+        if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
+            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
 
-                return $installment->saveOrFail();
-            }
-
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
+    }
+
+    private function withdrawAnyCardCharge(Installment $installment): bool
+    {
+        if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)) {
+            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment);
+
+            return true;
+        }
+
+        return false;
     }
 
     private function getInstallmentAmounts(): array

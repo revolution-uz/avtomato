@@ -11,4 +11,5 @@ enum InstallmentTypeEnum: int
     case WITHOUT_CARD = 0;
     case WITH_CARD = 1;
     case WITH_PINFL = 2;
+    case WITH_BOTH = 3;
 }

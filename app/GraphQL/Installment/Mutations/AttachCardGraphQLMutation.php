@@ -6,6 +6,7 @@ use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Installment;
+use App\Services\Installment\InstallmentService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -17,6 +18,13 @@ class AttachCardGraphQLMutation extends Mutation
     protected $attributes = [
         'name' => 'attachCard',
     ];
+
+    private InstallmentService $installmentService;
+
+    public function __construct(InstallmentService $installmentService)
+    {
+        $this->installmentService = $installmentService;
+    }
 
     public function args(): array
     {
@@ -52,6 +60,7 @@ class AttachCardGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $installment = Installment::findOrFail($args['installment_id']);
+        $this->installmentService->toggleAutoAndAnyCardCharge($installment, true, $installment->any_card_charge);
         $installment->cards()->attach($args['card_id']);
 
         return true;

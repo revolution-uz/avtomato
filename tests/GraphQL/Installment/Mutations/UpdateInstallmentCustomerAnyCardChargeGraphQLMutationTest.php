@@ -3,6 +3,7 @@
 namespace Tests\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\Installment;
@@ -49,7 +50,7 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
     {
         parent::setUp();
 
-        Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::INACTIVE, 'any_card_charge' => false]);
+        Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
 
         $this->_installment = Installment::query()->inRandomOrder()->first();
         $this->_input = ['id' => $this->_installment->id, 'any_card_charge' => true];
@@ -103,7 +104,7 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
         $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_EDIT)->firstOrFail();
 
         $branches = Branch::factory()->count(2)->create();
-        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::INACTIVE, 'any_card_charge' => false]);
+        $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::ACTIVE, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
         $this->_input = array_merge($this->_input, ['id' => $this->_installment->id]);
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);

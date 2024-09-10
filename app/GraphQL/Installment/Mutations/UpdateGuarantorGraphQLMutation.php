@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\InstallmentGuarantor;
+use App\Services\Installment\InstallmentService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -18,6 +19,13 @@ class UpdateGuarantorGraphQLMutation extends Mutation
     protected $attributes = [
         'name' => 'updateGuarantor',
     ];
+
+    private InstallmentService $installmentService;
+
+    public function __construct(InstallmentService $installmentService)
+    {
+        $this->installmentService = $installmentService;
+    }
 
     public function args(): array
     {
@@ -61,12 +69,9 @@ class UpdateGuarantorGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $installmentGuarantor = InstallmentGuarantor::query()
+        return $this->installmentService->toggleGuarantorAutoCharge(InstallmentGuarantor::query()
             ->where('installment_id', $args['installment_id'])
             ->where('customer_id', $args['guarantor_id'])
-            ->firstOrFail();
-        $installmentGuarantor->updateOrFail(['any_card_charge' => $args['any_card_charge']]);
-
-        return $installmentGuarantor;
+            ->firstOrFail(), $args['any_card_charge']);
     }
 }

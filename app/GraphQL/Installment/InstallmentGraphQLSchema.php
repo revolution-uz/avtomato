@@ -9,10 +9,11 @@ use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
+use App\GraphQL\Customer\Types\TagGraphQLType;
 use App\GraphQL\Installment\Mutations\AttachCardGraphQLMutation;
 use App\GraphQL\Installment\Mutations\AttachGuarantorGraphQLMutation;
 use App\GraphQL\Installment\Mutations\ChangeSettingsGraphQLMutation;
-use App\GraphQL\Installment\Mutations\ChangesStatusGraphQLMutation;
+use App\GraphQL\Installment\Mutations\ChangeStatusGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateDocumentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\CreateInstallmentGraphQLMutation;
@@ -141,7 +142,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 DeleteTransactionGraphQLMutation::class,
                 CreateDocumentGraphQLMutation::class,
                 DeleteDocumentGraphQLMutation::class,
-                ChangesStatusGraphQLMutation::class,
+                ChangeStatusGraphQLMutation::class,
                 UpdateInstallmentCustomerAnyCardChargeGraphQLMutation::class,
                 ChangeSettingsGraphQLMutation::class,
             ],
@@ -215,6 +216,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 RegionGraphQLType::class,
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
+                TagGraphQLType::class,
 
                 // unions last
                 ScoringRequestUnionGraphQLType::class,
