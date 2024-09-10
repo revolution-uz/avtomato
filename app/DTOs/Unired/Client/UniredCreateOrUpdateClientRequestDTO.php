@@ -5,7 +5,7 @@ namespace App\DTOs\Unired\Client;
 use App\DTOs\Unired\Base\BaseUniredDTO;
 
 /**
- * Class UniredCreateClientRequestDTO
+ * Class UniredCreateOrUpdateClientRequestDTO
  *
  * @property string $pinfl
  * @property string $passport_id
@@ -18,7 +18,7 @@ use App\DTOs\Unired\Base\BaseUniredDTO;
  * @property float $debit_amount
  * @property array $phones
  */
-class UniredCreateClientRequestDTO extends BaseUniredDTO
+class UniredCreateOrUpdateClientRequestDTO extends BaseUniredDTO
 {
     public function __construct(
         public string $pinfl,

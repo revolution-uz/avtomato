@@ -4,10 +4,15 @@ namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
 use App\DTOs\Unired\Base\BaseUniredDTO;
-use App\DTOs\Unired\Branch\ToggleBranchAutoRequestDTO;
+use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredFindBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
+use App\DTOs\Unired\Client\UniredAddClientPhoneRequestDTO;
+use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
+use App\DTOs\Unired\Client\UniredFindClientRequestDTO;
+use App\DTOs\Unired\Client\UniredFindClientsRequestDTO;
+use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
 use App\DTOs\Unired\System\UniredSetTokenRequestDTO;
 use App\DTOs\Unired\UniredPaginationRequestDTO;
 use App\DTOs\Unired\UniredResponseDTO;
@@ -61,77 +66,67 @@ class UniredClient extends BaseClient
         return $this->makeRequest('filial.all', $params);
     }
 
-    public function toggleFilialAuto(ToggleBranchAutoRequestDTO $params): UniredResponseDTO
+    public function toggleFilialAuto(UniredToggleBranchAutoRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest('filial.toggle.all', $params);
     }
 
-    public function createClient(array $clientData): UniredResponseDTO
+    public function createClient(UniredCreateOrUpdateClientRequestDTO $clientData): UniredResponseDTO
     {
         return $this->makeRequest('client.create', $clientData);
     }
 
-    // Method for updating or creating clients in bulk
-    public function createOrUpdateClients(array $clientsData): UniredResponseDTO
+    public function createOrUpdateClients(UniredCreateOrUpdateClientRequestDTO $clientsData): UniredResponseDTO
     {
         return $this->makeRequest('client.createOrUpdate', $clientsData);
     }
 
-    // Method for finding a client by loan_id
-    public function findClient(string $loanId): array
+    public function findClient(UniredFindClientRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.find', ['loan_id' => $loanId]);
+        return $this->makeRequest('client.find', $params);
     }
 
-    // Method for finding multiple clients by loan_ids
-    public function findMultipleClients(array $loanIds): array
+    public function findMultipleClients(UniredFindClientsRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.find.multiple', ['loan_ids' => $loanIds]);
+        return $this->makeRequest('client.find.multiple', $params);
     }
 
-    // Method for adding a phone number to a client
-    public function addClientPhone(string $pinfl, string $phone): array
+    public function addClientPhone(UniredAddClientPhoneRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.phone.add', ['pinfl' => $pinfl, 'phone' => $phone]);
+        return $this->makeRequest('client.phone.add', $params);
     }
 
-    // Method for getting all clients
-    public function getAllClients(int $pageSize, int $page, ?int $filialId = null): array
+    public function getAllClients(UniredPaginationRequestDTO $params): UniredResponseDTO
     {
-        $params = ['page_size' => $pageSize, 'page' => $page];
-        if ($filialId) {
-            $params['filial_id'] = $filialId;
-        }
-
+        $params->filial_id = tenant('id');
         return $this->makeRequest('client.all', $params);
     }
 
-    // Method for toggling autopay for a single client
-    public function toggleClientAuto(string $loanId, bool $auto): array
+    public function toggleClientAuto(UniredToggleClientAutoRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.auto.toggle', ['loan_id' => $loanId, 'auto' => $auto]);
+        return $this->makeRequest('client.auto.toggle', $params);
     }
 
     // Method for registering a payment
-    public function registerPayment(array $paymentData): array
+    public function registerPayment(array $paymentData): UniredResponseDTO
     {
         return $this->makeRequest('payment.register', $paymentData);
     }
 
     // Method for canceling a payment
-    public function cancelPayment(array $paymentData): array
+    public function cancelPayment(array $paymentData): UniredResponseDTO
     {
         return $this->makeRequest('payment.cancel', $paymentData);
     }
 
     // Method for checking webhook
-    public function getWebhook(): array
+    public function getWebhook(): UniredResponseDTO
     {
         return $this->makeRequest('payment.get.webhook', []);
     }
 
     // Method for setting webhook
-    public function setWebhook(string $webhookUrl): array
+    public function setWebhook(string $webhookUrl): UniredResponseDTO
     {
         return $this->makeRequest('payment.set.webhook', ['webhook' => $webhookUrl]);
     }
