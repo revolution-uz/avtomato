@@ -7,6 +7,7 @@ use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,6 +67,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read Carbon $nextPaymentDate
  * @property mixed $wholeDebtAmount
  * @property float $portion
+ *
+ * @method static Builder whereNextPayDate(string $operator, Carbon $date)
  */
 class Installment extends Model
 {
