@@ -18,11 +18,11 @@ use Rebing\GraphQL\Support\Query;
 
 class StatisticsGraphQLQuery extends Query
 {
-    private array $_branches;
-
     protected $attributes = [
         'name' => 'statistics',
     ];
+
+    private array $_branches;
 
     public function type(): Type
     {

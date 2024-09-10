@@ -16,11 +16,11 @@ use Rebing\GraphQL\Support\Query;
 
 class StatisticsInfoGraphQLQuery extends Query
 {
-    private array $_branches;
-
     protected $attributes = [
         'name' => 'statisticsInfo',
     ];
+
+    private array $_branches;
 
     public function type(): Type
     {
