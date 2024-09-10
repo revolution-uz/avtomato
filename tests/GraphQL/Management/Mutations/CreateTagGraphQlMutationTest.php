@@ -1,9 +1,10 @@
 <?php
 
-namespace GraphQL\Management\Mutations;
+namespace Tests\GraphQL\Management\Mutations;
 
 use App\Models\Company\Tag;
 use Illuminate\Support\Arr;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class CreateTagGraphQlMutationTest extends GraphQLTestCase
@@ -24,9 +25,7 @@ class CreateTagGraphQlMutationTest extends GraphQLTestCase
         $this->withHeaders(['Accept-Language' => 'uz']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successCreateTeg(): void
     {
         $response = $this
@@ -61,9 +60,7 @@ class CreateTagGraphQlMutationTest extends GraphQLTestCase
         $this->assertEquals($data['name_oz'], $tag->name_oz);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function argumentValidationErrors(): void
     {
         $response = $this
