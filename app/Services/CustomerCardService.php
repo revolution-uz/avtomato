@@ -22,7 +22,7 @@ readonly class CustomerCardService
     public function attachCard(int $customerId, array $request): array
     {
         // check has already connected card
-        $cardQuery = Card::query()->whereNumber($request['number'])->where('expiry', $request['expiry'])->whereNotNull('external_id')->withTrashed();
+        $cardQuery = Card::query()->whereNumber($request['number'])->where('expiry', $request['expiry'])->whereNotNull('external_id');
 
         // if connected card not exists create it and send request to card service
         if ((clone $cardQuery)->doesntExist()) {
@@ -100,7 +100,7 @@ readonly class CustomerCardService
     private function createOrGetCard(int $customerId, array $request)
     {
         $card = Card::query()->where('customer_id', $customerId)->whereNumber($request['number'])
-            ->where('expiry', $request['expiry'])->withTrashed()->first();
+            ->where('expiry', $request['expiry'])->first();
 
         if ($card) {
             return $card;
