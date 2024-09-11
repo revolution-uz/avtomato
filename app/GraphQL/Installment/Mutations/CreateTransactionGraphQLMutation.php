@@ -115,18 +115,21 @@ class CreateTransactionGraphQLMutation extends Mutation
         $model->fill($args);
         $model->external_id = 'local_' . Str::random();
         $model->admin_id = auth()->id();
+
         if (! $model->installment->is_active && ! $model->installment->isPaidInitialFee()) {
             if ($model->amount != $model->installment->initial_fee) {
                 throw ValidationException::withMessages(['amount' => __('api.Please create initial fee amount first')]);
             }
             $model->is_initial_fee = true;
         }
-        if (! $model->paid_at) {
-            $model->paid_at = Carbon::now();
+
+        $model->paid_at = $args['paid_at'] ?? Carbon::now();
+        if (isset($args['paid_at'])) {
+            $model->paid_at->setTime(now()->hour, now()->minute);
         }
-        if (! $model->branch_id) {
-            $model->branch_id = $model->installment->branch_id;
-        }
+
+        $model->branch_id = $args['branch_id'] ?? $installment->branch_id;
+
         $model->saveOrFail();
 
         return $model;
