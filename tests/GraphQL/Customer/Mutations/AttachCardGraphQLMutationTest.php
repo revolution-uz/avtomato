@@ -10,6 +10,7 @@ use App\Models\Company\Card;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -134,6 +135,51 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals('Карта уже привязана к этому клиенту', $response->json('errors.0.extensions.validation.number.0'));
+    }
+
+    #[Test]
+    public function reAttachTheDeletedCardToTheCustomer()
+    {
+        AtmosFaker::getToken();
+        AtmosFaker::attachCard(true);
+        SmsFaker::fly();
+        SmsFaker::sayqal();
+        $deletedCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $this->_customer->id, 'deleted_at' => Carbon::now()]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery(['customer_id' => $this->_customer->id, 'number' => $deletedCard->number, 'expiry' => $deletedCard->expiry])
+            );
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure([
+            'data' => [
+                'attachCard' => $this->_structure,
+            ],
+        ]);
+
+        $card = Card::query()->findOrFail($response->json('data.attachCard.card.id'));
+        $this->assertEquals($card->id, $response->json('data.attachCard.card.id'));
+        $this->assertEquals($card->customer_id, $response->json('data.attachCard.card.customer_id'));
+        $this->assertEquals($card->pan, $response->json('data.attachCard.card.number'));
+        $this->assertEquals($card->card_type, $response->json('data.attachCard.card.card_type'));
+        $this->assertEquals($card->owner, $response->json('data.attachCard.card.owner'));
+        $this->assertEquals($card->expiry, $response->json('data.attachCard.card.expiry'));
+        $this->assertEquals($card->is_connected, $response->json('data.attachCard.card.is_connected'));
+        $this->assertEquals($card->phone, $response->json('data.attachCard.card.phone'));
+        $this->assertEquals(CardStatusEnum::INACTIVE->value, $response->json('data.attachCard.card.status'));
+        $this->assertEquals((float) $card->balance, $response->json('data.attachCard.card.balance'));
+        $this->assertEquals($card->created_at->timestamp, $response->json('data.attachCard.card.created_at'));
+        $this->assertEquals($card->updated_at->timestamp, $response->json('data.attachCard.card.updated_at'));
+        $this->assertEquals($card->customer_id, $this->_customer->id);
+        $this->assertEquals($card->number, $deletedCard->number);
+        $this->assertEquals($card->expiry, $deletedCard->expiry);
+        $this->assertIsArray($response->json('data.attachCard.attachData'));
+        $this->assertEquals($response->json('data.attachCard.card.id'), $response->json('data.attachCard.attachData.transaction_id'));
+        $this->assertEquals($card->phone, $response->json('data.attachCard.attachData.phone'));
+        $this->assertEquals('OK', $response->json('data.attachCard.attachData.result_code'));
+        $this->assertNull($response->json('data.attachCard.attachData.result_description'));
     }
 
     #[Test]
