@@ -133,6 +133,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::BRANCH_EDIT,
                 PermissionEnum::BRANCH_DELETE,
                 PermissionEnum::BRANCH_CREATE,
+                PermissionEnum::STATISTICS_BY_BRANCHES,
             ],
             self::COMPANY_MANAGEMENT => [
                 PermissionEnum::SETTINGS_EDIT,
