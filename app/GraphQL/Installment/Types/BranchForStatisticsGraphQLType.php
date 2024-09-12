@@ -6,7 +6,7 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class BranchGraphQLType extends GraphQLType
+class BranchForStatisticsGraphQLType extends GraphQLType
 {
     public const GRAPHQL_TYPE_NAME = 'BranchGraphQLType';
 

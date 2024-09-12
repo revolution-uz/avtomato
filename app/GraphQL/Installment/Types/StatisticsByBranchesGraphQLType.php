@@ -19,7 +19,7 @@ class StatisticsByBranchesGraphQLType extends GraphQLType
     {
         return [
             'branches' => [
-                'type' => Type::listOf(GraphQL::type('BranchGraphQLType')),
+                'type' => Type::listOf(GraphQL::type(BranchForStatisticsGraphQLType::GRAPHQL_TYPE_NAME)),
                 'description' => 'A list of branches and their respective types and total amounts',
                 'resolve' => function (array $root) {
                     return $root['branches'];

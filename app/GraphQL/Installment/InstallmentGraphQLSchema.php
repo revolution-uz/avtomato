@@ -47,7 +47,7 @@ use App\GraphQL\Installment\Queries\TariffsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionAttemptsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionTypesGraphQLQuery;
-use App\GraphQL\Installment\Types\BranchGraphQLType;
+use App\GraphQL\Installment\Types\BranchForStatisticsGraphQLType;
 use App\GraphQL\Installment\Types\CalculatedGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentCommentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
@@ -165,7 +165,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
                 PhoneGraphQLType::class,
-                BranchGraphQLType::class,
+                BranchForStatisticsGraphQLType::class,
                 InstallmentGraphQLType::class,
                 InstallmentGraphGraphQLType::class,
                 TariffInputGraphQLType::class,
@@ -179,7 +179,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 InstallmentCommentGraphQLType::class,
                 InstallmentGuarantorGraphQLType::class,
                 SettingsGraphQLType::class,
-                BranchGraphQLType::class,
+                BranchForStatisticsGraphQLType::class,
                 TypeTotalGraphQLType::class,
                 StatisticsByBranchesGraphQLType::class,
 
