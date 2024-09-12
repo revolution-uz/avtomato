@@ -38,6 +38,10 @@ class Phoneable extends Model
         'type' => PhoneTypeEnum::class,
     ];
 
+    protected $attributes = [
+        'installment_notifications' => true,
+    ];
+
     public function phone(): BelongsTo
     {
         return $this->belongsTo(Phone::class);

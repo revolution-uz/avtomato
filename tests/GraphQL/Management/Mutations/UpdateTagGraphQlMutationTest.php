@@ -4,6 +4,7 @@ namespace GraphQL\Management\Mutations;
 
 use App\Models\Company\Tag;
 use Illuminate\Support\Arr;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class UpdateTagGraphQlMutationTest extends GraphQLTestCase
@@ -29,9 +30,7 @@ class UpdateTagGraphQlMutationTest extends GraphQLTestCase
         $this->withHeaders(['Accept-Language' => 'uz']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successWithoutArguments(): void
     {
         $response = $this
@@ -59,9 +58,7 @@ class UpdateTagGraphQlMutationTest extends GraphQLTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function errorWithArguments(): void
     {
         // error tag_id

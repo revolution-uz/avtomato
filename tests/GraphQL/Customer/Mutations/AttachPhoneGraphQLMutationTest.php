@@ -4,6 +4,8 @@ namespace Tests\GraphQL\Customer\Mutations;
 
 use App\Enums\Company\PhoneTypeEnum;
 use App\Models\Company\Customer;
+use App\Models\Company\Phone;
+use App\Models\Company\Phoneable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
@@ -35,6 +37,8 @@ class AttachPhoneGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successAttachWithoutComment()
     {
+        Phoneable::query()->forceDelete();
+
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
@@ -170,6 +174,7 @@ class AttachPhoneGraphQLMutationTest extends GraphQLTestCase
                     phone
                     type
                     comment
+                    installment_notifications
                     created_at
                     updated_at
                 }
@@ -190,11 +195,13 @@ class AttachPhoneGraphQLMutationTest extends GraphQLTestCase
                     'phone',
                     'type',
                     'comment',
+                    'installment_notifications',
                     'created_at',
                     'updated_at',
                 ],
             ],
         ]);
+        /** @var Phone $phone */
         $phone = $this->_customer->phones()->find($response->json('data.attachPhone.id'));
         $this->assertNotNull($phone);
         $this->assertEquals($this->_input['phone'], $phone->phone);
@@ -205,6 +212,8 @@ class AttachPhoneGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($phone->phone, $response->json('data.attachPhone.phone'));
         $this->assertEquals($phone->pivot->type, $response->json('data.attachPhone.type'));
         $this->assertEquals($phone->pivot->comment, $response->json('data.attachPhone.comment'));
+        $this->assertTrue($phone->pivot->installment_notifications);
+        $this->assertEquals($phone->pivot->installment_notifications, $response->json('data.attachPhone.installment_notifications'));
         $this->assertEquals($phone->pivot->created_at->timestamp, $response->json('data.attachPhone.created_at'));
         $this->assertEquals($phone->pivot->updated_at->timestamp, $response->json('data.attachPhone.updated_at'));
     }
