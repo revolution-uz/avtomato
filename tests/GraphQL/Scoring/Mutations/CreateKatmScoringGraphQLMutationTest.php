@@ -3,8 +3,12 @@
 namespace Tests\GraphQL\Scoring\Mutations;
 
 use App\Enums\Company\CompanyStatusEnum;
+use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Enums\FeatureEnum;
+use App\Models\Company\BalanceCharge;
 use App\Models\Company\District;
+use App\Models\Company\Feature;
 use App\Models\Company\Region;
 use App\Models\Company\ScoringRequest;
 use Illuminate\Support\Carbon;
@@ -14,25 +18,49 @@ use Tests\GraphQL\GraphQLTestCase;
 
 class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
 {
-    private int $_type = ScoringRequestTypeEnum::KATM_INPS_HISTORY->value;
+    private int $_featureAmount = 100;
+    private ScoringRequestTypeEnum $_type = ScoringRequestTypeEnum::KATM_INPS_HISTORY;
 
     protected function setUp(): void
     {
         parent::setUp();
         ScoringRequest::query()->forceDelete();
         $this->artisan('db:seed', ['--class' => '\\Database\\Seeders\\Company\\LocationSeeder']);
+        Feature::query()->whereIn('name', [FeatureEnum::SCORING_INPS_HISTORY])->update(['amount' => $this->_featureAmount]);
     }
 
     #[Test]
     public function successCreate(): void
     {
-        $this->mockUrl('https://api.abrand.uz/partner/katm/create-request*', json_decode(file_get_contents(storage_path('../JSON-for-testing/card-scoring-create-response.json')), true));
+        $this->mockUrl('https://api.abrand.uz/partner/katm/create-request*', json_decode(file_get_contents(storage_path('../JSON-for-testing/scoring/katm-create-request-response.json')), true));
         $response = $this->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.scoring'),
                 $this->buildGraphQLQuery($this->input(), $this->_type)
             );
         $this->assertSuccessCreateKatmScoringResponse($response);
+
+        $balanceCharge = BalanceCharge::query()->latest()->firstOrFail();
+        $feature = Feature::query()->where('name', FeatureEnum::SCORING_INPS_HISTORY)->firstOrFail();
+
+        $this->assertEquals($feature->id, $balanceCharge->feature_id);
+        $this->assertEquals($this->_featureAmount, $balanceCharge->amount);
+        $this->assertEquals($response->json('data.createKatmScoring'), $balanceCharge->chargeable_id);
+        $this->assertEquals(ScoringRequest::class, $balanceCharge->chargeable_type);
+    }
+
+    #[Test]
+    public function errorCreate(): void
+    {
+        $this->mockUrl('https://api.abrand.uz/partner/katm/create-request*', json_decode(file_get_contents(storage_path('../JSON-for-testing/scoring/katm-create-request-failed-response.json')), true));
+        $response = $this->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery($this->input(), $this->_type)
+            );
+        $this->assertSuccessCreateKatmScoringResponse($response, ScoringRequestStatusEnum::FAILED);
+
+        $this->assertTrue(BalanceCharge::query()->doesntExist());
     }
 
     #[Test]
@@ -110,10 +138,10 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
         ];
     }
 
-    private function buildGraphQLQuery(array $data, int $type): array
+    private function buildGraphQLQuery(array $data, ScoringRequestTypeEnum $type): array
     {
         return [
-            'variables' => ['data' => $data, 'type' => $type],
+            'variables' => ['data' => $data, 'type' => $type->value],
             'query' => '
                 mutation CreateKatmScoring($data: KatmCreateInputGraphQLType!, $type: Int!) {
                     createKatmScoring(data: $data, type: $type)
@@ -122,7 +150,7 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
         ];
     }
 
-    private function assertSuccessCreateKatmScoringResponse(TestResponse $response): void
+    private function assertSuccessCreateKatmScoringResponse(TestResponse $response, ScoringRequestStatusEnum $status = ScoringRequestStatusEnum::WAITING): void
     {
         $response->assertOk();
         $response->assertJsonStructure([
@@ -130,8 +158,11 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
                 'createKatmScoring',
             ],
         ]);
-        $scoringRequest = ScoringRequest::query()->find($response->json('data.createKatmScoring'));
-        $this->assertNotNull($scoringRequest);
-        $this->assertEquals($this->_type, $scoringRequest->type->value);
+
+        $scoringRequest = ScoringRequest::query()->firstOrFail();
+
+        $this->assertEquals($scoringRequest->id, $response->json('data.createKatmScoring'));
+        $this->assertEquals($this->_type, $scoringRequest->type);
+        $this->assertEquals($status, $scoringRequest->status);
     }
 }
