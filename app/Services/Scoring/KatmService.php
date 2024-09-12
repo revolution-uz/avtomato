@@ -16,11 +16,11 @@ use App\Services\User\BalanceService;
 use InvalidArgumentException;
 use Throwable;
 
-class KatmService
+readonly class KatmService
 {
     public function __construct(
-        private readonly AsaxiyClient $asaxiyClient,
-        private readonly BalanceService $balanceService,
+        private AsaxiyClient $asaxiyClient,
+        private BalanceService $balanceService,
     ) {}
 
     /**
@@ -29,7 +29,6 @@ class KatmService
      */
     public function createRequest(KatmCreateRequestDTO $dto, ScoringRequestTypeEnum $type): ScoringRequest
     {
-
         $model = new ScoringRequest;
         $model->type = $type;
         $model->request = $dto;
