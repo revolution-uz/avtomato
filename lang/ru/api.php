@@ -22,4 +22,5 @@ return [
     'inactive_company' => 'В настоящее время компания неактивна',
     'Please create initial fee amount first' => 'Сначала создайте сумму первоначального взноса',
     'tag' => 'Тег',
+    'already_attached_tag' => 'Тег уже привязана к этому клиенту',
 ];

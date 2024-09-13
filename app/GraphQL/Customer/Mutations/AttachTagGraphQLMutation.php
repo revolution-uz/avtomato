@@ -51,7 +51,7 @@ class AttachTagGraphQLMutation extends Mutation
         $customer = Customer::findOrFail($args['customer_id']);
         $customerTags = $customer->tags()->where('tag_id', $args['tag_id'])->first();
         if ($customerTags) {
-            throw ValidationException::withMessages(['tag_id' => 'Tag already attached']);
+            throw ValidationException::withMessages(['tag_id' => __('api.already_attached_tag')]);
         }
         $customer->tags()->attach($args['tag_id']);
         $customer->refresh();
