@@ -18,4 +18,5 @@ return [
     'inactive_company' => 'Компания ҳозирда фаол эмас',
     'Please create initial fee amount first' => 'Илтимос, аввал бошланғич тўлов миқдорини яратинг',
     'tag' => 'Тег',
+    'already_attached_tag' => 'Тег аллақачон бу мижозга уланган',
 ];
