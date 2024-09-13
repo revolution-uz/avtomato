@@ -20,15 +20,15 @@ class StatisticsGraphQLType extends GraphQLType
         return [
             'date' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (array $root) => $root['date']?->format('Y-m-d'),
+                'resolve' => fn ($root) => $root->date,
             ],
-            'debt' => [
+            'debt_amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (array $root) => $root['debt'],
+                'resolve' => fn ($root) => round($root->debt_amount, 2),
             ],
-            'paid' => [
+            'paid_amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (array $root) => $root['paid'],
+                'resolve' => fn ($root) => round($root->paid_amount, 2),
             ],
         ];
     }

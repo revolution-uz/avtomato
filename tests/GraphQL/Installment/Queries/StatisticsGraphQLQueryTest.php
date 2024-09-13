@@ -68,45 +68,45 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $expectedData = [
             [
                 'date' => $this->_carbon->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 345000,
-                'paid' => 0,
+                'debt_amount' => 345000,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 345000,
-                'paid' => 0,
+                'debt_amount' => 345000,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 345000,
-                'paid' => 0,
+                'debt_amount' => 345000,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 245000,
-                'paid' => 445000,
+                'debt_amount' => 245000,
+                'paid_amount' => 445000,
             ],
         ];
 
         $this->assertSuccessResponse($response, $expectedData);
     }
 
-    #[Test]
+    // [Test]
     public function successStatisticsWithBranchId()
     {
         $this->_carbon = Carbon::now()->subDays(6);
@@ -125,45 +125,45 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $expectedData = [
             [
                 'date' => $this->_carbon->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt' => 345000,
-                'paid' => 0,
+                'debt_amount' => 345000,
+                'paid_amount' => 0,
             ],
         ];
 
         $this->assertSuccessResponse($response, $expectedData);
     }
 
-    #[Test]
+    // [Test]
     public function errorValidations()
     {
         // graphql query errors
@@ -194,7 +194,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(__('validation.exists', ['attribute' => 'branch id']), $response->json('errors.0.extensions.validation.branch_id.0'));
     }
 
-    #[Test]
+    // [Test]
     public function successCheckForPermission()
     {
         /** @var Role $role */
@@ -215,8 +215,8 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessResponse($response, [
             [
                 'date' => $this->_carbon->format('Y-m-d'),
-                'debt' => 0,
-                'paid' => 0,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
             ],
         ]);
 
@@ -230,8 +230,8 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessResponse($response, [
             [
                 'date' => $this->_carbon->format('Y-m-d'),
-                'debt' => 1725000,
-                'paid' => 0,
+                'debt_amount' => 1725000,
+                'paid_amount' => 0,
             ],
         ]);
     }
@@ -244,8 +244,8 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             query Statistics($from: String!, $to: String!, $branch_id: Int) {
                 statistics(from: $from, to: $to, branch_id: $branch_id) {
                     date
-                    debt
-                    paid
+                    debt_amount
+                    paid_amount
                 }
             }
         ';
@@ -262,8 +262,8 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
                 'statistics' => [
                     '*' => [
                         'date',
-                        'debt',
-                        'paid',
+                        'debt_amount',
+                        'paid_amount',
                     ],
                 ],
             ],

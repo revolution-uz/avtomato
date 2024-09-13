@@ -55,12 +55,10 @@ class StatisticsInfoGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): \Illuminate\Database\Eloquent\Collection
     {
-        return Installment::query()
+        return Installment::paymentsDueOnDate($args['date'])
             ->with('transactions', fn ($q) => $q->whereDate('paid_at', $args['date'])->orderByDesc('id')->first())
             ->withSum(['transactions as transactions_sum_amount' => fn ($q) => $q->whereDate('paid_at', $args['date'])], 'amount')
             ->whereIn('status', [InstallmentStatusEnum::ACTIVE, InstallmentStatusEnum::CLOSED])
-            ->whereRaw("date_trunc('day', starts_in) + (interval '1 month' * EXTRACT(MONTH FROM AGE('{$args['date']}', starts_in))) = '{$args['date']}'")
-            ->whereRaw("EXTRACT(MONTH FROM AGE('{$args['date']}', starts_in)) < period")
             ->when(isset($args['branch_id']), fn ($q) => $q->where('branch_id', $args['branch_id']))
             ->when(! isset($args['branch_id']) and $this->_branches, fn ($q) => $q->whereIn('branch_id', $this->_branches))
             ->orderBy('id')

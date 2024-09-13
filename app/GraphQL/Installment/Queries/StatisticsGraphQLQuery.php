@@ -2,12 +2,10 @@
 
 namespace App\GraphQL\Installment\Queries;
 
-use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\StatisticsGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Installment;
-use App\Models\Company\Transaction;
+use App\Services\Installment\InstallmentService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -23,6 +21,13 @@ class StatisticsGraphQLQuery extends Query
     ];
 
     private array $_branches;
+
+    private InstallmentService $installmentService;
+
+    public function __construct(InstallmentService $installmentService)
+    {
+        $this->installmentService = $installmentService;
+    }
 
     public function type(): Type
     {
@@ -62,40 +67,12 @@ class StatisticsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): array
     {
-        $from = Carbon::createFromFormat('Y-m-d', $args['from'])->setTime(0, 0);
-        $to = Carbon::createFromFormat('Y-m-d', $args['to'])->setTime(0, 0);
+        $this->_branches = isset($args['branch_id']) ? [$args['branch_id']] : $this->_branches;
 
-        $data = [];
-
-        for ($date = $from; $date->lte($to); $date->addDay()) {
-            $debt = Installment::whereNextPayDate('=', $date)
-                ->whereIn('status', [InstallmentStatusEnum::ACTIVE, InstallmentStatusEnum::CLOSED])
-                ->selectRaw("
-                    SUM(
-                        (amount - initial_fee) * (percent/100 + 1) / period * LEAST(
-                            GREATEST(
-                                CEIL(DATE_PART('month', AGE(?, starts_in)) + 1), 0
-                            ),
-                            period
-                        ) - paid_amount
-                    ) as debt
-                ", [$date])
-                ->when(isset($args['branch_id']), fn ($q) => $q->where('branch_id', $args['branch_id']))
-                ->when(! isset($args['branch_id']) and $this->_branches, fn ($q) => $q->whereIn('branch_id', $this->_branches))
-                ->value('debt') ?? 0;
-
-            $paid = Transaction::query()->whereDate('paid_at', $date)
-                ->when(isset($args['branch_id']), fn ($q) => $q->where('branch_id', $args['branch_id']))
-                ->when(! isset($args['branch_id']) and $this->_branches, fn ($q) => $q->whereIn('branch_id', $this->_branches))
-                ->sum('amount');
-
-            $data[] = [
-                'date' => clone $date,
-                'debt' => round($debt, 2),
-                'paid' => round($paid, 2),
-            ];
-        }
-
-        return $data;
+        return $this->installmentService->getStatistics(
+            Carbon::createFromFormat('Y-m-d', $args['from']),
+            Carbon::createFromFormat('Y-m-d', $args['to']),
+            $this->_branches
+        );
     }
 }
