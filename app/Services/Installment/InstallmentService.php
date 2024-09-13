@@ -15,6 +15,7 @@ use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -136,6 +137,49 @@ class InstallmentService
             'installment_info_by_status' => $this->getInstallmentInfoByStatus(),
             'installment_overdues' => $this->getInstallmentOverdues(),
         ];
+    }
+
+    public function getStatistics(Carbon $from, Carbon $to, ?array $branches = null, ?array $statusIn = null): array
+    {
+        if (! $statusIn) {
+            $statusIn = [InstallmentStatusEnum::ACTIVE->value, InstallmentStatusEnum::CLOSED->value];
+        }
+
+        $bindings = [
+            'from' => $from->format('Y-m-d'),
+            'to' => $to->format('Y-m-d'),
+            'status_in' => implode(',', $statusIn),
+            'i_branches_in' => empty($branches) ? '' : 'AND i.branch_id IN (' . implode(',', $branches) . ')',
+            't_branches_in' => empty($branches) ? '' : 'AND t.branch_id IN (' . implode(',', $branches) . ')',
+        ];
+
+        return DB::select("
+            WITH
+                date_series AS (SELECT generate_series(DATE '{$bindings['from']}', DATE '{$bindings['to']}', '1 day'::interval)::date AS date),
+                installment_calculations AS (
+                    SELECT i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval AS next_pay_date,
+                        (i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period * LEAST(GREATEST(CEIL(DATE_PART('month', AGE(ds.date, i.starts_in)) + 1), 0), i.period) - i.paid_amount AS debt_amount
+                    FROM installments i
+                        INNER JOIN date_series ds
+                            ON i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval = ds.date
+                            AND i.status IN ({$bindings['status_in']}) {$bindings['i_branches_in']}
+                )
+            SELECT
+                ds.date,
+                COALESCE(ic.debt_amount, 0) AS debt_amount,
+                COALESCE(SUM(t.amount), 0) AS paid_amount
+            FROM date_series ds
+                LEFT JOIN (
+                    SELECT
+                        next_pay_date,
+                        SUM(debt_amount) AS debt_amount
+                    FROM installment_calculations
+                    GROUP BY next_pay_date
+                ) ic ON ds.date = ic.next_pay_date
+                LEFT JOIN transactions t ON ds.date = t.paid_at::date {$bindings['t_branches_in']}
+            GROUP BY ds.date, ic.debt_amount
+            ORDER BY ds.date;
+        ");
     }
 
     private function withdrawAutoCharge(Installment $installment): bool
