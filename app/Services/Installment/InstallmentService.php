@@ -15,6 +15,7 @@ use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -58,22 +59,28 @@ class InstallmentService
     }
 
     /**
+     * 01
+     * 10
+     *
      * @throws Throwable
      * @throws BalanceIsNotEnoughException
      */
-    public function toggleAutoCharge(Installment $installment, bool $auto_charge, bool $any_card): Installment
+    public function toggleAutoAndAnyCardCharge(Installment $installment, bool $auto_charge, bool $any_card): Installment
     {
-        if ($auto_charge) {
-            $installment->type = InstallmentTypeEnum::WITH_CARD;
-        } else {
-            $installment->type = InstallmentTypeEnum::WITHOUT_CARD;
+        if ($auto_charge && ! ($installment->type->value & InstallmentTypeEnum::WITH_CARD->value)) {
+            $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_CARD->value);
+            if (! $this->withdrawAutoCharge($installment)) {
+                throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
+            }
         }
-        if ($any_card) {
+        if ($any_card && ! ($installment->type->value & InstallmentTypeEnum::WITH_PINFL->value)) {
+            $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_PINFL->value);
             $installment->any_card_charge = $any_card;
+            if (! $this->withdrawAnyCardCharge($installment)) {
+                throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
+            }
         }
-        if ($this->withdrawAutoCharge($installment)) {
-            $installment->saveOrFail();
-        }
+        $installment->saveOrFail();
 
         return $installment;
     }
@@ -84,15 +91,14 @@ class InstallmentService
      */
     public function toggleGuarantorAutoCharge(InstallmentGuarantor $installmentGuarantor, bool $auto_charge): InstallmentGuarantor
     {
-        if ($auto_charge) {
-            $installmentGuarantor->any_card_charge = true;
-            if ($this->withdrawAutoCharge($installmentGuarantor->installment)) {
-                $installmentGuarantor->saveOrFail();
-            }
-        } else {
-            $installmentGuarantor->any_card_charge = false;
+        $installmentGuarantor->any_card_charge = $auto_charge;
+        if (! $auto_charge) {
             $installmentGuarantor->saveOrFail();
+
+            return $installmentGuarantor;
         }
+        $this->toggleAutoAndAnyCardCharge($installmentGuarantor->installment, false, true);
+        $installmentGuarantor->saveOrFail();
 
         return $installmentGuarantor;
     }
@@ -104,7 +110,7 @@ class InstallmentService
     {
         if ($status == InstallmentStatusEnum::ACTIVE) {
             if ($installment->isPaidInitialFee()) {
-                if ($this->withdrawAutoCharge($installment)) {
+                if ($this->withdrawAutoCharge($installment) && $this->withdrawAnyCardCharge($installment)) {
                     $installment->status = $status;
                 }
 
@@ -133,20 +139,69 @@ class InstallmentService
         ];
     }
 
-    private function withdrawAutoCharge(Installment $installment): bool
+    public function getStatistics(Carbon $from, Carbon $to, ?array $branches = null, ?array $statusIn = null): array
     {
-        if (($installment->any_card_charge || $installment->auto_pay) && ! $installment->withdrawn_auto_charge) {
-            if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
-                $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
-                $installment->withdrawn_auto_charge = true;
-
-                return $installment->saveOrFail();
-            }
-
-            return false;
+        if (! $statusIn) {
+            $statusIn = [InstallmentStatusEnum::ACTIVE->value, InstallmentStatusEnum::CLOSED->value];
         }
 
-        return true;
+        $bindings = [
+            'from' => $from->format('Y-m-d'),
+            'to' => $to->format('Y-m-d'),
+            'status_in' => implode(',', $statusIn),
+            'i_branches_in' => empty($branches) ? '' : 'AND i.branch_id IN (' . implode(',', $branches) . ')',
+            't_branches_in' => empty($branches) ? '' : 'AND t.branch_id IN (' . implode(',', $branches) . ')',
+        ];
+
+        return DB::select("
+            WITH
+                date_series AS (SELECT generate_series(DATE '{$bindings['from']}', DATE '{$bindings['to']}', '1 day'::interval)::date AS date),
+                installment_calculations AS (
+                    SELECT i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval AS next_pay_date,
+                        (i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period * LEAST(GREATEST(CEIL(DATE_PART('month', AGE(ds.date, i.starts_in)) + 1), 0), i.period) - i.paid_amount AS debt_amount
+                    FROM installments i
+                        INNER JOIN date_series ds
+                            ON i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval = ds.date
+                            AND i.status IN ({$bindings['status_in']}) {$bindings['i_branches_in']}
+                )
+            SELECT
+                ds.date,
+                COALESCE(ic.debt_amount, 0) AS debt_amount,
+                COALESCE(SUM(t.amount), 0) AS paid_amount
+            FROM date_series ds
+                LEFT JOIN (
+                    SELECT
+                        next_pay_date,
+                        SUM(debt_amount) AS debt_amount
+                    FROM installment_calculations
+                    GROUP BY next_pay_date
+                ) ic ON ds.date = ic.next_pay_date
+                LEFT JOIN transactions t ON ds.date = t.paid_at::date {$bindings['t_branches_in']}
+            GROUP BY ds.date, ic.debt_amount
+            ORDER BY ds.date;
+        ");
+    }
+
+    private function withdrawAutoCharge(Installment $installment): bool
+    {
+        if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
+            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function withdrawAnyCardCharge(Installment $installment): bool
+    {
+        if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)) {
+            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment);
+
+            return true;
+        }
+
+        return false;
     }
 
     private function getInstallmentAmounts(): array

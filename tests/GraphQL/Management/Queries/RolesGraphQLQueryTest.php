@@ -95,6 +95,7 @@ class RolesGraphQLQueryTest extends GraphQLTestCase
             'calculator_export',
             'installment_view_all',
             'installment_view',
+            'installment_view_statistics',
             'installment_start',
             'installment_cancel',
             'installment_freeze',

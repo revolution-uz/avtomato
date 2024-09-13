@@ -83,6 +83,7 @@ enum PermissionGroupEnum: string
             self::INSTALLMENT_MANAGEMENT => [
                 PermissionEnum::INSTALLMENT_VIEW_ALL,
                 PermissionEnum::INSTALLMENT_VIEW,
+                PermissionEnum::INSTALLMENT_VIEW_STATISTICS,
                 PermissionEnum::INSTALLMENT_CREATE,
                 PermissionEnum::INSTALLMENT_START,
                 PermissionEnum::INSTALLMENT_CANCEL,

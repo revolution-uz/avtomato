@@ -22,7 +22,6 @@ enum ModuleEnum: string
         return match ($feature) {
             FeatureEnum::USER_MANAGEMENT,
             FeatureEnum::BRANCH_MANAGEMENT,
-            FeatureEnum::COMPANY_MANAGEMENT,
             FeatureEnum::ACTIVITY_LOG,
             FeatureEnum::ROLE_MANAGEMENT => [self::MULTIBRANCH_2, self::MULTIBRANCH_3, self::MULTIBRANCH_4],
             FeatureEnum::SMS => [self::INSTALLMENT, self::MARKETING],
@@ -50,7 +49,8 @@ enum ModuleEnum: string
             FeatureEnum::PROFILE_EDIT,
             FeatureEnum::BALANCE_FUND,
             FeatureEnum::BALANCE_CHARGE,
-            FeatureEnum::THEME_MANAGEMENT => self::cases(),
+            FeatureEnum::THEME_MANAGEMENT,
+            FeatureEnum::COMPANY_MANAGEMENT => self::cases(),
         };
     }
 }

@@ -4,8 +4,11 @@ namespace Tests\GraphQL\Scoring\Mutations;
 
 use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
+use App\Enums\FeatureEnum;
+use App\Models\Company\BalanceCharge;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
+use App\Models\Company\Feature;
 use App\Models\Company\ScoringRequest;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -13,15 +16,11 @@ use Tests\GraphQL\GraphQLTestCase;
 
 class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
 {
-    private const GRAPHQL_SCORING_ROUTE = 'graphql.scoring';
-
     protected bool $tenancy = true;
 
-    private array $_input = [
-        'pinfl' => '50203040506070',
-    ];
+    private int $_featureAmount = 100;
     private string $_phone = '998990009988';
-
+    private array $_input = ['pinfl' => '50203040506070'];
     private int $taxType = ScoringRequestTypeEnum::PLUM_TAX_INFO->value;
     private int $mibType = ScoringRequestTypeEnum::PLUM_MIB_INFO->value;
 
@@ -31,27 +30,59 @@ class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
         Customer::query()->forceDelete();
         Card::query()->forceDelete();
         ScoringRequest::query()->forceDelete();
+        Feature::query()->whereIn('name', [FeatureEnum::SCORING_MIB_INFO, FeatureEnum::SCORING_TAX_INFO])->update(['amount' => $this->_featureAmount]);
     }
 
     #[Test]
     public function successTaxCreate(): void
     {
-        $this->mockUrl('https://api.abrand.uz/partner/katm/tax*', [
-            'result' => ['debtBal' => 1],
-        ]);
+        $this->mockUrl('https://api.abrand.uz/partner/katm/tax*', ['result' => ['debtBal' => 1]]);
         $response = $this->sendGraphQLRequest($this->_input, $this->taxType);
         $this->assertSuccessCreateDebtScoringResponse($response, $this->taxType);
+
+        $balanceCharge = BalanceCharge::query()->latest()->firstOrFail();
+        $feature = Feature::query()->where('name', FeatureEnum::SCORING_TAX_INFO)->firstOrFail();
+
+        $this->assertEquals($feature->id, $balanceCharge->feature_id);
+        $this->assertEquals($this->_featureAmount, $balanceCharge->amount);
+        $this->assertEquals($response->json('data.createDebtScoring'), $balanceCharge->chargeable_id);
+        $this->assertEquals(ScoringRequest::class, $balanceCharge->chargeable_type);
     }
 
     #[Test]
     public function successMibCreate(): void
     {
-        $this->mockUrl('https://api.abrand.uz/partner/katm/mib*', [
-            'result' => ['debtBal' => 1],
-        ]);
+        $this->mockUrl('https://api.abrand.uz/partner/katm/mib*', ['result' => ['debtBal' => 1]]);
         $inputWithPhone = array_merge($this->_input, ['phone' => $this->_phone]);
         $response = $this->sendGraphQLRequest($inputWithPhone, $this->mibType);
         $this->assertSuccessCreateDebtScoringResponse($response, $this->mibType);
+
+        $balanceCharge = BalanceCharge::query()->latest()->firstOrFail();
+        $feature = Feature::query()->where('name', FeatureEnum::SCORING_MIB_INFO)->firstOrFail();
+
+        $this->assertEquals($feature->id, $balanceCharge->feature_id);
+        $this->assertEquals($this->_featureAmount, $balanceCharge->amount);
+        $this->assertEquals($response->json('data.createDebtScoring'), $balanceCharge->chargeable_id);
+        $this->assertEquals(ScoringRequest::class, $balanceCharge->chargeable_type);
+    }
+
+    #[Test]
+    public function errorTaxCreate(): void
+    {
+        $this->mockUrl('https://api.abrand.uz/partner/katm/tax*', ['result' => ['error' => 'FAIL']]);
+        $response = $this->sendGraphQLRequest($this->_input, $this->taxType);
+        $this->assertSuccessCreateDebtScoringResponse($response, $this->taxType);
+        $this->assertTrue(BalanceCharge::query()->doesntExist());
+    }
+
+    #[Test]
+    public function errorMibCreate(): void
+    {
+        $this->mockUrl('https://api.abrand.uz/partner/katm/mib*', ['result' => ['error' => 'FAIL']]);
+        $inputWithPhone = array_merge($this->_input, ['phone' => $this->_phone]);
+        $response = $this->sendGraphQLRequest($inputWithPhone, $this->mibType);
+        $this->assertSuccessCreateDebtScoringResponse($response, $this->mibType);
+        $this->assertTrue(BalanceCharge::query()->doesntExist());
     }
 
     #[Test]
@@ -79,9 +110,7 @@ class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
     public function errorCreateWithInactiveCompany(): void
     {
         tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
-
         $response = $this->sendGraphQLRequest($this->_input, $this->taxType);
-
         $response->assertOk();
         $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
@@ -90,10 +119,7 @@ class CreateDebtScoringGraphQLMutationTest extends GraphQLTestCase
     {
         return $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route(self::GRAPHQL_SCORING_ROUTE),
-                $this->buildGraphQLQuery($data, $type)
-            );
+            ->postJson(route('graphql.scoring'), $this->buildGraphQLQuery($data, $type));
     }
 
     private function buildGraphQLQuery(array $data, int $type): array

@@ -4,6 +4,7 @@ namespace Tests\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
@@ -97,14 +98,41 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successSearch()
     {
-        $installment = Installment::first();
+        $input = [
+            'first_name' => 'YO‘LDOSHBOY',
+            'last_name' => 'SULTONOV',
+            'middle_name' => 'O‘RAZMETBOYEVICH',
+        ];
+
+        /** @var Customer $customer */
+        $customer = Customer::factory()->create($input);
+        /** @var Installment $installment */
+        $installment = Installment::factory()->create(['customer_id' => $customer->id]);
+
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery(['search' => $installment->customer->first_name])
+                $this->buildGraphQLQuery(['search' => $customer->first_name])
             );
+        $this->assertSuccessInstallmentsResponse($response, total: 1);
+        $this->assertEquals($installment->id, $response->json('data.installments.data.0.id'));
 
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['search' => $customer->last_name])
+            );
+        $this->assertSuccessInstallmentsResponse($response, total: 1);
+        $this->assertEquals($installment->id, $response->json('data.installments.data.0.id'));
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['search' => $customer->middle_name])
+            );
         $this->assertSuccessInstallmentsResponse($response, total: 1);
         $this->assertEquals($installment->id, $response->json('data.installments.data.0.id'));
     }
