@@ -85,6 +85,7 @@ enum PermissionEnum: string
     // Manage installment
     case INSTALLMENT_VIEW_ALL = 'installment_view_all';
     case INSTALLMENT_VIEW = 'installment_view';
+    case INSTALLMENT_VIEW_STATISTICS = 'installment_view_statistics';
     case INSTALLMENT_START = 'installment_start';
     case INSTALLMENT_CANCEL = 'installment_cancel';
     case INSTALLMENT_FREEZE = 'installment_freeze';
@@ -318,6 +319,7 @@ enum PermissionEnum: string
             // branch related
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
+            self::INSTALLMENT_VIEW_STATISTICS,
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_START,
             self::INSTALLMENT_CANCEL,
@@ -401,6 +403,7 @@ enum PermissionEnum: string
             PermissionGroupEnum::INSTALLMENT_MANAGEMENT->value => [
                 self::INSTALLMENT_VIEW_ALL->value,
                 self::INSTALLMENT_VIEW->value,
+                self::INSTALLMENT_VIEW_STATISTICS->value,
                 self::INSTALLMENT_CREATE->value,
                 self::INSTALLMENT_START->value,
                 self::INSTALLMENT_CANCEL->value,
@@ -596,6 +599,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_CREATE_TRANSACTION,
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
+            self::INSTALLMENT_VIEW_STATISTICS,
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_START,
             self::INSTALLMENT_CANCEL,

@@ -10,6 +10,7 @@ use App\Models\Company\Tag;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
@@ -57,5 +58,23 @@ class UpdateTagGraphQLMutation extends Mutation
         $tag->refresh();
 
         return $tag;
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return array_merge(parent::rules($args), [
+            'tag.name_uz' => [
+                Rule::unique('tags', 'name_uz')->ignore($args['tag_id'], 'id'),
+            ],
+            'tag.name_oz' => [
+                Rule::unique('tags', 'name_oz')->ignore($args['tag_id'], 'id'),
+            ],
+            'tag.name_ru' => [
+                Rule::unique('tags', 'name_ru')->ignore($args['tag_id'], 'id'),
+            ],
+            'tag.name_en' => [
+                Rule::unique('tags', 'name_en')->ignore($args['tag_id'], 'id'),
+            ],
+        ]);
     }
 }

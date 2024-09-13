@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Management\Mutations;
+namespace Tests\GraphQL\Management\Mutations;
 
 use App\Models\Company\Tag;
 use Illuminate\Support\Arr;

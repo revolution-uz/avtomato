@@ -7,6 +7,7 @@ use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,6 +67,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read Carbon $nextPaymentDate
  * @property mixed $wholeDebtAmount
  * @property float $portion
+ *
+ * @method static Builder whereNextPayDate(string $operator, Carbon $date)
+ * @method static Builder paymentsDueOnDate(string $date)
  */
 class Installment extends Model
 {
@@ -284,6 +288,13 @@ class Installment extends Model
     public function scopeSumProfit($query)
     {
         return $query->sumCustomRaw(self::getProfitAmountRaw());
+    }
+
+    public function scopePaymentsDueOnDate($query, string $date)
+    {
+        return $query
+            ->whereRaw("date_trunc('day', starts_in) + (interval '1 month' * EXTRACT(MONTH FROM AGE('{$date}', starts_in))) = '{$date}'")
+            ->whereRaw("EXTRACT(MONTH FROM AGE('{$date}', starts_in)) < period");
     }
 
     private function isAvailablePaymentDate(int $delay): bool

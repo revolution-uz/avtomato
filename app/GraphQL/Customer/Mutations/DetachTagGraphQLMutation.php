@@ -54,7 +54,7 @@ class DetachTagGraphQLMutation extends Mutation
             throw ValidationException::withMessages(['tag_id' => __('api.not found')]);
         }
 
-        $customer->tags()->where('tag_id', $args['tag_id'])->detach();
+        $customer->tags()->detach($args['tag_id']);
 
         return true;
     }
