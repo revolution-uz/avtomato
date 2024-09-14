@@ -5,11 +5,12 @@ namespace App\GraphQL\Installment\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\StatisticsByBranchesGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Installment;
+use App\Services\Installment\InstallmentService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -18,6 +19,35 @@ class StatisticsByBranchesGraphQLQuery extends Query
     protected $attributes = [
         'name' => 'StatisticsByBranches',
     ];
+    private InstallmentService $installmentService;
+    private array $_branches;
+
+    public function __construct(InstallmentService $installmentService)
+    {
+        $this->installmentService = $installmentService;
+    }
+
+    public function args(): array
+    {
+        $this->_branches = RbacHelper::getEnabledBranches(PermissionEnum::STATISTICS_BY_BRANCHES);
+
+        return [
+            'date' => [
+                'name' => 'date',
+                'type' => Type::string(),
+                'rules' => 'nullable|date_format:Y-m-d',
+                'description' => 'Ex: 2024-01-01',
+            ],
+            'branch_ids' => [
+                'type' => Type::listOf(Type::int()),
+                'rules' => [
+                    'nullable',
+                    'array',
+                    Rule::exists('branches', 'id')->whereNull('deleted_at')->when($this->_branches, fn ($q) => $q->where('id', $this->_branches)),
+                ],
+            ],
+        ];
+    }
 
     public function type(): Type
     {
@@ -31,53 +61,12 @@ class StatisticsByBranchesGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $branches = Installment::query()
-            ->select('branch_id', 'type', DB::raw('SUM(paid_amount) as total_amount'))
-            ->groupBy('branch_id', 'type')
-            ->orderBy('branch_id')
-            ->get();
-        // Initialize arrays to hold the formatted data and totals
-        $statistics = [];
-        $totalAmountByType = [];
-        $fullTotalAmount = 0;
+        $date = isset($args['date']) ? Carbon::createFromFormat('Y-m-d', $args['date']) : null;
+        $branch_ids = $args['branch_id'] ?? null;
 
-        // Loop through the results to build the array structure
-        foreach ($branches as $branch) {
-            /** @var Installment $branch */
-            // Check if the branch already exists in the $statistics array
-            if (! isset($statistics[$branch->branch_id])) {
-                $statistics[$branch->branch_id] = [
-                    'branch_id' => $branch->branch_id,
-                    'branch_name' => $branch->branch->name,
-                    'types' => [],
-                    'total_amount_by_branch' => 0,
-                ];
-            }
-
-            // Add the total amount for each type under the branch
-            $statistics[$branch->branch_id]['types'][$branch->type->value] = $branch->total_amount;
-
-            // Increment the branch's total
-            $statistics[$branch->branch_id]['total_amount_by_branch'] += $branch->total_amount;
-
-            // Increment the total amount for each type
-            if (! isset($totalAmountByType[$branch->type->value])) {
-                $totalAmountByType[$branch->type->value] = 0;
-            }
-            $totalAmountByType[$branch->type->value] += $branch->total_amount;
-
-            // Add to the full total amount across all branches
-            $fullTotalAmount += $branch->total_amount;
-        }
-
-        // Convert the $statistics array to an indexed array
-        $statistics = array_values($statistics);
-
-        // Return the formatted result
-        return [
-            'branches' => $statistics,
-            'total_amount_by_type' => $totalAmountByType,
-            'full_total_amount' => $fullTotalAmount,
-        ];
+        return $this->installmentService->statisticsByBranches(
+            $date,
+            $branch_ids,
+        );
     }
 }

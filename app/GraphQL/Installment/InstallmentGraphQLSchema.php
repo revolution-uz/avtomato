@@ -42,9 +42,9 @@ use App\GraphQL\Installment\Queries\SingleInstallmentGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTariffGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTransactionGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTransactionTypeGraphQLQuery;
+use App\GraphQL\Installment\Queries\StatisticsByBranchesGraphQLQuery;
 use App\GraphQL\Installment\Queries\StatisticsGraphQLQuery;
 use App\GraphQL\Installment\Queries\StatisticsInfoGraphQLQuery;
-use App\GraphQL\Installment\Queries\StatisticsByBranchesGraphQLQuery;
 use App\GraphQL\Installment\Queries\TariffsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionAttemptsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionsGraphQLQuery;
@@ -57,9 +57,9 @@ use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
 use App\GraphQL\Installment\Types\SettingsGraphQLType;
+use App\GraphQL\Installment\Types\StatisticsByBranchesGraphQLType;
 use App\GraphQL\Installment\Types\StatisticsGraphQLType;
 use App\GraphQL\Installment\Types\StatisticsInfoGraphQLType;
-use App\GraphQL\Installment\Types\StatisticsByBranchesGraphQLType;
 use App\GraphQL\Installment\Types\TariffGraphQLType;
 use App\GraphQL\Installment\Types\TariffInputGraphQLType;
 use App\GraphQL\Installment\Types\TransactionAttemptGraphQLType;
@@ -68,6 +68,7 @@ use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
 use App\GraphQL\Installment\Types\TypeTotalGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionGraphQLType;
@@ -171,7 +172,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
                 PhoneGraphQLType::class,
-                BranchForStatisticsGraphQLType::class,
+                BranchGraphQLType::class,
                 InstallmentGraphQLType::class,
                 InstallmentGraphGraphQLType::class,
                 TariffInputGraphQLType::class,

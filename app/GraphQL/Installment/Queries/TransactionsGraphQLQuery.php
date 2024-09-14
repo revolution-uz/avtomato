@@ -52,6 +52,10 @@ class TransactionsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => ['nullable', 'int', Rule::exists('installments', 'id')->whereNull('deleted_at')],
             ],
+            'branch_id' => [
+                'type' => Type::int(),
+                'rules' => ['nullable', 'int', Rule::exists('branches', 'id')->whereNull('deleted_at')],
+            ],
             'customer_id' => [
                 'name' => 'customer_id',
                 'type' => Type::int(),
