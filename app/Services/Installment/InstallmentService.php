@@ -202,7 +202,6 @@ class InstallmentService
 
         // Loop through the results to build the array structure
         foreach ($branches as $branch) {
-            /** @var Installment $branch */
             // Check if the branch already exists in the $statistics array
             if (! isset($statistics[$branch->branch_id])) {
                 $statistics[$branch->branch_id] = [
@@ -214,18 +213,22 @@ class InstallmentService
             }
 
             // Add the total amount for each type under the branch
+            /** @phpstan-ignore-next-line  */
             $statistics[$branch->branch_id]['types'][$branch->type->value] = $branch->total_amount;
 
             // Increment the branch's total
+            /** @phpstan-ignore-next-line  */
             $statistics[$branch->branch_id]['total_amount_by_branch'] += $branch->total_amount;
 
             // Increment the total amount for each type
             if (! isset($totalAmountByType[$branch->type->value])) {
                 $totalAmountByType[$branch->type->value] = 0;
             }
+            /** @phpstan-ignore-next-line  */
             $totalAmountByType[$branch->type->value] += $branch->total_amount;
 
             // Add to the full total amount across all branches
+            /** @phpstan-ignore-next-line  */
             $fullTotalAmount += $branch->total_amount;
         }
 

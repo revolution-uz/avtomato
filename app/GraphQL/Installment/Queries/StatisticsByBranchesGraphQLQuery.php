@@ -19,6 +19,7 @@ class StatisticsByBranchesGraphQLQuery extends Query
     protected $attributes = [
         'name' => 'StatisticsByBranches',
     ];
+
     private InstallmentService $installmentService;
     private array $_branches;
 
