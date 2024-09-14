@@ -123,9 +123,10 @@ class CreateTransactionGraphQLMutation extends Mutation
             $model->is_initial_fee = true;
         }
 
-        $model->paid_at = $args['paid_at'] ?? Carbon::now();
         if (isset($args['paid_at'])) {
-            $model->paid_at->setTime(now()->hour, now()->minute);
+            $model->paid_at = Carbon::createFromFormat('Y-m-d', $args['paid_at'])->setTime(now()->hour, now()->minute);
+        } else {
+            $model->paid_at = Carbon::now();
         }
 
         $model->branch_id = $args['branch_id'] ?? $installment->branch_id;
