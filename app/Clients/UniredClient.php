@@ -4,16 +4,21 @@ namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
 use App\DTOs\Unired\Base\BaseUniredDTO;
-use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredFindBranchRequestDTO;
+use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhoneRequestDTO;
+use App\DTOs\Unired\Client\UniredClientExtIdDTO;
 use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredFindClientRequestDTO;
 use App\DTOs\Unired\Client\UniredFindClientsRequestDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
+use App\DTOs\Unired\Payment\UniredCancelPaymentRequestDTO;
+use App\DTOs\Unired\Payment\UniredChangePaymentSendStatusRequestDTO;
+use App\DTOs\Unired\Payment\UniredRegisterPaymentRequestDTO;
 use App\DTOs\Unired\System\UniredSetTokenRequestDTO;
+use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredPaginationRequestDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\ClientCodeEnum;
@@ -99,6 +104,7 @@ class UniredClient extends BaseClient
     public function getAllClients(UniredPaginationRequestDTO $params): UniredResponseDTO
     {
         $params->filial_id = tenant('id');
+
         return $this->makeRequest('client.all', $params);
     }
 
@@ -107,28 +113,39 @@ class UniredClient extends BaseClient
         return $this->makeRequest('client.auto.toggle', $params);
     }
 
-    // Method for registering a payment
-    public function registerPayment(array $paymentData): UniredResponseDTO
+    public function deleteClient(UniredClientExtIdDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('payment.register', $paymentData);
+        return $this->makeRequest('client.delete', $params);
     }
 
-    // Method for canceling a payment
-    public function cancelPayment(array $paymentData): UniredResponseDTO
+    public function getPayments(UniredPaginationRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('payment.cancel', $paymentData);
+        return $this->makeRequest('filial.all', $params);
     }
 
-    // Method for checking webhook
+    public function registerPayment(UniredRegisterPaymentRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest('payment.register', $params);
+    }
+
+    public function cancelPayment(UniredCancelPaymentRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest('payment.cancel', $params);
+    }
+
+    public function changePaymentSendStatus(UniredChangePaymentSendStatusRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest('payment.change.send.status', $params);
+    }
+
     public function getWebhook(): UniredResponseDTO
     {
-        return $this->makeRequest('payment.get.webhook', []);
+        return $this->makeRequest('payment.get.webhook');
     }
 
-    // Method for setting webhook
-    public function setWebhook(string $webhookUrl): UniredResponseDTO
+    public function setWebhook(UniredSetWebhookDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('payment.set.webhook', ['webhook' => $webhookUrl]);
+        return $this->makeRequest('payment.set.webhook', $params);
     }
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO
@@ -147,7 +164,7 @@ class UniredClient extends BaseClient
         return UniredResponseDTO::from($response->json());
     }
 
-    private function makeRequest(string $method, BaseUniredDTO $params, string $httpMethod = 'post'): UniredResponseDTO
+    private function makeRequest(string $method, ?BaseUniredDTO $params = null, string $httpMethod = 'post'): UniredResponseDTO
     {
         return $this->httpRequest(['method' => $method, 'params' => $params], $httpMethod, '');
     }
