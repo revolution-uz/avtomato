@@ -38,6 +38,7 @@ enum ModuleEnum: string
             FeatureEnum::TRANSACTION_MANAGEMENT,
             FeatureEnum::TRANSACTION_TYPE_MANAGEMENT,
             FeatureEnum::INSTALLMENT_MANAGEMENT,
+            FeatureEnum::UNIRED_PAY,
             FeatureEnum::ATMOS_CARD_PAY,
             FeatureEnum::ATMOS_PINFL_PAY => [self::INSTALLMENT],
             FeatureEnum::SCORING_CREDIT_HISTORY,

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -140,5 +141,20 @@ class Customer extends Model
     public function activeCards()
     {
         return $this->cards()->where('status', CardStatusEnum::ACTIVE);
+    }
+
+    public function debtAmount(): float
+    {
+        return (float) Installment::query()->where('customer_id', $this->id)->sum(DB::raw('(amount - initial_fee) * (percent + 100) / 100 - paid_amount'));
+    }
+
+    public function onlyPhones(): array
+    {
+        $phones = [];
+        foreach ($this->phones as $phone) {
+            $phones[] = $phone->phone;
+        }
+
+        return $phones;
     }
 }

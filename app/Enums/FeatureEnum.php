@@ -35,10 +35,12 @@ enum FeatureEnum: string
     case ACTIVITY_LOG = 'activity_log';
     case ATMOS_CARD_PAY = 'atmos_card_pay';
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
+    case UNIRED_PAY = 'unired_pay';
 
     public function getDefaultDescription(): ?string
     {
         return match ($this) {
+            self::UNIRED_PAY => 'PINFL orqali pul yechish uchun UNIRED',
             self::ATMOS_PINFL_PAY => 'PINFL orqali pul yechish uchun ATMOS',
             self::ATMOS_CARD_PAY => 'Karta orqali pul yechish uchun ATMOS',
             self::PROFILE_EDIT => 'Admin o\'z profilini o\'zgartira olish funksiyasi',
@@ -78,6 +80,7 @@ enum FeatureEnum: string
         return match ($this) {
             self::ATMOS_PINFL_PAY,
             self::ATMOS_CARD_PAY => '{"username": "", "password": "", "store_id": 0, "expires_in": 0, "access_token": "", "token_type": "Bearer"}',
+            self::UNIRED_PAY => '{"name" : "", "merchant_uzcard" : "", "terminal_uzcard" : "", "merchant_humo" : "", "terminal_humo" : "", "phone" : ""}',
             self::SCORING_CREDIT_HISTORY,
             self::SCORING_PENSION_INFO,
             self::SCORING_INPS_HISTORY,

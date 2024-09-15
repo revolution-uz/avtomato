@@ -5,7 +5,6 @@ namespace App\Clients;
 use App\DTOs\HttpRequestLogDTO;
 use App\DTOs\Unired\Base\BaseUniredDTO;
 use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
-use App\DTOs\Unired\Branch\UniredFindBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhoneRequestDTO;
@@ -22,10 +21,13 @@ use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredPaginationRequestDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\ClientCodeEnum;
+use App\Enums\FeatureEnum;
 use Illuminate\Support\Facades\Http;
 
 class UniredClient extends BaseClient
 {
+    protected ?FeatureEnum $featureName = null;
+
     private string $baseUrl;
     private string $token;
 
@@ -34,6 +36,8 @@ class UniredClient extends BaseClient
         $this->baseUrl = config('clients.unired.base_url');
         $this->token = config('clients.unired.token');
         $this->channel = 'unired-client';
+        $this->featureName = FeatureEnum::UNIRED_PAY;
+
     }
 
     public function getClientCode(): ClientCodeEnum
@@ -51,27 +55,17 @@ class UniredClient extends BaseClient
         return $this->makeRequest('system.set.token', $params);
     }
 
-    public function createBranch(UniredCreateBranchRequestDTO $filialData): UniredResponseDTO
+    public function createBranch(UniredCreateBranchRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('filial.create', $filialData);
+        return $this->makeRequest('filial.create', $params);
     }
 
-    public function updateFilial(UniredUpdateBranchRequestDTO $filialData): UniredResponseDTO
+    public function updateBranch(UniredUpdateBranchRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('filial.update', $filialData);
+        return $this->makeRequest('filial.update', $params);
     }
 
-    public function findFilial(UniredFindBranchRequestDTO $params): UniredResponseDTO
-    {
-        return $this->makeRequest('filial.find', $params);
-    }
-
-    public function getAllFilials(UniredPaginationRequestDTO $params): UniredResponseDTO
-    {
-        return $this->makeRequest('filial.all', $params);
-    }
-
-    public function toggleFilialAuto(UniredToggleBranchAutoRequestDTO $params): UniredResponseDTO
+    public function toggleBranchAuto(UniredToggleBranchAutoRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest('filial.toggle.all', $params);
     }
