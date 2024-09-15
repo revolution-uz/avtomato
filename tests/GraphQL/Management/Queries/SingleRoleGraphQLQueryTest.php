@@ -138,6 +138,7 @@ class SingleRoleGraphQLQueryTest extends GraphQLTestCase
             'branch_edit',
             'branch_delete',
             'branch_create',
+            'statistics_by_branches',
             'scoring_credit_history_view_all',
             'scoring_credit_history_view',
             'scoring_credit_history_create',

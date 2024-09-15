@@ -138,6 +138,7 @@ enum PermissionEnum: string
     case BRANCH_EDIT = 'branch_edit';
     case BRANCH_DELETE = 'branch_delete';
     case BRANCH_CREATE = 'branch_create';
+    case STATISTICS_BY_BRANCHES = 'statistics_by_branches';
 
     // Scoring credit history
     case SCORING_CREDIT_HISTORY_VIEW_ALL = 'scoring_credit_history_view_all';
@@ -270,6 +271,7 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE,
+            self::STATISTICS_BY_BRANCHES,
 
             self::SCORING_CREDIT_HISTORY_VIEW_ALL,
             self::SCORING_CREDIT_HISTORY_VIEW,
@@ -452,6 +454,7 @@ enum PermissionEnum: string
                 self::BRANCH_EDIT->value,
                 self::BRANCH_DELETE->value,
                 self::BRANCH_CREATE->value,
+                self::STATISTICS_BY_BRANCHES,
             ],
             PermissionGroupEnum::COMPANY_MANAGEMENT->value => [
                 self::SETTINGS_EDIT->value,
@@ -646,7 +649,8 @@ enum PermissionEnum: string
             self::BRANCH_VIEW,
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
-            self::BRANCH_CREATE => FeatureEnum::BRANCH_MANAGEMENT,
+            self::BRANCH_CREATE,
+            self::STATISTICS_BY_BRANCHES => FeatureEnum::BRANCH_MANAGEMENT,
 
             self::SETTINGS_EDIT => FeatureEnum::COMPANY_MANAGEMENT,
 
@@ -764,6 +768,7 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE,
+            self::STATISTICS_BY_BRANCHES,
 
             self::SETTINGS_EDIT,
 

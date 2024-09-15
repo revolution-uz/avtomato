@@ -182,6 +182,62 @@ class InstallmentService
         ");
     }
 
+    public function statisticsByBranches(?Carbon $date = null, ?array $branch_ids = null): array
+    {
+        $branchesQuery = Installment::query()
+            ->select('branch_id', 'type', DB::raw('SUM(paid_amount) as total_amount'))
+            ->when(! empty($branch_ids), fn ($q) => $q->whereIn('branch_id', $branch_ids))
+            ->when(! empty($date), fn ($q) => $q->whereDate('created_at', '=', $date))
+            ->groupBy('branch_id', 'type')
+            ->orderBy('branch_id')
+            ->get();
+        $statistics = [];
+        $totalAmountByType = [];
+        $formattedTotalAmountByType = [];
+        $fullTotalAmount = 0;
+
+        foreach ($branchesQuery as $branch) {
+            $branchId = $branch->branch_id;
+            $type = $branch->type->value;
+            /* @phpstan-ignore-next-line **/
+            $totalAmount = $branch->total_amount;
+
+            if (! isset($statistics[$branchId])) {
+                $statistics[$branchId] = [
+                    'branch_id' => $branchId,
+                    'branch_name' => $branch->branch->name,
+                    'types' => [],
+                    'total_amount_by_branch' => 0,
+                ];
+            }
+
+            $statistics[$branchId]['types'][] = [
+                'type' => $type,
+                'total_amount' => $totalAmount,
+            ];
+
+            $statistics[$branchId]['total_amount_by_branch'] += $totalAmount;
+
+            if (! isset($totalAmountByType[$type])) {
+                $totalAmountByType[$type] = 0;
+            }
+            $totalAmountByType[$type] += $totalAmount;
+
+            $formattedTotalAmountByType[$type] = [
+                'type' => $type,
+                'total_amount' => $totalAmountByType[$type],
+            ];
+
+            $fullTotalAmount += $totalAmount;
+        }
+
+        return [
+            'branches' => $statistics,
+            'total_amount_by_type' => array_values($formattedTotalAmountByType),
+            'full_total_amount' => number_format($fullTotalAmount, 2, '.', '.'),
+        ];
+    }
+
     private function withdrawAutoCharge(Installment $installment): bool
     {
         if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
