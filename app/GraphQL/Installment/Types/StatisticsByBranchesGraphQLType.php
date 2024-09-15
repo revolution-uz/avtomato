@@ -12,7 +12,6 @@ class StatisticsByBranchesGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Branch and its total amount grouped by type',
     ];
 
     public function fields(): array
@@ -20,29 +19,18 @@ class StatisticsByBranchesGraphQLType extends GraphQLType
         return [
             'branches' => [
                 'type' => Type::listOf(GraphQL::type(BranchForStatisticsGraphQLType::GRAPHQL_TYPE_NAME)),
-                'description' => 'A list of branches and their respective types and total amounts',
                 'resolve' => function (array $root) {
                     return $root['branches'];
                 },
             ],
             'total_amount_by_type' => [
-                'type' => Type::listOf(GraphQL::type(TypeTotalGraphQLType::GRAPHQL_TYPE_NAME)), // Since "total_amount_by_type" is a list of floats
-                'description' => 'Total amount grouped by each type',
+                'type' => Type::listOf(GraphQL::type(TypeTotalGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => function (array $root) {
-                    $result = [];
-                    foreach ($root['total_amount_by_type'] as $typeId => $totalAmount) {
-                        $result[] = [
-                            'type' => $typeId,
-                            'total_amount' => $totalAmount,
-                        ]; // Ensure the type is mapped to the total amount
-                    }
-
-                    return $result;
+                    return $root['total_amount_by_type'];
                 },
             ],
             'full_total_amount' => [
-                'type' => Type::nonNull(Type::float()),
-                'description' => 'The overall total amount across all branches',
+                'type' => Type::nonNull(Type::string()),
                 'resolve' => function (array $root) {
                     return $root['full_total_amount'];
                 },

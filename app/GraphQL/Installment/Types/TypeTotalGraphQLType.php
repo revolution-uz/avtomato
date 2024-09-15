@@ -11,7 +11,6 @@ class TypeTotalGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Total amount grouped by type',
     ];
 
     public function fields(): array
@@ -19,11 +18,15 @@ class TypeTotalGraphQLType extends GraphQLType
         return [
             'type' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'The type identifier',
+                'resolve' => function (array $root) {
+                    return $root['type'];
+                },
             ],
             'total_amount' => [
-                'type' => Type::nonNull(Type::float()),
-                'description' => 'The total amount for the given type',
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => function (array $root) {
+                    return number_format($root['total_amount'], 2, '.', '.');
+                },
             ],
         ];
     }

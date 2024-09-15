@@ -44,6 +44,7 @@ class StatisticsByBranchesGraphQLQuery extends Query
                 'rules' => [
                     'nullable',
                     'array',
+                    'exists:installments,branch_id',
                     Rule::exists('branches', 'id')->whereNull('deleted_at')->when($this->_branches, fn ($q) => $q->where('id', $this->_branches)),
                 ],
             ],
@@ -62,12 +63,12 @@ class StatisticsByBranchesGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
+        $this->_branches = isset($args['branch_id']) ? $args['branch_ids'] : $this->_branches;
         $date = isset($args['date']) ? Carbon::createFromFormat('Y-m-d', $args['date']) : null;
-        $branch_ids = $args['branch_ids'] ?? null;
 
         return $this->installmentService->statisticsByBranches(
             $date,
-            $branch_ids,
+            $this->_branches,
         );
     }
 }
