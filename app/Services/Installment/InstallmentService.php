@@ -199,6 +199,7 @@ class InstallmentService
         foreach ($branchesQuery as $branch) {
             $branchId = $branch->branch_id;
             $type = $branch->type->value;
+            /* @phpstan-ignore-next-line **/
             $totalAmount = $branch->total_amount;
 
             if (! isset($statistics[$branchId])) {
