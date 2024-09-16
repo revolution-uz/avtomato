@@ -59,7 +59,7 @@ class Transaction extends Model
         'updated_at' => 'datetime',
     ];
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -81,8 +81,8 @@ class Transaction extends Model
             if ($transaction->card_pan) {
                 dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
             }
-            $installment = Installment::findOrFail($transaction->installment_id);
-            if ($installment->debtAmount <= 1) {
+            $installment = Installment::query()->findOrFail($transaction->installment_id);
+            if ($installment->wholeDebtAmount <= 1) {
                 $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
             }
         });
