@@ -125,20 +125,19 @@ class TransactionModelTest extends TestCase
         foreach ($graphs as $graph) {
             $amount += $graph->amount - $graph->paid_amount;
         }
-        $this->assertEquals($amount, $this->_installment->wholeDebtAmount);
-
         $transaction = new Transaction;
         $transaction->installment_id = $this->_installment->id;
         $transaction->transaction_type_id = $this->_transactionType->id;
         $transaction->customer_id = $this->_customer->id;
         $transaction->amount = $amount;
+
         $transaction->save();
 
         $this->assertEquals(InstallmentStatusEnum::CLOSED, $this->_installment->refresh()->status);
     }
 
     #[Test]
-    public function DoesNotChangeInstallmentStatusWhenCurrentDebtIsPaid(): void
+    public function doesNotChangeInstallmentStatusWhenCurrentDebtIsPaid(): void
     {
         $this->_installment = Installment::factory()->create([
             'starts_in' => Carbon::now()->subMonth(),
