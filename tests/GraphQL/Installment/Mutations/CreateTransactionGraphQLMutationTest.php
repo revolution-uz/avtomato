@@ -11,6 +11,7 @@ use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
+use Illuminate\Support\Carbon;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -45,14 +46,28 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successCreateTransaction()
     {
+        $paidAt = Carbon::createFromFormat('Y-m-d', '2020-01-01')->setTime(now()->hour, now()->minute);
+
         $response = $this->sendGraphQLRequest(
             $this->_installment->id,
             $this->_customer->id,
             $this->_transactionType->id,
             rand(0, 935000),
-            '2021-01-01'
+            $paidAt->format('Y-m-d'),
         );
-        $this->assertSuccessResponse($response);
+        $this->assertSuccessResponse($response, $paidAt);
+    }
+
+    #[Test]
+    public function successCreateTransactionWithoutPaidAt()
+    {
+        $response = $this->sendGraphQLRequest(
+            $this->_installment->id,
+            $this->_customer->id,
+            $this->_transactionType->id,
+            rand(0, 935000)
+        );
+        $this->assertSuccessResponse($response, Carbon::now());
     }
 
     #[Test]
@@ -214,7 +229,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertSuccessResponse($response);
     }
 
-    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, float $amount, ?string $paid_at, array $headers = []): TestResponse
+    private function sendGraphQLRequest(int $installment_id, int $customer_id, int $transaction_type_id, float $amount, ?string $paid_at = null, array $headers = []): TestResponse
     {
         return $this
             ->actingAs($this->createAdminUser())
@@ -236,7 +251,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
                 'paid_at' => $paid_at,
             ],
             'query' => '
-            mutation ($installment_id: Int!, $customer_id: Int!, $transaction_type_id: Int!, $amount: BigFloat!, $paid_at: String!) {
+            mutation ($installment_id: Int!, $customer_id: Int!, $transaction_type_id: Int!, $amount: BigFloat!, $paid_at: String) {
                 createTransaction(
                     installment_id: $installment_id,
                     customer_id: $customer_id,
@@ -315,7 +330,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
         ];
     }
 
-    private function assertSuccessResponse(TestResponse $response): void
+    private function assertSuccessResponse(TestResponse $response, ?Carbon $paidAt = null): void
     {
         $response->assertOk();
         $response->assertJsonIsObject();
@@ -402,6 +417,9 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertSuccessAdminResponse($response, $transaction);
         $this->assertSuccessCustomerResponse($response, $transaction);
         $this->assertSuccessTransactionTypeResponse($response, $transaction);
+        if ($paidAt) {
+            $this->assertEquals($paidAt->format('Y-m-d H:i'), $transaction->paid_at->format('Y-m-d H:i'));
+        }
     }
 
     private function assertSuccessInstallmentResponse($response, $transaction): void

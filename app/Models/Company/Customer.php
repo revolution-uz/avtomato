@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -43,6 +44,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Address[]|Collection<int,Address> $addresses
  * @property Phone[]|Collection<int,Phone> $phones
  * @property Card[]|Collection<int,Card> $cards
+ * @property Tag[]|Collection<int, Tag> $tags
  * @property ScoringRequest[]|Collection<int,ScoringRequest> $scoringRequests
  * @property-read  string $full_name
  *
@@ -142,12 +144,17 @@ class Customer extends Model
     {
         return $this->cards()->where('status', CardStatusEnum::ACTIVE);
     }
-
+  
     public function debtAmount(): float
     {
         return (float) Installment::query()->where('customer_id', $this->id)->sum(DB::raw('(amount - initial_fee) * (percent + 100) / 100 - paid_amount'));
     }
-
+  
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'customer_tags');
+    }
+  
     public function onlyPhones(): array
     {
         $phones = [];

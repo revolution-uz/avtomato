@@ -16,7 +16,7 @@ use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
-class ChangesStatusGraphQLMutation extends Mutation
+class ChangeStatusGraphQLMutation extends Mutation
 {
     protected $attributes = [
         'name' => 'changeStatus',

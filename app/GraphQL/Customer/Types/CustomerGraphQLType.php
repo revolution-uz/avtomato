@@ -118,6 +118,10 @@ class CustomerGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(ScoringRequestUnionGraphQLType::GRAPHQL_TYPE_NAME))),
                 'resolve' => fn (Customer $root) => $root->scoringRequests,
             ],
+            'tags' => [
+                'type' => Type::nonNull(Type::listOf(GraphQL::type(TagGraphQLType::GRAPHQL_TYPE_NAME))),
+                'resolve' => fn (Customer $root) => $root->tags,
+            ],
         ];
     }
 }

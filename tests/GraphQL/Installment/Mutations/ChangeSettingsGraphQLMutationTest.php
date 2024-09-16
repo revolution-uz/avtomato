@@ -107,7 +107,7 @@ class ChangeSettingsGraphQLMutationTest extends GraphQLTestCase
                 route('graphql.installment'),
                 $this->buildGraphQLQuery([
                     'settings_id' => $companySettings->id,
-                    'value' => (string) (! $companySettings->value),
+                    'value' => (string) $companySettings->value,
                 ]),
             );
 

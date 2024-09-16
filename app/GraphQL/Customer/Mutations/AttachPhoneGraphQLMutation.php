@@ -60,12 +60,11 @@ class AttachPhoneGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-
         $customer = Customer::findOrFail($args['customer_id']);
         /** @var Phone $phone */
         $phone = Phone::query()->firstOrCreate(['phone' => $args['phone']]);
 
-        $customer->phones()->attach($phone->id, ['type' => $args['type'], 'comment' => $args['comment'] ?? null]);
+        $customer->phones()->attach($phone->id, ['type' => $args['type'], 'comment' => $args['comment'] ?? null, 'installment_notifications' => true]);
         $customer->refresh();
 
         return $customer->phones()->where('phone', $args['phone'])->first();

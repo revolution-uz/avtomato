@@ -59,6 +59,14 @@ enum PermissionGroupEnum: string
                 PermissionEnum::CUSTOMER_CARD_VIEW,
                 PermissionEnum::CUSTOMER_CARD_EDIT,
                 PermissionEnum::CUSTOMER_CARD_REMOVE,
+                PermissionEnum::CUSTOMER_TAG_VIEW,
+                PermissionEnum::CUSTOMER_TAG_ATTACH,
+                PermissionEnum::CUSTOMER_TAG_DETACH,
+                PermissionEnum::TAG_VIEW,
+                PermissionEnum::TAG_CREATE,
+                PermissionEnum::TAG_EDIT,
+                PermissionEnum::TAG_DELETE,
+                PermissionEnum::TAG_VIEW_ALL,
             ],
             self::ROLE_MANAGEMENT => [
                 PermissionEnum::ROLE_VIEW_ALL,
@@ -75,6 +83,7 @@ enum PermissionGroupEnum: string
             self::INSTALLMENT_MANAGEMENT => [
                 PermissionEnum::INSTALLMENT_VIEW_ALL,
                 PermissionEnum::INSTALLMENT_VIEW,
+                PermissionEnum::INSTALLMENT_VIEW_STATISTICS,
                 PermissionEnum::INSTALLMENT_CREATE,
                 PermissionEnum::INSTALLMENT_START,
                 PermissionEnum::INSTALLMENT_CANCEL,
@@ -125,6 +134,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::BRANCH_EDIT,
                 PermissionEnum::BRANCH_DELETE,
                 PermissionEnum::BRANCH_CREATE,
+                PermissionEnum::STATISTICS_BY_BRANCHES,
             ],
             self::COMPANY_MANAGEMENT => [
                 PermissionEnum::SETTINGS_EDIT,

@@ -12,14 +12,18 @@ use App\Models\Company\ScoringRequest;
 use App\Services\User\BalanceService;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
-class CardScoringService
+readonly class CardScoringService
 {
     public function __construct(
-        private readonly AsaxiyClient $asaxiyClient,
-        private readonly BalanceService $balanceService
+        private AsaxiyClient $asaxiyClient,
+        private BalanceService $balanceService
     ) {}
 
+    /**
+     * @throws Throwable
+     */
     public function scoringHumo(CardCreateRequestDTO $dto): ScoringRequest
     {
         $model = new ScoringRequest;
@@ -30,22 +34,20 @@ class CardScoringService
         $model->saveOrFail();
         $this->balanceService->chargeAmount(FeatureEnum::SCORING_HUMO, $model);
         try {
-            $model->response = CardScoringResponseDTO::parseFromUnired(
-                $this->asaxiyClient->scoringHumo(
-                    $dto->toArray()
-                )
-            );
+            $model->response = CardScoringResponseDTO::parseFromUnired($this->asaxiyClient->scoringHumo($dto->toArray()));
             $model->status = ScoringRequestStatusEnum::SUCCESS;
-            $model->saveOrFail();
         } catch (Exception $e) {
             Log::error($e);
             $model->status = ScoringRequestStatusEnum::FAILED;
-            $model->saveOrFail();
         }
+        $model->saveOrFail();
 
         return $model;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function scoringUzcard(CardCreateRequestDTO $dto): ScoringRequest
     {
         $model = new ScoringRequest;
@@ -56,16 +58,13 @@ class CardScoringService
         $model->saveOrFail();
         $this->balanceService->chargeAmount(FeatureEnum::SCORING_UZCARD, $model);
         try {
-            $model->response = CardScoringResponseDTO::parseFromUnired($this->asaxiyClient->scoringUzcard(
-                $dto->toArray()
-            ));
+            $model->response = CardScoringResponseDTO::parseFromUnired($this->asaxiyClient->scoringUzcard($dto->toArray()));
             $model->status = ScoringRequestStatusEnum::SUCCESS;
-            $model->saveOrFail();
         } catch (Exception $e) {
             Log::error($e);
             $model->status = ScoringRequestStatusEnum::FAILED;
-            $model->saveOrFail();
         }
+        $model->saveOrFail();
 
         return $model;
     }

@@ -10,14 +10,20 @@ use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Models\Company\ScoringRequest;
 use App\Services\User\BalanceService;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
-class MibService
+readonly class MibService
 {
     public function __construct(
-        private readonly AsaxiyClient $mibScoringClient,
-        private readonly BalanceService $balanceService
+        private AsaxiyClient $mibScoringClient,
+        private BalanceService $balanceService
     ) {}
 
+    /**
+     * @throws Throwable
+     */
     public function scoringMib(MibInfoCreateRequestDTO $dto): ScoringRequest
     {
         $model = new ScoringRequest;
@@ -27,12 +33,13 @@ class MibService
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
         $this->balanceService->chargeAmount(FeatureEnum::SCORING_MIB_INFO, $model);
-
-        $model->response = MibInfoResponseDTO::from($this->mibScoringClient->scoringMib(
-            $dto->toArray()
-        ));
-
-        $model->status = ScoringRequestStatusEnum::SUCCESS;
+        try {
+            $model->response = MibInfoResponseDTO::from($this->mibScoringClient->scoringMib($dto->toArray()));
+            $model->status = ScoringRequestStatusEnum::SUCCESS;
+        } catch (Exception $e) {
+            Log::error($e);
+            $model->status = ScoringRequestStatusEnum::FAILED;
+        }
         $model->saveOrFail();
 
         return $model;

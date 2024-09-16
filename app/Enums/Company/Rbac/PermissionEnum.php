@@ -69,6 +69,14 @@ enum PermissionEnum: string
     case CUSTOMER_CARD_VIEW = 'customer_card_view';
     case CUSTOMER_CARD_EDIT = 'customer_card_edit';
     case CUSTOMER_CARD_REMOVE = 'customer_card_remove';
+    case CUSTOMER_TAG_ATTACH = 'customer_tag_attach';
+    case CUSTOMER_TAG_DETACH = 'customer_tag_detach';
+    case CUSTOMER_TAG_VIEW = 'customer_tag_view';
+    case TAG_CREATE = 'tag_create';
+    case TAG_EDIT = 'tag_edit';
+    case TAG_DELETE = 'tag_delete';
+    case TAG_VIEW = 'tag_view';
+    case TAG_VIEW_ALL = 'tag_view_all';
 
     // Calculator installment
     case CALCULATE_INSTALLMENT = 'calculate_installment';
@@ -77,6 +85,7 @@ enum PermissionEnum: string
     // Manage installment
     case INSTALLMENT_VIEW_ALL = 'installment_view_all';
     case INSTALLMENT_VIEW = 'installment_view';
+    case INSTALLMENT_VIEW_STATISTICS = 'installment_view_statistics';
     case INSTALLMENT_START = 'installment_start';
     case INSTALLMENT_CANCEL = 'installment_cancel';
     case INSTALLMENT_FREEZE = 'installment_freeze';
@@ -129,6 +138,7 @@ enum PermissionEnum: string
     case BRANCH_EDIT = 'branch_edit';
     case BRANCH_DELETE = 'branch_delete';
     case BRANCH_CREATE = 'branch_create';
+    case STATISTICS_BY_BRANCHES = 'statistics_by_branches';
 
     // Scoring credit history
     case SCORING_CREDIT_HISTORY_VIEW_ALL = 'scoring_credit_history_view_all';
@@ -225,6 +235,14 @@ enum PermissionEnum: string
             self::CUSTOMER_CARD_VIEW,
             self::CUSTOMER_CARD_EDIT,
             self::CUSTOMER_CARD_REMOVE,
+            self::CUSTOMER_TAG_VIEW,
+            self::CUSTOMER_TAG_ATTACH,
+            self::CUSTOMER_TAG_DETACH,
+            self::TAG_VIEW_ALL,
+            self::TAG_VIEW,
+            self::TAG_CREATE,
+            self::TAG_EDIT,
+            self::TAG_DELETE,
 
             self::ROLE_VIEW_ALL,
             self::ROLE_VIEW,
@@ -253,6 +271,7 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE,
+            self::STATISTICS_BY_BRANCHES,
 
             self::SCORING_CREDIT_HISTORY_VIEW_ALL,
             self::SCORING_CREDIT_HISTORY_VIEW,
@@ -300,6 +319,7 @@ enum PermissionEnum: string
             // branch related
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
+            self::INSTALLMENT_VIEW_STATISTICS,
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_START,
             self::INSTALLMENT_CANCEL,
@@ -359,6 +379,14 @@ enum PermissionEnum: string
                 self::CUSTOMER_CARD_VIEW->value,
                 self::CUSTOMER_CARD_EDIT->value,
                 self::CUSTOMER_CARD_REMOVE->value,
+                self::CUSTOMER_TAG_VIEW->value,
+                self::CUSTOMER_TAG_ATTACH->value,
+                self::CUSTOMER_TAG_DETACH->value,
+                self::TAG_CREATE->value,
+                self::TAG_EDIT->value,
+                self::TAG_DELETE->value,
+                self::TAG_VIEW_ALL->value,
+                self::TAG_VIEW->value,
             ],
             PermissionGroupEnum::ROLE_MANAGEMENT->value => [
                 self::ROLE_VIEW_ALL->value,
@@ -375,6 +403,7 @@ enum PermissionEnum: string
             PermissionGroupEnum::INSTALLMENT_MANAGEMENT->value => [
                 self::INSTALLMENT_VIEW_ALL->value,
                 self::INSTALLMENT_VIEW->value,
+                self::INSTALLMENT_VIEW_STATISTICS->value,
                 self::INSTALLMENT_CREATE->value,
                 self::INSTALLMENT_START->value,
                 self::INSTALLMENT_CANCEL->value,
@@ -425,6 +454,7 @@ enum PermissionEnum: string
                 self::BRANCH_EDIT->value,
                 self::BRANCH_DELETE->value,
                 self::BRANCH_CREATE->value,
+                self::STATISTICS_BY_BRANCHES,
             ],
             PermissionGroupEnum::COMPANY_MANAGEMENT->value => [
                 self::SETTINGS_EDIT->value,
@@ -553,7 +583,15 @@ enum PermissionEnum: string
             self::CUSTOMER_CARD_VIEW,
             self::CUSTOMER_CARD_EDIT,
             self::CUSTOMER_CARD_REMOVE,
-            self::CUSTOMER_INFO_BY_PASSPORT => FeatureEnum::CUSTOMER_MANAGEMENT,
+            self::CUSTOMER_INFO_BY_PASSPORT,
+            self::CUSTOMER_TAG_VIEW,
+            self::CUSTOMER_TAG_ATTACH,
+            self::CUSTOMER_TAG_DETACH,
+            self::TAG_VIEW_ALL,
+            self::TAG_VIEW,
+            self::TAG_CREATE,
+            self::TAG_EDIT,
+            self::TAG_DELETE => FeatureEnum::CUSTOMER_MANAGEMENT,
 
             self::CALCULATE_INSTALLMENT,
             self::CALCULATOR_EXPORT => FeatureEnum::CALCULATOR_INSTALLMENT,
@@ -561,6 +599,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_CREATE_TRANSACTION,
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
+            self::INSTALLMENT_VIEW_STATISTICS,
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_START,
             self::INSTALLMENT_CANCEL,
@@ -610,7 +649,8 @@ enum PermissionEnum: string
             self::BRANCH_VIEW,
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
-            self::BRANCH_CREATE => FeatureEnum::BRANCH_MANAGEMENT,
+            self::BRANCH_CREATE,
+            self::STATISTICS_BY_BRANCHES => FeatureEnum::BRANCH_MANAGEMENT,
 
             self::SETTINGS_EDIT => FeatureEnum::COMPANY_MANAGEMENT,
 
@@ -728,6 +768,7 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE,
+            self::STATISTICS_BY_BRANCHES,
 
             self::SETTINGS_EDIT,
 
