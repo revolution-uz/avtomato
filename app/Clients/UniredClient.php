@@ -21,13 +21,10 @@ use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredPaginationRequestDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\ClientCodeEnum;
-use App\Enums\FeatureEnum;
 use Illuminate\Support\Facades\Http;
 
 class UniredClient extends BaseClient
 {
-    protected ?FeatureEnum $featureName = null;
-
     private string $baseUrl;
     private string $token;
 
@@ -36,8 +33,6 @@ class UniredClient extends BaseClient
         $this->baseUrl = config('clients.unired.base_url');
         $this->token = config('clients.unired.token');
         $this->channel = 'unired-client';
-        $this->featureName = FeatureEnum::UNIRED_PAY;
-
     }
 
     public function getClientCode(): ClientCodeEnum
