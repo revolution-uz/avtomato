@@ -144,17 +144,17 @@ class Customer extends Model
     {
         return $this->cards()->where('status', CardStatusEnum::ACTIVE);
     }
-  
+
     public function debtAmount(): float
     {
         return (float) Installment::query()->where('customer_id', $this->id)->sum(DB::raw('(amount - initial_fee) * (percent + 100) / 100 - paid_amount'));
     }
-  
+
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'customer_tags');
     }
-  
+
     public function onlyPhones(): array
     {
         $phones = [];

@@ -31,6 +31,7 @@ class TransactionType extends Model
 
     const ATMOS_WITH_CARD = 1;
     const ATMOS_WITH_PINFL = 2;
+    const UNIRED_WITH_PINFL = 3;
 
     protected $fillable = [
         'name_uz',

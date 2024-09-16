@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UniredCheckPaymentCallbackRequest;
+use App\Http\Requests\UniredPaymentWebhookCallbackRequest;
 use App\Http\Requests\UniredSendPaymentSmsCallbackRequest;
 use App\Models\Company;
+use App\Models\Company\Customer;
 use App\Services\UniredService;
 
 class UniredController extends Controller
@@ -12,6 +14,19 @@ class UniredController extends Controller
     public function __construct(
         private readonly UniredService $uniredService
     ) {}
+
+    public function webHook(UniredPaymentWebhookCallbackRequest $request)
+    {
+        if ($companyId = $request->getCompanyId()) {
+            tenancy()->initialize(Company::findOrFail($companyId));
+
+            if ($this->uniredService->createTransaction(Customer::findOrFail($request->getClientId()), $request)) {
+                return response()->json(['success' => true, 'message' => 'OK'], 200);
+            }
+        }
+
+        return response()->json(['message' => 'Client was not found'], 501);
+    }
 
     public function checkPayment(UniredCheckPaymentCallbackRequest $request)
     {

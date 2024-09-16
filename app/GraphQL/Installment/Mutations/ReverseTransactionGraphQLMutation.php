@@ -7,6 +7,7 @@ use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use App\Services\AtmosService;
+use App\Services\UniredService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -21,6 +22,7 @@ class ReverseTransactionGraphQLMutation extends Mutation
 
     public function __construct(
         private readonly AtmosService $atmosCardService,
+        private readonly UniredService $uniredService,
     ) {}
 
     public function type(): Type
@@ -66,6 +68,8 @@ class ReverseTransactionGraphQLMutation extends Mutation
         $transaction = Transaction::findOrFail($args['id']);
         if ($transaction->transaction_type_id === TransactionType::ATMOS_WITH_CARD || $transaction->transaction_type_id === TransactionType::ATMOS_WITH_PINFL) {
             return $this->atmosCardService->reversePayment($transaction);
+        } elseif ($transaction->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
+            return $this->uniredService->reversePayment($transaction);
         } else {
             return $transaction->delete();
         }
