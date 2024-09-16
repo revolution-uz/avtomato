@@ -7,6 +7,7 @@ use App\Clients\AtmosPinflClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionDetailDTO;
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Exceptions\AtmosException;
@@ -42,7 +43,9 @@ class AtmosService
     {
         $response = $this->atmosCardClient->reversePayment($transaction->external_id);
         if ($response->result->isSucces()) {
-            return $transaction->delete();
+            return $transaction->installment->update([
+                'status' => InstallmentStatusEnum::CANCELED,
+            ]);
         }
 
         return false;

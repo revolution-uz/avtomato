@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\Feature;
@@ -100,6 +101,24 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
+
+        // already cancelled transaction
+        $this->_transaction = Transaction::query()->where('transaction_type_id', '>=', 100)->inRandomOrder()->first();
+        $this->actingAs($this->createAdminUser())
+            ->postJson(
+                route(self::GRAPHQL_ROUTE),
+                $this->buildGraphQLQuery(['id' => $this->_transaction->id])
+            );
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route(self::GRAPHQL_ROUTE),
+                $this->buildGraphQLQuery(['id' => $this->_transaction->id])
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('api.already_canceled_transaction'), $response->json('errors.0.extensions.validation.id.0'));
     }
 
     #[Test]
@@ -152,6 +171,9 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
             ],
         ]);
         $this->assertTrue($response->json('data.reverseTransaction'));
-        $this->assertTrue(Transaction::query()->where('id', $this->_transaction->id)->doesntExist());
+        $transaction = Transaction::query()->find($this->_transaction->id);
+        $this->assertTrue($response->json('data.reverseTransaction'));
+        $this->assertNotNull($transaction);
+        $this->assertTrue($transaction->installment->status === InstallmentStatusEnum::CANCELED);
     }
 }

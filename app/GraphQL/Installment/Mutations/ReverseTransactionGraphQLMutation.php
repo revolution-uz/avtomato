@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Installment\Mutations;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
@@ -43,9 +44,12 @@ class ReverseTransactionGraphQLMutation extends Mutation
                         /** @var Builder $transactionQuery */
                         $transactionQuery = Transaction::query()->where('id', $value)
                             ->when($branches, fn ($q) => $q->whereHas('installment', fn ($q) => $q->whereIn('branch_id', $branches)));
-
+                        /** @var Transaction $transaction */
+                        $transaction = $transactionQuery->first();
                         if ($transactionQuery->doesntExist()) {
                             $fail(__('validation.exists', ['attribute' => $attribute]));
+                        } elseif ($transaction->installment->status === InstallmentStatusEnum::CANCELED) {
+                            $fail(__('api.already_canceled_transaction'));
                         }
                         //                        elseif ($transactionQuery->where('transaction_type_id', '<', 100)->exists()) {
                         //                            $fail(__('api.it is system payment'));
@@ -67,7 +71,9 @@ class ReverseTransactionGraphQLMutation extends Mutation
         if ($transaction->transaction_type_id === TransactionType::ATMOS_WITH_CARD || $transaction->transaction_type_id === TransactionType::ATMOS_WITH_PINFL) {
             return $this->atmosCardService->reversePayment($transaction);
         } else {
-            return $transaction->delete();
+            return $transaction->installment->update([
+                'status' => InstallmentStatusEnum::CANCELED,
+            ]);
         }
     }
 }
