@@ -98,7 +98,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ],
             [
                 'date' => $this->_carbon->addDay()->format('Y-m-d'),
-                'debt_amount' => 245000,
+                'debt_amount' => 590000,
                 'paid_amount' => 445000,
             ],
         ];
@@ -106,7 +106,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessResponse($response, $expectedData);
     }
 
-    // [Test]
+    #[Test]
     public function successStatisticsWithBranchId()
     {
         $this->_carbon = Carbon::now()->subDays(6);
@@ -163,7 +163,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessResponse($response, $expectedData);
     }
 
-    // [Test]
+    #[Test]
     public function errorValidations()
     {
         // graphql query errors
@@ -194,7 +194,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(__('validation.exists', ['attribute' => 'branch id']), $response->json('errors.0.extensions.validation.branch_id.0'));
     }
 
-    // [Test]
+    #[Test]
     public function successCheckForPermission()
     {
         /** @var Role $role */

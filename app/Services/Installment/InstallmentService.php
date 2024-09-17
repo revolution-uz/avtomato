@@ -142,43 +142,43 @@ class InstallmentService
     public function getStatistics(Carbon $from, Carbon $to, ?array $branches = null, ?array $statusIn = null): array
     {
         if (! $statusIn) {
-            $statusIn = [InstallmentStatusEnum::ACTIVE->value, InstallmentStatusEnum::CLOSED->value];
+            $statusIn = [InstallmentStatusEnum::ACTIVE->value];
         }
 
         $bindings = [
             'from' => $from->format('Y-m-d'),
             'to' => $to->format('Y-m-d'),
             'status_in' => implode(',', $statusIn),
-            'i_branches_in' => empty($branches) ? '' : 'AND i.branch_id IN (' . implode(',', $branches) . ')',
-            't_branches_in' => empty($branches) ? '' : 'AND t.branch_id IN (' . implode(',', $branches) . ')',
+            'branches_in' => empty($branches) ? '' : 'AND branch_id IN (' . implode(',', $branches) . ')',
         ];
 
         return DB::select("
             WITH
-                date_series AS (SELECT generate_series(DATE '{$bindings['from']}', DATE '{$bindings['to']}', '1 day'::interval)::date AS date),
-                installment_calculations AS (
-                    SELECT i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval AS next_pay_date,
-                        (i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period * LEAST(GREATEST(CEIL(DATE_PART('month', AGE(ds.date, i.starts_in)) + 1), 0), i.period) - i.paid_amount AS debt_amount
-                    FROM installments i
+                date_series AS (SELECT GENERATE_SERIES('{$bindings['from']}'::date, '{$bindings['to']}'::date, '1 day'::interval)::date AS date),
+                installment_precalculations AS (
+                    SELECT (amount - initial_fee) * (percent / 100 + 1) / period AS monthly_payment,
+                        DATE_TRUNC('day', starts_in) + ('1 month'::interval * DATE_PART('month', AGE(ds.date, starts_in))) AS payment_date,
+                        GREATEST((amount - initial_fee) * (percent / 100 + 1) / period * LEAST(GREATEST(CEIL(DATE_PART('month', AGE(ds.date, starts_in)) + 1), 0), period) - paid_amount, 0) AS debt_amount
+                    FROM installments
                         INNER JOIN date_series ds
-                            ON i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval = ds.date
-                            AND i.status IN ({$bindings['status_in']}) {$bindings['i_branches_in']}
+                            ON DATE_PART('day', starts_in) = DATE_PART('day', ds.date)
+                                AND 0 <= DATE_PART('month', AGE(ds.date, starts_in)) AND DATE_PART('month', AGE(ds.date, starts_in)) < period
+                                AND status IN ({$bindings['status_in']}) {$bindings['branches_in']}
+                ),
+                installment_calculations AS (
+                    SELECT payment_date,
+                        CASE WHEN payment_date > NOW() THEN 0 ELSE LEAST(debt_amount, monthly_payment) END AS debt_amount,
+                        ABS(LEAST(debt_amount, monthly_payment) - monthly_payment) as paid_amount
+                    FROM installment_precalculations
                 )
             SELECT
-                ds.date,
-                COALESCE(ic.debt_amount, 0) AS debt_amount,
-                COALESCE(SUM(t.amount), 0) AS paid_amount
+                date,
+                COALESCE(SUM(debt_amount), 0) AS debt_amount_sum,
+                COALESCE(SUM(paid_amount), 0) AS paid_amount_sum
             FROM date_series ds
-                LEFT JOIN (
-                    SELECT
-                        next_pay_date,
-                        SUM(debt_amount) AS debt_amount
-                    FROM installment_calculations
-                    GROUP BY next_pay_date
-                ) ic ON ds.date = ic.next_pay_date
-                LEFT JOIN transactions t ON ds.date = t.paid_at::date {$bindings['t_branches_in']}
-            GROUP BY ds.date, ic.debt_amount
-            ORDER BY ds.date;
+                LEFT JOIN installment_calculations ic ON ds.date = ic.payment_date
+            GROUP BY ds.date
+            ORDER BY ds.date
         ");
     }
 
