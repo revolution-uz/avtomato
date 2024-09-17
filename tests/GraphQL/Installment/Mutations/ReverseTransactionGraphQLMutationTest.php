@@ -10,6 +10,7 @@ use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
@@ -69,9 +70,12 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $installment = Installment::factory()->create([
             'paid_amount' => 10000,
         ]);
+        $transactionType = TransactionType::factory()->create([
+            'id' => rand(500, 1000),
+        ]);
         $this->_transaction = Transaction::factory()->create([
             'installment_id' => $installment->id,
-            'transaction_type_id' => 100,
+            'transaction_type_id' => $transactionType->id,
             'amount' => 5000,
         ]);
 
