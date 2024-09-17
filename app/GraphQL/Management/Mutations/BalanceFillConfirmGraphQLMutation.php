@@ -4,6 +4,7 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Exceptions\AtmosException;
 use App\GraphQL\Management\Types\BalanceFundGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
@@ -46,6 +47,11 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
                 'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => 'required|string',
             ],
+            'expiry' => [
+                'name' => 'expiry',
+                'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|string|size:4|regex:/^[0-9]{4}$/',
+            ],
             'phone' => [
                 'name' => 'phone',
                 'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
@@ -66,13 +72,11 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $result = $this->balanceService->fundBalance(BalanceFundConfirmDTO::from($args));
-
-        if (! $result) {
-            throw ValidationException::withMessages(['otp' => 'Error on confirming payment']);
+        try {
+            return $this->balanceService->fundBalance(BalanceFundConfirmDTO::from($args));
+        } catch (AtmosException $e) {
+            throw ValidationException::withMessages(['otp' => $e->getMessage()]);
         }
-
-        return $result;
     }
 
     protected function rules(array $args = []): array

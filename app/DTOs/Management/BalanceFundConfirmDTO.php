@@ -11,6 +11,7 @@ class BalanceFundConfirmDTO extends Data
         public int $amount,
         public string $otp,
         public string $number,
+        public string $expiry,
         public ?string $phone,
     ) {}
 }

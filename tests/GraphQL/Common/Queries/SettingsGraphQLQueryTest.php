@@ -6,18 +6,24 @@ use App\Clients\AtmosBalanceClient;
 use App\Enums\Main\SettingsEnum;
 use App\Models\Company\BalanceFund;
 use App\Models\Settings;
+use App\Services\ConfirmationService;
+use App\Services\SmsService;
 use App\Services\User\BalanceService;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class SettingsGraphQLQueryTest extends GraphQLTestCase
 {
+    private BalanceService $_balanceService;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         BalanceFund::query()->forceDelete();
         BalanceFund::factory()->create();
+
+        $this->_balanceService = new BalanceService(new AtmosBalanceClient, new ConfirmationService(new SmsService));
     }
 
     #[Test]
@@ -86,13 +92,13 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($settings->first(fn (Settings $setting) => $setting->name === SettingsEnum::PARTNER_APP_MAINTENANCE_MODE)->value ?? true, $response->json('data.settings.app_maintenance_mode'));
         $this->assertEquals($settings->first(fn (Settings $setting) => $setting->name === SettingsEnum::PARTNER_WEB_MAINTENANCE_MODE)->value ?? true, $response->json('data.settings.web_maintenance_mode'));
         $this->assertEquals($settings->first(fn (Settings $setting) => $setting->name === SettingsEnum::PARTNER_APP_MIN_VERSION)->value ?? true, $response->json('data.settings.app_min_version'));
-        //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.card_after_due_days'));
-        //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.pinfl_after_due_days'));
-        //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_after_due_days'));
-        //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_pinfl_after_due_days'));
-        $this->assertNotEquals(0, (new BalanceService(new AtmosBalanceClient))->getBalance());
+        // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.card_after_due_days'));
+        // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.pinfl_after_due_days'));
+        // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_after_due_days'));
+        // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_pinfl_after_due_days'));
+        $this->assertNotEquals(0, $this->_balanceService->getBalance());
         $this->assertNotEquals(0, $response->json('data.settings.balance'));
-        $this->assertEquals((new BalanceService(new AtmosBalanceClient))->getBalance(), $response->json('data.settings.balance'));
+        $this->assertEquals($this->_balanceService->getBalance(), $response->json('data.settings.balance'));
     }
 
     private function buildGraphQLQuery(): array

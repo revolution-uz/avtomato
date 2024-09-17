@@ -67,7 +67,8 @@ class AttachGuarantorGraphQLMutation extends Mutation
                 'integer',
                 Rule::exists('customers', 'id'),
                 Rule::unique('installment_guarantors', 'customer_id')
-                    ->where('installment_id', $args['installment_id']),
+                    ->where('installment_id', $args['installment_id'])
+                    ->whereNull('deleted_at'),
             ],
         ];
     }

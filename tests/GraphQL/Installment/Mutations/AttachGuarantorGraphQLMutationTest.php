@@ -8,6 +8,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
+use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Testing\TestResponse;
@@ -36,6 +37,19 @@ class AttachGuarantorGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successAttachGuarantor(): void
     {
+        $response = $this->sendGraphQLRequest(
+            $this->_installment->id,
+            $this->_customer->id
+        );
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $this->assertSuccessResponse($response);
+
+        // Reattachment of extinguished guarantor
+        InstallmentGuarantor::query()
+            ->where('installment_id', $this->_installment->id)
+            ->where('customer_id', $this->_customer->id)
+            ->delete();
         $response = $this->sendGraphQLRequest(
             $this->_installment->id,
             $this->_customer->id
