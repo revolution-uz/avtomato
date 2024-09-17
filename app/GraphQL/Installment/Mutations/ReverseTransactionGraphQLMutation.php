@@ -71,9 +71,12 @@ class ReverseTransactionGraphQLMutation extends Mutation
         if ($transaction->transaction_type_id === TransactionType::ATMOS_WITH_CARD || $transaction->transaction_type_id === TransactionType::ATMOS_WITH_PINFL) {
             return $this->atmosCardService->reversePayment($transaction);
         } else {
-            return $transaction->installment->update([
-                'status' => InstallmentStatusEnum::CANCELED,
-            ]);
+            $installment = $transaction->installment;
+            $installment->status = InstallmentStatusEnum::CANCELED;
+            $installment->paid_amount -= $transaction->amount;
+            $installment->save();
+
+            return true;
         }
     }
 }

@@ -175,5 +175,6 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertTrue($response->json('data.reverseTransaction'));
         $this->assertNotNull($transaction);
         $this->assertTrue($transaction->installment->status === InstallmentStatusEnum::CANCELED);
+        $this->assertEquals(0, intval($transaction->installment->paid_amount));
     }
 }
