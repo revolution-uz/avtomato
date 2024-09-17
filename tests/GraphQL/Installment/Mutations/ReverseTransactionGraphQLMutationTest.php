@@ -2,15 +2,14 @@
 
 namespace Tests\GraphQL\Installment\Mutations;
 
-use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Models\Company\Branch;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
-use App\Models\Company\TransactionType;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
@@ -32,9 +31,6 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         parent::setUp();
 
         Artisan::call('tenants:seed', ['--class' => TransactionTypeSeeder::class, '--tenants' => [tenant()->id]]);
-        $transactionType = TransactionType::query()->where('id', '<', 100)->first();
-        Transaction::factory()->count(5)->create(['transaction_type_id' => $transactionType->id]);
-        Transaction::factory()->count(5)->create();
         $feature = Feature::findByName('atmos_card_pay');
         $feature->data = json_encode([
             'username' => 'username',
@@ -52,8 +48,13 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
     {
         AtmosFaker::getToken();
         AtmosFaker::reversePayment();
-
-        $this->_transaction = Transaction::query()->where('transaction_type_id', '<', 100)->inRandomOrder()->first();
+        $installment = Installment::factory()->create([
+            'paid_amount' => 10000,
+        ]);
+        $this->_transaction = Transaction::factory()->create([
+            'installment_id' => $installment->id,
+            'amount' => 6000,
+        ]);
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -65,7 +66,14 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successReverseSimpleTransaction()
     {
-        $this->_transaction = Transaction::query()->where('transaction_type_id', '>=', 100)->inRandomOrder()->first();
+        $installment = Installment::factory()->create([
+            'paid_amount' => 10000,
+        ]);
+        $this->_transaction = Transaction::factory()->create([
+            'installment_id' => $installment->id,
+            'transaction_type_id' => 100,
+            'amount' => 5000,
+        ]);
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -103,7 +111,9 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
 
         // already cancelled transaction
-        $this->_transaction = Transaction::query()->where('transaction_type_id', '>=', 100)->inRandomOrder()->first();
+        $this->_transaction = Transaction::factory()->create([
+            'status' => TransactionStatusEnum::CANCELED,
+        ]);
         $this->actingAs($this->createAdminUser())
             ->postJson(
                 route(self::GRAPHQL_ROUTE),
@@ -129,8 +139,14 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $permission = Permission::query()->where('slug', PermissionEnum::TRANSACTION_REVERSE)->firstOrFail();
 
         $branches = Branch::factory()->count(2)->create();
-        $installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
-        $this->_transaction = Transaction::factory()->create(['installment_id' => $installment->id]);
+        $installment = Installment::factory()->create([
+            'branch_id' => $branches[1]->id,
+            'paid_amount' => 10000,
+        ]);
+        $this->_transaction = Transaction::factory()->create([
+            'installment_id' => $installment->id,
+            'amount' => 5000,
+        ]);
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this
@@ -174,7 +190,7 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $transaction = Transaction::query()->find($this->_transaction->id);
         $this->assertTrue($response->json('data.reverseTransaction'));
         $this->assertNotNull($transaction);
-        $this->assertTrue($transaction->installment->status === InstallmentStatusEnum::CANCELED);
-        $this->assertEquals(0, intval($transaction->installment->paid_amount));
+        $this->assertTrue($transaction->status === TransactionStatusEnum::CANCELED);
+        $this->assertEquals(10000, intval($transaction->installment->paid_amount));
     }
 }

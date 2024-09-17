@@ -87,6 +87,10 @@ class TransactionGraphQLType extends GraphQLType
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Transaction $root) => $root->amount,
             ],
+            'status' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Transaction $root) => $root->status,
+            ],
             'paid_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (Transaction $root) => $root->paid_at?->timestamp,

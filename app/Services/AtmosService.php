@@ -7,9 +7,9 @@ use App\Clients\AtmosPinflClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionDetailDTO;
-use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Exceptions\AtmosException;
 use App\Helpers\Utilities;
 use App\Models\Company\Card;
@@ -18,6 +18,7 @@ use App\Models\Company\Transaction;
 use App\Models\Company\TransactionAttempt;
 use App\Models\Company\TransactionType;
 use Carbon\Carbon;
+use Throwable;
 
 class AtmosService
 {
@@ -39,14 +40,19 @@ class AtmosService
         return $this->atmosCardClient->confirmCard($transaction_id, $otp);
     }
 
+    /**
+     * @throws Throwable
+     * @throws AtmosException
+     */
     public function reversePayment(Transaction $transaction): bool
     {
         $response = $this->atmosCardClient->reversePayment($transaction->external_id);
         if ($response->result->isSucces()) {
             $installment = $transaction->installment;
-            $installment->status = InstallmentStatusEnum::CANCELED;
             $installment->paid_amount -= $transaction->amount;
-            $installment->save();
+            $installment->saveOrFail();
+            $transaction->status = TransactionStatusEnum::CANCELED;
+            $transaction->saveOrFail();
 
             return true;
         }
