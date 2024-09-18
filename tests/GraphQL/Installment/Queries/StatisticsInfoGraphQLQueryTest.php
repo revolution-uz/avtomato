@@ -183,7 +183,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(null, null));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$date" of non-null type "String!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$date" of non-null type "String!" must not be null.'));
 
         // validation errors
         $response = $this
