@@ -23,4 +23,5 @@ return [
     'Please create initial fee amount first' => 'Iltimos, avval boshlang\'ich to\'lov miqdorini yarating',
     'tag' => 'Teg',
     'already_attached_tag' => 'Teg allaqachon bu mijozga ulangan',
+    'already_canceled_transaction' => 'Tanlangan tranzaksiya allaqachon bekor qilingan',
 ];

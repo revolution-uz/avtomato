@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Jobs\SendTransactionSmsJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -32,6 +33,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $updated_at
  * @property-read  CompanyAdmin $admin
  * @property Carbon|null $paid_at
+ * @property TransactionStatusEnum $status
  */
 class Transaction extends Model
 {
@@ -51,12 +53,14 @@ class Transaction extends Model
         'paid_at',
         'card_pan',
         'is_initial_fee',
+        'status',
     ];
 
     protected $casts = [
         'paid_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'status' => TransactionStatusEnum::class,
     ];
 
     protected static function boot(): void
