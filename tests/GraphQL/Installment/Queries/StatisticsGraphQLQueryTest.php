@@ -63,37 +63,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('Y-m-d'),
+                'date' => $from->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
@@ -114,37 +114,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('Y-m-d'),
+                'date' => $from->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 590000,
                 'paid_amount' => 445000,
             ],
@@ -165,37 +165,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('Y-m-d'),
+                'date' => $from->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 100000,
             ],
@@ -214,37 +214,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($from, $to));
         $expectedData = [
             [
-                'date' => $from->format('Y-m-d'),
+                'date' => $from->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
@@ -258,37 +258,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($from, $to));
         $expectedData = [
             [
-                'date' => $from->format('Y-m-d'),
+                'date' => $from->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
@@ -312,37 +312,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('Y-m-d'),
+                'date' => $from->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 172500,
             ],
@@ -367,37 +367,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('Y-m-d'),
+                'date' => $from->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('Y-m-d'),
+                'date' => $from->addDay()->format('d-m-Y'),
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
@@ -452,7 +452,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($date, $date));
         $this->assertSuccessResponse($response, [
             [
-                'date' => $date->format('Y-m-d'),
+                'date' => $date->format('d-m-Y'),
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
@@ -464,7 +464,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($date, $date));
         $this->assertSuccessResponse($response, [
             [
-                'date' => $date->format('Y-m-d'),
+                'date' => $date->format('d-m-Y'),
                 'debt_amount' => 1725000,
                 'paid_amount' => 0,
             ],
