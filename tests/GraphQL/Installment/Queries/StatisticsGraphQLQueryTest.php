@@ -32,29 +32,29 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             'percent' => 15,
             'initial_fee' => 100000,
             'period' => 3,
-            'starts_in' => Carbon::now(),
+            'starts_in' => Carbon::today(),
             'status' => InstallmentStatusEnum::ACTIVE,
         ];
 
         /** @var Installment[] $installments */
         $installments = [];
 
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subMonth()]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::today()->subMonth()]));
         $installments[] = Installment::factory()->create($this->_input);
         $installments[] = Installment::factory()->create($this->_input);
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subDays(1)]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subDays(2)]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subDays(3)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::today()->subDays(1)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::today()->subDays(2)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::today()->subDays(3)]));
 
-        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => $installments[1]->debtAmount, 'paid_at' => Carbon::now()]);
-        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000, 'paid_at' => Carbon::now()]);
-        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000, 'paid_at' => Carbon::now()]);
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => $installments[1]->debtAmount, 'paid_at' => Carbon::today()]);
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000, 'paid_at' => Carbon::today()]);
+        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000, 'paid_at' => Carbon::today()]);
     }
 
     #[Test]
     public function successStatisticsForLastMonth()
     {
-        $to = Carbon::now()->subMonth();
+        $to = Carbon::today()->subMonth();
         $from = (clone $to)->subDays(6);
 
         $response = $this
@@ -63,37 +63,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('d-m-Y'),
+                'date' => $from->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
@@ -105,7 +105,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successStatisticsForLastWeek()
     {
-        $to = Carbon::now();
+        $to = Carbon::today();
         $from = (clone $to)->subDays(6);
 
         $response = $this
@@ -114,37 +114,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('d-m-Y'),
+                'date' => $from->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 590000,
                 'paid_amount' => 445000,
             ],
@@ -156,7 +156,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successStatisticsForNextMonth()
     {
-        $to = Carbon::now()->addMonth();
+        $to = Carbon::today()->addMonth();
         $from = (clone $to)->subDays(6);
 
         $response = $this
@@ -165,37 +165,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('d-m-Y'),
+                'date' => $from->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 100000,
             ],
@@ -207,88 +207,88 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successStatisticsForOutOfPeriodRanges()
     {
-        $to = Carbon::now()->subMonths(2);
+        $to = Carbon::today()->subMonths(2);
         $from = (clone $to)->subDays(6);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($from, $to));
         $expectedData = [
             [
-                'date' => $from->format('d-m-Y'),
+                'date' => $from->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
         ];
         $this->assertSuccessResponse($response, $expectedData);
 
-        $to = Carbon::now()->addMonths(3);
+        $to = Carbon::today()->addMonths(3);
         $from = (clone $to)->subDays(6);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($from, $to));
         $expectedData = [
             [
-                'date' => $from->format('d-m-Y'),
+                'date' => $from->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
@@ -303,7 +303,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $installment = Installment::factory()->create(array_merge($this->_input, ['starts_in' => '2024-12-31']));
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => 862500]);
 
-        $to = Carbon::createFromFormat('Y-m-d', '2025-02-28');
+        $to = Carbon::createFromFormat('Y-m-d', '2025-02-28')->startOfDay();
         $from = (clone $to)->subDays(6);
 
         $response = $this
@@ -312,37 +312,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('d-m-Y'),
+                'date' => $from->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 172500,
             ],
@@ -354,7 +354,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successStatisticsWithBranchId()
     {
-        $to = Carbon::now();
+        $to = Carbon::today();
         $from = (clone $to)->subDays(6);
 
         /** @var Branch $branch */
@@ -367,37 +367,37 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $expectedData = [
             [
-                'date' => $from->format('d-m-Y'),
+                'date' => $from->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
             [
-                'date' => $from->addDay()->format('d-m-Y'),
+                'date' => $from->addDay()->timestamp,
                 'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
@@ -436,7 +436,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successCheckForPermission()
     {
-        $date = Carbon::now();
+        $date = Carbon::today();
 
         /** @var Role $role */
         $role = Role::factory()->create();
@@ -452,7 +452,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($date, $date));
         $this->assertSuccessResponse($response, [
             [
-                'date' => $date->format('d-m-Y'),
+                'date' => $date->timestamp,
                 'debt_amount' => 0,
                 'paid_amount' => 0,
             ],
@@ -464,7 +464,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($date, $date));
         $this->assertSuccessResponse($response, [
             [
-                'date' => $date->format('d-m-Y'),
+                'date' => $date->timestamp,
                 'debt_amount' => 1725000,
                 'paid_amount' => 0,
             ],
