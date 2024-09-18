@@ -20,56 +20,6 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
     protected bool $tenancy = true;
 
     private array $_input;
-    private Carbon $_carbon;
-    private array $_structure = [
-        'id',
-        'debt',
-        'paid',
-        'customer' => [
-            'id',
-            'pinfl',
-            'tin',
-            'passport_series',
-            'passport_number',
-            'passport_given_date',
-            'passport_expiration_date',
-            'passport_given_place',
-            'passport_citizenship',
-            'first_name',
-            'last_name',
-            'middle_name',
-            'birth_date',
-            'birth_place',
-            'gender',
-            'created_at',
-            'updated_at',
-            'deleted_at',
-        ],
-        'branch' => [
-            'id',
-            'name',
-            'address',
-            'inn',
-            'created_at',
-            'updated_at',
-            'deleted_at',
-        ],
-        'transaction' => [
-            'id',
-            'branch_id',
-            'admin_id',
-            'installment_id',
-            'customer_id',
-            'transaction_type_id',
-            'card_id',
-            'card_pan',
-            'external_id',
-            'amount',
-            'paid_at',
-            'created_at',
-            'updated_at',
-        ],
-    ];
 
     protected function setUp(): void
     {
@@ -96,46 +46,116 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subDays(2)]));
         $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subDays(3)]));
 
-        $this->_carbon = Carbon::now();
-
-        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => $installments[1]->debtAmount, 'paid_at' => $this->_carbon]);
-        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000, 'paid_at' => $this->_carbon]);
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => $installments[1]->debtAmount, 'paid_at' => Carbon::now()]);
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000, 'paid_at' => Carbon::now()]);
+        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000, 'paid_at' => Carbon::now()]);
     }
 
     #[Test]
-    public function successStatisticsInfo()
+    public function successStatisticsInfoForLastMonth()
     {
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'), $this->buildGraphQLQuery(['date' => Carbon::now()->format('Y-m-d')])
-            );
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()->subMonth()));
 
         $expectedData = [
             [
-                'debt' => 690000,
-                'paid' => 0,
-                'transaction' => null,
-            ],
-            [
-                'debt' => 0,
-                'paid' => '345000.00',
-                'transaction' => [
-                    'amount' => '345000.00',
-                    'paid_at' => $this->_carbon->timestamp,
-                ],
-            ],
-            [
-                'debt' => 245000,
-                'paid' => '100000.00',
-                'transaction' => [
-                    'amount' => '100000.00',
-                    'paid_at' => $this->_carbon->timestamp,
-                ],
+                'id' => 1,
+                'debt_amount' => 345000,
+                'paid_amount' => 0,
             ],
         ];
 
         $this->assertSuccessResponse($response, $expectedData);
+    }
+
+    #[Test]
+    public function successStatisticsInfoForToday()
+    {
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()));
+
+        $expectedData = [
+            [
+                'id' => 1,
+                'debt_amount' => 345000,
+                'paid_amount' => 0,
+            ],
+            [
+                'id' => 2,
+                'debt_amount' => 0,
+                'paid_amount' => 345000,
+            ],
+            [
+                'id' => 3,
+                'debt_amount' => 245000,
+                'paid_amount' => 100000,
+            ],
+        ];
+
+        $this->assertSuccessResponse($response, $expectedData);
+    }
+
+    #[Test]
+    public function successStatisticsInfoForNextMonth()
+    {
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()->addMonth()));
+
+        $expectedData = [
+            [
+                'id' => 1,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
+            ],
+            [
+                'id' => 2,
+                'debt_amount' => 0,
+                'paid_amount' => 100000,
+            ],
+            [
+                'id' => 3,
+                'debt_amount' => 0,
+                'paid_amount' => 0,
+            ],
+        ];
+
+        $this->assertSuccessResponse($response, $expectedData);
+    }
+
+    #[Test]
+    public function successStatisticsInfoForOutOfPeriodRanges()
+    {
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()->subMonths(2)));
+        $this->assertSuccessResponse($response);
+        $this->assertEmpty($response->json('data.statisticsInfo'));
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()->addMonths(3)));
+        $this->assertSuccessResponse($response);
+        $this->assertEmpty($response->json('data.statisticsInfo'));
+    }
+
+    #[Test]
+    public function successStatisticsInfoForEndOfMonths()
+    {
+        /** @var Installment $installment */
+        $installment = Installment::factory()->create(array_merge($this->_input, ['starts_in' => '2024-12-31']));
+        Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => 862500]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery('2025-02-28'));
+
+        $this->assertSuccessResponse($response);
+        $this->assertEquals(1, count($response->json('data.statisticsInfo')));
+        $this->assertEquals($installment->id, $response->json('data.statisticsInfo.0.id'));
+        $this->assertEquals(172500, $response->json('data.statisticsInfo.0.paid_amount'));
     }
 
     #[Test]
@@ -147,14 +167,11 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(['date' => Carbon::now()->format('Y-m-d'), 'branch_id' => $branch->id])
-            );
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now(), $branch->id));
 
         $this->assertSuccessResponse($response);
         $this->assertEquals(1, count($response->json('data.statisticsInfo')));
-        $this->assertEquals($branch->id, $response->json('data.statisticsInfo.0.branch.id'));
+        $this->assertEquals($branch->name, $response->json('data.statisticsInfo.0.branch_name'));
     }
 
     #[Test]
@@ -163,10 +180,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         // graphql query errors
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(['date' => null, 'branch_id' => null])
-            );
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(null, null));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$date" of non-null type "String!" must not be null.'));
@@ -174,10 +188,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         // validation errors
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(['date' => 'oytresdtfygiuh', 'branch_id' => 999999999])
-            );
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery('oytresdtfygiuh', 999999999));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
@@ -199,7 +210,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this
             ->actingAs($simpleAdmin)
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['date' => Carbon::now()->format('Y-m-d')]));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()));
         $response->assertOk();
         $response->assertJsonIsObject();
         $response->assertJsonStructure([
@@ -212,19 +223,27 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
         $response = $this
             ->actingAs($simpleAdmin)
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['date' => Carbon::now()->format('Y-m-d')]));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()));
         $this->assertSuccessResponse($response);
         $this->assertEquals($installments->pluck('id')?->toArray(), $response->json('data.statisticsInfo.*.id'));
     }
 
-    private function buildGraphQLQuery(array $variables): array
+    private function buildGraphQLQuery(string|Carbon|null $date, $branch_id = null): array
     {
+        if ($date instanceof Carbon) {
+            $date = $date->format('Y-m-d');
+        }
+
         $query = [];
-        $query['variables'] = $variables;
+        $query['variables'] = ['date' => $date, 'branch_id' => $branch_id];
         $query['query'] = '
             query StatisticsInfo($date: String!, $branch_id: Int) {
                 statisticsInfo(date: $date, branch_id: $branch_id) {
-                    ' . $this->convertIntoQuery($this->_structure) . '
+                    id
+                    branch_name
+                    customer_fullname
+                    debt_amount
+                    paid_amount
                 }
             }
         ';
@@ -239,7 +258,13 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         $response->assertJsonStructure([
             'data' => [
                 'statisticsInfo' => [
-                    '*' => Arr::except($this->_structure, 'transaction'),
+                    '*' => [
+                        'id',
+                        'branch_name',
+                        'customer_fullname',
+                        'debt_amount',
+                        'paid_amount',
+                    ],
                 ],
             ],
         ]);

@@ -24,11 +24,11 @@ class StatisticsGraphQLType extends GraphQLType
             ],
             'debt_amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn ($root) => round($root->debt_amount, 2),
+                'resolve' => fn ($root) => round($root->debt_amount_sum, 2),
             ],
             'paid_amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn ($root) => round($root->paid_amount, 2),
+                'resolve' => fn ($root) => round($root->paid_amount_sum, 2),
             ],
         ];
     }

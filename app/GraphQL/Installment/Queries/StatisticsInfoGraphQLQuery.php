@@ -2,11 +2,10 @@
 
 namespace App\GraphQL\Installment\Queries;
 
-use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\StatisticsInfoGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Installment;
+use App\Services\Installment\InstallmentService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -21,6 +20,8 @@ class StatisticsInfoGraphQLQuery extends Query
     ];
 
     private array $_branches;
+
+    public function __construct(private readonly InstallmentService $installmentService) {}
 
     public function type(): Type
     {
@@ -53,15 +54,10 @@ class StatisticsInfoGraphQLQuery extends Query
         return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_VIEW_STATISTICS);
     }
 
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): \Illuminate\Database\Eloquent\Collection
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): array
     {
-        return Installment::paymentsDueOnDate($args['date'])
-            ->with('transactions', fn ($q) => $q->whereDate('paid_at', $args['date'])->orderByDesc('id')->first())
-            ->withSum(['transactions as transactions_sum_amount' => fn ($q) => $q->whereDate('paid_at', $args['date'])], 'amount')
-            ->whereIn('status', [InstallmentStatusEnum::ACTIVE, InstallmentStatusEnum::CLOSED])
-            ->when(isset($args['branch_id']), fn ($q) => $q->where('branch_id', $args['branch_id']))
-            ->when(! isset($args['branch_id']) and $this->_branches, fn ($q) => $q->whereIn('branch_id', $this->_branches))
-            ->orderBy('id')
-            ->get();
+        $this->_branches = isset($args['branch_id']) ? [$args['branch_id']] : $this->_branches;
+
+        return $this->installmentService->getStatisticsForDate($args['date'], $this->_branches);
     }
 }

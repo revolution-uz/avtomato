@@ -139,46 +139,62 @@ class InstallmentService
         ];
     }
 
-    public function getStatistics(Carbon $from, Carbon $to, ?array $branches = null, ?array $statusIn = null): array
+    public function getStatisticsForRange(string $from, string $to, ?array $branches = null): array
     {
-        if (! $statusIn) {
-            $statusIn = [InstallmentStatusEnum::ACTIVE->value, InstallmentStatusEnum::CLOSED->value];
-        }
-
-        $bindings = [
-            'from' => $from->format('Y-m-d'),
-            'to' => $to->format('Y-m-d'),
-            'status_in' => implode(',', $statusIn),
-            'i_branches_in' => empty($branches) ? '' : 'AND i.branch_id IN (' . implode(',', $branches) . ')',
-            't_branches_in' => empty($branches) ? '' : 'AND t.branch_id IN (' . implode(',', $branches) . ')',
-        ];
+        $branches_in_query = empty($branches) ? '' : 'AND branch_id IN (' . implode(',', $branches) . ')';
 
         return DB::select("
             WITH
-                date_series AS (SELECT generate_series(DATE '{$bindings['from']}', DATE '{$bindings['to']}', '1 day'::interval)::date AS date),
-                installment_calculations AS (
-                    SELECT i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval AS next_pay_date,
-                        (i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period * LEAST(GREATEST(CEIL(DATE_PART('month', AGE(ds.date, i.starts_in)) + 1), 0), i.period) - i.paid_amount AS debt_amount
-                    FROM installments i
+                date_series AS (SELECT GENERATE_SERIES('{$from}'::date, '{$to}'::date, '1 day'::interval)::date AS date),
+                installment_precalculations AS (
+                    SELECT (amount - initial_fee) * (percent / 100 + 1) / period AS monthly_payment,
+                           starts_in + (ROUND(DATE_PART('month', AGE(ds.date::date, starts_in)) + DATE_PART('day', AGE(ds.date::date, starts_in)) / 30) || ' month')::interval AS payment_date,
+                           GREATEST((amount - initial_fee) * (percent / 100 + 1) / period * LEAST(ROUND(DATE_PART('month', AGE(ds.date, starts_in)) + DATE_PART('day', AGE(ds.date, starts_in)) / 30) + 1, period) - paid_amount, 0) AS debt_amount
+                    FROM installments
                         INNER JOIN date_series ds
-                            ON i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval = ds.date
-                            AND i.status IN ({$bindings['status_in']}) {$bindings['i_branches_in']}
+                            ON starts_in + (ROUND(DATE_PART('month', AGE(ds.date::date, starts_in)) + DATE_PART('day', AGE(ds.date::date, starts_in)) / 30) || ' month')::interval = ds.date::date
+                                AND ROUND(DATE_PART('month', AGE(ds.date::date, starts_in)) + DATE_PART('day', AGE(ds.date::date, starts_in)) / 30) BETWEEN 0 AND period - 1
+                    WHERE status = 1 {$branches_in_query}
+                ),
+                installment_calculations AS (
+                    SELECT payment_date,
+                        CASE WHEN payment_date > NOW() THEN 0 ELSE LEAST(debt_amount, monthly_payment) END AS debt_amount,
+                        ABS(LEAST(debt_amount, monthly_payment) - monthly_payment) as paid_amount
+                    FROM installment_precalculations
                 )
             SELECT
-                ds.date,
-                COALESCE(ic.debt_amount, 0) AS debt_amount,
-                COALESCE(SUM(t.amount), 0) AS paid_amount
+                EXTRACT(EPOCH  FROM date) AS date, COALESCE(SUM(debt_amount), 0) AS debt_amount_sum, COALESCE(SUM(paid_amount), 0) AS paid_amount_sum
             FROM date_series ds
-                LEFT JOIN (
-                    SELECT
-                        next_pay_date,
-                        SUM(debt_amount) AS debt_amount
-                    FROM installment_calculations
-                    GROUP BY next_pay_date
-                ) ic ON ds.date = ic.next_pay_date
-                LEFT JOIN transactions t ON ds.date = t.paid_at::date {$bindings['t_branches_in']}
-            GROUP BY ds.date, ic.debt_amount
-            ORDER BY ds.date;
+                LEFT JOIN installment_calculations ic ON ds.date = ic.payment_date
+            GROUP BY ds.date
+            ORDER BY ds.date
+        ");
+    }
+
+    public function getStatisticsForDate(string $date, ?array $branches = null): array
+    {
+        $branches_in_query = empty($branches) ? '' : 'AND branch_id IN (' . implode(',', $branches) . ')';
+
+        return DB::select("
+            WITH installments_optimized AS (
+                SELECT
+                    id, amount, initial_fee, percent, period, paid_amount, starts_in, branch_id, customer_id,
+                    (amount - initial_fee) * (percent / 100 + 1) / period AS monthly_payment,
+                    ROUND(DATE_PART('month', AGE('{$date}'::date, starts_in)) + DATE_PART('day', AGE('{$date}'::date, starts_in)) / 30) AS age
+                FROM installments WHERE status = 1 {$branches_in_query}
+            )
+            SELECT
+                i.id,
+                b.name AS branch_name,
+                c.last_name || ' ' || c.first_name || ' ' || c.middle_name AS customer_fullname,
+                CASE WHEN '{$date}'::date > NOW() THEN 0 ELSE LEAST(GREATEST(i.monthly_payment * LEAST(i.age + 1, i.period) - i.paid_amount, 0), i.monthly_payment) END AS debt_amount,
+                ABS(LEAST(GREATEST(i.monthly_payment * LEAST(i.age + 1, i.period) - i.paid_amount, 0), i.monthly_payment) - i.monthly_payment) as paid_amount
+            FROM installments_optimized i
+                LEFT JOIN branches b ON b.id = i.branch_id
+                LEFT JOIN customers c ON c.id = i.customer_id
+            WHERE i.starts_in + (i.age || ' month')::interval = '{$date}'::date
+              AND i.age BETWEEN 0 AND i.period - 1
+            ORDER BY i.id
         ");
     }
 
