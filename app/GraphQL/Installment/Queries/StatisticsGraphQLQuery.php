@@ -9,7 +9,6 @@ use App\Services\Installment\InstallmentService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
@@ -22,12 +21,7 @@ class StatisticsGraphQLQuery extends Query
 
     private array $_branches;
 
-    private InstallmentService $installmentService;
-
-    public function __construct(InstallmentService $installmentService)
-    {
-        $this->installmentService = $installmentService;
-    }
+    public function __construct(private readonly InstallmentService $installmentService) {}
 
     public function type(): Type
     {
@@ -69,10 +63,6 @@ class StatisticsGraphQLQuery extends Query
     {
         $this->_branches = isset($args['branch_id']) ? [$args['branch_id']] : $this->_branches;
 
-        return $this->installmentService->getStatistics(
-            Carbon::createFromFormat('Y-m-d', $args['from']),
-            Carbon::createFromFormat('Y-m-d', $args['to']),
-            $this->_branches
-        );
+        return $this->installmentService->getStatisticsForRange($args['from'], $args['to'], $this->_branches);
     }
 }
