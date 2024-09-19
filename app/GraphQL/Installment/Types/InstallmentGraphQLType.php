@@ -138,6 +138,10 @@ class InstallmentGraphQLType extends GraphQLType
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Installment $root) => $root->initial_fee,
             ],
+            'is_paid_initial_fee' => [
+                'type' => Type::nonNull(Type::boolean()),
+                'resolve' => fn (Installment $root) => $root->isPaidInitialFee(),
+            ],
             'sms_notify' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (Installment $root) => $root->sms_notify,

@@ -270,6 +270,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     description
                     id
                     initial_fee
+                    is_paid_initial_fee
                     is_blacklist
                     next_pay_date
                     period
@@ -529,6 +530,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     'description',
                     'id',
                     'initial_fee',
+                    'is_paid_initial_fee',
                     'is_blacklist',
                     'next_pay_date',
                     'period',
@@ -661,6 +663,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installment->description, $response->json('data.singleInstallment.description'));
         $this->assertEquals($installment->id, $response->json('data.singleInstallment.id'));
         $this->assertEquals($installment->initial_fee, $response->json('data.singleInstallment.initial_fee'));
+        $this->assertEquals($installment->isPaidInitialFee(), $response->json('data.singleInstallment.is_paid_initial_fee'));
         $this->assertEquals($installment->is_blacklist, $response->json('data.singleInstallment.is_blacklist'));
         $this->assertEquals($installment->period, $response->json('data.singleInstallment.period'));
         $this->assertEquals($installment->sms_notify, $response->json('data.singleInstallment.sms_notify'));
@@ -803,7 +806,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
             $this->assertNotNull($transactionResponse);
             $this->assertEquals($transaction->admin_id, $transactionResponse['admin_id']);
             $this->assertEquals($transaction->amount, $transactionResponse['amount']);
-            $this->assertEquals($transaction->installment->branch_id, $transactionResponse['branch_id']);
+            $this->assertEquals($transaction->branch_id, $transactionResponse['branch_id']);
             $this->assertEquals($transaction->card_id, $transactionResponse['card_id']);
             $this->assertEquals($transaction->created_at->timestamp, $transactionResponse['created_at']);
             $this->assertEquals($transaction->customer_id, $transactionResponse['customer_id']);

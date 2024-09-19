@@ -28,12 +28,12 @@ class TransactionGraphQLType extends GraphQLType
                 'resolve' => fn (Transaction $root) => $root->id,
             ],
             'branch_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Transaction $root) => $root->installment->branch_id,
+                'type' => Type::int(),
+                'resolve' => fn (Transaction $root) => $root->branch_id,
             ],
             'branch' => [
-                'type' => Type::nonNull(GraphQL::type(BranchGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Transaction $root) => $root->installment->branch,
+                'type' => GraphQL::type(BranchGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Transaction $root) => $root->branch,
             ],
             'admin_id' => [
                 'type' => Type::int(),
