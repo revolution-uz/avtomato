@@ -122,4 +122,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(CompanyAdmin::class, 'admin_id', 'id');
     }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }

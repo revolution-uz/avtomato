@@ -136,7 +136,7 @@ class SingleTransactionTypeGraphQLQueryTest extends GraphQLTestCase
 
         $this->assertEquals(5, count($response->json('data.singleTransactionType.transactions')));
         $this->assertEquals($transactionType->transactions[0]->id, $response->json('data.singleTransactionType.transactions.0.id'));
-        $this->assertEquals($transactionType->transactions[0]->installment->branch_id, $response->json('data.singleTransactionType.transactions.0.branch_id'));
+        $this->assertEquals($transactionType->transactions[0]->branch_id, $response->json('data.singleTransactionType.transactions.0.branch_id'));
         $this->assertEquals($transactionType->transactions[0]->admin_id, $response->json('data.singleTransactionType.transactions.0.admin_id'));
         $this->assertEquals($transactionType->transactions[0]->installment_id, $response->json('data.singleTransactionType.transactions.0.installment_id'));
         $this->assertEquals($transactionType->transactions[0]->customer_id, $response->json('data.singleTransactionType.transactions.0.customer_id'));

@@ -80,6 +80,9 @@ class InstallmentService
                 throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
             }
         }
+
+        $installment->any_card_charge = $any_card;
+
         $installment->saveOrFail();
 
         return $installment;
