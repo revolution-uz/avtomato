@@ -44,7 +44,7 @@ class StatisticsByBranchesGraphQLQuery extends Query
                 'rules' => [
                     'nullable',
                     'array',
-                    'exists:installments,branch_id',
+                    'exists:transactions,branch_id',
                     Rule::exists('branches', 'id')->whereNull('deleted_at')->when($this->_branches, fn ($q) => $q->where('id', $this->_branches)),
                 ],
             ],

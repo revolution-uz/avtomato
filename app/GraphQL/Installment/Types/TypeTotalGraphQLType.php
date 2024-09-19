@@ -17,7 +17,7 @@ class TypeTotalGraphQLType extends GraphQLType
     {
         return [
             'type' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::string()),
                 'resolve' => function (array $root) {
                     return $root['type'];
                 },

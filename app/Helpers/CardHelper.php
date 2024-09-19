@@ -14,7 +14,9 @@ class CardHelper
         if (is_null($cardNumber)) {
             return false;
         }
-
+        if (str_starts_with($cardNumber, '9860')) {
+            return false;
+        }
         if (! is_numeric($cardNumber)) {
             return true;
         }
