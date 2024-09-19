@@ -2,12 +2,12 @@
 
 namespace App\Services\Installment;
 
+use App\Enums\Company\CardTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
-use App\Helpers\CardHelper;
 use App\Helpers\Utilities;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
@@ -222,7 +222,7 @@ class InstallmentService
             $type = $transaction->transactionType->id;
             /* @phpstan-ignore-next-line **/
             $totalAmount = $transaction->total_amount;
-            $cardType = CardHelper::getNameByCardNumber($transaction->card_pan);
+            $cardType = CardTypeEnum::getCardType($transaction->card_pan);
             //            dd($transaction->branch);
             if (! isset($statistics[$branchId])) {
                 $statistics[$branchId] = [
@@ -246,9 +246,9 @@ class InstallmentService
 
             $statistics[$branchId]['total_amount_by_branch'] += $totalAmount;
 
-            if ($cardType === 'UZCARD') {
+            if ($cardType === CardTypeEnum::UZCARD) {
                 $statistics[$branchId]['uzcard_total_amount'] += $totalAmount;
-            } elseif ($cardType === 'HUMO') {
+            } elseif ($cardType === CardTypeEnum::HUMO) {
                 $statistics[$branchId]['humo_total_amount'] += $totalAmount;
             }
 
@@ -275,13 +275,13 @@ class InstallmentService
         $uzcardTotalAmount = array_sum(array_column($statistics, 'uzcard_total_amount'));
         $humoTotalAmount = array_sum(array_column($statistics, 'humo_total_amount'));
 
-        $formattedTotalAmountByType['UZCARD'] = [
-            'type' => 'UZCARD',
+        $formattedTotalAmountByType[CardTypeEnum::UZCARD->name] = [
+            'type' => CardTypeEnum::UZCARD->name,
             'total_amount' => $uzcardTotalAmount,
         ];
 
-        $formattedTotalAmountByType['HUMO'] = [
-            'type' => 'HUMO',
+        $formattedTotalAmountByType[CardTypeEnum::HUMO->name] = [
+            'type' => CardTypeEnum::HUMO->name,
             'total_amount' => $humoTotalAmount,
         ];
 
