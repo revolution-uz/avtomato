@@ -27,7 +27,7 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
         Installment::query()->forceDelete();
         Transaction::query()->forceDelete();
         $this->_installment = Installment::factory()->create();
-        $this->_transaction = Transaction::factory()->create(['installment_id' => $this->_installment->id]);
+        $this->_transaction = Transaction::factory()->create(['installment_id' => $this->_installment->id, 'branch_id' => $this->_installment->branch_id]);
     }
 
     #[Test]
@@ -66,7 +66,7 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
 
         $branches = Branch::factory()->count(2)->create();
         $this->_installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
-        $this->_transaction = Transaction::factory()->create(['installment_id' => $this->_installment->id]);
+        $this->_transaction = Transaction::factory()->create(['installment_id' => $this->_installment->id, 'branch_id' => $this->_installment->branch_id]);
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this
@@ -295,12 +295,12 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
     {
 
         $transaction = $this->_transaction;
-        $this->assertEquals($transaction->installment->branch_id, $response->json('data.singleTransaction.branch_id'));
-        $this->assertEquals($transaction->installment->branch->id, $response->json('data.singleTransaction.branch.id'));
-        $this->assertEquals($transaction->installment->branch->name, $response->json('data.singleTransaction.branch.name'));
-        $this->assertEquals($transaction->installment->branch->address, $response->json('data.singleTransaction.branch.address'));
-        $this->assertEquals($transaction->installment->branch->created_at->timestamp, $response->json('data.singleTransaction.branch.created_at'));
-        $this->assertEquals($transaction->installment->branch->updated_at->timestamp, $response->json('data.singleTransaction.branch.updated_at'));
+        $this->assertEquals($transaction->branch_id, $response->json('data.singleTransaction.branch_id'));
+        $this->assertEquals($transaction->branch->id, $response->json('data.singleTransaction.branch.id'));
+        $this->assertEquals($transaction->branch->name, $response->json('data.singleTransaction.branch.name'));
+        $this->assertEquals($transaction->branch->address, $response->json('data.singleTransaction.branch.address'));
+        $this->assertEquals($transaction->branch->created_at->timestamp, $response->json('data.singleTransaction.branch.created_at'));
+        $this->assertEquals($transaction->branch->updated_at->timestamp, $response->json('data.singleTransaction.branch.updated_at'));
 
         // this installment
 

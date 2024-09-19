@@ -127,6 +127,7 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successCheckForPermission()
     {
+        /** @var Role $role */
         $role = Role::factory()->create();
         $simpleAdmin = $this->createSimpleAdminUser($role->id);
         $permission = Permission::query()->where('slug', PermissionEnum::TRANSACTION_EDIT)->firstOrFail();
@@ -199,7 +200,7 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
         }
 
         $this->assertEquals($this->_transaction->id, $response->json('data.updateTransaction.id'));
-        $this->assertEquals($this->_transaction->installment->branch_id, $response->json('data.updateTransaction.branch_id'));
+        $this->assertEquals($this->_transaction->branch_id, $response->json('data.updateTransaction.branch_id'));
         $this->assertEquals($this->_transaction->admin_id, $response->json('data.updateTransaction.admin_id'));
         $this->assertEquals($this->_transaction->installment_id, $response->json('data.updateTransaction.installment_id'));
         $this->assertEquals($this->_transaction->customer_id, $response->json('data.updateTransaction.customer_id'));
