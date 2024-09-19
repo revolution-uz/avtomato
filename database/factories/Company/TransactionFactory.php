@@ -26,9 +26,15 @@ class TransactionFactory extends Factory
             'transaction_type_id' => TransactionType::factory(),
             'external_id' => $this->faker->unique()->numberBetween(1000, 9999),
             'amount' => $this->faker->randomFloat(),
+            'branch_id' => $this->branch(),
             'paid_at' => Carbon::now(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
+    }
+
+    public function branch()
+    {
+        return Branch::factory(5)->create()->random()->id;
     }
 }
