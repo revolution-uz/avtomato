@@ -9,6 +9,7 @@ use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Testing\TestResponse;
@@ -18,7 +19,6 @@ use Tests\GraphQL\GraphQLTestCase;
 class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
-
 
     private Carbon $_carbon;
 
@@ -39,7 +39,9 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
             'status' => InstallmentStatusEnum::ACTIVE,
         ];
 
-        Transaction::factory(10)->create();
+        Transaction::factory(10)->create([
+            'transaction_type_id' => TransactionType::query()->inRandomOrder()->firstOrFail()->id,
+        ]);
     }
 
     #[Test]
