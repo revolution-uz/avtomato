@@ -64,7 +64,7 @@ class ConfirmCardGraphQLMutation extends Mutation
         /** @var AtmosConfirmCardResponseDTO $cardServiceResponse */
         [$card, $cardServiceResponse] = $this->customerCardService->confirmCard($args['customer_id'], Arr::except($args, ['customer_id']));
 
-        if ($cardServiceResponse->result->isSucces()) {
+        if ($cardServiceResponse->result->isSuccess()) {
             return $card;
         }
         throw ValidationException::withMessages(['otp' => $cardServiceResponse->result->description]);

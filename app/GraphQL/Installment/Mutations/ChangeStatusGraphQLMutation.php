@@ -24,7 +24,6 @@ class ChangeStatusGraphQLMutation extends Mutation
 
     public function __construct(
         protected InstallmentService $installmentService
-
     ) {}
 
     public function args(): array

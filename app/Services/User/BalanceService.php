@@ -34,12 +34,9 @@ readonly class BalanceService
         ]);
     }
 
-    public function isBalanceEnoughForFeature(FeatureEnum $featureName): bool
+    public function isBalanceEnoughForFeature(): bool
     {
-        /** @var Feature $feature */
-        $feature = Feature::query()->where('name', $featureName)->firstOrFail();
-
-        return $this->getBalance() >= $feature->chargeable_amount;
+        return $this->getBalance() > -100000;
     }
 
     public function getBalance(): int
@@ -66,13 +63,13 @@ readonly class BalanceService
             'User is filling his own balance'
         );
 
-        if (! $createPayResponseDTO->result->isSucces()) {
+        if (! $createPayResponseDTO->result->isSuccess()) {
             throw new AtmosException($createPayResponseDTO->result->description);
         }
 
         $preConfirmPayResponseDTO = $this->atmosBalanceClient->preConfirmPaymentWithOneTimeSms($createPayResponseDTO->transaction_id, $number, $expiry);
 
-        if (! $preConfirmPayResponseDTO->result->isSucces()) {
+        if (! $preConfirmPayResponseDTO->result->isSuccess()) {
             throw new AtmosException($preConfirmPayResponseDTO->result->description);
         }
 
@@ -86,7 +83,7 @@ readonly class BalanceService
             $balanceFundConfirmDTO->otp
         );
 
-        if (! $confirmPayResponseDTO->result->isSucces()) {
+        if (! $confirmPayResponseDTO->result->isSuccess()) {
             throw new AtmosException($confirmPayResponseDTO->result->description);
         }
 

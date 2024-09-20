@@ -159,11 +159,11 @@ class InstallmentService
                         INNER JOIN date_series ds
                             ON starts_in + (ROUND(DATE_PART('month', AGE(ds.date::date, starts_in)) + DATE_PART('day', AGE(ds.date::date, starts_in)) / 30) || ' month')::interval = ds.date::date
                                 AND ROUND(DATE_PART('month', AGE(ds.date::date, starts_in)) + DATE_PART('day', AGE(ds.date::date, starts_in)) / 30) BETWEEN 0 AND period - 1
-                    WHERE status = 1 {$branches_in_query}
+                    WHERE status IN (1,2) {$branches_in_query}
                 ),
                 installment_calculations AS (
                     SELECT payment_date,
-                        CASE WHEN payment_date > NOW() THEN 0 ELSE LEAST(debt_amount, monthly_payment) END AS debt_amount,
+                        LEAST(debt_amount, monthly_payment) AS debt_amount,
                         ABS(LEAST(debt_amount, monthly_payment) - monthly_payment) as paid_amount
                     FROM installment_precalculations
                 )
@@ -186,13 +186,13 @@ class InstallmentService
                     id, amount, initial_fee, percent, period, paid_amount, starts_in, branch_id, customer_id,
                     (amount - initial_fee) * (percent / 100 + 1) / period AS monthly_payment,
                     ROUND(DATE_PART('month', AGE('{$date}'::date, starts_in)) + DATE_PART('day', AGE('{$date}'::date, starts_in)) / 30) AS age
-                FROM installments WHERE status = 1 {$branches_in_query}
+                FROM installments WHERE status IN (1,2) {$branches_in_query}
             )
             SELECT
                 i.id,
                 b.name AS branch_name,
                 c.last_name || ' ' || c.first_name || ' ' || c.middle_name AS customer_fullname,
-                CASE WHEN '{$date}'::date > NOW() THEN 0 ELSE LEAST(GREATEST(i.monthly_payment * LEAST(i.age + 1, i.period) - i.paid_amount, 0), i.monthly_payment) END AS debt_amount,
+                LEAST(GREATEST(i.monthly_payment * LEAST(i.age + 1, i.period) - i.paid_amount, 0), i.monthly_payment) AS debt_amount,
                 ABS(LEAST(GREATEST(i.monthly_payment * LEAST(i.age + 1, i.period) - i.paid_amount, 0), i.monthly_payment) - i.monthly_payment) as paid_amount
             FROM installments_optimized i
                 LEFT JOIN branches b ON b.id = i.branch_id
@@ -297,7 +297,7 @@ class InstallmentService
 
     private function withdrawAutoCharge(Installment $installment): bool
     {
-        if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
+        if ($this->balanceService->isBalanceEnoughForFeature()) {
             $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
 
             return true;
@@ -308,7 +308,7 @@ class InstallmentService
 
     private function withdrawAnyCardCharge(Installment $installment): bool
     {
-        if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)) {
+        if ($this->balanceService->isBalanceEnoughForFeature()) {
             $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment);
 
             return true;

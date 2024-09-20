@@ -13,7 +13,7 @@ class AtmosTransactionInfoResponseDTO extends Data
         public ?AtmosTransactionInfoPayloadDTO $payload
     ) {}
 
-    public function isSucces(): bool
+    public function isSuccess(): bool
     {
         return (int) $this->code == 200;
     }
