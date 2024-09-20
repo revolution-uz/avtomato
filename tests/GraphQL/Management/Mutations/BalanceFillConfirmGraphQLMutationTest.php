@@ -127,7 +127,7 @@ class BalanceFillConfirmGraphQLMutationTest extends GraphQLTestCase
                     amount
                     phone_number
                     external_transaction_id
-                    card_pan
+                    card_number
                     created_at
                 }
             }
@@ -147,7 +147,7 @@ class BalanceFillConfirmGraphQLMutationTest extends GraphQLTestCase
                     'admin_id',
                     'phone_number',
                     'external_transaction_id',
-                    'card_pan',
+                    'card_number',
                     'created_at',
                 ],
             ],
@@ -162,7 +162,7 @@ class BalanceFillConfirmGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($balanceFund->amount, $response->json('data.balanceFillConfirm.amount'));
         $this->assertEquals($balanceFund->phone_number, $response->json('data.balanceFillConfirm.phone_number'));
         $this->assertEquals($balanceFund->external_transaction_id, $response->json('data.balanceFillConfirm.external_transaction_id'));
-        $this->assertEquals($balanceFund->card_pan, $response->json('data.balanceFillConfirm.card_pan'));
+        $this->assertEquals($balanceFund->card_number, $response->json('data.balanceFillConfirm.card_number'));
         $this->assertEquals($balanceFund->created_at->timestamp, $response->json('data.balanceFillConfirm.created_at'));
     }
 }

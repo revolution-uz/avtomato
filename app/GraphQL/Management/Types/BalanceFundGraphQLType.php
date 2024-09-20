@@ -43,9 +43,9 @@ class BalanceFundGraphQLType extends GraphQLType
                 'type' => Type::string(),
                 'resolve' => fn (BalanceFund $root) => $root->external_transaction_id,
             ],
-            'card_pan' => [
+            'card_number' => [
                 'type' => Type::string(),
-                'resolve' => fn (BalanceFund $root) => $root->card_pan,
+                'resolve' => fn (BalanceFund $root) => $root->card_number,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
