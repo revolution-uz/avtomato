@@ -168,7 +168,7 @@ class AtmosCardClient extends BaseAtmosClient
             'transaction_id' => $transaction_id,
         ];
 
-        if (! $otp) {
+        if ($otp) {
             $data['otp'] = $otp;
         }
 

@@ -107,17 +107,17 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         $expectedData = [
             [
                 'id' => 1,
-                'debt_amount' => 0,
+                'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
                 'id' => 2,
-                'debt_amount' => 0,
+                'debt_amount' => 245000,
                 'paid_amount' => 100000,
             ],
             [
                 'id' => 3,
-                'debt_amount' => 0,
+                'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
         ];

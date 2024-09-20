@@ -47,7 +47,7 @@ class AtmosService
     public function reversePayment(Transaction $transaction): bool
     {
         $response = $this->atmosCardClient->reversePayment($transaction->external_id);
-        if ($response->result->isSucces()) {
+        if ($response->result->isSuccess()) {
             $installment = $transaction->installment;
             $installment->paid_amount -= $transaction->amount;
             $installment->saveOrFail();
@@ -69,7 +69,7 @@ class AtmosService
             return [false, 'The card was binded with installment'];
         }
         $response = $this->atmosCardClient->removeCard($card->external_id);
-        if ($response->result->isSucces()) {
+        if ($response->result->isSuccess()) {
             $card->delete();
         }
 
@@ -89,7 +89,7 @@ class AtmosService
         ]);
 
         $createPayResponseDTO = $this->atmosCardClient->createPayment($transactionAttempt->id, $amount, $transactionAttempt->id);
-        if (! $createPayResponseDTO->result->isSucces()) {
+        if (! $createPayResponseDTO->result->isSuccess()) {
             $transactionAttempt->failed();
 
             return;
@@ -97,7 +97,7 @@ class AtmosService
 
         $preConfirmPayResponseDTO = $this->atmosCardClient->preConfirmPayment($card->external_id, $createPayResponseDTO->transaction_id);
 
-        if (! $preConfirmPayResponseDTO->result->isSucces()) {
+        if (! $preConfirmPayResponseDTO->result->isSuccess()) {
             $transactionAttempt->failed();
 
             return;
@@ -105,7 +105,7 @@ class AtmosService
 
         $confirmPayResponseDTO = $this->atmosCardClient->confirmPayment($createPayResponseDTO->transaction_id);
 
-        if (! $confirmPayResponseDTO->result->isSucces()) {
+        if (! $confirmPayResponseDTO->result->isSuccess()) {
             $transactionAttempt->failed();
 
             return;
@@ -144,7 +144,7 @@ class AtmosService
         $ext_id = Utilities::generateIdByTenancy($transactionAttempt->id);
 
         $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment_id, $amount);
-        if (! $createPayResponseDTO->isSucces()) {
+        if (! $createPayResponseDTO->isSuccess()) {
             $transactionAttempt->failed();
 
             return;
@@ -152,7 +152,7 @@ class AtmosService
 
         $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $createPayResponseDTO->payload->transaction_id);
 
-        if (! $confirmWithPinfl->isSucces()) {
+        if (! $confirmWithPinfl->isSuccess()) {
             $transactionAttempt->failed();
 
             return;

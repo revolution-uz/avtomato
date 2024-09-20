@@ -181,22 +181,22 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ],
             [
                 'date' => $from->addDay()->timestamp,
-                'debt_amount' => 0,
+                'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
                 'date' => $from->addDay()->timestamp,
-                'debt_amount' => 0,
+                'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
                 'date' => $from->addDay()->timestamp,
-                'debt_amount' => 0,
+                'debt_amount' => 345000,
                 'paid_amount' => 0,
             ],
             [
                 'date' => $from->addDay()->timestamp,
-                'debt_amount' => 0,
+                'debt_amount' => 935000,
                 'paid_amount' => 100000,
             ],
         ];
@@ -343,7 +343,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ],
             [
                 'date' => $from->addDay()->timestamp,
-                'debt_amount' => 0,
+                'debt_amount' => 172500,
                 'paid_amount' => 172500,
             ],
         ];

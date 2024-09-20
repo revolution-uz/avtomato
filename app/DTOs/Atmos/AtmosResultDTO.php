@@ -11,7 +11,7 @@ class AtmosResultDTO extends BaseScoringRequest
         public ?string $description,
     ) {}
 
-    public function isSucces(): bool
+    public function isSuccess(): bool
     {
         return $this->code == 'OK';
     }

@@ -1,4 +1,3 @@
-version: "3.8"
 services:
     avtomato-redis:
         image: redis:alpine

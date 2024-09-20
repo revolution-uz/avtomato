@@ -338,6 +338,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                                 starts_in
                                 next_pay_date
                             }
+                            is_initial_fee
                             customer_id
                             customer {
                                 id
@@ -459,6 +460,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                                 'starts_in',
                                 'next_pay_date',
                             ],
+                            'is_initial_fee',
                             'customer_id',
                             'customer' => [
                                 'id',

@@ -36,7 +36,7 @@ readonly class CustomerCardService
 
                 return [$oldCard, $customResponse];
             } else {
-                if (! $response->result->isSucces()) {
+                if (! $response->result->isSuccess()) {
                     throw new BadRequestHttpException($response->result->description);
                 }
                 $newCard = $this->createOrGetCard($customerId, $request);
@@ -90,7 +90,7 @@ readonly class CustomerCardService
         }
 
         $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request['transaction_id'], $request['otp']);
-        if ($atmosConfirmCardDto->result->isSucces()) {
+        if ($atmosConfirmCardDto->result->isSuccess()) {
             $card->fillData($atmosConfirmCardDto->data, CardStatusEnum::ACTIVE);
         }
 
