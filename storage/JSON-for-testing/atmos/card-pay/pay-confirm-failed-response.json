@@ -1,0 +1,9 @@
+{
+  "result": {
+    "code": "STPIMS-ERR-098",
+    "description": "OTP код указан неверно"
+  },
+  "store_transaction": null,
+  "ofd_url": null,
+  "ofd_url_commission": null
+}

@@ -146,12 +146,31 @@ class AtmosCardClient extends BaseAtmosClient
     /**
      * @throws AtmosException
      */
-    public function confirmPayment(string $transaction_id): AtmosConfirmPaymentResponseDTO
+    public function preConfirmPaymentWithOneTimeSms(string $transaction_id, string $card_number, string $expiry): AtmosPreConfirmPaymentResponseDTO
+    {
+        $data = [
+            'card_number' => $card_number,
+            'expiry' => $expiry,
+            'store_id' => $this->getStoreId(),
+            'transaction_id' => $transaction_id,
+        ];
+
+        return AtmosPreConfirmPaymentResponseDTO::from($this->makeRequest(self::PAYMENT_PRE_CONFIRM, $data));
+    }
+
+    /**
+     * @throws AtmosException
+     */
+    public function confirmPayment(string $transaction_id, ?string $otp = null): AtmosConfirmPaymentResponseDTO
     {
         $data = [
             'store_id' => $this->getStoreId(),
             'transaction_id' => $transaction_id,
         ];
+
+        if (! $otp) {
+            $data['otp'] = $otp;
+        }
 
         return AtmosConfirmPaymentResponseDTO::from($this->makeRequest(self::PAYMENT_CONFIRM, $data));
     }

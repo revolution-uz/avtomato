@@ -21,51 +21,35 @@ class BalanceFundGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => function (BalanceFund $root) {
-                    return $root->id;
-                },
+                'resolve' => fn (BalanceFund $root) => $root->id,
             ],
             'admin_id' => [
                 'type' => Type::int(),
-                'resolve' => function (BalanceFund $root) {
-                    return $root->admin_id;
-                },
+                'resolve' => fn (BalanceFund $root) => $root->admin_id,
             ],
             'admin' => [
                 'type' => GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => function (BalanceFund $root) {
-                    return $root->admin;
-                },
+                'resolve' => fn (BalanceFund $root) => $root->admin,
             ],
             'amount' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => function (BalanceFund $root) {
-                    return $root->amount;
-                },
+                'resolve' => fn (BalanceFund $root) => $root->amount,
             ],
             'phone_number' => [
                 'type' => Type::string(),
-                'resolve' => function (BalanceFund $root) {
-                    return $root->phone_number;
-                },
+                'resolve' => fn (BalanceFund $root) => $root->phone_number,
             ],
             'external_transaction_id' => [
                 'type' => Type::string(),
-                'resolve' => function (BalanceFund $root) {
-                    return $root->external_transaction_id;
-                },
+                'resolve' => fn (BalanceFund $root) => $root->external_transaction_id,
             ],
-            'card_number' => [
+            'card_pan' => [
                 'type' => Type::string(),
-                'resolve' => function (BalanceFund $root) {
-                    return $root->card_number;
-                },
+                'resolve' => fn (BalanceFund $root) => $root->card_pan,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => function (BalanceFund $root) {
-                    return $root->created_at->timestamp;
-                },
+                'resolve' => fn (BalanceFund $root) => $root->created_at->timestamp,
             ],
         ];
     }

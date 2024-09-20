@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Traits\LogsActivityDirtyOnlyTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $terminal_id
  * @property string|null $merchant_id
  * @property string|null $card_number
+ * @property string|null $card_pan
  * @property int|null $admin_id
  * @property Carbon $created_at
  * @property CompanyAdmin $admin
@@ -46,5 +48,10 @@ class BalanceFund extends Model
     public function admin(): BelongsTo
     {
         return $this->belongsTo(CompanyAdmin::class);
+    }
+
+    public function cardPan(): Attribute
+    {
+        return Attribute::make(get: fn () => substr_replace($this->card_number, '******', 6, 6));
     }
 }

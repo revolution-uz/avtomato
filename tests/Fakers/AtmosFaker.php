@@ -42,14 +42,18 @@ class AtmosFaker
         }
     }
 
-    public static function preConfirmPayment()
+    public static function preConfirmPayment(): void
     {
         self::fakeResponse(AtmosCardClient::PAYMENT_PRE_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-pre-confirm-response.json');
     }
 
-    public static function confirmPayment()
+    public static function confirmPayment(bool $is_failed = false): void
     {
-        self::fakeResponse(AtmosCardClient::PAYMENT_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-confirm-response.json');
+        if (! $is_failed) {
+            self::fakeResponse(AtmosCardClient::PAYMENT_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-confirm-response.json');
+        } else {
+            self::fakeResponse(AtmosCardClient::PAYMENT_CONFIRM, '../JSON-for-testing/atmos/card-pay/pay-confirm-failed-response.json');
+        }
     }
 
     public static function fakeResponse(string $path, string $jsonPath, $status = 200): void
@@ -59,7 +63,7 @@ class AtmosFaker
         ]);
     }
 
-    public static function reversePayment()
+    public static function reversePayment(): void
     {
         self::fakeResponse(AtmosCardClient::PAYMENT_CANCEL, '../JSON-for-testing/atmos/card-pay/pay-reverse.json');
     }

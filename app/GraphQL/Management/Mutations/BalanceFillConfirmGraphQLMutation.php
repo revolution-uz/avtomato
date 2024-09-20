@@ -8,6 +8,7 @@ use App\Exceptions\AtmosException;
 use App\GraphQL\Management\Types\BalanceFundGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
+use App\Models\Company\BalanceFund;
 use App\Services\User\BalanceService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -37,25 +38,10 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
                 'name' => 'otp',
                 'type' => Type::nonNull(Type::string()),
             ],
-            'amount' => [
-                'name' => 'amount',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => 'required|int',
-            ],
             'number' => [
                 'name' => 'number',
                 'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
-                'rules' => 'required|string',
-            ],
-            'expiry' => [
-                'name' => 'expiry',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|size:4|regex:/^[0-9]{4}$/',
-            ],
-            'phone' => [
-                'name' => 'phone',
-                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
-                'rules' => 'nullable|string',
+                'rules' => 'required|integer|digits:16',
             ],
         ];
     }
@@ -70,7 +56,7 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
         return RbacHelper::checkPermission(PermissionEnum::BALANCE_FUND_CONFIRM);
     }
 
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): BalanceFund
     {
         try {
             return $this->balanceService->fundBalance(BalanceFundConfirmDTO::from($args));
