@@ -2,19 +2,22 @@
 
 namespace Tests\GraphQL\Management\Mutations;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\FeatureEnum;
-use App\Models\BaseFeature;
-use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\Feature;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
+use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\AtmosFaker;
-use Tests\Fakers\SmsFaker;
 use Tests\GraphQL\GraphQLTestCase;
 
 class BalanceFillGraphQLMutationTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
+
+    private array $_input = ['number' => 8600332914249390, 'expiry' => '2509', 'amount' => 1000];
 
     protected function setUp(): void
     {
@@ -31,48 +34,89 @@ class BalanceFillGraphQLMutationTest extends GraphQLTestCase
         ];
         $feature->saveOrFail();
 
-        $baseFeature = BaseFeature::query()->where('name', FeatureEnum::SMS)->firstOrFail();
-        $baseFeature->original_data = [
-            'provider' => 'sms_sayqal',
-            'username' => 'username',
-            'secret' => 'secret',
-        ];
-        $baseFeature->saveOrFail();
-
         AtmosFaker::getToken();
-        SmsFaker::sayqal();
     }
 
     #[Test]
     public function successBalanceFill()
     {
-        AtmosFaker::attachCard();
+        AtmosFaker::createPayment();
+        AtmosFaker::preConfirmPayment();
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.management'),
-                $this->buildGraphQLQuery(['number' => 9860082443467252, 'expiry' => '2808']),
-            );
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery($this->_input));
 
         $this->assertSuccessResponse($response);
-        $this->assertEquals(0, CardConfirmationSms::query()->count());
     }
 
     #[Test]
-    public function successBalanceFillWithAttachedCard()
+    public function errorBalanceFill()
     {
-        AtmosFaker::attachCard(true);
+        AtmosFaker::createPayment(true);
 
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery($this->_input));
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertNotNull('Ошибка', $response->json('errors.0.message'));
+    }
+
+    #[Test]
+    public function errorValidation()
+    {
+        // required errors
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.management'),
-                $this->buildGraphQLQuery(['number' => 9860082443467252, 'expiry' => '2808']),
+                $this->buildGraphQLQuery(['number' => null, 'expiry' => null, 'amount' => null])
             );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$number" of non-null type "BigInteger!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$expiry" of non-null type "String!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$amount" of non-null type "Int!" must not be null.'));
 
+        // validation errors
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery(array_merge($this->_input, ['number' => 987678, 'expiry' => 'iuhgg']))
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.digits', ['attribute' => 'number', 'digits' => 16]), $response->json('errors.0.extensions.validation.number.0'));
+        $this->assertEquals(trans('validation.digits', ['attribute' => 'expiry', 'digits' => 4]), $response->json('errors.0.extensions.validation.expiry.0'));
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        AtmosFaker::createPayment();
+        AtmosFaker::preConfirmPayment();
+
+        /** @var Role $role */
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::BALANCE_FUND_CREATE)->firstOrFail();
+
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery($this->_input));
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertNotNull('Unauthorized', $response->json('errors.0.message'));
+
+        $role->permissions()->attach($permission);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery($this->_input));
         $this->assertSuccessResponse($response);
-        $this->assertEquals(1, CardConfirmationSms::query()->count());
     }
 
     private function buildGraphQLQuery(array $variables = []): array
@@ -80,10 +124,9 @@ class BalanceFillGraphQLMutationTest extends GraphQLTestCase
         $query = [];
         $query['variables'] = $variables;
         $query['query'] = '
-            mutation BalanceFill($number: BigInteger!, $expiry: String!) {
-                balanceFill(number: $number, expiry: $expiry) {
+            mutation BalanceFill($number: BigInteger!, $expiry: String!, $amount: Int!) {
+                balanceFill(number: $number, expiry: $expiry, amount: $amount) {
                     transaction_id
-                    phone
                     result_code
                     result_description
                 }
@@ -101,7 +144,6 @@ class BalanceFillGraphQLMutationTest extends GraphQLTestCase
             'data' => [
                 'balanceFill' => [
                     'transaction_id',
-                    'phone',
                     'result_code',
                     'result_description',
                 ],

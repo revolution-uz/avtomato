@@ -2,9 +2,12 @@
 
 namespace Tests\GraphQL\Management\Mutations;
 
+use App\Enums\Company\Rbac\PermissionEnum;
+use App\Enums\FeatureEnum;
 use App\Models\Company\BalanceFund;
-use App\Models\Company\CardConfirmationSms;
-use Illuminate\Support\Facades\Http;
+use App\Models\Company\Feature;
+use App\Models\Company\Rbac\Permission;
+use App\Models\Company\Rbac\Role;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakers\AtmosFaker;
@@ -14,89 +17,44 @@ class BalanceFillConfirmGraphQLMutationTest extends GraphQLTestCase
 {
     protected bool $tenancy = true;
 
-    private array $_input = [
-        'transaction_id' => 1,
-        'amount' => 1000000,
-        'otp' => '123456',
-        'number' => '9860082443467252',
-        'expiry' => '2505',
-        'phone' => null,
-    ];
+    private array $_input = ['transaction_id' => 1, 'otp' => '111111', 'number' => 8600332914249390];
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        BalanceFund::query()->forceDelete();
+
+        $feature = Feature::findByName(FeatureEnum::ATMOS_CARD_PAY);
+        $feature->data = [
+            'username' => 'username',
+            'password' => 'password',
+            'store_id' => '1',
+            'expires_in' => 3600,
+            'access_token' => 'access_token',
+            'token_type' => 'token_type',
+        ];
+        $feature->saveOrFail();
+
         AtmosFaker::getToken();
-        AtmosFaker::createPayment();
-        AtmosFaker::preConfirmPayment();
+    }
+
+    #[Test]
+    public function successBalanceFillConfirm()
+    {
         AtmosFaker::confirmPayment();
-    }
-
-    #[Test]
-    public function successBalanceFillConfirmWithoutPhone()
-    {
-        AtmosFaker::confirmCard();
 
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.management'), $this->buildGraphQLQuery($this->_input));
 
-        $this->assertBalanceFillConfirmResponse($response);
-        $this->assertNull($response->json('data.balanceFillConfirm.phone_number'));
+        $this->assertSuccessResponse($response);
     }
 
     #[Test]
-    public function successBalanceFillConfirmWithPhone()
+    public function errorBalanceFillConfirmWithWrongOtp()
     {
-        AtmosFaker::confirmCard();
-
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.management'),
-                $this->buildGraphQLQuery(array_merge($this->_input, ['phone' => '+998900222222'])),
-            );
-
-        $this->assertBalanceFillConfirmResponse($response);
-        $this->assertEquals('+998900222222', $response->json('data.balanceFillConfirm.phone_number'));
-    }
-
-    #[Test]
-    public function successBalanceFillConfirmWithAttachedCard()
-    {
-        AtmosFaker::attachCard(true);
-
-        /** @var CardConfirmationSms $confirmationSms */
-        $confirmationSms = CardConfirmationSms::factory()->create();
-
-        $this->_input = array_merge($this->_input, ['otp' => $confirmationSms->code, 'phone' => $confirmationSms->phone]);
-
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.management'), $this->buildGraphQLQuery($this->_input));
-
-        $this->assertBalanceFillConfirmResponse($response);
-        $this->assertEquals($confirmationSms->phone, $response->json('data.balanceFillConfirm.phone_number'));
-    }
-
-    #[Test]
-    public function failBalanceFillConfirmWithAttachedCard()
-    {
-        Http::fake([
-            'https://partner.atmos.uz/partner/bind-card/confirm' => Http::response([
-                'result' => [
-                    'code' => 'STPIMS-ERR-080',
-                    'description' => 'Карта заблокирована по причине ввода неправильного PIN-кода',
-                ],
-                'data' => null,
-            ]),
-        ]);
-
-        /** @var CardConfirmationSms $confirmationSms */
-        $confirmationSms = CardConfirmationSms::factory()->create();
-
-        $this->_input = array_merge($this->_input, ['otp' => '999999', 'phone' => $confirmationSms->phone]);
+        AtmosFaker::confirmPayment(true);
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -105,7 +63,56 @@ class BalanceFillConfirmGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals('Карта заблокирована по причине ввода неправильного PIN-кода', $response->json('errors.0.extensions.validation.otp.0'));
+        $this->assertEquals('OTP код указан неверно', $response->json('errors.0.extensions.validation.otp.0'));
+    }
+
+    #[Test]
+    public function errorArgumentsValidation()
+    {
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery(['transaction_id' => null, 'otp' => null, 'number' => null])
+            );
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('Variable "$transaction_id" of non-null type "BigInteger!" must not be null.', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$otp" of non-null type "String!" must not be null.', $response->json('errors.1.message'));
+        $this->assertEquals('Variable "$number" of non-null type "BigInteger!" must not be null.', $response->json('errors.2.message'));
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery(array_merge($this->_input, ['number' => '87678232']))
+            );
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.digits', ['attribute' => 'number', 'digits' => 16]), $response->json('errors.0.extensions.validation.number.0'));
+    }
+
+    #[Test]
+    public function successCheckForPermission()
+    {
+        AtmosFaker::confirmPayment();
+
+        /** @var Role $role */
+        $role = Role::factory()->create();
+        $simpleAdmin = $this->createSimpleAdminUser($role->id);
+        $permission = Permission::query()->where('slug', PermissionEnum::BALANCE_FUND_CONFIRM)->firstOrFail();
+
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery($this->_input));
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertNotNull('Unauthorized', $response->json('errors.0.message'));
+
+        $role->permissions()->attach($permission);
+        $response = $this
+            ->actingAs($simpleAdmin)
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery($this->_input));
+        $this->assertSuccessResponse($response);
     }
 
     private function buildGraphQLQuery(array $variables = []): array
@@ -113,8 +120,8 @@ class BalanceFillConfirmGraphQLMutationTest extends GraphQLTestCase
         $query = [];
         $query['variables'] = $variables;
         $query['query'] = '
-            mutation BalanceFillConfirm($transaction_id: BigInteger!, $otp: String!, $amount: Int!, $number: BigInteger!, $expiry: String!, $phone: BigInteger) {
-                balanceFillConfirm(transaction_id: $transaction_id, otp: $otp, amount: $amount, number: $number, expiry: $expiry, phone: $phone) {
+            mutation BalanceFillConfirm($transaction_id: BigInteger!, $otp: String!, $number: BigInteger!) {
+                balanceFillConfirm(transaction_id: $transaction_id, otp: $otp, number: $number) {
                     id
                     admin_id
                     amount
@@ -129,7 +136,7 @@ class BalanceFillConfirmGraphQLMutationTest extends GraphQLTestCase
         return $query;
     }
 
-    private function assertBalanceFillConfirmResponse(TestResponse $response)
+    private function assertSuccessResponse(TestResponse $response)
     {
         $response->assertOk();
         $response->assertJsonIsObject();
@@ -138,7 +145,6 @@ class BalanceFillConfirmGraphQLMutationTest extends GraphQLTestCase
                 'balanceFillConfirm' => [
                     'id',
                     'admin_id',
-                    'amount',
                     'phone_number',
                     'external_transaction_id',
                     'card_number',
@@ -147,7 +153,10 @@ class BalanceFillConfirmGraphQLMutationTest extends GraphQLTestCase
             ],
         ]);
 
-        $balanceFund = BalanceFund::query()->find($response->json('data.balanceFillConfirm.id'));
+        $balanceFund = BalanceFund::query()->firstOrFail();
+        $this->assertEquals(2000, $balanceFund->amount);
+        $this->assertEquals($this->_input['number'], $balanceFund->card_number);
+
         $this->assertEquals($balanceFund->id, $response->json('data.balanceFillConfirm.id'));
         $this->assertEquals($balanceFund->admin_id, $response->json('data.balanceFillConfirm.admin_id'));
         $this->assertEquals($balanceFund->amount, $response->json('data.balanceFillConfirm.amount'));

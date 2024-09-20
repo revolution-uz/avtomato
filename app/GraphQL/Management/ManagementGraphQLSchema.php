@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Management;
 
-use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
 use App\GraphQL\Customer\Types\TagGraphQLType;
 use App\GraphQL\Customer\Types\TagInputGraphQLType;
 use App\GraphQL\Management\Mutations\AttachPermissionsToRoleGraphQLMutation;
@@ -53,6 +52,7 @@ use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AdminInputGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BalanceChargeGraphQLType;
+use App\GraphQL\Management\Types\BalanceFillDataGraphQLType;
 use App\GraphQL\Management\Types\BalanceFundGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
@@ -122,7 +122,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 AdminGraphQLType::class,
                 AdminInputGraphQLType::class,
                 AttachmentGraphQLType::class,
-                AttachCardDataGraphQLType::class,
+                BalanceFillDataGraphQLType::class,
                 BalanceFundGraphQLType::class,
                 BalanceChargeGraphQLType::class,
                 PermissionGraphQLType::class,
