@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
 
 readonly class BalanceService
 {
+    const int MIN_BALANCE_AMOUNT = -100000;
+
     public function __construct(
         private AtmosBalanceClient $atmosBalanceClient
     ) {}
@@ -34,18 +36,18 @@ readonly class BalanceService
         ]);
     }
 
-    public function isBalanceEnoughForFeature(): bool
+    public function isBalanceEnough(): bool
     {
-        return $this->getBalance() > -100000;
+        return $this->getBalance() > self::MIN_BALANCE_AMOUNT;
     }
 
     public function getBalance(): int
     {
         $balance = BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
 
-        if (tenant()->status == CompanyStatusEnum::ACTIVE and $balance <= -100000) {
+        if (tenant()->status == CompanyStatusEnum::ACTIVE and $balance <= self::MIN_BALANCE_AMOUNT) {
             tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
-        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance > -100000) {
+        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance > self::MIN_BALANCE_AMOUNT) {
             tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
         }
 

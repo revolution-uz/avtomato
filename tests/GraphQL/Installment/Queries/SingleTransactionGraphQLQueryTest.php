@@ -127,6 +127,7 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
                         created_at
                         updated_at
                     }
+                    is_initial_fee
                     customer_id
                     customer {
                         id
@@ -260,6 +261,7 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
                     'admin' => $admin,
                     'installment_id',
                     'installment' => $installment,
+                    'is_initial_fee',
                     'customer_id',
                     'customer' => $customer,
                     'transaction_type_id',
