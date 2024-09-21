@@ -213,7 +213,7 @@ class InstallmentService
             ->groupBy('branch_id', 'transaction_type_id')
             ->orderBy('branch_id')
             ->get();
-        $transactionTypes = TransactionType::all()->keyBy('id');
+        $transactionTypes = TransactionType::all();
         $statistics = [];
         $totalAmountByType = [];
         $fullTotalAmount = 0;
