@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\GraphQL\Management\Types\BranchGraphQLType;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -17,16 +18,10 @@ class BranchForStatisticsGraphQLType extends GraphQLType
     public function fields(): array
     {
         return [
-            'branch_id' => [
-                'type' => Type::nonNull(Type::int()),
+            'branch' => [
+                'type' => Type::nonNull(GraphQL::type(BranchGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => function (array $root) {
-                    return $root['branch_id'];
-                },
-            ],
-            'branch_name' => [
-                'type' => Type::nonNull(Type::string()),
-                'resolve' => function (array $root) {
-                    return $root['branch_name'];
+                    return $root['branch'];
                 },
             ],
             'types' => [
@@ -35,22 +30,10 @@ class BranchForStatisticsGraphQLType extends GraphQLType
                     return $root['types'];
                 },
             ],
-            'uzcard_total_amount' => [
-                'type' => Type::nonNull(Type::string()),
-                'resolve' => function (array $root) {
-                    return number_format($root['uzcard_total_amount'], 2, '.', '.');
-                },
-            ],
-            'humo_total_amount' => [
-                'type' => Type::nonNull(Type::string()),
-                'resolve' => function (array $root) {
-                    return number_format($root['humo_total_amount'], 2, '.', '.');
-                },
-            ],
             'total_amount_by_branch' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => function (array $root) {
-                    return number_format($root['total_amount_by_branch'], 2, '.', '.');
+                    return number_format($root['total_amount_by_branch'], 2, '.', ' ');
                 },
             ],
         ];

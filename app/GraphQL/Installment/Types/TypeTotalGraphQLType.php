@@ -16,16 +16,16 @@ class TypeTotalGraphQLType extends GraphQLType
     public function fields(): array
     {
         return [
-            'type' => [
+            'name' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => function (array $root) {
-                    return $root['type'];
+                    return $root['name'];
                 },
             ],
-            'total_amount' => [
+            'amount' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => function (array $root) {
-                    return number_format($root['total_amount'], 2, '.', '.');
+                    return number_format($root['amount'], 2, '.', ' ');
                 },
             ],
         ];
