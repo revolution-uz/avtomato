@@ -18,6 +18,12 @@ class BranchForStatisticsGraphQLType extends GraphQLType
     public function fields(): array
     {
         return [
+            'branch_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => function (array $root) {
+                    return $root['branch_id'];
+                },
+            ],
             'branch' => [
                 'type' => Type::nonNull(GraphQL::type(BranchGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => function (array $root) {

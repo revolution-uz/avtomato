@@ -154,6 +154,7 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
                   StatisticsByBranches(branch_ids: $branch_ids, date: $date) {
                   full_total_amount
                   branches {
+                        branch_id
                         branch {
                             id
                             name
@@ -185,6 +186,7 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
                     'full_total_amount',
                     'branches' => [
                         '*' => [
+                            'branch_id',
                             'branch' => [
                                 'id',
                                 'name',

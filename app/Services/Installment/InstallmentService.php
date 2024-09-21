@@ -229,6 +229,7 @@ class InstallmentService
             $totalAmount = $transaction->total_amount;
             if (! isset($statistics[$branchId])) {
                 $statistics[$branchId] = [
+                    'branch_id' => $branchId,
                     'branch' => $transaction->branch,
                     'types' => [],
                     'total_amount_by_branch' => 0,
