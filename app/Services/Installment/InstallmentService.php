@@ -245,7 +245,7 @@ class InstallmentService
             $statistics[$branchId]['types'][$type]['amount'] += $totalAmount;
 
             $statistics[$branchId]['total_amount_by_branch'] += $totalAmount;
-            if (! isset($totalAmountByType)) {
+            if (! isset($totalAmountByType[$type])) {
                 $totalAmountByType[$type] = 0;
             }
             $totalAmountByType[$type] += $totalAmount;
