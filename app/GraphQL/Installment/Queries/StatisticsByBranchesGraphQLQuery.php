@@ -63,7 +63,7 @@ class StatisticsByBranchesGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $this->_branches = isset($args['branch_id']) ? $args['branch_ids'] : $this->_branches;
+        $this->_branches = $args['branch_ids'] ?? $this->_branches;
         $date = isset($args['date']) ? Carbon::createFromFormat('Y-m-d', $args['date']) : null;
 
         return $this->installmentService->statisticsByBranches(

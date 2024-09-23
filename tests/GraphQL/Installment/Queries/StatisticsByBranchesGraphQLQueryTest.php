@@ -141,7 +141,7 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessResponse($response);
         $branchInResult = $response->json('data.StatisticsByBranches.branches');
         $this->assertCount(1, $branchInResult);
-        $this->assertEquals($branches[1]->id, $branchInResult[0]['branch_id']);
+        $this->assertEquals($branches[1]->id, $branchInResult[0]['branch']['id']);
 
     }
 
@@ -155,18 +155,19 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
                   full_total_amount
                   branches {
                         branch_id
-                        branch_name
-                        uzcard_total_amount
-                        humo_total_amount
+                        branch {
+                            id
+                            name
+                        }
                         total_amount_by_branch
                         types {
-                        type
-                        total_amount
+                        name
+                        amount
                     }
                   }
                   total_amount_by_type {
-                        type
-                        total_amount
+                        name
+                        amount
                   }
                 }
             }
@@ -186,22 +187,23 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
                     'branches' => [
                         '*' => [
                             'branch_id',
-                            'branch_name',
-                            'uzcard_total_amount',
-                            'humo_total_amount',
+                            'branch' => [
+                                'id',
+                                'name',
+                            ],
                             'total_amount_by_branch',
                             'types' => [
                                 '*' => [
-                                    'type',
-                                    'total_amount',
+                                    'name',
+                                    'amount',
                                 ],
                             ],
                         ],
                     ],
                     'total_amount_by_type' => [
                         '*' => [
-                            'type',
-                            'total_amount',
+                            'name',
+                            'amount',
                         ],
                     ],
                 ],

@@ -2,7 +2,6 @@
 
 namespace App\Services\Installment;
 
-use App\Enums\Company\CardTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
@@ -13,6 +12,7 @@ use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
 use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Expression;
@@ -206,92 +206,71 @@ class InstallmentService
     public function statisticsByBranches(?Carbon $date = null, ?array $branch_ids = null): array
     {
         $transactions = Transaction::query()
-            ->select('branch_id', 'transaction_type_id', 'card_pan', DB::raw('SUM(amount) as total_amount'))
+            ->select('branch_id', 'transaction_type_id', DB::raw('SUM(amount) as total_amount'))
             ->when(! empty($branch_ids), fn ($q) => $q->whereIn('branch_id', $branch_ids))
             ->when(! empty($date), fn ($q) => $q->whereDate('created_at', '=', $date))
             ->where('status', TransactionStatusEnum::SUCCESS)
-            ->groupBy('branch_id', 'transaction_type_id', 'card_pan')
+            ->groupBy('branch_id', 'transaction_type_id')
             ->orderBy('branch_id')
             ->get();
-
+        $transactionTypes = TransactionType::all();
         $statistics = [];
         $totalAmountByType = [];
-        $formattedTotalAmountByType = [];
         $fullTotalAmount = 0;
-
+        $formattedTotalAmountByType = [];
+        foreach ($transactionTypes as $type) {
+            $totalAmountByType[$type->id] = 0;
+        }
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $branchId = $transaction->branch_id;
-            $type = $transaction->transactionType->id;
-            /* @phpstan-ignore-next-line **/
+            $type = $transaction->transaction_type_id;
+            /* @phpstan-ignore-next-line * */
             $totalAmount = $transaction->total_amount;
-            $cardType = CardTypeEnum::getCardType($transaction->card_pan);
-            //            dd($transaction->branch);
             if (! isset($statistics[$branchId])) {
                 $statistics[$branchId] = [
                     'branch_id' => $branchId,
-                    'branch_name' => $transaction->branch->name,
+                    'branch' => $transaction->branch,
                     'types' => [],
-                    'uzcard_total_amount' => 0,
-                    'humo_total_amount' => 0,
                     'total_amount_by_branch' => 0,
                 ];
 
-                foreach (InstallmentTypeEnum::cases() as $case) {
-                    $statistics[$branchId]['types'][$case->value] = [
-                        'type' => $case->value,
-                        'total_amount' => 0,
+                foreach ($transactionTypes as $case) {
+                    $statistics[$branchId]['types'][$case->id] = [
+                        'name' => $case->name,
+                        'amount' => 0,
                     ];
                 }
             }
 
-            $statistics[$branchId]['types'][$type]['total_amount'] += $totalAmount;
+            $statistics[$branchId]['types'][$type]['amount'] += $totalAmount;
 
             $statistics[$branchId]['total_amount_by_branch'] += $totalAmount;
-
-            if ($cardType === CardTypeEnum::UZCARD) {
-                $statistics[$branchId]['uzcard_total_amount'] += $totalAmount;
-            } elseif ($cardType === CardTypeEnum::HUMO) {
-                $statistics[$branchId]['humo_total_amount'] += $totalAmount;
-            }
-
             if (! isset($totalAmountByType[$type])) {
                 $totalAmountByType[$type] = 0;
             }
             $totalAmountByType[$type] += $totalAmount;
 
             $formattedTotalAmountByType[$type] = [
-                'type' => $type,
-                'total_amount' => $totalAmountByType[$type],
+                'name' => $transaction->transactionType->name,
+                'amount' => $totalAmountByType[$type],
             ];
 
             $fullTotalAmount += $totalAmount;
         }
-        foreach (InstallmentTypeEnum::cases() as $case) {
-            if (! isset($formattedTotalAmountByType[$case->value])) {
-                $formattedTotalAmountByType[$case->value] = [
-                    'type' => $case->value,
-                    'total_amount' => 0,
+        foreach ($transactionTypes as $case) {
+            if (! isset($formattedTotalAmountByType[$case->id])) {
+                $formattedTotalAmountByType[$case->id] = [
+                    'name' => $case->name,
+                    'amount' => 0,
                 ];
             }
         }
-        $uzcardTotalAmount = array_sum(array_column($statistics, 'uzcard_total_amount'));
-        $humoTotalAmount = array_sum(array_column($statistics, 'humo_total_amount'));
-
-        $formattedTotalAmountByType[CardTypeEnum::UZCARD->name] = [
-            'type' => CardTypeEnum::UZCARD->name,
-            'total_amount' => $uzcardTotalAmount,
-        ];
-
-        $formattedTotalAmountByType[CardTypeEnum::HUMO->name] = [
-            'type' => CardTypeEnum::HUMO->name,
-            'total_amount' => $humoTotalAmount,
-        ];
 
         return [
             'branches' => $statistics,
             'total_amount_by_type' => array_values($formattedTotalAmountByType),
-            'full_total_amount' => number_format($fullTotalAmount, 2, '.', '.'),
+            'full_total_amount' => number_format($fullTotalAmount, 2, '.', ' '),
         ];
     }
 
