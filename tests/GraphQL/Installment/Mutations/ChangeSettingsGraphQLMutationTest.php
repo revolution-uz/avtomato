@@ -184,7 +184,7 @@ class ChangeSettingsGraphQLMutationTest extends GraphQLTestCase
         $response = $this
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery(['settings_id' => 999999999, 'value' => 'qwertyuiop']),
+                $this->buildGraphQLQuery(['settings_id' => 999999999, 'value' => 'true']),
             );
 
         $response->assertOk();
@@ -201,6 +201,7 @@ class ChangeSettingsGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'settings id']), $response->json('errors.0.extensions.validation.settings_id.0'));
+        $this->assertEquals(trans('validation.integer', ['attribute' => 'value']), $response->json('errors.0.extensions.validation.value.0'));
     }
 
     #[Test]

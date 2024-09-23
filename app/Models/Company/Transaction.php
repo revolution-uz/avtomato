@@ -77,18 +77,16 @@ class Transaction extends Model
         });
 
         static::created(function (self $transaction) {
+            $installment = $transaction->installment;
+
             if (! $transaction->is_initial_fee) {
-                Installment::query()
-                    ->where('id', $transaction->installment_id)
-                    ->increment('paid_amount', $transaction->amount);
+                $installment->increment('paid_amount', $transaction->amount);
             }
-            if ($transaction->card_pan) {
-                dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
-            }
-            $installment = Installment::query()->findOrFail($transaction->installment_id);
             if ($installment->wholeDebtAmount <= 1) {
                 $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
             }
+
+            dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
         });
 
         static::deleted(function (self $transaction) {
