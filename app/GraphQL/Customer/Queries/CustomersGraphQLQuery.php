@@ -53,7 +53,7 @@ class CustomersGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return Customer::query()
+        return Customer::query()->with('tags')
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
@@ -62,7 +62,13 @@ class CustomersGraphQLQuery extends Query
                         ->orWhere('middle_name', 'ILIKE', $search)
                         ->orWhere('pinfl', 'ILIKE', $search)
                         ->orWhere('passport_series', 'ILIKE', $search)
-                        ->orWhere('passport_number', 'ILIKE', $search);
+                        ->orWhere('passport_number', 'ILIKE', $search)
+                        ->orWhereHas('tags', function (Builder $q) use ($search) {
+                            $q->where('name_uz', 'ILIKE', $search)
+                                ->orWhere('name_oz', 'ILIKE', $search)
+                                ->orWhere('name_ru', 'ILIKE', $search)
+                                ->orWhere('name_en', 'ILIKE', $search);
+                        });
                 });
             })
             ->when(
