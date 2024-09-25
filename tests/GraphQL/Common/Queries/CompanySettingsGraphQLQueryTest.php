@@ -5,6 +5,7 @@ namespace Tests\GraphQL\Common\Queries;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Models\Company\BalanceFund;
 use App\Models\Company\CompanySettings;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
@@ -22,29 +23,9 @@ class CompanySettingsGraphQLQueryTest extends GraphQLTestCase
     public function settingsWithoutAuthentication()
     {
         $response = $this
-            ->postJson(
-                route('graphql.common'),
-                $this->buildGraphQLQuery()
-            );
+            ->postJson(route('graphql.common'), $this->buildGraphQLQuery());
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'companySettings' => [
-                    'card_after_due_days',
-                    'pinfl_after_due_days',
-                    'guarantor_after_due_days',
-                    'guarantor_pinfl_after_due_days',
-                ],
-            ],
-        ]);
-
-        $settings = CompanySettings::query()->get();
-        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.card_after_due_days'));
-        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.pinfl_after_due_days'));
-        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_after_due_days'));
-        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_pinfl_after_due_days'));
+        $this->assertSuccessResponse($response);
     }
 
     #[Test]
@@ -59,24 +40,7 @@ class CompanySettingsGraphQLQueryTest extends GraphQLTestCase
                 ['Authorization' => 'Bearer ' . $token]
             );
 
-        $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'companySettings' => [
-                    'card_after_due_days',
-                    'pinfl_after_due_days',
-                    'guarantor_after_due_days',
-                    'guarantor_pinfl_after_due_days',
-                ],
-            ],
-        ]);
-
-        $settings = CompanySettings::query()->get();
-        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.card_after_due_days'));
-        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.pinfl_after_due_days'));
-        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_after_due_days'));
-        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_pinfl_after_due_days'));
+        $this->assertSuccessResponse($response);
     }
 
     private function buildGraphQLQuery(): array
@@ -95,5 +59,27 @@ class CompanySettingsGraphQLQueryTest extends GraphQLTestCase
         ';
 
         return $query;
+    }
+
+    private function assertSuccessResponse(TestResponse $response)
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure([
+            'data' => [
+                'companySettings' => [
+                    'card_after_due_days',
+                    'pinfl_after_due_days',
+                    'guarantor_after_due_days',
+                    'guarantor_pinfl_after_due_days',
+                ],
+            ],
+        ]);
+
+        $settings = CompanySettings::query()->get();
+        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value, $response->json('data.companySettings.card_after_due_days'));
+        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::PINFL_AFTER_DUE_DAYS)->value, $response->json('data.companySettings.pinfl_after_due_days'));
+        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS)->value, $response->json('data.companySettings.guarantor_after_due_days'));
+        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS)->value, $response->json('data.companySettings.guarantor_pinfl_after_due_days'));
     }
 }
