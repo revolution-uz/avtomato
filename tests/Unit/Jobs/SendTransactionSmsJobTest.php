@@ -18,7 +18,6 @@ use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use App\Services\SmsService;
 use App\Services\User\BalanceService;
-use Database\Seeders\Company\CompanySettingsSeeder;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Support\Arr;
 use Mockery;
@@ -37,7 +36,6 @@ class SendTransactionSmsJobTest extends TestCase
         parent::setUp();
 
         $this->artisan('db:seed', ['--class' => TransactionTypeSeeder::class]);
-        $this->artisan('db:seed', ['--class' => CompanySettingsSeeder::class]);
 
         $this->_customer = Customer::factory()->create();
         $this->_phone = Phone::factory()->create();
