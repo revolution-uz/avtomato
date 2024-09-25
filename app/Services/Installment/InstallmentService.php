@@ -320,7 +320,7 @@ class InstallmentService
     private function getInstallmentAmounts(): array
     {
         return [
-            'transaction' => $this->calculateByIncreasingPercent(Transaction::query(), 'id', 'amount'),
+            'transaction' => $this->calculateByIncreasingPercent(Transaction::query()->where('status', TransactionStatusEnum::SUCCESS), 'id', 'amount'),
             'installment' => $this->calculateByIncreasingPercent(Installment::query(), 'id', 'amount'),
             'installment_future_profit' => $this->calculateByIncreasingPercent(
                 Installment::query()->where('status', '>', InstallmentStatusEnum::INACTIVE),

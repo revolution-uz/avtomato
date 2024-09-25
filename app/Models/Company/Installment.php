@@ -121,7 +121,7 @@ class Installment extends Model
 
     public static function getProfitAmountRaw(): \Illuminate\Contracts\Database\Query\Expression
     {
-        return DB::raw('(amount - initial_fee) * percent / 100 - paid_amount');
+        return DB::raw('(amount - initial_fee) * (percent + 100) / 100 - paid_amount');
     }
 
     public function tariff(): BelongsTo
