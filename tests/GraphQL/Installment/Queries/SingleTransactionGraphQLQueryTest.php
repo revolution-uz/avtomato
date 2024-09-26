@@ -165,6 +165,7 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
                         created_at
                         updated_at
                     }
+                    status
                     external_id
                     amount
                     created_at
@@ -268,6 +269,7 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
                     'transaction_type' => $transactionType,
                     'card_id',
                     'card' => $card,
+                    'status',
                     'external_id',
                     'amount',
                     'created_at',
@@ -275,8 +277,22 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
                 ],
             ],
         ]);
-        $transaction = Transaction::query()->find($response->json('data.singleTransaction.id'));
-        $this->assertNotNull($transaction);
+
+        $transaction = Transaction::query()->findOrFail($response->json('data.singleTransaction.id'));
+        $this->assertEquals($transaction->id, $response->json('data.singleTransaction.id'));
+        $this->assertEquals($transaction->branch_id, $response->json('data.singleTransaction.branch_id'));
+        $this->assertEquals($transaction->admin_id, $response->json('data.singleTransaction.admin_id'));
+        $this->assertEquals($transaction->installment_id, $response->json('data.singleTransaction.installment_id'));
+        $this->assertEquals($transaction->is_initial_fee, $response->json('data.singleTransaction.is_initial_fee'));
+        $this->assertEquals($transaction->customer_id, $response->json('data.singleTransaction.customer_id'));
+        $this->assertEquals($transaction->transaction_type_id, $response->json('data.singleTransaction.transaction_type_id'));
+        $this->assertEquals($transaction->card_id, $response->json('data.singleTransaction.card_id'));
+        $this->assertEquals($transaction->status->value, $response->json('data.singleTransaction.status'));
+        $this->assertEquals($transaction->external_id, $response->json('data.singleTransaction.external_id'));
+        $this->assertEquals($transaction->amount, $response->json('data.singleTransaction.amount'));
+        $this->assertEquals($transaction->created_at->timestamp, $response->json('data.singleTransaction.created_at'));
+        $this->assertEquals($transaction->updated_at->timestamp, $response->json('data.singleTransaction.updated_at'));
+
         $this->assertSuccessInstallmentResponse($response);
         $this->assertSuccessAdminResponse($response);
         $this->assertSuccessCardResponse($response);
@@ -295,7 +311,6 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
 
     private function assertSuccessInstallmentResponse($response): void
     {
-
         $transaction = $this->_transaction;
         $this->assertEquals($transaction->branch_id, $response->json('data.singleTransaction.branch_id'));
         $this->assertEquals($transaction->branch->id, $response->json('data.singleTransaction.branch.id'));

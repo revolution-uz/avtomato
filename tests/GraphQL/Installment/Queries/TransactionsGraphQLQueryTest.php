@@ -373,6 +373,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                                 owner
                                 created_at
                             }
+                            status
                             external_id
                             amount
                             paid_at
@@ -495,6 +496,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                                 'owner',
                                 'created_at',
                             ],
+                            'status',
                             'external_id',
                             'amount',
                             'paid_at',
