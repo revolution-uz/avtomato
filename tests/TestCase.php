@@ -6,6 +6,7 @@ use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use App\Models\Company\Rbac\Role;
 use Database\Seeders\Company\AdminRoleSeeder;
+use Database\Seeders\Company\CompanySettingsSeeder;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\ModuleSeeder;
 use Database\Seeders\Company\PermissionSeeder;
@@ -56,30 +57,13 @@ abstract class TestCase extends BaseTestCase
 
         tenancy()->initialize($tenant);
 
-        Artisan::call('tenants:migrate-fresh', [
-            '--tenants' => [$tenant->id],
-        ]);
-        Artisan::call('tenants:seed', [
-            '--class' => ModuleSeeder::class,
-            '--tenants' => [$tenant->id],
-        ]);
-        Artisan::call('tenants:seed', [
-            '--class' => FeatureSeeder::class,
-            '--tenants' => [$tenant->id],
-        ]);
-        Artisan::call('tenants:seed', [
-            '--class' => PermissionSeeder::class,
-            '--tenants' => [$tenant->id],
-        ]);
-        Artisan::call('tenants:seed', [
-            '--class' => AdminRoleSeeder::class,
-            '--tenants' => [$tenant->id],
-        ]);
-        Artisan::call('tenants:seed', [
-            '--class' => SmsTemplateSeeder::class,
-            '--tenants' => [$tenant->id],
-        ]);
-
+        Artisan::call('tenants:migrate-fresh', ['--tenants' => [$tenant->id]]);
+        Artisan::call('tenants:seed', ['--class' => ModuleSeeder::class, '--tenants' => [$tenant->id]]);
+        Artisan::call('tenants:seed', ['--class' => FeatureSeeder::class, '--tenants' => [$tenant->id]]);
+        Artisan::call('tenants:seed', ['--class' => PermissionSeeder::class, '--tenants' => [$tenant->id]]);
+        Artisan::call('tenants:seed', ['--class' => AdminRoleSeeder::class, '--tenants' => [$tenant->id]]);
+        Artisan::call('tenants:seed', ['--class' => SmsTemplateSeeder::class, '--tenants' => [$tenant->id]]);
+        Artisan::call('tenants:seed', ['--class' => CompanySettingsSeeder::class, '--tenants' => [$tenant->id]]);
     }
 
     public function createAdminUser()

@@ -13,9 +13,9 @@ enum CompanySettingsEnum: string
     case PINFL_AFTER_DUE_DAYS = 'pinfl_after_due_days';
     case GUARANTOR_AFTER_DUE_DAYS = 'guarantor_after_due_days';
     case GUARANTOR_PINFL_AFTER_DUE_DAYS = 'guarantor_pinfl_after_due_days';
-    case SMS_INSTALLMENT_AUTO_CHARGE = 'sms_installment_auto_charge';
-    case SMS_INSTALLMENT_NOTIFICATION = 'sms_installment_notification';
-    case SMS_INSTALLMENT_PAYMENT = 'sms_installment_payment';
+    case SMS_INSTALLMENT_AUTO_CHARGE = 'sms_installment_auto_charge'; // auto charge notification
+    case SMS_INSTALLMENT_NOTIFICATION = 'sms_installment_notification'; // charge notification
+    case SMS_INSTALLMENT_PAYMENT = 'sms_installment_payment'; // debt notification
 
     public static function getType(self $type): SettingsTypeEnum
     {

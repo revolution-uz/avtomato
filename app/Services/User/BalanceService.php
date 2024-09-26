@@ -13,12 +13,12 @@ use App\Models\Company\BalanceFund;
 use App\Models\Company\Feature;
 use Illuminate\Database\Eloquent\Model;
 
-readonly class BalanceService
+class BalanceService
 {
     const int MIN_BALANCE_AMOUNT = -100000;
 
     public function __construct(
-        private AtmosBalanceClient $atmosBalanceClient
+        private readonly AtmosBalanceClient $atmosBalanceClient
     ) {}
 
     public function chargeAmount(FeatureEnum $featureName, Model $model): BalanceCharge

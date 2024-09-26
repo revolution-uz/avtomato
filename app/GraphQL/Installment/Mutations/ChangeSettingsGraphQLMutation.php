@@ -35,6 +35,7 @@ class ChangeSettingsGraphQLMutation extends Mutation
             'value' => [
                 'name' => 'value',
                 'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|integer',
             ],
         ];
     }

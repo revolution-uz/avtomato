@@ -65,7 +65,7 @@ class CreateTransactionGraphQLMutation extends Mutation
                     'int',
                     Rule::exists('transaction_types', 'id'),
                     function ($attribute, $value, $fail) {
-                        if (TransactionType::isAutopay($value)) {
+                        if (TransactionType::isAutoPay($value)) {
                             $fail(__('api.You cannot create system payment manually'));
                         }
                     },

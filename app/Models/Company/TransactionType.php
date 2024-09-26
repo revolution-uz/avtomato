@@ -29,8 +29,8 @@ class TransactionType extends Model
 
     public static array $sortables = ['id', 'name', 'is_system', 'created_at', 'updated_at'];
 
-    const ATMOS_WITH_CARD = 1;
-    const ATMOS_WITH_PINFL = 2;
+    const int ATMOS_WITH_CARD = 1;
+    const int ATMOS_WITH_PINFL = 2;
 
     protected $fillable = [
         'name_uz',
@@ -39,17 +39,17 @@ class TransactionType extends Model
         'is_system',
     ];
 
-    public static function isAutopay($value)
+    public static function isAutoPay($value): bool
     {
-        return in_array($value, self::autopayList());
+        return in_array($value, self::autoPayList());
     }
 
-    private static function autopayList()
+    public static function autoPayList(): array
     {
         return [self::ATMOS_WITH_CARD, self::ATMOS_WITH_PINFL];
     }
 
-    public function setNames(string $name)
+    public function setNames(string $name): void
     {
         $this->name_uz = $name;
         $this->name_ru = $name;
