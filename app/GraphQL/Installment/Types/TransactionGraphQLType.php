@@ -93,7 +93,7 @@ class TransactionGraphQLType extends GraphQLType
             ],
             'status' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Transaction $root) => $root->status,
+                'resolve' => fn (Transaction $root) => $root->status->value,
             ],
             'paid_at' => [
                 'type' => Type::int(),
