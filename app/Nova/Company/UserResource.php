@@ -2,6 +2,7 @@
 
 namespace App\Nova\Company;
 
+use App\Enums\Main\AdminRoleEnum;
 use App\Models\Company\CompanyAdmin;
 use App\Nova\Actions\ChangeUserPassword;
 use App\Nova\Actions\LoginAsUser;
@@ -59,21 +60,21 @@ class UserResource extends Resource
             Avatar::make('avatar', 'avatar_preview_path')
                 ->rounded()
                 ->disableDownload()
-                ->maxWidth(50),
+                ->maxWidth(50)->showOnUpdating(false),
 
             Text::make('Username')
                 ->sortable()
-                ->rules('required'),
+                ->rules('required')->showOnUpdating(fn () => request()->user()->role === AdminRoleEnum::SUPER_ADMIN),
 
             Text::make('First Name')
                 ->sortable()
-                ->rules('required'),
+                ->rules('required')->showOnUpdating(false),
 
             Text::make('Last Name')
                 ->sortable()
-                ->rules('required'),
+                ->rules('required')->showOnUpdating(false),
 
-            Boolean::make('Status', 'status'),
+            Boolean::make('Status', 'status')->showOnUpdating(false),
 
             Text::make('Phone')
                 ->sortable()
@@ -85,7 +86,7 @@ class UserResource extends Resource
                 ->onlyOnDetail()
                 ->rules('required'),
 
-            BelongsTo::make('Role', 'role', RoleResource::class),
+            BelongsTo::make('Role', 'role', RoleResource::class)->showOnUpdating(false),
 
             Code::make('Template Theme', 'template_theme')
                 ->json()
@@ -130,11 +131,6 @@ class UserResource extends Resource
     }
 
     public function authorizedToDelete(Request $request)
-    {
-        return false;
-    }
-
-    public function authorizedToUpdate(Request $request)
     {
         return false;
     }
