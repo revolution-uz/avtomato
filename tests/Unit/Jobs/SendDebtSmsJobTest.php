@@ -119,7 +119,7 @@ class SendDebtSmsJobTest extends TestCase
         $this->_customer = Customer::factory()->create();
         $this->_phone = Phone::factory()->create();
         $this->_customer->phones()->attach($this->_phone->id, ['type' => PhoneTypeEnum::randomValue(), 'installment_notifications' => false]);
-        $this->_installment = Installment::factory()->create(['customer_id' => $this->_customer->id]);
+        $this->_installment = Installment::factory()->create(['customer_id' => $this->_customer->id, 'starts_in' => Carbon::now()]);
 
         $smsServiceMock = $this->mock(SmsService::class);
         $smsServiceMock->shouldReceive('sendSms')->times(0);
