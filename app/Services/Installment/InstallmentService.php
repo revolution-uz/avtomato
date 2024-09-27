@@ -203,12 +203,13 @@ class InstallmentService
         ");
     }
 
-    public function statisticsByBranches(?Carbon $date = null, ?array $branch_ids = null): array
+    public function statisticsByBranches(?Carbon $from_date = null, ?Carbon $to_date = null, ?array $branch_ids = null): array
     {
         $transactions = Transaction::query()
             ->select('branch_id', 'transaction_type_id', DB::raw('SUM(amount) as total_amount'))
             ->when(! empty($branch_ids), fn ($q) => $q->whereIn('branch_id', $branch_ids))
-            ->when(! empty($date), fn ($q) => $q->whereDate('created_at', '=', $date))
+            ->when(! empty($from_date), fn ($q) => $q->whereDate('created_at', '>=', $from_date))
+            ->when(! empty($to_date), fn ($q) => $q->whereDate('created_at', '<=', $to_date))
             ->where('status', TransactionStatusEnum::SUCCESS)
             ->groupBy('branch_id', 'transaction_type_id')
             ->orderBy('branch_id')
