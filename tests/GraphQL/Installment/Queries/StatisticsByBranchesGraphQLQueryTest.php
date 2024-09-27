@@ -71,17 +71,39 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successStatisticsWithDateRange()
+    {
+        $branchId = Transaction::query()->first()->branch_id;
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(from_date: $this->_carbon->format('Y-m-d'), to_date: $this->_carbon->addDay()->format('Y-m-d')),
+            );
+        $this->assertSuccessResponse($response);
+    }
+
+    #[Test]
     public function errorValidations()
     {
         // validation date format errors
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(date: '11.01.2024'));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(from_date: '11.01.2024'));
         $response->assertOk();
+        //        dd($response->json());
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('validation.date_format', ['attribute' => 'date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.date.0'));
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'from date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.from_date.0'));
 
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(from_date: '2024-09-25', to_date: '2024-09-20'));
+        $response->assertOk();
+        //        dd($response->json());
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.after_or_equal', ['attribute' => 'to date', 'date' => 'from date']), $response->json('errors.0.extensions.validation.to_date.0'));
         // branch id not related to company
         $branch = Branch::factory()->create();
         $response = $this
@@ -124,7 +146,7 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
             ->actingAs($simpleAdmin)
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery(date: $this->_carbon->format('Y-m-d'))
+                $this->buildGraphQLQuery(from_date: $this->_carbon->format('Y-m-d'))
             );
         $this->assertSuccessResponse($response);
         $branchInResult = $response->json('data.StatisticsByBranches.branches');
@@ -145,13 +167,13 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
 
     }
 
-    private function buildGraphQLQuery(?array $branch_ids = null, ?string $date = null): array
+    private function buildGraphQLQuery(?array $branch_ids = null, ?string $from_date = null, ?string $to_date = null): array
     {
         $query = [];
-        $query['variables'] = ['branch_ids' => $branch_ids, 'date' => $date];
+        $query['variables'] = ['branch_ids' => $branch_ids, 'from_date' => $from_date, 'to_date' => $to_date];
         $query['query'] = '
-            query StatisticsByBranches($branch_ids: [Int], $date: String) {
-                  StatisticsByBranches(branch_ids: $branch_ids, date: $date) {
+            query StatisticsByBranches($branch_ids: [Int], $from_date: String, $to_date: String) {
+                  StatisticsByBranches(branch_ids: $branch_ids, from_date: $from_date, to_date: $to_date) {
                   full_total_amount
                   branches {
                         branch_id
