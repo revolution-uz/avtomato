@@ -367,7 +367,7 @@ class InstallmentService
                 'name' => __('api.installment_status_' . $status->name),
                 'type' => 'line',
                 'stack' => 'Total',
-                'count' => (clone $query)->where('created_at', '>=', Carbon::today()->startOfWeek())->countId(),
+                'count' => (clone $query)->where('created_at', '>=', Carbon::today()->startOfYear())->countId(),
                 'data' => $data,
             ];
         }
