@@ -48,6 +48,13 @@ class InstallmentService
         return $dates;
     }
 
+    public static function getDebtorInstallments(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Installment::whereNextPayDate('=', Carbon::today())
+            ->where('status', InstallmentStatusEnum::ACTIVE)
+            ->get();
+    }
+
     public function create(array $attributes): Installment
     {
         $attributes['status'] = InstallmentStatusEnum::INACTIVE;

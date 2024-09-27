@@ -14,7 +14,7 @@ class CompanySettingsSeeder extends Seeder
     public function run(): void
     {
         foreach (CompanySettingsEnum::cases() as $case) {
-            CompanySettings::query()->updateOrCreate([
+            CompanySettings::query()->firstOrCreate([
                 'name' => $case->value,
             ], [
                 'value' => CompanySettingsEnum::getDefaultValue($case),
