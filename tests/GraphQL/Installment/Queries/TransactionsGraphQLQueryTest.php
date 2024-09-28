@@ -18,6 +18,35 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
 
     private int $_totalTransactionsCount = 33;
 
+    private array $_structure = [
+        'total',
+        'per_page',
+        'current_page',
+        'from',
+        'to',
+        'last_page',
+        'has_more_pages',
+        'data' => [
+            '*' => [
+                'id',
+                'branch_id',
+                'admin_id',
+                'installment_id',
+                'is_initial_fee',
+                'customer_id',
+                'transaction_type_id',
+                'card_id',
+                'card_pan',
+                'external_id',
+                'amount',
+                'status',
+                'paid_at',
+                'created_at',
+                'updated_at',
+            ],
+        ],
+    ];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -133,6 +162,19 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successBranches()
+    {
+        $branch = Branch::factory()->create();
+        Transaction::factory()->create(['branch_id' => $branch->id]);
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        Transaction::factory()->create(['installment_id' => $installment->id]);
+
+        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+
+        $this->assertSuccessTransactionsResponse($response, total: 2);
+    }
+
+    #[Test]
     public function errorTransactionTypeId()
     {
         $response = $this->sendToGraphQL(['transaction_type_id' => 93]);
@@ -165,7 +207,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $response = $this->sendToGraphQL(['page' => 'asnjfasnjfasn']);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('Variable "$page" of type "String!" used in position expecting type "Int".', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$page" got invalid value "asnjfasnjfasn"; Int cannot represent non-integer value: "asnjfasnjfasn"', $response->json('errors.0.message'));
 
         $response = $this->sendToGraphQL(['page' => 0]);
         $response->assertOk();
@@ -180,7 +222,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $response = $this->sendToGraphQL(['per_page' => 'asnjfasnjfasn']);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('Variable "$per_page" of type "String!" used in position expecting type "Int".', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$per_page" got invalid value "asnjfasnjfasn"; Int cannot represent non-integer value: "asnjfasnjfasn"', $response->json('errors.0.message'));
 
         $response = $this->sendToGraphQL(['per_page' => 0]);
         $response->assertOk();
@@ -201,7 +243,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $response = $this->sendToGraphQL(['sort' => 111]);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('Variable "$sort" of type "Int!" used in position expecting type "String".', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$sort" got invalid value 111; String cannot represent a non string value: 111', $response->json('errors.0.message'));
 
         $response = $this->sendToGraphQL(['sort' => 'non-exist-column']);
         $response->assertOk();
@@ -259,131 +301,37 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
 
     private function buildGraphQLQuery(array $variables = []): array
     {
-        $variableArgs = implode(', ', array_map(fn ($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
-        $variableTypes = implode(', ', array_map(fn ($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
-        $query = [
-            'variables' => $variables,
-            'query' => '
-                query Transactions' . ($variableTypes ? "({$variableTypes})" : '') . ' {
-                    transactions' . ($variableArgs ? "({$variableArgs})" : '') . ' {
-                        current_page
-                        from
-                        has_more_pages
-                        last_page
-                        per_page
-                        to
-                        total
-                        data {
-                            id
-                            branch_id
-                            branch {
-                                id
-                                name
-                                inn
-                                address
-                                created_at
-                                updated_at
-                            }
-                            admin_id
-                            admin {
-                                id
-                                first_name
-                                last_name
-                                username
-                                language
-                                role_id
-                            }
-                            installment_id
-                            installment {
-                                id
-                                customer_id
-                                customer {
-                                    id
-                                    pinfl
-                                    tin
-                                    passport_series
-                                    passport_number
-                                    passport_given_date
-                                    passport_expiration_date
-                                    passport_given_place
-                                    passport_citizenship
-                                    first_name
-                                    last_name
-                                    middle_name
-                                    birth_date
-                                    birth_place
-                                    gender
-                                }
-                                tariff_id
-                                tariff {
-                                    id
-                                    name
-                                    percent
-                                    min_period
-                                    max_period
-                                    min_amount
-                                    max_amount
-                                    min_initial_fee
-                                    max_initial_fee
-                                }
-                                type
-                                amount
-                                initial_fee
-                                description
-                                sms_notify
-                                is_blacklist
-                                period
-                                canceled_at
-                                cancellation_details
-                                starts_in
-                                next_pay_date
-                            }
-                            is_initial_fee
-                            customer_id
-                            customer {
-                                id
-                                pinfl
-                                tin
-                                passport_series
-                                passport_number
-                                passport_given_date
-                                passport_expiration_date
-                                passport_given_place
-                                passport_citizenship
-                                first_name
-                                last_name
-                                middle_name
-                                birth_date
-                                birth_place
-                                gender
-                            }
-                            transaction_type_id
-                            transaction_type {
-                                id
-                                name
-                            }
-                            card_id
-                            card {
-                                id
-                                number
-                                owner
-                                expiry
-                                phone
-                                balance
-                                owner
-                                created_at
-                            }
-                            status
-                            external_id
-                            amount
-                            paid_at
-                            created_at
-                            updated_at
-                        }
-                    }
+        $query = [];
+        $query['variables'] = $variables;
+        $query['query'] = '
+            query Transactions(
+                $sort: String
+                $search: String
+                $page: Int
+                $per_page: Int
+                $id: Int
+                $installment_id: Int
+                $branches: [Int!]
+                $customer_id: Int
+                $card_id: Int
+                $transaction_type_id: Int
+            ) {
+                transactions(
+                    sort: $sort
+                    search: $search
+                    page: $page
+                    per_page: $per_page
+                    id: $id
+                    installment_id: $installment_id
+                    branches: $branches
+                    customer_id: $customer_id
+                    card_id: $card_id
+                    transaction_type_id: $transaction_type_id
+                ) {
+                    ' . $this->convertIntoQuery($this->_structure) . '
                 }
-            ',
-        ];
+            }
+        ';
 
         return $query;
     }
@@ -394,117 +342,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $response->assertJsonIsObject();
         $response->assertJsonStructure([
             'data' => [
-                'transactions' => [
-                    'current_page',
-                    'from',
-                    'has_more_pages',
-                    'last_page',
-                    'per_page',
-                    'to',
-                    'total',
-                    'data' => [
-                        '*' => [
-                            'id',
-                            'branch_id',
-                            'branch' => [
-                                'id',
-                                'name',
-                                'inn',
-                                'address',
-                                'created_at',
-                                'updated_at',
-                            ],
-                            'admin_id',
-                            'admin',
-                            'installment_id',
-                            'installment' => [
-                                'id',
-                                'customer_id',
-                                'customer' => [
-                                    'id',
-                                    'pinfl',
-                                    'tin',
-                                    'passport_series',
-                                    'passport_number',
-                                    'passport_given_date',
-                                    'passport_expiration_date',
-                                    'passport_given_place',
-                                    'passport_citizenship',
-                                    'first_name',
-                                    'last_name',
-                                    'middle_name',
-                                    'birth_date',
-                                    'birth_place',
-                                    'gender',
-                                ],
-                                'tariff_id',
-                                'tariff' => [
-                                    'id',
-                                    'name',
-                                    'percent',
-                                    'min_period',
-                                    'max_period',
-                                    'min_amount',
-                                    'max_amount',
-                                    'min_initial_fee',
-                                    'max_initial_fee',
-                                ],
-                                'type',
-                                'amount',
-                                'initial_fee',
-                                'description',
-                                'sms_notify',
-                                'is_blacklist',
-                                'period',
-                                'canceled_at',
-                                'cancellation_details',
-                                'starts_in',
-                                'next_pay_date',
-                            ],
-                            'is_initial_fee',
-                            'customer_id',
-                            'customer' => [
-                                'id',
-                                'pinfl',
-                                'tin',
-                                'passport_series',
-                                'passport_number',
-                                'passport_given_date',
-                                'passport_expiration_date',
-                                'passport_given_place',
-                                'passport_citizenship',
-                                'first_name',
-                                'last_name',
-                                'middle_name',
-                                'birth_date',
-                                'birth_place',
-                                'gender',
-                            ],
-                            'transaction_type_id',
-                            'transaction_type' => [
-                                'id',
-                                'name',
-                            ],
-                            'card_id',
-                            'card' => [
-                                'id',
-                                'number',
-                                'owner',
-                                'expiry',
-                                'phone',
-                                'balance',
-                                'owner',
-                                'created_at',
-                            ],
-                            'status',
-                            'external_id',
-                            'amount',
-                            'paid_at',
-                            'created_at',
-                            'updated_at',
-                        ],
-                    ],
-                ],
+                'transactions' => $this->_structure,
             ],
         ]);
 

@@ -20,6 +20,8 @@ class TransactionsGraphQLQuery extends Query
         'name' => 'transactions',
     ];
 
+    private array $_branches;
+
     public function type(): Type
     {
         return GraphQL::paginate(TransactionGraphQLType::GRAPHQL_TYPE_NAME);
@@ -27,6 +29,8 @@ class TransactionsGraphQLQuery extends Query
 
     public function args(): array
     {
+        $this->_branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_VIEW_ALL);
+
         return [
             'sort' => [
                 'type' => Type::string(),
@@ -52,9 +56,9 @@ class TransactionsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => ['nullable', 'int', Rule::exists('installments', 'id')->whereNull('deleted_at')],
             ],
-            'branch_id' => [
-                'type' => Type::int(),
-                'rules' => ['nullable', 'int', Rule::exists('branches', 'id')->whereNull('deleted_at')],
+            'branches' => [
+                'type' => Type::listOf(Type::nonNull(Type::int())),
+                'rules' => 'nullable|array',
             ],
             'customer_id' => [
                 'name' => 'customer_id',
@@ -78,7 +82,7 @@ class TransactionsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_VIEW_ALL);
+        $this->_branches = $args['branches'] ?? $this->_branches;
 
         return Transaction::query()
             ->with(['installment', 'admin', 'customer', 'transactionType', 'installment.branch'])
@@ -122,10 +126,12 @@ class TransactionsGraphQLQuery extends Query
                 fn (Builder $q) => $q
                     ->where('transaction_type_id', $args['transaction_type_id'])
             )
-            ->when($branches,
-                fn (Builder $q) => $q->whereHas('installment',
-                    fn (Builder $q) => $q->whereIn('branch_id', $branches)
-                ))
+            ->when(
+                $this->_branches,
+                fn (Builder $q) => $q
+                    ->whereIn('branch_id', $this->_branches)
+                    ->orWhereHas('installment', fn (Builder $q) => $q->whereIn('branch_id', $this->_branches))
+            )
             ->when(
                 isset($args['sort']),
                 fn (Builder|Transaction $q) => $q->orderBySortable($args['sort']),
@@ -139,5 +145,17 @@ class TransactionsGraphQLQuery extends Query
                 });
             })
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'branches.*' => [
+                'required',
+                Rule::exists('branches', 'id')
+                    ->whereNull('deleted_at')
+                    ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),
+            ],
+        ];
     }
 }

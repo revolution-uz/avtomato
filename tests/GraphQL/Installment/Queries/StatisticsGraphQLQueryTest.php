@@ -352,7 +352,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successStatisticsWithBranchId()
+    public function successStatisticsWithBranches()
     {
         $to = Carbon::today();
         $from = (clone $to)->subDays(6);
@@ -363,7 +363,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($from, $to, $branch->id));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($from, $to, [$branch->id]));
 
         $expectedData = [
             [
@@ -423,14 +423,14 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.installment'),
-                $this->buildGraphQLQuery('uytrtdyfgui', 'oytresdtfygiuh', 999999999)
+                $this->buildGraphQLQuery('uytrtdyfgui', 'oytresdtfygiuh', [999999999])
             );
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(__('validation.date_format', ['attribute' => 'from', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.from.0'));
         $this->assertEquals(__('validation.date_format', ['attribute' => 'to', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.to.0'));
-        $this->assertEquals(__('validation.exists', ['attribute' => 'branch id']), $response->json('errors.0.extensions.validation.branch_id.0'));
+        $this->assertEquals(__('validation.exists', ['attribute' => 'branches.0']), $response->json('errors.0.extensions.validation')['branches.0'][0]);
     }
 
     #[Test]
@@ -443,6 +443,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $simpleAdmin = $this->createSimpleAdminUser($role->id);
         $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_VIEW_STATISTICS)->firstOrFail();
 
+        /** @var Branch[] $branches */
         $branches = Branch::factory()->count(2)->create();
         Installment::factory()->count(5)->create(array_merge($this->_input, ['branch_id' => $branches[1]->id]));
 
@@ -471,7 +472,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         ]);
     }
 
-    private function buildGraphQLQuery(string|Carbon|null $from, string|Carbon|null $to, $branch_id = null): array
+    private function buildGraphQLQuery(string|Carbon|null $from, string|Carbon|null $to, $branches = null): array
     {
         if ($from instanceof Carbon) {
             $from = $from->format('Y-m-d');
@@ -482,10 +483,10 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         }
 
         $query = [];
-        $query['variables'] = ['from' => $from, 'to' => $to, 'branch_id' => $branch_id];
+        $query['variables'] = ['from' => $from, 'to' => $to, 'branches' => $branches];
         $query['query'] = '
-            query Statistics($from: String!, $to: String!, $branch_id: Int) {
-                statistics(from: $from, to: $to, branch_id: $branch_id) {
+            query Statistics($from: String!, $to: String!, $branches: [Int!]) {
+                statistics(from: $from, to: $to, branches: $branches) {
                     date
                     debt_amount
                     paid_amount
