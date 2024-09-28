@@ -10,6 +10,7 @@ use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -54,8 +55,8 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         parent::setUp();
 
         Installment::query()->forceDelete();
-        Transaction::query()->forceDelete();
-        Transaction::factory()->count($this->_totalTransactionsCount)->create();
+        Transaction::factory()->count(5)->create(['paid_at' => Carbon::now()->subWeek()]);
+        Transaction::factory()->count($this->_totalTransactionsCount - 5)->create();
     }
 
     #[Test]
@@ -244,6 +245,33 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successWithDateRange()
+    {
+        $response = $this->sendToGraphQL([
+            'from' => Carbon::now()->subWeek()->format('Y-m-d'),
+            'to' => Carbon::now()->subDay()->format('Y-m-d'),
+        ]);
+
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+    }
+
+    #[Test]
+    public function errorWithDateRange()
+    {
+        $response = $this->sendToGraphQL(['from' => 'dfghjkjk']);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.date_format', ['attribute' => 'from', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.from.0'));
+
+        $response = $this->sendToGraphQL(['from' => Carbon::now()->format('Y-m-d'), 'to' => null]);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.required_with', ['attribute' => 'to', 'values' => 'from']), $response->json('errors.0.extensions.validation.to.0'));
+
+        $response = $this->sendToGraphQL(['from' => null, 'to' => Carbon::now()->format('Y-m-d')]);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.required_with', ['attribute' => 'from', 'values' => 'to']), $response->json('errors.0.extensions.validation.from.0'));
+    }
+
+    #[Test]
     public function errorPage()
     {
         $response = $this->sendToGraphQL(['page' => 'asnjfasnjfasn']);
@@ -357,6 +385,8 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                 $customer_id: Int
                 $card_id: Int
                 $transaction_type_id: Int
+                $from: String
+                $to: String
             ) {
                 transactions(
                     sort: $sort
@@ -369,6 +399,8 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                     customer_id: $customer_id
                     card_id: $card_id
                     transaction_type_id: $transaction_type_id
+                    from: $from
+                    to: $to
                 ) {
                     ' . $this->convertIntoQuery($this->_structure) . '
                 }

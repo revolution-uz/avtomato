@@ -72,6 +72,16 @@ class TransactionsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => ['nullable', 'int', Rule::exists('transaction_types', 'id')->whereNull('deleted_at')],
             ],
+            'from' => [
+                'name' => 'from',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:to|date_format:Y-m-d',
+            ],
+            'to' => [
+                'name' => 'to',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:from|date_format:Y-m-d|after_or_equal:from',
+            ],
         ];
     }
 
@@ -148,6 +158,12 @@ class TransactionsGraphQLQuery extends Query
                         ->where('first_name', 'ilike', "%{$args['search']}%")
                         ->orWhere('last_name', 'ilike', "%{$args['search']}%")
                     )
+            )
+            ->when(
+                isset($args['from'], $args['to']),
+                fn (Builder|Transaction $q) => $q
+                    ->whereDate('paid_at', '>=', $args['from'])
+                    ->whereDate('paid_at', '<=', $args['to'])
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }

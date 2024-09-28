@@ -60,6 +60,7 @@ class SendTransactionSmsJobTest extends TestCase
 
         (new SendTransactionSmsJob($transaction->id))->handle($smsServiceMock, $balanceServiceMock);
 
+        $transaction->refresh();
         $smsMessage = SmsMessage::query()->firstOrFail();
         $this->assertEquals($this->_phone->phone, $smsMessage->phone);
         $this->assertEquals(
@@ -95,6 +96,7 @@ class SendTransactionSmsJobTest extends TestCase
 
         (new SendTransactionSmsJob($transaction->id))->handle($smsServiceMock, $balanceServiceMock);
 
+        $transaction->refresh();
         $smsMessage = SmsMessage::query()->firstOrFail();
         $this->assertEquals($this->_phone->phone, $smsMessage->phone);
         $this->assertEquals(
