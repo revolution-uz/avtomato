@@ -159,7 +159,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successStatisticsInfoWithBranchId()
+    public function successStatisticsInfoWithBranches()
     {
         /** @var Branch $branch */
         $branch = Branch::factory()->create();
@@ -193,7 +193,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(__('validation.date_format', ['attribute' => 'date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.date.0'));
-        $this->assertEquals(__('validation.exists', ['attribute' => 'branch id']), $response->json('errors.0.extensions.validation.branch_id.0'));
+        $this->assertEquals(__('validation.exists', ['attribute' => 'branches.0']), $response->json('errors.0.extensions.validation')['branches.0'][0]);
     }
 
     #[Test]
@@ -228,17 +228,17 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installments->pluck('id')?->toArray(), $response->json('data.statisticsInfo.*.id'));
     }
 
-    private function buildGraphQLQuery(string|Carbon|null $date, $branch_id = null): array
+    private function buildGraphQLQuery(string|Carbon|null $date, $branches = null): array
     {
         if ($date instanceof Carbon) {
             $date = $date->format('Y-m-d');
         }
 
         $query = [];
-        $query['variables'] = ['date' => $date, 'branch_id' => $branch_id];
+        $query['variables'] = ['date' => $date, 'branches' => $branches];
         $query['query'] = '
-            query StatisticsInfo($date: String!, $branch_id: Int) {
-                statisticsInfo(date: $date, branch_id: $branch_id) {
+            query StatisticsInfo($date: String!, $branches: [Int!]) {
+                statisticsInfo(date: $date, branches: $branches) {
                     id
                     branch_name
                     customer_fullname
