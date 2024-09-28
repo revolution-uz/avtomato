@@ -4,10 +4,12 @@ namespace Tests\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
+use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -195,8 +197,48 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successSearch()
     {
-        $transaction = Transaction::query()->first();
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create(['name' => 'Test Branch']);
+        /** @var Installment $installment */
+        $installment = Installment::factory()->create();
+        /** @var Customer $customer */
+        $customer = Customer::factory()->create(['first_name' => 'Test Firstname', 'last_name' => 'Test Lastname']);
+
+        /** @var Transaction $transaction */
+        $transaction = Transaction::factory()->create([
+            'external_id' => 'test_external_id',
+            'branch_id' => $branch->id,
+            'installment_id' => $installment->id,
+            'customer_id' => $customer->id,
+        ]);
+
+        // ID
+        $response = $this->sendToGraphQL(['search' => (string) $transaction->id]);
+        $this->assertSuccessTransactionsResponse($response, total: 'IGNORE');
+        $this->assertNotNull(Arr::first($response->json('data.transactions.data'), fn ($item) => $item['id'] === $transaction->id));
+
+        // External ID
         $response = $this->sendToGraphQL(['search' => $transaction->external_id]);
+        $this->assertSuccessTransactionsResponse($response, total: 1);
+        $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+
+        // Branch name
+        $response = $this->sendToGraphQL(['search' => $branch->name]);
+        $this->assertSuccessTransactionsResponse($response, total: 1);
+        $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+
+        // Installment ID
+        $response = $this->sendToGraphQL(['search' => (string) $installment->id]);
+        $this->assertSuccessTransactionsResponse($response, total: 'IGNORE');
+        $this->assertNotNull(Arr::first($response->json('data.transactions.data'), fn ($item) => $item['id'] === $transaction->id));
+
+        // Customer firstname
+        $response = $this->sendToGraphQL(['search' => $customer->first_name]);
+        $this->assertSuccessTransactionsResponse($response, total: 1);
+        $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+
+        // Customer lastname
+        $response = $this->sendToGraphQL(['search' => $customer->last_name]);
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
     }
@@ -346,6 +388,9 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
             ],
         ]);
 
+        if ($total == 'IGNORE') {
+            $total = $response->json('data.transactions.total');
+        }
         $totalCount = $total ?? $this->_totalTransactionsCount;
         $currentPage = $page ?? 1;
         $currentPerPage = $perPage ?? 10;

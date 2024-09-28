@@ -15,7 +15,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property int|null $branch_id
- * @property Branch $branch
+ * @property Branch|null $branch
  * @property int $installment_id
  * @property Installment $installment
  * @property int $customer_id
