@@ -72,6 +72,16 @@ class TransactionsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => ['nullable', 'int', Rule::exists('transaction_types', 'id')->whereNull('deleted_at')],
             ],
+            'from' => [
+                'name' => 'from',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:to|date_format:Y-m-d',
+            ],
+            'to' => [
+                'name' => 'to',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:from|date_format:Y-m-d|after_or_equal:from',
+            ],
         ];
     }
 
@@ -137,13 +147,24 @@ class TransactionsGraphQLQuery extends Query
                 fn (Builder|Transaction $q) => $q->orderBySortable($args['sort']),
                 fn (Builder|Transaction $q) => $q->orderByDesc('paid_at')
             )
-            ->when(isset($args['search']), function (Builder $q) use ($args) {
-                $search = '%' . $args['search'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('id', 'ILIKE', $search)
-                        ->orWhere('external_id', 'ILIKE', $search);
-                });
-            })
+            ->when(
+                isset($args['search']),
+                fn ($q) => $q
+                    ->where('id', 'ilike', "%{$args['search']}%")
+                    ->orWhere('external_id', 'ilike', "%{$args['search']}%")
+                    ->orWhereHas('branch', fn ($q) => $q->where('name', 'ilike', "%{$args['search']}%"))
+                    ->orWhereHas('installment', fn ($q) => $q->where('id', 'ilike', "%{$args['search']}%"))
+                    ->orWhereHas('customer', fn ($q) => $q
+                        ->where('first_name', 'ilike', "%{$args['search']}%")
+                        ->orWhere('last_name', 'ilike', "%{$args['search']}%")
+                    )
+            )
+            ->when(
+                isset($args['from'], $args['to']),
+                fn (Builder|Transaction $q) => $q
+                    ->whereDate('paid_at', '>=', $args['from'])
+                    ->whereDate('paid_at', '<=', $args['to'])
+            )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 

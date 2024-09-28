@@ -4,10 +4,13 @@ namespace Tests\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -52,8 +55,8 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         parent::setUp();
 
         Installment::query()->forceDelete();
-        Transaction::query()->forceDelete();
-        Transaction::factory()->count($this->_totalTransactionsCount)->create();
+        Transaction::factory()->count(5)->create(['paid_at' => Carbon::now()->subWeek()]);
+        Transaction::factory()->count($this->_totalTransactionsCount - 5)->create();
     }
 
     #[Test]
@@ -195,10 +198,77 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successSearch()
     {
-        $transaction = Transaction::query()->first();
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create(['name' => 'Test Branch']);
+        /** @var Installment $installment */
+        $installment = Installment::factory()->create();
+        /** @var Customer $customer */
+        $customer = Customer::factory()->create(['first_name' => 'Test Firstname', 'last_name' => 'Test Lastname']);
+
+        /** @var Transaction $transaction */
+        $transaction = Transaction::factory()->create([
+            'external_id' => 'test_external_id',
+            'branch_id' => $branch->id,
+            'installment_id' => $installment->id,
+            'customer_id' => $customer->id,
+        ]);
+
+        // ID
+        $response = $this->sendToGraphQL(['search' => (string) $transaction->id]);
+        $this->assertSuccessTransactionsResponse($response, total: 'IGNORE');
+        $this->assertNotNull(Arr::first($response->json('data.transactions.data'), fn ($item) => $item['id'] === $transaction->id));
+
+        // External ID
         $response = $this->sendToGraphQL(['search' => $transaction->external_id]);
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+
+        // Branch name
+        $response = $this->sendToGraphQL(['search' => $branch->name]);
+        $this->assertSuccessTransactionsResponse($response, total: 1);
+        $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+
+        // Installment ID
+        $response = $this->sendToGraphQL(['search' => (string) $installment->id]);
+        $this->assertSuccessTransactionsResponse($response, total: 'IGNORE');
+        $this->assertNotNull(Arr::first($response->json('data.transactions.data'), fn ($item) => $item['id'] === $transaction->id));
+
+        // Customer firstname
+        $response = $this->sendToGraphQL(['search' => $customer->first_name]);
+        $this->assertSuccessTransactionsResponse($response, total: 1);
+        $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+
+        // Customer lastname
+        $response = $this->sendToGraphQL(['search' => $customer->last_name]);
+        $this->assertSuccessTransactionsResponse($response, total: 1);
+        $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+    }
+
+    #[Test]
+    public function successWithDateRange()
+    {
+        $response = $this->sendToGraphQL([
+            'from' => Carbon::now()->subWeek()->format('Y-m-d'),
+            'to' => Carbon::now()->subDay()->format('Y-m-d'),
+        ]);
+
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+    }
+
+    #[Test]
+    public function errorWithDateRange()
+    {
+        $response = $this->sendToGraphQL(['from' => 'dfghjkjk']);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.date_format', ['attribute' => 'from', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.from.0'));
+
+        $response = $this->sendToGraphQL(['from' => Carbon::now()->format('Y-m-d'), 'to' => null]);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.required_with', ['attribute' => 'to', 'values' => 'from']), $response->json('errors.0.extensions.validation.to.0'));
+
+        $response = $this->sendToGraphQL(['from' => null, 'to' => Carbon::now()->format('Y-m-d')]);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.required_with', ['attribute' => 'from', 'values' => 'to']), $response->json('errors.0.extensions.validation.from.0'));
     }
 
     #[Test]
@@ -315,6 +385,8 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                 $customer_id: Int
                 $card_id: Int
                 $transaction_type_id: Int
+                $from: String
+                $to: String
             ) {
                 transactions(
                     sort: $sort
@@ -327,6 +399,8 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                     customer_id: $customer_id
                     card_id: $card_id
                     transaction_type_id: $transaction_type_id
+                    from: $from
+                    to: $to
                 ) {
                     ' . $this->convertIntoQuery($this->_structure) . '
                 }
@@ -346,6 +420,9 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
             ],
         ]);
 
+        if ($total == 'IGNORE') {
+            $total = $response->json('data.transactions.total');
+        }
         $totalCount = $total ?? $this->_totalTransactionsCount;
         $currentPage = $page ?? 1;
         $currentPerPage = $perPage ?? 10;
