@@ -139,7 +139,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 TagInputGraphQLType::class,
                 TagGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum', 'is_soft_delete_token'],
+            'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];
     }
 }
