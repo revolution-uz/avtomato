@@ -270,7 +270,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     description
                     id
                     initial_fee
-                    initial_fee_info {
+                    initial_fee_transaction {
                         id
                         branch_id
                         admin_id
@@ -546,7 +546,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     'description',
                     'id',
                     'initial_fee',
-                    'initial_fee_info' => [
+                    'initial_fee_transaction' => [
                         'id',
                         'branch_id',
                         'admin_id',
@@ -887,22 +887,22 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
             $this->assertEquals($transaction->transactionType->updated_at->timestamp, $transactionResponse['transaction_type']['updated_at']);
         }
 
-        $initialFeeInfo = $installment->transactions()->firstWhere('is_initial_fee', true);
-        $this->assertEquals($initialFeeInfo->id, $response->json('data.singleInstallment.initial_fee_info.id'));
-        $this->assertEquals($initialFeeInfo->branch_id, $response->json('data.singleInstallment.initial_fee_info.branch_id'));
-        $this->assertEquals($initialFeeInfo->admin_id, $response->json('data.singleInstallment.initial_fee_info.admin_id'));
-        $this->assertEquals($initialFeeInfo->installment_id, $response->json('data.singleInstallment.initial_fee_info.installment_id'));
-        $this->assertEquals(true, $response->json('data.singleInstallment.initial_fee_info.is_initial_fee'));
-        $this->assertEquals($initialFeeInfo->customer_id, $response->json('data.singleInstallment.initial_fee_info.customer_id'));
-        $this->assertEquals($initialFeeInfo->transaction_type_id, $response->json('data.singleInstallment.initial_fee_info.transaction_type_id'));
-        $this->assertEquals($initialFeeInfo->card_id, $response->json('data.singleInstallment.initial_fee_info.card_id'));
-        $this->assertEquals($initialFeeInfo->card_pan, $response->json('data.singleInstallment.initial_fee_info.card_pan'));
-        $this->assertEquals($initialFeeInfo->external_id, $response->json('data.singleInstallment.initial_fee_info.external_id'));
-        $this->assertEquals($initialFeeInfo->amount, $response->json('data.singleInstallment.initial_fee_info.amount'));
-        $this->assertEquals($initialFeeInfo->status->value, $response->json('data.singleInstallment.initial_fee_info.status'));
-        $this->assertEquals($initialFeeInfo->paid_at->timestamp, $response->json('data.singleInstallment.initial_fee_info.paid_at'));
-        $this->assertEquals($initialFeeInfo->created_at->timestamp, $response->json('data.singleInstallment.initial_fee_info.created_at'));
-        $this->assertEquals($initialFeeInfo->updated_at->timestamp, $response->json('data.singleInstallment.initial_fee_info.updated_at'));
+        $initialFeeTransaction = $installment->transactions()->firstWhere('is_initial_fee', true);
+        $this->assertEquals($initialFeeTransaction->id, $response->json('data.singleInstallment.initial_fee_transaction.id'));
+        $this->assertEquals($initialFeeTransaction->branch_id, $response->json('data.singleInstallment.initial_fee_transaction.branch_id'));
+        $this->assertEquals($initialFeeTransaction->admin_id, $response->json('data.singleInstallment.initial_fee_transaction.admin_id'));
+        $this->assertEquals($initialFeeTransaction->installment_id, $response->json('data.singleInstallment.initial_fee_transaction.installment_id'));
+        $this->assertEquals(true, $response->json('data.singleInstallment.initial_fee_transaction.is_initial_fee'));
+        $this->assertEquals($initialFeeTransaction->customer_id, $response->json('data.singleInstallment.initial_fee_transaction.customer_id'));
+        $this->assertEquals($initialFeeTransaction->transaction_type_id, $response->json('data.singleInstallment.initial_fee_transaction.transaction_type_id'));
+        $this->assertEquals($initialFeeTransaction->card_id, $response->json('data.singleInstallment.initial_fee_transaction.card_id'));
+        $this->assertEquals($initialFeeTransaction->card_pan, $response->json('data.singleInstallment.initial_fee_transaction.card_pan'));
+        $this->assertEquals($initialFeeTransaction->external_id, $response->json('data.singleInstallment.initial_fee_transaction.external_id'));
+        $this->assertEquals($initialFeeTransaction->amount, $response->json('data.singleInstallment.initial_fee_transaction.amount'));
+        $this->assertEquals($initialFeeTransaction->status->value, $response->json('data.singleInstallment.initial_fee_transaction.status'));
+        $this->assertEquals($initialFeeTransaction->paid_at->timestamp, $response->json('data.singleInstallment.initial_fee_transaction.paid_at'));
+        $this->assertEquals($initialFeeTransaction->created_at->timestamp, $response->json('data.singleInstallment.initial_fee_transaction.created_at'));
+        $this->assertEquals($initialFeeTransaction->updated_at->timestamp, $response->json('data.singleInstallment.initial_fee_transaction.updated_at'));
     }
 
     private function assertCustomerFields(array $customerData): void

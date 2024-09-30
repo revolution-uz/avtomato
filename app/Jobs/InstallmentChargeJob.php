@@ -49,7 +49,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
                 $atmosService->withdrawAmountAndCreatePINFLTransaction($installment->customer, $installment->id, $debt_amount);
             }
 
-            if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->isAvailableGurantorCard()) {
+            if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->isAvailableGuarantorCard()) {
                 foreach ($installment->cards as $card) {
                     if ($card->customer_id != $installment->customer_id && $debt_amount > self::MINIMUM_WITHDRAW_AMOUNT) {
                         $atmosService->withdrawAmountAndCreateCardTransaction($card, $installment->id, $debt_amount);
