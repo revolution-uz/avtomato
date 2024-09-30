@@ -53,11 +53,11 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Branch $branch
  * @property Tariff $tariff
  * @property Customer $customer
- * @property Card[] $cards
+ * @property Card[]|Collection<int, Card> $cards
  * @property Attachment[] $documents
  * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
  * @property Customer[]|Collection<int, Customer> $guarantors
- * @property Transaction[] $transactions
+ * @property Transaction[]|Collection<int, Transaction> $transactions
  * @property InstallmentGuarantor[] $guarantorList
  * @property-read  CompanyAdmin $admin
  * @property-read float $debtAmount

@@ -140,7 +140,6 @@ class TransactionsGraphQLQuery extends Query
                 $this->_branches,
                 fn (Builder $q) => $q
                     ->whereIn('branch_id', $this->_branches)
-                    ->orWhereHas('installment', fn (Builder $q) => $q->whereIn('branch_id', $this->_branches))
             )
             ->when(
                 isset($args['sort']),

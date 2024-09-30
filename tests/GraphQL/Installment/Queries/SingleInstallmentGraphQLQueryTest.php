@@ -54,8 +54,8 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         }
         InstallmentComment::factory()->create(['installment_id' => $this->_installment->id, 'admin_id' => $this->_installment->admin_id]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::INSTALLMENT_DOCUMENT, $this->_installment, 'photo1.jpg');
-        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_installment->customer_id, 'admin_id' => $this->_installment->admin_id]);
-        Transaction::factory()->count(1)->create(['installment_id' => $this->_installment->id, 'customer_id' => $guarantor->id, 'admin_id' => $this->_installment->admin_id]);
+        Transaction::factory()->create(['installment_id' => $this->_installment->id, 'customer_id' => $this->_installment->customer_id, 'admin_id' => $this->_installment->admin_id]);
+        Transaction::factory()->create(['installment_id' => $this->_installment->id, 'customer_id' => $guarantor->id, 'admin_id' => $this->_installment->admin_id, 'is_initial_fee' => true]);
     }
 
     #[Test]
@@ -270,7 +270,23 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     description
                     id
                     initial_fee
-                    is_paid_initial_fee
+                    initial_fee_info {
+                        id
+                        branch_id
+                        admin_id
+                        installment_id
+                        is_initial_fee
+                        customer_id
+                        transaction_type_id
+                        card_id
+                        card_pan
+                        external_id
+                        amount
+                        status
+                        paid_at
+                        created_at
+                        updated_at
+                    }
                     is_blacklist
                     next_pay_date
                     period
@@ -530,7 +546,23 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
                     'description',
                     'id',
                     'initial_fee',
-                    'is_paid_initial_fee',
+                    'initial_fee_info' => [
+                        'id',
+                        'branch_id',
+                        'admin_id',
+                        'installment_id',
+                        'is_initial_fee',
+                        'customer_id',
+                        'transaction_type_id',
+                        'card_id',
+                        'card_pan',
+                        'external_id',
+                        'amount',
+                        'status',
+                        'paid_at',
+                        'created_at',
+                        'updated_at',
+                    ],
                     'is_blacklist',
                     'next_pay_date',
                     'period',
@@ -663,7 +695,6 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installment->description, $response->json('data.singleInstallment.description'));
         $this->assertEquals($installment->id, $response->json('data.singleInstallment.id'));
         $this->assertEquals($installment->initial_fee, $response->json('data.singleInstallment.initial_fee'));
-        $this->assertEquals($installment->isPaidInitialFee(), $response->json('data.singleInstallment.is_paid_initial_fee'));
         $this->assertEquals($installment->is_blacklist, $response->json('data.singleInstallment.is_blacklist'));
         $this->assertEquals($installment->period, $response->json('data.singleInstallment.period'));
         $this->assertEquals($installment->sms_notify, $response->json('data.singleInstallment.sms_notify'));
@@ -855,6 +886,23 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
             $this->assertEquals($transaction->transactionType->name_uz, $transactionResponse['transaction_type']['name_uz']);
             $this->assertEquals($transaction->transactionType->updated_at->timestamp, $transactionResponse['transaction_type']['updated_at']);
         }
+
+        $initialFeeInfo = $installment->transactions()->firstWhere('is_initial_fee', true);
+        $this->assertEquals($initialFeeInfo->id, $response->json('data.singleInstallment.initial_fee_info.id'));
+        $this->assertEquals($initialFeeInfo->branch_id, $response->json('data.singleInstallment.initial_fee_info.branch_id'));
+        $this->assertEquals($initialFeeInfo->admin_id, $response->json('data.singleInstallment.initial_fee_info.admin_id'));
+        $this->assertEquals($initialFeeInfo->installment_id, $response->json('data.singleInstallment.initial_fee_info.installment_id'));
+        $this->assertEquals(true, $response->json('data.singleInstallment.initial_fee_info.is_initial_fee'));
+        $this->assertEquals($initialFeeInfo->customer_id, $response->json('data.singleInstallment.initial_fee_info.customer_id'));
+        $this->assertEquals($initialFeeInfo->transaction_type_id, $response->json('data.singleInstallment.initial_fee_info.transaction_type_id'));
+        $this->assertEquals($initialFeeInfo->card_id, $response->json('data.singleInstallment.initial_fee_info.card_id'));
+        $this->assertEquals($initialFeeInfo->card_pan, $response->json('data.singleInstallment.initial_fee_info.card_pan'));
+        $this->assertEquals($initialFeeInfo->external_id, $response->json('data.singleInstallment.initial_fee_info.external_id'));
+        $this->assertEquals($initialFeeInfo->amount, $response->json('data.singleInstallment.initial_fee_info.amount'));
+        $this->assertEquals($initialFeeInfo->status->value, $response->json('data.singleInstallment.initial_fee_info.status'));
+        $this->assertEquals($initialFeeInfo->paid_at->timestamp, $response->json('data.singleInstallment.initial_fee_info.paid_at'));
+        $this->assertEquals($initialFeeInfo->created_at->timestamp, $response->json('data.singleInstallment.initial_fee_info.created_at'));
+        $this->assertEquals($initialFeeInfo->updated_at->timestamp, $response->json('data.singleInstallment.initial_fee_info.updated_at'));
     }
 
     private function assertCustomerFields(array $customerData): void
