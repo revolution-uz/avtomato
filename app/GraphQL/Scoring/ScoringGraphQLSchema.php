@@ -115,7 +115,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum', 'is_soft_delete_token'],
+            'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];
     }
 }
