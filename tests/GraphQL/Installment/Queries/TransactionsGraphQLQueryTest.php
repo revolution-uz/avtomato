@@ -11,7 +11,6 @@ use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -330,8 +329,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
 
         /** @var Branch[] $branches */
         $branches = Branch::factory()->count(2)->create();
-        /** @var Transaction[]|Collection<int, Transaction> $transactions */
-        $transactions = Transaction::factory()->count(10)->create(['branch_id' => $branches[1]->id]);
+        Transaction::factory()->count(10)->create(['branch_id' => $branches[1]->id]);
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this
@@ -353,7 +351,10 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery()
             );
         $this->assertSuccessTransactionsResponse($response, total: 10);
-        $this->assertEquals($transactions->pluck('id')->toArray(), $response->json('data.transactions.data.*.id'));
+        $this->assertEquals(
+            Transaction::query()->where('branch_id', $branches[1]->id)->pluck('id')->toArray(),
+            $response->json('data.transactions.data.*.id')
+        );
     }
 
     private function sendToGraphQL(array $data = []): TestResponse
