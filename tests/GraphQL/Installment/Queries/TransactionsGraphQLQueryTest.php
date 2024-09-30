@@ -352,7 +352,10 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
             );
         $this->assertSuccessTransactionsResponse($response, total: 10);
         $this->assertEquals(
-            Transaction::query()->where('branch_id', $branches[1]->id)->pluck('id')->toArray(),
+            Transaction::query()
+                ->where('branch_id', $branches[1]->id)
+                ->orderByDesc('paid_at')
+                ->pluck('id')->toArray(),
             $response->json('data.transactions.data.*.id')
         );
     }
