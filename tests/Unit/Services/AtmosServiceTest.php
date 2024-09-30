@@ -80,7 +80,7 @@ class AtmosServiceTest extends TestCase
 
         $debtAmount = $this->_installment->debtAmount;
 
-        $this->_atmosService->withdrawAmountAndCreateCardTransaction($this->_card, $this->_installment->id, $debtAmount);
+        $this->_atmosService->withdrawAmountAndCreateCardTransaction($this->_card, $this->_installment, $debtAmount);
 
         $transaction = Transaction::query()->first();
         $transactionAttempt = TransactionAttempt::query()->first();
@@ -116,7 +116,7 @@ class AtmosServiceTest extends TestCase
 
         $debtAmount = $this->_installment->debtAmount;
 
-        $this->_atmosService->withdrawAmountAndCreatePINFLTransaction($this->_customer, $this->_installment->id, $debtAmount);
+        $this->_atmosService->withdrawAmountAndCreatePINFLTransaction($this->_customer, $this->_installment, $debtAmount);
 
         $transactions = Transaction::query()->get();
         $transactionAttempts = TransactionAttempt::query()->get();
@@ -170,7 +170,7 @@ class AtmosServiceTest extends TestCase
 
         $debtAmount = $this->_installment->debtAmount;
 
-        $this->_atmosService->withdrawAmountAndCreateCardTransaction($this->_card, $this->_installment->id, $debtAmount);
+        $this->_atmosService->withdrawAmountAndCreateCardTransaction($this->_card, $this->_installment, $debtAmount);
 
         $transaction = Transaction::query()->first();
         $transactionAttempt = TransactionAttempt::query()->first();
@@ -199,7 +199,7 @@ class AtmosServiceTest extends TestCase
 
         $debtAmount = $this->_installment->debtAmount;
 
-        $this->_atmosService->withdrawAmountAndCreatePINFLTransaction($this->_customer, $this->_installment->id, $debtAmount);
+        $this->_atmosService->withdrawAmountAndCreatePINFLTransaction($this->_customer, $this->_installment, $debtAmount);
 
         $transactions = Transaction::query()->get();
         $transactionAttempts = TransactionAttempt::query()->get();
