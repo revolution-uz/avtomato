@@ -165,16 +165,45 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successBranchesOnlyTransactionBranchId()
+    {
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        $transactions = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
+        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+        foreach ($transactions as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
+    }
+
+    #[Test]
+    public function successBranchesOnlyInstallmentBranchId()
+    {
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        $transactions = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
+        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+        foreach ($transactions as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
+    }
+
+    #[Test]
     public function successBranches()
     {
+        /** @var Branch $branch */
         $branch = Branch::factory()->create();
-        Transaction::factory()->create(['branch_id' => $branch->id]);
+        $transactionsWithBranch = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
         $installment = Installment::factory()->create(['branch_id' => $branch->id]);
-        Transaction::factory()->create(['installment_id' => $installment->id]);
-
+        $transactionsWithoutBranch = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
         $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
-
-        $this->assertSuccessTransactionsResponse($response, total: 2);
+        $this->assertSuccessTransactionsResponse($response, total: 10);
+        foreach ($transactionsWithBranch->merge($transactionsWithoutBranch) as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
     }
 
     #[Test]
@@ -325,13 +354,14 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successCheckForPermission()
     {
+        /** @var Role $role */
         $role = Role::factory()->create();
         $simpleAdmin = $this->createSimpleAdminUser($role->id);
         $permission = Permission::query()->where('slug', PermissionEnum::TRANSACTION_VIEW_ALL)->firstOrFail();
 
+        /** @var Branch[] $branches */
         $branches = Branch::factory()->count(2)->create();
-        $installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
-        Transaction::factory()->count(10)->create(['installment_id' => $installment->id]);
+        Transaction::factory()->count(10)->create(['branch_id' => $branches[1]->id]);
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this
@@ -355,7 +385,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessTransactionsResponse($response, total: 10);
         $this->assertEquals(
             Transaction::query()
-                ->whereHas('installment', fn ($q) => $q->where('branch_id', $branches[1]->id))
+                ->where('branch_id', $branches[1]->id)
                 ->orderByDesc('paid_at')
                 ->pluck('id')->toArray(),
             $response->json('data.transactions.data.*.id')
