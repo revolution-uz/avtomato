@@ -165,13 +165,45 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successBranchesOnlyTransactionBranchId()
+    {
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        $transactions = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
+        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+        foreach ($transactions as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
+    }
+
+    #[Test]
+    public function successBranchesOnlyInstallmentBranchId()
+    {
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        $transactions = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
+        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+        foreach ($transactions as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
+    }
+
+    #[Test]
     public function successBranches()
     {
         /** @var Branch $branch */
         $branch = Branch::factory()->create();
-        Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
+        $transactionsWithBranch = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        $transactionsWithoutBranch = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
         $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
-        $this->assertSuccessTransactionsResponse($response, total: 5);
+        $this->assertSuccessTransactionsResponse($response, total: 10);
+        foreach ($transactionsWithBranch->merge($transactionsWithoutBranch) as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
     }
 
     #[Test]
