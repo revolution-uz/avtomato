@@ -3,6 +3,7 @@
 namespace Tests\Unit\Models;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Helpers\InstallmentGraphHelper;
 use App\Models\Company\Card;
 use App\Models\Company\CompanyAdmin;
@@ -158,7 +159,7 @@ class TransactionModelTest extends TestCase
     }
 
     #[Test]
-    public function decrementsInstallmentsPaidAmount()
+    public function decrementsInstallmentPaidAmountWhenTransactionIsDeleted()
     {
         $transaction = Transaction::factory()->create([
             'installment_id' => $this->_installment->id,
@@ -171,5 +172,58 @@ class TransactionModelTest extends TestCase
         $transaction->delete();
 
         $this->assertEquals($oldPaidAmount - 1000, $this->_installment->refresh()->paid_amount);
+    }
+
+    #[Test]
+    public function decrementsInstallmentPaidAmountWhenTransactionIsCanceled()
+    {
+        $transaction = Transaction::factory()->create([
+            'installment_id' => $this->_installment->id,
+            'amount' => 1000,
+            'status' => TransactionStatusEnum::SUCCESS,
+        ]);
+        $this->_installment->refresh();
+        $oldPaidAmount = $this->_installment->paid_amount;
+        $transaction->update(['status' => TransactionStatusEnum::CANCELED]);
+
+        $this->assertEquals($oldPaidAmount - 1000, $this->_installment->refresh()->paid_amount);
+    }
+
+    #[Test]
+    public function doesNotDecrementInstallmentPaidAmountWhenTransactionIsCanceled()
+    {
+        // Transaction is not canceled just updated
+        $transaction = Transaction::factory()->create([
+            'installment_id' => $this->_installment->id,
+            'amount' => 1000,
+            'status' => TransactionStatusEnum::SUCCESS,
+        ]);
+        $this->_installment->refresh();
+        $oldPaidAmount = $this->_installment->paid_amount;
+        $transaction->update(['customer_id' => Customer::factory()->create()->id]);
+        $this->assertEquals($oldPaidAmount, $this->_installment->refresh()->paid_amount);
+
+        // Transaction is already canceled
+        $transaction = Transaction::factory()->create([
+            'installment_id' => $this->_installment->id,
+            'amount' => 1000,
+            'status' => TransactionStatusEnum::CANCELED,
+        ]);
+        $this->_installment->refresh();
+        $oldPaidAmount = $this->_installment->paid_amount;
+        $transaction->update(['status' => TransactionStatusEnum::CANCELED]);
+        $this->assertEquals($oldPaidAmount, $this->_installment->refresh()->paid_amount);
+
+        // Transaction is_initial_fee column is true so Installment paid amount does not decrement
+        $transaction = Transaction::factory()->create([
+            'installment_id' => $this->_installment->id,
+            'amount' => 1000,
+            'status' => TransactionStatusEnum::SUCCESS,
+            'is_initial_fee' => true,
+        ]);
+        $this->_installment->refresh();
+        $oldPaidAmount = $this->_installment->paid_amount;
+        $transaction->update(['status' => TransactionStatusEnum::CANCELED]);
+        $this->assertEquals($oldPaidAmount, $this->_installment->refresh()->paid_amount);
     }
 }
