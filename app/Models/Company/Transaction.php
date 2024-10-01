@@ -89,10 +89,21 @@ class Transaction extends Model
             dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
         });
 
+        static::updating(function (self $transaction) {
+            if (
+                $transaction->isDirty('status')
+                and $transaction->getOriginal('status') === TransactionStatusEnum::SUCCESS
+                and $transaction->status === TransactionStatusEnum::CANCELED
+                and ! $transaction->is_initial_fee
+            ) {
+                Installment::query()->where('id', $transaction->installment_id)->decrement('paid_amount', $transaction->amount);
+            }
+        });
+
         static::deleted(function (self $transaction) {
-            Installment::query()
-                ->where('id', $transaction->installment_id)
-                ->decrement('paid_amount', $transaction->amount);
+            if (! $transaction->is_initial_fee) {
+                Installment::query()->where('id', $transaction->installment_id)->decrement('paid_amount', $transaction->amount);
+            }
         });
     }
 

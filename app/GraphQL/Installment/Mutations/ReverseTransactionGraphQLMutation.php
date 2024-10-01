@@ -13,7 +13,6 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Mutation;
-use Throwable;
 
 class ReverseTransactionGraphQLMutation extends Mutation
 {
@@ -66,23 +65,16 @@ class ReverseTransactionGraphQLMutation extends Mutation
         return RbacHelper::checkPermission(PermissionEnum::TRANSACTION_REVERSE);
     }
 
-    /**
-     * @throws Throwable
-     */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $transaction = Transaction::findOrFail($args['id']);
-        if ($transaction->transaction_type_id === TransactionType::ATMOS_WITH_CARD || $transaction->transaction_type_id === TransactionType::ATMOS_WITH_PINFL) {
+
+        if (TransactionType::isAutoPay($transaction->transaction_type_id)) {
             return $this->atmosCardService->reversePayment($transaction);
         } else {
-            $installment = $transaction->installment;
-            $installment->paid_amount -= $transaction->amount;
-            $installment->saveOrFail();
-
             $transaction->status = TransactionStatusEnum::CANCELED;
-            $transaction->saveOrFail();
 
-            return true;
+            return $transaction->saveOrFail();
         }
     }
 }

@@ -260,7 +260,7 @@ class Installment extends Model
 
     public function isPaidInitialFee(): bool
     {
-        return (float) $this->transactions()->where('is_initial_fee', true)->sum('amount') == $this->initial_fee;
+        return (float) $this->transactions()->where('is_initial_fee', true)->where('status', TransactionStatusEnum::SUCCESS)->sum('amount') == $this->initial_fee;
     }
 
     public function isFullyPaid(): Attribute
