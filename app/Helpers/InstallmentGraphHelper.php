@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\DTOs\Installment\InstallmentGraphDTO;
 use App\Enums\Company\InstallmentGraphStatusEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
 use App\Services\Installment\InstallmentService;
@@ -16,10 +17,11 @@ class InstallmentGraphHelper
      */
     public static function getGraphs(Installment $installment): array
     {
-        $transactions = $installment->transactions()->orderBy('id')->select('amount', 'created_at')->get();
+        $transactions = $installment->transactions()->where('status', TransactionStatusEnum::SUCCESS)->orderBy('id')->select('amount', 'created_at')->get();
         $paidAmount = max(round($transactions->sum('amount') - $installment->initial_fee, 2), 0);
         $graphs = [];
         $months = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
+        $allPaid = $paidAmount >= $installment->installment_amount;
         /** @var Carbon $monthlyPaymentDate */
         foreach ($months as $index => $monthlyPaymentDate) {
             $paidForMonth = round(min($paidAmount, $installment->monthlyPayment), 2);
@@ -34,18 +36,18 @@ class InstallmentGraphHelper
                     break;
                 }
             }
+            $status = $allPaid || $paidForMonth >= $installment->monthlyPayment
+                ? InstallmentGraphStatusEnum::PAID
+                : ($monthlyPaymentDate->isPast()
+                    ? InstallmentGraphStatusEnum::DELAY
+                    : InstallmentGraphStatusEnum::NOT_STARTED);
             $graphs[] = new InstallmentGraphDTO(
                 id: $index + 1,
                 amount: $installment->monthlyPayment,
                 paid_amount: $paidForMonth,
                 overdue_days: $monthlyPaymentDate->isPast() ? max(round($monthlyPaymentDate->diffInDays($paidDateForMonth)), 0) : 0,
                 starts_in: $monthlyPaymentDate,
-                status: $monthlyPaymentDate->isPast()
-                    ? (
-                        $paidForMonth >= $installment->monthlyPayment
-                            ? InstallmentGraphStatusEnum::PAID
-                            : InstallmentGraphStatusEnum::DELAY
-                    ) : InstallmentGraphStatusEnum::NOT_STARTED
+                status: $status
             );
         }
 
