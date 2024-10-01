@@ -21,40 +21,44 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
     private array $_input;
 
+    private Carbon $_carbon;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         Installment::query()->forceDelete();
 
+        $this->_carbon = Carbon::createFromFormat('Y-m-d', '2024-09-15')->startOfDay();
+
         $this->_input = [
             'amount' => 1000000,
             'percent' => 15,
             'initial_fee' => 100000,
             'period' => 3,
-            'starts_in' => Carbon::today(),
+            'starts_in' => $this->_carbon,
             'status' => InstallmentStatusEnum::ACTIVE,
         ];
 
         /** @var Installment[] $installments */
         $installments = [];
 
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::today()->subMonth()]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subMonth()]));
         $installments[] = Installment::factory()->create($this->_input);
         $installments[] = Installment::factory()->create($this->_input);
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::today()->subDays(1)]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::today()->subDays(2)]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::today()->subDays(3)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(1)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(2)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(3)]));
 
-        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => $installments[1]->debtAmount, 'paid_at' => Carbon::today()]);
-        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000, 'paid_at' => Carbon::today()]);
-        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000, 'paid_at' => Carbon::today()]);
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => $installments[1]->debtAmount, 'paid_at' => $this->_carbon]);
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000, 'paid_at' => $this->_carbon]);
+        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000, 'paid_at' => $this->_carbon]);
     }
 
     #[Test]
     public function successStatisticsForLastMonth()
     {
-        $to = Carbon::today()->subMonth();
+        $to = $this->_carbon->subMonth();
         $from = (clone $to)->subDays(6);
 
         $response = $this
@@ -105,7 +109,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successStatisticsForLastWeek()
     {
-        $to = Carbon::today();
+        $to = $this->_carbon;
         $from = (clone $to)->subDays(6);
 
         $response = $this
@@ -156,7 +160,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successStatisticsForNextMonth()
     {
-        $to = Carbon::today()->addMonth();
+        $to = $this->_carbon->addMonth();
         $from = (clone $to)->subDays(6);
 
         $response = $this
@@ -207,7 +211,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successStatisticsForOutOfPeriodRanges()
     {
-        $to = Carbon::today()->subMonths(2);
+        $to = (clone $this->_carbon)->subMonths(2);
         $from = (clone $to)->subDays(6);
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -251,7 +255,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         ];
         $this->assertSuccessResponse($response, $expectedData);
 
-        $to = Carbon::today()->addMonths(3);
+        $to = (clone $this->_carbon)->addMonths(3);
         $from = (clone $to)->subDays(6);
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -354,7 +358,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successStatisticsWithBranches()
     {
-        $to = Carbon::today();
+        $to = $this->_carbon;
         $from = (clone $to)->subDays(6);
 
         /** @var Branch $branch */
@@ -436,7 +440,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successCheckForPermission()
     {
-        $date = Carbon::today();
+        $date = $this->_carbon;
 
         /** @var Role $role */
         $role = Role::factory()->create();
