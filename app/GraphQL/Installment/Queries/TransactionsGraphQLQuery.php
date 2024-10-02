@@ -139,11 +139,11 @@ class TransactionsGraphQLQuery extends Query
             ->when(
                 $this->_branches,
                 fn (Builder $q) => $q
-                    ->whereIn('branch_id', $this->_branches)
-                    ->orWhere(fn (Builder $q) => $q
-                        ->whereNull('branch_id')
-                        ->whereHas('installment', fn (Builder $q) => $q
-                            ->whereIn('branch_id', $this->_branches)
+                    ->where(fn (Builder $q) => $q
+                        ->whereIn('branch_id', $this->_branches)
+                        ->orWhere(fn (Builder $q) => $q
+                            ->whereNull('branch_id')
+                            ->whereHas('installment', fn (Builder $q) => $q->whereIn('branch_id', $this->_branches))
                         )
                     )
             )
