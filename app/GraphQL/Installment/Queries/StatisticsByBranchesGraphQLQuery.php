@@ -46,13 +46,8 @@ class StatisticsByBranchesGraphQLQuery extends Query
                 'description' => 'Ex: 2024-01-01',
             ],
             'branch_ids' => [
-                'type' => Type::listOf(Type::int()),
-                'rules' => [
-                    'nullable',
-                    'array',
-                    'exists:transactions,branch_id',
-                    Rule::exists('branches', 'id')->whereNull('deleted_at')->when($this->_branches, fn ($q) => $q->where('id', $this->_branches)),
-                ],
+                'type' => Type::listOf(Type::nonNull(Type::int())),
+                'rules' => ['nullable', 'array'],
             ],
         ];
     }
@@ -78,5 +73,17 @@ class StatisticsByBranchesGraphQLQuery extends Query
             $to_date,
             $this->_branches,
         );
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'branch_ids.*' => [
+                'exists:transactions,branch_id',
+                Rule::exists('branches', 'id')
+                    ->whereNull('deleted_at')
+                    ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),
+            ],
+        ];
     }
 }
