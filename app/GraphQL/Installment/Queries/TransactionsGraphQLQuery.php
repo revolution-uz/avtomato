@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
+use App\ValueObjects\Issue;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -92,81 +93,81 @@ class TransactionsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $this->_branches = $args['branches'] ?? $this->_branches;
-
+        if (isset($args['branches']))
+            $args['branches'] = array_intersect($args['branches'], $this->_branches);
         return Transaction::query()
             ->with(['installment', 'admin', 'customer', 'transactionType', 'installment.branch'])
             ->when(
                 isset($args['amount']),
-                fn (Builder $q) => $q
+                fn(Builder $q) => $q
                     ->where('amount', $args['amount'])
             )
             ->when(
                 isset($args['id']),
-                fn (Builder $q) => $q
+                fn(Builder $q) => $q
                     ->where('id', $args['id'])
             )
             ->when(
                 isset($args['branch_id']),
-                fn (Builder $q) => $q
-                    ->whereHas('installment', fn (Builder $q) => $q->where('branch_id', $args['branch_id']))
+                fn(Builder $q) => $q
+                    ->whereHas('installment', fn(Builder $q) => $q->where('branch_id', $args['branch_id']))
             )
             ->when(
                 isset($args['admin_id']),
-                fn (Builder $q) => $q
+                fn(Builder $q) => $q
                     ->where('id', $args['admin_id'])
             )
             ->when(
                 isset($args['installment_id']),
-                fn (Builder $q) => $q
+                fn(Builder $q) => $q
                     ->where('installment_id', $args['installment_id'])
             )
             ->when(
                 isset($args['customer_id']),
-                fn (Builder $q) => $q
+                fn(Builder $q) => $q
                     ->where('customer_id', $args['customer_id'])
             )
             ->when(
                 isset($args['card_id']),
-                fn (Builder $q) => $q
+                fn(Builder $q) => $q
                     ->where('card_id', $args['card_id'])
             )
             ->when(
                 isset($args['transaction_type_id']),
-                fn (Builder $q) => $q
+                fn(Builder $q) => $q
                     ->where('transaction_type_id', $args['transaction_type_id'])
             )
             ->when(
-                $this->_branches,
-                fn (Builder $q) => $q
-                    ->whereIn('branch_id', $this->_branches)
-                    ->orWhere(fn (Builder $q) => $q
+                isset($args['branches']),
+                fn(Builder $q) => $q
+                    ->whereIn('branch_id', $args['branches'])
+                    ->orWhere(fn(Builder $q) => $q
                         ->whereNull('branch_id')
-                        ->whereHas('installment', fn (Builder $q) => $q
-                            ->whereIn('branch_id', $this->_branches)
+                        ->whereHas('installment', fn(Builder $q) => $q
+                            ->whereIn('branch_id', $args['branches'])
                         )
                     )
             )
             ->when(
                 isset($args['sort']),
-                fn (Builder|Transaction $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|Transaction $q) => $q->orderByDesc('paid_at')
+                fn(Builder|Transaction $q) => $q->orderBySortable($args['sort']),
+                fn(Builder|Transaction $q) => $q->orderByDesc('paid_at')
             )
             ->when(
                 isset($args['search']),
-                fn ($q) => $q
+                fn($q) => $q
                     ->where('id', 'ilike', "%{$args['search']}%")
                     ->orWhere('external_id', 'ilike', "%{$args['search']}%")
-                    ->orWhereHas('branch', fn ($q) => $q->where('name', 'ilike', "%{$args['search']}%"))
-                    ->orWhereHas('installment', fn ($q) => $q->where('id', 'ilike', "%{$args['search']}%"))
-                    ->orWhereHas('customer', fn ($q) => $q
+                    ->orWhereHas('branch', fn($q) => $q->where('name', 'ilike', "%{$args['search']}%"))
+                    ->orWhereHas('installment', fn($q) => $q->where('id', 'ilike', "%{$args['search']}%"))
+                    ->orWhereHas('customer', fn($q) => $q
                         ->where('first_name', 'ilike', "%{$args['search']}%")
                         ->orWhere('last_name', 'ilike', "%{$args['search']}%")
                     )
             )
             ->when(
                 isset($args['from'], $args['to']),
-                fn (Builder|Transaction $q) => $q
+                fn(Builder|Transaction $q) => $q
                     ->whereDate('paid_at', '>=', $args['from'])
                     ->whereDate('paid_at', '<=', $args['to'])
             )
@@ -180,7 +181,7 @@ class TransactionsGraphQLQuery extends Query
                 'required',
                 Rule::exists('branches', 'id')
                     ->whereNull('deleted_at')
-                    ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),
+                    ->when($this->_branches, fn($q) => $q->whereIn('id', $this->_branches)),
             ],
         ];
     }
