@@ -92,9 +92,7 @@ class TransactionsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        if (isset($args['branches'])) {
-            $args['branches'] = array_intersect($args['branches'], $this->_branches);
-        }
+        $this->_branches = $args['branches'] ?? $this->_branches;
 
         return Transaction::query()
             ->with(['installment', 'admin', 'customer', 'transactionType', 'installment.branch'])
@@ -139,13 +137,13 @@ class TransactionsGraphQLQuery extends Query
                     ->where('transaction_type_id', $args['transaction_type_id'])
             )
             ->when(
-                isset($args['branches']),
+                $this->_branches,
                 fn (Builder $q) => $q
-                    ->whereIn('branch_id', $args['branches'])
-                    ->orWhere(fn (Builder $q) => $q
-                        ->whereNull('branch_id')
-                        ->whereHas('installment', fn (Builder $q) => $q
-                            ->whereIn('branch_id', $args['branches'])
+                    ->where(fn (Builder $q) => $q
+                        ->whereIn('branch_id', $this->_branches)
+                        ->orWhere(fn (Builder $q) => $q
+                            ->whereNull('branch_id')
+                            ->whereHas('installment', fn (Builder $q) => $q->whereIn('branch_id', $this->_branches))
                         )
                     )
             )

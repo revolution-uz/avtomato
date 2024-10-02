@@ -178,6 +178,25 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successBranchesOnlyTransactionBranchIdIsNull()
+    {
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        $installments = Installment::factory()->count(2)->create(['branch_id' => $branch->id]);
+        $transactions = Transaction::factory()->count(5)->create(['installment_id' => $installments[0]->id, 'branch_id' => null]);
+        Transaction::factory()->count(5)->create(['installment_id' => $installments[1]->id, 'branch_id' => null]);
+
+        $response = $this->sendToGraphQL([
+            'installment_id' => $installments[0]->id,
+            'branches' => [$branch->id],
+        ]);
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+        foreach ($transactions as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
+    }
+
+    #[Test]
     public function successBranchesOnlyInstallmentBranchId()
     {
         /** @var Branch $branch */
