@@ -113,9 +113,10 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery(branch_ids: [$branch->id])
             );
         $response->assertOk();
+        $error = $response->json('errors.0.extensions.validation');
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('validation.exists', ['attribute' => 'branch ids']), $response->json('errors.0.extensions.validation.branch_ids.0'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'branch_ids.0']), $error['branch_ids.0'][0]);
 
     }
 
@@ -138,9 +139,10 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery(branch_ids: [$branches[1]->id])
             );
         $response->assertOk();
+        $error = $response->json('errors.0.extensions.validation');
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('validation.exists', ['attribute' => 'branch ids']), $response->json('errors.0.extensions.validation.branch_ids.0'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'branch_ids.0']), $error['branch_ids.0'][0]);
 
         $response = $this
             ->actingAs($simpleAdmin)
@@ -172,7 +174,7 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
         $query = [];
         $query['variables'] = ['branch_ids' => $branch_ids, 'from_date' => $from_date, 'to_date' => $to_date];
         $query['query'] = '
-            query StatisticsByBranches($branch_ids: [Int], $from_date: String, $to_date: String) {
+            query StatisticsByBranches($branch_ids: [Int!], $from_date: String, $to_date: String) {
                   StatisticsByBranches(branch_ids: $branch_ids, from_date: $from_date, to_date: $to_date) {
                   full_total_amount
                   branches {
