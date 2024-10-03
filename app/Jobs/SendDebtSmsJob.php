@@ -30,9 +30,7 @@ class SendDebtSmsJob implements ShouldBeUnique, ShouldQueue
         $feature = Feature::findByName(FeatureEnum::SMS);
         $installment = Installment::query()->findOrFail($this->installmentId);
 
-        $template = SmsTemplate::query()
-            ->whereNotNull('data')
-            ->whereJsonContains('data->is_active', true)
+        $template = SmsTemplate::debtTemplates()
             ->whereJsonContains('data->overdue_days', $installment->overdue_days)
             ->first();
 

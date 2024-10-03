@@ -31,8 +31,8 @@ class PopulateDebtSmsJobsTest extends TestCase
         $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
 
         for ($i = -1; $i <= 1; $i++) {
-            SmsTemplate::query()->create([
-                'original_template' => 'Test',
+            SmsTemplate::factory()->create([
+                'template' => 'Test',
                 'data' => [
                     'category' => 'debt-templates',
                     'overdue_days' => $i,

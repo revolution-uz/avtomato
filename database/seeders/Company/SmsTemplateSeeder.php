@@ -12,7 +12,7 @@ class SmsTemplateSeeder extends Seeder
     {
         /** @var BaseSmsTemplate $baseSmsTemplate */
         foreach (BaseSmsTemplate::query()->get()->all() as $baseSmsTemplate) {
-            SmsTemplate::query()->updateOrCreate([
+            SmsTemplate::query()->firstOrCreate([
                 'id' => $baseSmsTemplate->id,
             ], [
                 'original_template' => $baseSmsTemplate->original_template,

@@ -45,16 +45,16 @@ class SendDebtSmsJobTest extends TestCase
         $this->_customer->phones()->attach($this->_phone->id, ['type' => PhoneTypeEnum::randomValue(), 'installment_notifications' => true]);
         $this->_installment = Installment::factory()->create(['customer_id' => $this->_customer->id]);
 
-        SmsTemplate::query()->create([
-            'original_template' => 'One day left to pay!',
+        SmsTemplate::factory()->create([
+            'template' => 'One day left to pay!',
             'data' => [
                 'category' => 'debt-templates',
                 'overdue_days' => -1,
                 'is_active' => true,
             ],
         ]);
-        SmsTemplate::query()->create([
-            'original_template' => 'Payment is one day late!',
+        SmsTemplate::factory()->create([
+            'template' => 'Payment is one day late!',
             'data' => [
                 'category' => 'debt-templates',
                 'overdue_days' => 1,
