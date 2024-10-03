@@ -140,6 +140,7 @@ return [
     'include_files' => [
         '*.log',
         '**/*.log',
+        storage_path('company_*/logs/*.log'),
 
         // You can include paths to other log types as well, such as apache, nginx, and more.
         //        '/var/log/httpd/*',

@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -54,11 +56,11 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Branch $branch
  * @property Tariff $tariff
  * @property Customer $customer
- * @property Card[] $cards
+ * @property Card[]|Collection<int, Card> $cards
  * @property Attachment[] $documents
  * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
  * @property Customer[]|Collection<int, Customer> $guarantors
- * @property Transaction[] $transactions
+ * @property Transaction[]|Collection<int, Transaction> $transactions
  * @property InstallmentGuarantor[] $guarantorList
  * @property-read  CompanyAdmin $admin
  * @property-read float $debtAmount
@@ -182,6 +184,13 @@ class Installment extends Model
         return $this->belongsTo(CompanyAdmin::class, 'admin_id')->withTrashed();
     }
 
+    public function initialFeeTransaction(): HasOne
+    {
+        return $this->hasOne(Transaction::class, 'installment_id')
+            ->where('status', TransactionStatusEnum::SUCCESS)
+            ->where('is_initial_fee', true);
+    }
+
     public function autoPay(): Attribute
     {
         return Attribute::make(get: fn () => $this->type->value & InstallmentTypeEnum::WITH_CARD->value);
@@ -207,7 +216,7 @@ class Installment extends Model
         return $this->isAvailablePaymentDate(intval($this->pinfl_after_due_days !== null ? $this->pinfl_after_due_days : CompanySettings::getValue(CompanySettingsEnum::PINFL_AFTER_DUE_DAYS)));
     }
 
-    public function isAvailableGurantorCard(): bool
+    public function isAvailableGuarantorCard(): bool
     {
         return $this->isAvailablePaymentDate(intval($this->guarantor_after_due_days !== null ? $this->guarantor_after_due_days : CompanySettings::getValue(CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS)));
     }
@@ -252,7 +261,7 @@ class Installment extends Model
 
     public function isPaidInitialFee(): bool
     {
-        return (float) $this->transactions()->where('is_initial_fee', true)->sum('amount') == $this->initial_fee;
+        return (float) $this->transactions()->where('is_initial_fee', true)->where('status', TransactionStatusEnum::SUCCESS)->sum('amount') == $this->initial_fee;
     }
 
     public function isFullyPaid(): Attribute

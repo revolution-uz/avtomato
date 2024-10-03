@@ -43,13 +43,9 @@ class StatisticsGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::string()),
                 'rules' => 'required|date_format:Y-m-d|after_or_equal:from',
             ],
-            'branch_id' => [
-                'type' => Type::int(),
-                'rules' => [
-                    'nullable',
-                    'integer',
-                    Rule::exists('branches', 'id')->whereNull('deleted_at')->when($this->_branches, fn ($q) => $q->where('branch_id', $this->_branches)),
-                ],
+            'branches' => [
+                'type' => Type::listOf(Type::nonNull(Type::int())),
+                'rules' => 'nullable|array',
             ],
         ];
     }
@@ -61,8 +57,20 @@ class StatisticsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): array
     {
-        $this->_branches = isset($args['branch_id']) ? [$args['branch_id']] : $this->_branches;
+        $this->_branches = $args['branches'] ?? $this->_branches;
 
         return $this->installmentService->getStatisticsForRange($args['from'], $args['to'], $this->_branches);
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'branches.*' => [
+                'required',
+                Rule::exists('branches', 'id')
+                    ->whereNull('deleted_at')
+                    ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),
+            ],
+        ];
     }
 }

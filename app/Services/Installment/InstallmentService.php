@@ -391,7 +391,7 @@ class InstallmentService
     private function getInstallmentOverdues(): array
     {
         $result = [];
-        $queryHasDebt = Installment::query()->whereHasDebt();
+        $queryHasDebt = Installment::query()->where('status', InstallmentStatusEnum::ACTIVE)->whereHasDebt();
         $total_amount = (clone $queryHasDebt)->whereNextPayDate('<=', Carbon::now())->sumDebt();
         $total_count = (clone $queryHasDebt)->whereNextPayDate('<=', Carbon::now())->countId();
         for ($i = 10; $i < 70; $i += 10) {

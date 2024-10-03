@@ -120,6 +120,10 @@ return [
             'days' => 14,
             'replace_placeholders' => true,
         ],
+        'tenant' => [
+            'driver' => 'daily',
+            'days' => 14,
+        ],
 
         'slack' => [
             'driver' => 'slack',
