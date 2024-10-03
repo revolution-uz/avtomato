@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Main;
 
-use App\Enums\SmsTemplateEnum;
+use App\Enums\Company\SmsTemplateEnum;
 use App\Models\BaseSmsTemplate;
 use Illuminate\Database\Seeder;
 

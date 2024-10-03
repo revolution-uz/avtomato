@@ -45,7 +45,7 @@ class PopulateDebtSmsJobs extends Command
                 or ! $balanceService->isBalanceEnough()
                 or $overdueDays->isEmpty()
             ) {
-                return;
+                continue;
             }
 
             /** @var Installment[] $installments */

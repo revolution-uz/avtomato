@@ -5,6 +5,7 @@ namespace Tests\Unit\Commands;
 use App\Console\Commands\PopulateDebtSmsJobs;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\SmsTemplateStatusEnum;
 use App\Jobs\SendDebtSmsJob;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Installment;
@@ -102,7 +103,7 @@ class PopulateDebtSmsJobsTest extends TestCase
     #[Test]
     public function doNotPopulateIfThereIsNoAvailableTemplates(): void
     {
-        SmsTemplate::debtTemplates()->update(['data->is_active' => false]);
+        SmsTemplate::debtTemplates()->update(['status' => SmsTemplateStatusEnum::INACTIVE]);
 
         Bus::fake();
 

@@ -2,10 +2,12 @@
 
 namespace App\Models\Company;
 
-use App\Enums\SmsTemplateEnum;
+use App\Enums\Company\SmsTemplateEnum;
+use App\Enums\Company\SmsTemplateStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -13,9 +15,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * App\Models\Company\SmsTemplate
  *
  * @property-read int $id
- * @property-read string $original_template
- * @property-read string $template
- * @property-read array|null $data
+ * @property SmsTemplateStatusEnum $status
+ * @property string $original_template
+ * @property string $template
+ * @property array|null $data
  * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -24,12 +27,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class SmsTemplate extends Model
 {
-    use HasFactory, OrderBySortable, TenantConnection;
+    use HasFactory, OrderBySortable, TenantConnection, SoftDeletes;
 
     public static array $sortables = ['id'];
 
     protected $fillable = [
         'id',
+        'status',
         'original_template',
         'template',
         'data',
@@ -37,7 +41,12 @@ class SmsTemplate extends Model
     ];
 
     protected $casts = [
+        'status' => SmsTemplateStatusEnum::class,
         'data' => 'array',
+    ];
+
+    protected $attributes = [
+        'status' => SmsTemplateStatusEnum::DRAFT,
     ];
 
     public function getMessage(array $placeholders = []): string
@@ -60,7 +69,7 @@ class SmsTemplate extends Model
     {
         return $query
             ->whereNotNull('data')
-            ->whereJsonContains('data->is_active', true)
+            ->where('status', SmsTemplateStatusEnum::ACTIVE)
             ->whereJsonContains('data->category', 'debt-templates');
     }
 }

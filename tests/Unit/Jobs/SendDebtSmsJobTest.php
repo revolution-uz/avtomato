@@ -6,8 +6,9 @@ use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\Company\SmsMessageStatusEnum;
+use App\Enums\Company\SmsTemplateEnum;
+use App\Enums\Company\SmsTemplateStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Enums\SmsTemplateEnum;
 use App\Jobs\SendDebtSmsJob;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Customer;
@@ -46,19 +47,19 @@ class SendDebtSmsJobTest extends TestCase
         $this->_installment = Installment::factory()->create(['customer_id' => $this->_customer->id]);
 
         SmsTemplate::factory()->create([
+            'status' => SmsTemplateStatusEnum::ACTIVE,
             'template' => 'One day left to pay!',
             'data' => [
                 'category' => 'debt-templates',
                 'overdue_days' => -1,
-                'is_active' => true,
             ],
         ]);
         SmsTemplate::factory()->create([
+            'status' => SmsTemplateStatusEnum::ACTIVE,
             'template' => 'Payment is one day late!',
             'data' => [
                 'category' => 'debt-templates',
                 'overdue_days' => 1,
-                'is_active' => true,
             ],
         ]);
     }

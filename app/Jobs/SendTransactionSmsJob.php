@@ -4,8 +4,8 @@ namespace App\Jobs;
 
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\SmsMessageStatusEnum;
+use App\Enums\Company\SmsTemplateEnum;
 use App\Enums\FeatureEnum;
-use App\Enums\SmsTemplateEnum;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Feature;
 use App\Models\Company\SmsMessage;

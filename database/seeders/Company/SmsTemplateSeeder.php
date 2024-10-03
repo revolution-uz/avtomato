@@ -15,6 +15,7 @@ class SmsTemplateSeeder extends Seeder
             SmsTemplate::query()->updateOrCreate([
                 'id' => $baseSmsTemplate->id,
             ], [
+                'status' => $baseSmsTemplate->status,
                 'original_template' => $baseSmsTemplate->original_template,
                 'data' => $baseSmsTemplate->original_data,
                 'description' => $baseSmsTemplate->description,
