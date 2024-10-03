@@ -17,6 +17,7 @@ use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Throwable;
@@ -48,10 +49,13 @@ class InstallmentService
         return $dates;
     }
 
-    public static function getDebtorInstallments(): \Illuminate\Database\Eloquent\Collection
+    public static function getDebtorInstallments(string|array $overdueDays): Collection
     {
-        return Installment::whereNextPayDate('=', Carbon::today())
+        $nextPaymentDate = "(starts_in + (FLOOR(paid_amount / ROUND(((amount - initial_fee) * (percent / 100 + 1) / period)::numeric, 2))::text || ' month')::interval)";
+
+        return Installment::query()
             ->where('status', InstallmentStatusEnum::ACTIVE)
+            ->whereRaw("EXTRACT(DAY FROM CURRENT_DATE - {$nextPaymentDate}) IN ({$overdueDays})")
             ->get();
     }
 
@@ -316,6 +320,7 @@ class InstallmentService
             ),
             'installment_overdue' => $this->calculateByIncreasingPercent(
                 Installment::query()
+                    ->where('status', '=', InstallmentStatusEnum::ACTIVE)
                     ->whereNextPayDate('<', Carbon::now()),
                 'id',
                 Installment::getDebtAmountRaw()

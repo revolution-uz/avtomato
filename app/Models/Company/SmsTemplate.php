@@ -3,8 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\SmsTemplateEnum;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -15,13 +14,17 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read int $id
  * @property-read string $original_template
  * @property-read string $template
+ * @property-read array|null $original_data
+ * @property-read array|null $data
+ * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property mixed $description
+ *
+ * @method static Builder debtTemplates()
  */
 class SmsTemplate extends Model
 {
-    use HasFactory, OrderBySortable, TenantConnection;
+    use OrderBySortable, TenantConnection;
 
     public static array $sortables = ['id'];
 
@@ -29,6 +32,12 @@ class SmsTemplate extends Model
         'id',
         'original_template',
         'template',
+        'data',
+        'description',
+    ];
+
+    protected $casts = [
+        'data' => 'array',
     ];
 
     public function getMessage(array $placeholders = []): string
@@ -44,11 +53,14 @@ class SmsTemplate extends Model
 
     public function getExampleMessage(): string
     {
-        return $this->getMessage(SmsTemplateEnum::from($this->id)->getExampleData());
+        return $this->getMessage(SmsTemplateEnum::getExampleData());
     }
 
-    public function description(): Attribute
+    public function scopeDebtTemplates($query)
     {
-        return Attribute::make(get: fn () => SmsTemplateEnum::from($this->id)->getDefaultDescription());
+        return $query
+            ->whereNotNull('data')
+            ->whereJsonContains('data->is_active', true)
+            ->whereJsonContains('data->category', 'debt-templates');
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Jobs;
 
 use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\Company\SmsMessageStatusEnum;
 use App\Enums\FeatureEnum;
@@ -28,29 +29,50 @@ class SendDebtSmsJobTest extends TestCase
     private Customer $_customer;
     private Phone $_phone;
     private Installment $_installment;
+    private $_smsServiceMock;
+    private $_balanceServiceMock;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->_smsServiceMock = $this->mock(SmsService::class);
+        $this->_balanceServiceMock = $this->mock(BalanceService::class);
         CompanySettings::query()->where('name', CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT)->update(['value' => 1]);
 
         $this->_customer = Customer::factory()->create();
         $this->_phone = Phone::factory()->create();
         $this->_customer->phones()->attach($this->_phone->id, ['type' => PhoneTypeEnum::randomValue(), 'installment_notifications' => true]);
-        $this->_installment = Installment::factory()->create(['customer_id' => $this->_customer->id, 'starts_in' => Carbon::now()]);
+        $this->_installment = Installment::factory()->create(['customer_id' => $this->_customer->id]);
+
+        SmsTemplate::query()->create([
+            'original_template' => 'One day left to pay!',
+            'data' => [
+                'category' => 'debt-templates',
+                'overdue_days' => -1,
+                'is_active' => true,
+            ],
+        ]);
+        SmsTemplate::query()->create([
+            'original_template' => 'Payment is one day late!',
+            'data' => [
+                'category' => 'debt-templates',
+                'overdue_days' => 1,
+                'is_active' => true,
+            ],
+        ]);
     }
 
     #[Test]
-    public function success(): void
+    public function successSendDebtSmsForToday(): void
     {
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->once();
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
-        $balanceServiceMock->shouldReceive('chargeAmount')->once();
+        $this->_smsServiceMock->shouldReceive('sendSms')->once();
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->once();
 
-        (new SendDebtSmsJob($this->_installment->id))->handle($smsServiceMock, $balanceServiceMock);
+        $this->_installment->update(['starts_in' => Carbon::today()]);
+
+        (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $smsMessage = SmsMessage::query()->firstOrFail();
         $this->assertEquals($this->_phone->phone, $smsMessage->phone);
@@ -68,17 +90,71 @@ class SendDebtSmsJobTest extends TestCase
     }
 
     #[Test]
+    public function successSendDebtSmsBeforeOneDay(): void
+    {
+        $this->_smsServiceMock->shouldReceive('sendSms')->once();
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->once();
+
+        $this->_installment->update(['starts_in' => Carbon::today()->addDay()]);
+
+        (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
+
+        $smsMessage = SmsMessage::query()->firstOrFail();
+        $this->assertEquals($this->_phone->phone, $smsMessage->phone);
+        $this->assertEquals('One day left to pay!', $smsMessage->message);
+        $this->assertEquals(SmsMessageStatusEnum::ACCEPTED, $smsMessage->status);
+        $this->assertNull($smsMessage->ext_id);
+    }
+
+    #[Test]
+    public function successSendDebtSmsAfterOneDay(): void
+    {
+        $this->_smsServiceMock->shouldReceive('sendSms')->once();
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->once();
+
+        $this->_installment->update(['starts_in' => Carbon::today()->subDay()]);
+
+        (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
+
+        $smsMessage = SmsMessage::query()->firstOrFail();
+        $this->assertEquals($this->_phone->phone, $smsMessage->phone);
+        $this->assertEquals('Payment is one day late!', $smsMessage->message);
+        $this->assertEquals(SmsMessageStatusEnum::ACCEPTED, $smsMessage->status);
+        $this->assertNull($smsMessage->ext_id);
+    }
+
+    #[Test]
+    public function doNotSendDebtSmsIfThereIsNoAvailable(): void
+    {
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->times(3)->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+
+        SmsTemplate::debtTemplates()->update(['data->is_active' => false]);
+        $installments = [];
+        $installments[] = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->subDay()]);
+        $installments[] = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()]);
+        $installments[] = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->addDay()]);
+
+        foreach ($installments as $installment) {
+            (new SendDebtSmsJob($installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
+        }
+
+        $this->assertEquals(0, SmsMessage::query()->count());
+    }
+
+    #[Test]
     public function failWithInactiveFeature(): void
     {
         Feature::findByName(FeatureEnum::SMS)->update(['is_active' => false]);
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->times(0);
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->times(0);
-        $balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->times(0);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
-        (new SendDebtSmsJob($this->_installment->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $this->assertEquals(0, SmsMessage::query()->count());
     }
@@ -86,13 +162,11 @@ class SendDebtSmsJobTest extends TestCase
     #[Test]
     public function failWithInsufficientBalance(): void
     {
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->times(0);
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(false);
-        $balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(false);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
-        (new SendDebtSmsJob($this->_installment->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $this->assertEquals(0, SmsMessage::query()->count());
     }
@@ -102,13 +176,11 @@ class SendDebtSmsJobTest extends TestCase
     {
         CompanySettings::query()->where('name', CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT)->update(['value' => 0]);
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->times(0);
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(false);
-        $balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->times(0);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
-        (new SendDebtSmsJob($this->_installment->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $this->assertEquals(0, SmsMessage::query()->count());
     }
@@ -121,13 +193,11 @@ class SendDebtSmsJobTest extends TestCase
         $this->_customer->phones()->attach($this->_phone->id, ['type' => PhoneTypeEnum::randomValue(), 'installment_notifications' => false]);
         $this->_installment = Installment::factory()->create(['customer_id' => $this->_customer->id, 'starts_in' => Carbon::now()]);
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->times(0);
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
-        $balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
-        (new SendDebtSmsJob($this->_installment->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $this->assertEquals(0, SmsMessage::query()->count());
     }

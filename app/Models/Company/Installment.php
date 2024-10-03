@@ -47,6 +47,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int|null $pinfl_after_due_days
  * @property int|null $guarantor_after_due_days
  * @property int|null $guarantor_pinfl_after_due_days
+ * @property int|null $overdue_days
  * @property string $cancellation_details
  * @property InstallmentTypeEnum $type
  * @property InstallmentStatusEnum $status
@@ -257,6 +258,11 @@ class Installment extends Model
     public function isFullyPaid(): Attribute
     {
         return Attribute::make(get: fn () => $this->paid_amount >= $this->installment_amount);
+    }
+
+    public function overdueDays(): Attribute
+    {
+        return Attribute::make(get: fn () => (int) $this->nextPaymentDate->diffInDays(Carbon::today()));
     }
 
     public function scopeWhereHasDebt($query)

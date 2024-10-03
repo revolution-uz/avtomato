@@ -16,9 +16,14 @@ class SmsTemplateSeeder extends Seeder
                 'id' => $baseSmsTemplate->id,
             ], [
                 'original_template' => $baseSmsTemplate->original_template,
+                'data' => $baseSmsTemplate->original_data,
+                'description' => $baseSmsTemplate->description,
             ]);
         }
 
-        SmsTemplate::query()->whereNotIn('id', BaseSmsTemplate::query()->pluck('id'))->forceDelete();
+        SmsTemplate::query()
+            ->whereNotIn('id', BaseSmsTemplate::query()->pluck('id'))
+            ->where('id', '<', 100)
+            ->forceDelete();
     }
 }

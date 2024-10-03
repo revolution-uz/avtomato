@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\SmsMessageStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Enums\SmsTemplateEnum;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -31,16 +30,20 @@ class SendDebtSmsJob implements ShouldBeUnique, ShouldQueue
         $feature = Feature::findByName(FeatureEnum::SMS);
         $installment = Installment::query()->findOrFail($this->installmentId);
 
+        $template = SmsTemplate::query()
+            ->whereNotNull('data')
+            ->whereJsonContains('data->is_active', true)
+            ->whereJsonContains('data->overdue_days', $installment->overdue_days)
+            ->first();
+
         if (
-            ! $feature->is_active
-            or $installment->debtAmount <= 500
+            CompanySettings::getValue(CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT) == 0
+            or ! $feature->is_active
             or ! $balanceService->isBalanceEnough()
-            or CompanySettings::getValue(CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT) == 0
+            or ! $template
         ) {
             return;
         }
-
-        $template = SmsTemplate::query()->findOrFail(SmsTemplateEnum::DEBT->value);
 
         foreach ($installment->customer->phones as $phone) {
             if (! $phone->pivot->installment_notifications) {

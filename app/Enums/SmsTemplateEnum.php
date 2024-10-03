@@ -9,27 +9,7 @@ enum SmsTemplateEnum: int
     case CHARGE = 3;
     case DEBT = 4;
 
-    public function getDefaultTemplate(): string
-    {
-        return match ($this) {
-            self::AUTO_CHARGE => ':pan kartadan :amount so\'m N:credit_number shartnomaga asosan :company ga yechildi. Ma\'lumot uchun: :phone',
-            self::CARD_CONFIRMATION => 'Avtomato tizimida kartangizni muddatli to\'lovga biriktirish tasdiqlash kodi-:code',
-            self::CHARGE => ':amount so\'m N:credit_number shartnomaga asosan :company ga to\'lov qilindi. Ma\'lumot uchun: :phone',
-            self::DEBT => 'N:credit_number shartnomaga asosan :company ga joriy oyda :amount so\'m qarzinggiz bor. Ma\'lumot uchun: :phone',
-        };
-    }
-
-    public function getDefaultDescription(): ?string
-    {
-        return match ($this) {
-            self::AUTO_CHARGE => 'Avtomatlashtirilgan to\'lov bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
-            self::CARD_CONFIRMATION => 'Karta ma\'lumotlarini tasdiqlovchi SMS xabarlar uchun ishlatiladigan shablonni ifodalaydi.',
-            self::CHARGE => 'To\'lov bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
-            self::DEBT => 'Qarzdorlik bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
-        };
-    }
-
-    public function getExampleData(): array
+    public static function getExampleData(): array
     {
         return [
             'pan' => '9860 01** **** 6789',
@@ -39,5 +19,32 @@ enum SmsTemplateEnum: int
             'phone' => tenant('owner_phone'),
             'code' => 232432,
         ];
+    }
+
+    public function getDefaultTemplate(): array
+    {
+        return match ($this) {
+            self::AUTO_CHARGE => [
+                'original_template' => ':pan kartadan :amount so\'m N:credit_number shartnomaga asosan :company ga yechildi. Ma\'lumot uchun: :phone',
+                'description' => 'Avtomatlashtirilgan to\'lov bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+            self::CARD_CONFIRMATION => [
+                'original_template' => 'Avtomato tizimida kartangizni muddatli to\'lovga biriktirish tasdiqlash kodi-:code',
+                'description' => 'Karta ma\'lumotlarini tasdiqlovchi SMS xabarlar uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+            self::CHARGE => [
+                'original_template' => ':amount so\'m N:credit_number shartnomaga asosan :company ga to\'lov qilindi. Ma\'lumot uchun: :phone',
+                'description' => 'To\'lov bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+            self::DEBT => [
+                'original_template' => 'N:credit_number shartnomaga asosan :company ga joriy oyda :amount so\'m qarzinggiz bor. Ma\'lumot uchun: :phone',
+                'original_data' => [
+                    'category' => 'debt-templates',
+                    'overdue_days' => 0,
+                    'is_active' => true,
+                ],
+                'description' => 'Qarzdorlik bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+        };
     }
 }
