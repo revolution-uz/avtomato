@@ -6,13 +6,12 @@ use App\Models\Company\Installment;
 use App\Services\AtmosService;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
+class InstallmentChargeJob implements ShouldBeUniqueUntilProcessing
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -20,11 +19,6 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
     use SerializesModels;
 
     const MINIMUM_WITHDRAW_AMOUNT = 500;
-
-    /**
-     * The number of seconds after which the job's unique lock will be released.
-     */
-    public int $uniqueFor = 5 * 60;
 
     public function __construct(private readonly int $installmentId) {}
 
@@ -72,7 +66,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
      */
     public function uniqueId(): string
     {
-        return 'installment-charge-' . $this->installmentId;
+        return 'installment-charge-' . tenant('id') . '-' . $this->installmentId;
     }
 
     public function tags(): array
