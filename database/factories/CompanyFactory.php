@@ -12,12 +12,10 @@ class CompanyFactory extends Factory
 
     public function definition(): array
     {
-        $name = $this->faker->name();
-
         return [
-            'name' => $name,
-            'owner_phone' => $this->faker->phoneNumber(),
-            'owner_name' => $this->faker->name(),
+            'name' => $this->faker->word,
+            'owner_phone' => $this->faker->e164PhoneNumber,
+            'owner_name' => $this->faker->firstNameMale . ' ' . $this->faker->lastName,
             'status' => CompanyStatusEnum::CREATED,
         ];
     }

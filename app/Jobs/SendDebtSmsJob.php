@@ -61,4 +61,19 @@ class SendDebtSmsJob implements ShouldBeUnique, ShouldQueue
             $smsService->sendSms($feature, $message);
         }
     }
+
+    /**
+     * Get the unique ID for the job.
+     */
+    public function uniqueId(): string
+    {
+        return 'send-debt-sms-' . tenant('id') . '-' . $this->installmentId;
+    }
+
+    public function tags(): array
+    {
+        return [
+            'tenant:' . tenant('id'),
+        ];
+    }
 }
