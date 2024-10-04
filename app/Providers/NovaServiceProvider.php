@@ -87,7 +87,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
             if ($admin->role === AdminRoleEnum::SUPER_ADMIN) {
                 $menu->append([
-                    MenuItem::link('Horizon dashboard', '/horizon'),
+                    MenuItem::externalLink('Horizon dashboard', '/nova/horizon')->openInNewTab(),
                     MenuItem::externalLink('Log viewer', '/nova/log-viewer')->openInNewTab(),
                 ]
                 );
