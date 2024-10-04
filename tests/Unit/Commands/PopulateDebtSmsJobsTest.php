@@ -34,6 +34,7 @@ class PopulateDebtSmsJobsTest extends TestCase
         for ($i = -1; $i <= 1; $i++) {
             SmsTemplate::factory()->create([
                 'template' => 'Test',
+                'status' => SmsTemplateStatusEnum::ACTIVE,
                 'data' => [
                     'category' => 'debt-templates',
                     'overdue_days' => $i,
@@ -49,7 +50,7 @@ class PopulateDebtSmsJobsTest extends TestCase
         Bus::fake();
 
         /** @var Installment $installment */
-        $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::now()]);
+        $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()]);
 
         (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
 
@@ -60,12 +61,12 @@ class PopulateDebtSmsJobsTest extends TestCase
     }
 
     #[Test]
-    public function populateCorrectDebtorInstallmentsForYesterday(): void
+    public function populateCorrectDebtorInstallmentsBeforeOneDay(): void
     {
         Bus::fake();
 
         /** @var Installment $installment */
-        $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::now()->subDay()]);
+        $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->subDay()]);
 
         (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
 
@@ -76,12 +77,12 @@ class PopulateDebtSmsJobsTest extends TestCase
     }
 
     #[Test]
-    public function populateCorrectDebtorInstallmentsForTomorrow(): void
+    public function populateCorrectDebtorInstallmentsAfterOneDay(): void
     {
         Bus::fake();
 
         /** @var Installment $installment */
-        $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::now()->addDay()]);
+        $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->addDay()]);
 
         (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
 
