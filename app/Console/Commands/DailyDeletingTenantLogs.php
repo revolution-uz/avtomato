@@ -29,7 +29,8 @@ class DailyDeletingTenantLogs extends Command
      */
     public function handle(): int
     {
-        foreach (Company::all() as $company) {
+        /** @var Company $company */
+        foreach (Company::get() as $company) {
             $logPath = storage_path("company_{$company->id}/logs/");
             if (! File::exists($logPath)) {
                 continue;
