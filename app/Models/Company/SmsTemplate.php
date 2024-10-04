@@ -27,7 +27,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class SmsTemplate extends Model
 {
-    use HasFactory, OrderBySortable, TenantConnection, SoftDeletes;
+    use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id'];
 
