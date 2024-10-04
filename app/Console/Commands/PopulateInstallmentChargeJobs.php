@@ -43,10 +43,8 @@ class PopulateInstallmentChargeJobs extends Command
                 continue;
             }
 
-            $threshold = 5 * 60.0 / count($installments);
             foreach ($installments as $index => $installment) {
                 dispatch(new InstallmentChargeJob($installment->id))
-                    ->delay(intval($threshold * $index))
                     ->onQueue('installment-charge');
             }
         }
