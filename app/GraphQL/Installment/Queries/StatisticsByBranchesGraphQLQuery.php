@@ -79,7 +79,6 @@ class StatisticsByBranchesGraphQLQuery extends Query
     {
         return [
             'branch_ids.*' => [
-                'exists:transactions,branch_id',
                 Rule::exists('branches', 'id')
                     ->whereNull('deleted_at')
                     ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),

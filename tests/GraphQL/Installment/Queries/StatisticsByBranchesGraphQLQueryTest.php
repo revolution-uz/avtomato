@@ -104,19 +104,6 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.after_or_equal', ['attribute' => 'to date', 'date' => 'from date']), $response->json('errors.0.extensions.validation.to_date.0'));
-        // branch id not related to company
-        $branch = Branch::factory()->create();
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(branch_ids: [$branch->id])
-            );
-        $response->assertOk();
-        $error = $response->json('errors.0.extensions.validation');
-        $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('validation.exists', ['attribute' => 'branch_ids.0']), $error['branch_ids.0'][0]);
 
     }
 
@@ -152,7 +139,7 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
             );
         $this->assertSuccessResponse($response);
         $branchInResult = $response->json('data.StatisticsByBranches.branches');
-        $this->assertCount(0, $branchInResult);
+        $this->assertCount(1, $branchInResult);
         $this->assertEquals('0.00', $response->json('data.StatisticsByBranches.full_total_amount'));
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
@@ -164,8 +151,9 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
             );
         $this->assertSuccessResponse($response);
         $branchInResult = $response->json('data.StatisticsByBranches.branches');
-        $this->assertCount(1, $branchInResult);
-        $this->assertEquals($branches[1]->id, $branchInResult[0]['branch']['id']);
+        $this->assertCount(2, $branchInResult);
+        $this->assertEquals($branches[0]->id, $branchInResult[0]['branch']['id']);
+        $this->assertEquals($branches[1]->id, $branchInResult[1]['branch']['id']);
 
     }
 

@@ -8,6 +8,7 @@ use App\Enums\Company\TransactionStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Helpers\Utilities;
+use App\Models\Company\Branch;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
@@ -205,6 +206,9 @@ class InstallmentService
 
     public function statisticsByBranches(?Carbon $from_date = null, ?Carbon $to_date = null, ?array $branch_ids = null): array
     {
+        $branches = Branch::query()
+            ->when(! empty($branch_ids), fn ($q) => $q->whereIn('id', $branch_ids))
+            ->get();
         $transactions = Transaction::query()
             ->select('branch_id', 'transaction_type_id', DB::raw('SUM(amount) as total_amount'))
             ->when(! empty($branch_ids), fn ($q) => $q->whereIn('branch_id', $branch_ids))
@@ -222,27 +226,27 @@ class InstallmentService
         foreach ($transactionTypes as $type) {
             $totalAmountByType[$type->id] = 0;
         }
+        foreach ($branches as $branch) {
+            $statistics[$branch->id] = [
+                'branch_id' => $branch->id,
+                'branch' => $branch,
+                'types' => [],
+                'total_amount_by_branch' => 0,
+            ];
+
+            foreach ($transactionTypes as $case) {
+                $statistics[$branch->id]['types'][$case->id] = [
+                    'name' => $case->name,
+                    'amount' => 0,
+                ];
+            }
+        }
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $branchId = $transaction->branch_id;
             $type = $transaction->transaction_type_id;
             /* @phpstan-ignore-next-line * */
             $totalAmount = $transaction->total_amount;
-            if (! isset($statistics[$branchId])) {
-                $statistics[$branchId] = [
-                    'branch_id' => $branchId,
-                    'branch' => $transaction->branch,
-                    'types' => [],
-                    'total_amount_by_branch' => 0,
-                ];
-
-                foreach ($transactionTypes as $case) {
-                    $statistics[$branchId]['types'][$case->id] = [
-                        'name' => $case->name,
-                        'amount' => 0,
-                    ];
-                }
-            }
 
             $statistics[$branchId]['types'][$type]['amount'] += $totalAmount;
 
