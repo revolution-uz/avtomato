@@ -3,15 +3,14 @@
 namespace Tests\Unit\Commands;
 
 use App\Models\Company\Transaction;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AddBranchIdToOldAutoPayTest extends TestCase
 {
     protected bool $tenancy = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addBranchIdToOldAutoPay()
     {
         Transaction::factory(5)->create(['branch_id' => null]);
