@@ -23,6 +23,6 @@ class DownloadInstallmentAgreementRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_UPLOAD_DOCUMENT);
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_VIEW_DOCUMENT);
     }
 }
