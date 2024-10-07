@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,8 +18,6 @@ class TenantLogging
     {
         if (tenant()) {
             $tenant = tenant()->getTenantKey();
-            $logPath = storage_path('logs/company_' . $tenant . '.log');
-            Config::set('logging.channels.tenant.path', $logPath);
             $response = $next($request);
             $jsonDecodedResponse = json_decode($response->getContent(), true);
             $shortUrl = substr($request->url(), strpos($request->url(), '/graphql'));
