@@ -6,11 +6,13 @@ use App\Models\Company\Installment;
 use App\Services\AtmosService;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
 class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
 {
@@ -80,5 +82,13 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
         return [
             'tenant:' . tenant('id'),
         ];
+    }
+
+    /**
+     * Get the cache driver for the unique job lock.
+     */
+    public function uniqueVia(): Repository
+    {
+        return Cache::driver('redis');
     }
 }
