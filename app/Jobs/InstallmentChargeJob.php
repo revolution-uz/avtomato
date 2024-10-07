@@ -61,13 +61,13 @@ class InstallmentChargeJob implements ShouldBeUniqueUntilProcessing
         }
     }
 
-    /**
-     * Get the unique ID for the job.
-     */
-    public function uniqueId(): string
-    {
-        return 'installment-charge-' . tenant('id') . '-' . $this->installmentId;
-    }
+    //    /**
+    //     * Get the unique ID for the job.
+    //     */
+    //    public function uniqueId(): string
+    //    {
+    //        return 'installment-charge-' . tenant('id') . '-' . $this->installmentId;
+    //    }
 
     public function tags(): array
     {
