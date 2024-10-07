@@ -36,18 +36,18 @@ class TenancyServiceProvider extends ServiceProvider
 
         TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
         $this->makeTenancyMiddlewareHighestPriority();
-        Event::listen(TenancyInitialized::class, function (TenancyInitialized $event) {
+        Event::listen(TenancyInitialized::class, function () {
             $channels = array_keys(config('logging.channels'));
             foreach ($channels as $channelName) {
-                $newPath = storage_path('logs/' . $event->tenancy->tenant->getAttribute('id') . '/' . $channelName . '.log');
+                $newPath = storage_path('logs/' . $channelName . '.log');
                 config(['logging.channels.' . $channelName . '.path' => $newPath]);
             }
             app()->instance('log', new LogManager(app()));
         });
-        Event::listen(TenancyBootstrapped::class, function (TenancyBootstrapped $event) {
+        Event::listen(TenancyBootstrapped::class, function () {
             $channels = array_keys(config('logging.channels'));
             foreach ($channels as $channelName) {
-                $newPath = storage_path('logs/' . $event->tenancy->tenant->getAttribute('id') . '/' . $channelName . '.log');
+                $newPath = storage_path('logs/' . $channelName . '.log');
                 config(['logging.channels.' . $channelName . '.path' => $newPath]);
             }
             app()->instance('log', new LogManager(app()));
