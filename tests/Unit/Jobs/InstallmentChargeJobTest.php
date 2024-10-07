@@ -35,7 +35,7 @@ class InstallmentChargeJobTest extends TestCase
         ]);
         $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
         $installment->cards()->attach($card);
-        $job = new InstallmentChargeJob($installment->id, tenant('id'));
+        $job = new InstallmentChargeJob($installment->id);
         $mock = $this->mock(
             AtmosService::class,
         );
@@ -59,7 +59,7 @@ class InstallmentChargeJobTest extends TestCase
         ]);
         $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
         $installment->cards()->attach($card);
-        $job = new InstallmentChargeJob($installment->id, tenant('id'));
+        $job = new InstallmentChargeJob($installment->id);
         $mock = $this->mock(
             AtmosService::class,
         );
@@ -87,7 +87,7 @@ class InstallmentChargeJobTest extends TestCase
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::PINFL_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
-        $job = new InstallmentChargeJob($installment->id, tenant('id'));
+        $job = new InstallmentChargeJob($installment->id);
         $mock = $this->mock(
             AtmosService::class,
         );
@@ -115,7 +115,7 @@ class InstallmentChargeJobTest extends TestCase
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
         $installment->cards()->attach($customerCard);
         $installment->cards()->attach($guarantorCard);
-        $job = new InstallmentChargeJob($installment->id, tenant('id'));
+        $job = new InstallmentChargeJob($installment->id);
         $mock = $this->mock(
             AtmosService::class,
         );
@@ -148,7 +148,7 @@ class InstallmentChargeJobTest extends TestCase
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::PINFL_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
-        $job = new InstallmentChargeJob($installment->id, tenant('id'));
+        $job = new InstallmentChargeJob($installment->id);
         $mock = $this->mock(
             AtmosService::class,
         );
@@ -177,7 +177,7 @@ class InstallmentChargeJobTest extends TestCase
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => false]);
         $installment->cards()->attach($customerCard);
         $installment->cards()->attach($guarantorCard);
-        $job = new InstallmentChargeJob($installment->id, tenant('id'));
+        $job = new InstallmentChargeJob($installment->id);
         $mock = $this->mock(
             AtmosService::class,
         );
@@ -201,7 +201,7 @@ class InstallmentChargeJobTest extends TestCase
         ]);
         $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
         $installment->cards()->attach($card);
-        $job = new InstallmentChargeJob($installment->id, tenant('id'));
+        $job = new InstallmentChargeJob($installment->id);
         $mock = $this->mock(
             AtmosService::class,
         );
@@ -227,7 +227,7 @@ class InstallmentChargeJobTest extends TestCase
         $card2 = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
         $installment->cards()->attach($card1);
         $installment->cards()->attach($card2);
-        $job = new InstallmentChargeJob($installment->id, tenant('id'));
+        $job = new InstallmentChargeJob($installment->id);
         $mock = $this->mock(
             AtmosService::class,
         );
