@@ -18,6 +18,7 @@ class AttachPermissionsToRoleGraphQLMutationTest extends GraphQLTestCase
     private Role $_role;
 
     private array $_permissionInput;
+    private Permission $_permission;
 
     private array $_structure = [
         'id',
@@ -188,11 +189,11 @@ class AttachPermissionsToRoleGraphQLMutationTest extends GraphQLTestCase
         parent::setUp();
 
         $this->_role = Role::factory()->create();
-        $permission = Permission::query()->inRandomOrder()->first();
+        $this->_permission = Permission::query()->inRandomOrder()->first();
         $branch = Branch::factory()->create();
 
         $this->_permissionInput = [
-            'permission_id' => $permission->id,
+            'permission_id' => $this->_permission->id,
             'branch_id' => $branch->id,
             'enabled' => true,
         ];
@@ -281,6 +282,20 @@ class AttachPermissionsToRoleGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
+    }
+
+    #[Test]
+    public function errorAttachPermissionsIsNotActiveFeature(): void
+    {
+        $this->_permission->feature->update(['is_active' => false]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery($this->_role->id, $this->_permissionInput)
+            );
+        $errors = $response->json('errors');
+        $this->assertEquals(__('api.feature_not_active'), $errors[0]['extensions']['validation']['permissions.0.permission_id'][0]);
     }
 
     private function buildGraphQLQuery(?int $roleId = null, array $permission = []): array
