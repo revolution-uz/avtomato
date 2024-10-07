@@ -59,6 +59,7 @@ class DeleteTransactionGraphQLMutation extends Mutation
                 function ($attribute, $value, $fail) use ($branches) {
                     /** @var Builder $transactionQuery */
                     $transactionQuery = Transaction::query()->where('id', $value)
+                        ->where('is_initial_fee', false)
                         ->when($branches, fn ($q) => $q->whereHas('installment', fn ($q) => $q->whereIn('branch_id', $branches)));
 
                     if ($transactionQuery->doesntExist()) {

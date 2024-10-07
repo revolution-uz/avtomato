@@ -55,6 +55,7 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->_transaction = Transaction::factory()->create([
             'installment_id' => $installment->id,
             'amount' => 6000,
+            'is_initial_fee' => false,
         ]);
 
         $response = $this
@@ -77,6 +78,7 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
             'installment_id' => $installment->id,
             'transaction_type_id' => $transactionType->id,
             'amount' => 5000,
+            'is_initial_fee' => false,
         ]);
 
         $response = $this
@@ -84,6 +86,21 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
             ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery(['id' => $this->_transaction->id]));
 
         $this->assertSuccessResponse($response);
+    }
+
+    #[Test]
+    public function cannotReverseInitialFeeTransaction()
+    {
+        $this->_transaction = Transaction::factory()->create(['is_initial_fee' => true]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery(['id' => $this->_transaction->id]));
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
     }
 
     #[Test]
