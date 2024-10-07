@@ -37,18 +37,17 @@ class TenancyServiceProvider extends ServiceProvider
         TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
         $this->makeTenancyMiddlewareHighestPriority();
         Event::listen(TenancyInitialized::class, function (TenancyInitialized $event) {
-            $channels = config('logging.channels');
-            foreach ($channels as $channelName => $channelConf) {
-                $newPath = storage_path('logs/' . $event->tenancy->tenant->getAttribute('id') . '/' . $channelConf . '.log');
+            $channels = array_keys(config('logging.channels'));
+            foreach ($channels as $channelName) {
+                $newPath = storage_path('logs/' . $event->tenancy->tenant->getAttribute('id') . '/' . $channelName . '.log');
                 config(['logging.channels.' . $channelName . '.path' => $newPath]);
             }
             app()->instance('log', new LogManager(app()));
         });
         Event::listen(RevertedToCentralContext::class, function () {
-            $channels = config('logging.channels');
-            foreach ($channels as $channelName => $channelConf) {
-                $newPath = 'logs/' . $channelConf . '.log';
-                config(['logging.channels.' . $channelName . '.path' => $newPath]);
+            $channels = array_keys(config('logging.channels'));
+            foreach ($channels as $channelName) {
+                config(['logging.channels.' . $channelName . '.path' => 'logs/' . $channelName . '.log']);
             }
             app()->instance('log', new LogManager(app()));
         });
