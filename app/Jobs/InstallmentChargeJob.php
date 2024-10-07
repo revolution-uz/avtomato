@@ -28,7 +28,10 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
      */
     public int|float $uniqueFor = 5 * 60;
 
-    public function __construct(private readonly int $installmentId) {}
+    public function __construct(private readonly int $installmentId)
+    {
+        $this->onQueue('installment-charge');
+    }
 
     /**
      * @throws Exception
