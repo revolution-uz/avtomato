@@ -104,6 +104,7 @@ enum PermissionEnum: string
     case INSTALLMENT_UPDATE_COMMENT = 'installment_update_comment';
     case INSTALLMENT_DELETE_COMMENT = 'installment_delete_comment';
 
+    case INSTALLMENT_VIEW_DOCUMENT = 'installment_view_document';
     case INSTALLMENT_UPLOAD_DOCUMENT = 'installment_upload_document';
     case INSTALLMENT_DELETE_DOCUMENT = 'installment_delete_document';
 
@@ -338,6 +339,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT,
 
+            self::INSTALLMENT_VIEW_DOCUMENT,
             self::INSTALLMENT_UPLOAD_DOCUMENT,
             self::INSTALLMENT_DELETE_DOCUMENT,
 
@@ -420,6 +422,7 @@ enum PermissionEnum: string
                 self::INSTALLMENT_CREATE_COMMENT->value,
                 self::INSTALLMENT_UPDATE_COMMENT->value,
                 self::INSTALLMENT_DELETE_COMMENT->value,
+                self::INSTALLMENT_VIEW_DOCUMENT->value,
                 self::INSTALLMENT_UPLOAD_DOCUMENT->value,
                 self::INSTALLMENT_DELETE_DOCUMENT->value,
                 self::INSTALLMENT_CREATE_TRANSACTION->value,
@@ -622,6 +625,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT => FeatureEnum::INSTALLMENT_COMMENT,
 
+            self::INSTALLMENT_VIEW_DOCUMENT,
             self::INSTALLMENT_UPLOAD_DOCUMENT,
             self::INSTALLMENT_DELETE_DOCUMENT => FeatureEnum::INSTALLMENT_DOCUMENT,
 
@@ -749,6 +753,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT,
 
+            self::INSTALLMENT_VIEW_DOCUMENT,
             self::INSTALLMENT_UPLOAD_DOCUMENT,
             self::INSTALLMENT_DELETE_DOCUMENT,
 

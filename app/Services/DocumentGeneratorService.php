@@ -5,12 +5,12 @@ namespace App\Services;
 use App\Clients\DocumentGeneratorClient;
 use App\Enums\Company\AddressTypeEnum;
 use App\Helpers\InstallmentGraphHelper;
+use App\Models\Company;
 use App\Models\Company\Address;
-use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
-use App\Models\Company\Phone;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 readonly class DocumentGeneratorService
@@ -19,35 +19,50 @@ readonly class DocumentGeneratorService
         private DocumentGeneratorClient $documentGeneratorClient
     ) {}
 
-    public function generateCustomerApplicationStream(Customer $customer): StreamedResponse
+    public function generateCustomerApplicationStream(Installment $installment): StreamedResponse
     {
-        $phones = [];
-        foreach ($customer->phones as $phone) {
-            /** @var Phone $phone */
-            $phones[] = $phone->phone;
-        }
-        $work_address = new Address;
-        foreach ($customer->addresses as $address) {
-            /** @var Address $address */
-            if ($address->type == AddressTypeEnum::WORK_PLACE) {
-                $work_address = $address;
-            }
-        }
-        $card = new Card;
-        foreach ($customer->cards as $_card) {
-            $card = $_card;
-        }
+        /** @var Company $company */
+        $company = tenant();
+
         $data = [
-            'application_number' => $customer->id,
-            'date' => $customer->created_at->format('d.m.Y'),
-            'full_name' => $customer->full_name,
-            'phone' => $phones[0] ?? '',
-            'extra_phone' => $phones[1] ?? '',
-            'work_address' => $work_address->full_address,
-            'card' => $card->pan,
+            'company_name' => $company->name,
+            'company_bank' => $company->bank_name,
+            'company_account' => $company->account_number,
+            'company_tin' => $company->tin,
+            'company_phone' => $company->owner_phone,
+            'company_owner' => $company->owner_name,
+            'company_bank_code' => $company->bank_code,
+            'company_address' => $company->address,
+            'installment_id' => $installment->id,
+            'installment_created_at' => $this->formatDate($installment->created_at),
+            'installment_period' => $installment->period,
+            'installment_whole_amount' => $this->formatAmount($installment->wholeDebtAmount),
+            'installment_description' => $installment->description,
+            'customer_address' => $installment->customer->addresses()->first()->address,
+            'customer_full_name' => $installment->customer->full_name,
+            'customer_passport' => $installment->customer->passport,
+            'customer_tin' => $installment->customer->tin,
+            'customer_phone' => $installment->customer->phones()->first()->phone,
         ];
 
-        return $this->documentGeneratorClient->generateStream($customer->full_name . ' ' . date('d-m-Y--H-i-s.docx'), 'customer-application.docx', $data);
+        $i = 0;
+        foreach (InstallmentGraphHelper::getGraphs($installment) as $graph) {
+            $i++;
+            $data = array_merge($data, [
+                "i#{$i}" => $i,
+                "starts_in#{$i}" => $graph->starts_in->format('d.m.Y'),
+                "sum#{$i}" => $this->formatAmount($graph->amount),
+            ]);
+        }
+
+        $table = ['identifier' => 'i', 'row_count' => $i];
+
+        return $this->documentGeneratorClient->generateStream(
+            $this->generateFileName($installment->customer->full_name),
+            'customer-application.docx',
+            $data,
+            [$table]
+        );
     }
 
     public function generateInstallmentFormStream(Installment $installment): StreamedResponse
@@ -88,5 +103,55 @@ readonly class DocumentGeneratorService
         $data['paid_price'] = number_format($paid_sum, 2, ' ', '.');
 
         return $this->documentGeneratorClient->generateStream($customer->full_name . ' ' . date('d-m-Y--H-i-s.docx'), 'installment-form.docx', $data);
+    }
+
+    public function generateGuarantorApplicationStream(Installment $installment, Customer $guarantor): StreamedResponse
+    {
+        /** @var Company $company */
+        $company = tenant();
+
+        $data = [
+            'company_name' => $company->name,
+            'company_bank' => $company->bank_name,
+            'company_account' => $company->account_number,
+            'company_tin' => $company->tin,
+            'company_phone' => $company->owner_phone,
+            'company_owner' => $company->owner_name,
+            'installment_id' => $installment->id,
+            'installment_created_at' => $this->formatDate($installment->created_at),
+            'installment_amount' => $this->formatAmount($installment->amount),
+            'installment_period' => $installment->period,
+            'guarantor_address' => $guarantor->addresses()->first()->address,
+            'guarantor_full_name' => $guarantor->full_name,
+            'guarantor_passport' => $guarantor->passport,
+            'guarantor_tin' => $guarantor->tin,
+            'guarantor_phone' => $guarantor->phones()->first()->phone,
+        ];
+
+        return $this->documentGeneratorClient->generateStream(
+            $this->generateFileName($guarantor->full_name),
+            'guarantor-application.docx',
+            $data
+        );
+    }
+
+    private function formatDate(Carbon $date): string
+    {
+        $months = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentyabr', 'Oktyabr', 'Noyabr', 'Dekabr'];
+
+        return "«{$date->day}» {$months[$date->month - 1]} {$date->year} yil";
+    }
+
+    private function generateFileName($fullName)
+    {
+        $sanitizedFileName = preg_replace("/[\/?%*:|\"<>\s']+/", '-', Str::kebab($fullName));
+        $currentDate = Carbon::now()->format('d-m-Y-H-i-s');
+
+        return "{$sanitizedFileName}-{$currentDate}.docx";
+    }
+
+    private function formatAmount($amount): string
+    {
+        return number_format($amount, 2, '.', ' ');
     }
 }

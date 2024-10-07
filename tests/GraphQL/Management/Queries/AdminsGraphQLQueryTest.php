@@ -128,6 +128,7 @@ class AdminsGraphQLQueryTest extends GraphQLTestCase
                 'installment_create_transaction',
                 'installment_update_comment',
                 'installment_delete_comment',
+                'installment_view_document',
                 'installment_upload_document',
                 'installment_delete_document',
                 'dashboard_info_view',
