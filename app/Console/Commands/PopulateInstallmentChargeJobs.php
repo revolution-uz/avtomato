@@ -44,7 +44,7 @@ class PopulateInstallmentChargeJobs extends Command
             }
 
             foreach ($installments as $installment) {
-                \Illuminate\Bus\Dispatcher::dispatch(new InstallmentChargeJob($installment->id));
+                InstallmentChargeJob::dispatch($installment->id);
             }
         }
 
