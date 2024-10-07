@@ -2,19 +2,20 @@
 
 namespace App\Jobs;
 
+use App\Models\Company;
 use App\Models\Company\Installment;
 use App\Services\AtmosService;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Cache\Repository;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 
-class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
+class InstallmentChargeJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -23,12 +24,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
 
     const MINIMUM_WITHDRAW_AMOUNT = 500;
 
-    /**
-     * The number of seconds after which the job's unique lock will be released.
-     */
-    public int|float $uniqueFor = 5 * 60;
-
-    public function __construct(private readonly int $installmentId)
+    public function __construct(private readonly int $installmentId, private readonly int $companyId)
     {
         $this->onQueue('installment-charge');
     }
@@ -38,6 +34,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
      */
     public function handle(AtmosService $atmosService): void
     {
+        tenancy()->initialize(Company::find($this->companyId));
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($this->installmentId);
         $debt_amount = $installment->debtAmount;
@@ -77,13 +74,13 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
      */
     public function uniqueId(): string
     {
-        return 'installment-charge-' . tenant('id') . '-' . $this->installmentId;
+        return 'installment-charge-' . $this->companyId . '-' . $this->installmentId;
     }
 
     public function tags(): array
     {
         return [
-            'tenant:' . tenant('id'),
+            'tenant:' . $this->companyId,
         ];
     }
 
