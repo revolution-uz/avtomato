@@ -36,7 +36,7 @@ class TenancyServiceProvider extends ServiceProvider
 
         TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
         $this->makeTenancyMiddlewareHighestPriority();
-        Event::listen(TenancyInitialized::class, function (TenancyBootstrapped $event) {
+        Event::listen(TenancyInitialized::class, function (TenancyInitialized $event) {
             $channels = config('logging.channels');
             foreach ($channels as $channelName => $channelConf) {
                 $newPath = storage_path('logs/' . $event->tenancy->tenant->getAttribute('id') . '/' . $channelConf . '.log');
