@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Jobs\CreateDefaultFiles;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Controllers\TenantAssetsController;
 use Stancl\Tenancy\Events;
+use Stancl\Tenancy\Events\RevertedToCentralContext;
+use Stancl\Tenancy\Events\TenancyBootstrapped;
+use Stancl\Tenancy\Events\TenancyInitialized;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
@@ -19,6 +24,42 @@ class TenancyServiceProvider extends ServiceProvider
 {
     // By default, no namespace is used to support the callable array syntax.
     public static string $controllerNamespace = '';
+
+    public function register()
+    {
+        //
+    }
+
+    public function boot(): void
+    {
+        $this->bootEvents();
+
+        TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
+        $this->makeTenancyMiddlewareHighestPriority();
+        Event::listen(TenancyInitialized::class, function () {
+            $channels = array_keys(config('logging.channels'));
+            foreach ($channels as $channelName) {
+                $newPath = storage_path('logs/' . $channelName . '.log');
+                config(['logging.channels.' . $channelName . '.path' => $newPath]);
+            }
+            app()->instance('log', new LogManager(app()));
+        });
+        Event::listen(TenancyBootstrapped::class, function () {
+            $channels = array_keys(config('logging.channels'));
+            foreach ($channels as $channelName) {
+                $newPath = storage_path('logs/' . $channelName . '.log');
+                config(['logging.channels.' . $channelName . '.path' => $newPath]);
+            }
+            app()->instance('log', new LogManager(app()));
+        });
+        Event::listen(RevertedToCentralContext::class, function () {
+            $channels = array_keys(config('logging.channels'));
+            foreach ($channels as $channelName) {
+                config(['logging.channels.' . $channelName . '.path' => 'logs/' . $channelName . '.log']);
+            }
+            app()->instance('log', new LogManager(app()));
+        });
+    }
 
     public function events(): array
     {
@@ -93,19 +134,6 @@ class TenancyServiceProvider extends ServiceProvider
         ];
     }
 
-    public function register()
-    {
-        //
-    }
-
-    public function boot(): void
-    {
-        $this->bootEvents();
-
-        TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
-        $this->makeTenancyMiddlewareHighestPriority();
-    }
-
     protected function bootEvents(): void
     {
         foreach ($this->events() as $event => $listeners) {
@@ -133,7 +161,7 @@ class TenancyServiceProvider extends ServiceProvider
         ];
 
         foreach (array_reverse($tenancyMiddleware) as $middleware) {
-            $this->app[\Illuminate\Contracts\Http\Kernel::class]->prependToMiddlewarePriority($middleware);
+            $this->app[Kernel::class]->prependToMiddlewarePriority($middleware);
         }
     }
 }

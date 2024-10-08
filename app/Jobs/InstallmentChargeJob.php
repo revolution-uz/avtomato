@@ -6,12 +6,15 @@ use App\Models\Company\Installment;
 use App\Services\AtmosService;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
-class InstallmentChargeJob implements ShouldBeUniqueUntilProcessing
+class InstallmentChargeJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -20,7 +23,10 @@ class InstallmentChargeJob implements ShouldBeUniqueUntilProcessing
 
     const MINIMUM_WITHDRAW_AMOUNT = 500;
 
-    public function __construct(private readonly int $installmentId) {}
+    public function __construct(private readonly int $installmentId)
+    {
+        $this->onQueue('installment-charge');
+    }
 
     /**
      * @throws Exception
@@ -74,5 +80,13 @@ class InstallmentChargeJob implements ShouldBeUniqueUntilProcessing
         return [
             'tenant:' . tenant('id'),
         ];
+    }
+
+    /**
+     * Get the cache driver for the unique job lock.
+     */
+    public function uniqueVia(): Repository
+    {
+        return Cache::driver('redis');
     }
 }
