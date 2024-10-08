@@ -19,4 +19,6 @@ return [
     'tag' => 'Tag',
     'already_attached_tag' => 'The tag already connected to this customer',
     'already_canceled_transaction' => 'The selected transaction is already canceled',
+    'customer_application' => 'Contract with the client',
+    'guarantor_application' => 'Contract with the guarantor',
 ];

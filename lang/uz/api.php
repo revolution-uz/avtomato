@@ -24,4 +24,6 @@ return [
     'tag' => 'Teg',
     'already_attached_tag' => 'Teg allaqachon bu mijozga ulangan',
     'already_canceled_transaction' => 'Tanlangan tranzaksiya allaqachon bekor qilingan',
+    'customer_application' => 'Mijoz bilan shartnoma',
+    'guarantor_application' => 'Kafil bilan shartnoma',
 ];

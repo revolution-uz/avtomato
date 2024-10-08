@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // document
     Route::prefix('document')->controller(DocumentController::class)->group(function () {
-        Route::get('installment-agreement', 'downloadInstallmentAgreement')->name('document.downloadInstallmentAgreement');
+        // Route::get('installment-agreement', 'downloadInstallmentAgreement')->name('document.downloadInstallmentAgreement');
         Route::get('customer-application', 'downloadCustomerApplication')->name('document.downloadCustomerApplication');
         Route::get('guarantor-application', 'downloadGuarantorApplication')->name('document.downloadGuarantorApplication');
     });
