@@ -62,7 +62,7 @@ jobs:
           ./vendor/bin/phpunit
         env:
           DB_PORT: ${{ job.services.postgres.ports[5432] }}
-          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+          REDIS_PORT: ${{ job.services.redis.ports[6379] }}
       - name: Run security checks
         uses: symfonycorp/security-checker-action@v3
       - name: send telegram message on push
