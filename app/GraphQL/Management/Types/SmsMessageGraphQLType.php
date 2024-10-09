@@ -4,6 +4,7 @@ namespace App\GraphQL\Management\Types;
 
 use App\Models\Company\SmsMessage;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class SmsMessageGraphQLType extends GraphQLType
@@ -36,6 +37,26 @@ class SmsMessageGraphQLType extends GraphQLType
             'ext_id' => [
                 'type' => Type::int(),
                 'resolve' => fn (SmsMessage $root) => $root->ext_id,
+            ],
+            'installment_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (SmsMessage $root) => $root->installment_id,
+            ],
+            'installment' => [
+                'type' => GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (SmsMessage $root) => $root->installment,
+            ],
+            'customer_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (SmsMessage $root) => $root->customer_id,
+            ],
+            'customer' => [
+                'type' => GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (SmsMessage $root) => $root->customer,
+            ],
+            'customer_type' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (SmsMessage $root) => $root->customer_type->value,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
