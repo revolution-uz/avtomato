@@ -22,48 +22,34 @@ class DeviceGraphQLType extends GraphQLType
             'id' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'ID of token',
-                'resolve' => function (PersonalAccessToken $root) {
-                    return $root->id;
-                },
+                'resolve' => fn (PersonalAccessToken $root) => $root->id,
             ],
             'name' => [
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'Token name',
-                'resolve' => function (PersonalAccessToken $root) {
-                    return $root->name;
-                },
+                'resolve' => fn (PersonalAccessToken $root) => $root->name,
             ],
             'device_ip' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => Type::string(),
                 'description' => 'IP address',
-                'resolve' => function (PersonalAccessToken $root) {
-                    return $root->device_ip;
-                },
+                'resolve' => fn (PersonalAccessToken $root) => $root->device_ip,
             ],
             'device_type' => [
                 'type' => Type::string(),
-                'resolve' => function (PersonalAccessToken $root) {
-                    return $root->device_type;
-                },
+                'resolve' => fn (PersonalAccessToken $root) => $root->device_type,
             ],
             'device_os' => [
                 'type' => Type::string(),
-                'resolve' => function (PersonalAccessToken $root) {
-                    return $root->device_os;
-                },
+                'resolve' => fn (PersonalAccessToken $root) => $root->device_os,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'Attachment created timestamp',
-                'resolve' => function (PersonalAccessToken $root) {
-                    return $root->created_at->timestamp;
-                },
+                'resolve' => fn (PersonalAccessToken $root) => $root->created_at->timestamp,
             ],
             'last_used_at' => [
                 'type' => Type::int(),
-                'resolve' => function (PersonalAccessToken $root) {
-                    return $root->last_used_at?->timestamp;
-                },
+                'resolve' => fn (PersonalAccessToken $root) => $root->last_used_at?->timestamp,
             ],
         ];
     }
