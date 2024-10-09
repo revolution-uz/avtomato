@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\PermissionInputGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -75,5 +76,17 @@ class AttachPermissionsToRoleGraphQLMutation extends Mutation
         $role->refresh();
 
         return $role;
+    }
+
+    public function rules(array $args = []): array
+    {
+        return [
+            'permissions.*.permission_id' => function ($attribute, $value, $fail) {
+                $permission = Permission::findOrFail($value);
+                if (! $permission->feature->is_active) {
+                    $fail(__('api.feature_not_active'));
+                }
+            },
+        ];
     }
 }
