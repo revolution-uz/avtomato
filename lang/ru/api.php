@@ -25,4 +25,6 @@ return [
     'already_attached_tag' => 'Тег уже привязана к этому клиенту',
     'already_canceled_transaction' => 'Выбранная транзакция уже отменена',
     'feature_not_active' => 'Функция не активна',
+    'customer_application' => 'Договор с клиентом',
+    'guarantor_application' => 'Договор с гарантором',
 ];

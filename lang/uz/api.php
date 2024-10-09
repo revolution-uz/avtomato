@@ -25,4 +25,6 @@ return [
     'already_attached_tag' => 'Teg allaqachon bu mijozga ulangan',
     'already_canceled_transaction' => 'Tanlangan tranzaksiya allaqachon bekor qilingan',
     'feature_not_active' => 'Xususiyat faol emas',
+    'customer_application' => 'Mijoz bilan shartnoma',
+    'guarantor_application' => 'Kafil bilan shartnoma',
 ];
