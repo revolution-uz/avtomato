@@ -18,16 +18,14 @@ use App\Services\SmsService;
 use App\Services\User\BalanceService;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Cache\Repository;
-use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Cache;
 use Throwable;
 
-class SendTransactionSmsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
+class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -86,14 +84,6 @@ class SendTransactionSmsJob implements ShouldBeUniqueUntilProcessing, ShouldQueu
         return [
             'tenant:' . tenant('id'),
         ];
-    }
-
-    /**
-     * Get the cache driver for the unique job lock.
-     */
-    public function uniqueVia(): Repository
-    {
-        return Cache::driver('redis');
     }
 
     private function sendSmsToCustomerPhones(Customer $customer, SmsMessageCustomerTypeEnum $customerType): void
