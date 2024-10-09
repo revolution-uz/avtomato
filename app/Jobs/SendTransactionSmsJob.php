@@ -18,14 +18,16 @@ use App\Services\SmsService;
 use App\Services\User\BalanceService;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 use Throwable;
 
-class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
+class SendTransactionSmsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -35,7 +37,10 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
     private BalanceService $_balanceService;
     private SmsService $_smsService;
 
-    public function __construct(private readonly int $transactionId) {}
+    public function __construct(private readonly int $transactionId)
+    {
+        $this->onQueue('sms');
+    }
 
     /**
      * @throws Exception|Throwable
@@ -68,11 +73,27 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
         }
     }
 
+    /**
+     * Get the unique ID for the job.
+     */
+    public function uniqueId(): string
+    {
+        return 'transaction-sms-' . tenant('id') . '-' . $this->transactionId;
+    }
+
     public function tags(): array
     {
         return [
             'tenant:' . tenant('id'),
         ];
+    }
+
+    /**
+     * Get the cache driver for the unique job lock.
+     */
+    public function uniqueVia(): Repository
+    {
+        return Cache::driver('redis');
     }
 
     private function sendSmsToCustomerPhones(Customer $customer, SmsMessageCustomerTypeEnum $customerType): void
