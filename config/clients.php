@@ -63,4 +63,14 @@ return [
     'sms_sayqal' => [
         'base_url' => 'https://routee.sayqal.uz',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Royxat Client
+    |--------------------------------------------------------------------------
+    */
+    'royxat' => [
+        'base_url' => 'https://service.royxat.uz/api/credits',
+        'token' => env('ROYXAT_UZ_TOKEN', ''),
+    ],
 ];
