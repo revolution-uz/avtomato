@@ -113,6 +113,7 @@ class RolesGraphQLQueryTest extends GraphQLTestCase
             'installment_create_transaction',
             'installment_update_comment',
             'installment_delete_comment',
+            'installment_view_document',
             'installment_upload_document',
             'installment_delete_document',
             'dashboard_info_view',
@@ -192,6 +193,11 @@ class RolesGraphQLQueryTest extends GraphQLTestCase
             );
 
         $this->assertSuccessRolesResponse($response);
+        foreach ($response->json('data') as $roles) {
+            foreach ($roles['data'] as $role) {
+                $this->checkIsNullPermission($role['permissions']);
+            }
+        }
     }
 
     #[Test]
@@ -442,5 +448,12 @@ class RolesGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(min($totalCount, $currentPage * $currentPerPage), $response->json('data.roles.to'));
         $this->assertEquals($totalCount, $response->json('data.roles.total'));
         $this->assertCount(min($totalCount - ($currentPage - 1) * $currentPerPage, $currentPerPage), $response->json('data.roles.data'));
+    }
+
+    private function checkIsNullPermission(array $permissions): void
+    {
+        foreach ($permissions as $permission) {
+            $this->assertNull($permission);
+        }
     }
 }

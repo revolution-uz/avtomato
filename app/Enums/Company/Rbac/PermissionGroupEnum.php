@@ -100,6 +100,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::INSTALLMENT_CREATE_COMMENT,
                 PermissionEnum::INSTALLMENT_UPDATE_COMMENT,
                 PermissionEnum::INSTALLMENT_DELETE_COMMENT,
+                PermissionEnum::INSTALLMENT_VIEW_DOCUMENT,
                 PermissionEnum::INSTALLMENT_UPLOAD_DOCUMENT,
                 PermissionEnum::INSTALLMENT_DELETE_DOCUMENT,
                 PermissionEnum::INSTALLMENT_CREATE_TRANSACTION,

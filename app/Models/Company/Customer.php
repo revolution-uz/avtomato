@@ -45,7 +45,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Card[]|Collection<int,Card> $cards
  * @property Tag[]|Collection<int, Tag> $tags
  * @property ScoringRequest[]|Collection<int,ScoringRequest> $scoringRequests
- * @property-read  string $full_name
+ * @property-read string $full_name
+ * @property-read string $passport
  *
  * @method static Builder|static query()
  * @method static Customer find(int $id)
@@ -147,5 +148,10 @@ class Customer extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'customer_tags');
+    }
+
+    public function passport(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->passport_series . $this->passport_number);
     }
 }

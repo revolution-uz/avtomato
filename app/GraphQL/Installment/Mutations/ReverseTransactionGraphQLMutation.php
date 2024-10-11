@@ -43,6 +43,7 @@ class ReverseTransactionGraphQLMutation extends Mutation
                     function ($attribute, $value, $fail) use ($branches) {
                         /** @var Builder $transactionQuery */
                         $transactionQuery = Transaction::query()->where('id', $value)
+                            ->where('is_initial_fee', false)
                             ->when($branches, fn ($q) => $q->whereHas('installment', fn ($q) => $q->whereIn('branch_id', $branches)));
                         /** @var Transaction $transaction */
                         $transaction = $transactionQuery->first();
@@ -51,9 +52,9 @@ class ReverseTransactionGraphQLMutation extends Mutation
                         } elseif ($transaction->status === TransactionStatusEnum::CANCELED) {
                             $fail(__('api.already_canceled_transaction'));
                         }
-                        //                        elseif ($transactionQuery->where('transaction_type_id', '<', 100)->exists()) {
-                        //                            $fail(__('api.it is system payment'));
-                        //                        }
+                        // elseif ($transactionQuery->where('transaction_type_id', '<', 100)->exists()) {
+                        //     $fail(__('api.it is system payment'));
+                        // }
                     },
                 ],
             ],

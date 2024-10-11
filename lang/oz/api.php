@@ -20,4 +20,7 @@ return [
     'tag' => 'Тег',
     'already_attached_tag' => 'Тег аллақачон бу мижозга уланган',
     'already_canceled_transaction' => 'Танланган транзакция аллақачон бекор қилинган',
+    'feature_not_active' => 'Хусусият фаол эмас',
+    'customer_application' => 'Мижоз билан шартнома',
+    'guarantor_application' => 'Кафил билан шартнома',
 ];

@@ -43,9 +43,8 @@ class PopulateInstallmentChargeJobs extends Command
                 continue;
             }
 
-            foreach ($installments as $index => $installment) {
-                dispatch(new InstallmentChargeJob($installment->id))
-                    ->onQueue('installment-charge');
+            foreach ($installments as $installment) {
+                InstallmentChargeJob::dispatch($installment->id);
             }
         }
 
