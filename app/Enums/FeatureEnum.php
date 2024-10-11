@@ -36,6 +36,8 @@ enum FeatureEnum: string
     case ATMOS_CARD_PAY = 'atmos_card_pay';
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
 
+    const PARTNER_CREDIT_HISTORY = 'partner_credit_history';
+
     public function getDefaultDescription(): ?string
     {
         return match ($this) {
