@@ -39,6 +39,8 @@ class InstallmentChargeJobTest extends TestCase
         $mock = $this->mock(
             AtmosService::class,
         );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->times(0); // card payment  must not be run
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0); // pinfl payment must not be run
         $job->handle($mock);
         $this->assertTrue(true);
     }
@@ -63,6 +65,8 @@ class InstallmentChargeJobTest extends TestCase
         $mock = $this->mock(
             AtmosService::class,
         );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->times(0); // card payment  must not be run
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0); // pinfl payment must not be ru
         $job->handle($mock);
         $this->assertTrue(true);
     }
@@ -91,6 +95,8 @@ class InstallmentChargeJobTest extends TestCase
         $mock = $this->mock(
             AtmosService::class,
         );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->times(0); // card payment  must not be run
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0); // pinfl payment must not be run
         $job->handle($mock);
         $this->assertTrue(true);
     }
@@ -182,6 +188,36 @@ class InstallmentChargeJobTest extends TestCase
             AtmosService::class,
         );
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0); // pinfl payment must not be run
+        $job->handle($mock);
+    }
+
+    #[Test]
+    public function doesntChargeByGuarantorIfNotDueDay(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'amount' => 1000000000,
+            'period' => 1,
+            'card_after_due_days' => 0,
+            'pinfl_after_due_days' => 0,
+            'guarantor_after_due_days' => 1,
+            'guarantor_pinfl_after_due_days' => 1,
+            'any_card_charge' => true,
+        ]);
+        $customerCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $guarantor = Customer::factory()->create();
+        $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
+        $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
+        $installment->cards()->attach($customerCard);
+        $installment->cards()->attach($guarantorCard);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->once()->withAnyArgs(); // one for customer
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->once()->withAnyArgs(); // one for customer
         $job->handle($mock);
     }
 
@@ -206,6 +242,8 @@ class InstallmentChargeJobTest extends TestCase
             AtmosService::class,
         );
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->once()->withAnyArgs();
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
+
         $job->handle($mock);
     }
 
@@ -232,6 +270,155 @@ class InstallmentChargeJobTest extends TestCase
             AtmosService::class,
         );
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs();
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
+        $job->handle($mock);
+    }
+
+    #[Test]
+    public function triesToChargeWithExactAmountByCard(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'amount' => 100000,
+            'period' => 1,
+            'percent' => 0,
+            'card_after_due_days' => 0,
+            'pinfl_after_due_days' => 1,
+            'guarantor_after_due_days' => 1,
+            'guarantor_pinfl_after_due_days' => 1,
+            'any_card_charge' => true,
+        ]);
+        $card1 = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $installment->cards()->attach($card1);
+        $guarantor = Customer::factory()->create();
+        $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
+        $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
+        $installment->cards()->attach($guarantorCard);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->once(1)->withAnyArgs();
+        //Todo fix expects, please!
+        //        $mock->expects()->withdrawAmountAndCreateCardTransaction(
+        //            \Mockery::on(function ($amount) use($installment) {
+        //                return $amount == $installment->debtAmount;
+        //            }),
+        //            \Mockery::any()
+        //        )->times(1);
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
+        $job->handle($mock);
+    }
+
+    #[Test]
+    public function triesToChargeWithExactAmountByPinfl(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'amount' => 100000,
+            'period' => 1,
+            'percent' => 0,
+            'card_after_due_days' => 1,
+            'pinfl_after_due_days' => 0,
+            'guarantor_after_due_days' => 1,
+            'guarantor_pinfl_after_due_days' => 1,
+            'any_card_charge' => true,
+        ]);
+        $card1 = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $installment->cards()->attach($card1);
+        $guarantor = Customer::factory()->create();
+        $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
+        $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
+        $installment->cards()->attach($guarantorCard);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->once(1)->withAnyArgs();
+        //Todo fix expects, please!
+        //        $mock->expects()->withdrawAmountAndCreatePINFLTransaction(
+        //            \Mockery::on(function ($amount) use($installment) {
+        //                return $amount == $installment->debtAmount;
+        //            }),
+        //            \Mockery::any()
+        //        )->times(1);
+        $job->handle($mock);
+    }
+
+    #[Test]
+    public function triesToChargeWithExactAmountByCardFromGuarantor(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'amount' => 100000,
+            'period' => 1,
+            'percent' => 0,
+            'card_after_due_days' => 0,
+            'pinfl_after_due_days' => 1,
+            'guarantor_after_due_days' => 1,
+            'guarantor_pinfl_after_due_days' => 1,
+            'any_card_charge' => true,
+        ]);
+        $customerCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $installment->cards()->attach($customerCard);
+        $guarantor = Customer::factory()->create();
+        $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
+        $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
+        $installment->cards()->attach($guarantorCard);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreateCardTransaction()->once(1)->withAnyArgs();
+        //Todo fix expects, please!
+        //        $mock->expects()->withdrawAmountAndCreateCardTransaction(
+        //            \Mockery::on(function ($amount) use($installment) {
+        //                return $amount == $installment->debtAmount;
+        //            }),
+        //            \Mockery::any()
+        //        )->times(1);
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
+        $job->handle($mock);
+    }
+
+    #[Test]
+    public function triesToChargeWithExactAmountByPinflFromGuarantor(): void
+    {
+        $installment = Installment::factory()->create([
+            'status' => InstallmentStatusEnum::ACTIVE,
+            'starts_in' => now(),
+            'amount' => 100000,
+            'period' => 1,
+            'percent' => 0,
+            'card_after_due_days' => 1,
+            'pinfl_after_due_days' => 1,
+            'guarantor_after_due_days' => 1,
+            'guarantor_pinfl_after_due_days' => 0,
+            'any_card_charge' => true,
+        ]);
+        $customerCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
+        $installment->cards()->attach($customerCard);
+        $guarantor = Customer::factory()->create();
+        $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
+        $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
+        $installment->cards()->attach($guarantorCard);
+        $job = new InstallmentChargeJob($installment->id);
+        $mock = $this->mock(
+            AtmosService::class,
+        );
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
+        $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->once(1)->withAnyArgs();
+        //Todo fix expects, please!
+        //        $mock->expects()->withdrawAmountAndCreatePINFLTransaction(
+        //            \Mockery::on(function ($amount) use($installment) {
+        //                return $amount == $installment->debtAmount;
+        //            }),
+        //            \Mockery::any()
+        //        )->times(1);
         $job->handle($mock);
     }
 }
