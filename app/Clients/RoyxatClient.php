@@ -52,7 +52,6 @@ class RoyxatClient extends BaseClient
 
     protected function makeRequest(string $path, mixed $data, string $method = 'post'): array
     {
-
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
@@ -87,6 +86,6 @@ class RoyxatClient extends BaseClient
             body: $data,
         ));
 
-        return $response->json();
+        return $response->json('data');
     }
 }

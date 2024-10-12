@@ -3,7 +3,9 @@
 namespace App\DTOs\Royxat;
 
 use App\DTOs\Scoring\Base\BaseScoringRequest;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 class RoyxatCreditResponseDTO extends BaseScoringRequest
 {
@@ -15,13 +17,16 @@ class RoyxatCreditResponseDTO extends BaseScoringRequest
         public string $name,
         public string $passport,
         public ?int $tin,
-        public ?int $pinfl,
+        public ?string $pinfl,
         public string $credit_status,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.u\Z')]
         public Carbon $contract_date,
         public int $overdue_days,
         public int $merchant_id,
         public string $merchant_name,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.u\Z')]
         public Carbon $created_at,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.u\Z')]
         public Carbon $updated_at,
     ) {}
 }

@@ -47,7 +47,7 @@ class RoyxatCreditGraphQLType extends GraphQLType
                 'resolve' => fn (RoyxatCreditResponseDTO $root) => $root->tin,
             ],
             'pinfl' => [
-                'type' => Type::int(),
+                'type' => Type::string(),
                 'resolve' => fn (RoyxatCreditResponseDTO $root) => $root->pinfl,
             ],
             'credit_status' => [
