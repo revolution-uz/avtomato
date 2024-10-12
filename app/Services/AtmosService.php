@@ -10,7 +10,7 @@ use App\DTOs\Atmos\Transaction\AtmosTransactionDetailDTO;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
-use App\Exceptions\AtmosException;
+use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
@@ -26,7 +26,7 @@ class AtmosService
     public function __construct(private AtmosCardClient $atmosCardClient, private AtmosPinflClient $atmosPinflClient) {}
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function attachCard(string $number, string $expiry): AtmosAttachCardResponseDTO
     {
@@ -34,7 +34,7 @@ class AtmosService
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function confirmCard(int $transaction_id, string $otp): AtmosConfirmCardResponseDTO
     {
@@ -43,7 +43,7 @@ class AtmosService
 
     /**
      * @throws Throwable
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function reversePayment(Transaction $transaction): bool
     {

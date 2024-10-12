@@ -4,7 +4,7 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\Exceptions\AtmosException;
+use App\Exceptions\GeneralException;
 use App\GraphQL\Management\Types\BalanceFundGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
@@ -60,7 +60,7 @@ class BalanceFillConfirmGraphQLMutation extends Mutation
     {
         try {
             return $this->balanceService->fundBalance(BalanceFundConfirmDTO::from($args));
-        } catch (AtmosException $e) {
+        } catch (GeneralException $e) {
             throw ValidationException::withMessages(['otp' => $e->getMessage()]);
         }
     }

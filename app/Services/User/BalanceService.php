@@ -7,7 +7,7 @@ use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Exceptions\AtmosException;
+use App\Exceptions\GeneralException;
 use App\Models\Company\BalanceCharge;
 use App\Models\Company\BalanceFund;
 use App\Models\Company\Feature;
@@ -55,7 +55,7 @@ class BalanceService
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function requestFillBalance(string $number, string $expiry, int $amount): AtmosCreatePaymentResponseDTO
     {
@@ -66,13 +66,13 @@ class BalanceService
         );
 
         if (! $createPayResponseDTO->result->isSuccess()) {
-            throw new AtmosException($createPayResponseDTO->result->description);
+            throw new GeneralException($createPayResponseDTO->result->description);
         }
 
         $preConfirmPayResponseDTO = $this->atmosBalanceClient->preConfirmPaymentWithOneTimeSms($createPayResponseDTO->transaction_id, $number, $expiry);
 
         if (! $preConfirmPayResponseDTO->result->isSuccess()) {
-            throw new AtmosException($preConfirmPayResponseDTO->result->description);
+            throw new GeneralException($preConfirmPayResponseDTO->result->description);
         }
 
         return $createPayResponseDTO;
@@ -86,7 +86,7 @@ class BalanceService
         );
 
         if (! $confirmPayResponseDTO->result->isSuccess()) {
-            throw new AtmosException($confirmPayResponseDTO->result->description);
+            throw new GeneralException($confirmPayResponseDTO->result->description);
         }
 
         $balanceFund = new BalanceFund;

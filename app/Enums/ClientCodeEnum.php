@@ -14,4 +14,5 @@ enum ClientCodeEnum: int
     case DOCUMENT_GENERATOR = 7;
     case ATMOS_BALANCE_PAY = 8;
     case SMS_SAYQAL = 9;
+    case ROYXAT = 10;
 }

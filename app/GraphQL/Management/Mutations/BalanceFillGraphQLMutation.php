@@ -4,7 +4,7 @@ namespace App\GraphQL\Management\Mutations;
 
 use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\Exceptions\AtmosException;
+use App\Exceptions\GeneralException;
 use App\GraphQL\Management\Types\BalanceFillDataGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
@@ -61,7 +61,7 @@ class BalanceFillGraphQLMutation extends Mutation
     {
         try {
             return $this->balanceService->requestFillBalance(...$args);
-        } catch (AtmosException $e) {
+        } catch (GeneralException $e) {
             throw new Error($e->getMessage());
         }
     }
