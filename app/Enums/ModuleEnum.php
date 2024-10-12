@@ -82,7 +82,7 @@ enum ModuleEnum: string
             self::MULTIBRANCH_2 => LimitBranchEnum::MULTIBRANCH_2_BRANCH->value,
             self::MULTIBRANCH_3 => LimitBranchEnum::MULTIBRANCH_3_BRANCH->value,
             self::MULTIBRANCH_4 => LimitBranchEnum::MULTIBRANCH_4_BRANCH->value,
-            self::SCORING, self::INSTALLMENT, self::MARKETING => throw new Exception('To be implemented'),
+            self::SCORING, self::INSTALLMENT, self::MARKETING => throw new Exception('Is not limited'),
         };
     }
 }
