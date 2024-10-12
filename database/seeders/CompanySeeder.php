@@ -7,6 +7,7 @@ use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Rbac\Role;
 use Database\Seeders\Company\AdminRoleSeeder;
+use Database\Seeders\Company\BranchSeeder;
 use Database\Seeders\Company\CompanySettingsSeeder;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\LocationSeeder;
@@ -32,6 +33,7 @@ class CompanySeeder extends Seeder
         $this->call(TransactionTypeSeeder::class);
         $this->call(CompanySettingsSeeder::class);
         $this->call(SmsTemplateSeeder::class);
+        $this->call(BranchSeeder::class);
         // TODO remove before production
         /** @var CompanyAdmin $admin */
         $admin = CompanyAdmin::query()->firstOrCreate(
