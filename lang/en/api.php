@@ -20,4 +20,6 @@ return [
     'already_attached_tag' => 'The tag already connected to this customer',
     'already_canceled_transaction' => 'The selected transaction is already canceled',
     'feature_not_active' => 'Feature not active',
+    'n_branches' => 'You can only create up to :n branches!',
+    'n_admins' => 'You can only create up to :n admins!',
 ];

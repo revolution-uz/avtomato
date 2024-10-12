@@ -2,7 +2,9 @@
 
 namespace Tests\GraphQL\Management\Mutations;
 
+use App\Enums\Company\LimitBranchEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\Module;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,6 +17,8 @@ class CreateBranchGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successCreateBranch()
     {
+        Module::where('name', 'like', 'multibranch%')->update(['is_active' => false]);
+        Module::where('name', 'multibranch_2')->update(['is_active' => true]);
         $branchInput = [
             'name' => Str::random(255),
             'address' => Str::random(255),
@@ -109,6 +113,54 @@ class CreateBranchGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'Имя', 'max' => 255]), $response->json('errors.0.extensions.validation.name.0'));
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'address', 'max' => 255]), $response->json('errors.0.extensions.validation.address.0'));
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'inn', 'max' => 9]), $response->json('errors.0.extensions.validation.inn.0'));
+    }
+
+    #[Test]
+    public function limitMultibranch1(): void
+    {
+        $this->runMultibranchLimitTest('multibranch_1', LimitBranchEnum::MULTIBRANCH_1_BRANCH->value);
+    }
+
+    #[Test]
+    public function limitMultibranch2(): void
+    {
+        Branch::factory()->create();  // Create 1 branch
+        $this->runMultibranchLimitTest('multibranch_2', LimitBranchEnum::MULTIBRANCH_2_BRANCH->value);
+    }
+
+    #[Test]
+    public function limitMultibranch3(): void
+    {
+        Branch::factory(2)->create();  // Create 2 branches
+        $this->runMultibranchLimitTest('multibranch_3', LimitBranchEnum::MULTIBRANCH_3_BRANCH->value);
+    }
+
+    #[Test]
+    public function limitMultibranch4(): void
+    {
+        Branch::factory(4)->create();  // Create 4 branches
+        $this->runMultibranchLimitTest('multibranch_4', LimitBranchEnum::MULTIBRANCH_4_BRANCH->value);
+    }
+
+    private function runMultibranchLimitTest(string $moduleName, int $branchLimit): void
+    {
+        Module::where('name', 'like', 'multibranch%')->update(['is_active' => false]);
+        Module::where('name', $moduleName)->update(['is_active' => true]);
+
+        $branchInput = [
+            'name' => Str::random(255),
+            'address' => Str::random(255),
+            'inn' => Str::random(9),
+        ];
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.management'),
+                $this->buildGraphQLQuery($branchInput)
+            );
+
+        $this->assertEquals(__('api.n_branches', ['n' => $branchLimit]), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

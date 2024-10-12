@@ -3,8 +3,10 @@
 namespace Tests\GraphQL\Management\Mutations;
 
 use App\Enums\Company\CompanyStatusEnum;
+use App\Enums\Company\LimitAdminEnum;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\CompanyAdmin;
+use App\Models\Company\Module;
 use App\Models\Company\Rbac\Role;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -23,8 +25,6 @@ class CreateAdminGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        CompanyAdmin::factory()->count(5)->create();
-
         $this->_input = [
             'username' => Str::random(50),
             'first_name' => Str::random(50),
@@ -39,6 +39,8 @@ class CreateAdminGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successCreateAdmin()
     {
+        Module::where('name', 'like', 'multibranch%')->update(['is_active' => false]);
+        Module::where('name', 'multibranch_2')->update(['is_active' => true]);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.management'), $this->buildGraphQLQuery(['admin' => $this->_input]));
@@ -49,7 +51,8 @@ class CreateAdminGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function errorUnique()
     {
-        $this->_input = array_merge($this->_input, ['username' => CompanyAdmin::query()->inRandomOrder()->first()->username]);
+        $companyAdmin = CompanyAdmin::factory()->create();
+        $this->_input = array_merge($this->_input, ['username' => $companyAdmin->username]);
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -175,6 +178,44 @@ class CreateAdminGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
+    }
+
+    #[Test]
+    public function limitAdminMultibranch1(): void
+    {
+        CompanyAdmin::factory()->create();
+        $this->runAdminsLimitTest('multibranch_1', LimitAdminEnum::MULTIBRANCH_1_ADMIN->value);
+    }
+
+    #[Test]
+    public function limitAdminMultibranch2(): void
+    {
+        CompanyAdmin::factory(5)->create();  // Create 5 admin
+        $this->runAdminsLimitTest('multibranch_2', LimitAdminEnum::MULTIBRANCH_2_ADMIN->value);
+    }
+
+    #[Test]
+    public function limitAdminMultibranch3(): void
+    {
+        CompanyAdmin::factory(10)->create();  // Create 10 admin
+        $this->runAdminsLimitTest('multibranch_3', LimitAdminEnum::MULTIBRANCH_3_ADMIN->value);
+    }
+
+    #[Test]
+    public function limitAdminMultibranch4(): void
+    {
+        CompanyAdmin::factory(20)->create();  // Create 10 admin
+        $this->runAdminsLimitTest('multibranch_4', LimitAdminEnum::MULTIBRANCH_4_ADMIN->value);
+    }
+
+    private function runAdminsLimitTest(string $moduleName, int $adminLimit): void
+    {
+        Module::where('name', 'like', 'multibranch%')->update(['is_active' => false]);
+        Module::where('name', $moduleName)->update(['is_active' => true]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery(['admin' => $this->_input]));
+        $this->assertEquals(__('api.n_admins', ['n' => $adminLimit]), $response->json('errors.0.message'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array
