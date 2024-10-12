@@ -4,6 +4,7 @@ namespace App\Enums;
 
 use App\Enums\Company\LimitAdminEnum;
 use App\Enums\Company\LimitBranchEnum;
+use Exception;
 
 enum ModuleEnum: string
 {
@@ -57,6 +58,9 @@ enum ModuleEnum: string
         };
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getAdminsLimit(ModuleEnum $module): int
     {
         return match ($module) {
@@ -64,9 +68,13 @@ enum ModuleEnum: string
             self::MULTIBRANCH_2 => LimitAdminEnum::MULTIBRANCH_2_ADMIN->value,
             self::MULTIBRANCH_3 => LimitAdminEnum::MULTIBRANCH_3_ADMIN->value,
             self::MULTIBRANCH_4 => LimitAdminEnum::MULTIBRANCH_4_ADMIN->value,
+            self::SCORING, self::MARKETING, self::INSTALLMENT => throw new Exception('Is not limited'),
         };
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getBranchLimit(ModuleEnum $module): int
     {
         return match ($module) {
@@ -74,6 +82,7 @@ enum ModuleEnum: string
             self::MULTIBRANCH_2 => LimitBranchEnum::MULTIBRANCH_2_BRANCH->value,
             self::MULTIBRANCH_3 => LimitBranchEnum::MULTIBRANCH_3_BRANCH->value,
             self::MULTIBRANCH_4 => LimitBranchEnum::MULTIBRANCH_4_BRANCH->value,
+            self::SCORING, self::INSTALLMENT, self::MARKETING => throw new Exception('To be implemented'),
         };
     }
 }

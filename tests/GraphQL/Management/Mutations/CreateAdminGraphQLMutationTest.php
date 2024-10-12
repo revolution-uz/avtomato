@@ -215,7 +215,7 @@ class CreateAdminGraphQLMutationTest extends GraphQLTestCase
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.management'), $this->buildGraphQLQuery(['admin' => $this->_input]));
-        $this->assertEquals(__('api.n_admins', ['n' => $adminLimit]), $response->json('errors.0.message'));
+        $this->assertEquals(__('api.n_admins', ['n' => $adminLimit]), $response->json('errors.0.extensions.debugMessage'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

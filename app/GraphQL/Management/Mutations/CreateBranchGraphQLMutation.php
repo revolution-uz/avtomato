@@ -9,7 +9,7 @@ use App\Helpers\RbacHelper;
 use App\Models\Company\Branch;
 use App\Models\Company\Module;
 use Closure;
-use GraphQL\Error\Error;
+use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -62,7 +62,7 @@ class CreateBranchGraphQLMutation extends Mutation
         $branchCount = Branch::query()->count();
         $branchLimit = ModuleEnum::getBranchLimit($module->name);
         if ($module && $branchLimit <= $branchCount) {
-            return new Error(__('api.n_branches', ['n' => $branchLimit]));
+            return throw new Exception(__('api.n_branches', ['n' => $branchLimit]));
         }
         $model = new Branch;
         $model->fill($args);
