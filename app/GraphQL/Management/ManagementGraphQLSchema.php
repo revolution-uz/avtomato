@@ -55,7 +55,9 @@ use App\GraphQL\Management\Types\BalanceChargeGraphQLType;
 use App\GraphQL\Management\Types\BalanceFillDataGraphQLType;
 use App\GraphQL\Management\Types\BalanceFundGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
+use App\GraphQL\Management\Types\CustomerGraphQLType;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
+use App\GraphQL\Management\Types\InstallmentGraphQLType;
 use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionGraphQLType;
@@ -138,6 +140,8 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 SmsMessageGraphQLType::class,
                 TagInputGraphQLType::class,
                 TagGraphQLType::class,
+                CustomerGraphQLType::class,
+                InstallmentGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];

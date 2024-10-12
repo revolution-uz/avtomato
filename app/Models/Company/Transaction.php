@@ -86,7 +86,7 @@ class Transaction extends Model
                 $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
             }
 
-            dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
+            SendTransactionSmsJob::dispatch($transaction->id);
         });
 
         static::updating(function (self $transaction) {

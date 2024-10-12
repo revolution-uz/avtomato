@@ -27,4 +27,6 @@ return [
     'feature_not_active' => 'Xususiyat faol emas',
     'n_branches' => 'Siz faqat :n ta filial yaratishingiz mumkin!',
     'n_admins' => 'Siz faqat :n ta admin yaratishingiz mumkin!',
+    'customer_application' => 'Mijoz bilan shartnoma',
+    'guarantor_application' => 'Kafil bilan shartnoma',
 ];

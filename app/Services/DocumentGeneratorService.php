@@ -144,7 +144,7 @@ readonly class DocumentGeneratorService
 
     private function generateFileName($fullName)
     {
-        $sanitizedFileName = preg_replace("/[\/?%*:|\"<>\s']+/", '-', Str::kebab($fullName));
+        $sanitizedFileName = preg_replace("/[\/?%*:|\"<>\s']+/", '-', Str::kebab(Str::lower($fullName)));
         $currentDate = Carbon::now()->format('d-m-Y-H-i-s');
 
         return "{$sanitizedFileName}-{$currentDate}.docx";
