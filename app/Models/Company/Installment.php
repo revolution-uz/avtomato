@@ -306,6 +306,6 @@ class Installment extends Model
 
     private function isAvailablePaymentDate(int $delay): bool
     {
-        return $this->nextPaymentDate->addDays($delay) <= Carbon::now();
+        return (clone $this->nextPaymentDate)->addDays($delay) <= Carbon::now();
     }
 }

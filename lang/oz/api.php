@@ -23,4 +23,6 @@ return [
     'feature_not_active' => 'Хусусият фаол эмас',
     'customer_application' => 'Мижоз билан шартнома',
     'guarantor_application' => 'Кафил билан шартнома',
+    'n_branches' => 'Сиз фақат :n та филиал яратишингиз мумкин!',
+    'n_admins' => 'Сиз фақат :n та админ яратишингиз мумкин!',
 ];

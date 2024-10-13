@@ -20,7 +20,6 @@ use App\Services\SmsService;
 use App\Services\User\BalanceService;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Support\Arr;
-use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -30,10 +29,15 @@ class SendTransactionSmsJobTest extends TestCase
 
     private Customer $_customer;
     private Phone $_phone;
+    private SmsService $_smsServiceMock;
+    private BalanceService $_balanceServiceMock;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->_smsServiceMock = $this->mock(SmsService::class);
+        $this->_balanceServiceMock = $this->mock(BalanceService::class);
 
         $this->artisan('db:seed', ['--class' => TransactionTypeSeeder::class]);
 
@@ -51,14 +55,11 @@ class SendTransactionSmsJobTest extends TestCase
         $transaction = Transaction::factory()->make(['transaction_type_id' => $transactionType->id, 'customer_id' => $this->_customer->id]);
         $transaction->saveQuietly();
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->once();
-        Mockery::mock(BalanceService::class)->makePartial();
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
-        $balanceServiceMock->shouldReceive('chargeAmount')->once();
+        $this->_smsServiceMock->shouldReceive('sendSms')->once();
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->once();
 
-        (new SendTransactionSmsJob($transaction->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendTransactionSmsJob($transaction->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $transaction->refresh();
         $smsMessage = SmsMessage::query()->firstOrFail();
@@ -88,13 +89,11 @@ class SendTransactionSmsJobTest extends TestCase
         $transaction = Transaction::factory()->make(['customer_id' => $this->_customer->id]);
         $transaction->saveQuietly();
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->once();
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
-        $balanceServiceMock->shouldReceive('chargeAmount')->once();
+        $this->_smsServiceMock->shouldReceive('sendSms')->once();
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->once();
 
-        (new SendTransactionSmsJob($transaction->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendTransactionSmsJob($transaction->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $transaction->refresh();
         $smsMessage = SmsMessage::query()->firstOrFail();
@@ -123,13 +122,11 @@ class SendTransactionSmsJobTest extends TestCase
         $transaction = Transaction::factory()->make(['customer_id' => $this->_customer->id]);
         $transaction->saveQuietly();
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->times(0);
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->times(0);
-        $balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->times(0);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
-        (new SendTransactionSmsJob($transaction->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendTransactionSmsJob($transaction->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $this->assertEquals(0, SmsMessage::query()->count());
     }
@@ -141,13 +138,11 @@ class SendTransactionSmsJobTest extends TestCase
         $transaction = Transaction::factory()->make(['customer_id' => $this->_customer->id]);
         $transaction->saveQuietly();
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->times(0);
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(false);
-        $balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(false);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
-        (new SendTransactionSmsJob($transaction->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendTransactionSmsJob($transaction->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $this->assertEquals(0, SmsMessage::query()->count());
     }
@@ -165,13 +160,11 @@ class SendTransactionSmsJobTest extends TestCase
         $transaction = Transaction::factory()->make(['transaction_type_id' => $transactionType->id, 'customer_id' => $this->_customer->id]);
         $transaction->saveQuietly();
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->times(0);
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
-        $balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
-        (new SendTransactionSmsJob($transaction->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendTransactionSmsJob($transaction->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $this->assertEquals(0, SmsMessage::query()->count());
     }
@@ -187,13 +180,11 @@ class SendTransactionSmsJobTest extends TestCase
         $transaction = Transaction::factory()->make(['customer_id' => $this->_customer->id]);
         $transaction->saveQuietly();
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->times(0);
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
-        $balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
-        (new SendTransactionSmsJob($transaction->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendTransactionSmsJob($transaction->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $this->assertEquals(0, SmsMessage::query()->count());
     }
@@ -211,13 +202,11 @@ class SendTransactionSmsJobTest extends TestCase
         $transaction = Transaction::factory()->make(['transaction_type_id' => $transactionType->id, 'customer_id' => $this->_customer->id]);
         $transaction->saveQuietly();
 
-        $smsServiceMock = $this->mock(SmsService::class);
-        $smsServiceMock->shouldReceive('sendSms')->times(0);
-        $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
-        $balanceServiceMock->shouldReceive('chargeAmount')->times(0);
+        $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
-        (new SendTransactionSmsJob($transaction->id))->handle($smsServiceMock, $balanceServiceMock);
+        (new SendTransactionSmsJob($transaction->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
 
         $this->assertEquals(0, SmsMessage::query()->count());
     }

@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "id": 65,
+      "credit_id": "test021-01",
+      "amount": 4664798,
+      "duration": 12,
+      "name": "Palonchiyev Palonchi Palonchiyevich",
+      "passport": "AB1234567",
+      "tin": "123456789",
+      "pinfl": 12345678910234,
+      "credit_status": "Проблемный",
+      "contract_date": "2019-10-05T19:00:00.000000Z",
+      "overdue_days": 1196,
+      "merchant_id": 3,
+      "merchant_name": "alif",
+      "created_at": "2021-02-26T17:57:32.000000Z",
+      "updated_at": "2023-02-14T20:18:37.000000Z"
+    }
+  ]
+}

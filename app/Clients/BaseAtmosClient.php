@@ -7,7 +7,7 @@ use App\DTOs\Atmos\AtmosCredentialsDTO;
 use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\HttpRequestLogDTO;
 use App\Enums\FeatureEnum;
-use App\Exceptions\AtmosException;
+use App\Exceptions\GeneralException;
 use App\Models\Company\Feature;
 use Illuminate\Support\Facades\Http;
 
@@ -38,7 +38,7 @@ abstract class BaseAtmosClient extends BaseClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     protected function makeRequest(string $path, array $data, string $method = 'post'): array
     {
@@ -70,7 +70,7 @@ abstract class BaseAtmosClient extends BaseClient
                 'error'
             );
 
-            throw new AtmosException($response['description'], $response['code']);
+            throw new GeneralException($response['description'], $response['code']);
         }
 
         parent::logRequest(new HttpRequestLogDTO(

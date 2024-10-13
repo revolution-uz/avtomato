@@ -22,4 +22,6 @@ return [
     'feature_not_active' => 'Feature not active',
     'customer_application' => 'Contract with the client',
     'guarantor_application' => 'Contract with the guarantor',
+    'n_branches' => 'You can only create up to :n branches!',
+    'n_admins' => 'You can only create up to :n admins!',
 ];

@@ -7,7 +7,7 @@ use App\DTOs\Atmos\Transaction\AtmosTransactionCreateResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
-use App\Exceptions\AtmosException;
+use App\Exceptions\GeneralException;
 use App\Models\Company\Customer;
 use Throwable;
 
@@ -37,7 +37,7 @@ class AtmosPinflClient extends BaseAtmosClient
      * ------------- PINFL Payment module begin --------------
      */
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function payWithPinfl(string $ext_id, Customer $customer, string $contract_number, int $amount): AtmosTransactionCreateResponseDTO
     {
@@ -59,7 +59,7 @@ class AtmosPinflClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function payConfirmWithPinfl(string $ext_id, string $transaction_id): AtmosTransactionInfoResponseDTO
     {
@@ -72,7 +72,7 @@ class AtmosPinflClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function payCheckWithPinfl(string $ext_id, string $pinfl, string $passer, string $pasnum, string $contract_number, int $amount): AtmosTransactionInfoResponseDTO
     {
@@ -89,7 +89,7 @@ class AtmosPinflClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function payCancelWithPinfl(string $ext_id, string $transaction_id): AtmosTransactionCancelResponseDTO
     {

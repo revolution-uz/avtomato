@@ -6,6 +6,7 @@ use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use App\Models\Company\Rbac\Role;
 use Database\Seeders\Company\AdminRoleSeeder;
+use Database\Seeders\Company\BranchSeeder;
 use Database\Seeders\Company\CompanySettingsSeeder;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\ModuleSeeder;
@@ -64,6 +65,7 @@ abstract class TestCase extends BaseTestCase
         Artisan::call('tenants:seed', ['--class' => AdminRoleSeeder::class, '--tenants' => [$tenant->id]]);
         Artisan::call('tenants:seed', ['--class' => SmsTemplateSeeder::class, '--tenants' => [$tenant->id]]);
         Artisan::call('tenants:seed', ['--class' => CompanySettingsSeeder::class, '--tenants' => [$tenant->id]]);
+        Artisan::call('tenants:seed', ['--class' => BranchSeeder::class, '--tenants' => [$tenant->id]]);
     }
 
     public function createAdminUser()

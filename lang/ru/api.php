@@ -27,4 +27,6 @@ return [
     'feature_not_active' => 'Функция не активна',
     'customer_application' => 'Договор с клиентом',
     'guarantor_application' => 'Договор с гарантором',
+    'n_branches' => 'Вы можете создать только до :n филиалов!',
+    'n_admins' => 'Вы можете создать только до :n админов!',
 ];
