@@ -15,6 +15,11 @@ use Stancl\Tenancy\Database\Models\Tenant;
  * @property string $name
  * @property string $owner_phone
  * @property string $owner_name
+ * @property string $address
+ * @property string $bank_name
+ * @property string $bank_code
+ * @property string $account_number
+ * @property string $tin
  * @property CompanyStatusEnum $status
  */
 class Company extends Tenant implements TenantWithDatabase
@@ -24,6 +29,7 @@ class Company extends Tenant implements TenantWithDatabase
     protected $table = 'companies';
 
     protected $fillable = [
+        'id',
         'name',
         'status',
         'owner_name',

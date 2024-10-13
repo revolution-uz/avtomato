@@ -7,6 +7,7 @@ use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\SmsTemplateStatusEnum;
 use App\Jobs\SendDebtSmsJob;
+use App\Models\Company;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Installment;
 use App\Models\Company\SmsTemplate;
@@ -27,10 +28,8 @@ class PopulateDebtSmsJobsTest extends TestCase
         parent::setUp();
 
         CompanySettings::where('name', CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT)->update(['value' => '1']);
-
-        $this->_balanceServiceMock = $this->mock(BalanceService::class);
-        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
-
+        $this->initializeTenancy(companyId: 2);
+        CompanySettings::where('name', CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT)->update(['value' => '1']);
         for ($i = -1; $i <= 1; $i++) {
             SmsTemplate::factory()->create([
                 'template' => 'Test',
@@ -42,60 +41,63 @@ class PopulateDebtSmsJobsTest extends TestCase
                 ],
             ]);
         }
+
+        Bus::fake();
+        $this->_balanceServiceMock = $this->mock(BalanceService::class);
     }
 
     #[Test]
     public function populateCorrectDebtorInstallmentsForToday(): void
     {
-        Bus::fake();
-
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->twice()->andReturn(true);
         /** @var Installment $installment */
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()]);
 
         (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertDispatched(
-            SendDebtSmsJob::class,
-            fn ($job) => $job->installmentId === $installment->id and $job->queue === 'debt-sms' and $job->delay === 0
-        );
+        $dispatchedJobs = Bus::dispatched(SendDebtSmsJob::class);
+        $this->assertCount(1, $dispatchedJobs);
+        $this->assertEquals($installment->id, $dispatchedJobs[0]->installmentId);
+        $this->assertEquals('sms', $dispatchedJobs[0]->queue);
+        $this->assertEquals(0, $dispatchedJobs[0]->delay);
     }
 
     #[Test]
     public function populateCorrectDebtorInstallmentsBeforeOneDay(): void
     {
-        Bus::fake();
-
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->times(2)->andReturn(true);
         /** @var Installment $installment */
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->subDay()]);
 
         (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertDispatched(
-            SendDebtSmsJob::class,
-            fn ($job) => $job->installmentId === $installment->id and $job->queue === 'debt-sms' and $job->delay === 0
-        );
+        $dispatchedJobs = Bus::dispatched(SendDebtSmsJob::class);
+        $this->assertCount(1, $dispatchedJobs);
+        $this->assertEquals($installment->id, $dispatchedJobs[0]->installmentId);
+        $this->assertEquals('sms', $dispatchedJobs[0]->queue);
+        $this->assertEquals(0, $dispatchedJobs[0]->delay);
     }
 
     #[Test]
     public function populateCorrectDebtorInstallmentsAfterOneDay(): void
     {
-        Bus::fake();
-
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->times(2)->andReturn(true);
         /** @var Installment $installment */
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->addDay()]);
 
         (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertDispatched(
-            SendDebtSmsJob::class,
-            fn ($job) => $job->installmentId === $installment->id and $job->queue === 'debt-sms' and $job->delay === 0
-        );
+        $dispatchedJobs = Bus::dispatched(SendDebtSmsJob::class);
+        $this->assertCount(1, $dispatchedJobs);
+        $this->assertEquals($installment->id, $dispatchedJobs[0]->installmentId);
+        $this->assertEquals('sms', $dispatchedJobs[0]->queue);
+        $this->assertEquals(0, $dispatchedJobs[0]->delay);
     }
 
     #[Test]
     public function doNotPopulateInactiveInstallments(): void
     {
-        Bus::fake();
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->times(2)->andReturn(true);
         Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
         (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
         Bus::assertNotDispatched(SendDebtSmsJob::class);
@@ -104,10 +106,8 @@ class PopulateDebtSmsJobsTest extends TestCase
     #[Test]
     public function doNotPopulateIfThereIsNoAvailableTemplates(): void
     {
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->times(2)->andReturn(true);
         SmsTemplate::debtTemplates()->update(['status' => SmsTemplateStatusEnum::INACTIVE]);
-
-        Bus::fake();
-
         Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->subDay()]);
         Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()]);
         Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->addDay()]);
@@ -115,5 +115,48 @@ class PopulateDebtSmsJobsTest extends TestCase
         (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
 
         Bus::assertNotDispatched(SendDebtSmsJob::class);
+    }
+
+    #[Test]
+    public function successCheckingForTwoAvailableCompanies(): void
+    {
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->twice()->andReturn(true);
+        foreach (Company::query()->get() as $company) {
+            tenancy()->initialize($company);
+            Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()]);
+        }
+
+        (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
+
+        $dispatchedJobs = Bus::dispatched(SendDebtSmsJob::class);
+        $this->assertCount(2, $dispatchedJobs);
+        /** @var SendDebtSmsJob $job */
+        foreach ($dispatchedJobs as $job) {
+            $this->assertEquals(1, $job->installmentId);
+            $this->assertEquals('sms', $job->queue);
+            $this->assertEquals(0, $job->delay);
+        }
+    }
+
+    #[Test]
+    public function successCheckingForOneAvailableCompany(): void
+    {
+        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->times(1)->andReturn(true);
+        CompanySettings::where('name', CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT)->update(['value' => '0']);
+        foreach (Company::query()->get() as $company) {
+            tenancy()->initialize($company);
+            Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()]);
+        }
+
+        (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
+
+        $dispatchedJobs = Bus::dispatched(SendDebtSmsJob::class);
+        $this->assertCount(1, $dispatchedJobs);
+        /** @var SendDebtSmsJob $job */
+        foreach ($dispatchedJobs as $job) {
+            $this->assertEquals(1, $job->installmentId);
+            $this->assertEquals('sms', $job->queue);
+            $this->assertEquals(0, $job->delay);
+        }
     }
 }

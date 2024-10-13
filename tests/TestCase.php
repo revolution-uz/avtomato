@@ -42,15 +42,10 @@ abstract class TestCase extends BaseTestCase
     /**
      * @throws TenantCouldNotBeIdentifiedById
      */
-    public function initializeTenancy(): void
+    public function initializeTenancy(int $companyId = 1): void
     {
         /** @var Company $tenant */
-        $tenant = Company::query()->first() ?? Company::factory()->create([
-            'name' => 'Test Company',
-            'owner_phone' => '0123456789',
-            'owner_name' => 'Test Owner',
-            'status' => CompanyStatusEnum::ACTIVE,
-        ]);
+        $tenant = Company::firstOrCreate(['id' => $companyId], Company::factory()->make()->toArray());
 
         if ($tenant->status !== CompanyStatusEnum::ACTIVE) {
             $tenant->update(['status' => CompanyStatusEnum::ACTIVE]);

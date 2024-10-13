@@ -53,7 +53,7 @@ class PopulateDebtSmsJobs extends Command
 
             $threshold = 5 * 60.0 / (count($installments) ?: 1);
             foreach ($installments as $index => $installment) {
-                SendDebtSmsJob::dispatch($installment->id)->delay(intval($threshold * $index))->onQueue('debt-sms');
+                SendDebtSmsJob::dispatch($installment->id)->delay(intval($threshold * $index));
             }
         }
     }

@@ -23,7 +23,10 @@ class SendDebtSmsJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public readonly int $installmentId) {}
+    public function __construct(public readonly int $installmentId)
+    {
+        $this->onQueue('sms');
+    }
 
     public function handle(SmsService $smsService, BalanceService $balanceService): void
     {
