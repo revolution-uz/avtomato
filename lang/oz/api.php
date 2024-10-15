@@ -19,4 +19,10 @@ return [
     'Please create initial fee amount first' => 'Илтимос, аввал бошланғич тўлов миқдорини яратинг',
     'tag' => 'Тег',
     'already_attached_tag' => 'Тег аллақачон бу мижозга уланган',
+    'already_canceled_transaction' => 'Танланган транзакция аллақачон бекор қилинган',
+    'feature_not_active' => 'Хусусият фаол эмас',
+    'customer_application' => 'Мижоз билан шартнома',
+    'guarantor_application' => 'Кафил билан шартнома',
+    'n_branches' => 'Сиз фақат :n та филиал яратишингиз мумкин!',
+    'n_admins' => 'Сиз фақат :n та админ яратишингиз мумкин!',
 ];

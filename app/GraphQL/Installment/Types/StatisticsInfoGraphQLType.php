@@ -2,10 +2,7 @@
 
 namespace App\GraphQL\Installment\Types;
 
-use App\GraphQL\Customer\Types\CustomerGraphQLType;
-use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\GraphQL\Scalars\BigFloat;
-use App\Models\Company\Installment;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -23,27 +20,23 @@ class StatisticsInfoGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Installment $root) => $root->id,
+                'resolve' => fn ($root) => $root->id,
             ],
-            'debt' => [
+            'branch_name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn ($root) => $root->branch_name,
+            ],
+            'customer_fullname' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn ($root) => $root->customer_fullname,
+            ],
+            'debt_amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Installment $root) => $root->debtAmount,
+                'resolve' => fn ($root) => round($root->debt_amount, 2),
             ],
-            'paid' => [
+            'paid_amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Installment $root) => $root->transactions_sum_amount ?? 0,
-            ],
-            'branch' => [
-                'type' => Type::nonNull(GraphQL::type(BranchGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Installment $root) => $root->branch,
-            ],
-            'customer' => [
-                'type' => Type::nonNull(GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Installment $root) => $root->customer,
-            ],
-            'transaction' => [
-                'type' => GraphQL::type(TransactionGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Installment $root) => $root->transactions()->first(),
+                'resolve' => fn ($root) => round($root->paid_amount, 2),
             ],
         ];
     }

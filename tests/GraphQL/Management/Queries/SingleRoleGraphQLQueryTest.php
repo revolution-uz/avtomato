@@ -113,6 +113,7 @@ class SingleRoleGraphQLQueryTest extends GraphQLTestCase
             'installment_create_transaction',
             'installment_update_comment',
             'installment_delete_comment',
+            'installment_view_document',
             'installment_upload_document',
             'installment_delete_document',
             'dashboard_info_view',
@@ -184,8 +185,7 @@ class SingleRoleGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successWithId()
     {
-        $role = Role::query()->first();
-
+        $role = Role::query()->where('id', '!=', 1)->first();
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
@@ -194,6 +194,7 @@ class SingleRoleGraphQLQueryTest extends GraphQLTestCase
             );
 
         $this->assertSuccessSingleRoleResponse($response, $role);
+        $this->checkIsNullPermission($response->json('data.singleRole.permissions'));
     }
 
     #[Test]
@@ -274,6 +275,13 @@ class SingleRoleGraphQLQueryTest extends GraphQLTestCase
 
         foreach ($role->mapRolePermissionByBranch() as $key => $value) {
             $this->assertEquals(json_encode($value), $response->json("data.singleRole.permissions.{$key}"));
+        }
+    }
+
+    private function checkIsNullPermission(array $permissions): void
+    {
+        foreach ($permissions as $permission) {
+            $this->assertNull($permission);
         }
     }
 }

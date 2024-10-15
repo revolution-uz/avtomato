@@ -2,11 +2,10 @@
 
 namespace App\GraphQL\Installment\Queries;
 
-use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\StatisticsInfoGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Installment;
+use App\Services\Installment\InstallmentService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -21,6 +20,8 @@ class StatisticsInfoGraphQLQuery extends Query
     ];
 
     private array $_branches;
+
+    public function __construct(private readonly InstallmentService $installmentService) {}
 
     public function type(): Type
     {
@@ -37,13 +38,9 @@ class StatisticsInfoGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::string()),
                 'rules' => 'required|date_format:Y-m-d',
             ],
-            'branch_id' => [
-                'type' => Type::int(),
-                'rules' => [
-                    'nullable',
-                    'integer',
-                    Rule::exists('branches', 'id')->whereNull('deleted_at')->when($this->_branches, fn ($q) => $q->where('branch_id', $this->_branches)),
-                ],
+            'branches' => [
+                'type' => Type::listOf(Type::nonNull(Type::int())),
+                'rules' => 'nullable|array',
             ],
         ];
     }
@@ -53,15 +50,22 @@ class StatisticsInfoGraphQLQuery extends Query
         return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_VIEW_STATISTICS);
     }
 
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): \Illuminate\Database\Eloquent\Collection
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): array
     {
-        return Installment::paymentsDueOnDate($args['date'])
-            ->with('transactions', fn ($q) => $q->whereDate('paid_at', $args['date'])->orderByDesc('id')->first())
-            ->withSum(['transactions as transactions_sum_amount' => fn ($q) => $q->whereDate('paid_at', $args['date'])], 'amount')
-            ->whereIn('status', [InstallmentStatusEnum::ACTIVE, InstallmentStatusEnum::CLOSED])
-            ->when(isset($args['branch_id']), fn ($q) => $q->where('branch_id', $args['branch_id']))
-            ->when(! isset($args['branch_id']) and $this->_branches, fn ($q) => $q->whereIn('branch_id', $this->_branches))
-            ->orderBy('id')
-            ->get();
+        $this->_branches = $args['branches'] ?? $this->_branches;
+
+        return $this->installmentService->getStatisticsForDate($args['date'], $this->_branches);
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'branches.*' => [
+                'required',
+                Rule::exists('branches', 'id')
+                    ->whereNull('deleted_at')
+                    ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),
+            ],
+        ];
     }
 }

@@ -23,4 +23,10 @@ return [
     'Please create initial fee amount first' => 'Сначала создайте сумму первоначального взноса',
     'tag' => 'Тег',
     'already_attached_tag' => 'Тег уже привязана к этому клиенту',
+    'already_canceled_transaction' => 'Выбранная транзакция уже отменена',
+    'feature_not_active' => 'Функция не активна',
+    'customer_application' => 'Договор с клиентом',
+    'guarantor_application' => 'Договор с гарантором',
+    'n_branches' => 'Вы можете создать только до :n филиалов!',
+    'n_admins' => 'Вы можете создать только до :n админов!',
 ];

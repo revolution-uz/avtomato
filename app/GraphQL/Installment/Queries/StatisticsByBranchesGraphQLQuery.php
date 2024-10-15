@@ -33,20 +33,21 @@ class StatisticsByBranchesGraphQLQuery extends Query
         $this->_branches = RbacHelper::getEnabledBranches(PermissionEnum::STATISTICS_BY_BRANCHES);
 
         return [
-            'date' => [
-                'name' => 'date',
+            'from_date' => [
+                'name' => 'from_date',
                 'type' => Type::string(),
                 'rules' => 'nullable|date_format:Y-m-d',
                 'description' => 'Ex: 2024-01-01',
             ],
+            'to_date' => [
+                'name' => 'to_date',
+                'type' => Type::string(),
+                'rules' => 'nullable|date_format:Y-m-d|after_or_equal:from_date',
+                'description' => 'Ex: 2024-01-01',
+            ],
             'branch_ids' => [
-                'type' => Type::listOf(Type::int()),
-                'rules' => [
-                    'nullable',
-                    'array',
-                    'exists:installments,branch_id',
-                    Rule::exists('branches', 'id')->whereNull('deleted_at')->when($this->_branches, fn ($q) => $q->where('id', $this->_branches)),
-                ],
+                'type' => Type::listOf(Type::nonNull(Type::int())),
+                'rules' => ['nullable', 'array'],
             ],
         ];
     }
@@ -63,12 +64,25 @@ class StatisticsByBranchesGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $this->_branches = isset($args['branch_id']) ? $args['branch_ids'] : $this->_branches;
-        $date = isset($args['date']) ? Carbon::createFromFormat('Y-m-d', $args['date']) : null;
+        $this->_branches = $args['branch_ids'] ?? $this->_branches;
+        $from_date = isset($args['from_date']) ? Carbon::createFromFormat('Y-m-d', $args['from_date']) : null;
+        $to_date = isset($args['to_date']) ? Carbon::createFromFormat('Y-m-d', $args['to_date']) : null;
 
         return $this->installmentService->statisticsByBranches(
-            $date,
+            $from_date,
+            $to_date,
             $this->_branches,
         );
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'branch_ids.*' => [
+                Rule::exists('branches', 'id')
+                    ->whereNull('deleted_at')
+                    ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),
+            ],
+        ];
     }
 }

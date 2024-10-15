@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Jobs\SendTransactionSmsJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -14,7 +15,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property int|null $branch_id
- * @property Branch $branch
+ * @property Branch|null $branch
  * @property int $installment_id
  * @property Installment $installment
  * @property int $customer_id
@@ -32,6 +33,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $updated_at
  * @property-read  CompanyAdmin $admin
  * @property Carbon|null $paid_at
+ * @property TransactionStatusEnum $status
  */
 class Transaction extends Model
 {
@@ -51,15 +53,17 @@ class Transaction extends Model
         'paid_at',
         'card_pan',
         'is_initial_fee',
+        'status',
     ];
 
     protected $casts = [
         'paid_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'status' => TransactionStatusEnum::class,
     ];
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -73,24 +77,33 @@ class Transaction extends Model
         });
 
         static::created(function (self $transaction) {
+            $installment = $transaction->installment;
+
             if (! $transaction->is_initial_fee) {
-                Installment::query()
-                    ->where('id', $transaction->installment_id)
-                    ->increment('paid_amount', $transaction->amount);
+                $installment->increment('paid_amount', $transaction->amount);
             }
-            if ($transaction->card_pan) {
-                dispatch(new SendTransactionSmsJob($transaction->id))->onQueue('sms');
-            }
-            $installment = Installment::findOrFail($transaction->installment_id);
-            if ($installment->debtAmount <= 1) {
+            if ($installment->wholeDebtAmount <= 1) {
                 $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
+            }
+
+            SendTransactionSmsJob::dispatch($transaction->id);
+        });
+
+        static::updating(function (self $transaction) {
+            if (
+                $transaction->isDirty('status')
+                and $transaction->getOriginal('status') === TransactionStatusEnum::SUCCESS
+                and $transaction->status === TransactionStatusEnum::CANCELED
+                and ! $transaction->is_initial_fee
+            ) {
+                Installment::query()->where('id', $transaction->installment_id)->decrement('paid_amount', $transaction->amount);
             }
         });
 
         static::deleted(function (self $transaction) {
-            Installment::query()
-                ->where('id', $transaction->installment_id)
-                ->decrement('paid_amount', $transaction->amount);
+            if (! $transaction->is_initial_fee) {
+                Installment::query()->where('id', $transaction->installment_id)->decrement('paid_amount', $transaction->amount);
+            }
         });
     }
 
@@ -117,5 +130,10 @@ class Transaction extends Model
     public function admin(): BelongsTo
     {
         return $this->belongsTo(CompanyAdmin::class, 'admin_id', 'id');
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
     }
 }

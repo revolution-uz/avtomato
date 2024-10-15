@@ -2,12 +2,15 @@
 
 namespace App\GraphQL\Management\Mutations;
 
+use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
+use App\Exceptions\GeneralException;
+use App\GraphQL\Management\Types\BalanceFillDataGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Services\User\BalanceService;
 use Closure;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -29,29 +32,24 @@ class BalanceFillGraphQLMutation extends Mutation
             'number' => [
                 'name' => 'number',
                 'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
-                'rules' => [
-                    'required',
-                    'string',
-                    'size:16',
-                    'regex:/^[0-9]{16}$/',
-                ],
+                'rules' => 'required|digits:16',
             ],
             'expiry' => [
                 'name' => 'expiry',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'string',
-                    'size:4',
-                    'regex:/^[0-9]{4}$/',
-                ],
+                'rules' => 'required|digits:4',
+            ],
+            'amount' => [
+                'name' => 'amount',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => 'required|int',
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(AttachCardDataGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(BalanceFillDataGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -59,8 +57,12 @@ class BalanceFillGraphQLMutation extends Mutation
         return RbacHelper::checkPermission(PermissionEnum::BALANCE_FUND_CREATE);
     }
 
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): AtmosCreatePaymentResponseDTO
     {
-        return $this->balanceService->requestFillBalance($args['number'], $args['expiry']);
+        try {
+            return $this->balanceService->requestFillBalance(...$args);
+        } catch (GeneralException $e) {
+            throw new Error($e->getMessage());
+        }
     }
 }

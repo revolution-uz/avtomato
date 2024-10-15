@@ -18,4 +18,10 @@ return [
     'Please create initial fee amount first' => 'Please, create initial fee amount first',
     'tag' => 'Tag',
     'already_attached_tag' => 'The tag already connected to this customer',
+    'already_canceled_transaction' => 'The selected transaction is already canceled',
+    'feature_not_active' => 'Feature not active',
+    'customer_application' => 'Contract with the client',
+    'guarantor_application' => 'Contract with the guarantor',
+    'n_branches' => 'You can only create up to :n branches!',
+    'n_admins' => 'You can only create up to :n admins!',
 ];

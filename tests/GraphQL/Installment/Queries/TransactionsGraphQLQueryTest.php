@@ -4,10 +4,13 @@ namespace Tests\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -18,13 +21,42 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
 
     private int $_totalTransactionsCount = 33;
 
+    private array $_structure = [
+        'total',
+        'per_page',
+        'current_page',
+        'from',
+        'to',
+        'last_page',
+        'has_more_pages',
+        'data' => [
+            '*' => [
+                'id',
+                'branch_id',
+                'admin_id',
+                'installment_id',
+                'is_initial_fee',
+                'customer_id',
+                'transaction_type_id',
+                'card_id',
+                'card_pan',
+                'external_id',
+                'amount',
+                'status',
+                'paid_at',
+                'created_at',
+                'updated_at',
+            ],
+        ],
+    ];
+
     protected function setUp(): void
     {
         parent::setUp();
 
         Installment::query()->forceDelete();
-        Transaction::query()->forceDelete();
-        Transaction::factory()->count($this->_totalTransactionsCount)->create();
+        Transaction::factory()->count(5)->create(['paid_at' => Carbon::now()->subWeek()]);
+        Transaction::factory()->count($this->_totalTransactionsCount - 5)->create();
     }
 
     #[Test]
@@ -133,6 +165,67 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function successBranchesOnlyTransactionBranchId()
+    {
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        $transactions = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
+        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+        foreach ($transactions as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
+    }
+
+    #[Test]
+    public function successBranchesOnlyTransactionBranchIdIsNull()
+    {
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        $installments = Installment::factory()->count(2)->create(['branch_id' => $branch->id]);
+        $transactions = Transaction::factory()->count(5)->create(['installment_id' => $installments[0]->id, 'branch_id' => null]);
+        Transaction::factory()->count(5)->create(['installment_id' => $installments[1]->id, 'branch_id' => null]);
+
+        $response = $this->sendToGraphQL([
+            'installment_id' => $installments[0]->id,
+            'branches' => [$branch->id],
+        ]);
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+        foreach ($transactions as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
+    }
+
+    #[Test]
+    public function successBranchesOnlyInstallmentBranchId()
+    {
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        $transactions = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
+        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+        foreach ($transactions as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
+    }
+
+    #[Test]
+    public function successBranches()
+    {
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        $transactionsWithBranch = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        $transactionsWithoutBranch = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
+        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        $this->assertSuccessTransactionsResponse($response, total: 10);
+        foreach ($transactionsWithBranch->merge($transactionsWithoutBranch) as $transaction) {
+            $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
+        }
+    }
+
+    #[Test]
     public function errorTransactionTypeId()
     {
         $response = $this->sendToGraphQL(['transaction_type_id' => 93]);
@@ -153,10 +246,77 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successSearch()
     {
-        $transaction = Transaction::query()->first();
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create(['name' => 'Test Branch']);
+        /** @var Installment $installment */
+        $installment = Installment::factory()->create();
+        /** @var Customer $customer */
+        $customer = Customer::factory()->create(['first_name' => 'Test Firstname', 'last_name' => 'Test Lastname']);
+
+        /** @var Transaction $transaction */
+        $transaction = Transaction::factory()->create([
+            'external_id' => 'test_external_id',
+            'branch_id' => $branch->id,
+            'installment_id' => $installment->id,
+            'customer_id' => $customer->id,
+        ]);
+
+        // ID
+        $response = $this->sendToGraphQL(['search' => (string) $transaction->id]);
+        $this->assertSuccessTransactionsResponse($response, total: 'IGNORE');
+        $this->assertNotNull(Arr::first($response->json('data.transactions.data'), fn ($item) => $item['id'] === $transaction->id));
+
+        // External ID
         $response = $this->sendToGraphQL(['search' => $transaction->external_id]);
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+
+        // Branch name
+        $response = $this->sendToGraphQL(['search' => $branch->name]);
+        $this->assertSuccessTransactionsResponse($response, total: 1);
+        $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+
+        // Installment ID
+        $response = $this->sendToGraphQL(['search' => (string) $installment->id]);
+        $this->assertSuccessTransactionsResponse($response, total: 'IGNORE');
+        $this->assertNotNull(Arr::first($response->json('data.transactions.data'), fn ($item) => $item['id'] === $transaction->id));
+
+        // Customer firstname
+        $response = $this->sendToGraphQL(['search' => $customer->first_name]);
+        $this->assertSuccessTransactionsResponse($response, total: 1);
+        $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+
+        // Customer lastname
+        $response = $this->sendToGraphQL(['search' => $customer->last_name]);
+        $this->assertSuccessTransactionsResponse($response, total: 1);
+        $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
+    }
+
+    #[Test]
+    public function successWithDateRange()
+    {
+        $response = $this->sendToGraphQL([
+            'from' => Carbon::now()->subWeek()->format('Y-m-d'),
+            'to' => Carbon::now()->subDay()->format('Y-m-d'),
+        ]);
+
+        $this->assertSuccessTransactionsResponse($response, total: 5);
+    }
+
+    #[Test]
+    public function errorWithDateRange()
+    {
+        $response = $this->sendToGraphQL(['from' => 'dfghjkjk']);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.date_format', ['attribute' => 'from', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.from.0'));
+
+        $response = $this->sendToGraphQL(['from' => Carbon::now()->format('Y-m-d'), 'to' => null]);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.required_with', ['attribute' => 'to', 'values' => 'from']), $response->json('errors.0.extensions.validation.to.0'));
+
+        $response = $this->sendToGraphQL(['from' => null, 'to' => Carbon::now()->format('Y-m-d')]);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.required_with', ['attribute' => 'from', 'values' => 'to']), $response->json('errors.0.extensions.validation.from.0'));
     }
 
     #[Test]
@@ -165,7 +325,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $response = $this->sendToGraphQL(['page' => 'asnjfasnjfasn']);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('Variable "$page" of type "String!" used in position expecting type "Int".', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$page" got invalid value "asnjfasnjfasn"; Int cannot represent non-integer value: "asnjfasnjfasn"', $response->json('errors.0.message'));
 
         $response = $this->sendToGraphQL(['page' => 0]);
         $response->assertOk();
@@ -180,7 +340,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $response = $this->sendToGraphQL(['per_page' => 'asnjfasnjfasn']);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('Variable "$per_page" of type "String!" used in position expecting type "Int".', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$per_page" got invalid value "asnjfasnjfasn"; Int cannot represent non-integer value: "asnjfasnjfasn"', $response->json('errors.0.message'));
 
         $response = $this->sendToGraphQL(['per_page' => 0]);
         $response->assertOk();
@@ -201,7 +361,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $response = $this->sendToGraphQL(['sort' => 111]);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('Variable "$sort" of type "Int!" used in position expecting type "String".', $response->json('errors.0.message'));
+        $this->assertEquals('Variable "$sort" got invalid value 111; String cannot represent a non string value: 111', $response->json('errors.0.message'));
 
         $response = $this->sendToGraphQL(['sort' => 'non-exist-column']);
         $response->assertOk();
@@ -213,13 +373,14 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successCheckForPermission()
     {
+        /** @var Role $role */
         $role = Role::factory()->create();
         $simpleAdmin = $this->createSimpleAdminUser($role->id);
         $permission = Permission::query()->where('slug', PermissionEnum::TRANSACTION_VIEW_ALL)->firstOrFail();
 
+        /** @var Branch[] $branches */
         $branches = Branch::factory()->count(2)->create();
-        $installment = Installment::factory()->create(['branch_id' => $branches[1]->id]);
-        Transaction::factory()->count(10)->create(['installment_id' => $installment->id]);
+        Transaction::factory()->count(10)->create(['branch_id' => $branches[1]->id]);
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this
@@ -243,7 +404,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessTransactionsResponse($response, total: 10);
         $this->assertEquals(
             Transaction::query()
-                ->whereHas('installment', fn ($q) => $q->where('branch_id', $branches[1]->id))
+                ->where('branch_id', $branches[1]->id)
                 ->orderByDesc('paid_at')
                 ->pluck('id')->toArray(),
             $response->json('data.transactions.data.*.id')
@@ -259,129 +420,41 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
 
     private function buildGraphQLQuery(array $variables = []): array
     {
-        $variableArgs = implode(', ', array_map(fn ($variableName) => "{$variableName}: \${$variableName}", array_keys($variables)));
-        $variableTypes = implode(', ', array_map(fn ($variableName) => "\${$variableName}: " . $this->getGraphQLType($variables[$variableName]), array_keys($variables)));
-        $query = [
-            'variables' => $variables,
-            'query' => '
-                query Transactions' . ($variableTypes ? "({$variableTypes})" : '') . ' {
-                    transactions' . ($variableArgs ? "({$variableArgs})" : '') . ' {
-                        current_page
-                        from
-                        has_more_pages
-                        last_page
-                        per_page
-                        to
-                        total
-                        data {
-                            id
-                            branch_id
-                            branch {
-                                id
-                                name
-                                inn
-                                address
-                                created_at
-                                updated_at
-                            }
-                            admin_id
-                            admin {
-                                id
-                                first_name
-                                last_name
-                                username
-                                language
-                                role_id
-                            }
-                            installment_id
-                            installment {
-                                id
-                                customer_id
-                                customer {
-                                    id
-                                    pinfl
-                                    tin
-                                    passport_series
-                                    passport_number
-                                    passport_given_date
-                                    passport_expiration_date
-                                    passport_given_place
-                                    passport_citizenship
-                                    first_name
-                                    last_name
-                                    middle_name
-                                    birth_date
-                                    birth_place
-                                    gender
-                                }
-                                tariff_id
-                                tariff {
-                                    id
-                                    name
-                                    percent
-                                    min_period
-                                    max_period
-                                    min_amount
-                                    max_amount
-                                    min_initial_fee
-                                    max_initial_fee
-                                }
-                                type
-                                amount
-                                initial_fee
-                                description
-                                sms_notify
-                                is_blacklist
-                                period
-                                canceled_at
-                                cancellation_details
-                                starts_in
-                                next_pay_date
-                            }
-                            customer_id
-                            customer {
-                                id
-                                pinfl
-                                tin
-                                passport_series
-                                passport_number
-                                passport_given_date
-                                passport_expiration_date
-                                passport_given_place
-                                passport_citizenship
-                                first_name
-                                last_name
-                                middle_name
-                                birth_date
-                                birth_place
-                                gender
-                            }
-                            transaction_type_id
-                            transaction_type {
-                                id
-                                name
-                            }
-                            card_id
-                            card {
-                                id
-                                number
-                                owner
-                                expiry
-                                phone
-                                balance
-                                owner
-                                created_at
-                            }
-                            external_id
-                            amount
-                            paid_at
-                            created_at
-                            updated_at
-                        }
-                    }
+        $query = [];
+        $query['variables'] = $variables;
+        $query['query'] = '
+            query Transactions(
+                $sort: String
+                $search: String
+                $page: Int
+                $per_page: Int
+                $id: Int
+                $installment_id: Int
+                $branches: [Int!]
+                $customer_id: Int
+                $card_id: Int
+                $transaction_type_id: Int
+                $from: String
+                $to: String
+            ) {
+                transactions(
+                    sort: $sort
+                    search: $search
+                    page: $page
+                    per_page: $per_page
+                    id: $id
+                    installment_id: $installment_id
+                    branches: $branches
+                    customer_id: $customer_id
+                    card_id: $card_id
+                    transaction_type_id: $transaction_type_id
+                    from: $from
+                    to: $to
+                ) {
+                    ' . $this->convertIntoQuery($this->_structure) . '
                 }
-            ',
-        ];
+            }
+        ';
 
         return $query;
     }
@@ -392,118 +465,13 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $response->assertJsonIsObject();
         $response->assertJsonStructure([
             'data' => [
-                'transactions' => [
-                    'current_page',
-                    'from',
-                    'has_more_pages',
-                    'last_page',
-                    'per_page',
-                    'to',
-                    'total',
-                    'data' => [
-                        '*' => [
-                            'id',
-                            'branch_id',
-                            'branch' => [
-                                'id',
-                                'name',
-                                'inn',
-                                'address',
-                                'created_at',
-                                'updated_at',
-                            ],
-                            'admin_id',
-                            'admin',
-                            'installment_id',
-                            'installment' => [
-                                'id',
-                                'customer_id',
-                                'customer' => [
-                                    'id',
-                                    'pinfl',
-                                    'tin',
-                                    'passport_series',
-                                    'passport_number',
-                                    'passport_given_date',
-                                    'passport_expiration_date',
-                                    'passport_given_place',
-                                    'passport_citizenship',
-                                    'first_name',
-                                    'last_name',
-                                    'middle_name',
-                                    'birth_date',
-                                    'birth_place',
-                                    'gender',
-                                ],
-                                'tariff_id',
-                                'tariff' => [
-                                    'id',
-                                    'name',
-                                    'percent',
-                                    'min_period',
-                                    'max_period',
-                                    'min_amount',
-                                    'max_amount',
-                                    'min_initial_fee',
-                                    'max_initial_fee',
-                                ],
-                                'type',
-                                'amount',
-                                'initial_fee',
-                                'description',
-                                'sms_notify',
-                                'is_blacklist',
-                                'period',
-                                'canceled_at',
-                                'cancellation_details',
-                                'starts_in',
-                                'next_pay_date',
-                            ],
-                            'customer_id',
-                            'customer' => [
-                                'id',
-                                'pinfl',
-                                'tin',
-                                'passport_series',
-                                'passport_number',
-                                'passport_given_date',
-                                'passport_expiration_date',
-                                'passport_given_place',
-                                'passport_citizenship',
-                                'first_name',
-                                'last_name',
-                                'middle_name',
-                                'birth_date',
-                                'birth_place',
-                                'gender',
-                            ],
-                            'transaction_type_id',
-                            'transaction_type' => [
-                                'id',
-                                'name',
-                            ],
-                            'card_id',
-                            'card' => [
-                                'id',
-                                'number',
-                                'owner',
-                                'expiry',
-                                'phone',
-                                'balance',
-                                'owner',
-                                'created_at',
-                            ],
-                            'external_id',
-                            'amount',
-                            'paid_at',
-                            'created_at',
-                            'updated_at',
-                        ],
-                    ],
-                ],
+                'transactions' => $this->_structure,
             ],
         ]);
 
+        if ($total == 'IGNORE') {
+            $total = $response->json('data.transactions.total');
+        }
         $totalCount = $total ?? $this->_totalTransactionsCount;
         $currentPage = $page ?? 1;
         $currentPerPage = $perPage ?? 10;

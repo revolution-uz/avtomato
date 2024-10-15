@@ -6,13 +6,15 @@ use App\Models\Company\Installment;
 use App\Services\AtmosService;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
-class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
+class InstallmentChargeJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -21,12 +23,10 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
 
     const MINIMUM_WITHDRAW_AMOUNT = 500;
 
-    /**
-     * The number of seconds after which the job's unique lock will be released.
-     */
-    public int $uniqueFor = 5 * 60;
-
-    public function __construct(private readonly int $installmentId) {}
+    public function __construct(private readonly int $installmentId)
+    {
+        $this->onQueue('installment-charge');
+    }
 
     /**
      * @throws Exception
@@ -40,19 +40,19 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
             if ($installment->isAvailableCustomerCard()) {
                 foreach ($installment->cards as $card) {
                     if ($card->customer_id == $installment->customer_id && $debt_amount > self::MINIMUM_WITHDRAW_AMOUNT) {
-                        $atmosService->withdrawAmountAndCreateCardTransaction($card, $installment->id, $debt_amount);
+                        $atmosService->withdrawAmountAndCreateCardTransaction($card, $installment, $debt_amount);
                     }
                 }
             }
 
             if ($installment->any_card_charge && $debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->isAvailableCustomerPinfl()) {
-                $atmosService->withdrawAmountAndCreatePINFLTransaction($installment->customer, $installment->id, $debt_amount);
+                $atmosService->withdrawAmountAndCreatePINFLTransaction($installment->customer, $installment, $debt_amount);
             }
 
-            if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->isAvailableGurantorCard()) {
+            if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->isAvailableGuarantorCard()) {
                 foreach ($installment->cards as $card) {
                     if ($card->customer_id != $installment->customer_id && $debt_amount > self::MINIMUM_WITHDRAW_AMOUNT) {
-                        $atmosService->withdrawAmountAndCreateCardTransaction($card, $installment->id, $debt_amount);
+                        $atmosService->withdrawAmountAndCreateCardTransaction($card, $installment, $debt_amount);
                     }
                 }
             }
@@ -60,7 +60,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
             if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->isAvailableGuarantorPinfl()) {
                 foreach ($installment->guarantorList as $guarantor) {
                     if ($guarantor->any_card_charge && $debt_amount > self::MINIMUM_WITHDRAW_AMOUNT) {
-                        $atmosService->withdrawAmountAndCreatePINFLTransaction($guarantor->customer, $installment->id, $debt_amount);
+                        $atmosService->withdrawAmountAndCreatePINFLTransaction($guarantor->customer, $installment, $debt_amount);
                     }
                 }
             }
@@ -72,7 +72,7 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
      */
     public function uniqueId(): string
     {
-        return 'installment-charge-' . $this->installmentId;
+        return 'installment-charge-' . tenant('id') . '-' . $this->installmentId;
     }
 
     public function tags(): array
@@ -80,5 +80,13 @@ class InstallmentChargeJob implements ShouldBeUnique, ShouldQueue
         return [
             'tenant:' . tenant('id'),
         ];
+    }
+
+    /**
+     * Get the cache driver for the unique job lock.
+     */
+    public function uniqueVia(): Repository
+    {
+        return Cache::driver('redis');
     }
 }

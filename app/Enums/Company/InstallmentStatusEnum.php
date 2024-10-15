@@ -21,12 +21,12 @@ enum InstallmentStatusEnum: int
     public static function getStatusListByStatus(?self $statusEnum = null): array
     {
         return match ($statusEnum) {
+            self::ACTIVE => [self::FROZEN, self::CANCELED, self::CLOSED],
+            self::FROZEN => [self::ACTIVE, self::CANCELED, self::CLOSED],
+            self::INACTIVE => [self::ACTIVE, self::CANCELED],
             self::CANCELED,
-            self::ACTIVE => [self::FROZEN, self::INACTIVE],
-            self::FROZEN => [self::ACTIVE, self::CLOSED],
-            self::INACTIVE => [],
-            self::CLOSED => [self::ACTIVE],
-            default => [self::CANCELED, self::INACTIVE],
+            self::CLOSED => [],
+            default => [self::CANCELED],
         };
     }
 

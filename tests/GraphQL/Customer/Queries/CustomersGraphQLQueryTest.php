@@ -3,6 +3,7 @@
 namespace Tests\GraphQL\Customer\Queries;
 
 use App\Models\Company\Customer;
+use App\Models\Company\Tag;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -101,6 +102,16 @@ class CustomersGraphQLQueryTest extends GraphQLTestCase
                 $this->buildGraphQLQuery(['search' => $customer->pinfl])
             );
 
+        $this->assertSuccessCustomersResponse($response, total: 1);
+        $this->assertEquals($customer->id, $response->json('data.customers.data.0.id'));
+        $tag = Tag::factory()->create();
+        $customer->tags()->attach([$tag->id]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery(['search' => $customer->tags[0]->name])
+            );
         $this->assertSuccessCustomersResponse($response, total: 1);
         $this->assertEquals($customer->id, $response->json('data.customers.data.0.id'));
     }

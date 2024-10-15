@@ -14,6 +14,7 @@ use App\GraphQL\Scoring\Queries\CreditHistoriesGraphQLQuery;
 use App\GraphQL\Scoring\Queries\DebtScoringRequestsGraphQLQuery;
 use App\GraphQL\Scoring\Queries\InpsHistoriesGraphQLQuery;
 use App\GraphQL\Scoring\Queries\PensionInfosGraphQLQuery;
+use App\GraphQL\Scoring\Queries\RoyxatCreditsGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleCardScoringRequestGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleCreditHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleDebtScoringRequestGraphQLQuery;
@@ -49,6 +50,7 @@ use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionInfoResponseGraphQL
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionRowGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionSizePensionGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\PensionInfoGraphQLType;
+use App\GraphQL\Scoring\Types\Partners\RoyxatCreditGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class ScoringGraphQLSchema implements ConfigConvertible
@@ -67,6 +69,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 SingleDebtScoringRequestGraphQLQuery::class,
                 SingleInpsHistoryGraphQLQuery::class,
                 SinglePensionInfoGraphQLQuery::class,
+                RoyxatCreditsGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateCardScoringGraphQLMutation::class,
@@ -114,8 +117,10 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 RegionGraphQLType::class,
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
+
+                RoyxatCreditGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum', 'is_soft_delete_token'],
+            'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];
     }
 }

@@ -10,7 +10,7 @@ use App\DTOs\Atmos\CardPay\AtmosPreConfirmPaymentResponseDTO;
 use App\DTOs\Atmos\CardPay\AtmosTransactionReversePaymentDto;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
-use App\Exceptions\AtmosException;
+use App\Exceptions\GeneralException;
 use Throwable;
 
 class AtmosCardClient extends BaseAtmosClient
@@ -46,7 +46,7 @@ class AtmosCardClient extends BaseAtmosClient
      * ------------- Card module begin --------------
      */
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function attachCard(string $card_number, string $expiry): AtmosAttachCardResponseDTO
     {
@@ -59,7 +59,7 @@ class AtmosCardClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function confirmCard(string $transaction_id, string $otp): AtmosConfirmCardResponseDTO
     {
@@ -72,7 +72,7 @@ class AtmosCardClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function getCardInfo(string $token): array
     {
@@ -84,7 +84,7 @@ class AtmosCardClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function getCards(int $page = 0, int $pageSize = 100): array
     {
@@ -97,7 +97,7 @@ class AtmosCardClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function removeCard(string $token): AtmosConfirmCardResponseDTO
     {
@@ -114,7 +114,7 @@ class AtmosCardClient extends BaseAtmosClient
      * ------------- Payment module begin --------------
      */
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function createPayment(string $account, int $amount, string $details): AtmosCreatePaymentResponseDTO
     {
@@ -130,7 +130,7 @@ class AtmosCardClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function preConfirmPayment(string $card_token, string $transaction_id): AtmosPreConfirmPaymentResponseDTO
     {
@@ -144,20 +144,39 @@ class AtmosCardClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
-    public function confirmPayment(string $transaction_id): AtmosConfirmPaymentResponseDTO
+    public function preConfirmPaymentWithOneTimeSms(string $transaction_id, string $card_number, string $expiry): AtmosPreConfirmPaymentResponseDTO
+    {
+        $data = [
+            'card_number' => $card_number,
+            'expiry' => $expiry,
+            'store_id' => $this->getStoreId(),
+            'transaction_id' => $transaction_id,
+        ];
+
+        return AtmosPreConfirmPaymentResponseDTO::from($this->makeRequest(self::PAYMENT_PRE_CONFIRM, $data));
+    }
+
+    /**
+     * @throws GeneralException
+     */
+    public function confirmPayment(string $transaction_id, ?string $otp = null): AtmosConfirmPaymentResponseDTO
     {
         $data = [
             'store_id' => $this->getStoreId(),
             'transaction_id' => $transaction_id,
         ];
 
+        if ($otp) {
+            $data['otp'] = $otp;
+        }
+
         return AtmosConfirmPaymentResponseDTO::from($this->makeRequest(self::PAYMENT_CONFIRM, $data));
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function getPayment(string $transaction_id): AtmosCreatePaymentResponseDTO
     {
@@ -170,7 +189,7 @@ class AtmosCardClient extends BaseAtmosClient
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
     public function reversePayment(string $transaction_id, string $reason = 'Wrong payment', int $hold_amount = 0): AtmosTransactionReversePaymentDto
     {

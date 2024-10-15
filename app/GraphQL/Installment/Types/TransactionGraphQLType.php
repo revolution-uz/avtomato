@@ -28,12 +28,12 @@ class TransactionGraphQLType extends GraphQLType
                 'resolve' => fn (Transaction $root) => $root->id,
             ],
             'branch_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Transaction $root) => $root->installment->branch_id,
+                'type' => Type::int(),
+                'resolve' => fn (Transaction $root) => $root->branch_id ?: $root->installment->branch_id,
             ],
             'branch' => [
-                'type' => Type::nonNull(GraphQL::type(BranchGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Transaction $root) => $root->installment->branch,
+                'type' => GraphQL::type(BranchGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Transaction $root) => $root->branch ?: $root->installment->branch,
             ],
             'admin_id' => [
                 'type' => Type::int(),
@@ -50,6 +50,10 @@ class TransactionGraphQLType extends GraphQLType
             'installment' => [
                 'type' => Type::nonNull(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Transaction $root) => $root->installment,
+            ],
+            'is_initial_fee' => [
+                'type' => Type::nonNull(Type::boolean()),
+                'resolve' => fn (Transaction $root) => $root->is_initial_fee,
             ],
             'customer_id' => [
                 'type' => Type::nonNull(Type::int()),
@@ -86,6 +90,10 @@ class TransactionGraphQLType extends GraphQLType
             'amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Transaction $root) => $root->amount,
+            ],
+            'status' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Transaction $root) => $root->status->value,
             ],
             'paid_at' => [
                 'type' => Type::int(),

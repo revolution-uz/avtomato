@@ -3,6 +3,7 @@
 namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
@@ -44,14 +45,18 @@ class ReverseTransactionGraphQLMutation extends Mutation
                     function ($attribute, $value, $fail) use ($branches) {
                         /** @var Builder $transactionQuery */
                         $transactionQuery = Transaction::query()->where('id', $value)
+                            ->where('is_initial_fee', false)
                             ->when($branches, fn ($q) => $q->whereHas('installment', fn ($q) => $q->whereIn('branch_id', $branches)));
-
+                        /** @var Transaction $transaction */
+                        $transaction = $transactionQuery->first();
                         if ($transactionQuery->doesntExist()) {
                             $fail(__('validation.exists', ['attribute' => $attribute]));
+                        } elseif ($transaction->status === TransactionStatusEnum::CANCELED) {
+                            $fail(__('api.already_canceled_transaction'));
                         }
-                        //                        elseif ($transactionQuery->where('transaction_type_id', '<', 100)->exists()) {
-                        //                            $fail(__('api.it is system payment'));
-                        //                        }
+                        // elseif ($transactionQuery->where('transaction_type_id', '<', 100)->exists()) {
+                        //     $fail(__('api.it is system payment'));
+                        // }
                     },
                 ],
             ],
@@ -66,12 +71,15 @@ class ReverseTransactionGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $transaction = Transaction::findOrFail($args['id']);
-        if ($transaction->transaction_type_id === TransactionType::ATMOS_WITH_CARD || $transaction->transaction_type_id === TransactionType::ATMOS_WITH_PINFL) {
+
+        if (TransactionType::isAutoPay($transaction->transaction_type_id)) {
             return $this->atmosCardService->reversePayment($transaction);
         } elseif ($transaction->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
             return $this->uniredService->reversePayment($transaction);
         } else {
-            return $transaction->delete();
+            $transaction->status = TransactionStatusEnum::CANCELED;
+
+            return $transaction->saveOrFail();
         }
     }
 }

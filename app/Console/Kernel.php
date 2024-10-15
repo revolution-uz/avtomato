@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('populate:installment-charge-jobs')->everyFiveMinutes();
+        $schedule->command('daily:delete-logs')->dailyAt('00:00');
         // $schedule->command('inspire')->hourly();
     }
 

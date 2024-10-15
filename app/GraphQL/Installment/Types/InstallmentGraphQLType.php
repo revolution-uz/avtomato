@@ -64,32 +64,37 @@ class InstallmentGraphQLType extends GraphQLType
             'documents' => [
                 'type' => Type::listOf(GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => function (Installment $root) {
-                    $installmentAgreement = (new Attachment)->fill([
-                        'id' => 0,
-                        'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
-                        'name' => 'Договор',
-                        'original_name' => 'Договор',
-                        'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                        'path' => route('document.downloadInstallmentAgreement', ['installment_id' => $root->id]),
-                        'attachmentable_id' => $root->id,
-                        'attachmentable_type' => Installment::class,
-                    ]);
-                    $installmentAgreement->created_at = Carbon::now();
-                    $installmentAgreement->updated_at = Carbon::now();
+                    $documents = [];
 
                     $customerApplication = (new Attachment)->fill([
                         'id' => 0,
                         'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
-                        'name' => 'Опросник',
-                        'original_name' => 'Опросник',
+                        'name' => __('api.customer_application'),
+                        'original_name' => __('api.customer_application'),
                         'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                        'path' => route('document.downloadCustomerApplication', ['customer_id' => $root->customer_id]),
+                        'path' => route('document.downloadCustomerApplication', ['installment_id' => $root->id]),
                         'attachmentable_id' => $root->id,
                         'attachmentable_type' => Installment::class,
                     ]);
                     $customerApplication->created_at = Carbon::now();
                     $customerApplication->updated_at = Carbon::now();
-                    $documents = [$installmentAgreement, $customerApplication];
+                    $documents[] = $customerApplication;
+
+                    if ($guarantor = $root->guarantors->first()) {
+                        $guarantorApplication = (new Attachment)->fill([
+                            'id' => 0,
+                            'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
+                            'name' => __('api.guarantor_application'),
+                            'original_name' => __('api.guarantor_application'),
+                            'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'path' => route('document.downloadGuarantorApplication', ['installment_id' => $root->id, 'guarantor_id' => $guarantor->id]),
+                            'attachmentable_id' => $root->id,
+                            'attachmentable_type' => Installment::class,
+                        ]);
+                        $guarantorApplication->created_at = Carbon::now();
+                        $guarantorApplication->updated_at = Carbon::now();
+                        $documents[] = $guarantorApplication;
+                    }
 
                     foreach ($root->documents as $document) {
                         $documents[] = $document;
@@ -137,6 +142,10 @@ class InstallmentGraphQLType extends GraphQLType
             'initial_fee' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Installment $root) => $root->initial_fee,
+            ],
+            'initial_fee_transaction' => [
+                'type' => GraphQL::type(TransactionGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Installment $root) => $root->initialFeeTransaction,
             ],
             'sms_notify' => [
                 'type' => Type::nonNull(Type::boolean()),

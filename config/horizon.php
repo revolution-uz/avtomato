@@ -194,7 +194,7 @@ return [
             'connection' => 'redis',
             'queue' => ['installment-charge'],
             'balance' => 'simple',
-            'maxProcesses' => 10,
+            'maxProcesses' => 1,
             'memory' => 128,
             'tries' => 1,
             'timeout' => 600,

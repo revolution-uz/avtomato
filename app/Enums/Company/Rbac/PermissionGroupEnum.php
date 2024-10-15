@@ -28,6 +28,7 @@ enum PermissionGroupEnum: string
     case SCORING_TAX_INFO = 'scoring_tax_info';
     case SCORING_HUMO = 'scoring_humo';
     case SCORING_UZCARD = 'scoring_uzcard';
+    case PARTNER_CREDIT_HISTORY = 'partner_credit_history';
     case ACTIVITY_LOG = 'activity_log';
 
     /**
@@ -100,6 +101,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::INSTALLMENT_CREATE_COMMENT,
                 PermissionEnum::INSTALLMENT_UPDATE_COMMENT,
                 PermissionEnum::INSTALLMENT_DELETE_COMMENT,
+                PermissionEnum::INSTALLMENT_VIEW_DOCUMENT,
                 PermissionEnum::INSTALLMENT_UPLOAD_DOCUMENT,
                 PermissionEnum::INSTALLMENT_DELETE_DOCUMENT,
                 PermissionEnum::INSTALLMENT_CREATE_TRANSACTION,
@@ -180,6 +182,9 @@ enum PermissionGroupEnum: string
                 PermissionEnum::SCORING_UZCARD_VIEW,
                 PermissionEnum::SCORING_UZCARD_CREATE,
                 PermissionEnum::SCORING_UZCARD_DELETE,
+            ],
+            self::PARTNER_CREDIT_HISTORY => [
+                PermissionEnum::ROYXAT_CREDIT_VIEW_ALL,
             ],
             self::PROFILE_EDIT => [
                 PermissionEnum::PROFILE_EDIT,

@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -22,7 +23,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class CardConfirmationSms extends Model
 {
-    use TenantConnection;
+    use HasFactory, TenantConnection;
 
     protected $table = 'card_confirmation_sms';
 

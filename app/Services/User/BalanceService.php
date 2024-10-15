@@ -3,20 +3,22 @@
 namespace App\Services\User;
 
 use App\Clients\AtmosBalanceClient;
-use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
+use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Exceptions\AtmosException;
+use App\Exceptions\GeneralException;
 use App\Models\Company\BalanceCharge;
 use App\Models\Company\BalanceFund;
 use App\Models\Company\Feature;
 use Illuminate\Database\Eloquent\Model;
 
-readonly class BalanceService
+class BalanceService
 {
+    const int MIN_BALANCE_AMOUNT = -100000;
+
     public function __construct(
-        private AtmosBalanceClient $atmosBalanceClient
+        private readonly AtmosBalanceClient $atmosBalanceClient
     ) {}
 
     public function chargeAmount(FeatureEnum $featureName, Model $model): BalanceCharge
@@ -34,21 +36,18 @@ readonly class BalanceService
         ]);
     }
 
-    public function isBalanceEnoughForFeature(FeatureEnum $featureName): bool
+    public function isBalanceEnough(): bool
     {
-        /** @var Feature $feature */
-        $feature = Feature::query()->where('name', $featureName)->firstOrFail();
-
-        return $this->getBalance() >= $feature->chargeable_amount;
+        return $this->getBalance() > self::MIN_BALANCE_AMOUNT;
     }
 
     public function getBalance(): int
     {
         $balance = BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
 
-        if (tenant()->status == CompanyStatusEnum::ACTIVE and $balance <= -100000) {
+        if (tenant()->status == CompanyStatusEnum::ACTIVE and $balance <= self::MIN_BALANCE_AMOUNT) {
             tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
-        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance > -100000) {
+        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance > self::MIN_BALANCE_AMOUNT) {
             tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
         }
 
@@ -56,58 +55,48 @@ readonly class BalanceService
     }
 
     /**
-     * @throws AtmosException
+     * @throws GeneralException
      */
-    public function requestFillBalance(string $number, string $expiry): AtmosAttachCardResponseDTO
+    public function requestFillBalance(string $number, string $expiry, int $amount): AtmosCreatePaymentResponseDTO
     {
-        return $this->atmosBalanceClient->attachCard($number, $expiry);
-    }
-
-    /**
-     * @throws AtmosException
-     */
-    public function fundBalance(BalanceFundConfirmDTO $balanceFundConfirmDTO): ?BalanceFund
-    {
-        $confirmCardResponseDTO = $this->atmosBalanceClient->confirmCard($balanceFundConfirmDTO->transaction_id, $balanceFundConfirmDTO->otp);
-
-        if (! $confirmCardResponseDTO->result->isSucces()) {
-            return null;
-        }
-
         $createPayResponseDTO = $this->atmosBalanceClient->createPayment(
             'Fill balance',
-            $balanceFundConfirmDTO->amount,
-            'User is going to fill his own balance'
+            $amount,
+            'User is filling his own balance'
         );
 
-        if (! $createPayResponseDTO->result->isSucces()) {
-            return null;
+        if (! $createPayResponseDTO->result->isSuccess()) {
+            throw new GeneralException($createPayResponseDTO->result->description);
         }
 
-        $preConfirmPayResponseDTO = $this->atmosBalanceClient->preConfirmPayment($confirmCardResponseDTO->data->card_token, $createPayResponseDTO->transaction_id);
+        $preConfirmPayResponseDTO = $this->atmosBalanceClient->preConfirmPaymentWithOneTimeSms($createPayResponseDTO->transaction_id, $number, $expiry);
 
-        if (! $preConfirmPayResponseDTO->result->isSucces()) {
-            return null;
+        if (! $preConfirmPayResponseDTO->result->isSuccess()) {
+            throw new GeneralException($preConfirmPayResponseDTO->result->description);
         }
 
-        $confirmPayResponseDTO = $this->atmosBalanceClient->confirmPayment($createPayResponseDTO->transaction_id);
+        return $createPayResponseDTO;
+    }
 
-        if (! $confirmPayResponseDTO->result->isSucces()) {
-            return null;
+    public function fundBalance(BalanceFundConfirmDTO $balanceFundConfirmDTO): BalanceFund
+    {
+        $confirmPayResponseDTO = $this->atmosBalanceClient->confirmPayment(
+            $balanceFundConfirmDTO->transaction_id,
+            $balanceFundConfirmDTO->otp
+        );
+
+        if (! $confirmPayResponseDTO->result->isSuccess()) {
+            throw new GeneralException($confirmPayResponseDTO->result->description);
         }
 
         $balanceFund = new BalanceFund;
-        $balanceFund->amount = $balanceFundConfirmDTO->amount;
+        $balanceFund->amount = $confirmPayResponseDTO->store_transaction->amount / 100; // soum
         $balanceFund->card_number = $balanceFundConfirmDTO->number;
         $balanceFund->phone_number = $balanceFundConfirmDTO->phone;
         $balanceFund->external_transaction_id = $confirmPayResponseDTO->store_transaction->success_trans_id;
         $balanceFund->terminal_id = $confirmPayResponseDTO->store_transaction->terminal_id;
-        if ($balanceFund->save()) {
-            return $balanceFund;
-        }
+        $balanceFund->saveOrFail();
 
-        $this->atmosBalanceClient->removeCard($confirmCardResponseDTO->data->card_token);
-
-        return null;
+        return $balanceFund;
     }
 }

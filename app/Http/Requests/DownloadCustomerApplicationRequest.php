@@ -8,21 +8,23 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * @property int $customer_id
+ * @property int $installment_id
  */
 class DownloadCustomerApplicationRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'customer_id' => [
-                'required', 'int', Rule::exists('customers', 'id')->whereNull('deleted_at'),
+            'installment_id' => [
+                'required',
+                'int',
+                Rule::exists('installments', 'id')->whereNull('deleted_at'),
             ],
         ];
     }
 
     public function authorize(): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_UPLOAD_DOCUMENT);
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_VIEW_DOCUMENT);
     }
 }

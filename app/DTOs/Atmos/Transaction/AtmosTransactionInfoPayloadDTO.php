@@ -16,7 +16,7 @@ class AtmosTransactionInfoPayloadDTO extends Data
         public ?DataCollection $details,
     ) {}
 
-    public function isSucces(): bool
+    public function isSuccess(): bool
     {
         return $this->transaction_status == 'SUCCESS';
     }

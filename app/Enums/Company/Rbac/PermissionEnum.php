@@ -104,6 +104,7 @@ enum PermissionEnum: string
     case INSTALLMENT_UPDATE_COMMENT = 'installment_update_comment';
     case INSTALLMENT_DELETE_COMMENT = 'installment_delete_comment';
 
+    case INSTALLMENT_VIEW_DOCUMENT = 'installment_view_document';
     case INSTALLMENT_UPLOAD_DOCUMENT = 'installment_upload_document';
     case INSTALLMENT_DELETE_DOCUMENT = 'installment_delete_document';
 
@@ -181,6 +182,9 @@ enum PermissionEnum: string
     case SCORING_UZCARD_VIEW = 'scoring_uzcard_view';
     case SCORING_UZCARD_CREATE = 'scoring_uzcard_create';
     case SCORING_UZCARD_DELETE = 'scoring_uzcard_delete';
+
+    // Credit History in Partners
+    case ROYXAT_CREDIT_VIEW_ALL = 'royxat_credit_view_all';
 
     // Activity log
     case ACTIVITY_LOG_VIEW = 'activity_log_view';
@@ -308,6 +312,8 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE,
 
+            self::ROYXAT_CREDIT_VIEW_ALL,
+
             self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,
             self::ACTIVITY_LOG_VIEW_OWN,
@@ -338,6 +344,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT,
 
+            self::INSTALLMENT_VIEW_DOCUMENT,
             self::INSTALLMENT_UPLOAD_DOCUMENT,
             self::INSTALLMENT_DELETE_DOCUMENT,
 
@@ -420,6 +427,7 @@ enum PermissionEnum: string
                 self::INSTALLMENT_CREATE_COMMENT->value,
                 self::INSTALLMENT_UPDATE_COMMENT->value,
                 self::INSTALLMENT_DELETE_COMMENT->value,
+                self::INSTALLMENT_VIEW_DOCUMENT->value,
                 self::INSTALLMENT_UPLOAD_DOCUMENT->value,
                 self::INSTALLMENT_DELETE_DOCUMENT->value,
                 self::INSTALLMENT_CREATE_TRANSACTION->value,
@@ -500,6 +508,9 @@ enum PermissionEnum: string
                 self::SCORING_UZCARD_VIEW->value,
                 self::SCORING_UZCARD_CREATE->value,
                 self::SCORING_UZCARD_DELETE->value,
+            ],
+            PermissionGroupEnum::PARTNER_CREDIT_HISTORY->value => [
+                self::ROYXAT_CREDIT_VIEW_ALL->value,
             ],
             PermissionGroupEnum::PROFILE_EDIT->value => [
                 self::PROFILE_EDIT->value,
@@ -622,6 +633,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT => FeatureEnum::INSTALLMENT_COMMENT,
 
+            self::INSTALLMENT_VIEW_DOCUMENT,
             self::INSTALLMENT_UPLOAD_DOCUMENT,
             self::INSTALLMENT_DELETE_DOCUMENT => FeatureEnum::INSTALLMENT_DOCUMENT,
 
@@ -689,6 +701,8 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE => FeatureEnum::SCORING_UZCARD,
 
+            self::ROYXAT_CREDIT_VIEW_ALL => FeatureEnum::PARTNER_CREDIT_HISTORY,
+
             self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,
             self::ACTIVITY_LOG_VIEW_OWN => FeatureEnum::ACTIVITY_LOG,
@@ -749,6 +763,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT,
 
+            self::INSTALLMENT_VIEW_DOCUMENT,
             self::INSTALLMENT_UPLOAD_DOCUMENT,
             self::INSTALLMENT_DELETE_DOCUMENT,
 

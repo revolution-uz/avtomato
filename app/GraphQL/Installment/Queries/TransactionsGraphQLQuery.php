@@ -20,6 +20,8 @@ class TransactionsGraphQLQuery extends Query
         'name' => 'transactions',
     ];
 
+    private array $_branches;
+
     public function type(): Type
     {
         return GraphQL::paginate(TransactionGraphQLType::GRAPHQL_TYPE_NAME);
@@ -27,6 +29,8 @@ class TransactionsGraphQLQuery extends Query
 
     public function args(): array
     {
+        $this->_branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_VIEW_ALL);
+
         return [
             'sort' => [
                 'type' => Type::string(),
@@ -52,9 +56,9 @@ class TransactionsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => ['nullable', 'int', Rule::exists('installments', 'id')->whereNull('deleted_at')],
             ],
-            'branch_id' => [
-                'type' => Type::int(),
-                'rules' => ['nullable', 'int', Rule::exists('branches', 'id')->whereNull('deleted_at')],
+            'branches' => [
+                'type' => Type::listOf(Type::nonNull(Type::int())),
+                'rules' => 'nullable|array',
             ],
             'customer_id' => [
                 'name' => 'customer_id',
@@ -68,6 +72,16 @@ class TransactionsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => ['nullable', 'int', Rule::exists('transaction_types', 'id')->whereNull('deleted_at')],
             ],
+            'from' => [
+                'name' => 'from',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:to|date_format:Y-m-d',
+            ],
+            'to' => [
+                'name' => 'to',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:from|date_format:Y-m-d|after_or_equal:from',
+            ],
         ];
     }
 
@@ -78,7 +92,7 @@ class TransactionsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $branches = RbacHelper::getEnabledBranches(PermissionEnum::TRANSACTION_VIEW_ALL);
+        $this->_branches = $args['branches'] ?? $this->_branches;
 
         return Transaction::query()
             ->with(['installment', 'admin', 'customer', 'transactionType', 'installment.branch'])
@@ -122,22 +136,52 @@ class TransactionsGraphQLQuery extends Query
                 fn (Builder $q) => $q
                     ->where('transaction_type_id', $args['transaction_type_id'])
             )
-            ->when($branches,
-                fn (Builder $q) => $q->whereHas('installment',
-                    fn (Builder $q) => $q->whereIn('branch_id', $branches)
-                ))
+            ->when(
+                $this->_branches,
+                fn (Builder $q) => $q
+                    ->where(fn (Builder $q) => $q
+                        ->whereIn('branch_id', $this->_branches)
+                        ->orWhere(fn (Builder $q) => $q
+                            ->whereNull('branch_id')
+                            ->whereHas('installment', fn (Builder $q) => $q->whereIn('branch_id', $this->_branches))
+                        )
+                    )
+            )
             ->when(
                 isset($args['sort']),
                 fn (Builder|Transaction $q) => $q->orderBySortable($args['sort']),
                 fn (Builder|Transaction $q) => $q->orderByDesc('paid_at')
             )
-            ->when(isset($args['search']), function (Builder $q) use ($args) {
-                $search = '%' . $args['search'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('id', 'ILIKE', $search)
-                        ->orWhere('external_id', 'ILIKE', $search);
-                });
-            })
+            ->when(
+                isset($args['search']),
+                fn ($q) => $q
+                    ->where('id', 'ilike', "%{$args['search']}%")
+                    ->orWhere('external_id', 'ilike', "%{$args['search']}%")
+                    ->orWhereHas('branch', fn ($q) => $q->where('name', 'ilike', "%{$args['search']}%"))
+                    ->orWhereHas('installment', fn ($q) => $q->where('id', 'ilike', "%{$args['search']}%"))
+                    ->orWhereHas('customer', fn ($q) => $q
+                        ->where('first_name', 'ilike', "%{$args['search']}%")
+                        ->orWhere('last_name', 'ilike', "%{$args['search']}%")
+                    )
+            )
+            ->when(
+                isset($args['from'], $args['to']),
+                fn (Builder|Transaction $q) => $q
+                    ->whereDate('paid_at', '>=', $args['from'])
+                    ->whereDate('paid_at', '<=', $args['to'])
+            )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'branches.*' => [
+                'required',
+                Rule::exists('branches', 'id')
+                    ->whereNull('deleted_at')
+                    ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),
+            ],
+        ];
     }
 }

@@ -708,7 +708,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
 
         // transaction
         $this->assertEquals($transactionAttempt->transaction->id, $response->json('data.transactionAttempts.data.0.transaction.id'));
-        $this->assertEquals($transactionAttempt->transaction->installment->branch_id, $response->json('data.transactionAttempts.data.0.transaction.branch_id'));
+        $this->assertEquals($transactionAttempt->transaction->branch_id, $response->json('data.transactionAttempts.data.0.transaction.branch_id'));
         $this->assertEquals($transactionAttempt->transaction->admin_id, $response->json('data.transactionAttempts.data.0.transaction.admin_id'));
         $this->assertEquals($transactionAttempt->transaction->installment_id, $response->json('data.transactionAttempts.data.0.transaction.installment_id'));
         $this->assertEquals($transactionAttempt->transaction->customer_id, $response->json('data.transactionAttempts.data.0.transaction.customer_id'));

@@ -26,10 +26,10 @@ class DeleteTransactionGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        Artisan::call('tenants:seed', ['--class' => TransactionTypeSeeder::class, '--tenants' => [tenant()->id]]);
+        Artisan::call('tenants:seed', ['--class' => TransactionTypeSeeder::class, '--tenants' => [tenant('id')]]);
         $transactionType = TransactionType::query()->where('id', '<', 100)->first();
-        Transaction::factory()->count(5)->create(['transaction_type_id' => $transactionType->id]);
-        Transaction::factory()->count(5)->create();
+        Transaction::factory()->count(5)->create(['transaction_type_id' => $transactionType->id, 'is_initial_fee' => false]);
+        Transaction::factory()->count(5)->create(['is_initial_fee' => false]);
     }
 
     #[Test]
@@ -43,6 +43,22 @@ class DeleteTransactionGraphQLMutationTest extends GraphQLTestCase
             ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery(['ids' => $idsInput]));
 
         $this->assertSuccessResponse($response, $idsInput);
+    }
+
+    #[Test]
+    public function cannotDeleteInitialFeeTransaction()
+    {
+        /** @var Transaction $transaction */
+        $transaction = Transaction::factory()->create(['is_initial_fee' => true]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery(['ids' => [$transaction->id]]));
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(__('validation.exists', ['attribute' => 'ids.0']), $response->json('errors.0.extensions.validation')['ids.0'][0]);
     }
 
     #[Test]

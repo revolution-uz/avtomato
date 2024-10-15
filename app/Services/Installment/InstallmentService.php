@@ -4,13 +4,16 @@ namespace App\Services\Installment;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Helpers\Utilities;
+use App\Models\Company\Branch;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
 use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Expression;
@@ -80,6 +83,9 @@ class InstallmentService
                 throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
             }
         }
+
+        $installment->any_card_charge = $any_card;
+
         $installment->saveOrFail();
 
         return $installment;
@@ -110,7 +116,11 @@ class InstallmentService
     {
         if ($status == InstallmentStatusEnum::ACTIVE) {
             if ($installment->isPaidInitialFee()) {
-                if ($this->withdrawAutoCharge($installment) && $this->withdrawAnyCardCharge($installment)) {
+                if ($installment->status == InstallmentStatusEnum::INACTIVE) {
+                    if ($this->withdrawAutoCharge($installment) && $this->withdrawAnyCardCharge($installment)) {
+                        $installment->status = $status;
+                    }
+                } else {
                     $installment->status = $status;
                 }
 
@@ -139,108 +149,143 @@ class InstallmentService
         ];
     }
 
-    public function getStatistics(Carbon $from, Carbon $to, ?array $branches = null, ?array $statusIn = null): array
+    public function getStatisticsForRange(string $from, string $to, ?array $branches = null): array
     {
-        if (! $statusIn) {
-            $statusIn = [InstallmentStatusEnum::ACTIVE->value, InstallmentStatusEnum::CLOSED->value];
-        }
-
-        $bindings = [
-            'from' => $from->format('Y-m-d'),
-            'to' => $to->format('Y-m-d'),
-            'status_in' => implode(',', $statusIn),
-            'i_branches_in' => empty($branches) ? '' : 'AND i.branch_id IN (' . implode(',', $branches) . ')',
-            't_branches_in' => empty($branches) ? '' : 'AND t.branch_id IN (' . implode(',', $branches) . ')',
-        ];
+        $branches_in_query = empty($branches) ? '' : 'AND branch_id IN (' . implode(',', $branches) . ')';
 
         return DB::select("
             WITH
-                date_series AS (SELECT generate_series(DATE '{$bindings['from']}', DATE '{$bindings['to']}', '1 day'::interval)::date AS date),
-                installment_calculations AS (
-                    SELECT i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval AS next_pay_date,
-                        (i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period * LEAST(GREATEST(CEIL(DATE_PART('month', AGE(ds.date, i.starts_in)) + 1), 0), i.period) - i.paid_amount AS debt_amount
-                    FROM installments i
+                date_series AS (SELECT GENERATE_SERIES('{$from}'::date, '{$to}'::date, '1 day'::interval)::date AS date),
+                installment_precalculations AS (
+                    SELECT (amount - initial_fee) * (percent / 100 + 1) / period AS monthly_payment,
+                           starts_in + (ROUND(DATE_PART('month', AGE(ds.date::date, starts_in)) + DATE_PART('day', AGE(ds.date::date, starts_in)) / 30) || ' month')::interval AS payment_date,
+                           GREATEST((amount - initial_fee) * (percent / 100 + 1) / period * LEAST(ROUND(DATE_PART('month', AGE(ds.date, starts_in)) + DATE_PART('day', AGE(ds.date, starts_in)) / 30) + 1, period) - paid_amount, 0) AS debt_amount
+                    FROM installments
                         INNER JOIN date_series ds
-                            ON i.starts_in + (FLOOR(i.paid_amount / ROUND(((i.amount - i.initial_fee) * (i.percent / 100 + 1) / i.period)::numeric, 2))::text || ' month')::interval = ds.date
-                            AND i.status IN ({$bindings['status_in']}) {$bindings['i_branches_in']}
+                            ON starts_in + (ROUND(DATE_PART('month', AGE(ds.date::date, starts_in)) + DATE_PART('day', AGE(ds.date::date, starts_in)) / 30) || ' month')::interval = ds.date::date
+                                AND ROUND(DATE_PART('month', AGE(ds.date::date, starts_in)) + DATE_PART('day', AGE(ds.date::date, starts_in)) / 30) BETWEEN 0 AND period - 1
+                    WHERE status IN (1,2) {$branches_in_query}
+                ),
+                installment_calculations AS (
+                    SELECT payment_date,
+                        LEAST(debt_amount, monthly_payment) AS debt_amount,
+                        ABS(LEAST(debt_amount, monthly_payment) - monthly_payment) as paid_amount
+                    FROM installment_precalculations
                 )
             SELECT
-                ds.date,
-                COALESCE(ic.debt_amount, 0) AS debt_amount,
-                COALESCE(SUM(t.amount), 0) AS paid_amount
+                EXTRACT(EPOCH  FROM date) AS date, COALESCE(SUM(debt_amount), 0) AS debt_amount_sum, COALESCE(SUM(paid_amount), 0) AS paid_amount_sum
             FROM date_series ds
-                LEFT JOIN (
-                    SELECT
-                        next_pay_date,
-                        SUM(debt_amount) AS debt_amount
-                    FROM installment_calculations
-                    GROUP BY next_pay_date
-                ) ic ON ds.date = ic.next_pay_date
-                LEFT JOIN transactions t ON ds.date = t.paid_at::date {$bindings['t_branches_in']}
-            GROUP BY ds.date, ic.debt_amount
-            ORDER BY ds.date;
+                LEFT JOIN installment_calculations ic ON ds.date = ic.payment_date
+            GROUP BY ds.date
+            ORDER BY ds.date
         ");
     }
 
-    public function statisticsByBranches(?Carbon $date = null, ?array $branch_ids = null): array
+    public function getStatisticsForDate(string $date, ?array $branches = null): array
     {
-        $branchesQuery = Installment::query()
-            ->select('branch_id', 'type', DB::raw('SUM(paid_amount) as total_amount'))
+        $branches_in_query = empty($branches) ? '' : 'AND branch_id IN (' . implode(',', $branches) . ')';
+
+        return DB::select("
+            WITH installments_optimized AS (
+                SELECT
+                    id, amount, initial_fee, percent, period, paid_amount, starts_in, branch_id, customer_id,
+                    (amount - initial_fee) * (percent / 100 + 1) / period AS monthly_payment,
+                    ROUND(DATE_PART('month', AGE('{$date}'::date, starts_in)) + DATE_PART('day', AGE('{$date}'::date, starts_in)) / 30) AS age
+                FROM installments WHERE status IN (1,2) {$branches_in_query}
+            )
+            SELECT
+                i.id,
+                b.name AS branch_name,
+                c.last_name || ' ' || c.first_name || ' ' || c.middle_name AS customer_fullname,
+                LEAST(GREATEST(i.monthly_payment * LEAST(i.age + 1, i.period) - i.paid_amount, 0), i.monthly_payment) AS debt_amount,
+                ABS(LEAST(GREATEST(i.monthly_payment * LEAST(i.age + 1, i.period) - i.paid_amount, 0), i.monthly_payment) - i.monthly_payment) as paid_amount
+            FROM installments_optimized i
+                LEFT JOIN branches b ON b.id = i.branch_id
+                LEFT JOIN customers c ON c.id = i.customer_id
+            WHERE i.starts_in + (i.age || ' month')::interval = '{$date}'::date
+              AND i.age BETWEEN 0 AND i.period - 1
+            ORDER BY i.id
+        ");
+    }
+
+    public function statisticsByBranches(?Carbon $from_date = null, ?Carbon $to_date = null, ?array $branch_ids = null): array
+    {
+        $branches = Branch::query()
+            ->when(! empty($branch_ids), fn ($q) => $q->whereIn('id', $branch_ids))
+            ->get();
+        $transactions = Transaction::query()
+            ->select('branch_id', 'transaction_type_id', DB::raw('SUM(amount) as total_amount'))
             ->when(! empty($branch_ids), fn ($q) => $q->whereIn('branch_id', $branch_ids))
-            ->when(! empty($date), fn ($q) => $q->whereDate('created_at', '=', $date))
-            ->groupBy('branch_id', 'type')
+            ->when(! empty($from_date), fn ($q) => $q->whereDate('created_at', '>=', $from_date))
+            ->when(! empty($to_date), fn ($q) => $q->whereDate('created_at', '<=', $to_date))
+            ->where('status', TransactionStatusEnum::SUCCESS)
+            ->groupBy('branch_id', 'transaction_type_id')
             ->orderBy('branch_id')
             ->get();
+        $transactionTypes = TransactionType::all();
         $statistics = [];
         $totalAmountByType = [];
-        $formattedTotalAmountByType = [];
         $fullTotalAmount = 0;
-
-        foreach ($branchesQuery as $branch) {
-            $branchId = $branch->branch_id;
-            $type = $branch->type->value;
-            /* @phpstan-ignore-next-line **/
-            $totalAmount = $branch->total_amount;
-
-            if (! isset($statistics[$branchId])) {
-                $statistics[$branchId] = [
-                    'branch_id' => $branchId,
-                    'branch_name' => $branch->branch->name,
-                    'types' => [],
-                    'total_amount_by_branch' => 0,
-                ];
-            }
-
-            $statistics[$branchId]['types'][] = [
-                'type' => $type,
-                'total_amount' => $totalAmount,
+        $formattedTotalAmountByType = [];
+        foreach ($transactionTypes as $type) {
+            $totalAmountByType[$type->id] = 0;
+        }
+        foreach ($branches as $branch) {
+            $statistics[$branch->id] = [
+                'branch_id' => $branch->id,
+                'branch' => $branch,
+                'types' => [],
+                'total_amount_by_branch' => 0,
             ];
 
-            $statistics[$branchId]['total_amount_by_branch'] += $totalAmount;
+            foreach ($transactionTypes as $case) {
+                $statistics[$branch->id]['types'][$case->id] = [
+                    'name' => $case->name,
+                    'amount' => 0,
+                ];
+            }
+        }
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $branchId = $transaction->branch_id;
+            $type = $transaction->transaction_type_id;
+            /* @phpstan-ignore-next-line * */
+            $totalAmount = $transaction->total_amount;
 
+            $statistics[$branchId]['types'][$type]['amount'] += $totalAmount;
+
+            $statistics[$branchId]['total_amount_by_branch'] += $totalAmount;
             if (! isset($totalAmountByType[$type])) {
                 $totalAmountByType[$type] = 0;
             }
             $totalAmountByType[$type] += $totalAmount;
 
             $formattedTotalAmountByType[$type] = [
-                'type' => $type,
-                'total_amount' => $totalAmountByType[$type],
+                'name' => $transaction->transactionType->name,
+                'amount' => $totalAmountByType[$type],
             ];
 
             $fullTotalAmount += $totalAmount;
+        }
+        foreach ($transactionTypes as $case) {
+            if (! isset($formattedTotalAmountByType[$case->id])) {
+                $formattedTotalAmountByType[$case->id] = [
+                    'name' => $case->name,
+                    'amount' => 0,
+                ];
+            }
         }
 
         return [
             'branches' => $statistics,
             'total_amount_by_type' => array_values($formattedTotalAmountByType),
-            'full_total_amount' => number_format($fullTotalAmount, 2, '.', '.'),
+            'full_total_amount' => number_format($fullTotalAmount, 2, '.', ' '),
         ];
     }
 
     private function withdrawAutoCharge(Installment $installment): bool
     {
-        if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE)) {
+        if ($this->balanceService->isBalanceEnough()) {
             $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
 
             return true;
@@ -251,7 +296,7 @@ class InstallmentService
 
     private function withdrawAnyCardCharge(Installment $installment): bool
     {
-        if ($this->balanceService->isBalanceEnoughForFeature(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)) {
+        if ($this->balanceService->isBalanceEnough()) {
             $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment);
 
             return true;
@@ -263,7 +308,7 @@ class InstallmentService
     private function getInstallmentAmounts(): array
     {
         return [
-            'transaction' => $this->calculateByIncreasingPercent(Transaction::query(), 'id', 'amount'),
+            'transaction' => $this->calculateByIncreasingPercent(Transaction::query()->where('status', TransactionStatusEnum::SUCCESS), 'id', 'amount'),
             'installment' => $this->calculateByIncreasingPercent(Installment::query(), 'id', 'amount'),
             'installment_future_profit' => $this->calculateByIncreasingPercent(
                 Installment::query()->where('status', '>', InstallmentStatusEnum::INACTIVE),
@@ -272,6 +317,7 @@ class InstallmentService
             ),
             'installment_overdue' => $this->calculateByIncreasingPercent(
                 Installment::query()
+                    ->where('status', '=', InstallmentStatusEnum::ACTIVE)
                     ->whereNextPayDate('<', Carbon::now()),
                 'id',
                 Installment::getDebtAmountRaw()
@@ -331,7 +377,7 @@ class InstallmentService
                 'name' => __('api.installment_status_' . $status->name),
                 'type' => 'line',
                 'stack' => 'Total',
-                'count' => (clone $query)->where('created_at', '>=', Carbon::today()->startOfWeek())->countId(),
+                'count' => (clone $query)->where('created_at', '>=', Carbon::today()->startOfYear())->countId(),
                 'data' => $data,
             ];
         }
@@ -342,13 +388,13 @@ class InstallmentService
     private function getInstallmentOverdues(): array
     {
         $result = [];
-        $queryHasDebt = Installment::query()->whereHasDebt();
+        $queryHasDebt = Installment::query()->where('status', InstallmentStatusEnum::ACTIVE)->whereHasDebt();
         $total_amount = (clone $queryHasDebt)->whereNextPayDate('<=', Carbon::now())->sumDebt();
         $total_count = (clone $queryHasDebt)->whereNextPayDate('<=', Carbon::now())->countId();
         for ($i = 10; $i < 70; $i += 10) {
             $subQuery = (clone $queryHasDebt)->whereNextPayDate('>', Carbon::now()->subDays($i))->whereNextPayDate('<=', Carbon::now()->subDays($i - 10));
             $count = (clone $subQuery)->countId();
-            $amount = (clone $subQuery)->sumInstallmentAmount();
+            $amount = (clone $subQuery)->sumDebt();
             $total_count -= $count;
             $total_amount -= $amount;
             $result[] = [
