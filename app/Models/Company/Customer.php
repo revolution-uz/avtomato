@@ -154,14 +154,4 @@ class Customer extends Model
     {
         return $this->belongsToMany(Tag::class, 'customer_tags');
     }
-
-    public function onlyPhones(): array
-    {
-        $phones = [];
-        foreach ($this->phones as $phone) {
-            $phones[] = $phone->phone;
-        }
-
-        return $phones;
-    }
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Clients\UniredClient;
+use App\DTOs\Unired\Branch\UniredBranchResponseDTO;
 use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
@@ -10,6 +11,8 @@ use App\DTOs\Unired\Client\UniredClientExtIdDTO;
 use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
 use App\DTOs\Unired\Payment\UniredCancelPaymentRequestDTO;
+use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
+use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationResponseDTO;
 use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\FeatureEnum;
@@ -25,36 +28,58 @@ class UniredService
 {
     public function __construct(private UniredClient $uniredClient) {}
 
-    public function createCompany(): bool
+    public function createCompany(UniredCreateBranchRequestDTO $params): bool
     {
+        $uniredResponseDto = $this->uniredClient->createBranch($params);
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $uniredResponseDto = $this->uniredClient->createBranch(UniredCreateBranchRequestDTO::from($feature));
-        $company = UniredUpdateBranchRequestDTO::from($uniredResponseDto->result);
-        $feature['id'] = $company->id;
+        $feature->data = UniredBranchResponseDTO::from($uniredResponseDto->result)->toArray();
 
         return $feature->saveOrFail();
     }
 
-    public function updateCompany(): void
+    public function updateCompany(UniredUpdateBranchRequestDTO $params): bool
     {
-        $this->uniredClient->updateBranch(UniredUpdateBranchRequestDTO::from(Feature::findByName(FeatureEnum::UNIRED_PAY)));
+        $uniredResponseDto = $this->uniredClient->updateBranch($params);
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $feature->data = array_merge($feature->data, UniredUpdateBranchRequestDTO::from($uniredResponseDto->result)->toArray());
+
+        return $feature->saveOrFail();
     }
 
-    public function switchOffCompany(): void
+    public function switchOffCompany(): bool
     {
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->id, false));
+        $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->data['id'], false));
+        $feature->data = array_merge($feature->data, ['auto_payment' => false]);
+
+        return $feature->saveOrFail();
     }
 
-    public function switchOnCompany(): void
+    public function switchOnCompany(): bool
     {
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->id, true));
+        $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->data['id'], true));
+        $feature->data = array_merge($feature->data, ['auto_payment' => true]);
+
+        return $feature->saveOrFail();
     }
 
-    public function createOrUpdateCustomer(Customer $customer)
+    public function createOrUpdateCustomer(Customer $customer): bool
     {
-        $this->uniredClient->createOrUpdateClients(new UniredCreateOrUpdateClientRequestDTO($customer->pinfl, $customer->passport_series . $customer->passport_number, Utilities::generateIdByTenancy($customer->id), Utilities::generateIdByTenancy($customer->id), $customer->first_name, $customer->last_name, $customer->middle_name, tenant('id'), $customer->debtAmount(), $customer->onlyPhones()));
+        $this->uniredClient->createOrUpdateClients(new UniredCreateOrUpdateClientRequestDTO(
+            $customer->pinfl,
+            $customer->passport_series . $customer->passport_number,
+            Utilities::generateIdByTenancy($customer->id),
+            Utilities::generateIdByTenancy($customer->id),
+            $customer->first_name,
+            $customer->last_name,
+            $customer->middle_name,
+            tenant('id'),
+            $customer->debtAmount(),
+            $customer->phones->pluck('phone')->toArray()
+        ));
+
+        return true;
     }
 
     public function switchOffCustomer(Customer $customer): void
@@ -70,6 +95,13 @@ class UniredService
     public function deleteCustomer(Customer $customer)
     {
         return $this->uniredClient->deleteClient(new UniredClientExtIdDTO(Utilities::generateIdByTenancy($customer->id)));
+    }
+
+    public function getPayments(UniredGetPaymentsPaginationRequestDTO $params): UniredGetPaymentsPaginationResponseDTO
+    {
+        $uniredResponseDto = $this->uniredClient->getPayments($params);
+
+        return UniredGetPaymentsPaginationResponseDTO::from($uniredResponseDto->result);
     }
 
     public function reversePayment(Transaction $transaction): UniredResponseDTO

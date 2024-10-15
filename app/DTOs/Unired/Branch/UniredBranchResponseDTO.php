@@ -4,6 +4,8 @@ namespace App\DTOs\Unired\Branch;
 
 use App\DTOs\Unired\Base\BaseUniredDTO;
 use Carbon\Carbon;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 /**
  * Class UniredBranchResponseDTO
@@ -28,7 +30,9 @@ class UniredBranchResponseDTO extends BaseUniredDTO
         public string $merchant_humo,
         public string $terminal_humo,
         public string $phone,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.u\Z')]
         public Carbon $created_at,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.u\Z')]
         public Carbon $updated_at,
     ) {}
 }

@@ -14,6 +14,7 @@ class UniredToggleClientAutoRequestDTO extends BaseUniredDTO
 {
     public function __construct(
         public int $loan_id,
+        // public ?string $ext_id = null, // required without loan_id
         public bool $auto,
     ) {}
 }

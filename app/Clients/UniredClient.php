@@ -15,16 +15,54 @@ use App\DTOs\Unired\Client\UniredFindClientsRequestDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
 use App\DTOs\Unired\Payment\UniredCancelPaymentRequestDTO;
 use App\DTOs\Unired\Payment\UniredChangePaymentSendStatusRequestDTO;
+use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
 use App\DTOs\Unired\Payment\UniredRegisterPaymentRequestDTO;
 use App\DTOs\Unired\System\UniredSetTokenRequestDTO;
 use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredPaginationRequestDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\ClientCodeEnum;
+use App\Exceptions\UniredException;
 use Illuminate\Support\Facades\Http;
 
 class UniredClient extends BaseClient
 {
+    // Authorization Module
+    const SYSTEM_SET_TOKEN = 'system.set.token';
+
+    // Branch Module
+    const FILIAL_CREATE = 'filial.create';
+    const FILIAL_UPDATE = 'filial.update';
+    const FILIAL_FIND = 'filial.find';
+    const FILIAL_ALL = 'filial.all';
+    const FILIAL_TOGGLE_AUTO = 'filial.toggle.auto';
+
+    // Client Module
+    const CLIENT_CREATE = 'client.create';
+    const CLIENT_CREATE_OR_UPDATE = 'client.createOrUpdate';
+    const CLIENT_FIND = 'client.find';
+    const CLIENT_FIND_MULTIPLE = 'client.find.multiple';
+    const CLIENT_NOT_IDENTIFIED = 'client.not.identified';
+    const CLIENT_PHONE_ADD = 'client.phone.add';
+    const CLIENT_ALL = 'client.all';
+    const CLIENT_DEBIT_UPDATE = 'client.debit.update';
+    const CLIENT_AUTO_TOGGLE = 'client.auto.toggle';
+    const CLIENT_AUTO_TOGGLE_MASSIVE = 'client.auto.toggle.massive';
+    const CLIENT_AUTO_TOGGLE_ALL = 'client.auto.toggle.all';
+    const CLIENT_DELETE = 'client.delete';
+
+    // Payment Module
+    const PAYMENT_GET = 'payment.get';
+    const PAYMENT_CHANGE_SEND_STATUS = 'payment.change.send.status';
+    const PAYMENT_REGISTER = 'payment.register';
+    const PAYMENT_CANCEL = 'payment.cancel';
+    const PAYMENT_GET_WEBHOOK = 'payment.get.webhook';
+    const PAYMENT_SET_WEBHOOK = 'payment.set.webhook';
+
+    // Syncronization and SMS Modules
+    const CHECK_DEBIT_BEFORE_PAYMENT = 'check.debit.before.payment';
+    const SMS_AFTER_PAYMENT = 'sms.after.payment';
+
     private string $baseUrl;
     private string $token;
 
@@ -47,95 +85,135 @@ class UniredClient extends BaseClient
 
     public function setToken(UniredSetTokenRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('system.set.token', $params);
+        return $this->makeRequest(self::SYSTEM_SET_TOKEN, $params);
     }
 
     public function createBranch(UniredCreateBranchRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('filial.create', $params);
+        return $this->makeRequest(self::FILIAL_CREATE, $params);
     }
 
     public function updateBranch(UniredUpdateBranchRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('filial.update', $params);
+        return $this->makeRequest(self::FILIAL_UPDATE, $params);
     }
+
+    // public function filialFind(UniredUpdateBranchRequestDTO $params): UniredResponseDTO
+    // {
+    //     return $this->makeRequest(self::FILIAL_FIND, $params);
+    // }
+
+    // public function filialAll(UniredPaginationRequestDTO $params): UniredResponseDTO
+    // {
+    //     return $this->makeRequest(self::FILIAL_ALL, $params);
+    // }
 
     public function toggleBranchAuto(UniredToggleBranchAutoRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('filial.toggle.all', $params);
+        return $this->makeRequest(self::FILIAL_TOGGLE_AUTO, $params);
     }
 
-    public function createClient(UniredCreateOrUpdateClientRequestDTO $clientData): UniredResponseDTO
+    public function createClient(UniredCreateOrUpdateClientRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.create', $clientData);
+        return $this->makeRequest(self::CLIENT_CREATE, $params);
     }
 
-    public function createOrUpdateClients(UniredCreateOrUpdateClientRequestDTO $clientsData): UniredResponseDTO
+    public function createOrUpdateClients(UniredCreateOrUpdateClientRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.createOrUpdate', $clientsData);
+        return $this->makeRequest(self::CLIENT_CREATE_OR_UPDATE, $params);
     }
 
     public function findClient(UniredFindClientRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.find', $params);
+        return $this->makeRequest(self::CLIENT_FIND, $params);
     }
 
     public function findMultipleClients(UniredFindClientsRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.find.multiple', $params);
+        return $this->makeRequest(self::CLIENT_FIND_MULTIPLE, $params);
     }
+
+    // public function clientNotIdentified(UniredFindClientsRequestDTO $params): UniredResponseDTO
+    // {
+    //     return $this->makeRequest(self::CLIENT_NOT_IDENTIFIED, $params);
+    // }
 
     public function addClientPhone(UniredAddClientPhoneRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.phone.add', $params);
+        return $this->makeRequest(self::CLIENT_PHONE_ADD, $params);
     }
 
     public function getAllClients(UniredPaginationRequestDTO $params): UniredResponseDTO
     {
         $params->filial_id = tenant('id');
 
-        return $this->makeRequest('client.all', $params);
+        return $this->makeRequest(self::CLIENT_ALL, $params);
     }
+
+    // public function clientDebitUpdate(UniredAddClientPhoneRequestDTO $params): UniredResponseDTO
+    // {
+    //     return $this->makeRequest(self::CLIENT_DEBIT_UPDATE, $params);
+    // }
 
     public function toggleClientAuto(UniredToggleClientAutoRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.auto.toggle', $params);
+        return $this->makeRequest(self::CLIENT_AUTO_TOGGLE, $params);
     }
+
+    // public function clientAutoToggleMassive(UniredToggleClientAutoRequestDTO $params): UniredResponseDTO
+    // {
+    //     return $this->makeRequest(self::CLIENT_AUTO_TOGGLE_MASSIVE, $params);
+    // }
+
+    // public function clientAutoToggleAll(UniredToggleClientAutoRequestDTO $params): UniredResponseDTO
+    // {
+    //     return $this->makeRequest(self::CLIENT_AUTO_TOGGLE_ALL, $params);
+    // }
 
     public function deleteClient(UniredClientExtIdDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('client.delete', $params);
+        return $this->makeRequest(self::CLIENT_DELETE, $params);
     }
 
-    public function getPayments(UniredPaginationRequestDTO $params): UniredResponseDTO
+    public function getPayments(UniredGetPaymentsPaginationRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('filial.all', $params);
+        return $this->makeRequest(self::PAYMENT_GET, $params);
     }
 
     public function registerPayment(UniredRegisterPaymentRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('payment.register', $params);
+        return $this->makeRequest(self::PAYMENT_REGISTER, $params);
     }
 
     public function cancelPayment(UniredCancelPaymentRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('payment.cancel', $params);
+        return $this->makeRequest(self::PAYMENT_CANCEL, $params);
     }
 
     public function changePaymentSendStatus(UniredChangePaymentSendStatusRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('payment.change.send.status', $params);
+        return $this->makeRequest(self::PAYMENT_CHANGE_SEND_STATUS, $params);
     }
 
     public function getWebhook(): UniredResponseDTO
     {
-        return $this->makeRequest('payment.get.webhook');
+        return $this->makeRequest(self::PAYMENT_GET_WEBHOOK);
     }
 
     public function setWebhook(UniredSetWebhookDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest('payment.set.webhook', $params);
+        return $this->makeRequest(self::PAYMENT_SET_WEBHOOK, $params);
     }
+
+    // public function checkDebitBeforePayment(UniredCheckDebitBeforePaymentDTO $params): UniredResponseDTO
+    // {
+    //     return $this->makeRequest(self::CHECK_DEBIT_BEFORE_PAYMENT, $params);
+    // }
+
+    // public function smsAfterPayment(UniredCheckDebitBeforePaymentDTO $params): UniredResponseDTO
+    // {
+    //     return $this->makeRequest(self::SMS_AFTER_PAYMENT, $params);
+    // }
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO
     {
@@ -155,6 +233,12 @@ class UniredClient extends BaseClient
 
     private function makeRequest(string $method, ?BaseUniredDTO $params = null, string $httpMethod = 'post'): UniredResponseDTO
     {
-        return $this->httpRequest(['method' => $method, 'params' => $params], $httpMethod, '');
+        $response = $this->httpRequest(['method' => $method, 'params' => $params], $httpMethod, '');
+
+        if (! $response->isSuccess()) {
+            throw new UniredException($response->error->message);
+        }
+
+        return $response;
     }
 }
