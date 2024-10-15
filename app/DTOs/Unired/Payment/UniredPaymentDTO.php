@@ -8,12 +8,24 @@ use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 /**
- * Class UniredRegisterPaymentRequestDTO
+ * Class UniredPaymentDTO
  *
- * @property string $client_ext_id
- * @property string $payment_ext_id
- * @property string $payment_transaction_id
+ * @property string $pinfl
+ * @property string $loan_id
+ * @property string $transaction_id
+ * @property string $ext_id
+ * @property string $card_mask
+ * @property string $card_owner
  * @property int $amount
+ * @property Carbon $date
+ * @property string $terminal
+ * @property string $merchant
+ * @property int $filial_id
+ * @property string $type
+ * @property string $status
+ * @property Carbon|null $refunded_at
+ * @property Carbon $created_at
+ * @property bool $is_sent
  */
 class UniredPaymentDTO extends BaseUniredDTO
 {
