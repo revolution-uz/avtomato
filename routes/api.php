@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SayqalController;
+use App\Http\Controllers\UniredController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +22,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth.sayqal')->prefix('sayqal-callback')->controller(SayqalController::class)->group(function () {
     Route::post('sms', 'sms')->name('sayqalCallback.sms');
     Route::post('voice', 'voice')->name('sayqalCallback.voice');
+});
+Route::middleware('auth.unired')->prefix('unired-callback')->controller(UniredController::class)->group(function () {
+    Route::post('web-hook', 'webHook')->name('uniredCallback.webHook');
+    Route::get('check-payment', 'checkPayment')->name('uniredCallback.checkPayment');
+    Route::post('send-sms', 'sendSms')->name('uniredCallback.sendSms');
 });

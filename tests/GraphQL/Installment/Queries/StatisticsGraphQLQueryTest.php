@@ -29,7 +29,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         Installment::query()->forceDelete();
 
-        $this->_carbon = Carbon::createFromFormat('Y-m-d', '2024-09-15')->startOfDay();
+        $this->_carbon = Carbon::createFromFormat('Y-m-d', '2024-09-20')->startOfDay();
 
         $this->_input = [
             'amount' => 1000000,

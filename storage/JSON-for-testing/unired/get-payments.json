@@ -1,0 +1,39 @@
+{
+  "status": true,
+  "result": {
+    "page_number": 0,
+    "page_size": 100,
+    "total_elements": 2,
+    "total_pages": 0,
+    "payments": [
+      {
+        "pinfl": "33012933450133",
+        "loan_id": "33012933450133",
+        "transaction_id": "015397909580",
+        "ext_id": "autopay_506416_165907797412",
+        "card_mask": "860048******6728",
+        "card_owner": "GOFUROV SHAXZODBEK",
+        "amount": 700000,
+        "date": "2022-07-29",
+        "terminal": "92412344",
+        "merchant": "90489053",
+        "filial_id": 2,
+        "type": "Online",
+        "status": "OK",
+        "refunded_at": null,
+        "created_at": "2022-07-29T06:59:34.000000Z",
+        "is_sent": 0,
+        "card": {
+          "card_number": "860048******6728",
+          "phone": "97*****33",
+          "owner": "GOFUROV SHAXZODBEK"
+        },
+        "filial": {
+          "id": 2,
+          "name": "Burke Sharpe"
+        }
+      }
+    ]
+  },
+  "error": null
+}
