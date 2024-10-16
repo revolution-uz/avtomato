@@ -33,8 +33,6 @@ class UniredClient extends BaseClient
     // Branch Module
     const FILIAL_CREATE = 'filial.create';
     const FILIAL_UPDATE = 'filial.update';
-    const FILIAL_FIND = 'filial.find';
-    const FILIAL_ALL = 'filial.all';
     const FILIAL_TOGGLE_AUTO = 'filial.toggle.auto';
 
     // Client Module
@@ -42,13 +40,9 @@ class UniredClient extends BaseClient
     const CLIENT_CREATE_OR_UPDATE = 'client.createOrUpdate';
     const CLIENT_FIND = 'client.find';
     const CLIENT_FIND_MULTIPLE = 'client.find.multiple';
-    const CLIENT_NOT_IDENTIFIED = 'client.not.identified';
     const CLIENT_PHONE_ADD = 'client.phone.add';
     const CLIENT_ALL = 'client.all';
-    const CLIENT_DEBIT_UPDATE = 'client.debit.update';
     const CLIENT_AUTO_TOGGLE = 'client.auto.toggle';
-    const CLIENT_AUTO_TOGGLE_MASSIVE = 'client.auto.toggle.massive';
-    const CLIENT_AUTO_TOGGLE_ALL = 'client.auto.toggle.all';
     const CLIENT_DELETE = 'client.delete';
 
     // Payment Module
@@ -58,10 +52,6 @@ class UniredClient extends BaseClient
     const PAYMENT_CANCEL = 'payment.cancel';
     const PAYMENT_GET_WEBHOOK = 'payment.get.webhook';
     const PAYMENT_SET_WEBHOOK = 'payment.set.webhook';
-
-    // Syncronization and SMS Modules
-    const CHECK_DEBIT_BEFORE_PAYMENT = 'check.debit.before.payment';
-    const SMS_AFTER_PAYMENT = 'sms.after.payment';
 
     private string $baseUrl;
     private string $token;
@@ -98,16 +88,6 @@ class UniredClient extends BaseClient
         return $this->makeRequest(self::FILIAL_UPDATE, $params);
     }
 
-    // public function filialFind(UniredUpdateBranchRequestDTO $params): UniredResponseDTO
-    // {
-    //     return $this->makeRequest(self::FILIAL_FIND, $params);
-    // }
-
-    // public function filialAll(UniredPaginationRequestDTO $params): UniredResponseDTO
-    // {
-    //     return $this->makeRequest(self::FILIAL_ALL, $params);
-    // }
-
     public function toggleBranchAuto(UniredToggleBranchAutoRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest(self::FILIAL_TOGGLE_AUTO, $params);
@@ -133,11 +113,6 @@ class UniredClient extends BaseClient
         return $this->makeRequest(self::CLIENT_FIND_MULTIPLE, $params);
     }
 
-    // public function clientNotIdentified(UniredFindClientsRequestDTO $params): UniredResponseDTO
-    // {
-    //     return $this->makeRequest(self::CLIENT_NOT_IDENTIFIED, $params);
-    // }
-
     public function addClientPhone(UniredAddClientPhoneRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest(self::CLIENT_PHONE_ADD, $params);
@@ -150,25 +125,10 @@ class UniredClient extends BaseClient
         return $this->makeRequest(self::CLIENT_ALL, $params);
     }
 
-    // public function clientDebitUpdate(UniredAddClientPhoneRequestDTO $params): UniredResponseDTO
-    // {
-    //     return $this->makeRequest(self::CLIENT_DEBIT_UPDATE, $params);
-    // }
-
     public function toggleClientAuto(UniredToggleClientAutoRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest(self::CLIENT_AUTO_TOGGLE, $params);
     }
-
-    // public function clientAutoToggleMassive(UniredToggleClientAutoRequestDTO $params): UniredResponseDTO
-    // {
-    //     return $this->makeRequest(self::CLIENT_AUTO_TOGGLE_MASSIVE, $params);
-    // }
-
-    // public function clientAutoToggleAll(UniredToggleClientAutoRequestDTO $params): UniredResponseDTO
-    // {
-    //     return $this->makeRequest(self::CLIENT_AUTO_TOGGLE_ALL, $params);
-    // }
 
     public function deleteClient(UniredClientExtIdDTO $params): UniredResponseDTO
     {
@@ -204,16 +164,6 @@ class UniredClient extends BaseClient
     {
         return $this->makeRequest(self::PAYMENT_SET_WEBHOOK, $params);
     }
-
-    // public function checkDebitBeforePayment(UniredCheckDebitBeforePaymentDTO $params): UniredResponseDTO
-    // {
-    //     return $this->makeRequest(self::CHECK_DEBIT_BEFORE_PAYMENT, $params);
-    // }
-
-    // public function smsAfterPayment(UniredCheckDebitBeforePaymentDTO $params): UniredResponseDTO
-    // {
-    //     return $this->makeRequest(self::SMS_AFTER_PAYMENT, $params);
-    // }
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO
     {
