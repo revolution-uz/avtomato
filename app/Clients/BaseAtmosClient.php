@@ -10,6 +10,7 @@ use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Models\Company\Feature;
 use Illuminate\Support\Facades\Http;
+use Throwable;
 
 abstract class BaseAtmosClient extends BaseClient
 {
@@ -45,44 +46,45 @@ abstract class BaseAtmosClient extends BaseClient
         if (! $token = $this->getActiveToken()) {
             return ['result' => new AtmosResultDTO('ERROR', 'Cannot activate the token')];
         }
+
         $data['lang'] = app()->getLocale();
-        $response = Http::withHeaders([
-            'Authorization' => $token,
-            'Content-Type' => 'application/json',
-            'Connection' => 'close',
-        ])->timeout(150)->connectTimeout(150)
-            ->$method($this->baseUrl . $path, $data);
+        $url = $this->baseUrl . $path;
 
-        if (
-            $response->status() !== 200 &&
-            $response->status() !== 201
-        ) {
-            parent::logRequest(
-                new HttpRequestLogDTO(
-                    method: $method,
-                    url: $this->baseUrl . $path,
-                    status: $response->status(),
-                    response: $response->body(),
-                    duration: $response->transferStats?->getTransferTime(),
-                    headers: ['Authorization' => $token],
-                    body: $data,
-                ),
-                'error'
-            );
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $token,
+                'Content-Type' => 'application/json',
+                'Connection' => 'close',
+            ])->timeout(150)
+                ->connectTimeout(150)
+                ->$method($url, $data);
 
-            throw new GeneralException($response['description'], $response['code']);
+            parent::logRequest(new HttpRequestLogDTO(
+                method: $method,
+                url: $this->baseUrl . $path,
+                status: $response->status(),
+                response: $response->body(),
+                duration: $response->transferStats?->getTransferTime(),
+                body: $data,
+            ));
+
+            if (! in_array($response->status(), [200, 201]) || empty($response->json())) {
+                throw new GeneralException($response->json('description', 'Unexpected response'), $response->json('code', 0));
+            }
+
+            return $response->json();
+        } catch (Throwable $exception) {
+            parent::logRequest(new HttpRequestLogDTO(
+                method: $method,
+                url: $url,
+                status: $exception->getCode(),
+                response: $exception->getMessage(),
+                duration: null,
+                headers: ['Authorization' => $token],
+                body: $data,
+            ), 'error');
+            throw new GeneralException($exception->getMessage(), $exception->getCode());
         }
-
-        parent::logRequest(new HttpRequestLogDTO(
-            method: $method,
-            url: $this->baseUrl . $path,
-            status: $response->status(),
-            response: $response->body(),
-            duration: $response->transferStats?->getTransferTime(),
-            body: $data,
-        ));
-
-        return $response->json();
     }
 
     protected function getActiveToken(): ?string
