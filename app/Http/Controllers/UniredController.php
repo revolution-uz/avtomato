@@ -39,8 +39,9 @@ class UniredController extends Controller
                     'code' => 0,
                     'message' => 'SUCCESS',
                     'result' => [
-                        'debt' => $debt,
-                    ]], 200);
+                        'debt' => $debt * 100,
+                    ],
+                ], 200);
             }
             if ($debt === null) {
                 return response()->json([

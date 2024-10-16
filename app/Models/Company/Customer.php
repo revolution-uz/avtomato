@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\CardStatusEnum;
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\GenderEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
@@ -17,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -36,6 +36,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $birth_date
  * @property string|null $birth_place
  * @property GenderEnum|null $gender
+ * @property-read float $debt_amount
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -146,9 +147,9 @@ class Customer extends Model
         return $this->cards()->where('status', CardStatusEnum::ACTIVE);
     }
 
-    public function debtAmount(): float
+    public function getDebtAmountAttribute(): float
     {
-        return (float) Installment::query()->where('customer_id', $this->id)->sum(DB::raw('(amount - initial_fee) * (percent + 100) / 100 - paid_amount'));
+        return $this->installments()->where('status', InstallmentStatusEnum::ACTIVE)->get()->sum('debtAmount');
     }
 
     public function tags(): BelongsToMany

@@ -75,7 +75,7 @@ class UniredService
             $customer->last_name,
             $customer->middle_name,
             tenant('id'),
-            $customer->debtAmount(),
+            $customer->debt_amount,
             $customer->phones->pluck('phone')->toArray()
         ));
 
@@ -117,7 +117,7 @@ class UniredService
     public function getClientDebt(?int $customer_id): ?float
     {
         if ($customer = Customer::find($customer_id)) {
-            return $customer->debtAmount();
+            return $customer->debt_amount;
         }
 
         return null;
@@ -143,7 +143,7 @@ class UniredService
             $transaction->installment_id = $installment->id;
             $transaction->customer_id = $customer->id;
             $transaction->card_pan = $request->card_mask;
-            $transaction->paid_at = Carbon::createFromTimestampMs($request->created_at);
+            $transaction->paid_at = Carbon::parse($request->created_at);
             if ($transaction->save()) {
                 $amount -= $current_amount;
             }

@@ -149,7 +149,7 @@ class UniredServiceTest extends TestCase
     {
         UniredFaker::badResponse();
         $this->expectException(UniredException::class);
-        $this->expectExceptionMessage('Error message');
+        $this->expectExceptionMessage('Error message!');
         $this->_uniredService->setWebhook();
     }
 

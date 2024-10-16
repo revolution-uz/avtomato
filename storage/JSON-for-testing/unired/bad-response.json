@@ -1,7 +1,6 @@
 {
   "status": false,
   "error": {
-    "message": "Error message"
-  },
-  "result": null
+    "message": "Error message!"
+  }
 }

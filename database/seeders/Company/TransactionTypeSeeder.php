@@ -30,5 +30,15 @@ class TransactionTypeSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
+        TransactionType::query()->updateOrCreate([
+            'id' => TransactionType::UNIRED_WITH_PINFL,
+        ], [
+            'name_uz' => 'Unired passport bilan',
+            'name_ru' => 'Униред с паспортом',
+            'name_en' => 'Unired with passport',
+            'is_system' => true,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
     }
 }
