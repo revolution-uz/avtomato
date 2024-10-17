@@ -24,6 +24,7 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
 
     protected bool $tenancy = false;
+    protected bool $multiTenancies = false;
 
     protected function setUp(): void
     {
@@ -32,6 +33,9 @@ abstract class TestCase extends BaseTestCase
 
         if ($this->tenancy) {
             $this->initializeTenancy();
+            if ($this->multiTenancies) {
+                $this->initializeTenancy(2);
+            }
             $this->withoutMiddleware([
                 InitializeTenancyByDomain::class,
                 PreventAccessFromCentralDomains::class,

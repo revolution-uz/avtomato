@@ -9,6 +9,7 @@ use Tests\TestCase;
 class AddBranchIdToOldAutoPayTest extends TestCase
 {
     protected bool $tenancy = true;
+    protected bool $multiTenancies = true;
 
     #[Test]
     public function addBranchIdToOldAutoPay()
