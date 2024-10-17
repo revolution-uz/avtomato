@@ -19,7 +19,8 @@ class UniredController extends Controller
     {
         if ($companyId = $request->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
-            if ($installment = Installment::findOrFail($request->getInstallmentId())) {
+            $installment = Installment::findOrFail($request->getInstallmentId());
+            if ($installment !== null) {
                 if ($request->isGuarantorPayment()) {
                     if ($this->uniredService->createTransaction($installment, $request->getInstallmentGuarantorCustomerId(), $request)) {
                         return response()->json(['success' => true, 'message' => 'OK'], 200);
