@@ -60,10 +60,24 @@ class UniredPaymentWebhookCallbackRequest extends FormRequest
         return $arr[0] ?? null;
     }
 
-    public function getClientId(): ?int
+    public function getInstallmentId(): ?int
     {
         $arr = explode(Utilities::TENANT_SEPARATOR, $this->loan_id);
 
         return isset($arr[1]) ? (int) $arr[1] : null;
+    }
+
+    public function isGuarantorPayment(): bool
+    {
+        $arr = explode(Utilities::TENANT_SEPARATOR, $this->loan_id);
+
+        return is_array($arr) && count($arr) === 3;
+    }
+
+    public function getInstallmentGuarantorCustomerId(): ?int
+    {
+        $arr = explode(Utilities::TENANT_SEPARATOR, $this->loan_id);
+
+        return isset($arr[2]) ? (int) $arr[2] : null;
     }
 }
