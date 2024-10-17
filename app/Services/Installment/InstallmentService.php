@@ -405,7 +405,7 @@ class InstallmentService
         for ($i = 10; $i < 70; $i += 10) {
             $subQuery = (clone $queryHasDebt)->whereNextPayDate('>', Carbon::now()->subDays($i))->whereNextPayDate('<=', Carbon::now()->subDays($i - 10));
             $count = (clone $subQuery)->countId();
-            $amount = (clone $subQuery)->sumInstallmentAmount();
+            $amount = (clone $subQuery)->sumDebt();
             $total_count -= $count;
             $total_amount -= $amount;
             $result[] = [

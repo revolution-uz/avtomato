@@ -3,6 +3,7 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\CardStatusEnum;
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\GenderEnum;
 use App\Traits\LogsActivityDirtyOnlyTrait;
@@ -35,6 +36,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $birth_date
  * @property string|null $birth_place
  * @property GenderEnum|null $gender
+ * @property-read float $debt_amount
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -143,6 +145,11 @@ class Customer extends Model
     public function activeCards()
     {
         return $this->cards()->where('status', CardStatusEnum::ACTIVE);
+    }
+
+    public function getDebtAmountAttribute(): float
+    {
+        return $this->installments()->where('status', InstallmentStatusEnum::ACTIVE)->get()->sum('debtAmount');
     }
 
     public function tags(): BelongsToMany

@@ -74,6 +74,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.sayqal' => \App\Http\Middleware\AuthSayqal::class,
+        'auth.unired' => \App\Http\Middleware\AuthUnired::class,
         'tenant_logging' => \App\Http\Middleware\TenantLogging::class,
     ];
 }
