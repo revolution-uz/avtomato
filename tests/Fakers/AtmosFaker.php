@@ -72,4 +72,9 @@ class AtmosFaker
     {
         self::fakeResponse('*', '../JSON-for-testing/atmos/card/empty-response.json');
     }
+
+    public static function nullResponse(): void
+    {
+        self::fakeResponse('*', '../JSON-for-testing/atmos/card/null-response.json');
+    }
 }

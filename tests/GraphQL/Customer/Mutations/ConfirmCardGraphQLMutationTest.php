@@ -119,6 +119,25 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
+    public function nullResponseFromAtmos(): void
+    {
+        AtmosFaker::nullResponse();
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery([
+                    'customer_id' => $this->_customer->id,
+                    'card_id' => $this->_card->id,
+                    'transaction_id' => 999999,
+                    'otp' => '1',
+                ])
+            );
+        $this->assertEquals('Internal server error', $response->json('errors.0.message'));
+        $this->assertEquals('Unexpected response', $response->json('errors.0.extensions.debugMessage'));
+    }
+
+    #[Test]
     public function successConfirmAlreadyAttachedCard()
     {
         $authAttempt = CardConfirmationSms::query()->create(['phone' => $this->_card->phone, 'code' => rand(100000, 999999)]);
