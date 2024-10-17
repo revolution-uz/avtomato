@@ -3,9 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\FeatureEnum;
 use App\Jobs\InstallmentChargeJob;
 use App\Models\Company;
+use App\Models\Company\Feature;
 use App\Models\Company\Installment;
+use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as CommandAlias;
@@ -29,10 +32,21 @@ class PopulateInstallmentChargeJobs extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): int
+    public function handle(BalanceService $balanceService): int
     {
         foreach (Company::get() as $company) {
             tenancy()->initialize($company);
+
+            if (
+                ! (
+                    Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE)->is_active
+                    or Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->is_active
+                )
+                or ! $balanceService->isBalanceEnough()
+            ) {
+                continue;
+            }
+
             /** @var Installment[] $installments */
             $installments = Installment::query()->select('id')
                 ->where('status', InstallmentStatusEnum::ACTIVE)
