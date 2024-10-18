@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('populate:installment-charge-jobs')->everyFiveMinutes();
         $schedule->command('daily:delete-logs')->dailyAt('00:00');
+        $schedule->command('populate:debt-sms-jobs')->dailyAt('00:00');
         // $schedule->command('inspire')->hourly();
     }
 

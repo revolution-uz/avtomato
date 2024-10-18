@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
-use App\Enums\SmsTemplateEnum;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Enums\Company\SmsTemplateStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
 /**
  * @property int $id
+ * @property SmsTemplateStatusEnum $status
  * @property int $original_template
+ * @property array|null $original_data
+ * @property string|null $description
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property mixed $description
  */
 class BaseSmsTemplate extends Model
 {
@@ -21,7 +22,19 @@ class BaseSmsTemplate extends Model
 
     protected $fillable = [
         'id',
+        'status',
         'original_template',
+        'original_data',
+        'description',
+    ];
+
+    protected $casts = [
+        'status' => SmsTemplateStatusEnum::class,
+        'original_data' => 'array',
+    ];
+
+    protected $attributes = [
+        'status' => SmsTemplateStatusEnum::DRAFT,
     ];
 
     public function getMessage(array $placeholders = []): string
@@ -33,10 +46,5 @@ class BaseSmsTemplate extends Model
         }
 
         return $message;
-    }
-
-    public function description(): Attribute
-    {
-        return Attribute::make(get: fn () => SmsTemplateEnum::from($this->id)->getDefaultDescription());
     }
 }

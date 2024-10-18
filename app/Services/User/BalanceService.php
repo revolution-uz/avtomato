@@ -38,7 +38,7 @@ class BalanceService
 
     public function isBalanceEnough(): bool
     {
-        return $this->getBalance() > self::MIN_BALANCE_AMOUNT;
+        return tenant('status') == CompanyStatusEnum::ACTIVE and $this->getBalance() > self::MIN_BALANCE_AMOUNT;
     }
 
     public function getBalance(): int

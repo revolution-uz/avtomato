@@ -17,7 +17,7 @@ class CompanyFactory extends Factory
             'name' => $this->faker->company,
             'owner_phone' => $this->faker->e164PhoneNumber,
             'owner_name' => $this->faker->name('male'),
-            'status' => CompanyStatusEnum::ACTIVE,
+            'status' => CompanyStatusEnum::randomValue(),
             'address' => $this->faker->address,
             'bank_name' => Str::ucfirst($this->faker->word()) . ' Bank',
             'bank_code' => $this->faker->numberBetween(10000, 99999),
