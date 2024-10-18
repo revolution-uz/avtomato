@@ -67,4 +67,14 @@ class AtmosFaker
     {
         self::fakeResponse(AtmosCardClient::PAYMENT_CANCEL, '../JSON-for-testing/atmos/card-pay/pay-reverse.json');
     }
+
+    public static function emptyResponse(): void
+    {
+        self::fakeResponse('*', '../JSON-for-testing/atmos/card/empty-response.json');
+    }
+
+    public static function nullResponse(): void
+    {
+        self::fakeResponse('*', '../JSON-for-testing/atmos/card/null-response.json');
+    }
 }
