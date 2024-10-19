@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Helpers\Utilities;
 use App\Models\Company\Installment;
 use App\Services\UniredService;
 use Exception;
@@ -17,10 +16,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ImportInstallmentIntoUniredJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     const MINIMUM_WITHDRAW_AMOUNT = 500;
     const JOB_ID = 'import-installment-into-unired';
@@ -57,7 +53,7 @@ class ImportInstallmentIntoUniredJob implements ShouldBeUniqueUntilProcessing, S
      */
     public function uniqueId(): string
     {
-        return Utilities::generateIdByTenancy(self::JOB_ID . Utilities::TENANT_SEPARATOR . $this->installmentId);
+        return self::JOB_ID . '-' . tenant('id') . '-' . $this->installmentId;
     }
 
     public function tags(): array
@@ -72,6 +68,6 @@ class ImportInstallmentIntoUniredJob implements ShouldBeUniqueUntilProcessing, S
      */
     public function uniqueVia(): Repository
     {
-        return Cache::driver('redis');
+        return Cache::driver(config('cache.default', 'redis'));
     }
 }

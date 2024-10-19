@@ -87,10 +87,6 @@ class InstallmentChargeJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
      */
     public function uniqueVia(): Repository
     {
-        if (app()->environment('testing')) {
-            return Cache::store();
-        }
-
-        return Cache::driver('redis');
+        return Cache::driver(config('cache.default', 'redis'));
     }
 }
