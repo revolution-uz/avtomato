@@ -11,6 +11,7 @@ use App\Enums\FeatureEnum;
 use App\Exceptions\UniredException;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
+use App\Models\Company\Installment;
 use App\Models\Company\Phone;
 use App\Models\Company\Transaction;
 use App\Services\UniredService;
@@ -110,11 +111,11 @@ class UniredServiceTest extends TestCase
     public function successCreateOrUpdateCustomer()
     {
         UniredFaker::createOrUpdateCustomer();
-        $customer = Customer::factory()->create();
+        $installment = Installment::factory()->create();
         $phones = Phone::factory()->count(5)->create();
-        $customer->phones()->attach($phones, ['type' => PhoneTypeEnum::PRIVATE]);
+        $installment->customer->phones()->attach($phones, ['type' => PhoneTypeEnum::PRIVATE]);
 
-        $response = $this->_uniredService->createOrUpdateInstallment($customer);
+        $response = $this->_uniredService->createOrUpdateInstallment($installment);
 
         $this->assertTrue($response);
     }
