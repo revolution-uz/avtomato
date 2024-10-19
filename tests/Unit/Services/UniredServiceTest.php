@@ -9,7 +9,6 @@ use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\UniredException;
-use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\Phone;
