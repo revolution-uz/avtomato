@@ -2,8 +2,12 @@
 
 namespace App\Enums\Company;
 
+use App\Enums\EnumMethods;
+
 enum CompanyStatusEnum: int
 {
+    use EnumMethods;
+
     case CREATED = 0; // means just created and need to run company:create command
     case ACTIVE = 1; // means active
     case INACTIVE = -1; // means disabled

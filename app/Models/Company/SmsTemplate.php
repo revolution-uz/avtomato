@@ -2,10 +2,12 @@
 
 namespace App\Models\Company;
 
-use App\Enums\SmsTemplateEnum;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Enums\Company\SmsTemplateEnum;
+use App\Enums\Company\SmsTemplateStatusEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -13,22 +15,38 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * App\Models\Company\SmsTemplate
  *
  * @property-read int $id
- * @property-read string $original_template
- * @property-read string $template
+ * @property SmsTemplateStatusEnum $status
+ * @property string $original_template
+ * @property string $template
+ * @property array|null $data
+ * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property mixed $description
+ *
+ * @method static Builder debtTemplates()
  */
 class SmsTemplate extends Model
 {
-    use HasFactory, OrderBySortable, TenantConnection;
+    use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id'];
 
     protected $fillable = [
         'id',
+        'status',
         'original_template',
         'template',
+        'data',
+        'description',
+    ];
+
+    protected $casts = [
+        'status' => SmsTemplateStatusEnum::class,
+        'data' => 'array',
+    ];
+
+    protected $attributes = [
+        'status' => SmsTemplateStatusEnum::DRAFT,
     ];
 
     public function getMessage(array $placeholders = []): string
@@ -44,11 +62,14 @@ class SmsTemplate extends Model
 
     public function getExampleMessage(): string
     {
-        return $this->getMessage(SmsTemplateEnum::from($this->id)->getExampleData());
+        return $this->getMessage(SmsTemplateEnum::getExampleData());
     }
 
-    public function description(): Attribute
+    public function scopeDebtTemplates($query)
     {
-        return Attribute::make(get: fn () => SmsTemplateEnum::from($this->id)->getDefaultDescription());
+        return $query
+            ->whereNotNull('data')
+            ->where('status', SmsTemplateStatusEnum::ACTIVE)
+            ->whereJsonContains('data->category', 'debt-templates');
     }
 }

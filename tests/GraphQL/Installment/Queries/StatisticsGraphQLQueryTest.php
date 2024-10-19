@@ -29,7 +29,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         Installment::query()->forceDelete();
 
-        $this->_carbon = Carbon::createFromFormat('Y-m-d', '2024-09-20')->startOfDay();
+        $this->_carbon = Carbon::now()->startOfDay();
 
         $this->_input = [
             'amount' => 1000000,
@@ -50,9 +50,9 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(2)]));
         $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(3)]));
 
-        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => $installments[1]->debtAmount, 'paid_at' => $this->_carbon]);
-        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000, 'paid_at' => $this->_carbon]);
-        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000, 'paid_at' => $this->_carbon]);
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 345000]); // 345000 is debt amount for the second installment
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000]);
+        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000]);
     }
 
     #[Test]

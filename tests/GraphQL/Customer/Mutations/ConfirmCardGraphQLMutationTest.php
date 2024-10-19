@@ -63,7 +63,6 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
         parent::setUp();
 
         AtmosFaker::getToken();
-        AtmosFaker::confirmCard();
 
         Customer::query()->forceDelete();
         $this->_customer = Customer::factory()->create();
@@ -84,6 +83,7 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successConfirmCard()
     {
+        AtmosFaker::confirmCard();
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
@@ -97,6 +97,44 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
             );
 
         $this->assertSuccessConfirmCardResponse($response);
+    }
+
+    #[Test]
+    public function emptyResponseFromAtmos(): void
+    {
+        AtmosFaker::emptyResponse();
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery([
+                    'customer_id' => $this->_customer->id,
+                    'card_id' => $this->_card->id,
+                    'transaction_id' => 999999,
+                    'otp' => '1',
+                ])
+            );
+        $this->assertEquals('Internal server error', $response->json('errors.0.message'));
+        $this->assertEquals('Unexpected response', $response->json('errors.0.extensions.debugMessage'));
+    }
+
+    #[Test]
+    public function nullResponseFromAtmos(): void
+    {
+        AtmosFaker::nullResponse();
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.customer'),
+                $this->buildGraphQLQuery([
+                    'customer_id' => $this->_customer->id,
+                    'card_id' => $this->_card->id,
+                    'transaction_id' => 999999,
+                    'otp' => '1',
+                ])
+            );
+        $this->assertEquals('Internal server error', $response->json('errors.0.message'));
+        $this->assertEquals('Unexpected response', $response->json('errors.0.extensions.debugMessage'));
     }
 
     #[Test]

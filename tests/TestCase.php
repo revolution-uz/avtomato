@@ -24,6 +24,7 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
 
     protected bool $tenancy = false;
+    protected bool $multiTenancies = false;
 
     protected function setUp(): void
     {
@@ -32,6 +33,9 @@ abstract class TestCase extends BaseTestCase
 
         if ($this->tenancy) {
             $this->initializeTenancy();
+            if ($this->multiTenancies) {
+                $this->initializeTenancy(2);
+            }
             $this->withoutMiddleware([
                 InitializeTenancyByDomain::class,
                 PreventAccessFromCentralDomains::class,
@@ -42,15 +46,10 @@ abstract class TestCase extends BaseTestCase
     /**
      * @throws TenantCouldNotBeIdentifiedById
      */
-    public function initializeTenancy(): void
+    public function initializeTenancy(int $companyId = 1): void
     {
         /** @var Company $tenant */
-        $tenant = Company::query()->first() ?? Company::factory()->create([
-            'name' => 'Test Company',
-            'owner_phone' => '0123456789',
-            'owner_name' => 'Test Owner',
-            'status' => CompanyStatusEnum::ACTIVE,
-        ]);
+        $tenant = Company::firstOrCreate(['id' => $companyId], Company::factory()->make()->toArray());
 
         if ($tenant->status !== CompanyStatusEnum::ACTIVE) {
             $tenant->update(['status' => CompanyStatusEnum::ACTIVE]);
