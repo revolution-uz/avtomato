@@ -30,6 +30,7 @@ enum PermissionGroupEnum: string
     case SCORING_UZCARD = 'scoring_uzcard';
     case PARTNER_CREDIT_HISTORY = 'partner_credit_history';
     case ACTIVITY_LOG = 'activity_log';
+    case MARKET = 'market';
 
     /**
      * @return PermissionEnum[]
@@ -213,6 +214,11 @@ enum PermissionGroupEnum: string
                 PermissionEnum::ACTIVITY_LOG_VIEW,
                 PermissionEnum::ACTIVITY_LOG_VIEW_ALL,
                 PermissionEnum::ACTIVITY_LOG_VIEW_OWN,
+            ],
+            self::MARKET => [
+                PermissionEnum::PRODUCT_CATEGORY_CREATE,
+                PermissionEnum::PRODUCT_CATEGORY_UPDATE,
+                PermissionEnum::PRODUCT_CATEGORY_DELETE,
             ],
         };
     }

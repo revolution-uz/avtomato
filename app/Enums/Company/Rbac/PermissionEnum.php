@@ -193,6 +193,10 @@ enum PermissionEnum: string
 
     // Company Settings
     case SETTINGS_EDIT = 'settings_edit';
+    // Market
+    case PRODUCT_CATEGORY_CREATE = 'product_category_create';
+    case PRODUCT_CATEGORY_UPDATE = 'product_category_update';
+    case PRODUCT_CATEGORY_DELETE = 'product_category_delete';
 
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
@@ -356,7 +360,10 @@ enum PermissionEnum: string
             self::TRANSACTION_CREATE,
             self::TRANSACTION_EDIT,
             self::TRANSACTION_DELETE,
-            self::TRANSACTION_REVERSE => true,
+            self::TRANSACTION_REVERSE,
+            self::PRODUCT_CATEGORY_CREATE,
+            self::PRODUCT_CATEGORY_UPDATE,
+            self::PRODUCT_CATEGORY_DELETE => true,
         };
     }
 
@@ -540,6 +547,11 @@ enum PermissionEnum: string
                 self::ACTIVITY_LOG_VIEW_ALL->value,
                 self::ACTIVITY_LOG_VIEW_OWN->value,
             ],
+            PermissionGroupEnum::MARKET->value => [
+                self::PRODUCT_CATEGORY_CREATE->value,
+                self::PRODUCT_CATEGORY_UPDATE->value,
+                self::PRODUCT_CATEGORY_DELETE->value,
+            ],
         ];
     }
 
@@ -706,6 +718,10 @@ enum PermissionEnum: string
             self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,
             self::ACTIVITY_LOG_VIEW_OWN => FeatureEnum::ACTIVITY_LOG,
+
+            self::PRODUCT_CATEGORY_CREATE,
+            self::PRODUCT_CATEGORY_UPDATE,
+            self::PRODUCT_CATEGORY_DELETE => FeatureEnum::MARKET,
         };
     }
 

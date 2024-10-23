@@ -17,6 +17,7 @@ enum ModuleEnum: string
     case MULTIBRANCH_2 = 'multibranch_2';
     case MULTIBRANCH_3 = 'multibranch_3';
     case MULTIBRANCH_4 = 'multibranch_4';
+    case MARKET = 'market';
 
     /**
      * @return ModuleEnum[]
@@ -27,9 +28,10 @@ enum ModuleEnum: string
             FeatureEnum::USER_MANAGEMENT,
             FeatureEnum::BRANCH_MANAGEMENT,
             FeatureEnum::ACTIVITY_LOG,
-            FeatureEnum::ROLE_MANAGEMENT => [self::MULTIBRANCH_2, self::MULTIBRANCH_3, self::MULTIBRANCH_4],
+            FeatureEnum::ROLE_MANAGEMENT => [self::MULTIBRANCH_2, self::MULTIBRANCH_3, self::MULTIBRANCH_4, self::MARKET],
             FeatureEnum::SMS => [self::INSTALLMENT, self::MARKETING],
             FeatureEnum::CUSTOMER_MANAGEMENT => [self::INSTALLMENT, self::SCORING],
+            FeatureEnum::MARKET => [self::MARKET],
             FeatureEnum::CUSTOMER_CARDS_MANAGEMENT,
             FeatureEnum::CALCULATOR_INSTALLMENT,
             FeatureEnum::INSTALLMENT_AUTO_CHARGE,
@@ -70,7 +72,7 @@ enum ModuleEnum: string
             self::MULTIBRANCH_2 => LimitAdminEnum::MULTIBRANCH_2_ADMIN->value,
             self::MULTIBRANCH_3 => LimitAdminEnum::MULTIBRANCH_3_ADMIN->value,
             self::MULTIBRANCH_4 => LimitAdminEnum::MULTIBRANCH_4_ADMIN->value,
-            self::SCORING, self::MARKETING, self::INSTALLMENT => throw new Exception('Is not limited'),
+            self::SCORING, self::MARKETING, self::INSTALLMENT, self::MARKET => throw new Exception('Is not limited'),
         };
     }
 
@@ -84,7 +86,7 @@ enum ModuleEnum: string
             self::MULTIBRANCH_2 => LimitBranchEnum::MULTIBRANCH_2_BRANCH->value,
             self::MULTIBRANCH_3 => LimitBranchEnum::MULTIBRANCH_3_BRANCH->value,
             self::MULTIBRANCH_4 => LimitBranchEnum::MULTIBRANCH_4_BRANCH->value,
-            self::SCORING, self::INSTALLMENT, self::MARKETING => throw new Exception('Is not limited'),
+            self::SCORING, self::INSTALLMENT, self::MARKETING, self::MARKET => throw new Exception('Is not limited'),
         };
     }
 }

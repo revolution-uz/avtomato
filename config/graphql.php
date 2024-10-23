@@ -87,6 +87,7 @@ return [
         'scoring' => \App\GraphQL\Scoring\ScoringGraphQLSchema::class,
         'installment' => \App\GraphQL\Installment\InstallmentGraphQLSchema::class,
         'marketing' => \App\GraphQL\Marketing\MarketingGraphQLSchema::class,
+        'market' => \App\GraphQL\Market\MarketGraphQLSchema::class,
     ],
 
     // The global types available to all schemas.
