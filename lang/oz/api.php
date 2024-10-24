@@ -25,4 +25,5 @@ return [
     'guarantor_application' => 'Кафил билан шартнома',
     'n_branches' => 'Сиз фақат :n та филиал яратишингиз мумкин!',
     'n_admins' => 'Сиз фақат :n та админ яратишингиз мумкин!',
+    'You cannot activate an installment without withdrawing initial fee' => 'Фаоллаштириш учун бошланғич тўловни амалга оширинг',
 ];
