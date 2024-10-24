@@ -14,6 +14,7 @@ use Database\Seeders\Company\PermissionSeeder;
 use Database\Seeders\Company\SmsTemplateSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -30,6 +31,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         Artisan::call('db:seed');
+        Config::set('cache.default', 'array');
 
         if ($this->tenancy) {
             $this->initializeTenancy();

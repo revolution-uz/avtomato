@@ -18,8 +18,9 @@ use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\FeatureEnum;
 use App\Helpers\Utilities;
 use App\Http\Requests\UniredPaymentWebhookCallbackRequest;
-use App\Models\Company\Customer;
 use App\Models\Company\Feature;
+use App\Models\Company\Installment;
+use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Carbon\Carbon;
@@ -28,7 +29,7 @@ class UniredService
 {
     public function __construct(private UniredClient $uniredClient) {}
 
-    public function createCompany(UniredCreateBranchRequestDTO $params): bool
+    public function createBranch(UniredCreateBranchRequestDTO $params): bool
     {
         $uniredResponseDto = $this->uniredClient->createBranch($params);
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
@@ -37,7 +38,7 @@ class UniredService
         return $feature->saveOrFail();
     }
 
-    public function updateCompany(UniredUpdateBranchRequestDTO $params): bool
+    public function updateBranch(UniredUpdateBranchRequestDTO $params): bool
     {
         $uniredResponseDto = $this->uniredClient->updateBranch($params);
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
@@ -46,7 +47,7 @@ class UniredService
         return $feature->saveOrFail();
     }
 
-    public function switchOffCompany(): bool
+    public function switchOffBranch(): bool
     {
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
         $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->data['id'], false));
@@ -55,7 +56,7 @@ class UniredService
         return $feature->saveOrFail();
     }
 
-    public function switchOnCompany(): bool
+    public function switchOnBranch(): bool
     {
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
         $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->data['id'], true));
@@ -64,37 +65,55 @@ class UniredService
         return $feature->saveOrFail();
     }
 
-    public function createOrUpdateCustomer(Customer $customer): bool
+    public function createOrUpdateInstallment(Installment $installment): bool
     {
         $this->uniredClient->createOrUpdateClients(new UniredCreateOrUpdateClientRequestDTO(
-            $customer->pinfl,
-            $customer->passport_series . $customer->passport_number,
-            Utilities::generateIdByTenancy($customer->id),
-            Utilities::generateIdByTenancy($customer->id),
-            $customer->first_name,
-            $customer->last_name,
-            $customer->middle_name,
-            tenant('id'),
-            $customer->debt_amount,
-            $customer->phones->pluck('phone')->toArray()
+            $installment->customer->pinfl,
+            $installment->customer->passport_series . $installment->customer->passport_number,
+            Utilities::generateIdByTenancy($installment->id),
+            Utilities::generateIdByTenancy($installment->id),
+            $installment->customer->first_name,
+            $installment->customer->last_name,
+            $installment->customer->middle_name,
+            Utilities::generateIdByTenancy($installment->branch_id),
+            $installment->debtAmount,
+            $installment->customer->phones->pluck('phone')->toArray()
         ));
 
         return true;
     }
 
-    public function switchOffCustomer(Customer $customer): void
+    public function createOrUpdateInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): bool
     {
-        $this->uniredClient->toggleClientAuto(new UniredToggleClientAutoRequestDTO(Utilities::generateIdByTenancy($customer->id), false));
+        $this->uniredClient->createOrUpdateClients(new UniredCreateOrUpdateClientRequestDTO(
+            $installmentGuarantor->customer->pinfl,
+            $installmentGuarantor->customer->passport_series . $installmentGuarantor->customer->passport_number,
+            Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
+            Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
+            $installmentGuarantor->customer->first_name,
+            $installmentGuarantor->customer->last_name,
+            $installmentGuarantor->customer->middle_name,
+            Utilities::generateIdByTenancy($installmentGuarantor->installment->branch_id),
+            $installmentGuarantor->installment->debtAmount,
+            $installmentGuarantor->customer->phones->pluck('phone')->toArray()
+        ));
+
+        return true;
     }
 
-    public function switchOnCustomer(Customer $customer): void
+    public function switchOffInstallment(Installment $installment): void
     {
-        $this->uniredClient->toggleClientAuto(new UniredToggleClientAutoRequestDTO(Utilities::generateIdByTenancy($customer->id), true));
+        $this->uniredClient->toggleClientAuto(new UniredToggleClientAutoRequestDTO(Utilities::generateIdByTenancy($installment->id), false));
     }
 
-    public function deleteCustomer(Customer $customer)
+    public function switchOnInstallment(Installment $installment): void
     {
-        return $this->uniredClient->deleteClient(new UniredClientExtIdDTO(Utilities::generateIdByTenancy($customer->id)));
+        $this->uniredClient->toggleClientAuto(new UniredToggleClientAutoRequestDTO(Utilities::generateIdByTenancy($installment->id), true));
+    }
+
+    public function deleteInstallment(Installment $installment)
+    {
+        return $this->uniredClient->deleteClient(new UniredClientExtIdDTO(Utilities::generateIdByTenancy($installment->id)));
     }
 
     public function getPayments(UniredGetPaymentsPaginationRequestDTO $params): UniredGetPaymentsPaginationResponseDTO
@@ -114,10 +133,10 @@ class UniredService
         return $this->uniredClient->setWebhook(new UniredSetWebhookDTO('http://automato.uz/api/unired-callback/web-hook'));
     }
 
-    public function getClientDebt(?int $customer_id): ?float
+    public function getInstallmentDebt(?int $installment_id): ?float
     {
-        if ($customer = Customer::find($customer_id)) {
-            return $customer->debt_amount;
+        if ($installment = Installment::find($installment_id)) {
+            return $installment->debtAmount;
         }
 
         return null;
@@ -128,27 +147,18 @@ class UniredService
         return true;
     }
 
-    public function createTransaction(Customer $customer, UniredPaymentWebhookCallbackRequest $request): bool
+    public function createTransaction(Installment $installment, int $customer_id, UniredPaymentWebhookCallbackRequest $request): bool
     {
-        $amount = $request->amount / 100;
-        foreach ($customer->installments as $installment) {
-            $current_amount = min($amount, $installment->debtAmount);
-            if (! $current_amount) {
-                continue;
-            }
-            $transaction = new Transaction;
-            $transaction->transaction_type_id = TransactionType::UNIRED_WITH_PINFL;
-            $transaction->external_id = $request->ext_id;
-            $transaction->amount = $current_amount;
-            $transaction->installment_id = $installment->id;
-            $transaction->customer_id = $customer->id;
-            $transaction->card_pan = $request->card_mask;
-            $transaction->paid_at = Carbon::parse($request->created_at);
-            if ($transaction->save()) {
-                $amount -= $current_amount;
-            }
-        }
+        $transaction = new Transaction;
+        $transaction->transaction_type_id = TransactionType::UNIRED_WITH_PINFL;
+        $transaction->branch_id = $installment->branch_id;
+        $transaction->external_id = $request->ext_id;
+        $transaction->amount = $request->amount / 100;
+        $transaction->installment_id = $installment->id;
+        $transaction->customer_id = $customer_id;
+        $transaction->card_pan = $request->card_mask;
+        $transaction->paid_at = Carbon::parse($request->created_at);
 
-        return true;
+        return $transaction->save();
     }
 }

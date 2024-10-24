@@ -9,8 +9,8 @@ use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\UniredException;
-use App\Models\Company\Customer;
 use App\Models\Company\Feature;
+use App\Models\Company\Installment;
 use App\Models\Company\Phone;
 use App\Models\Company\Transaction;
 use App\Services\UniredService;
@@ -49,7 +49,7 @@ class UniredServiceTest extends TestCase
     {
         UniredFaker::createBranch();
 
-        $response = $this->_uniredService->createCompany(UniredCreateBranchRequestDTO::from($this->_inputCompany));
+        $response = $this->_uniredService->createBranch(UniredCreateBranchRequestDTO::from($this->_inputCompany));
 
         $this->assertTrue($response);
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
@@ -71,7 +71,7 @@ class UniredServiceTest extends TestCase
         $feature->data = array_merge($this->_inputCompany, ['name' => 'Before Updated']);
         $feature->save();
 
-        $response = $this->_uniredService->updateCompany(UniredUpdateBranchRequestDTO::from($this->_inputCompany));
+        $response = $this->_uniredService->updateBranch(UniredUpdateBranchRequestDTO::from($this->_inputCompany));
 
         $this->assertTrue($response);
         $feature->refresh();
@@ -93,7 +93,7 @@ class UniredServiceTest extends TestCase
         $feature->data = $this->_inputCompany;
         $feature->save();
 
-        $this->_uniredService->switchOffCompany();
+        $this->_uniredService->switchOffBranch();
 
         $feature->refresh();
         $this->assertEquals($this->_inputCompany['id'], $feature->data['id']);
@@ -110,11 +110,11 @@ class UniredServiceTest extends TestCase
     public function successCreateOrUpdateCustomer()
     {
         UniredFaker::createOrUpdateCustomer();
-        $customer = Customer::factory()->create();
+        $installment = Installment::factory()->create();
         $phones = Phone::factory()->count(5)->create();
-        $customer->phones()->attach($phones, ['type' => PhoneTypeEnum::PRIVATE]);
+        $installment->customer->phones()->attach($phones, ['type' => PhoneTypeEnum::PRIVATE]);
 
-        $response = $this->_uniredService->createOrUpdateCustomer($customer);
+        $response = $this->_uniredService->createOrUpdateInstallment($installment);
 
         $this->assertTrue($response);
     }
