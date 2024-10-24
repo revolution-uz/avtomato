@@ -12,7 +12,7 @@ use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
-class ChangesStatusGraphQLMutationTest extends GraphQLTestCase
+class ChangeStatusGraphQLMutationTest extends GraphQLTestCase
 {
     private const GRAPHQL_ROUTE = 'graphql.installment';
 
@@ -87,6 +87,20 @@ class ChangesStatusGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(
             trans('validation.exists', ['attribute' => 'installment id']),
             $response->json('errors.0.extensions.validation')['installment_id'][0]
+        );
+    }
+
+    #[Test]
+    public function failActivate(): void
+    {
+        $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
+        $response = $this->sendGraphQLRequest($installment->id, InstallmentStatusEnum::ACTIVE->value);
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertStringContainsString('validation', $response->json('errors.0.message'));
+        $this->assertEquals(
+            trans('api.You cannot activate an installment without withdrawing initial fee'),
+            $response->json('errors.0.extensions.validation.status.0')
         );
     }
 

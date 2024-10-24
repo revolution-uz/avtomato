@@ -29,4 +29,5 @@ return [
     'guarantor_application' => 'Договор с гарантором',
     'n_branches' => 'Вы можете создать только до :n филиалов!',
     'n_admins' => 'Вы можете создать только до :n админов!',
+    'You cannot activate an installment without withdrawing initial fee' => 'Внесите первоначальный платеж за активацию',
 ];
