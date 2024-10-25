@@ -87,7 +87,8 @@ return [
         'scoring' => \App\GraphQL\Scoring\ScoringGraphQLSchema::class,
         'installment' => \App\GraphQL\Installment\InstallmentGraphQLSchema::class,
         'marketing' => \App\GraphQL\Marketing\MarketingGraphQLSchema::class,
-        'market' => \App\GraphQL\Market\MarketGraphQLSchema::class,
+        'ecommerce' => \App\GraphQL\Ecommerce\EcommerceGraphQLSchema::class,
+        'ecommerce_client_common' => \App\GraphQL\EcommerceClient\Common\EcommerceCommonGraphQLSchema::class,
     ],
 
     // The global types available to all schemas.

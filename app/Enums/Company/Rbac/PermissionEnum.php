@@ -193,7 +193,7 @@ enum PermissionEnum: string
 
     // Company Settings
     case SETTINGS_EDIT = 'settings_edit';
-    // Market
+    // Ecommerce
     case PRODUCT_CATEGORY_CREATE = 'product_category_create';
     case PRODUCT_CATEGORY_UPDATE = 'product_category_update';
     case PRODUCT_CATEGORY_DELETE = 'product_category_delete';
@@ -547,7 +547,7 @@ enum PermissionEnum: string
                 self::ACTIVITY_LOG_VIEW_ALL->value,
                 self::ACTIVITY_LOG_VIEW_OWN->value,
             ],
-            PermissionGroupEnum::MARKET->value => [
+            PermissionGroupEnum::ECOMMERCE->value => [
                 self::PRODUCT_CATEGORY_CREATE->value,
                 self::PRODUCT_CATEGORY_UPDATE->value,
                 self::PRODUCT_CATEGORY_DELETE->value,
@@ -721,7 +721,7 @@ enum PermissionEnum: string
 
             self::PRODUCT_CATEGORY_CREATE,
             self::PRODUCT_CATEGORY_UPDATE,
-            self::PRODUCT_CATEGORY_DELETE => FeatureEnum::MARKET,
+            self::PRODUCT_CATEGORY_DELETE => FeatureEnum::ECOMMERCE,
         };
     }
 

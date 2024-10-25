@@ -3,8 +3,6 @@
 namespace App\GraphQL\Common;
 
 use App\GraphQL\Common\Mutations\LoginGraphQLMutation;
-use App\GraphQL\Common\Mutations\MarketLoginGraphQLMutation;
-use App\GraphQL\Common\Mutations\MarketRegisterGraphQLMutation;
 use App\GraphQL\Common\Queries\CompanySettingsGraphQLQuery;
 use App\GraphQL\Common\Queries\DashboardGraphQLQuery;
 use App\GraphQL\Common\Queries\DistrictsGraphQLQuery;
@@ -39,8 +37,6 @@ class CommonGraphQLSchema implements ConfigConvertible
             ],
             'mutation' => [
                 LoginGraphQLMutation::class,
-                MarketRegisterGraphqlMutation::class,
-                MarketLoginGraphQLMutation::class,
             ],
             'types' => [
                 CompanySettingsGraphQLType::class,
