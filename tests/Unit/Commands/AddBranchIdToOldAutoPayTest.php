@@ -16,7 +16,8 @@ class AddBranchIdToOldAutoPayTest extends TestCase
     {
         Transaction::factory(5)->create(['branch_id' => null]);
         $this->artisan('autopay:add-branch_id');
-        $this->assertDatabaseCount('transactions', 5);
+        $this->assertEquals(5, Transaction::query()->count('id'));
+
         foreach (Transaction::all() as $transaction) {
             $this->assertNotNull($transaction->branch_id);
             $this->assertEquals($transaction->branch_id, $transaction->installment->branch_id);
