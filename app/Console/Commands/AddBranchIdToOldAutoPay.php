@@ -35,6 +35,7 @@ class AddBranchIdToOldAutoPay extends Command
                 continue;
             }
             foreach ($transactions as $transaction) {
+                /** @var Transaction $transaction */
                 $branchId = $transaction->installment->branch_id;
                 $transaction->branch_id = $branchId;
                 $transaction->save();
