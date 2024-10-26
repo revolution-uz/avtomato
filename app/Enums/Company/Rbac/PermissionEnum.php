@@ -184,7 +184,7 @@ enum PermissionEnum: string
     case SCORING_UZCARD_DELETE = 'scoring_uzcard_delete';
 
     // Credit History in Partners
-    case ROYXAT_CREDIT_VIEW_ALL = 'royxat_credit_view_all';
+    case SCORING_ROYXAT_CREDIT_VIEW_ALL = 'scoring_royxat_credit_view_all';
 
     // Activity log
     case ACTIVITY_LOG_VIEW = 'activity_log_view';
@@ -316,7 +316,7 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE,
 
-            self::ROYXAT_CREDIT_VIEW_ALL,
+            self::SCORING_ROYXAT_CREDIT_VIEW_ALL,
 
             self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,
@@ -516,8 +516,8 @@ enum PermissionEnum: string
                 self::SCORING_UZCARD_CREATE->value,
                 self::SCORING_UZCARD_DELETE->value,
             ],
-            PermissionGroupEnum::PARTNER_CREDIT_HISTORY->value => [
-                self::ROYXAT_CREDIT_VIEW_ALL->value,
+            PermissionGroupEnum::SCORING_ROYXAT_CREDIT_HISTORY->value => [
+                self::SCORING_ROYXAT_CREDIT_VIEW_ALL->value,
             ],
             PermissionGroupEnum::PROFILE_EDIT->value => [
                 self::PROFILE_EDIT->value,
@@ -713,7 +713,7 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE => FeatureEnum::SCORING_UZCARD,
 
-            self::ROYXAT_CREDIT_VIEW_ALL => FeatureEnum::PARTNER_CREDIT_HISTORY,
+            self::SCORING_ROYXAT_CREDIT_VIEW_ALL => FeatureEnum::SCORING_ROYXAT_CREDIT_HISTORY,
 
             self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,

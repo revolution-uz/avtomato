@@ -31,7 +31,7 @@ class UniredCheckPaymentCallbackRequest extends FormRequest
         return $arr[0] ?? null;
     }
 
-    public function getClientId(): ?int
+    public function getInstallmentId(): ?int
     {
         $arr = explode(Utilities::TENANT_SEPARATOR, $this->loan_id);
 

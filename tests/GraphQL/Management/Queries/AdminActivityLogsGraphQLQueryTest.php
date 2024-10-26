@@ -165,6 +165,7 @@ class AdminActivityLogsGraphQLQueryTest extends GraphQLTestCase
                     'scoring_uzcard_view',
                     'scoring_uzcard_create',
                     'scoring_uzcard_delete',
+                    'scoring_royxat_credit_view_all',
                     'activity_log_view',
                     'activity_log_view_all',
                     'activity_log_view_own',

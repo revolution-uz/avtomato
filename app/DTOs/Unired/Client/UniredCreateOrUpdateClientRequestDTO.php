@@ -28,7 +28,7 @@ class UniredCreateOrUpdateClientRequestDTO extends BaseUniredDTO
         public string $firstname,
         public string $lastname,
         public string $middlename,
-        public int $filial_id,
+        public string $filial_id,
         public float $debit_amount,
         public array $phones,
     ) {}

@@ -32,7 +32,7 @@ enum FeatureEnum: string
     case SCORING_TAX_INFO = 'scoring_tax_info';
     case SCORING_HUMO = 'scoring_humo';
     case SCORING_UZCARD = 'scoring_uzcard';
-    case PARTNER_CREDIT_HISTORY = 'partner_credit_history';
+    case SCORING_ROYXAT_CREDIT_HISTORY = 'scoring_royxat_credit_history';
     case ACTIVITY_LOG = 'activity_log';
     case ATMOS_CARD_PAY = 'atmos_card_pay';
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
@@ -59,7 +59,7 @@ enum FeatureEnum: string
             self::SCORING_HUMO => 'Humo kartalari yillik oborot skoringi',
             self::SCORING_TAX_INFO => 'Soliq qarzdorligi skoringi',
             self::SCORING_MIB_INFO => 'MIB qarzdorligi skoringi',
-            self::PARTNER_CREDIT_HISTORY => 'Kredit tarixini Ro\'yxat.uz orqali olish',
+            self::SCORING_ROYXAT_CREDIT_HISTORY => 'Kredit tarixini Ro\'yxat.uz orqali olish',
             self::BRANCH_MANAGEMENT => 'Filiallar boshqaruvi',
             self::COMPANY_MANAGEMENT => 'Kompaniya boshqaruvi',
             self::TRANSACTION_TYPE_MANAGEMENT => 'Tranzaksiya turlari boshqaruvi',
@@ -107,6 +107,7 @@ enum FeatureEnum: string
             self::SCORING_HUMO,
             self::SCORING_TAX_INFO,
             self::SCORING_MIB_INFO,
+            self::SCORING_ROYXAT_CREDIT_HISTORY,
             self::SMS,
             self::INSTALLMENT_AUTO_CHARGE,
             self::INSTALLMENT_AUTO_CHARGE_BY_PINFL,

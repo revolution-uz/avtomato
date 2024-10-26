@@ -53,7 +53,7 @@ enum ModuleEnum: string
             FeatureEnum::SCORING_TAX_INFO,
             FeatureEnum::SCORING_HUMO,
             FeatureEnum::SCORING_UZCARD,
-            FeatureEnum::PARTNER_CREDIT_HISTORY => [self::SCORING],
+            FeatureEnum::SCORING_ROYXAT_CREDIT_HISTORY => [self::SCORING],
             FeatureEnum::PROFILE_EDIT,
             FeatureEnum::BALANCE_FUND,
             FeatureEnum::BALANCE_CHARGE,

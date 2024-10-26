@@ -6,7 +6,7 @@ use App\Http\Requests\UniredCheckPaymentCallbackRequest;
 use App\Http\Requests\UniredPaymentWebhookCallbackRequest;
 use App\Http\Requests\UniredSendPaymentSmsCallbackRequest;
 use App\Models\Company;
-use App\Models\Company\Customer;
+use App\Models\Company\Installment;
 use App\Services\UniredService;
 
 class UniredController extends Controller
@@ -19,9 +19,15 @@ class UniredController extends Controller
     {
         if ($companyId = $request->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
-
-            if ($this->uniredService->createTransaction(Customer::findOrFail($request->getClientId()), $request)) {
-                return response()->json(['success' => true, 'message' => 'OK'], 200);
+            $installment = Installment::findOrFail($request->getInstallmentId());
+            if ($installment !== null) {
+                if ($request->isGuarantorPayment()) {
+                    if ($this->uniredService->createTransaction($installment, $request->getInstallmentGuarantorCustomerId(), $request)) {
+                        return response()->json(['success' => true, 'message' => 'OK'], 200);
+                    }
+                } elseif ($this->uniredService->createTransaction($installment, $installment->customer_id, $request)) {
+                    return response()->json(['success' => true, 'message' => 'OK'], 200);
+                }
             }
         }
 
@@ -33,7 +39,7 @@ class UniredController extends Controller
         if ($companyId = $request->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
 
-            if ($debt = $this->uniredService->getClientDebt($request->getClientId())) {
+            if ($debt = $this->uniredService->getInstallmentDebt($request->getInstallmentId())) {
                 return response()->json([
                     'success' => true,
                     'code' => 0,

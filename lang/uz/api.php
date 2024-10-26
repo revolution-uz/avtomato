@@ -29,4 +29,5 @@ return [
     'n_admins' => 'Siz faqat :n ta admin yaratishingiz mumkin!',
     'customer_application' => 'Mijoz bilan shartnoma',
     'guarantor_application' => 'Kafil bilan shartnoma',
+    'You cannot activate an installment without withdrawing initial fee' => 'Faollashtirish uchun boshlang\'ich to\'lovni amalga oshiring',
 ];
