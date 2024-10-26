@@ -1,10 +1,10 @@
 <?php
 
-namespace App\GraphQL\Ecommerce\Types\Mutations;
+namespace App\GraphQL\Ecommerce\Mutations;
 
-use App\GraphQL\Ecommerce\Types\ProductBrandGraphQLType;
-use App\GraphQL\Ecommerce\Types\ProductBrandInputGraphQLType;
-use App\Models\Company\Ecommerce\ProductBrand;
+use App\GraphQL\Ecommerce\Types\BannerGraphQLType;
+use App\GraphQL\Ecommerce\Types\BannerInputGraphQLType;
+use App\Models\Company\Ecommerce\Banner;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -12,25 +12,25 @@ use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
-class CreateProductBrandGraphQLMutation extends Mutation
+class CreateBannerGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'createProductBrand',
+        'name' => 'createBanner',
     ];
 
     public function args(): array
     {
         return [
-            'productBrand' => [
-                'name' => 'productBrand',
-                'type' => Type::nonNull(GraphQL::type(ProductBrandInputGraphQLType::GRAPHQL_TYPE_NAME)),
+            'banner' => [
+                'name' => 'banner',
+                'type' => Type::nonNull(GraphQL::type(BannerInputGraphQLType::GRAPHQL_TYPE_NAME)),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ProductBrandGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(BannerGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -42,10 +42,10 @@ class CreateProductBrandGraphQLMutation extends Mutation
     /**
      * @throws Throwable
      */
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): ProductBrand
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): Banner
     {
 
-        $model = new ProductBrand;
+        $model = new Banner;
         $model->fill($args['banner']);
         $model->saveOrFail();
 

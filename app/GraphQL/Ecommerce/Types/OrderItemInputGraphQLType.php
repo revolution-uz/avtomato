@@ -5,9 +5,9 @@ namespace App\GraphQL\Ecommerce\Types;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\InputType;
 
-class ProductActionInputGraphQLType extends InputType
+class OrderItemInputGraphQLType extends InputType
 {
-    public const string GRAPHQL_TYPE_NAME = 'ProductActionInputGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'OrderItemInputGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -19,24 +19,33 @@ class ProductActionInputGraphQLType extends InputType
             'product_id' => [
                 'name' => 'product_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:products,id'],
+                'rules' => [
+                    'required',
+                    'exists:e_commerce_products,id',
+                ],
             ],
             'order_id' => [
                 'name' => 'order_id',
-                'type' => Type::int(),
-                'rules' => ['nullable', 'exists:orders,id'],
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    'exists:e_commerce_orders,id',
+                ],
             ],
             'price' => [
                 'name' => 'price',
                 'type' => Type::nonNull(Type::float()),
-                'rules' => ['required', 'numeric'],
+                'rules' => [
+                    'required',
+                ],
             ],
             'quantity' => [
                 'name' => 'quantity',
                 'type' => Type::nonNull(Type::float()),
-                'rules' => ['required', 'numeric'],
+                'rules' => [
+                    'required',
+                ],
             ],
-
         ];
     }
 }

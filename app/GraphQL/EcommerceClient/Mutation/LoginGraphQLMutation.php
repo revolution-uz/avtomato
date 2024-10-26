@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\EcommerceClient\Common\Mutation;
+namespace App\GraphQL\EcommerceClient\Mutation;
 
 use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\Ecommerce\User;
@@ -13,7 +13,7 @@ use Rebing\GraphQL\Error\AuthorizationError;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
-class EcommerceLoginGraphQLMutation extends Mutation
+class LoginGraphQLMutation extends Mutation
 {
     protected $attributes = [
         'name' => 'ecommerceLogin',

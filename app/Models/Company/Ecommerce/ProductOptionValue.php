@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property int $id
  * @property int $group_id
- * @property string $name_uz
- * @property string $name_ru
- * @property string $name_en
- * @property string $name_oz
+ * @property string $value_uz
+ * @property string $value_ru
+ * @property string $value_en
+ * @property string $value_oz
  * @property string $slug
  * @property Carbon $created_at
  * @property Carbon $updated_at

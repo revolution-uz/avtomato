@@ -16,6 +16,11 @@ class ProductOptionInputGraphQLType extends InputType
     public function fields(): array
     {
         return [
+            'group_id' => [
+                'name' => 'group_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', 'exists:e_commerce_product_option_groups,id'],
+            ],
             'name_uz' => [
                 'name' => 'name_uz',
                 'type' => Type::nonNull(Type::string()),
@@ -42,6 +47,14 @@ class ProductOptionInputGraphQLType extends InputType
             ],
             'name_oz' => [
                 'name' => 'name_oz',
+                'type' => Type::nonNull(Type::string()),
+                'rules' => [
+                    'required',
+                    'string',
+                ],
+            ],
+            'description' => [
+                'name' => 'description',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => [
                     'required',

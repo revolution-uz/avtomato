@@ -22,7 +22,7 @@ class BannerInputGraphQLType extends InputType
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:product_categories,id',
+                    'exists:e_commerce_product_categories,id',
                 ],
             ],
             'brand_id' => [
@@ -30,7 +30,7 @@ class BannerInputGraphQLType extends InputType
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:product_brands,id',
+                    'exists:e_commerce_product_brands,id',
                 ],
             ],
             'product_id' => [
@@ -38,7 +38,7 @@ class BannerInputGraphQLType extends InputType
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:product,id',
+                    'exists:e_commerce_product,id',
                 ],
             ],
             'name_uz' => [
@@ -88,6 +88,14 @@ class BannerInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'string',
+                ],
+            ],
+            'is_active' => [
+                'name' => 'is_active',
+                'type' => Type::nonNull(Type::boolean()),
+                'rules' => [
+                    'required',
+                    'boolean',
                 ],
             ],
         ];

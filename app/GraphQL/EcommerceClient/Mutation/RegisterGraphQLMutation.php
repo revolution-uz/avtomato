@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\EcommerceClient\Common\Mutation;
+namespace App\GraphQL\EcommerceClient\Mutation;
 
 use App\Enums\Company\AllowedEnum;
 use App\Enums\Company\CompanyStatusEnum;
@@ -14,7 +14,7 @@ use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
-class EcommerceRegisterGraphQLMutation extends Mutation
+class RegisterGraphQLMutation extends Mutation
 {
     protected $attributes = [
         'name' => 'ecommerceRegister',

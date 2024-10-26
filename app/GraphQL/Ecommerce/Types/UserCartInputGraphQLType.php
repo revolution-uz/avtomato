@@ -19,12 +19,12 @@ class UserCartInputGraphQLType extends InputType
             'user_id' => [
                 'name' => 'user_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:users,id'],
+                'rules' => ['required', 'exists:e_commerce_users,id'],
             ],
             'product_id' => [
                 'name' => 'product_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:products,id'],
+                'rules' => ['required', 'exists:e_commerce_products,id'],
             ],
         ];
     }

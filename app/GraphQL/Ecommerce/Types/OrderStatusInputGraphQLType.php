@@ -16,11 +16,6 @@ class OrderStatusInputGraphQLType extends InputType
     public function fields(): array
     {
         return [
-            'order_stage_id' => [
-                'name' => 'order_stage_id',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:order_stages,id'],
-            ],
             'name_uz' => [
                 'name' => 'name_uz',
                 'type' => Type::nonNull(Type::string()),

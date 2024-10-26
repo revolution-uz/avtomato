@@ -9,7 +9,7 @@ enum SmsTemplateEnum: int
     case CHARGE = 3;
     case DEBT = 4;
 
-    case MARKET_OTP = 5;
+    case ECOMMERCE_OTP = 5;
 
     public static function getExampleData(): array
     {
@@ -50,7 +50,7 @@ enum SmsTemplateEnum: int
                 ],
                 'description' => 'Qarzdorlik bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
             ],
-            self::MARKET_OTP => [
+            self::ECOMMERCE_OTP => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
                 'original_template' => ':ecommerce dan ro\'yxatdan o\'tish uchun kod: :code',
                 'description' => 'Onlayn do\'kondan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',

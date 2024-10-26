@@ -21,6 +21,14 @@ class ProductGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Product $root) => $root->id,
             ],
+            'category_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Product $root) => $root->category_id,
+            ],
+            'brand_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Product $root) => $root->brand_id,
+            ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Product $root) => $root->name_uz,
@@ -41,9 +49,13 @@ class ProductGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Product $root) => $root->slug,
             ],
-            'status' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Product $root) => $root->status,
+            'image' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Product $root) => $root->image,
+            ],
+            'is_active' => [
+                'type' => Type::nonNull(Type::boolean()),
+                'resolve' => fn (Product $root) => $root->is_active,
             ],
             'cost' => [
                 'type' => Type::nonNull(Type::float()),
@@ -56,14 +68,6 @@ class ProductGraphQLType extends GraphQLType
             'old_price' => [
                 'type' => Type::float(),
                 'resolve' => fn (Product $root) => $root->old_price,
-            ],
-            'category_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Product $root) => $root->category_id,
-            ],
-            'brand_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Product $root) => $root->brand_id,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),

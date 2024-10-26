@@ -37,13 +37,25 @@ class ProductBrandGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (ProductBrand $root) => $root->name_oz,
             ],
-            'status' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (ProductBrand $root) => $root->status,
-            ],
             'image' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (ProductBrand $root) => $root->image,
+            ],
+            'is_active' => [
+                'type' => Type::nonNull(Type::boolean()),
+                'resolve' => fn (ProductBrand $root) => $root->is_active,
+            ],
+            'created_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (ProductBrand $root) => $root->created_at->timestamp,
+            ],
+            'updated_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (ProductBrand $root) => $root->updated_at->timestamp,
+            ],
+            'deleted_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (ProductBrand $root) => $root->deleted_at?->timestamp,
             ],
         ];
     }

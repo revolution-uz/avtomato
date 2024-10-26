@@ -28,7 +28,7 @@ enum ModuleEnum: string
             FeatureEnum::USER_MANAGEMENT,
             FeatureEnum::BRANCH_MANAGEMENT,
             FeatureEnum::ACTIVITY_LOG,
-            FeatureEnum::ROLE_MANAGEMENT => [self::MULTIBRANCH_2, self::MULTIBRANCH_3, self::MULTIBRANCH_4, self::MARKET],
+            FeatureEnum::ROLE_MANAGEMENT => [self::MULTIBRANCH_2, self::MULTIBRANCH_3, self::MULTIBRANCH_4, self::ECOMMERCE],
             FeatureEnum::SMS => [self::INSTALLMENT, self::MARKETING],
             FeatureEnum::CUSTOMER_MANAGEMENT => [self::INSTALLMENT, self::SCORING],
             FeatureEnum::ECOMMERCE => [self::ECOMMERCE],

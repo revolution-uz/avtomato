@@ -19,7 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_en
  * @property string $name_oz
  * @property string $image
- * @property int $status
+ * @property bool $is_active
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -37,7 +37,7 @@ class ProductCategory extends Model
         'name_en',
         'name_oz',
         'image',
-        'status',
+        'is_active',
     ];
 
     public function products(): HasMany

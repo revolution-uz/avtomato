@@ -19,27 +19,12 @@ class ProductVariationInputGraphQLType extends InputType
             'product_id' => [
                 'name' => 'product_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:products,id'],
+                'rules' => ['required', 'exists:e_commerce_products,id'],
             ],
-            'status' => [
+            'is_active' => [
                 'name' => 'status',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::boolean()),
                 'rules' => ['required'],
-            ],
-            'option' => [
-                'name' => 'option',
-                'type' => Type::nonNull(Type::listOf(Type::string())),
-                'rules' => ['required', 'array'],
-            ],
-            'data' => [
-                'name' => 'data',
-                'type' => Type::nonNull(Type::listOf(Type::string())),
-                'rules' => ['required', 'array'],
-            ],
-            'images' => [
-                'name' => 'images',
-                'type' => Type::nonNull(Type::listOf(Type::string())),
-                'rules' => ['required', 'array'],
             ],
         ];
     }

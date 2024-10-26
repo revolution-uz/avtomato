@@ -70,6 +70,18 @@ class BannerGraphQLType extends GraphQLType
                 'type' => GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (Banner $root) => $root->product,
             ],
+            'created_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->created_at->timestamp,
+            ],
+            'updated_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->updated_at->timestamp,
+            ],
+            'deleted_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (Banner $root) => $root->deleted_at?->timestamp,
+            ],
         ];
     }
 }

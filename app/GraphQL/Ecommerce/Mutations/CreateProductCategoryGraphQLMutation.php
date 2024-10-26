@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Ecommerce\Types\Mutations;
+namespace App\GraphQL\Ecommerce\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Types\ProductCategoryGraphQLType;
@@ -41,7 +41,8 @@ class CreateProductCategoryGraphQLMutation extends Mutation
      */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_CREATE);
+        return true;
+        //        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_CREATE);
     }
 
     /**

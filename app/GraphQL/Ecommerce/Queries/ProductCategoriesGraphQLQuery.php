@@ -3,7 +3,6 @@
 namespace App\GraphQL\Ecommerce\Queries;
 
 use App\GraphQL\Ecommerce\Types\ProductCategoryGraphQLType;
-use App\Models\Company\Ecommerce\Product;
 use App\Models\Company\Ecommerce\ProductCategory;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -52,7 +51,7 @@ class ProductCategoriesGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return ProductCategory::query()->with('products')
+        return ProductCategory::query()
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
@@ -64,8 +63,8 @@ class ProductCategoriesGraphQLQuery extends Query
             })
             ->when(
                 isset($args['sort']),
-                fn (Builder|Product $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|Product $q) => $q->orderByDesc('id')
+                fn (Builder|ProductCategory $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|ProductCategory $q) => $q->orderByDesc('id')
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Ecommerce\Types\Mutations;
+namespace App\GraphQL\Ecommerce\Mutations;
 
 use App\GraphQL\Ecommerce\Types\ProductGraphQLType;
 use App\GraphQL\Ecommerce\Types\ProductInputGraphQLType;
