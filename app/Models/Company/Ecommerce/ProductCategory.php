@@ -29,7 +29,11 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 class ProductCategory extends Model
 {
     use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
+
+    public static array $sortables = ['id', 'parent_id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'is_active'];
+
     protected $table = 'e_commerce_product_categories';
+
     protected $fillable = [
         'parent_id',
         'name_uz',
