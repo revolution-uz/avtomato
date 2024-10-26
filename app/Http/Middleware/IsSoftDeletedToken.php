@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Admin;
 use App\Models\Company\PersonalAccessToken;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -25,7 +26,7 @@ class IsSoftDeletedToken
 
             [$bearer, $token] = explode(' ', $request->header('Authorization'));
             [$id, $token] = explode('|', $token);
-            if (PersonalAccessToken::query()->where('id', $id)->doesntExist()) {
+            if (PersonalAccessToken::query()->where('id', $id)->where('tokenable_type', Admin::class)->doesntExist()) {
                 abort(401, 'Unauthorized');
             }
         }
