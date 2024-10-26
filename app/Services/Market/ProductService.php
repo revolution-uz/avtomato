@@ -6,5 +6,8 @@ use App\Models\Company\Ecommerce\ProductCategory;
 
 class ProductService
 {
-    public function createProductCategory(array $data): ProductCategory {}
+    public function createProductCategory(array $data): ProductCategory
+    {
+        return new ProductCategory;
+    }
 }

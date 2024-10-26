@@ -20,7 +20,7 @@ class CustomerService
             $customer = new Customer;
         }
         $customer->fill($data);
-        if ($type === CustomerTypeEnum::MARKET) {
+        if ($type === CustomerTypeEnum::ECOMMERCE) {
             $customer->saveOrFail();
 
             return $customer;
