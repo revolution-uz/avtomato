@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property $id
+ * @property int $id
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en

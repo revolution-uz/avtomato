@@ -28,6 +28,7 @@ class ProductBrand extends Model
     use HasFactory, OrderBySortable, SoftDeletes;
 
     public static array $sortables = ['id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'is_active'];
+
     protected $table = 'e_commerce_product_brands';
     protected $fillable = [
         'name_uz',
