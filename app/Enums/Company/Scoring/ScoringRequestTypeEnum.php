@@ -15,6 +15,8 @@ enum ScoringRequestTypeEnum: int
     case PLUM_TAX_INFO = 5;
     case HUMO = 6;
     case UZCARD = 7;
+    case ROYXAT_CREDIT_HISTORY = 8;
+    case UZUM_NASIYA_LIMIT = 9;
 
     public function convertToAsaxiyFormat(): AsaxiyKatmTypeEnum
     {
