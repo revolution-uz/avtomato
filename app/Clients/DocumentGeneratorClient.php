@@ -37,9 +37,6 @@ class DocumentGeneratorClient extends BaseClient
         $filePath = Storage::disk('temp')->path($fileName);
         $templateProcessor->saveAs($filePath);
 
-        $response = Storage::disk('temp')->download($fileName);
-        $response->headers->set('Access-Control-Allow-Origin', '*');
-
-        return $response;
+        return Storage::disk('temp')->download($fileName);
     }
 }
