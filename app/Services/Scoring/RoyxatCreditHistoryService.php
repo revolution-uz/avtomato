@@ -4,7 +4,6 @@ namespace App\Services\Scoring;
 
 use App\Clients\RoyxatClient;
 use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryInputDTO;
-use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Enums\FeatureEnum;
@@ -34,7 +33,7 @@ readonly class RoyxatCreditHistoryService
         $model->saveOrFail();
         $this->balanceService->chargeAmount(FeatureEnum::SCORING_UZUM_NASIYA_LIMIT, $model);
         try {
-            $model->response = RoyxatCreditHistoryResponseDTO::from($this->royxatClient->getCredits($dto));
+            $model->response = $this->royxatClient->getCredits($dto);
             $model->status = ScoringRequestStatusEnum::SUCCESS;
         } catch (Exception $e) {
             Log::error($e);
