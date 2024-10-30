@@ -61,6 +61,7 @@ enum FeatureEnum: string
             self::SCORING_TAX_INFO => 'Soliq qarzdorligi skoringi',
             self::SCORING_MIB_INFO => 'MIB qarzdorligi skoringi',
             self::SCORING_ROYXAT_CREDIT_HISTORY => 'Kredit tarixini Ro\'yxat.uz orqali olish',
+            self::SCORING_UZUM_NASIYA_LIMIT => 'Kredit tarixini Uzumnasiya.uz orqali olish',
             self::BRANCH_MANAGEMENT => 'Filiallar boshqaruvi',
             self::COMPANY_MANAGEMENT => 'Kompaniya boshqaruvi',
             self::TRANSACTION_TYPE_MANAGEMENT => 'Tranzaksiya turlari boshqaruvi',
