@@ -2,11 +2,11 @@
 
 namespace App\GraphQL\Scoring\Mutations;
 
-use App\DTOs\Scoring\UzumNasiya\UzumNasiyaLimitCreateRequestDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryInputDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryCreateInputGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Services\Scoring\UzumNasiyaService;
+use App\Services\Scoring\RoyxatCreditHistoryService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -20,7 +20,7 @@ class CreateRoyxatCreditHistoryScoringGraphQLMutation extends Mutation
     ];
 
     public function __construct(
-        private readonly UzumNasiyaService $uzumNasiyaService,
+        private readonly RoyxatCreditHistoryService $royxatCreditHistoryService,
     ) {}
 
     public function args(): array
@@ -45,7 +45,7 @@ class CreateRoyxatCreditHistoryScoringGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return $this->uzumNasiyaService->scoring(UzumNasiyaLimitCreateRequestDTO::from($args['data']))->id;
+        return $this->royxatCreditHistoryService->scoring(RoyxatCreditHistoryInputDTO::from($args['data']))->id;
     }
 
     protected function rules(array $args = []): array
