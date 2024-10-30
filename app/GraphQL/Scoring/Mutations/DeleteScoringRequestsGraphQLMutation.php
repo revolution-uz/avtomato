@@ -55,6 +55,8 @@ class DeleteScoringRequestsGraphQLMutation extends Mutation
                     ScoringRequestTypeEnum::PLUM_TAX_INFO => PermissionEnum::SCORING_TAX_INFO_DELETE,
                     ScoringRequestTypeEnum::HUMO => PermissionEnum::SCORING_HUMO_DELETE,
                     ScoringRequestTypeEnum::UZCARD => PermissionEnum::SCORING_UZCARD_DELETE,
+                    ScoringRequestTypeEnum::UZUM_NASIYA_LIMIT => PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_DELETE,
+                    ScoringRequestTypeEnum::ROYXAT_CREDIT_HISTORY => PermissionEnum::SCORING_ROYXAT_CREDIT_DELETE,
                 }
             );
         }

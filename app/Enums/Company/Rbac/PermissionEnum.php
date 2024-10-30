@@ -185,7 +185,9 @@ enum PermissionEnum: string
 
     // Credit History in Partners
     case SCORING_ROYXAT_CREDIT_VIEW_ALL = 'scoring_royxat_credit_view_all';
+    case SCORING_ROYXAT_CREDIT_DELETE = 'scoring_royxat_credit_delete';
     case SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL = 'scoring_uzum_nasiya_limit_view_all';
+    case SCORING_UZUM_NASIYA_LIMIT_DELETE = 'scoring_uzum_nasiya_limit_delete';
 
     // Activity log
     case ACTIVITY_LOG_VIEW = 'activity_log_view';
