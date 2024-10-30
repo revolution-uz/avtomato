@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Scoring\Queries;
 
-use App\Clients\RoyxatClient;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryGraphQLType;
@@ -20,13 +19,6 @@ class RoyxatCreditHistoriesGraphQLQuery extends Query
     protected $attributes = [
         'name' => 'royxatCreditHistories',
     ];
-
-    private RoyxatClient $royxatClient;
-
-    public function __construct(RoyxatClient $royxatClient)
-    {
-        $this->royxatClient = $royxatClient;
-    }
 
     public function type(): Type
     {
