@@ -3,13 +3,15 @@
 namespace App\GraphQL\Scoring\Queries;
 
 use App\Clients\RoyxatClient;
-use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\Company\ScoringRequest;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -34,17 +36,21 @@ class RoyxatCreditHistoriesGraphQLQuery extends Query
     public function args(): array
     {
         return [
-            'passport' => [
+            'sort' => [
                 'type' => Type::string(),
-                'rules' => 'required_without_all:pinfl,tin|nullable|string|max:9|min:9',
+                'rules' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
             ],
-            'pinfl' => [
+            'search' => [
                 'type' => Type::string(),
-                'rules' => 'required_without_all:passport,tin|nullable|integer|digits:14',
+                'rules' => 'nullable|string|max:255',
             ],
-            'tin' => [
-                'type' => Type::string(),
-                'rules' => 'required_without_all:passport,pinfl|nullable|integer|digits:9',
+            'page' => [
+                'type' => Type::int(),
+                'rules' => 'nullable|int|min:1',
+            ],
+            'per_page' => [
+                'type' => Type::int(),
+                'rules' => 'nullable|int|min:5|max:100',
             ],
         ];
     }
@@ -56,19 +62,19 @@ class RoyxatCreditHistoriesGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $attribute = $args['passport'] ?? null;
-        $attributeName = 'passport_id';
-
-        if (isset($args['pinfl'])) {
-            $attribute = $args['pinfl'];
-            $attributeName = 'pinfl';
-        }
-
-        if (isset($args['tin'])) {
-            $attribute = $args['tin'];
-            $attributeName = 'tin';
-        }
-
-        return RoyxatCreditHistoryResponseDTO::collect($this->royxatClient->getCredits($attribute, $attributeName));
+        return ScoringRequest::query()
+            ->where('type', ScoringRequestTypeEnum::ROYXAT_CREDIT_HISTORY)
+            ->when(isset($args['search']), function (Builder $q) use ($args) {
+                $search = '%' . $args['search'] . '%';
+                $q->where(function (Builder $query) use ($search) {
+                    $query->where('request->phone', 'ILIKE', $search);
+                });
+            })
+            ->when(
+                isset($args['sort']),
+                fn (Builder|ScoringRequest $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|ScoringRequest $q) => $q->orderByDesc('id')
+            )
+            ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }
