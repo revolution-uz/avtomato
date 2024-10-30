@@ -12,7 +12,7 @@ class UzumNasiyaLimitResponseDTO extends BaseScoringResponse
         public ?int $status,
         public ?int $buyer_id,
         #[DataCollectionOf(UzumNasiyaAvailablePeriodResponseDTO::class)]
-        public ?DataCollection $available_balance,
+        public ?DataCollection $available_periods,
         public ?string $balance,
         public ?bool $has_overdue_contracts
     ) {}

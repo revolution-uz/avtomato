@@ -40,7 +40,7 @@ class CreateUzumNasiyaLimitScoringGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL);
+        return RbacHelper::checkPermission(PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_CREATE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

@@ -29,6 +29,7 @@ enum PermissionGroupEnum: string
     case SCORING_HUMO = 'scoring_humo';
     case SCORING_UZCARD = 'scoring_uzcard';
     case SCORING_ROYXAT_CREDIT_HISTORY = 'scoring_royxat_credit_history';
+    case SCORING_UZUM_NASIYA_LIMIT = 'scoring_uzum_nasiya_limit';
     case ACTIVITY_LOG = 'activity_log';
 
     /**
@@ -184,7 +185,12 @@ enum PermissionGroupEnum: string
                 PermissionEnum::SCORING_UZCARD_DELETE,
             ],
             self::SCORING_ROYXAT_CREDIT_HISTORY => [
-                PermissionEnum::SCORING_ROYXAT_CREDIT_VIEW_ALL,
+                PermissionEnum::SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL,
+                PermissionEnum::SCORING_ROYXAT_CREDIT_HISTORY_DELETE,
+            ],
+            self::SCORING_UZUM_NASIYA_LIMIT => [
+                PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL,
+                PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_DELETE,
             ],
             self::PROFILE_EDIT => [
                 PermissionEnum::PROFILE_EDIT,
