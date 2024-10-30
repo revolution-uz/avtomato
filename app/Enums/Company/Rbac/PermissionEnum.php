@@ -185,6 +185,8 @@ enum PermissionEnum: string
 
     // Credit History in Partners
     case SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL = 'scoring_royxat_credit_history_view_all';
+    case SCORING_ROYXAT_CREDIT_HISTORY_VIEW = 'scoring_royxat_credit_history_view';
+    case SCORING_ROYXAT_CREDIT_HISTORY_CREATE = 'scoring_royxat_credit_history_create';
     case SCORING_ROYXAT_CREDIT_HISTORY_DELETE = 'scoring_royxat_credit_history_delete';
     case SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL = 'scoring_uzum_nasiya_limit_view_all';
     case SCORING_UZUM_NASIYA_LIMIT_VIEW = 'scoring_uzum_nasiya_limit_view';
@@ -318,6 +320,8 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_DELETE,
 
             self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_CREATE,
             self::SCORING_ROYXAT_CREDIT_HISTORY_DELETE,
 
             self::SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL,
@@ -522,6 +526,8 @@ enum PermissionEnum: string
             ],
             PermissionGroupEnum::SCORING_ROYXAT_CREDIT_HISTORY->value => [
                 self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL->value,
+                self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW->value,
+                self::SCORING_ROYXAT_CREDIT_HISTORY_CREATE->value,
                 self::SCORING_ROYXAT_CREDIT_HISTORY_DELETE->value,
             ],
             PermissionGroupEnum::SCORING_UZUM_NASIYA_LIMIT->value => [
@@ -720,6 +726,8 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_DELETE => FeatureEnum::SCORING_UZCARD,
 
             self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_CREATE,
             self::SCORING_ROYXAT_CREDIT_HISTORY_DELETE => FeatureEnum::SCORING_ROYXAT_CREDIT_HISTORY,
 
             self::SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL,
