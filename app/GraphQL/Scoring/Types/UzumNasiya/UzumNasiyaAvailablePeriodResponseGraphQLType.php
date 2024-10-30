@@ -6,9 +6,9 @@ use App\DTOs\Scoring\UzumNasiya\UzumNasiyaAvailablePeriodResponseDTO;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class UzumNasiyaAvailablePeriodScoringResponseGraphQLType extends GraphQLType
+class UzumNasiyaAvailablePeriodResponseGraphQLType extends GraphQLType
 {
-    public const string GRAPHQL_TYPE_NAME = 'UzumNasiyaAvailablePeriodScoringResponseGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'UzumNasiyaAvailablePeriodResponseGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

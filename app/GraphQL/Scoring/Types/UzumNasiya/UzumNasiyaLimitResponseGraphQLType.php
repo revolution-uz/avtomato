@@ -29,7 +29,7 @@ class UzumNasiyaLimitResponseGraphQLType extends GraphQLType
             ],
             'available_periods' => [
                 'name' => 'available_periods',
-                'type' => Type::listOf(UzumNasiyaAvailablePeriodScoringResponseGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::listOf(UzumNasiyaAvailablePeriodResponseGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (UzumNasiyaLimitResponseDTO $root) => $root->available_periods,
             ],
             'balance' => [
