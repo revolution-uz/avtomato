@@ -6,7 +6,7 @@ use App\DTOs\Scoring\UzumNasiya\UzumNasiyaLimitResponseDTO;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class UzumNasiyaLimitScoringResponseGraphQLType extends GraphQLType
+class UzumNasiyaLimitResponseGraphQLType extends GraphQLType
 {
     public const string GRAPHQL_TYPE_NAME = 'UzumNasiyaLimitScoringResponseGraphQLType';
 

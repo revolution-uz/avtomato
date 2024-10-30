@@ -22,9 +22,9 @@ use App\GraphQL\Scoring\Queries\SingleCreditHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleDebtScoringRequestGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleInpsHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SinglePensionInfoGraphQLQuery;
-use App\GraphQL\Scoring\Queries\SingleRoyxatCreditHistoryScoringRequestGraphQLQuery;
-use App\GraphQL\Scoring\Queries\SingleUzumNasiyaLimitScoringRequestGraphQLQuery;
-use App\GraphQL\Scoring\Queries\UzumNasiyaLimitScoringRequestsGraphQLQuery;
+use App\GraphQL\Scoring\Queries\SingleRoyxatCreditHistoryRequestGraphQLQuery;
+use App\GraphQL\Scoring\Queries\SingleUzumNasiyaLimitRequestGraphQLQuery;
+use App\GraphQL\Scoring\Queries\UzumNasiyaLimitRequestsGraphQLQuery;
 use App\GraphQL\Scoring\Types\Card\CardCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardMonthlyAnalyticsGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardMonthlyDetailedAnalyticsGraphQLType;
@@ -57,8 +57,10 @@ use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionSizePensionGraphQLT
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\PensionInfoGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryGraphQLType;
+use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryResponseGraphQLType;
 use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaAvailablePeriodScoringResponseGraphQLType;
-use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitScoringResponseGraphQLType;
+use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitGraphQLType;
+use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitResponseGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class ScoringGraphQLSchema implements ConfigConvertible
@@ -78,9 +80,9 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 SingleInpsHistoryGraphQLQuery::class,
                 SinglePensionInfoGraphQLQuery::class,
                 RoyxatCreditHistoriesGraphQLQuery::class,
-                SingleRoyxatCreditHistoryScoringRequestGraphQLQuery::class,
-                UzumNasiyaLimitScoringRequestsGraphQLQuery::class,
-                SingleUzumNasiyaLimitScoringRequestGraphQLQuery::class,
+                SingleRoyxatCreditHistoryRequestGraphQLQuery::class,
+                UzumNasiyaLimitRequestsGraphQLQuery::class,
+                SingleUzumNasiyaLimitRequestGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateCardScoringGraphQLMutation::class,
@@ -131,9 +133,12 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
 
+                RoyxatCreditHistoryResponseGraphQLType::class,
                 RoyxatCreditHistoryGraphQLType::class,
                 RoyxatCreditHistoryCreateInputGraphQLType::class,
-                UzumNasiyaLimitScoringResponseGraphQLType::class,
+
+                UzumNasiyaLimitGraphQLType::class,
+                UzumNasiyaLimitResponseGraphQLType::class,
                 UzumNasiyaAvailablePeriodScoringResponseGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],

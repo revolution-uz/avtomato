@@ -5,7 +5,7 @@ namespace App\GraphQL\Scoring\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryGraphQLType;
+use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ScoringRequest;
 use Closure;
@@ -15,15 +15,15 @@ use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class SingleRoyxatCreditHistoryScoringRequestGraphQLQuery extends Query
+class SingleUzumNasiyaLimitRequestGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'singleRoyxatCreditHistoryScoringRequest',
+        'name' => 'singleUzumNasiyaLimitRequest',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(RoyxatCreditHistoryGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(UzumNasiyaLimitGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
@@ -33,7 +33,7 @@ class SingleRoyxatCreditHistoryScoringRequestGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => Rule::exists('scoring_requests', 'id')
                     ->where('status', ScoringRequestStatusEnum::SUCCESS)
-                    ->where('type', ScoringRequestTypeEnum::ROYXAT_CREDIT_HISTORY)
+                    ->where('type', ScoringRequestTypeEnum::UZUM_NASIYA_LIMIT)
                     ->whereNull('deleted_at'),
             ],
         ];
@@ -41,7 +41,7 @@ class SingleRoyxatCreditHistoryScoringRequestGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::SCORING_ROYXAT_CREDIT_HISTORY_VIEW);
+        return RbacHelper::checkPermission(PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_VIEW);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
