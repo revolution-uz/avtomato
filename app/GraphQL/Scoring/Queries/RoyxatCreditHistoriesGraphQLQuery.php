@@ -3,9 +3,9 @@
 namespace App\GraphQL\Scoring\Queries;
 
 use App\Clients\RoyxatClient;
-use App\DTOs\Royxat\RoyxatCreditResponseDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Scoring\Types\Partners\RoyxatCreditGraphQLType;
+use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryGraphQLType;
 use App\Helpers\RbacHelper;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -13,7 +13,7 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class RoyxatCreditsGraphQLQuery extends Query
+class RoyxatCreditHistoriesGraphQLQuery extends Query
 {
     protected $attributes = [
         'name' => 'royxatCredits',
@@ -28,7 +28,7 @@ class RoyxatCreditsGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::listOf(GraphQL::type(RoyxatCreditGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::listOf(GraphQL::type(RoyxatCreditHistoryGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
@@ -69,6 +69,6 @@ class RoyxatCreditsGraphQLQuery extends Query
             $attributeName = 'tin';
         }
 
-        return RoyxatCreditResponseDTO::collect($this->royxatClient->getCredits($attribute, $attributeName));
+        return RoyxatCreditHistoryResponseDTO::collect($this->royxatClient->getCredits($attribute, $attributeName));
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
-use App\DTOs\Royxat\CreateCreditRequestDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\CreateCreditRequestDTO;
 use App\Enums\ClientCodeEnum;
 use App\Exceptions\GeneralException;
 use Illuminate\Support\Facades\Http;
