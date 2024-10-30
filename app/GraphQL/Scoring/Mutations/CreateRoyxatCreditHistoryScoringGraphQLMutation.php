@@ -5,8 +5,6 @@ namespace App\GraphQL\Scoring\Mutations;
 use App\DTOs\Scoring\UzumNasiya\UzumNasiyaLimitCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryCreateInputGraphQLType;
-use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryGraphQLType;
-use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitCreateInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Scoring\UzumNasiyaService;
 use Closure;
@@ -23,9 +21,7 @@ class CreateRoyxatCreditHistoryScoringGraphQLMutation extends Mutation
 
     public function __construct(
         private readonly UzumNasiyaService $uzumNasiyaService,
-    )
-    {
-    }
+    ) {}
 
     public function args(): array
     {
