@@ -11,7 +11,6 @@ use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -44,18 +43,6 @@ class UzumNasiyaLimitScoringRequestsGraphQLQuery extends Query
             'per_page' => [
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
-            ],
-            'type' => [
-                'name' => 'type',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => [
-                    'required',
-                    'integer',
-                    Rule::in([
-                        ScoringRequestTypeEnum::PLUM_MIB_INFO->value,
-                        ScoringRequestTypeEnum::PLUM_TAX_INFO->value,
-                    ]),
-                ],
             ],
         ];
     }
