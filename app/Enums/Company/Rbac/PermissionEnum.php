@@ -184,7 +184,14 @@ enum PermissionEnum: string
     case SCORING_UZCARD_DELETE = 'scoring_uzcard_delete';
 
     // Credit History in Partners
-    case SCORING_ROYXAT_CREDIT_VIEW_ALL = 'scoring_royxat_credit_view_all';
+    case SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL = 'scoring_royxat_credit_history_view_all';
+    case SCORING_ROYXAT_CREDIT_HISTORY_VIEW = 'scoring_royxat_credit_history_view';
+    case SCORING_ROYXAT_CREDIT_HISTORY_CREATE = 'scoring_royxat_credit_history_create';
+    case SCORING_ROYXAT_CREDIT_HISTORY_DELETE = 'scoring_royxat_credit_history_delete';
+    case SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL = 'scoring_uzum_nasiya_limit_view_all';
+    case SCORING_UZUM_NASIYA_LIMIT_VIEW = 'scoring_uzum_nasiya_limit_view';
+    case SCORING_UZUM_NASIYA_LIMIT_CREATE = 'scoring_uzum_nasiya_limit_create';
+    case SCORING_UZUM_NASIYA_LIMIT_DELETE = 'scoring_uzum_nasiya_limit_delete';
 
     // Activity log
     case ACTIVITY_LOG_VIEW = 'activity_log_view';
@@ -312,7 +319,15 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE,
 
-            self::SCORING_ROYXAT_CREDIT_VIEW_ALL,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_CREATE,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_DELETE,
+
+            self::SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL,
+            self::SCORING_UZUM_NASIYA_LIMIT_VIEW,
+            self::SCORING_UZUM_NASIYA_LIMIT_CREATE,
+            self::SCORING_UZUM_NASIYA_LIMIT_DELETE,
 
             self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,
@@ -510,7 +525,16 @@ enum PermissionEnum: string
                 self::SCORING_UZCARD_DELETE->value,
             ],
             PermissionGroupEnum::SCORING_ROYXAT_CREDIT_HISTORY->value => [
-                self::SCORING_ROYXAT_CREDIT_VIEW_ALL->value,
+                self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL->value,
+                self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW->value,
+                self::SCORING_ROYXAT_CREDIT_HISTORY_CREATE->value,
+                self::SCORING_ROYXAT_CREDIT_HISTORY_DELETE->value,
+            ],
+            PermissionGroupEnum::SCORING_UZUM_NASIYA_LIMIT->value => [
+                self::SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL->value,
+                self::SCORING_UZUM_NASIYA_LIMIT_VIEW->value,
+                self::SCORING_UZUM_NASIYA_LIMIT_CREATE->value,
+                self::SCORING_UZUM_NASIYA_LIMIT_DELETE->value,
             ],
             PermissionGroupEnum::PROFILE_EDIT->value => [
                 self::PROFILE_EDIT->value,
@@ -701,7 +725,15 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE => FeatureEnum::SCORING_UZCARD,
 
-            self::SCORING_ROYXAT_CREDIT_VIEW_ALL => FeatureEnum::SCORING_ROYXAT_CREDIT_HISTORY,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_VIEW,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_CREATE,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_DELETE => FeatureEnum::SCORING_ROYXAT_CREDIT_HISTORY,
+
+            self::SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL,
+            self::SCORING_UZUM_NASIYA_LIMIT_VIEW,
+            self::SCORING_UZUM_NASIYA_LIMIT_CREATE,
+            self::SCORING_UZUM_NASIYA_LIMIT_DELETE => FeatureEnum::SCORING_UZUM_NASIYA_LIMIT,
 
             self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,

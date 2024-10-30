@@ -119,4 +119,20 @@ class AsaxiyClient extends BaseClient
 
         return $response->json('result');
     }
+
+    public function scoringUzumNasiya(array $params)
+    {
+        $response = Http::withHeaders(['x-access-token' => $this->token])
+            ->get($this->baseUrl . '/katm/uzum-nasiya?' . http_build_query($params));
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'GET',
+            url: $this->baseUrl . '/katm/uzum-nasiya',
+            status: $response->status(),
+            response: $response->json(),
+            duration: $response->transferStats?->getTransferTime(),
+            params: $params,
+        ));
+
+        return $response->json('result');
+    }
 }
