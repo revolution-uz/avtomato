@@ -187,10 +187,14 @@ enum PermissionGroupEnum: string
             ],
             self::SCORING_ROYXAT_CREDIT_HISTORY => [
                 PermissionEnum::SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL,
+                PermissionEnum::SCORING_ROYXAT_CREDIT_HISTORY_VIEW,
+                PermissionEnum::SCORING_ROYXAT_CREDIT_HISTORY_CREATE,
                 PermissionEnum::SCORING_ROYXAT_CREDIT_HISTORY_DELETE,
             ],
             self::SCORING_UZUM_NASIYA_LIMIT => [
                 PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL,
+                PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_VIEW,
+                PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_CREATE,
                 PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_DELETE,
             ],
             self::PROFILE_EDIT => [
