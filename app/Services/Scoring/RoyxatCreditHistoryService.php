@@ -2,7 +2,6 @@
 
 namespace App\Services\Scoring;
 
-use App\Clients\AsaxiyClient;
 use App\Clients\RoyxatClient;
 use App\DTOs\Scoring\UzumNasiya\UzumNasiyaLimitCreateRequestDTO;
 use App\DTOs\Scoring\UzumNasiya\UzumNasiyaLimitResponseDTO;
@@ -18,7 +17,7 @@ use Throwable;
 readonly class RoyxatCreditHistoryService
 {
     public function __construct(
-        private RoyxatClient   $royxatClient,
+        private RoyxatClient $royxatClient,
         private BalanceService $balanceService
     ) {}
 
