@@ -58,7 +58,8 @@ use App\GraphQL\Scoring\Types\Katm\PensionHistory\PensionInfoGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryResponseGraphQLType;
-use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaAvailablePeriodScoringResponseGraphQLType;
+use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaAvailablePeriodResponseGraphQLType;
+use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitGraphQLType;
 use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitResponseGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
@@ -137,9 +138,10 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 RoyxatCreditHistoryGraphQLType::class,
                 RoyxatCreditHistoryCreateInputGraphQLType::class,
 
+                UzumNasiyaLimitCreateInputGraphQLType::class,
                 UzumNasiyaLimitGraphQLType::class,
                 UzumNasiyaLimitResponseGraphQLType::class,
-                UzumNasiyaAvailablePeriodScoringResponseGraphQLType::class,
+                UzumNasiyaAvailablePeriodResponseGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];
