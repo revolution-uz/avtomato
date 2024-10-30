@@ -138,10 +138,10 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 RoyxatCreditHistoryGraphQLType::class,
                 RoyxatCreditHistoryCreateInputGraphQLType::class,
 
-                UzumNasiyaLimitCreateInputGraphQLType::class,
                 UzumNasiyaLimitGraphQLType::class,
                 UzumNasiyaLimitResponseGraphQLType::class,
                 UzumNasiyaAvailablePeriodResponseGraphQLType::class,
+                UzumNasiyaLimitCreateInputGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];

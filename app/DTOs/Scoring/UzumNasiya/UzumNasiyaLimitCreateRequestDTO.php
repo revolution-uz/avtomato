@@ -7,10 +7,6 @@ use App\DTOs\Scoring\Base\BaseScoringRequest;
 class UzumNasiyaLimitCreateRequestDTO extends BaseScoringRequest
 {
     public function __construct(
-        public string $phone
-    ) {
-        if (! str_contains($this->phone, '+')) {
-            $this->phone = '+' . $this->phone;
-        }
-    }
+        public int $phone
+    ) {}
 }
