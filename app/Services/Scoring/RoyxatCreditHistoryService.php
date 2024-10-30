@@ -3,8 +3,8 @@
 namespace App\Services\Scoring;
 
 use App\Clients\RoyxatClient;
-use App\DTOs\Scoring\UzumNasiya\UzumNasiyaLimitCreateRequestDTO;
-use App\DTOs\Scoring\UzumNasiya\UzumNasiyaLimitResponseDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryInputDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Enums\FeatureEnum;
@@ -24,7 +24,7 @@ readonly class RoyxatCreditHistoryService
     /**
      * @throws Throwable
      */
-    public function scoring(UzumNasiyaLimitCreateRequestDTO $dto): ScoringRequest
+    public function scoring(RoyxatCreditHistoryInputDTO $dto): ScoringRequest
     {
         $model = new ScoringRequest;
         $model->type = ScoringRequestTypeEnum::UZUM_NASIYA_LIMIT;
@@ -34,7 +34,7 @@ readonly class RoyxatCreditHistoryService
         $model->saveOrFail();
         $this->balanceService->chargeAmount(FeatureEnum::SCORING_UZUM_NASIYA_LIMIT, $model);
         try {
-            $model->response = UzumNasiyaLimitResponseDTO::from($this->royxatClient->scoringUzumNasiya($dto->toArray()));
+            $model->response = RoyxatCreditHistoryResponseDTO::from($this->royxatClient->getCredits($dto));
             $model->status = ScoringRequestStatusEnum::SUCCESS;
         } catch (Exception $e) {
             Log::error($e);

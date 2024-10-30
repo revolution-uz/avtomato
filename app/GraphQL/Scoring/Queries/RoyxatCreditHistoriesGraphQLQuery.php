@@ -16,7 +16,7 @@ use Rebing\GraphQL\Support\Query;
 class RoyxatCreditHistoriesGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'royxatCredits',
+        'name' => 'royxatCreditHistories',
     ];
 
     private RoyxatClient $royxatClient;
