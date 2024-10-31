@@ -84,7 +84,7 @@ enum FeatureEnum: string
         return match ($this) {
             self::ATMOS_PINFL_PAY,
             self::ATMOS_CARD_PAY => '{"username": "", "password": "", "store_id": 0, "expires_in": 0, "access_token": "", "token_type": "Bearer"}',
-            self::UNIRED_PAY => '{"name" : "", "merchant_uzcard" : "", "terminal_uzcard" : "", "merchant_humo" : "", "terminal_humo" : "", "phone" : ""}',
+            self::UNIRED_PAY => '{"id" : "", "name" : "", "merchant_uzcard" : "", "terminal_uzcard" : "", "merchant_humo" : "", "terminal_humo" : "", "phone" : ""}',
             self::SCORING_CREDIT_HISTORY,
             self::SCORING_PENSION_INFO,
             self::SCORING_INPS_HISTORY,

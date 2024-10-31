@@ -27,7 +27,12 @@ use Carbon\Carbon;
 
 class UniredService
 {
-    public function __construct(private UniredClient $uniredClient) {}
+    private UniredBranchResponseDTO $branchFeatureDto;
+
+    public function __construct(private UniredClient $uniredClient)
+    {
+        $this->branchFeatureDto = UniredBranchResponseDTO::from(Feature::findByName(FeatureEnum::UNIRED_PAY));
+    }
 
     public function createBranch(UniredCreateBranchRequestDTO $params): bool
     {
@@ -75,7 +80,7 @@ class UniredService
             $installment->customer->first_name,
             $installment->customer->last_name,
             $installment->customer->middle_name,
-            Utilities::generateIdByTenancy($installment->branch_id),
+            $this->branchFeatureDto->id,
             $installment->debtAmount,
             $installment->customer->phones->pluck('phone')->toArray()
         ));
@@ -93,7 +98,7 @@ class UniredService
             $installmentGuarantor->customer->first_name,
             $installmentGuarantor->customer->last_name,
             $installmentGuarantor->customer->middle_name,
-            Utilities::generateIdByTenancy($installmentGuarantor->installment->branch_id),
+            $this->branchFeatureDto->id,
             $installmentGuarantor->installment->debtAmount,
             $installmentGuarantor->customer->phones->pluck('phone')->toArray()
         ));
