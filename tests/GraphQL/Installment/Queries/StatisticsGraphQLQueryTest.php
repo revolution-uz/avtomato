@@ -29,7 +29,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
 
         Installment::query()->forceDelete();
 
-        $this->_carbon = Carbon::now()->startOfDay();
+        $this->_carbon = Carbon::parse('2024-09-15');
 
         $this->_input = [
             'amount' => 1000000,
