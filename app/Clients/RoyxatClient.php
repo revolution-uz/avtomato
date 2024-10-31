@@ -3,7 +3,8 @@
 namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
-use App\DTOs\Royxat\CreateCreditRequestDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\CreateCreditRequestDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryInputDTO;
 use App\Enums\ClientCodeEnum;
 use App\Exceptions\GeneralException;
 use Illuminate\Support\Facades\Http;
@@ -25,9 +26,9 @@ class RoyxatClient extends BaseClient
         return ClientCodeEnum::ROYXAT;
     }
 
-    public function getCredits(string $attribute, string $attributeName = 'passport_id')
+    public function getCredits(RoyxatCreditHistoryInputDTO $dto)
     {
-        return $this->makeRequest('/search', [$attributeName => $attribute], 'GET');
+        return $this->makeRequest('/search?' . http_build_query($dto->toArray()), 'GET');
     }
 
     public function createCredit(CreateCreditRequestDTO $creditRequestDTO)

@@ -20,6 +20,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
     protected bool $tenancy = true;
 
     private array $_input;
+    private Carbon $_carbon;
 
     protected function setUp(): void
     {
@@ -27,28 +28,30 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
 
         Installment::query()->forceDelete();
 
+        $this->_carbon = Carbon::parse('2024-09-15');
+
         $this->_input = [
             'amount' => 1000000,
             'percent' => 15,
             'initial_fee' => 100000,
             'period' => 3,
-            'starts_in' => Carbon::now(),
+            'starts_in' => $this->_carbon,
             'status' => InstallmentStatusEnum::ACTIVE,
         ];
 
         /** @var Installment[] $installments */
         $installments = [];
 
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subMonth()]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subMonth()]));
         $installments[] = Installment::factory()->create($this->_input);
         $installments[] = Installment::factory()->create($this->_input);
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subDays(1)]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subDays(2)]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => Carbon::now()->subDays(3)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(1)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(2)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(3)]));
 
-        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => $installments[1]->debtAmount, 'paid_at' => Carbon::now()]);
-        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000, 'paid_at' => Carbon::now()]);
-        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000, 'paid_at' => Carbon::now()]);
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 345000]); // 345000 is debt amount for the second installment
+        Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000]);
+        Transaction::factory()->create(['installment_id' => $installments[2]->id, 'amount' => 100000]);
     }
 
     #[Test]
@@ -56,7 +59,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
     {
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()->subMonth()));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_carbon->subMonth()));
 
         $expectedData = [
             [
@@ -74,7 +77,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
     {
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_carbon));
 
         $expectedData = [
             [
@@ -102,7 +105,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
     {
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()->addMonth()));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_carbon->addMonth()));
 
         $expectedData = [
             [
@@ -130,13 +133,13 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
     {
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()->subMonths(2)));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery((clone $this->_carbon)->subMonths(2)));
         $this->assertSuccessResponse($response);
         $this->assertEmpty($response->json('data.statisticsInfo'));
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()->addMonths(3)));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery((clone $this->_carbon)->addMonths(3)));
         $this->assertSuccessResponse($response);
         $this->assertEmpty($response->json('data.statisticsInfo'));
     }
@@ -167,7 +170,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now(), $branch->id));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_carbon, $branch->id));
 
         $this->assertSuccessResponse($response);
         $this->assertEquals(1, count($response->json('data.statisticsInfo')));
@@ -210,7 +213,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this
             ->actingAs($simpleAdmin)
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_carbon));
         $response->assertOk();
         $response->assertJsonIsObject();
         $response->assertJsonStructure([
@@ -223,7 +226,7 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
         $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
         $response = $this
             ->actingAs($simpleAdmin)
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(Carbon::now()));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_carbon));
         $this->assertSuccessResponse($response);
         $this->assertEquals($installments->pluck('id')?->toArray(), $response->json('data.statisticsInfo.*.id'));
     }

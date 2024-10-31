@@ -1,13 +1,13 @@
 <?php
 
-namespace App\DTOs\Royxat;
+namespace App\DTOs\Scoring\RoyxatCreditHistory;
 
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 use Illuminate\Support\Carbon;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
-class RoyxatCreditResponseDTO extends BaseScoringRequest
+class RoyxatCreditHistoryResponseDTO extends BaseScoringRequest
 {
     public function __construct(
         public int $id,

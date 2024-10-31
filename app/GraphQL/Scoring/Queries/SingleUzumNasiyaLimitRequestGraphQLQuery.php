@@ -5,7 +5,7 @@ namespace App\GraphQL\Scoring\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitScoringResponseGraphQLType;
+use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ScoringRequest;
 use Closure;
@@ -15,15 +15,15 @@ use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class SingleUzumNasiyaLimitScoringRequestGraphQLQuery extends Query
+class SingleUzumNasiyaLimitRequestGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'singleUzumNasiyaLimitScoringRequest',
+        'name' => 'singleUzumNasiyaLimitRequest',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(UzumNasiyaLimitScoringResponseGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(UzumNasiyaLimitGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array

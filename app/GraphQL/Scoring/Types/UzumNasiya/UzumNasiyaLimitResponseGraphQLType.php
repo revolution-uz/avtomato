@@ -4,9 +4,10 @@ namespace App\GraphQL\Scoring\Types\UzumNasiya;
 
 use App\DTOs\Scoring\UzumNasiya\UzumNasiyaLimitResponseDTO;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class UzumNasiyaLimitScoringResponseGraphQLType extends GraphQLType
+class UzumNasiyaLimitResponseGraphQLType extends GraphQLType
 {
     public const string GRAPHQL_TYPE_NAME = 'UzumNasiyaLimitScoringResponseGraphQLType';
 
@@ -29,7 +30,7 @@ class UzumNasiyaLimitScoringResponseGraphQLType extends GraphQLType
             ],
             'available_periods' => [
                 'name' => 'available_periods',
-                'type' => Type::listOf(UzumNasiyaAvailablePeriodScoringResponseGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::listOf(GraphQL::type(UzumNasiyaAvailablePeriodResponseGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (UzumNasiyaLimitResponseDTO $root) => $root->available_periods,
             ],
             'balance' => [

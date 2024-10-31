@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOs\Royxat;
+namespace App\DTOs\Scoring\RoyxatCreditHistory;
 
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 

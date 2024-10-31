@@ -4,26 +4,25 @@ namespace App\GraphQL\Scoring\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
-use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitScoringResponseGraphQLType;
+use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\ScoringRequest;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class UzumNasiyaLimitScoringRequestsGraphQLQuery extends Query
+class RoyxatCreditHistoriesGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'uzumNasiyaLimitScoringRequests',
+        'name' => 'royxatCreditHistories',
     ];
 
     public function type(): Type
     {
-        return GraphQL::paginate(GraphQL::type(UzumNasiyaLimitScoringResponseGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::listOf(GraphQL::type(RoyxatCreditHistoryGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
@@ -45,30 +44,18 @@ class UzumNasiyaLimitScoringRequestsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
             ],
-            'type' => [
-                'name' => 'type',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => [
-                    'required',
-                    'integer',
-                    Rule::in([
-                        ScoringRequestTypeEnum::PLUM_MIB_INFO->value,
-                        ScoringRequestTypeEnum::PLUM_TAX_INFO->value,
-                    ]),
-                ],
-            ],
         ];
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::SCORING_UZUM_NASIYA_LIMIT_VIEW_ALL);
+        return RbacHelper::checkPermission(PermissionEnum::SCORING_ROYXAT_CREDIT_HISTORY_VIEW_ALL);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return ScoringRequest::query()
-            ->where('type', ScoringRequestTypeEnum::UZUM_NASIYA_LIMIT)
+            ->where('type', ScoringRequestTypeEnum::ROYXAT_CREDIT_HISTORY)
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
