@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Ecommerce\Queries;
+namespace App\GraphQL\EcommerceClient\Queries;
 
 use App\GraphQL\Ecommerce\Types\ProductCategoryGraphQLType;
 use App\Models\Company\Ecommerce\ProductCategory;

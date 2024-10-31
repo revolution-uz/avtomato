@@ -6,7 +6,6 @@ use App\GraphQL\Ecommerce\Types\ProductGraphQLType;
 use App\GraphQL\Ecommerce\Types\ProductInputGraphQLType;
 use App\Models\Company\Ecommerce\Product;
 use Closure;
-use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -34,9 +33,6 @@ class CreateProductGraphQLMutation extends Mutation
         return Type::nonNull(GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
-    /**
-     * @throws Error
-     */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
         return true;
@@ -54,10 +50,5 @@ class CreateProductGraphQLMutation extends Mutation
         $model->saveOrFail();
 
         return $model;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return parent::rules($args);
     }
 }

@@ -17,6 +17,11 @@ class ProductCategoryInputGraphQLType extends InputType
     public function fields(): array
     {
         return [
+            'parent_id' => [
+                'name' => 'parent_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', 'exists:e_commerce_product_categories,id'],
+            ],
             'name_uz' => [
                 'name' => 'name_uz',
                 'type' => Type::nonNull(Type::string()),

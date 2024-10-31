@@ -3,10 +3,12 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\Address;
+use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -18,13 +20,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property-read User $customer
+ * @property-read User $user
  * @property-read Address $address
  * @property-read OrderStatus $status
+ * @property-read OrderItem $orderItems
  */
 class Order extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, OrderBySortable, SoftDeletes;
+    protected static array $sortables = ['id', 'user_id', 'address_id', 'status_id', 'installment_id', 'created_at', 'updated_at'];
+
     protected $table = 'e_commerce_orders';
     protected $fillable = [
         'user_id',
@@ -46,5 +51,10 @@ class Order extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(OrderStatus::class, 'status_id');
+    }
+
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class, 'order_id');
     }
 }

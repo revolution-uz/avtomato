@@ -16,7 +16,7 @@ class ConfirmationService
     /**
      * @throws Exception
      */
-    public function send(string $phone, bool $isMarketOtp = false): true
+    public function send(string $phone, bool $isEcommerceOtp = false): true
     {
         /** @var CardConfirmationSms|null $authAttempt */
         $authAttempt = CardConfirmationSms::query()
@@ -33,7 +33,7 @@ class ConfirmationService
             'phone' => $phone,
             'code' => $code,
         ]);
-        $this->smsService->sendConfirmationSms($confirmationSms, $isMarketOtp);
+        $this->smsService->sendConfirmationSms($confirmationSms, $isEcommerceOtp);
 
         return true;
     }

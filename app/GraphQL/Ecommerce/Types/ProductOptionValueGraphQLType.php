@@ -39,7 +39,7 @@ class ProductOptionValueGraphQLType extends GraphQLType
                 'resolve' => fn (ProductOptionValue $root) => $root->value_oz,
             ],
             'slug' => [
-                'type' => Type::nonNull(Type::boolean()),
+                'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (ProductOptionValue $root) => $root->slug,
             ],
             'product_join_options' => [

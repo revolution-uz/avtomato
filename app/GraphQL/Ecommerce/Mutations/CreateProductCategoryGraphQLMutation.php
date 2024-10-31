@@ -57,9 +57,4 @@ class CreateProductCategoryGraphQLMutation extends Mutation
 
         return $model;
     }
-
-    protected function rules(array $args = []): array
-    {
-        return parent::rules($args);
-    }
 }

@@ -98,6 +98,14 @@ class ProductInputGraphQLType extends InputType
                     'numeric',
                 ],
             ],
+            'is_active' => [
+                'name' => 'is_active',
+                'type' => Type::nonNull(Type::boolean()),
+                'rules' => [
+                    'required',
+                    'boolean',
+                ],
+            ],
 
         ];
     }

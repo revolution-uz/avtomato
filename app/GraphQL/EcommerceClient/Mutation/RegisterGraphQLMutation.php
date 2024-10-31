@@ -53,7 +53,7 @@ class RegisterGraphQLMutation extends Mutation
             if ($args['phone'] === AllowedEnum::PHONE->value) {
                 return true;
             }
-            $this->confirmationService->send($args['phone'], isMarketOtp: true);
+            $this->confirmationService->send($args['phone'], isEcommerceOtp: true);
 
             return true;
         } catch (Throwable $e) {

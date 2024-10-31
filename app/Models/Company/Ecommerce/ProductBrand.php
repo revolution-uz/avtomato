@@ -27,7 +27,7 @@ class ProductBrand extends Model
 {
     use HasFactory, OrderBySortable, SoftDeletes;
 
-    public static array $sortables = ['id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'is_active'];
+    public static array $sortables = ['id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'is_active', 'created_at', 'updated_at'];
 
     protected $table = 'e_commerce_product_brands';
     protected $fillable = [
@@ -41,7 +41,7 @@ class ProductBrand extends Model
 
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'brand_id');
     }
 
     public function banners(): HasMany

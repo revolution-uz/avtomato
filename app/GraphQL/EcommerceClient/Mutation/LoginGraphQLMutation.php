@@ -51,7 +51,7 @@ class LoginGraphQLMutation extends Mutation
     {
         $confirm = $this->confirmationService->confirm($args['phone'], $args['code']);
         if (! $confirm) {
-            throw new AuthenticationException('Unauthenticated');
+            throw new AuthenticationException('Phone or code is wrong');
         }
         if (! request()->hasHeader('Device-Name') || ! request()->hasHeader('Device-Type') || ! request()->hasHeader('Device-OS')) {
             throw new AuthorizationError('Phone or code is wrong');

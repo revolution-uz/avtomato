@@ -4,6 +4,7 @@ namespace App\GraphQL\Ecommerce\Types;
 
 use App\Models\Company\Ecommerce\ProductOption;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class ProductOptionGraphQLType extends GraphQLType
@@ -60,6 +61,10 @@ class ProductOptionGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (ProductOption $root) => $root->deleted_at?->timestamp,
+            ],
+            'product_option_groups' => [
+                'type' => Type::listOf(GraphQL::type(ProductOptionGroupGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (ProductOption $root) => $root->productOptionGroup,
             ],
         ];
     }

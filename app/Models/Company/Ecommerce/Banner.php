@@ -2,10 +2,12 @@
 
 namespace App\Models\Company\Ecommerce;
 
+use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
@@ -27,7 +29,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Banner extends Model
 {
-    use HasFactory;
+    use HasFactory, OrderBySortable, SoftDeletes;
+    protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'status', 'url', 'category_id', 'brand_id', 'product_id', 'created_at', 'updated_at'];
+
     protected $table = 'e_commerce_banners';
     protected $fillable = [
         'name_uz',

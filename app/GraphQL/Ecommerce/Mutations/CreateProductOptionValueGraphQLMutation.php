@@ -9,6 +9,7 @@ use App\Models\Company\Ecommerce\ProductOptionValue;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Support\Str;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
@@ -47,14 +48,10 @@ class CreateProductOptionValueGraphQLMutation extends Mutation
     {
 
         $model = new ProductOptionValue;
+        $args['productOptionValue']['slug'] = Str::slug($args['productOptionValue']['value_en']);
         $model->fill($args['productOptionValue']);
         $model->saveOrFail();
 
         return $model;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return parent::rules($args);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Company\Ecommerce;
 
+use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,10 +18,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read Product $product
  */
 class OrderItem extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, OrderBySortable, SoftDeletes;
+    protected static array $sortables = ['id', 'order_id', 'product_id', 'quantity', 'price', 'created_at', 'updated_at'];
+
     protected $table = 'e_commerce_order_items';
     protected $fillable = [
         'product_id',
