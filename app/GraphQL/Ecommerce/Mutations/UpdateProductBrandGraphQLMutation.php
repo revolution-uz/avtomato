@@ -5,8 +5,10 @@ namespace App\GraphQL\Ecommerce\Mutations;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Types\ProductBrandGraphQLType;
 use App\GraphQL\Ecommerce\Types\ProductBrandInputGraphQLType;
+use App\Helpers\RbacHelper;
 use App\Models\Company\Ecommerce\ProductBrand;
 use Closure;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -39,10 +41,12 @@ class UpdateProductBrandGraphQLMutation extends Mutation
         return Type::nonNull(GraphQL::type(ProductBrandGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
+    /**
+     * @throws Error
+     */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return true;
-        //            returnRbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_UPDATE);
+        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_BRAND_DELETE);
     }
 
     /**

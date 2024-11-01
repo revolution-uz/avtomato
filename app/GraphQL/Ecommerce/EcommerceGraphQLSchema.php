@@ -38,6 +38,7 @@ use App\GraphQL\Ecommerce\Queries\SingleProductGraphQLQuery;
 use App\GraphQL\Ecommerce\Queries\SingleProductOptionGroupGraphQLQuery;
 use App\GraphQL\Ecommerce\Queries\SingleProductOptionValueGraphQLQuery;
 use App\GraphQL\Ecommerce\Queries\SingleProductVariationGraphQLQuery;
+use App\GraphQL\Ecommerce\Queries\SingleUserGraphQLQuery;
 use App\GraphQL\Ecommerce\Queries\UsersGraphQLQuery;
 use App\GraphQL\Ecommerce\Types\BannerGraphQLType;
 use App\GraphQL\Ecommerce\Types\BannerInputGraphQLType;
@@ -112,6 +113,7 @@ class EcommerceGraphQLSchema implements ConfigConvertible
                 SingleProductVariationGraphQLQuery::class,
                 SingleProductBrandGraphQLQuery::class,
                 SingleBannerGraphQLQuery::class,
+                SingleUserGraphQLQuery::class,
             ],
             'types' => [
                 ProductCategoryGraphQLType::class,

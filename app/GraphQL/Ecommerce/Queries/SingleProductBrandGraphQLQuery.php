@@ -2,10 +2,12 @@
 
 namespace App\GraphQL\Ecommerce\Queries;
 
-use App\Exceptions\GeneralException;
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Types\ProductBrandGraphQLType;
+use App\Helpers\RbacHelper;
 use App\Models\Company\Ecommerce\ProductBrand;
 use Closure;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
@@ -39,14 +41,14 @@ class SingleProductBrandGraphQLQuery extends Query
         ];
     }
 
+    /**
+     * @throws Error
+     */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return true;
+        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_BRAND_VIEW);
     }
 
-    /**
-     * @throws GeneralException
-     */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return ProductBrand::query()->findOrFail($args['id']);

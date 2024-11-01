@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Ecommerce\Queries;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Types\ProductOptionValueGraphQLType;
+use App\Helpers\RbacHelper;
 use App\Models\Company\Ecommerce\ProductOptionValue;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -40,7 +42,7 @@ class SingleProductOptionValueGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return true;
+        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_OPTION_VALUE_VIEW);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

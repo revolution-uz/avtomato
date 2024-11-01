@@ -4,9 +4,9 @@ namespace App\GraphQL\Ecommerce\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Ecommerce\Banner;
 use App\Models\Company\Ecommerce\ProductBrand;
 use Closure;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Mutation;
@@ -33,10 +33,12 @@ class DeleteProductBrandGraphQLMutation extends Mutation
         return Type::nonNull(Type::boolean());
     }
 
+    /**
+     * @throws Error
+     */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return true;
-        //            RbacHelper::checkPermission(PermissionEnum::BANNER_DELETE);
+        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_BRAND_DELETE);
     }
 
     /**

@@ -46,7 +46,7 @@ class UpdateProductCategoryGraphQLMutation extends Mutation
      */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_UPDATE);
+        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_EDIT);
     }
 
     /**

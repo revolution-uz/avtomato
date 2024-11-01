@@ -194,9 +194,63 @@ enum PermissionEnum: string
     // Company Settings
     case SETTINGS_EDIT = 'settings_edit';
     // Ecommerce
-    case PRODUCT_CATEGORY_CREATE = 'product_category_create';
-    case PRODUCT_CATEGORY_UPDATE = 'product_category_update';
-    case PRODUCT_CATEGORY_DELETE = 'product_category_delete';
+    case PRODUCT_CATEGORY_CREATE = 'e_commerce_product_category_create';
+    case PRODUCT_CATEGORY_VIEW = 'e_commerce_product_category_view';
+    case PRODUCT_CATEGORY_VIEW_ALL = 'e_commerce_product_category_view_all';
+    case PRODUCT_CATEGORY_EDIT = 'e_commerce_product_category_update';
+    case PRODUCT_CATEGORY_DELETE = 'e_commerce_product_category_delete';
+    case BANNER_CREATE = 'e_commerce_banner_create';
+    case BANNER_EDIT = 'e_commerce_banner_edit';
+    case BANNER_DELETE = 'e_commerce_banner_delete';
+    case BANNER_VIEW = 'e_commerce_banner_view';
+    case BANNER_VIEW_ALL = 'e_commerce_banner_view_all';
+    case PRODUCT_BRAND_CREATE = 'e_commerce_product_brand_create';
+    case PRODUCT_BRAND_EDIT = 'e_commerce_product_brand_edit';
+    case PRODUCT_BRAND_DELETE = 'e_commerce_product_brand_delete';
+    case PRODUCT_BRAND_VIEW = 'e_commerce_product_brand_view';
+    case PRODUCT_BRAND_VIEW_ALL = 'e_commerce_product_brand_view_all';
+    case PRODUCT_OPTION_VALUE_CREATE = 'e_commerce_product_option_value_create';
+    case PRODUCT_OPTION_VALUE_VIEW = 'e_commerce_product_option_value_view';
+    case PRODUCT_OPTION_VALUE_EDIT = 'e_commerce_product_option_value_edit';
+    case PRODUCT_OPTION_VALUE_DELETE = 'e_commerce_product_option_value_delete';
+    case PRODUCT_OPTION_VALUE_VIEW_ALL = 'e_commerce_product_option_value_view_all';
+    case PRODUCT_OPTION_GROUP_CREATE = 'e_commerce_product_option_group_create';
+    case PRODUCT_OPTION_GROUP_EDIT = 'e_commerce_product_option_group_edit';
+    case PRODUCT_OPTION_GROUP_DELETE = 'e_commerce_product_option_group_delete';
+    case PRODUCT_OPTION_GROUP_VIEW = 'e_commerce_product_option_group_view';
+    case PRODUCT_OPTION_GROUP_VIEW_ALL = 'e_commerce_product_option_group_view_all';
+    case PRODUCT_OPTION_CREATE = 'e_commerce_product_option_create';
+    case PRODUCT_OPTION_EDIT = 'e_commerce_product_option_edit';
+    case PRODUCT_OPTION_DELETE = 'e_commerce_product_option_delete';
+    case PRODUCT_OPTION_VIEW = 'e_commerce_product_option_view';
+    case PRODUCT_OPTION_VIEW_ALL = 'e_commerce_product_option_view_all';
+    case PRODUCT_JOIN_OPTION_CREATE = 'e_commerce_product_join_option_create';
+    case PRODUCT_JOIN_OPTION_EDIT = 'e_commerce_product_join_option_edit';
+    case PRODUCT_JOIN_OPTION_DELETE = 'e_commerce_product_join_option_delete';
+    case PRODUCT_JOIN_OPTION_VIEW = 'e_commerce_product_join_option_view';
+    case PRODUCT_JOIN_OPTION_VIEW_ALL = 'e_commerce_product_join_option_view_all';
+    case PRODUCT_VARIATION_CREATE = 'e_commerce_product_variation_create';
+    case PRODUCT_VARIATION_EDIT = 'e_commerce_product_variation_edit';
+    case PRODUCT_VARIATION_DELETE = 'e_commerce_product_variation_delete';
+    case PRODUCT_VARIATION_VIEW = 'e_commerce_product_variation_view';
+    case PRODUCT_VARIATION_VIEW_ALL = 'e_commerce_product_variation_view_all';
+    case PRODUCT_CREATE = 'e_commerce_product_create';
+    case PRODUCT_EDIT = 'e_commerce_product_edit';
+    case PRODUCT_DELETE = 'e_commerce_product_delete';
+    case PRODUCT_VIEW = 'e_commerce_product_view';
+    case PRODUCT_VIEW_ALL = 'e_commerce_product_view_all';
+    case ORDERS_VIEW_ALL = 'e_commerce_orders_view_all';
+    case ORDERS_VIEW = 'e_commerce_orders_view';
+    case ORDER_STATUS_CREATE = 'e_commerce_order_statuses_create';
+    case ORDER_STATUS_EDIT = 'e_commerce_order_statuses_edit';
+    case ORDER_STATUS_DELETE = 'e_commerce_order_statuses_delete';
+    case ORDER_STATUS_VIEW = 'e_commerce_order_statuses_view';
+    case ORDER_STATUS_VIEW_ALL = 'e_commerce_order_statuses_view_all';
+    case ORDER_ITEMS_VIEW_ALL = 'e_commerce_order_items_view_all';
+
+    case USERS_VIEW_ALL = 'e_commerce_users_view_all';
+
+    case USERS_VIEW = 'e_commerce_users_view';
 
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
@@ -325,6 +379,62 @@ enum PermissionEnum: string
             self::DASHBOARD_INFO_VIEW,
 
             self::SETTINGS_EDIT,
+            //e-commerce
+            self::PRODUCT_CATEGORY_CREATE,
+            self::PRODUCT_CATEGORY_EDIT,
+            self::PRODUCT_CATEGORY_DELETE,
+            self::PRODUCT_CATEGORY_VIEW,
+            self::PRODUCT_CATEGORY_VIEW_ALL,
+            self::BANNER_CREATE,
+            self::BANNER_EDIT,
+            self::BANNER_DELETE,
+            self::BANNER_VIEW_ALL,
+            self::BANNER_VIEW,
+            self::PRODUCT_BRAND_CREATE,
+            self::PRODUCT_BRAND_EDIT,
+            self::PRODUCT_BRAND_DELETE,
+            self::PRODUCT_BRAND_VIEW,
+            self::PRODUCT_BRAND_VIEW_ALL,
+            self::PRODUCT_OPTION_VALUE_CREATE,
+            self::PRODUCT_OPTION_VALUE_EDIT,
+            self::PRODUCT_OPTION_VALUE_DELETE,
+            self::PRODUCT_OPTION_VALUE_VIEW,
+            self::PRODUCT_OPTION_VALUE_VIEW_ALL,
+            self::PRODUCT_OPTION_GROUP_CREATE,
+            self::PRODUCT_OPTION_GROUP_EDIT,
+            self::PRODUCT_OPTION_GROUP_DELETE,
+            self::PRODUCT_OPTION_GROUP_VIEW,
+            self::PRODUCT_OPTION_GROUP_VIEW_ALL,
+            self::PRODUCT_OPTION_CREATE,
+            self::PRODUCT_OPTION_EDIT,
+            self::PRODUCT_OPTION_VIEW_ALL,
+            self::PRODUCT_OPTION_VIEW,
+            self::PRODUCT_OPTION_DELETE,
+            self::PRODUCT_VARIATION_CREATE,
+            self::PRODUCT_VARIATION_EDIT,
+            self::PRODUCT_VARIATION_DELETE,
+            self::PRODUCT_VARIATION_VIEW,
+            self::PRODUCT_VARIATION_VIEW_ALL,
+            self::PRODUCT_JOIN_OPTION_CREATE,
+            self::PRODUCT_JOIN_OPTION_EDIT,
+            self::PRODUCT_JOIN_OPTION_DELETE,
+            self::PRODUCT_JOIN_OPTION_VIEW,
+            self::PRODUCT_JOIN_OPTION_VIEW_ALL,
+            self::PRODUCT_CREATE,
+            self::PRODUCT_EDIT,
+            self::PRODUCT_DELETE,
+            self::PRODUCT_VIEW,
+            self::PRODUCT_VIEW_ALL,
+            self::ORDER_STATUS_CREATE,
+            self::ORDER_STATUS_EDIT,
+            self::ORDER_STATUS_DELETE,
+            self::ORDER_STATUS_VIEW,
+            self::ORDER_STATUS_VIEW_ALL,
+            self::ORDERS_VIEW,
+            self::ORDERS_VIEW_ALL,
+            self::ORDER_ITEMS_VIEW_ALL,
+            self::USERS_VIEW_ALL,
+            self::USERS_VIEW,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL,
@@ -360,10 +470,7 @@ enum PermissionEnum: string
             self::TRANSACTION_CREATE,
             self::TRANSACTION_EDIT,
             self::TRANSACTION_DELETE,
-            self::TRANSACTION_REVERSE,
-            self::PRODUCT_CATEGORY_CREATE,
-            self::PRODUCT_CATEGORY_UPDATE,
-            self::PRODUCT_CATEGORY_DELETE => true,
+            self::TRANSACTION_REVERSE => true,
         };
     }
 
@@ -549,8 +656,60 @@ enum PermissionEnum: string
             ],
             PermissionGroupEnum::ECOMMERCE->value => [
                 self::PRODUCT_CATEGORY_CREATE->value,
-                self::PRODUCT_CATEGORY_UPDATE->value,
+                self::PRODUCT_CATEGORY_EDIT->value,
                 self::PRODUCT_CATEGORY_DELETE->value,
+                self::PRODUCT_CATEGORY_VIEW_ALL->value,
+                self::PRODUCT_CATEGORY_VIEW->value,
+                self::BANNER_CREATE->value,
+                self::BANNER_EDIT->value,
+                self::BANNER_DELETE->value,
+                self::BANNER_VIEW_ALL->value,
+                self::BANNER_VIEW->value,
+                self::PRODUCT_BRAND_CREATE->value,
+                self::PRODUCT_BRAND_EDIT->value,
+                self::PRODUCT_BRAND_DELETE->value,
+                self::PRODUCT_BRAND_VIEW->value,
+                self::PRODUCT_BRAND_VIEW_ALL->value,
+                self::PRODUCT_OPTION_VALUE_CREATE->value,
+                self::PRODUCT_OPTION_VALUE_EDIT->value,
+                self::PRODUCT_OPTION_VALUE_DELETE->value,
+                self::PRODUCT_OPTION_VALUE_VIEW->value,
+                self::PRODUCT_OPTION_VALUE_VIEW_ALL->value,
+                self::PRODUCT_OPTION_GROUP_CREATE->value,
+                self::PRODUCT_OPTION_GROUP_EDIT->value,
+                self::PRODUCT_OPTION_GROUP_DELETE->value,
+                self::PRODUCT_OPTION_GROUP_VIEW->value,
+                self::PRODUCT_OPTION_GROUP_VIEW_ALL->value,
+                self::PRODUCT_OPTION_CREATE->value,
+                self::PRODUCT_OPTION_EDIT->value,
+                self::PRODUCT_OPTION_VIEW_ALL->value,
+                self::PRODUCT_OPTION_VIEW->value,
+                self::PRODUCT_OPTION_DELETE->value,
+                self::PRODUCT_VARIATION_CREATE->value,
+                self::PRODUCT_VARIATION_EDIT->value,
+                self::PRODUCT_VARIATION_DELETE->value,
+                self::PRODUCT_VARIATION_VIEW->value,
+                self::PRODUCT_VARIATION_VIEW_ALL->value,
+                self::PRODUCT_JOIN_OPTION_CREATE->value,
+                self::PRODUCT_JOIN_OPTION_EDIT->value,
+                self::PRODUCT_JOIN_OPTION_DELETE->value,
+                self::PRODUCT_JOIN_OPTION_VIEW->value,
+                self::PRODUCT_JOIN_OPTION_VIEW_ALL->value,
+                self::PRODUCT_CREATE->value,
+                self::PRODUCT_EDIT->value,
+                self::PRODUCT_DELETE->value,
+                self::PRODUCT_VIEW->value,
+                self::PRODUCT_VIEW_ALL->value,
+                self::ORDER_STATUS_CREATE->value,
+                self::ORDER_STATUS_EDIT->value,
+                self::ORDER_STATUS_DELETE->value,
+                self::ORDER_STATUS_VIEW->value,
+                self::ORDER_STATUS_VIEW_ALL->value,
+                self::ORDERS_VIEW->value,
+                self::ORDERS_VIEW_ALL->value,
+                self::ORDER_ITEMS_VIEW_ALL->value,
+                self::USERS_VIEW_ALL->value,
+                self::USERS_VIEW->value,
             ],
         ];
     }
@@ -720,8 +879,60 @@ enum PermissionEnum: string
             self::ACTIVITY_LOG_VIEW_OWN => FeatureEnum::ACTIVITY_LOG,
 
             self::PRODUCT_CATEGORY_CREATE,
-            self::PRODUCT_CATEGORY_UPDATE,
-            self::PRODUCT_CATEGORY_DELETE => FeatureEnum::ECOMMERCE,
+            self::PRODUCT_CATEGORY_EDIT,
+            self::PRODUCT_CATEGORY_DELETE,
+            self::PRODUCT_CATEGORY_VIEW,
+            self::PRODUCT_CATEGORY_VIEW_ALL,
+            self::BANNER_CREATE,
+            self::BANNER_EDIT,
+            self::BANNER_DELETE,
+            self::BANNER_VIEW_ALL,
+            self::BANNER_VIEW,
+            self::PRODUCT_BRAND_CREATE,
+            self::PRODUCT_BRAND_EDIT,
+            self::PRODUCT_BRAND_DELETE,
+            self::PRODUCT_BRAND_VIEW,
+            self::PRODUCT_BRAND_VIEW_ALL,
+            self::PRODUCT_OPTION_VALUE_CREATE,
+            self::PRODUCT_OPTION_VALUE_EDIT,
+            self::PRODUCT_OPTION_VALUE_DELETE,
+            self::PRODUCT_OPTION_VALUE_VIEW,
+            self::PRODUCT_OPTION_VALUE_VIEW_ALL,
+            self::PRODUCT_OPTION_GROUP_CREATE,
+            self::PRODUCT_OPTION_GROUP_EDIT,
+            self::PRODUCT_OPTION_GROUP_DELETE,
+            self::PRODUCT_OPTION_GROUP_VIEW,
+            self::PRODUCT_OPTION_GROUP_VIEW_ALL,
+            self::PRODUCT_OPTION_CREATE,
+            self::PRODUCT_OPTION_EDIT,
+            self::PRODUCT_OPTION_VIEW_ALL,
+            self::PRODUCT_OPTION_VIEW,
+            self::PRODUCT_OPTION_DELETE,
+            self::PRODUCT_VARIATION_CREATE,
+            self::PRODUCT_VARIATION_EDIT,
+            self::PRODUCT_VARIATION_DELETE,
+            self::PRODUCT_VARIATION_VIEW,
+            self::PRODUCT_VARIATION_VIEW_ALL,
+            self::PRODUCT_JOIN_OPTION_CREATE,
+            self::PRODUCT_JOIN_OPTION_EDIT,
+            self::PRODUCT_JOIN_OPTION_DELETE,
+            self::PRODUCT_JOIN_OPTION_VIEW,
+            self::PRODUCT_JOIN_OPTION_VIEW_ALL,
+            self::PRODUCT_CREATE,
+            self::PRODUCT_EDIT,
+            self::PRODUCT_DELETE,
+            self::PRODUCT_VIEW,
+            self::PRODUCT_VIEW_ALL,
+            self::ORDER_STATUS_CREATE,
+            self::ORDER_STATUS_EDIT,
+            self::ORDER_STATUS_DELETE,
+            self::ORDER_STATUS_VIEW,
+            self::ORDER_STATUS_VIEW_ALL,
+            self::ORDERS_VIEW,
+            self::ORDERS_VIEW_ALL,
+            self::ORDER_ITEMS_VIEW_ALL,
+            self::USERS_VIEW_ALL,
+            self::USERS_VIEW => FeatureEnum::ECOMMERCE,
         };
     }
 
@@ -734,8 +945,6 @@ enum PermissionEnum: string
     {
         return match ($this) {
             self::BALANCE_FUND_DELETE,
-            self::BALANCE_FUND_CREATE,
-            self::BALANCE_FUND_CONFIRM,
 
             self::BALANCE_CHARGE_DELETE,
             self::BALANCE_CHARGE_CREATE,

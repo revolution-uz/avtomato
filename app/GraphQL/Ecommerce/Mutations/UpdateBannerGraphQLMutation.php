@@ -46,7 +46,7 @@ class UpdateBannerGraphQLMutation extends Mutation
      */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::BANNER_UPDATE);
+        return RbacHelper::checkPermission(PermissionEnum::BANNER_EDIT);
     }
 
     /**

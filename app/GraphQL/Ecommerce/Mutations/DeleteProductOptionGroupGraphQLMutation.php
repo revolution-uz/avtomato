@@ -4,7 +4,6 @@ namespace App\GraphQL\Ecommerce\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Ecommerce\Banner;
 use App\Models\Company\Ecommerce\ProductOptionGroup;
 use Closure;
 use GraphQL\Error\Error;
@@ -39,8 +38,7 @@ class DeleteProductOptionGroupGraphQLMutation extends Mutation
      */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return true;
-        //            RbacHelper::checkPermission(PermissionEnum::BANNER_DELETE);
+        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_OPTION_GROUP_DELETE);
     }
 
     /**

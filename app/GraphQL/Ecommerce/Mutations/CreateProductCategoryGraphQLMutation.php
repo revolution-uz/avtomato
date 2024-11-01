@@ -41,8 +41,7 @@ class CreateProductCategoryGraphQLMutation extends Mutation
      */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return true;
-        //        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_CREATE);
+        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_CREATE);
     }
 
     /**

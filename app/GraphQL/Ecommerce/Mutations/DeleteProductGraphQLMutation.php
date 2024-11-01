@@ -38,8 +38,7 @@ class DeleteProductGraphQLMutation extends Mutation
      */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return true;
-        //            RbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_DELETE);
+        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_DELETE);
     }
 
     /**
