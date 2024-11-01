@@ -750,8 +750,6 @@ enum PermissionEnum: string
     {
         return match ($this) {
             self::BALANCE_FUND_DELETE,
-            self::BALANCE_FUND_CREATE,
-            self::BALANCE_FUND_CONFIRM,
 
             self::BALANCE_CHARGE_DELETE,
             self::BALANCE_CHARGE_CREATE,
