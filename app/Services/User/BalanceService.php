@@ -21,10 +21,18 @@ class BalanceService
         private readonly AtmosBalanceClient $atmosBalanceClient
     ) {}
 
+    public static function getBalance(): int
+    {
+        return BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
+    }
+
+    public static function isAvaiblableBalance()
+    {
+        return self::getBalance() > self::MIN_BALANCE_AMOUNT;
+    }
+
     public function chargeAmount(FeatureEnum $featureName, Model $model): BalanceCharge
     {
-        $this->getBalance();
-
         /** @var Feature $feature */
         $feature = Feature::query()->where('name', $featureName)->firstOrFail();
 
@@ -36,22 +44,9 @@ class BalanceService
         ]);
     }
 
-    public function isBalanceEnough(): bool
+    public function isAvaiblableCompany(): bool
     {
-        return tenant('status') == CompanyStatusEnum::ACTIVE and $this->getBalance() > self::MIN_BALANCE_AMOUNT;
-    }
-
-    public function getBalance(): int
-    {
-        $balance = BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
-
-        if (tenant()->status == CompanyStatusEnum::ACTIVE and $balance <= self::MIN_BALANCE_AMOUNT) {
-            tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
-        } elseif (tenant()->status != CompanyStatusEnum::ACTIVE and $balance > self::MIN_BALANCE_AMOUNT) {
-            tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
-        }
-
-        return $balance;
+        return tenant('status') == CompanyStatusEnum::ACTIVE and self::isAvaiblableBalance();
     }
 
     /**

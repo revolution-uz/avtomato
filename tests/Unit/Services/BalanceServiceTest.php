@@ -37,17 +37,17 @@ class BalanceServiceTest extends TestCase
     public function getBalanceWorking()
     {
         BalanceCharge::factory()->create(['amount' => 50000, 'feature_id' => $this->_feature->id]);
-        $this->assertEquals(-50000, $this->_balanceService->getBalance());
+        $this->assertEquals(-50000, BalanceService::getBalance());
         $this->assertEquals(CompanyStatusEnum::ACTIVE, tenant()->refresh()?->status);
 
         // Make company status inactive
         BalanceCharge::factory()->create(['amount' => 50000, 'feature_id' => $this->_feature->id]);
-        $this->assertEquals(-100000, $this->_balanceService->getBalance());
+        $this->assertEquals(-100000, BalanceService::getBalance());
         $this->assertEquals(CompanyStatusEnum::INACTIVE, tenant()->refresh()?->status);
 
         // Make company status active
         BalanceFund::factory()->create(['amount' => 1]);
-        $this->assertEquals(-99999, $this->_balanceService->getBalance());
+        $this->assertEquals(-99999, BalanceService::getBalance());
         $this->assertEquals(CompanyStatusEnum::ACTIVE, tenant()->refresh()?->status);
     }
 }

@@ -42,7 +42,7 @@ class PopulateInstallmentChargeJobs extends Command
                     Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE)->is_active
                     or Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->is_active
                 )
-                or ! $balanceService->isBalanceEnough()
+                or ! $balanceService->isAvaiblableCompany()
             ) {
                 continue;
             }

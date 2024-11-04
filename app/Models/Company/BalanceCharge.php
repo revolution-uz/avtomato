@@ -2,6 +2,8 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\CompanyStatusEnum;
+use App\Services\User\BalanceService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +36,17 @@ class BalanceCharge extends Model
         'chargeable_id',
         'chargeable_type',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (self $balanceCharge) {
+            if (tenant()->status != CompanyStatusEnum::INACTIVE and ! BalanceService::isAvaiblableBalance()) {
+                tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
+            }
+        });
+    }
 
     public function chargeable(): MorphTo
     {
