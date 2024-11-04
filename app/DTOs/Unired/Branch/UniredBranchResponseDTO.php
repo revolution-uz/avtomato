@@ -17,8 +17,8 @@ use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
  * @property string $merchant_humo
  * @property string $terminal_humo
  * @property string $phone
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class UniredBranchResponseDTO extends BaseUniredDTO
 {
@@ -31,8 +31,8 @@ class UniredBranchResponseDTO extends BaseUniredDTO
         public string $terminal_humo,
         public string $phone,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.u\Z')]
-        public Carbon $created_at,
+        public ?Carbon $created_at,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.u\Z')]
-        public Carbon $updated_at,
+        public ?Carbon $updated_at,
     ) {}
 }

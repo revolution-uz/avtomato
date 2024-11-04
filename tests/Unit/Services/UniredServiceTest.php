@@ -109,6 +109,10 @@ class UniredServiceTest extends TestCase
     #[Test]
     public function successCreateOrUpdateCustomer()
     {
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $feature->data = FeatureEnum::UNIRED_PAY->getExampleData();
+        $feature->saveOrFail();
+
         UniredFaker::createOrUpdateCustomer();
         $installment = Installment::factory()->create();
         $phones = Phone::factory()->count(5)->create();

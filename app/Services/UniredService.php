@@ -67,6 +67,9 @@ class UniredService
 
     public function createOrUpdateInstallment(Installment $installment): bool
     {
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
+
         $this->uniredClient->createOrUpdateClients(new UniredCreateOrUpdateClientRequestDTO(
             $installment->customer->pinfl,
             $installment->customer->passport_series . $installment->customer->passport_number,
@@ -75,7 +78,7 @@ class UniredService
             $installment->customer->first_name,
             $installment->customer->last_name,
             $installment->customer->middle_name,
-            Utilities::generateIdByTenancy($installment->branch_id),
+            $branchFeatureDto->id,
             $installment->debtAmount,
             $installment->customer->phones->pluck('phone')->toArray()
         ));
@@ -85,6 +88,9 @@ class UniredService
 
     public function createOrUpdateInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): bool
     {
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
+
         $this->uniredClient->createOrUpdateClients(new UniredCreateOrUpdateClientRequestDTO(
             $installmentGuarantor->customer->pinfl,
             $installmentGuarantor->customer->passport_series . $installmentGuarantor->customer->passport_number,
@@ -93,7 +99,7 @@ class UniredService
             $installmentGuarantor->customer->first_name,
             $installmentGuarantor->customer->last_name,
             $installmentGuarantor->customer->middle_name,
-            Utilities::generateIdByTenancy($installmentGuarantor->installment->branch_id),
+            $branchFeatureDto->id,
             $installmentGuarantor->installment->debtAmount,
             $installmentGuarantor->customer->phones->pluck('phone')->toArray()
         ));
