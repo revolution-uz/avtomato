@@ -22,7 +22,6 @@ class SettingsGraphQLType extends GraphQLType
     ];
 
     public function __construct(
-        private readonly BalanceService $balanceService,
     ) {}
 
     public function fields(): array
