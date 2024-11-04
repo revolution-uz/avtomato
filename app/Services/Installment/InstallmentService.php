@@ -89,7 +89,7 @@ class InstallmentService
                 }
             }
         }
-        if ($auto_charge !== null) {
+        if ($any_card_charge !== null) {
             if ($any_card_charge && ! ($installment->type->value & InstallmentTypeEnum::WITH_PINFL->value)) {
                 $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_PINFL->value);
                 $installment->any_card_charge = $any_card_charge;
