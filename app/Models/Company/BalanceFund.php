@@ -2,6 +2,8 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\CompanyStatusEnum;
+use App\Services\User\BalanceService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,6 +46,17 @@ class BalanceFund extends Model
         'amount' => 'integer',
         'external_transaction_id' => 'integer',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (self $balanceFund) {
+            if (tenant()->status != CompanyStatusEnum::ACTIVE and BalanceService::isAvaiblableBalance()) {
+                tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
+            }
+        });
+    }
 
     public function admin(): BelongsTo
     {

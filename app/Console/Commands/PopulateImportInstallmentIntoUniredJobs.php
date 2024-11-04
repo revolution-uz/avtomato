@@ -39,7 +39,7 @@ class PopulateImportInstallmentIntoUniredJobs extends Command
 
             if (
                 ! Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->is_active
-                or ! $balanceService->isBalanceEnough()
+                or ! $balanceService->isAvaiblableCompany()
             ) {
                 continue;
             }

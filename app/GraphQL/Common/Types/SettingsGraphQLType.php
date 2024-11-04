@@ -56,7 +56,7 @@ class SettingsGraphQLType extends GraphQLType
                 'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'description' => 'Company balance',
                 'resolve' => function ($root) {
-                    return Auth::check() ? $this->balanceService->getBalance() : 0;
+                    return Auth::check() ? BalanceService::getBalance() : 0;
                 },
             ],
         ];
