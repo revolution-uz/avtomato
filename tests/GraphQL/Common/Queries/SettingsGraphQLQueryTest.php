@@ -96,9 +96,9 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
         // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.pinfl_after_due_days'));
         // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_after_due_days'));
         // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_pinfl_after_due_days'));
-        $this->assertNotEquals(0, $this->_balanceService->getBalance());
+        $this->assertNotEquals(0, BalanceService::getBalance());
         $this->assertNotEquals(0, $response->json('data.settings.balance'));
-        $this->assertEquals($this->_balanceService->getBalance(), $response->json('data.settings.balance'));
+        $this->assertEquals(BalanceService::getBalance(), $response->json('data.settings.balance'));
     }
 
     private function buildGraphQLQuery(): array

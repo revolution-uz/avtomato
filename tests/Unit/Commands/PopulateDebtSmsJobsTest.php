@@ -53,7 +53,7 @@ class PopulateDebtSmsJobsTest extends TestCase
     #[Test]
     public function populateCorrectDebtorInstallmentsForToday(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
         foreach (Company::query()->get() as $company) {
             tenancy()->initialize($company);
             Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()]);
@@ -74,7 +74,7 @@ class PopulateDebtSmsJobsTest extends TestCase
     #[Test]
     public function populateCorrectDebtorInstallmentsBeforeOneDay(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
         /** @var Installment $installment */
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->subDay()]);
 
@@ -90,7 +90,7 @@ class PopulateDebtSmsJobsTest extends TestCase
     #[Test]
     public function populateCorrectDebtorInstallmentsAfterOneDay(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
         /** @var Installment $installment */
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->addDay()]);
 
@@ -106,7 +106,7 @@ class PopulateDebtSmsJobsTest extends TestCase
     #[Test]
     public function successCheckingForOneAvailableCompany(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->once()->andReturn(true);
         Feature::findByName(FeatureEnum::SMS)->update(['is_active' => false]);
         foreach (Company::query()->get() as $company) {
             tenancy()->initialize($company);
@@ -128,7 +128,7 @@ class PopulateDebtSmsJobsTest extends TestCase
     #[Test]
     public function doNotPopulateInactiveInstallments(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
         Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
         (new PopulateDebtSmsJobs)->handle($this->_balanceServiceMock);
         Bus::assertNotDispatched(SendDebtSmsJob::class);
@@ -137,7 +137,7 @@ class PopulateDebtSmsJobsTest extends TestCase
     #[Test]
     public function doNotPopulateIfThereIsNoAvailableTemplates(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isBalanceEnough')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
         SmsTemplate::debtTemplates()->update(['status' => SmsTemplateStatusEnum::INACTIVE]);
         Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()->subDay()]);
         Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::today()]);

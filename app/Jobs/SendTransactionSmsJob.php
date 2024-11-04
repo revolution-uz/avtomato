@@ -49,7 +49,7 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
         $this->_smsService = $smsService;
 
         $this->_feature = Feature::findByName(FeatureEnum::SMS);
-        if (! $this->_feature->is_active or ! $balanceService->isBalanceEnough()) {
+        if (! $this->_feature->is_active or ! $balanceService->isAvaiblableCompany()) {
             return;
         }
 
