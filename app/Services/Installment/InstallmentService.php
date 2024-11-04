@@ -127,13 +127,7 @@ class InstallmentService
     {
         if ($status == InstallmentStatusEnum::ACTIVE) {
             if ($installment->isPaidInitialFee()) {
-                if ($installment->status == InstallmentStatusEnum::INACTIVE) {
-                    if ($this->withdrawAutoCharge($installment) && $this->withdrawAnyCardCharge($installment)) {
-                        $installment->status = $status;
-                    }
-                } else {
-                    $installment->status = $status;
-                }
+                $installment->status = $status;
 
                 return $installment->save();
             }
