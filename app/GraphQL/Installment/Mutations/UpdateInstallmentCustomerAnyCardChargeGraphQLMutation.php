@@ -60,8 +60,6 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $installment = Installment::findOrFail($args['id']);
-
-        return $this->installmentService->toggleAutoAndAnyCardCharge($installment, false, $args['any_card_charge']);
+        return $this->installmentService->toggleAutoAndAnyCardCharge(Installment::findOrFail($args['id']), null, $args['any_card_charge']);
     }
 }
