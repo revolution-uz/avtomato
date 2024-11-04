@@ -60,7 +60,7 @@ class AttachCardGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $installment = Installment::findOrFail($args['installment_id']);
-        $this->installmentService->toggleAutoAndAnyCardCharge($installment, true, false);
+        $this->installmentService->toggleAutoAndAnyCardCharge($installment, true, null);
         $installment->cards()->attach($args['card_id']);
 
         return true;
