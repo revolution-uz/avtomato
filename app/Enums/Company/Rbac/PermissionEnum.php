@@ -197,7 +197,7 @@ enum PermissionEnum: string
     case PRODUCT_CATEGORY_CREATE = 'e_commerce_product_category_create';
     case PRODUCT_CATEGORY_VIEW = 'e_commerce_product_category_view';
     case PRODUCT_CATEGORY_VIEW_ALL = 'e_commerce_product_category_view_all';
-    case PRODUCT_CATEGORY_EDIT = 'e_commerce_product_category_update';
+    case PRODUCT_CATEGORY_EDIT = 'e_commerce_product_category_edit';
     case PRODUCT_CATEGORY_DELETE = 'e_commerce_product_category_delete';
     case BANNER_CREATE = 'e_commerce_banner_create';
     case BANNER_EDIT = 'e_commerce_banner_edit';

@@ -10,7 +10,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class UserGraphQLType extends GraphQLType
 {
-    public const string GRAPHQL_TYPE_NAME = 'userGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'UserGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,

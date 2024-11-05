@@ -1,9 +1,9 @@
 <?php
 
-namespace App\GraphQL\EcommerceClient\Queries;
+namespace App\GraphQL\EcommerceClient\Common\Queries;
 
-use App\GraphQL\Ecommerce\Types\ProductGraphQLType;
-use App\Models\Company\Ecommerce\Product;
+use App\GraphQL\Ecommerce\Types\BannerGraphQLType;
+use App\Models\Company\Ecommerce\Banner;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -11,15 +11,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class ProductsGraphQLQuery extends Query
+class BannersGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'products',
+        'name' => 'banners',
     ];
 
     public function type(): Type
     {
-        return GraphQL::paginate(ProductGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(BannerGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -51,7 +51,7 @@ class ProductsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return Product::query()
+        return Banner::query()
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
@@ -63,8 +63,8 @@ class ProductsGraphQLQuery extends Query
             })
             ->when(
                 isset($args['sort']),
-                fn (Builder|Product $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|Product $q) => $q->orderByDesc('id')
+                fn (Builder|Banner $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|Banner $q) => $q->orderByDesc('id')
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }

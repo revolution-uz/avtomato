@@ -20,6 +20,9 @@ use App\GraphQL\Ecommerce\Mutations\UpdateProductCategoryGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\UpdateProductOptionGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\UpdateProductOptionGroupGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\UpdateProductOptionValueGraphQLMutation;
+use App\GraphQL\Ecommerce\Mutations\UploadImageProductBrandGraphQLMutation;
+use App\GraphQL\Ecommerce\Mutations\UploadImageProductCategoryGraphQLMutation;
+use App\GraphQL\Ecommerce\Mutations\UploadImageProductGraphQLMutation;
 use App\GraphQL\Ecommerce\Queries\BannersGraphQLQuery;
 use App\GraphQL\Ecommerce\Queries\OrderItemsGraphQLQuery;
 use App\GraphQL\Ecommerce\Queries\OrdersGraphQLQuery;
@@ -42,10 +45,12 @@ use App\GraphQL\Ecommerce\Queries\SingleUserGraphQLQuery;
 use App\GraphQL\Ecommerce\Queries\UsersGraphQLQuery;
 use App\GraphQL\Ecommerce\Types\BannerGraphQLType;
 use App\GraphQL\Ecommerce\Types\BannerInputGraphQLType;
+use App\GraphQL\Ecommerce\Types\EcommerceImageGraphQLType;
 use App\GraphQL\Ecommerce\Types\OrderGraphQLType;
 use App\GraphQL\Ecommerce\Types\OrderInputGraphQLType;
 use App\GraphQL\Ecommerce\Types\OrderItemGraphQLType;
 use App\GraphQL\Ecommerce\Types\OrderItemInputGraphQLType;
+use App\GraphQL\Ecommerce\Types\OrderStatusGraphQLType;
 use App\GraphQL\Ecommerce\Types\OrderStatusInputGraphQLType;
 use App\GraphQL\Ecommerce\Types\ProductBrandGraphQLType;
 use App\GraphQL\Ecommerce\Types\ProductBrandInputGraphQLType;
@@ -66,6 +71,7 @@ use App\GraphQL\Ecommerce\Types\ProductVariationInputGraphQLType;
 use App\GraphQL\Ecommerce\Types\UserCartInputGraphQLType;
 use App\GraphQL\Ecommerce\Types\UserFavoriteInputGraphQLType;
 use App\GraphQL\Ecommerce\Types\UserGraphQLType;
+use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class EcommerceGraphQLSchema implements ConfigConvertible
@@ -81,6 +87,9 @@ class EcommerceGraphQLSchema implements ConfigConvertible
                 CreateProductBrandGraphQLMutation::class,
                 CreateProductOptionGroupGraphQLMutation::class,
                 CreateProductOptionValueGraphQLMutation::class,
+                UploadImageProductCategoryGraphQLMutation::class,
+                UploadImageProductBrandGraphQLMutation::class,
+                UploadImageProductGraphQLMutation::class,
                 UpdateProductCategoryGraphQLMutation::class,
                 UpdateBannerGraphQLMutation::class,
                 UpdateProductOptionGroupGraphQLMutation::class,
@@ -116,6 +125,8 @@ class EcommerceGraphQLSchema implements ConfigConvertible
                 SingleUserGraphQLQuery::class,
             ],
             'types' => [
+                AttachmentGraphQLType::class,
+                EcommerceImageGraphQLType::class,
                 ProductCategoryGraphQLType::class,
                 ProductCategoryInputGraphQLType::class,
                 ProductGraphQLType::class,
@@ -127,6 +138,7 @@ class EcommerceGraphQLSchema implements ConfigConvertible
                 OrderInputGraphQLType::class,
                 OrderItemInputGraphQLType::class,
                 OrderStatusInputGraphQLType::class,
+                OrderStatusGraphQLType::class,
                 ProductJoinOptionGraphQLType::class,
                 ProductJoinOptionInputGraphQLType::class,
                 ProductOptionValueGraphQLType::class,

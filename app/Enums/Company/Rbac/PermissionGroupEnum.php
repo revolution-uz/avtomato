@@ -217,6 +217,8 @@ enum PermissionGroupEnum: string
             ],
             self::ECOMMERCE => [
                 PermissionEnum::PRODUCT_CATEGORY_CREATE,
+                PermissionEnum::PRODUCT_CATEGORY_VIEW_ALL,
+                PermissionEnum::PRODUCT_CATEGORY_VIEW,
                 PermissionEnum::PRODUCT_CATEGORY_EDIT,
                 PermissionEnum::PRODUCT_CATEGORY_DELETE,
                 PermissionEnum::BANNER_CREATE,

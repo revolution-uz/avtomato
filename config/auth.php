@@ -45,7 +45,7 @@ return [
             'provider' => 'admins',
         ],
         'ecommerce-client' => [
-            'driver' => 'token',
+            'driver' => 'sanctum',
             'provider' => 'ecommerce-client',
         ],
     ],

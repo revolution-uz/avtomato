@@ -3,7 +3,6 @@
 namespace App\GraphQL\Ecommerce\Types;
 
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class ProductInputGraphQLType extends InputType
@@ -63,15 +62,6 @@ class ProductInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'string',
-                ],
-            ],
-            'image' => [
-                'name' => 'image',
-                'type' => GraphQL::type('Upload'),
-                'rules' => [
-                    'required',
-                    'mimes:jpg,jpeg,png',
-                    'max:1024',
                 ],
             ],
             'cost' => [

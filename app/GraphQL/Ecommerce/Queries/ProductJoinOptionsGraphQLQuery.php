@@ -6,7 +6,6 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Types\ProductJoinOptionGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Ecommerce\ProductJoinOption;
-use App\Models\Company\Ecommerce\ProductOption;
 use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -88,8 +87,8 @@ class ProductJoinOptionsGraphQLQuery extends Query
             })
             ->when(
                 isset($args['sort']),
-                fn (Builder|ProductOption $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|ProductOption $q) => $q->orderByDesc('id')
+                fn (Builder|ProductJoinOption $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|ProductJoinOption $q) => $q->orderByDesc('id')
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }

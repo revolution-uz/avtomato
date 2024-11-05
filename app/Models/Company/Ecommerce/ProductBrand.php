@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -15,13 +16,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name_ru
  * @property string $name_oz
  * @property string $name_en
- * @property string $image
  * @property bool $is_active
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property-read Product $products
  * @property-read Banner $banners
+ * @property-read EcommerceImage|null $image
  */
 class ProductBrand extends Model
 {
@@ -35,7 +36,6 @@ class ProductBrand extends Model
         'name_ru',
         'name_en',
         'name_oz',
-        'image',
         'is_active',
     ];
 
@@ -47,5 +47,10 @@ class ProductBrand extends Model
     public function banners(): HasMany
     {
         return $this->hasMany(Banner::class);
+    }
+
+    public function image(): MorphOne
+    {
+        return $this->morphOne(EcommerceImage::class, 'attachmentable')->latestOfMany();
     }
 }

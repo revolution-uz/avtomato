@@ -16,6 +16,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('e_commerce_customer_favorite');
+        Schema::dropIfExists('e_commerce_user_favorite');
     }
 };

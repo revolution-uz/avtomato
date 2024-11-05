@@ -7,7 +7,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -19,7 +21,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_oz
  * @property string $name_en
  * @property string $slug
- * @property string $image
  * @property float $cost
  * @property float $actual_price
  * @property float|null $old_price
@@ -29,6 +30,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $deleted_at
  * @property-read ProductCategory $category
  * @property-read ProductBrand $brand
+ * @property EcommerceImage[]|Collection<int, EcommerceImage> $images
  */
 class Product extends Model
 {
@@ -60,5 +62,10 @@ class Product extends Model
     public function brand(): BelongsTo
     {
         return $this->belongsTo(ProductBrand::class);
+    }
+
+    public function images(): MorphMany
+    {
+        return $this->morphMany(EcommerceImage::class, 'attachmentable');
     }
 }

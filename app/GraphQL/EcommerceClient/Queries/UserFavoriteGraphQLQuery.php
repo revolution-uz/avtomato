@@ -2,31 +2,32 @@
 
 namespace App\GraphQL\EcommerceClient\Queries;
 
-use App\GraphQL\Ecommerce\Types\ProductCategoryGraphQLType;
-use App\Models\Company\Ecommerce\ProductCategory;
+use App\Exceptions\GeneralException;
+use App\GraphQL\Ecommerce\Types\ProductGraphQLType;
+use App\Models\Company\Ecommerce\User;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class SingleProductCategoryGraphQLQuery extends Query
+class UserFavoriteGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'SingleProductCategory',
+        'name' => 'UserFavorite',
     ];
 
     public function type(): Type
     {
-        return GraphQL::type(ProductCategoryGraphQLType::GRAPHQL_TYPE_NAME);
+        return Type::listOf(GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
     {
         return [
-            'id' => [
+            'user_id' => [
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_product_categories,id'],
+                'rules' => ['required', 'exists:e_commerce_users,user_id'],
             ],
         ];
     }
@@ -36,8 +37,16 @@ class SingleProductCategoryGraphQLQuery extends Query
         return true;
     }
 
+    /**
+     * @throws GeneralException
+     */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return ProductCategory::query()->findOrFail($args['id']);
+        $authUser = auth()->user()->id;
+        if ($authUser !== $args['user_id']) {
+            throw new GeneralException(trans('validation.exists', ['attribute' => 'user id']));
+        }
+
+        return User::query()->findOrFail($authUser)->favorite;
     }
 }

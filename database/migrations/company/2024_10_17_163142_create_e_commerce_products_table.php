@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('name_en');
             $table->string('name_oz');
             $table->string('slug')->unique();
-            $table->string('image');
             $table->double('cost');
             $table->double('actual_price');
             $table->double('old_price')->nullable();

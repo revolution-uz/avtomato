@@ -10,12 +10,11 @@ return new class extends Migration
     {
         Schema::create('e_commerce_product_categories', function (Blueprint $table) {
             $table->id();
-            $table->integer('parent_id');
+            $table->integer('parent_id')->nullable();
             $table->string('name_uz');
             $table->string('name_ru');
             $table->string('name_en');
             $table->string('name_oz');
-            $table->string('image');
             $table->boolean('is_active');
             $table->timestamps();
             $table->softDeletes();

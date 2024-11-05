@@ -1,9 +1,9 @@
 <?php
 
-namespace App\GraphQL\EcommerceClient\Queries;
+namespace App\GraphQL\EcommerceClient\Common\Queries;
 
-use App\GraphQL\Ecommerce\Types\ProductBrandGraphQLType;
-use App\Models\Company\Ecommerce\ProductBrand;
+use App\GraphQL\Ecommerce\Types\ProductCategoryGraphQLType;
+use App\Models\Company\Ecommerce\ProductCategory;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -11,15 +11,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class ProductBrandsGraphQLQuery extends Query
+class ProductCategoriesGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'productBrands',
+        'name' => 'productCategories',
     ];
 
     public function type(): Type
     {
-        return GraphQL::paginate(ProductBrandGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(ProductCategoryGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -51,7 +51,7 @@ class ProductBrandsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return ProductBrand::query()
+        return ProductCategory::query()
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
@@ -63,8 +63,8 @@ class ProductBrandsGraphQLQuery extends Query
             })
             ->when(
                 isset($args['sort']),
-                fn (Builder|ProductBrand $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|ProductBrand $q) => $q->orderByDesc('id')
+                fn (Builder|ProductCategory $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|ProductCategory $q) => $q->orderByDesc('id')
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }

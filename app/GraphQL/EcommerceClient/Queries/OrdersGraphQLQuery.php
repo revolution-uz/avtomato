@@ -2,33 +2,22 @@
 
 namespace App\GraphQL\EcommerceClient\Queries;
 
-use App\GraphQL\Ecommerce\Types\ProductGraphQLType;
-use App\Models\Company\Ecommerce\Product;
+use App\GraphQL\Ecommerce\Types\OrderGraphQLType;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class SingleProductGraphQLQuery extends Query
+class OrdersGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'SingleProduct',
+        'name' => 'orders',
     ];
 
     public function type(): Type
     {
-        return GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME);
-    }
-
-    public function args(): array
-    {
-        return [
-            'id' => [
-                'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_products,id'],
-            ],
-        ];
+        return Type::listOf(GraphQL::type(OrderGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -38,6 +27,8 @@ class SingleProductGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return Product::query()->findOrFail($args['id']);
+        $authUser = auth('ecommerce-client')->user();
+
+        return $authUser->orders;
     }
 }

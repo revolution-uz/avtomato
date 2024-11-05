@@ -4,6 +4,7 @@ namespace App\GraphQL\Ecommerce\Types;
 
 use App\Models\Company\Ecommerce\ProductBrand;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class ProductBrandGraphQLType extends GraphQLType
@@ -38,7 +39,7 @@ class ProductBrandGraphQLType extends GraphQLType
                 'resolve' => fn (ProductBrand $root) => $root->name_oz,
             ],
             'image' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (ProductBrand $root) => $root->image,
             ],
             'is_active' => [

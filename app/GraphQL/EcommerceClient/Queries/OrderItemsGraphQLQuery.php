@@ -2,24 +2,25 @@
 
 namespace App\GraphQL\EcommerceClient\Queries;
 
-use App\GraphQL\Ecommerce\Types\ProductCategoryGraphQLType;
-use App\Models\Company\Ecommerce\ProductCategory;
+use App\GraphQL\Ecommerce\Types\OrderItemGraphQLType;
+use App\Models\Company\Ecommerce\OrderItem;
 use Closure;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class ProductCategoriesGraphQLQuery extends Query
+class OrderItemsGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'productCategories',
+        'name' => 'orderItems',
     ];
 
     public function type(): Type
     {
-        return GraphQL::paginate(ProductCategoryGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::paginate(OrderItemGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -44,6 +45,9 @@ class ProductCategoriesGraphQLQuery extends Query
         ];
     }
 
+    /**
+     * @throws Error
+     */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
         return true;
@@ -51,20 +55,20 @@ class ProductCategoriesGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return ProductCategory::query()
+        return OrderItem::query()->with('product')
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('name_en', 'ILIKE', $search)
-                        ->orWhere('name_uz', 'ILIKE', $search)
-                        ->orWhere('name_oz', 'ILIKE', $search)
-                        ->orWhere('name_ru', 'ILIKE', $search);
+                $q->whereHas('product', function (Builder $q) use ($search) {
+                    $q->where('name_uz', 'ilike', $search)
+                        ->orWhere('name_en', 'ilike', $search)
+                        ->orWhere('name_oz', 'ilike', $search)
+                        ->orWhere('name_ru', 'ilike', $search);
                 });
             })
             ->when(
                 isset($args['sort']),
-                fn (Builder|ProductCategory $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|ProductCategory $q) => $q->orderByDesc('id')
+                fn (Builder|OrderItem $q) => $q->orderBySortable($args['sort']),
+                fn (Builder|OrderItem $q) => $q->orderByDesc('id')
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }

@@ -23,7 +23,7 @@ class ProductCategoryGraphQLType extends GraphQLType
                 'resolve' => fn (ProductCategory $root) => $root->id,
             ],
             'parent_id' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'resolve' => fn (ProductCategory $root) => $root->parent_id,
             ],
             'name_uz' => [
@@ -43,7 +43,7 @@ class ProductCategoryGraphQLType extends GraphQLType
                 'resolve' => fn (ProductCategory $root) => $root->name_oz,
             ],
             'image' => [
-                'type' => Type::nonNull(Type::string()),
+                'type' => GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (ProductCategory $root) => $root->image,
             ],
             'is_active' => [

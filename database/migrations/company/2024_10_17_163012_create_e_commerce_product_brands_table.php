@@ -14,7 +14,6 @@ return new class extends Migration
             $table->string('name_ru');
             $table->string('name_en');
             $table->string('name_oz');
-            $table->string('image');
             $table->boolean('is_active');
             $table->timestamps();
             $table->softDeletes();

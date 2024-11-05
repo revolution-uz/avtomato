@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\EcommerceClient\Mutation;
+namespace App\GraphQL\EcommerceClient\Common\Mutation;
 
 use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\Ecommerce\User;

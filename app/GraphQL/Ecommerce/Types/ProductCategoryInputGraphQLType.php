@@ -3,7 +3,6 @@
 namespace App\GraphQL\Ecommerce\Types;
 
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class ProductCategoryInputGraphQLType extends InputType
@@ -19,8 +18,8 @@ class ProductCategoryInputGraphQLType extends InputType
         return [
             'parent_id' => [
                 'name' => 'parent_id',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_product_categories,id'],
+                'type' => Type::int(),
+                'rules' => ['nullable', 'exists:e_commerce_product_categories,id'],
             ],
             'name_uz' => [
                 'name' => 'name_uz',
@@ -54,13 +53,12 @@ class ProductCategoryInputGraphQLType extends InputType
                     'string',
                 ],
             ],
-            'image' => [
-                'name' => 'image',
-                'type' => GraphQL::type('Upload'),
+            'is_active' => [
+                'name' => 'is_active',
+                'type' => Type::nonNull(Type::boolean()),
                 'rules' => [
                     'required',
-                    'mimes:jpg,jpeg,png',
-                    'max:1024',
+                    'boolean',
                 ],
             ],
         ];

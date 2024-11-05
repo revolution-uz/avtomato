@@ -1,25 +1,25 @@
 <?php
 
-namespace App\GraphQL\EcommerceClient\Queries;
+namespace App\GraphQL\EcommerceClient\Common\Queries;
 
-use App\Exceptions\GeneralException;
-use App\GraphQL\Ecommerce\Types\ProductBrandGraphQLType;
-use App\Models\Company\Ecommerce\ProductBrand;
+use App\GraphQL\Ecommerce\Types\ProductGraphQLType;
+use App\Models\Company\Ecommerce\Product;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class SingleProductBrandGraphQLQuery extends Query
+class SingleProductGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'SingleProductBrand',
+        'name' => 'singleProduct',
     ];
 
     public function type(): Type
     {
-        return GraphQL::type(ProductBrandGraphQLType::GRAPHQL_TYPE_NAME);
+        return GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -27,7 +27,13 @@ class SingleProductBrandGraphQLQuery extends Query
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_product_brands,id'],
+                'rules' => [
+                    'required',
+                    Rule::exists('e_commerce_products', 'id')
+                        ->where(function ($query) {
+                            $query->whereNull('deleted_at');
+                        }),
+                ],
             ],
         ];
     }
@@ -37,15 +43,8 @@ class SingleProductBrandGraphQLQuery extends Query
         return true;
     }
 
-    /**
-     * @throws GeneralException
-     */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        if (! ProductBrand::query()->where('id', $args['id'])->exists()) {
-            throw new GeneralException(trans('api.not found'));
-        }
-
-        return ProductBrand::query()->findOrFail($args['id']);
+        return Product::query()->findOrFail($args['id']);
     }
 }
