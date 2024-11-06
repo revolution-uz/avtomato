@@ -19,7 +19,7 @@ class EcommerceRegisterGraphQLQueryTest extends GraphQLTestCase
     {
         $response = $this
             ->postJson(
-                route('graphql.ecommerceCommon'),
+                route('graphql.ecommerce-client-common'),
                 $this->buildGraphQLQuery('998904333699'),
                 $this->_headers
             );
@@ -32,7 +32,7 @@ class EcommerceRegisterGraphQLQueryTest extends GraphQLTestCase
     {
         $response = $this
             ->postJson(
-                route('graphql.ecommerceCommon'),
+                route('graphql.ecommerce-client-common'),
                 $this->buildGraphQLQuery('998904333698'),
                 $this->_headers
             );
