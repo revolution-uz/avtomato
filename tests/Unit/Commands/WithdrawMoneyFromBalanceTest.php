@@ -21,7 +21,7 @@ class WithdrawMoneyFromBalanceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->company = Company::query()->first();
+        $this->company = Company::query()->findOrFail(1);
     }
 
     #[Test]
