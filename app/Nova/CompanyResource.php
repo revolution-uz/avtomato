@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
+use Illuminate\Support\Carbon;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
@@ -80,6 +81,14 @@ class CompanyResource extends Resource
                 ->options(CompanyStatusEnum::getAllCasesForDropdown())
                 ->displayUsingLabels()
                 ->default(CompanyStatusEnum::CREATED),
+            Text::make(__('nova.company.payment_day'), 'payment_day')
+                ->creationRules('nullable')
+                ->updateRules('nullable')
+                ->rules('min:0', function ($attribute, $value, $fail) {
+                    if ($value > Carbon::now()->endOfMonth()->day) {
+                        $fail("{$attribute} joriy oyda mavjud kun bo'lishi kerak!");
+                    }
+                }),
             HasMany::make('Domains', 'domains', DomainResource::class),
         ];
     }

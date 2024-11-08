@@ -21,6 +21,7 @@ use Stancl\Tenancy\Database\Models\Tenant;
  * @property string $account_number
  * @property string $tin
  * @property CompanyStatusEnum $status
+ * @property int $payment_day
  */
 class Company extends Tenant implements TenantWithDatabase
 {
@@ -39,6 +40,7 @@ class Company extends Tenant implements TenantWithDatabase
         'bank_code',
         'account_number',
         'tin',
+        'payment_day',
     ];
 
     protected $casts = [
