@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('populate:import-installment-into-unired-jobs')->dailyAt('00:00');
         $schedule->command('daily:delete-logs')->dailyAt('00:00');
         $schedule->command('populate:debt-sms-jobs')->dailyAt('00:00');
+        $schedule->command('money:withdraw-balance')->dailyAt('00:00');
         // $schedule->command('inspire')->hourly();
     }
 
