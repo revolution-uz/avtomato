@@ -29,7 +29,7 @@ class SingleBannerGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    Rule::exists('e_commerce_banners', 'id')
+                    Rule::exists('ecommerce_banners', 'id')
                         ->where(function ($query) {
                             $query->whereNull('deleted_at');
                         }),

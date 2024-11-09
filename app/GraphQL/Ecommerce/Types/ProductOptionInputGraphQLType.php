@@ -19,7 +19,7 @@ class ProductOptionInputGraphQLType extends InputType
             'group_id' => [
                 'name' => 'group_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_product_option_groups,id'],
+                'rules' => ['required', 'exists:ecommerce_product_option_groups,id'],
             ],
             'name_uz' => [
                 'name' => 'name_uz',

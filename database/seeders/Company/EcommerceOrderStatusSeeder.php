@@ -34,6 +34,6 @@ class EcommerceOrderStatusSeeder extends Seeder
             ],
         ];
 
-        DB::table('e_commerce_order_statuses')->insert($statuses);
+        DB::table('ecommerce_order_statuses')->insert($statuses);
     }
 }

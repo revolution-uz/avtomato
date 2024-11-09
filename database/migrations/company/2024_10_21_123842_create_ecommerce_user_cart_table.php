@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('e_commerce_user_favorite', function (Blueprint $table) {
+        Schema::create('ecommerce_user_cart', function (Blueprint $table) {
             $table->integer('user_id');
             $table->integer('product_id');
         });
@@ -16,6 +16,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('e_commerce_user_favorite');
+        Schema::dropIfExists('ecommerce_user_cart');
     }
 };

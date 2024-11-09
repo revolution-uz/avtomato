@@ -27,7 +27,7 @@ class ProductVariation extends Model
 
     protected static array $sortables = ['id', 'product_id', 'is_active', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_product_variations';
+    protected $table = 'ecommerce_product_variations';
     protected $fillable = [
         'product_id',
         'is_active',

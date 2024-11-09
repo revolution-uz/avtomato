@@ -30,7 +30,7 @@ class SingleProductBrandGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    Rule::exists('e_commerce_product_brands', 'id')
+                    Rule::exists('ecommerce_product_brands', 'id')
                         ->where(function ($query) {
                             $query->whereNull('deleted_at');
                         }),

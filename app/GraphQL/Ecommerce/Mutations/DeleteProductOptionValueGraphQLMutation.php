@@ -61,7 +61,7 @@ class DeleteProductOptionValueGraphQLMutation extends Mutation
             'ids.*' => [
                 'required',
                 'integer',
-                'exists:e_commerce_product_option_values,id',
+                'exists:ecommerce_product_option_values,id',
                 function ($attribute, $value, $fail) {
                     if (ProductOptionValue::query()->whereHas('productJoinOptions')->find($value)) {
                         $fail(__('api.are used', [

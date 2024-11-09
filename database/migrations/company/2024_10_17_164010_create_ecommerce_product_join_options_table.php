@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('e_commerce_product_join_options', function (Blueprint $table) {
+        Schema::create('ecommerce_product_join_options', function (Blueprint $table) {
             $table->id();
             $table->integer('option_id');
             $table->integer('value_id');
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('e_commerce_product_join_options');
+        Schema::dropIfExists('ecommerce_product_join_options');
     }
 };

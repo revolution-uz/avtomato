@@ -27,7 +27,7 @@ class UpdateProductBrandGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:e_commerce_product_brands,id'],
+                'rules' => ['exists:ecommerce_product_brands,id'],
             ],
             'productBrand' => [
                 'name' => 'productBrand',

@@ -25,7 +25,7 @@ class OrderItem extends Model
     use HasFactory, OrderBySortable, SoftDeletes;
     protected static array $sortables = ['id', 'order_id', 'product_id', 'quantity', 'price', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_order_items';
+    protected $table = 'ecommerce_order_items';
     protected $fillable = [
         'product_id',
         'order_id',

@@ -28,7 +28,7 @@ class CreateOrderItemMutation extends Mutation
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    'exists:e_commerce_products,id',
+                    'exists:ecommerce_products,id',
                 ],
             ],
             'order_id' => [
@@ -36,7 +36,7 @@ class CreateOrderItemMutation extends Mutation
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:e_commerce_orders,id',
+                    'exists:ecommerce_orders,id',
                 ],
             ],
             'price' => [

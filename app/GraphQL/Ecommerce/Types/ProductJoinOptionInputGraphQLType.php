@@ -19,22 +19,22 @@ class ProductJoinOptionInputGraphQLType extends InputType
             'option_id' => [
                 'name' => 'option_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_product_options,id'],
+                'rules' => ['required', 'exists:ecommerce_product_options,id'],
             ],
             'value_id' => [
                 'name' => 'value_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_product_option_values,id'],
+                'rules' => ['required', 'exists:ecommerce_product_option_values,id'],
             ],
             'product_id' => [
                 'name' => 'product_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_products,id'],
+                'rules' => ['required', 'exists:ecommerce_products,id'],
             ],
             'product_variation_id' => [
                 'name' => 'product_variation_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['nullable', 'exists:e_commerce_product_variations,id'],
+                'rules' => ['nullable', 'exists:ecommerce_product_variations,id'],
             ],
         ];
     }

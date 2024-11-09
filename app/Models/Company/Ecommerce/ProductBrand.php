@@ -30,7 +30,7 @@ class ProductBrand extends Model
 
     public static array $sortables = ['id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'is_active', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_product_brands';
+    protected $table = 'ecommerce_product_brands';
     protected $fillable = [
         'name_uz',
         'name_ru',

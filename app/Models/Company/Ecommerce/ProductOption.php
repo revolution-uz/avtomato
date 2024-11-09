@@ -31,7 +31,7 @@ class ProductOption extends Model
     use HasFactory, OrderBySortable, SoftDeletes;
     protected static array $sortables = ['id', 'group_id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'slug', 'description', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_product_options';
+    protected $table = 'ecommerce_product_options';
     protected $fillable = [
         'group_id',
         'name_uz',

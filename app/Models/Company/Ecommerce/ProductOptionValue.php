@@ -29,7 +29,7 @@ class ProductOptionValue extends Model
 
     protected static array $sortables = ['id', 'value_uz', 'value_ru', 'value_en', 'value_oz', 'slug', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_product_option_values';
+    protected $table = 'ecommerce_product_option_values';
     protected $fillable = [
         'value_uz',
         'value_ru',

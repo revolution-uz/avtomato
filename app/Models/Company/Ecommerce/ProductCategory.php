@@ -33,7 +33,7 @@ class ProductCategory extends Model
 
     public static array $sortables = ['id', 'parent_id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'is_active', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_product_categories';
+    protected $table = 'ecommerce_product_categories';
 
     protected $fillable = [
         'parent_id',

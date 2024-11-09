@@ -8,14 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('e_commerce_product_option_groups', function (Blueprint $table) {
+        Schema::create('ecommerce_product_option_values', function (Blueprint $table) {
             $table->id();
-            $table->string('name_uz');
-            $table->string('name_ru');
-            $table->string('name_en');
-            $table->string('name_oz');
+            $table->string('value_uz');
+            $table->string('value_ru');
+            $table->string('value_en');
+            $table->string('value_oz');
             $table->string('slug')->unique();
-            $table->string('description');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -23,6 +22,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('e_commerce_product_option_groups');
+        Schema::dropIfExists('ecommerce_product_option_values');
     }
 };

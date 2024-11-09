@@ -21,7 +21,7 @@ class ProductInputGraphQLType extends InputType
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    'exists:e_commerce_product_categories,id',
+                    'exists:ecommerce_product_categories,id',
                 ],
             ],
             'brand_id' => [
@@ -29,7 +29,7 @@ class ProductInputGraphQLType extends InputType
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'nullable',
-                    'exists:e_commerce_product_brands,id',
+                    'exists:ecommerce_product_brands,id',
                 ],
             ],
             'name_uz' => [

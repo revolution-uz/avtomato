@@ -28,7 +28,7 @@ class UpdateProductOptionGroupGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:e_commerce_product_option_groups,id'],
+                'rules' => ['exists:ecommerce_product_option_groups,id'],
             ],
             'productOptionGroup' => [
                 'name' => 'productOptionGroup',

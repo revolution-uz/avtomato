@@ -31,7 +31,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, OrderBySortable, SoftDeletes;
     protected static array $sortables = ['id', 'phone', 'customer_id', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_users';
+    protected $table = 'ecommerce_users';
     protected $fillable = [
         'phone',
         'customer_id',
@@ -57,11 +57,11 @@ class User extends Authenticatable
 
     public function cart(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'e_commerce_user_cart');
+        return $this->belongsToMany(Product::class, 'ecommerce_user_cart');
     }
 
     public function favorite(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'e_commerce_user_favorite');
+        return $this->belongsToMany(Product::class, 'ecommerce_user_favorite');
     }
 }

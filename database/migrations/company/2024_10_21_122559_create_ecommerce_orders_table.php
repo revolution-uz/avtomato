@@ -8,13 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('e_commerce_product_option_values', function (Blueprint $table) {
+        Schema::create('ecommerce_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('value_uz');
-            $table->string('value_ru');
-            $table->string('value_en');
-            $table->string('value_oz');
-            $table->string('slug')->unique();
+            $table->integer('user_id');
+            $table->integer('address_id');
+            $table->integer('status_id');
+            $table->integer('installment_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -22,6 +21,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('e_commerce_product_option_values');
+        Schema::dropIfExists('ecommerce_orders');
     }
 };

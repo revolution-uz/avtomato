@@ -30,7 +30,7 @@ class Order extends Model
     use HasFactory, OrderBySortable, SoftDeletes;
     protected static array $sortables = ['id', 'user_id', 'address_id', 'status_id', 'installment_id', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_orders';
+    protected $table = 'ecommerce_orders';
     protected $fillable = [
         'user_id',
         'address_id',

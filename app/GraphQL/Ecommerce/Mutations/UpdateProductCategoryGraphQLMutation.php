@@ -27,7 +27,7 @@ class UpdateProductCategoryGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:e_commerce_product_categories,id'],
+                'rules' => ['exists:ecommerce_product_categories,id'],
             ],
             'productCategoryInput' => [
                 'name' => 'productCategoryInput',

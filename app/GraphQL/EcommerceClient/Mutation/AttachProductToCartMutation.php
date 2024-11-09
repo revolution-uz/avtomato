@@ -24,12 +24,12 @@ class AttachProductToCartMutation extends Mutation
             'user_id' => [
                 'name' => 'user_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_users,id'],
+                'rules' => ['required', 'exists:ecommerce_users,id'],
             ],
             'product_id' => [
                 'name' => 'product_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_products,id'],
+                'rules' => ['required', 'exists:ecommerce_products,id'],
             ],
         ];
     }

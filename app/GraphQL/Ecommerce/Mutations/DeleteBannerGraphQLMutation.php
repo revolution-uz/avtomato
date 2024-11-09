@@ -61,7 +61,7 @@ class DeleteBannerGraphQLMutation extends Mutation
             'ids.*' => [
                 'required',
                 'integer',
-                'exists:e_commerce_banners,id',
+                'exists:ecommerce_banners,id',
 
             ],
         ];

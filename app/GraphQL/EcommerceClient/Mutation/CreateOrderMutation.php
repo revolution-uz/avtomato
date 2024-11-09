@@ -31,7 +31,7 @@ class CreateOrderMutation extends Mutation
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    'exists:e_commerce_users,id',
+                    'exists:ecommerce_users,id',
                 ],
             ],
             'address_id' => [

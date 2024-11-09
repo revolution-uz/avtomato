@@ -38,7 +38,7 @@ class Product extends Model
 
     public static array $sortables = ['id', 'category_id', 'brand_id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'slug', 'cost', 'actual_price', 'old_price', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_products';
+    protected $table = 'ecommerce_products';
     protected $fillable = [
         'category_id',
         'brand_id',

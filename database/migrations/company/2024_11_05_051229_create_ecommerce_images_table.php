@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('e_commerce_images', function (Blueprint $table) {
+        Schema::create('ecommerce_images', function (Blueprint $table) {
             $table->id();
             $table->string('path', 32); // uploads/{companyId}/uuid.extension
             $table->string('original_name', 64);
@@ -24,6 +24,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('e_commerce_images');
+        Schema::dropIfExists('ecommerce_images');
     }
 };

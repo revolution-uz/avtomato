@@ -27,7 +27,7 @@ class UploadImageProductBrandGraphQLMutation extends Mutation
             'brand_id' => [
                 'name' => 'brand_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_product_brands,id'],
+                'rules' => ['required', 'exists:ecommerce_product_brands,id'],
             ],
             'image' => [
                 'name' => 'image',

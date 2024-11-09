@@ -61,7 +61,7 @@ class DeleteProductBrandGraphQLMutation extends Mutation
             'ids.*' => [
                 'required',
                 'integer',
-                'exists:e_commerce_product_brands,id',
+                'exists:ecommerce_product_brands,id',
                 function ($attribute, $value, $fail) {
                     if (ProductBrand::query()->whereHas('products')->find($value)) {
                         $fail(__('api.are used', [

@@ -19,7 +19,7 @@ class ProductCategoryInputGraphQLType extends InputType
             'parent_id' => [
                 'name' => 'parent_id',
                 'type' => Type::int(),
-                'rules' => ['nullable', 'exists:e_commerce_product_categories,id'],
+                'rules' => ['nullable', 'exists:ecommerce_product_categories,id'],
             ],
             'name_uz' => [
                 'name' => 'name_uz',

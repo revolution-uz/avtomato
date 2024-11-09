@@ -27,7 +27,7 @@ class UserFavoriteGraphQLQuery extends Query
         return [
             'user_id' => [
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_users,user_id'],
+                'rules' => ['required', 'exists:ecommerce_users,user_id'],
             ],
         ];
     }

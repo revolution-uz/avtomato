@@ -24,7 +24,7 @@ class OrderStatus extends Model
     use HasFactory, OrderBySortable, SoftDeletes;
     protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'created_at', 'updated_at'];
 
-    protected $table = 'e_commerce_order_statuses';
+    protected $table = 'ecommerce_order_statuses';
     protected $fillable = [
         'name_uz',
         'name_ru',

@@ -61,7 +61,7 @@ class DeleteProductGraphQLMutation extends Mutation
             'ids.*' => [
                 'required',
                 'integer',
-                'exists:e_commerce_products,id',
+                'exists:ecommerce_products,id',
             ],
         ];
     }

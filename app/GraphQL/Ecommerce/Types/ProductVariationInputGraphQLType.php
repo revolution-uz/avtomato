@@ -19,7 +19,7 @@ class ProductVariationInputGraphQLType extends InputType
             'product_id' => [
                 'name' => 'product_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_products,id'],
+                'rules' => ['required', 'exists:ecommerce_products,id'],
             ],
             'is_active' => [
                 'name' => 'status',

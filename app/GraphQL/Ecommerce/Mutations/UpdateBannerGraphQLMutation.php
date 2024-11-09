@@ -27,7 +27,7 @@ class UpdateBannerGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:e_commerce_banners,id'],
+                'rules' => ['exists:ecommerce_banners,id'],
             ],
             'banner' => [
                 'name' => 'banner',

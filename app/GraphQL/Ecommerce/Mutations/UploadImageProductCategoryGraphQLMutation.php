@@ -27,7 +27,7 @@ class UploadImageProductCategoryGraphQLMutation extends Mutation
             'category_id' => [
                 'name' => 'category_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:e_commerce_product_categories,id'],
+                'rules' => ['required', 'exists:ecommerce_product_categories,id'],
             ],
             'image' => [
                 'name' => 'image',

@@ -21,7 +21,7 @@ class OrderInputGraphQLType extends InputType
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    'exists:e_commerce_users,id',
+                    'exists:ecommerce_users,id',
                 ],
             ],
             'address_id' => [
@@ -37,7 +37,7 @@ class OrderInputGraphQLType extends InputType
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    'exists:e_commerce_order_statuses,id',
+                    'exists:ecommerce_order_statuses,id',
                 ],
             ],
             'installment_id' => [
