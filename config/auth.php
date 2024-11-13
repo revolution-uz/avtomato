@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+        'ecommerce-client' => [
+            'driver' => 'sanctum',
+            'provider' => 'ecommerce-client',
+        ],
     ],
 
     /*
@@ -72,7 +76,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-
+        'ecommerce-client' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Company\Ecommerce\User::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
