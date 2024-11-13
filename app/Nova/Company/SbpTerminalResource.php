@@ -7,7 +7,6 @@ use App\Models\Company\SbpTerminal;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -44,7 +43,6 @@ class SbpTerminalResource extends Resource
     public function fields(NovaRequest $request): array
     {
         return [
-            Heading::make($this->resource->description),
             ID::make()->sortable(),
             Text::make(__('nova.sbp_terminal.name'), 'name')->filterable()->exceptOnForms(),
             Text::make(__('nova.sbp_terminal.filial_code'), 'filial_code')->filterable()->exceptOnForms(),
