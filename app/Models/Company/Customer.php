@@ -3,7 +3,6 @@
 namespace App\Models\Company;
 
 use App\Enums\Company\CardStatusEnum;
-use App\Enums\Company\CustomerTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\GenderEnum;
@@ -19,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Sanctum\HasApiTokens;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -49,7 +47,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Card[]|Collection<int,Card> $cards
  * @property Tag[]|Collection<int, Tag> $tags
  * @property ScoringRequest[]|Collection<int,ScoringRequest> $scoringRequests
- * @property CustomerTypeEnum $type
  * @property-read string $full_name
  * @property-read string $passport
  *
@@ -62,7 +59,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Customer extends Model
 {
-    use HasApiTokens, HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id', 'pinfl', 'passport_series', 'passport_number', 'first_name', 'last_name', 'birth_date'];
 
@@ -81,7 +78,6 @@ class Customer extends Model
         'birth_date',
         'birth_place',
         'gender',
-        'type',
     ];
 
     protected $casts = [
@@ -89,7 +85,6 @@ class Customer extends Model
         'passport_expiration_date' => 'date:d-m-Y',
         'birth_date' => 'date:d-m-Y',
         'gender' => GenderEnum::class,
-        'type' => CustomerTypeEnum::class,
     ];
 
     protected static function boot()

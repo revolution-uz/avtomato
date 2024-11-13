@@ -6,12 +6,9 @@ use App\DTOs\HttpRequestLogDTO;
 use App\DTOs\Sms\SmsSayqal\SmsSayqalGetStatusResponseDTO;
 use App\DTOs\Sms\SmsSayqal\SmsSayqalSendMessageResponseDTO;
 use App\Enums\ClientCodeEnum;
-use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
 use App\Models\Company\SmsMessage;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
-use Throwable;
 
 class SmsSayqalClient extends BaseSmsClient
 {
@@ -51,40 +48,22 @@ class SmsSayqalClient extends BaseSmsClient
         ], '/sms/StatusSMS');
     }
 
-    /**
-     * @throws Throwable
-     * @throws ConnectionException
-     */
     private function request(array $data, string $method)
     {
-        try {
-            $unixTime = time();
-            $response = Http::withHeaders(['Content-Type' => 'application/json', 'X-Access-Token' => $this->generateTransmitAccessToken($unixTime)])
-                ->post($this->baseUrl . $method, array_merge($data, ['utime' => $unixTime]));
-            if ($response->status() == 200) {
-                $this->logRequest(new HttpRequestLogDTO(
-                    method: 'POST',
-                    url: $this->baseUrl . $method,
-                    status: $response->status(),
-                    response: $response->body(),
-                    duration: $response->transferStats?->getTransferTime(),
-                    body: $data,
-                ));
+        $unixTime = time();
+        $response = Http::withHeaders(['Content-Type' => 'application/json', 'X-Access-Token' => $this->generateTransmitAccessToken($unixTime)])
+            ->post($this->baseUrl . $method, array_merge($data, ['utime' => $unixTime]));
 
-                return $response->json();
-            }
-        } catch (Throwable $exception) {
-            $this->logRequest(new HttpRequestLogDTO(
-                method: 'POST',
-                url: $this->baseUrl . $method,
-                status: $exception->getCode(),
-                response: $exception->getMessage(),
-                duration: $exception->getTraceAsString(),
-                body: $data,
-            ), 'error');
-            throw new GeneralException($exception->getMessage());
-        }
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'POST',
+            url: $this->baseUrl . $method,
+            status: $response->status(),
+            response: $response->body(),
+            duration: $response->transferStats?->getTransferTime(),
+            body: $data,
+        ));
 
+        return $response->json();
     }
 
     private function generateTransmitAccessToken(int $unixTime): string

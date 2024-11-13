@@ -81,10 +81,10 @@ class SmsService
         return $message;
     }
 
-    public function sendConfirmationSms(CardConfirmationSms $confirmationSms, bool $isEcommerceOtp = false): void
+    public function sendConfirmationSms(CardConfirmationSms $confirmationSms): void
     {
         $feature = BaseFeature::where('name', FeatureEnum::SMS)->firstOrFail();
-        $template = SmsTemplate::query()->findOrFail($isEcommerceOtp ? SmsTemplateEnum::ECOMMERCE_OTP->value : SmsTemplateEnum::CARD_CONFIRMATION->value);
+        $template = SmsTemplate::query()->findOrFail(SmsTemplateEnum::CARD_CONFIRMATION->value);
 
         $data = FeatureSmsData::from($feature->original_data);
 

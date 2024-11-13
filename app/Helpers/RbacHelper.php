@@ -9,9 +9,6 @@ use GraphQL\Error\Error;
 
 class RbacHelper
 {
-    /**
-     * @throws Error
-     */
     public static function checkPermission(PermissionEnum $permission): bool
     {
         if ($permission->isRelatedToCompanyStatus() and tenant('status') != CompanyStatusEnum::ACTIVE) {
