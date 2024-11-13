@@ -2,7 +2,6 @@
 
 namespace App\Nova\Company;
 
-use App\Models\Company\Feature;
 use App\Models\Company\SbpTerminal;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
@@ -19,7 +18,7 @@ class SbpTerminalResource extends Resource
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<Feature>
+     * @var class-string<SbpTerminal>
      */
     public static string $model = SbpTerminal::class;
 
