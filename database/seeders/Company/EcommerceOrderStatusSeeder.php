@@ -28,7 +28,7 @@ class EcommerceOrderStatusSeeder extends Seeder
             [
                 'name_uz' => 'Yetkazib berildi',
                 'name_ru' => 'Доставлено',
-                'name_en' => OrderStatusEnum::DELIVERED->value,
+                'name_en' => OrderStatusEnum::FINISHED->value,
                 'name_oz' => 'Еткaзиб берилди',
                 'is_active' => true,
             ],
