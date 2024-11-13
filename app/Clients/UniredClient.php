@@ -65,7 +65,7 @@ class UniredClient extends BaseClient
 
     public function getClientCode(): ClientCodeEnum
     {
-        return ClientCodeEnum::ASAXIY;
+        return ClientCodeEnum::UNIRED;
     }
 
     public function ping(): UniredResponseDTO

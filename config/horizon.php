@@ -210,6 +210,16 @@ return [
             'timeout' => 60,
             'nice' => 0,
         ],
+        'supervisor-5' => [
+            'connection' => 'redis',
+            'queue' => ['import-installment-into-unired'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 600,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [
