@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Bus;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class PopulateImportInstallmentIntoUniredJobsTest extends TestCase
+class PopulateCreateOrUpdateInstallmentInUniredJobsTest extends TestCase
 {
     protected bool $tenancy = true;
     protected bool $multiTenancies = true;

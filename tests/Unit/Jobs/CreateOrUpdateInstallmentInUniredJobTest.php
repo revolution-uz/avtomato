@@ -13,7 +13,7 @@ use App\Services\UniredService;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class ImportInstallmentIntoUniredJobTest extends TestCase
+class CreateOrUpdateInstallmentInUniredJobTest extends TestCase
 {
     protected bool $tenancy = true;
 
