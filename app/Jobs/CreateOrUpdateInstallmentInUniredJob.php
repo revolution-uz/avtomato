@@ -2,8 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Enums\FeatureEnum;
+use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Services\UniredService;
+use App\Services\User\BalanceService;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Cache\Repository;
@@ -14,12 +17,13 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 
-class ImportInstallmentIntoUniredJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
+class CreateOrUpdateInstallmentInUniredJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    const MINIMUM_WITHDRAW_AMOUNT = 500;
-    const JOB_ID = 'import-installment-into-unired';
+    const MINIMUM_WITHDRAW_AMOUNT = 100;
+    const MINIMUM_INSTALLMENT_CREATE_AMOUNT = 10000;
+    const JOB_ID = 'create-or-update-installment-in-unired';
 
     public function __construct(private readonly int $installmentId)
     {
@@ -29,20 +33,41 @@ class ImportInstallmentIntoUniredJob implements ShouldBeUniqueUntilProcessing, S
     /**
      * @throws Exception
      */
-    public function handle(UniredService $uniredService): void
+    public function handle(UniredService $uniredService, BalanceService $balanceService): void
     {
+        if (
+            ! Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->is_active
+            or ! $balanceService->isAvaiblableCompany()
+        ) {
+            return;
+        }
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($this->installmentId);
         $debt_amount = $installment->debtAmount;
         if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->any_card_charge) {
             if ($installment->isAvailableCustomerPinfl()) {
-                $uniredService->createOrUpdateInstallment($installment);
+                if ($installment->unired_id) {
+                    $uniredService->createOrUpdateInstallment($installment);
+                } elseif ($debt_amount > self::MINIMUM_INSTALLMENT_CREATE_AMOUNT) {
+                    $uniredService->createInstallment($installment);
+                }
             }
             if ($installment->isAvailableGuarantorPinfl()) {
                 foreach ($installment->guarantorList as $guarantor) {
                     if ($guarantor->any_card_charge) {
-                        $uniredService->createOrUpdateInstallmentGuarantor($guarantor);
+                        if ($guarantor->unired_id) {
+                            $uniredService->createOrUpdateInstallmentGuarantor($guarantor);
+                        } elseif ($debt_amount > self::MINIMUM_INSTALLMENT_CREATE_AMOUNT) {
+                            $uniredService->createInstallmentGuarantor($guarantor);
+                        }
                     }
+                }
+            }
+        } elseif ($installment->unired_id) {
+            $uniredService->switchOffInstallment($installment);
+            foreach ($installment->guarantorList as $guarantor) {
+                if ($guarantor->unired_id) {
+                    $uniredService->switchOffInstallmentGuarantor($guarantor);
                 }
             }
         }

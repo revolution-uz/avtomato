@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Commands;
 
-use App\Console\Commands\PopulateImportInstallmentIntoUniredJobs;
+use App\Console\Commands\PopulateCreateOrUpdateInstallmentInUniredJobs;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Jobs\ImportInstallmentIntoUniredJob;
+use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Models\Company;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -37,12 +37,12 @@ class PopulateImportInstallmentIntoUniredJobsTest extends TestCase
         $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
 
-        (new PopulateImportInstallmentIntoUniredJobs)->handle($this->_balanceServiceMock);
+        (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        $dispatchedJobs = Bus::dispatched(ImportInstallmentIntoUniredJob::class);
+        $dispatchedJobs = Bus::dispatched(CreateOrUpdateInstallmentInUniredJob::class);
         $this->assertCount(1, $dispatchedJobs);
-        $this->assertEquals(ImportInstallmentIntoUniredJob::JOB_ID . '-' . tenant('id') . '-' . $installment->id, $dispatchedJobs[0]->uniqueId());
-        $this->assertEquals(ImportInstallmentIntoUniredJob::JOB_ID, $dispatchedJobs[0]->queue);
+        $this->assertEquals(CreateOrUpdateInstallmentInUniredJob::JOB_ID . '-' . tenant('id') . '-' . $installment->id, $dispatchedJobs[0]->uniqueId());
+        $this->assertEquals(CreateOrUpdateInstallmentInUniredJob::JOB_ID, $dispatchedJobs[0]->queue);
         $this->assertEquals(0, $dispatchedJobs[0]->delay);
     }
 
@@ -52,9 +52,9 @@ class PopulateImportInstallmentIntoUniredJobsTest extends TestCase
         $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
         Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->addDay()]);
 
-        (new PopulateImportInstallmentIntoUniredJobs)->handle($this->_balanceServiceMock);
+        (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(ImportInstallmentIntoUniredJob::class);
+        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 
     #[Test]
@@ -64,9 +64,9 @@ class PopulateImportInstallmentIntoUniredJobsTest extends TestCase
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->addDay()]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
 
-        (new PopulateImportInstallmentIntoUniredJobs)->handle($this->_balanceServiceMock);
+        (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(ImportInstallmentIntoUniredJob::class);
+        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 
     #[Test]
@@ -77,9 +77,9 @@ class PopulateImportInstallmentIntoUniredJobsTest extends TestCase
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->monthlyPayment]);
 
-        (new PopulateImportInstallmentIntoUniredJobs)->handle($this->_balanceServiceMock);
+        (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(ImportInstallmentIntoUniredJob::class);
+        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 
     #[Test]
@@ -91,14 +91,14 @@ class PopulateImportInstallmentIntoUniredJobsTest extends TestCase
             Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::now()]);
         }
 
-        (new PopulateImportInstallmentIntoUniredJobs)->handle($this->_balanceServiceMock);
+        (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        $dispatchedJobs = Bus::dispatched(ImportInstallmentIntoUniredJob::class);
+        $dispatchedJobs = Bus::dispatched(CreateOrUpdateInstallmentInUniredJob::class);
         $this->assertCount(2, $dispatchedJobs);
-        /** @var ImportInstallmentIntoUniredJob $job */
+        /** @var CreateOrUpdateInstallmentInUniredJob $job */
         foreach ($dispatchedJobs as $job) {
-            $this->assertEquals(ImportInstallmentIntoUniredJob::JOB_ID . '-' . tenant('id') . '-' . 1, $job->uniqueId());
-            $this->assertEquals(ImportInstallmentIntoUniredJob::JOB_ID, $job->queue);
+            $this->assertEquals(CreateOrUpdateInstallmentInUniredJob::JOB_ID . '-' . tenant('id') . '-' . 1, $job->uniqueId());
+            $this->assertEquals(CreateOrUpdateInstallmentInUniredJob::JOB_ID, $job->queue);
             $this->assertEquals(0, $job->delay);
         }
     }
@@ -113,9 +113,9 @@ class PopulateImportInstallmentIntoUniredJobsTest extends TestCase
             Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
         }
 
-        (new PopulateImportInstallmentIntoUniredJobs)->handle($this->_balanceServiceMock);
+        (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(ImportInstallmentIntoUniredJob::class);
+        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 
     #[Test]
@@ -127,8 +127,8 @@ class PopulateImportInstallmentIntoUniredJobsTest extends TestCase
             Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
         }
 
-        (new PopulateImportInstallmentIntoUniredJobs)->handle($this->_balanceServiceMock);
+        (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(ImportInstallmentIntoUniredJob::class);
+        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 }

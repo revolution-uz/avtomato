@@ -8,6 +8,7 @@ use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredClientExtIdDTO;
+use App\DTOs\Unired\Client\UniredCreateClientResponseDTO;
 use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
 use App\DTOs\Unired\Payment\UniredCancelPaymentRequestDTO;
@@ -65,6 +66,31 @@ class UniredService
         return $feature->saveOrFail();
     }
 
+    public function createInstallment(Installment $installment): bool
+    {
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
+
+        $createClientResponse = $this->uniredClient->createClient(new UniredCreateOrUpdateClientRequestDTO(
+            $installment->customer->pinfl,
+            $installment->customer->passport_series . $installment->customer->passport_number,
+            Utilities::generateIdByTenancy($installment->id),
+            Utilities::generateIdByTenancy($installment->id),
+            $installment->customer->first_name,
+            $installment->customer->last_name,
+            $installment->customer->middle_name,
+            $branchFeatureDto->id,
+            $installment->debtAmount,
+            $installment->customer->phones->pluck('phone')->toArray()
+        ));
+        if ($createClientResponse->status) {
+            $uniredCreatedClient = UniredCreateClientResponseDTO::from($createClientResponse->result);
+            $installment->update(['unired_id' => $uniredCreatedClient->id]);
+        }
+
+        return true;
+    }
+
     public function createOrUpdateInstallment(Installment $installment): bool
     {
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
@@ -82,6 +108,31 @@ class UniredService
             $installment->debtAmount,
             $installment->customer->phones->pluck('phone')->toArray()
         ));
+
+        return true;
+    }
+
+    public function createInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): bool
+    {
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
+
+        $createClientResponse = $this->uniredClient->createClient(new UniredCreateOrUpdateClientRequestDTO(
+            $installmentGuarantor->customer->pinfl,
+            $installmentGuarantor->customer->passport_series . $installmentGuarantor->customer->passport_number,
+            Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
+            Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
+            $installmentGuarantor->customer->first_name,
+            $installmentGuarantor->customer->last_name,
+            $installmentGuarantor->customer->middle_name,
+            $branchFeatureDto->id,
+            $installmentGuarantor->installment->debtAmount,
+            $installmentGuarantor->customer->phones->pluck('phone')->toArray()
+        ));
+        if ($createClientResponse->status) {
+            $uniredCreatedClient = UniredCreateClientResponseDTO::from($createClientResponse->result);
+            $installmentGuarantor->update(['unired_id' => $uniredCreatedClient->id]);
+        }
 
         return true;
     }
@@ -120,6 +171,21 @@ class UniredService
     public function deleteInstallment(Installment $installment)
     {
         return $this->uniredClient->deleteClient(new UniredClientExtIdDTO(Utilities::generateIdByTenancy($installment->id)));
+    }
+
+    public function switchOffInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): void
+    {
+        $this->uniredClient->toggleClientAuto(new UniredToggleClientAutoRequestDTO(Utilities::generateIdByTenancy($installmentGuarantor->id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id), false));
+    }
+
+    public function switchOnInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): void
+    {
+        $this->uniredClient->toggleClientAuto(new UniredToggleClientAutoRequestDTO(Utilities::generateIdByTenancy($installmentGuarantor->id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id), true));
+    }
+
+    public function deleteInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor)
+    {
+        return $this->uniredClient->deleteClient(new UniredClientExtIdDTO(Utilities::generateIdByTenancy($installmentGuarantor->id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id)));
     }
 
     public function getPayments(UniredGetPaymentsPaginationRequestDTO $params): UniredGetPaymentsPaginationResponseDTO

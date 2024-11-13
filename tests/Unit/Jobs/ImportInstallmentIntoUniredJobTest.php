@@ -5,7 +5,7 @@ namespace Tests\Unit\Jobs;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Main\SettingsTypeEnum;
-use App\Jobs\ImportInstallmentIntoUniredJob;
+use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
@@ -29,7 +29,7 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
             'guarantor_pinfl_after_due_days' => 0,
             'any_card_charge' => true,
         ]);
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createOrUpdateInstallment()->times(0);
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
@@ -48,7 +48,7 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
             'guarantor_pinfl_after_due_days' => 1,
             'any_card_charge' => true,
         ]);
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createOrUpdateInstallment()->times(0);
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
@@ -70,7 +70,7 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::PINFL_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
 
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createOrUpdateInstallment()->times(0);
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
@@ -93,7 +93,7 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
 
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createOrUpdateInstallment()->once()->withAnyArgs();
         $mock->expects()->createOrUpdateInstallmentGuarantor()->once()->withAnyArgs();
@@ -116,7 +116,7 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => false]);
 
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createOrUpdateInstallment()->once()->withAnyArgs();
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
@@ -139,7 +139,7 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
 
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createOrUpdateInstallment()->once()->withAnyArgs();
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
