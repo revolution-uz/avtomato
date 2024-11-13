@@ -86,7 +86,7 @@ class SbpTerminalResource extends Resource
 
     public function title(): string
     {
-        return $this->resource->name->value;
+        return $this->resource->name;
     }
 
     public function authorizedToDelete(Request $request): bool
