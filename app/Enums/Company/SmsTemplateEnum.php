@@ -9,8 +9,6 @@ enum SmsTemplateEnum: int
     case CHARGE = 3;
     case DEBT = 4;
 
-    case ECOMMERCE_OTP = 5;
-
     public static function getExampleData(): array
     {
         return [
@@ -49,11 +47,6 @@ enum SmsTemplateEnum: int
                     'overdue_days' => 0,
                 ],
                 'description' => 'Qarzdorlik bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
-            ],
-            self::ECOMMERCE_OTP => [
-                'status' => SmsTemplateStatusEnum::ACTIVE,
-                'original_template' => ':ecommerce dan ro\'yxatdan o\'tish uchun kod: :code',
-                'description' => 'Onlayn do\'kondan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
         };
     }

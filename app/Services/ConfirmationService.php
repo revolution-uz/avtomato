@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\Company\AllowedEnum;
 use App\Models\Company\CardConfirmationSms;
 use Carbon\Carbon;
 use Exception;
@@ -16,7 +15,7 @@ class ConfirmationService
     /**
      * @throws Exception
      */
-    public function send(string $phone, bool $isEcommerceOtp = false): true
+    public function send(string $phone): true
     {
         /** @var CardConfirmationSms|null $authAttempt */
         $authAttempt = CardConfirmationSms::query()
@@ -33,16 +32,14 @@ class ConfirmationService
             'phone' => $phone,
             'code' => $code,
         ]);
-        $this->smsService->sendConfirmationSms($confirmationSms, $isEcommerceOtp);
+
+        $this->smsService->sendConfirmationSms($confirmationSms);
 
         return true;
     }
 
     public function confirm(string $phone, string $otp): bool
     {
-        if ($phone == AllowedEnum::PHONE->value && $otp === AllowedEnum::OTP_CODE->value) {
-            return true;
-        }
         $authAttempt = CardConfirmationSms::query()
             ->where('phone', $phone)
             ->orderBy('created_at', 'desc')
