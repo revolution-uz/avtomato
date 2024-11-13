@@ -9,7 +9,7 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
  *
  * @property int $terminal_id
  */
-class SbpDeactivateTerminalRequestDTOBase extends BaseQrPayDTO
+class SbpDeactivateTerminalRequestDTO extends BaseQrPayDTO
 {
     public function __construct(
         public int $terminal_id,

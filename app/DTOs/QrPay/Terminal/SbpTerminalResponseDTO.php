@@ -14,7 +14,7 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
  * @property string $name
  * @property int $status
  */
-class SbpTerminalResponseDTOBase extends BaseQrPayDTO
+class SbpTerminalResponseDTO extends BaseQrPayDTO
 {
     public function __construct(
         public int $terminal_id,
