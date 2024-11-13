@@ -7,10 +7,10 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Error\AuthorizationError;
 use Rebing\GraphQL\Support\Mutation;
 
-class AttachProductToFavoriteMutation extends Mutation
+class AttachProductToCartGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'attachProductToFavorite',
+        'name' => 'attachProductToCart',
     ];
 
     public function type(): Type
@@ -24,7 +24,7 @@ class AttachProductToFavoriteMutation extends Mutation
             'user_id' => [
                 'name' => 'user_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:ecommerce_products,id'],
+                'rules' => ['required', 'exists:ecommerce_users,id'],
             ],
             'product_id' => [
                 'name' => 'product_id',
@@ -35,8 +35,8 @@ class AttachProductToFavoriteMutation extends Mutation
     }
 
     /**
-     * @throws GeneralException
      * @throws AuthorizationError
+     * @throws GeneralException
      */
     public function resolve($root, $args)
     {
@@ -45,9 +45,9 @@ class AttachProductToFavoriteMutation extends Mutation
         }
         $user = auth('ecommerce-client')->user();
         if ($user->id !== $args['user_id']) {
-            throw new GeneralException(trans('validation.exists', ['attribute' => 'user_id']));
+            throw new GeneralException(trans('validation.exists', ['attribute' => 'user id']));
         }
-        $user->favorite()->attach($args['product_id']);
+        $user->cart()->attach($args['product_id']);
 
         return true;
     }

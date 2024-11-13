@@ -7,9 +7,9 @@ use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
@@ -24,7 +24,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Product[]|Collection<int, Product> $cart
  * @property Product[]|Collection<int, Product> $favorite
  * @property Order[]|Collection<int, Order> $orders
- * @property Customer $customer
+ * @property-read  Customer|null $customer
  */
 class User extends Authenticatable
 {
@@ -37,9 +37,9 @@ class User extends Authenticatable
         'customer_id',
     ];
 
-    public function customer(): HasOne
+    public function customer(): BelongsTo
     {
-        return $this->hasOne(Customer::class, 'id', 'customer_id');
+        return $this->belongsTo(Customer::class);
     }
 
     public function orders(): HasMany

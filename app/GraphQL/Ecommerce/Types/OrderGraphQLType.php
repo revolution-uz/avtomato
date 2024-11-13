@@ -38,14 +38,14 @@ class OrderGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (Order $root) => $root->installment_id,
             ],
-            //            'status' => [
-            //                'type' => GraphQL::type(OrderStatusGraphQLType::GRAPHQL_TYPE_NAME),
-            //                'resolve' => fn (Order $root) => $root->status,
-            //            ],
-            //            'order_items' => [
-            //                'type' => GraphQL::type(OrderItemGraphQLType::GRAPHQL_TYPE_NAME),
-            //                'resolve' => fn (Order $root) => $root->orderItems,
-            //            ],
+            'status' => [
+                'type' => GraphQL::type(OrderStatusGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Order $root) => $root->status,
+            ],
+            'order_items' => [
+                'type' => Type::listOf(GraphQL::type(OrderItemGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Order $root) => $root->orderItems,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Order $root) => $root->created_at->timestamp,

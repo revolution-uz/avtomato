@@ -5,6 +5,7 @@ namespace App\GraphQL\EcommerceClient\Mutation;
 use App\Enums\Company\OrderStatusEnum;
 use App\Exceptions\GeneralException;
 use App\GraphQL\Ecommerce\Types\OrderGraphQLType;
+use App\GraphQL\Ecommerce\Types\OrderInputGraphQLType;
 use App\Models\Company\Ecommerce\Order;
 use App\Models\Company\Ecommerce\OrderStatus;
 use GraphQL\Type\Definition\Type;
@@ -12,7 +13,7 @@ use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
-class CreateOrderMutation extends Mutation
+class CreateOrderGraphQLMutation extends Mutation
 {
     protected $attributes = [
         'name' => 'createOrder',
@@ -26,14 +27,6 @@ class CreateOrderMutation extends Mutation
     public function args(): array
     {
         return [
-            'user_id' => [
-                'name' => 'user_id',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => [
-                    'required',
-                    'exists:ecommerce_users,id',
-                ],
-            ],
             'address_id' => [
                 'name' => 'address_id',
                 'type' => Type::nonNull(Type::int()),
@@ -50,6 +43,10 @@ class CreateOrderMutation extends Mutation
                     'exists:installments,id',
                 ],
             ],
+            'orderItems' => [
+                'name' => 'orderItems',
+                'type' => Type::listOf(Type::nonNull(GraphQL::type(OrderInputGraphQLType::GRAPHQL_TYPE_NAME))),
+            ],
         ];
     }
 
@@ -64,11 +61,14 @@ class CreateOrderMutation extends Mutation
             throw new GeneralException('Iltimos profilni to\'ldiring');
         }
         $order = new Order;
-        $order->user_id = $args['user_id'];
+        $order->user_id = $authUser->id;
         $order->address_id = $args['address_id'];
         $order->status_id = OrderStatus::query()->where('name_en', OrderStatusEnum::CREATED)->first()->id;
         $order->installment_id = $args['installment_id'];
         $order->saveOrFail();
+        foreach ($args['orderItems'] as $item) {
+            $order->orderItems()->create($item);
+        }
 
         return $order;
     }

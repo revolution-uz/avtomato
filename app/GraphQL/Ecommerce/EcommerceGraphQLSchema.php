@@ -2,6 +2,14 @@
 
 namespace App\GraphQL\Ecommerce;
 
+use App\GraphQL\Common\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\MahallaGraphQLType;
+use App\GraphQL\Common\Types\RegionGraphQLType;
+use App\GraphQL\Customer\Types\AddressGraphQLType;
+use App\GraphQL\Customer\Types\CardGraphQLType;
+use App\GraphQL\Customer\Types\CustomerGraphQLType;
+use App\GraphQL\Customer\Types\PhoneGraphQLType;
+use App\GraphQL\Customer\Types\TagGraphQLType;
 use App\GraphQL\Ecommerce\Mutations\CreateBannerGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\CreateProductBrandGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\CreateProductCategoryGraphQLMutation;
@@ -16,6 +24,7 @@ use App\GraphQL\Ecommerce\Mutations\DeleteProductOptionGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\DeleteProductOptionGroupGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\DeleteProductOptionValueGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\UpdateBannerGraphQLMutation;
+use App\GraphQL\Ecommerce\Mutations\UpdateOrderStatusGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\UpdateProductCategoryGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\UpdateProductOptionGraphQLMutation;
 use App\GraphQL\Ecommerce\Mutations\UpdateProductOptionGroupGraphQLMutation;
@@ -71,7 +80,24 @@ use App\GraphQL\Ecommerce\Types\ProductVariationInputGraphQLType;
 use App\GraphQL\Ecommerce\Types\UserCartInputGraphQLType;
 use App\GraphQL\Ecommerce\Types\UserFavoriteInputGraphQLType;
 use App\GraphQL\Ecommerce\Types\UserGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentCommentGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
+use App\GraphQL\Installment\Types\TariffGraphQLType;
+use App\GraphQL\Installment\Types\TransactionGraphQLType;
+use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
+use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\BranchGraphQLType;
+use App\GraphQL\Management\Types\RoleGraphQLType;
+use App\GraphQL\Scoring\Types\Card\CardScoringGraphQLType;
+use App\GraphQL\Scoring\Types\Debt\DebtScoringGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\CreditHistory\CreditHistoryGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\InpsHistory\InpsHistoryGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\PensionHistory\PensionInfoGraphQLType;
+use App\GraphQL\Scoring\Types\ScoringRequestGraphQLType;
+use App\GraphQL\Scoring\Types\ScoringRequestUnionGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class EcommerceGraphQLSchema implements ConfigConvertible
@@ -95,6 +121,7 @@ class EcommerceGraphQLSchema implements ConfigConvertible
                 UpdateProductOptionGroupGraphQLMutation::class,
                 UpdateProductOptionValueGraphQLMutation::class,
                 UpdateProductOptionGraphQLMutation::class,
+                UpdateOrderStatusGraphQLMutation::class,
                 DeleteProductCategoryGraphQLMutation::class,
                 DeleteProductOptionGroupGraphQLMutation::class,
                 DeleteProductOptionValueGraphQLMutation::class,
@@ -154,6 +181,32 @@ class EcommerceGraphQLSchema implements ConfigConvertible
                 UserGraphQLType::class,
                 OrderGraphQLType::class,
                 OrderItemGraphQLType::class,
+                CreditHistoryGraphQLType::class,
+                InpsHistoryGraphQLType::class,
+                PensionInfoGraphQLType::class,
+                CardScoringGraphQLType::class,
+                DebtScoringGraphQLType::class,
+                InstallmentGraphQLType::class,
+                InstallmentGraphGraphQLType::class,
+                TransactionGraphQLType::class,
+                InstallmentGuarantorGraphQLType::class,
+                InstallmentCommentGraphQLType::class,
+                AttachmentGraphQLType::class,
+                BranchGraphQLType::class,
+                AdminGraphQLType::class,
+                TariffGraphQLType::class,
+                CustomerGraphQLType::class,
+                CardGraphQLType::class,
+                AddressGraphQLType::class,
+                PhoneGraphQLType::class,
+                ScoringRequestGraphQLType::class,
+                ScoringRequestUnionGraphQLType::class,
+                TagGraphQLType::class,
+                RegionGraphQLType::class,
+                DistrictGraphQLType::class,
+                MahallaGraphQLType::class,
+                TransactionTypeGraphQLType::class,
+                RoleGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];
