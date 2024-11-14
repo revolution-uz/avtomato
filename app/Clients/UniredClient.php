@@ -157,7 +157,7 @@ class UniredClient extends BaseClient
 
     public function getWebhook(): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_GET_WEBHOOK);
+        return $this->makeRequest(self::PAYMENT_GET_WEBHOOK, BaseUniredDTO::from([]));
     }
 
     public function setWebhook(UniredSetWebhookDTO $params): UniredResponseDTO
