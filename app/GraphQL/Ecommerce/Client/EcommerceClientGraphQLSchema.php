@@ -2,6 +2,10 @@
 
 namespace App\GraphQL\Ecommerce\Client;
 
+use App\GraphQL\Common\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\MahallaGraphQLType;
+use App\GraphQL\Common\Types\RegionGraphQLType;
+use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CustomerInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\BannerGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
@@ -35,6 +39,7 @@ use App\GraphQL\Ecommerce\Common\Queries\SingleBannerGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\SingleProductBrandGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\SingleProductCategoryGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\SingleProductGraphQLQuery;
+use App\GraphQL\Management\Types\AdminInputGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class EcommerceClientGraphQLSchema implements ConfigConvertible
@@ -81,6 +86,11 @@ class EcommerceClientGraphQLSchema implements ConfigConvertible
                 UserGraphQLType::class,
                 UserFavouriteGraphQLType::class,
                 UserCartGraphQLType::class,
+                DistrictGraphQLType::class,
+                MahallaGraphQLType::class,
+                RegionGraphQLType::class,
+                AddressGraphQLType::class,
+                AdminInputGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_client_token'],
         ];

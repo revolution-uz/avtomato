@@ -2,6 +2,12 @@
 
 namespace App\GraphQL\Ecommerce\Common;
 
+use App\GraphQL\Common\Queries\DistrictsGraphQLQuery;
+use App\GraphQL\Common\Queries\MahallasGraphQLQuery;
+use App\GraphQL\Common\Queries\RegionsGraphQLQuery;
+use App\GraphQL\Common\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\MahallaGraphQLType;
+use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\BannerGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductBrandGraphQLType;
@@ -40,6 +46,9 @@ class EcommerceCommonGraphQLSchema implements ConfigConvertible
             'mutation' => [
                 RegisterGraphQLMutation::class,
                 LoginGraphQLMutation::class,
+                DistrictsGraphQLQuery::class,
+                MahallasGraphQLQuery::class,
+                RegionsGraphQLQuery::class,
             ],
             'types' => [
                 EcommerceImageGraphQLType::class,
@@ -50,6 +59,9 @@ class EcommerceCommonGraphQLSchema implements ConfigConvertible
                 ProductJoinOptionGraphQLType::class,
                 ProductOptionValueGraphQLType::class,
                 ProductOptionGraphQLType::class,
+                DistrictGraphQLType::class,
+                MahallaGraphQLType::class,
+                RegionGraphQLType::class,
             ],
             'middleware' => ['optional_auth:sanctum'],
         ];
