@@ -167,13 +167,18 @@ class UniredClient extends BaseClient
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO
     {
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->$httpMethod($this->baseUrl . $path, $data);
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->token,
+        ];
+        $response = Http::withHeaders($headers)->$httpMethod($this->baseUrl . $path, $data);
+        $headers['Authorization'] = 'Bearer ****' . substr($this->token, -9);
         $this->logRequest(new HttpRequestLogDTO(
-            method: $httpMethod . $path,
-            url: $this->baseUrl,
+            method: $httpMethod,
+            url: $this->baseUrl . $path,
             status: $response->status(),
             response: $response->json(),
+            headers: $headers,
             duration: $response->transferStats?->getTransferTime(),
             body: $data,
         ));
@@ -185,7 +190,7 @@ class UniredClient extends BaseClient
     {
         $response = $this->httpRequest(['method' => $method, 'params' => $params->toArray()], $httpMethod, '');
 
-        if (! $response->isSuccess()) {
+        if (!$response->isSuccess()) {
             throw new UniredException($response->error->message);
         }
 
