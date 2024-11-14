@@ -7,7 +7,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
@@ -19,7 +20,8 @@ use Illuminate\Support\Collection;
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property-read Product $product
- * @property-read ProductJoinOption[]|Collection<int,ProductJoinOption> $productJoinOption
+ * @property-read ProductOption[]|Collection<int,ProductOption> $options
+ * @property EcommerceImage[]|Collection<int, EcommerceImage> $images
  */
 class ProductVariation extends Model
 {
@@ -38,8 +40,13 @@ class ProductVariation extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function productJoinOptions(): HasMany
+    public function options(): BelongsToMany
     {
-        return $this->hasMany(ProductJoinOption::class);
+        return $this->belongsToMany(ProductOption::class, 'ecommerce_product_join_options');
+    }
+
+    public function images(): MorphMany
+    {
+        return $this->morphMany(EcommerceImage::class, 'attachmentable');
     }
 }

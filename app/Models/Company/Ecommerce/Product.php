@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -30,7 +31,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $deleted_at
  * @property-read ProductCategory $category
  * @property-read ProductBrand $brand
+ * @property-read ProductVariation[] $variations
  * @property EcommerceImage[]|Collection<int, EcommerceImage> $images
+ * @property EcommerceImage|Collection<int, EcommerceImage> $mainImage
  */
 class Product extends Model
 {
@@ -64,7 +67,17 @@ class Product extends Model
         return $this->belongsTo(ProductBrand::class);
     }
 
+    public function variations(): HasMany
+    {
+        return $this->hasMany(ProductVariation::class, 'product_id');
+    }
+
     public function images(): MorphMany
+    {
+        return $this->morphMany(EcommerceImage::class, 'attachmentable');
+    }
+
+    public function mainImage(): MorphMany
     {
         return $this->morphMany(EcommerceImage::class, 'attachmentable');
     }

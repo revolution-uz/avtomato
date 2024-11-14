@@ -50,9 +50,17 @@ class ProductGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Product $root) => $root->slug,
             ],
-            'image' => [
+            'main_image' => [
+                'type' => GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Product $root) => $root->mainImage,
+            ],
+            'images' => [
                 'type' => Type::listOf(GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Product $root) => $root->images,
+            ],
+            'variations' => [
+                'type' => Type::listOf(GraphQL::type(ProductVariationGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Product $root) => $root->var,
             ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),
