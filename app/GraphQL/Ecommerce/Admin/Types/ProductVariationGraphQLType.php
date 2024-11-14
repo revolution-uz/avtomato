@@ -9,7 +9,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class ProductVariationGraphQLType extends GraphQLType
 {
-    public const string GRAPHQL_TYPE_NAME = 'ProductOptionValueGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'ProductVariationGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
