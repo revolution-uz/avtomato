@@ -3,7 +3,6 @@
 namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
-use App\DTOs\Unired\Base\BaseUniredDTO;
 use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
@@ -100,7 +99,7 @@ class UniredClient extends BaseClient
 
     public function createOrUpdateClients(UniredCreateOrUpdateClientRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::CLIENT_CREATE_OR_UPDATE, $params);
+        return $this->makeRequest(self::CLIENT_CREATE_OR_UPDATE, [$params]);
     }
 
     public function findClient(UniredFindClientRequestDTO $params): UniredResponseDTO
@@ -181,7 +180,7 @@ class UniredClient extends BaseClient
         return UniredResponseDTO::from($response->json());
     }
 
-    private function makeRequest(string $method, ?BaseUniredDTO $params = null, string $httpMethod = 'post'): UniredResponseDTO
+    private function makeRequest($method, $params = null, $httpMethod = 'post'): UniredResponseDTO
     {
         $response = $this->httpRequest(['method' => $method, 'params' => $params], $httpMethod, '');
 

@@ -20,7 +20,7 @@ return new class extends Migration
         Schema::table('sms_messages', function (Blueprint $table) {
             $table->dropforeign('installment_id');
             $table->dropforeign('customer_id');
-            $table->tinyInteger('customer_type')->default(0);
+            $table->dropColumn('customer_type');
         });
     }
 };

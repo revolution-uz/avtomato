@@ -1,0 +1,18 @@
+{
+  "status": true,
+  "result": {
+    "pinfl": 45261322135488,
+    "passport_id": "AB123141",
+    "loan_id": "330129334501331",
+    "ext_id": "xyz-1234",
+    "firstname": "John",
+    "lastname": "Doe",
+    "middlename": "Matti",
+    "filial_id": 6,
+    "debit_amount": 100000000,
+    "updated_at": "2022-08-02T07:43:03.000000Z",
+    "created_at": "2022-08-02T07:43:03.000000Z",
+    "id": 11
+  },
+  "error": null
+}

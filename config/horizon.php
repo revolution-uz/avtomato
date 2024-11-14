@@ -212,7 +212,7 @@ return [
         ],
         'supervisor-5' => [
             'connection' => 'redis',
-            'queue' => ['import-installment-into-unired'],
+            'queue' => ['create-or-update-installment-in-unired'],
             'balance' => 'simple',
             'maxProcesses' => 1,
             'memory' => 128,
