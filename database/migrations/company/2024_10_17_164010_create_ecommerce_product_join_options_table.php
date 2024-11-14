@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('ecommerce_product_join_options', function (Blueprint $table) {
             $table->id();
-            $table->integer('option_id');
-            $table->integer('value_id');
-            $table->integer('product_id');
-            $table->integer('product_variation_id')->nullable();
+            $table->bigInteger('option_id');
+            $table->bigInteger('value_id');
+            $table->bigInteger('product_id');
+            $table->bigInteger('product_variation_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->integer('status_id');
             $table->integer('installment_id')->nullable();
             $table->integer('delivery_point_id')->nullable();
+            $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

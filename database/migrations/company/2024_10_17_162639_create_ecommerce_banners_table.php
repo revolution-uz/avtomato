@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('name_oz');
             $table->boolean('is_active');
             $table->string('url')->nullable();
-            $table->integer('category_id')->nullable();
-            $table->integer('brand_id')->nullable();
-            $table->integer('product_id')->nullable();
+            $table->bigInteger('category_id')->nullable();
+            $table->bigInteger('brand_id')->nullable();
+            $table->bigInteger('product_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

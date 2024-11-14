@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ecommerce_product_options', function (Blueprint $table) {
             $table->id();
-            $table->integer('group_id');
+            $table->bigInteger('group_id');
             $table->string('name_uz');
             $table->string('name_ru');
             $table->string('name_en');

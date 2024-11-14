@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ecommerce_delivery_points', function (Blueprint $table) {
             $table->id();
-            $table->integer('address_id');
+            $table->bigInteger('address_id');
             $table->string('name_uz');
             $table->string('name_ru');
             $table->string('name_en');

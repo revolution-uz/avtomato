@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ecommerce_product_variations', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id');
+            $table->bigInteger('product_id');
             $table->boolean('is_active');
             $table->timestamps();
             $table->softDeletes();

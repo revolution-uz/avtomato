@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('ecommerce_user_carts', function (Blueprint $table) {
             $table->bigInteger('user_id');
             $table->bigInteger('product_id');
+            $table->bigInteger('variation_id')->nullable();
             $table->integer('quantity');
         });
     }

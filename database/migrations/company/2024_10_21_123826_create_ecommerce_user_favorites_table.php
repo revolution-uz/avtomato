@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ecommerce_user_favourites', function (Blueprint $table) {
-            $table->integer('user_id');
-            $table->integer('product_id');
+            $table->bigInteger('user_id');
+            $table->bigInteger('product_id');
         });
     }
 

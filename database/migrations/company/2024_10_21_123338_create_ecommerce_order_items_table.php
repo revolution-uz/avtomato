@@ -10,8 +10,9 @@ return new class extends Migration
     {
         Schema::create('ecommerce_order_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id');
-            $table->integer('order_id')->nullable();
+            $table->bigInteger('product_id');
+            $table->bigInteger('variation_id')->nullable();
+            $table->bigInteger('order_id')->nullable();
             $table->double('price');
             $table->double('quantity');
             $table->timestamps();
