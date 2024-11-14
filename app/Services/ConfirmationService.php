@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\Company\AllowedEnum;
 use App\Models\Company\CardConfirmationSms;
 use Carbon\Carbon;
 use Exception;
@@ -40,9 +39,6 @@ class ConfirmationService
 
     public function confirm(string $phone, string $otp): bool
     {
-        if ($phone == AllowedEnum::PHONE->value && $otp === AllowedEnum::OTP_CODE->value) {
-            return true;
-        }
         $authAttempt = CardConfirmationSms::query()
             ->where('phone', $phone)
             ->orderBy('created_at', 'desc')

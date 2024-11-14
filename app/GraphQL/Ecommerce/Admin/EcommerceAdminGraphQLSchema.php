@@ -11,6 +11,7 @@ use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Customer\Types\TagGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Mutations\CreateBannerGraphQLMutation;
+use App\GraphQL\Ecommerce\Admin\Mutations\CreateDeliveryPointGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\CreateProductBrandGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\CreateProductCategoryGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\CreateProductGraphQLMutation;
@@ -24,6 +25,7 @@ use App\GraphQL\Ecommerce\Admin\Mutations\DeleteProductOptionGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\DeleteProductOptionGroupGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\DeleteProductOptionValueGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UpdateBannerGraphQLMutation;
+use App\GraphQL\Ecommerce\Admin\Mutations\UpdateDeliveryPointGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UpdateOrderStatusGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UpdateProductCategoryGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UpdateProductOptionGraphQLMutation;
@@ -33,6 +35,7 @@ use App\GraphQL\Ecommerce\Admin\Mutations\UploadImageProductBrandGraphQLMutation
 use App\GraphQL\Ecommerce\Admin\Mutations\UploadImageProductCategoryGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UploadImageProductGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Queries\BannersGraphQLQuery;
+use App\GraphQL\Ecommerce\Admin\Queries\DeliveryPointsGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\OrdersGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\ProductBrandsGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\ProductCategoriesGraphQLQuery;
@@ -43,6 +46,7 @@ use App\GraphQL\Ecommerce\Admin\Queries\ProductOptionValuesGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\ProductsGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\ProductVariationsGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleBannerGraphQLQuery;
+use App\GraphQL\Ecommerce\Admin\Queries\SingleDeliveryPointGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductBrandGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductCategoryGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductGraphQLQuery;
@@ -53,6 +57,7 @@ use App\GraphQL\Ecommerce\Admin\Queries\SingleUserGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\UserGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Types\BannerGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\BannerInputGraphQLType;
+use App\GraphQL\Ecommerce\Admin\Types\DeliveryPointGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderInputGraphQLType;
@@ -111,6 +116,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 CreateProductBrandGraphQLMutation::class,
                 CreateProductOptionGroupGraphQLMutation::class,
                 CreateProductOptionValueGraphQLMutation::class,
+                CreateDeliveryPointGraphQLMutation::class,
                 UploadImageProductCategoryGraphQLMutation::class,
                 UploadImageProductBrandGraphQLMutation::class,
                 UploadImageProductGraphQLMutation::class,
@@ -120,6 +126,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 UpdateProductOptionValueGraphQLMutation::class,
                 UpdateProductOptionGraphQLMutation::class,
                 UpdateOrderStatusGraphQLMutation::class,
+                UpdateDeliveryPointGraphQLMutation::class,
                 DeleteProductCategoryGraphQLMutation::class,
                 DeleteProductOptionGroupGraphQLMutation::class,
                 DeleteProductOptionValueGraphQLMutation::class,
@@ -139,6 +146,8 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 BannersGraphQLQuery::class,
                 OrdersGraphQLQuery::class,
                 UserGraphQLQuery::class,
+                DeliveryPointsGraphQLQuery::class,
+                SingleDeliveryPointGraphQLQuery::class,
                 SingleProductGraphQLQuery::class,
                 SingleProductCategoryGraphQLQuery::class,
                 SingleProductOptionValueGraphQLQuery::class,
@@ -203,6 +212,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 MahallaGraphQLType::class,
                 TransactionTypeGraphQLType::class,
                 RoleGraphQLType::class,
+                DeliveryPointGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];

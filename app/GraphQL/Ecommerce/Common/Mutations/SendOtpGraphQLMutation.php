@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Ecommerce\Common\Mutations;
 
-use App\Enums\Company\AllowedEnum;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Exceptions\GeneralException;
 use App\GraphQL\Scalars\BigInteger;
@@ -14,7 +13,7 @@ use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
-class RegisterGraphQLMutation extends Mutation
+class SendOtpGraphQLMutation extends Mutation
 {
     protected $attributes = [
         'name' => 'ecommerceRegister',
@@ -50,9 +49,6 @@ class RegisterGraphQLMutation extends Mutation
             throw new GeneralException('Company is not active');
         }
         try {
-            if ($args['phone'] === AllowedEnum::PHONE->value) {
-                return true;
-            }
             $this->confirmationService->send($args['phone'], isEcommerceOtp: true);
 
             return true;

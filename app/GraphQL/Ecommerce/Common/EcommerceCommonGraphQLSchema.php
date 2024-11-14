@@ -17,7 +17,7 @@ use App\GraphQL\Ecommerce\Admin\Types\ProductJoinOptionGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductOptionGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductOptionValueGraphQLType;
 use App\GraphQL\Ecommerce\Common\Mutations\LoginGraphQLMutation;
-use App\GraphQL\Ecommerce\Common\Mutations\RegisterGraphQLMutation;
+use App\GraphQL\Ecommerce\Common\Mutations\SendOtpGraphQLMutation;
 use App\GraphQL\Ecommerce\Common\Queries\BannersGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\FilterProductsGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\ProductBrandsGraphQLQuery;
@@ -35,6 +35,9 @@ class EcommerceCommonGraphQLSchema implements ConfigConvertible
     {
         return [
             'query' => [
+                DistrictsGraphQLQuery::class,
+                MahallasGraphQLQuery::class,
+                RegionsGraphQLQuery::class,
                 BannersGraphQLQuery::class,
                 ProductCategoriesGraphQLQuery::class,
                 FilterProductsGraphQLQuery::class,
@@ -46,11 +49,8 @@ class EcommerceCommonGraphQLSchema implements ConfigConvertible
                 SingleProductBrandGraphQLQuery::class,
             ],
             'mutation' => [
-                RegisterGraphQLMutation::class,
+                SendOtpGraphQLMutation::class,
                 LoginGraphQLMutation::class,
-                DistrictsGraphQLQuery::class,
-                MahallasGraphQLQuery::class,
-                RegionsGraphQLQuery::class,
             ],
             'types' => [
                 EcommerceImageGraphQLType::class,
