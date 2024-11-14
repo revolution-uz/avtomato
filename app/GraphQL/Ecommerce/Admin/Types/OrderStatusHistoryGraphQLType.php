@@ -27,9 +27,17 @@ class OrderStatusHistoryGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (OrderStatusHistory $root) => $root->from_status_id,
             ],
+            'from_status' => [
+                'type' => Type::nonNull(GraphQL::type(OrderStatusGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (OrderStatusHistory $root) => $root->fromStatus,
+            ],
             'to_status_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (OrderStatusHistory $root) => $root->to_status_id,
+            ],
+            'to_status' => [
+                'type' => Type::nonNull(GraphQL::type(OrderStatusGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (OrderStatusHistory $root) => $root->toStatus,
             ],
             'admin_id' => [
                 'type' => Type::nonNull(Type::int()),

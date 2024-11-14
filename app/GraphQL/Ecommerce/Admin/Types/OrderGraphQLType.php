@@ -49,7 +49,7 @@ class OrderGraphQLType extends GraphQLType
                 'resolve' => fn (Order $root) => $root->status,
             ],
             'status_histories' => [
-                'type' => GraphQL::type(OrderStatusGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::listOf(GraphQL::type(OrderStatusHistoryGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Order $root) => $root->statusHistories(),
             ],
             'installment_id' => [

@@ -21,7 +21,7 @@ class CreateOrderGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(OrderGraphQLType::GRAPHQL_TYPE_NAME));
+        return GraphQL::type(OrderGraphQLType::GRAPHQL_TYPE_NAME);
     }
 
     public function args(): array
@@ -33,6 +33,14 @@ class CreateOrderGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'exists:addresses,id',
+                ],
+            ],
+            'delivery_point_id' => [
+                'name' => 'address_id',
+                'type' => Type::int(),
+                'rules' => [
+                    'nullable',
+                    'exists:delivery_points,id',
                 ],
             ],
             'installment_id' => [

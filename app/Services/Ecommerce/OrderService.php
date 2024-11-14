@@ -12,27 +12,30 @@ use App\Models\Company\Ecommerce\UserCart;
 
 class OrderService
 {
-    public function createOrder(User $user, $cart, $address_id, $installment_id = null): Order
+    public function createOrder(User $user, mixed $cart, int $address_id, ?int $installment_id): ?Order
     {
         $order = new Order;
         $order->user_id = $user->id;
         $order->address_id = $address_id;
         $order->status_id = OrderStatus::CREATED;
         $order->installment_id = $installment_id;
-        $order->saveOrFail();
-        foreach ($cart as $item) {
-            $product = Product::findOrFail($item['product_id']);
-            $orderItemAttributes = [
-                'order_id' => $order->id,
-                'product_id' => $product->id,
-                'price' => $product->actual_price,
-                'quantity' => $item['quantity'],
-            ];
-            OrderItem::create($orderItemAttributes);
-            UserCart::removeCart($order->user_id, $product->id);
+        if ($order->saveOrFail()) {
+            foreach ($cart as $item) {
+                $product = Product::findOrFail($item['product_id']);
+                $orderItemAttributes = [
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'price' => $product->actual_price,
+                    'quantity' => $item['quantity'],
+                ];
+                OrderItem::create($orderItemAttributes);
+                UserCart::removeCart($order->user_id, $product->id);
+            }
+
+            return $order;
         }
 
-        return $order;
+        return null;
     }
 
     public function changeOrderStatus(Order $order, int $order_status_id): Order
