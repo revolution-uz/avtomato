@@ -20,6 +20,7 @@ use App\Services\SmsService;
 use App\Services\User\BalanceService;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Bus;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -35,6 +36,8 @@ class SendTransactionSmsJobTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        Bus::fake();
 
         $this->_smsServiceMock = $this->mock(SmsService::class);
         $this->_balanceServiceMock = $this->mock(BalanceService::class);

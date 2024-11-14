@@ -40,7 +40,7 @@ class PopulateCreateOrUpdateInstallmentInUniredJobsTest extends TestCase
         (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
         $dispatchedJobs = Bus::dispatched(CreateOrUpdateInstallmentInUniredJob::class);
-        $this->assertCount(1, $dispatchedJobs);
+        $this->assertCount(2, $dispatchedJobs);
         $this->assertEquals(CreateOrUpdateInstallmentInUniredJob::JOB_ID . '-' . tenant('id') . '-' . $installment->id, $dispatchedJobs[0]->uniqueId());
         $this->assertEquals(CreateOrUpdateInstallmentInUniredJob::JOB_ID, $dispatchedJobs[0]->queue);
         $this->assertEquals(0, $dispatchedJobs[0]->delay);
@@ -54,7 +54,7 @@ class PopulateCreateOrUpdateInstallmentInUniredJobsTest extends TestCase
 
         (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
+        Bus::assertDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 
     #[Test]
@@ -66,7 +66,7 @@ class PopulateCreateOrUpdateInstallmentInUniredJobsTest extends TestCase
 
         (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
+        Bus::assertDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 
     #[Test]
@@ -79,7 +79,7 @@ class PopulateCreateOrUpdateInstallmentInUniredJobsTest extends TestCase
 
         (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
+        Bus::assertDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 
     #[Test]
@@ -94,7 +94,7 @@ class PopulateCreateOrUpdateInstallmentInUniredJobsTest extends TestCase
         (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
         $dispatchedJobs = Bus::dispatched(CreateOrUpdateInstallmentInUniredJob::class);
-        $this->assertCount(2, $dispatchedJobs);
+        $this->assertCount(4, $dispatchedJobs);
         /** @var CreateOrUpdateInstallmentInUniredJob $job */
         foreach ($dispatchedJobs as $job) {
             $this->assertEquals(CreateOrUpdateInstallmentInUniredJob::JOB_ID . '-' . tenant('id') . '-' . 1, $job->uniqueId());
@@ -115,7 +115,7 @@ class PopulateCreateOrUpdateInstallmentInUniredJobsTest extends TestCase
 
         (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
+        Bus::assertDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 
     #[Test]
@@ -129,6 +129,6 @@ class PopulateCreateOrUpdateInstallmentInUniredJobsTest extends TestCase
 
         (new PopulateCreateOrUpdateInstallmentInUniredJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(CreateOrUpdateInstallmentInUniredJob::class);
+        Bus::assertDispatched(CreateOrUpdateInstallmentInUniredJob::class);
     }
 }

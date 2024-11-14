@@ -44,7 +44,7 @@ class CreateOrUpdateInstallmentInUniredJob implements ShouldBeUniqueUntilProcess
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($this->installmentId);
         $debt_amount = $installment->debtAmount;
-        if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->any_card_charge) {
+        if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->any_card_charge && $installment->is_active) {
             if ($installment->isAvailableCustomerPinfl()) {
                 if ($installment->unired_id) {
                     $uniredService->createOrUpdateInstallment($installment);

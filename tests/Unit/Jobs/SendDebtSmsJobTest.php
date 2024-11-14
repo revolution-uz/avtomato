@@ -20,6 +20,7 @@ use App\Models\Company\SmsTemplate;
 use App\Services\SmsService;
 use App\Services\User\BalanceService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Bus;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -37,6 +38,7 @@ class SendDebtSmsJobTest extends TestCase
     {
         parent::setUp();
 
+        Bus::fake();
         $this->_smsServiceMock = $this->mock(SmsService::class);
         $this->_balanceServiceMock = $this->mock(BalanceService::class);
         CompanySettings::query()->where('name', CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT)->update(['value' => 1]);
