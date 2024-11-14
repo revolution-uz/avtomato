@@ -2,18 +2,20 @@
 
 namespace App\GraphQL\Ecommerce\Client\Mutations;
 
+use App\Enums\Company\CustomerTypeEnum;
 use App\Exceptions\GeneralException;
 use App\GraphQL\Customer\Types\CustomerInputGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserGraphQLType;
+use App\Models\Company\Ecommerce\User;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Error\AuthorizationError;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
-class FillProfileGraphQLMutation extends Mutation
+class CreateCustomerGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'fillProfile',
+        'name' => 'createCustomer',
     ];
 
     public function type(): Type
@@ -41,8 +43,13 @@ class FillProfileGraphQLMutation extends Mutation
             throw new AuthorizationError('Unauthenticated');
         }
         $user = auth('ecommerce-client')->user();
-
-        $user->customer()->create($args['customer']);
+        /** @var User $user */
+        $args['customer']['type'] = CustomerTypeEnum::INSTALLMENT_AND_ECOMMERCE;
+        if ($customer = $user->customer) {
+            $customer->updateOrFail($args['customer']);
+        } else {
+            $user->customer()->create($args['customer']);
+        }
 
         return $user;
     }

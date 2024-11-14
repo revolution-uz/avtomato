@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Ecommerce\Common\Mutations;
 
+use App\Enums\Company\CustomerTypeEnum;
 use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\Ecommerce\User;
 use App\Rules\PhoneRule;
@@ -57,6 +58,8 @@ class LoginGraphQLMutation extends Mutation
             throw new AuthorizationError('Phone or code is wrong');
         }
         $user = User::query()->firstOrCreate(['phone' => $args['phone']]);
+
+        $user->customer()->create(['type' => CustomerTypeEnum::ECOMMERCE]);
 
         return $user->createTokenWithData(
             Str::substr(request()->header('Device-Name'), 0, 255),

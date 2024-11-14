@@ -16,8 +16,8 @@ use App\GraphQL\Ecommerce\Admin\Types\ProductOptionGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductOptionValueGraphQLType;
 use App\GraphQL\Ecommerce\Client\Mutations\AddCartGraphQLMutation;
 use App\GraphQL\Ecommerce\Client\Mutations\AddFavouriteGraphQLMutation;
+use App\GraphQL\Ecommerce\Client\Mutations\CreateCustomerGraphQLMutation;
 use App\GraphQL\Ecommerce\Client\Mutations\CreateOrderGraphQLMutation;
-use App\GraphQL\Ecommerce\Client\Mutations\FillProfileGraphQLMutation;
 use App\GraphQL\Ecommerce\Client\Mutations\RemoveCartGraphQLMutation;
 use App\GraphQL\Ecommerce\Client\Mutations\RemoveFavouriteGraphQLMutation;
 use App\GraphQL\Ecommerce\Client\Queries\OrdersGraphQLQuery;
@@ -61,7 +61,7 @@ class EcommerceClientGraphQLSchema implements ConfigConvertible
                 RemoveCartGraphQLMutation::class,
                 RemoveFavouriteGraphQLMutation::class,
                 CreateOrderGraphQLMutation::class,
-                FillProfileGraphQLMutation::class,
+                CreateCustomerGraphQLMutation::class,
 
             ],
             'types' => [
