@@ -178,8 +178,8 @@ class UniredClient extends BaseClient
             url: $this->baseUrl . $path,
             status: $response->status(),
             response: $response->json(),
-            headers: $headers,
             duration: $response->transferStats?->getTransferTime(),
+            headers: $headers,
             body: $data,
         ));
 
@@ -190,7 +190,7 @@ class UniredClient extends BaseClient
     {
         $response = $this->httpRequest(['method' => $method, 'params' => $params->toArray()], $httpMethod, '');
 
-        if (!$response->isSuccess()) {
+        if (! $response->isSuccess()) {
             throw new UniredException($response->error->message);
         }
 
