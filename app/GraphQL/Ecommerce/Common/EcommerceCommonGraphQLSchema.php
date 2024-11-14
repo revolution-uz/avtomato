@@ -19,6 +19,7 @@ use App\GraphQL\Ecommerce\Admin\Types\ProductOptionValueGraphQLType;
 use App\GraphQL\Ecommerce\Common\Mutations\LoginGraphQLMutation;
 use App\GraphQL\Ecommerce\Common\Mutations\RegisterGraphQLMutation;
 use App\GraphQL\Ecommerce\Common\Queries\BannersGraphQLQuery;
+use App\GraphQL\Ecommerce\Common\Queries\FilterProductsGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\ProductBrandsGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\ProductCategoriesGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\ProductsGraphQLQuery;
@@ -36,6 +37,7 @@ class EcommerceCommonGraphQLSchema implements ConfigConvertible
             'query' => [
                 BannersGraphQLQuery::class,
                 ProductCategoriesGraphQLQuery::class,
+                FilterProductsGraphQLQuery::class,
                 ProductsGraphQLQuery::class,
                 ProductBrandsGraphQLQuery::class,
                 SingleBannerGraphQLQuery::class,
