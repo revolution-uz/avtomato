@@ -35,6 +35,8 @@ class EcommerceImage extends Model
         'path',
         'original_name',
         'mime',
+        'attachmentable_id',
+        'attachmentable_type',
     ];
 
     /**

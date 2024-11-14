@@ -258,6 +258,11 @@ enum PermissionEnum: string
     case USERS_VIEW_ALL = 'ecommerce_users_view_all';
 
     case USERS_VIEW = 'ecommerce_users_view';
+    case DELIVERY_POINT_CREATE = 'ecommerce_delivery_point_create';
+    case DELIVERY_POINT_EDIT = 'ecommerce_delivery_point_edit';
+    case DELIVERY_POINT_DELETE = 'ecommerce_delivery_point_delete';
+    case DELIVERY_POINT_VIEW = 'ecommerce_delivery_point_view';
+    case DELIVERY_POINT_VIEW_ALL = 'ecommerce_delivery_point_view_all';
 
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
@@ -450,6 +455,11 @@ enum PermissionEnum: string
             self::ORDER_ITEMS_VIEW_ALL,
             self::USERS_VIEW_ALL,
             self::USERS_VIEW,
+            self::DELIVERY_POINT_CREATE,
+            self::DELIVERY_POINT_DELETE,
+            self::DELIVERY_POINT_EDIT,
+            self::DELIVERY_POINT_VIEW,
+            self::DELIVERY_POINT_VIEW_ALL,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL,
@@ -734,6 +744,11 @@ enum PermissionEnum: string
                 self::ORDER_ITEMS_VIEW_ALL->value,
                 self::USERS_VIEW_ALL->value,
                 self::USERS_VIEW->value,
+                self::DELIVERY_POINT_CREATE->value,
+                self::DELIVERY_POINT_EDIT->value,
+                self::DELIVERY_POINT_DELETE->value,
+                self::DELIVERY_POINT_VIEW->value,
+                self::DELIVERY_POINT_VIEW_ALL->value,
             ],
         ];
     }
@@ -964,7 +979,12 @@ enum PermissionEnum: string
             self::ORDERS_VIEW_ALL,
             self::ORDER_ITEMS_VIEW_ALL,
             self::USERS_VIEW_ALL,
-            self::USERS_VIEW => FeatureEnum::ECOMMERCE,
+            self::USERS_VIEW,
+            self::DELIVERY_POINT_CREATE,
+            self::DELIVERY_POINT_EDIT,
+            self::DELIVERY_POINT_DELETE,
+            self::DELIVERY_POINT_VIEW,
+            self::DELIVERY_POINT_VIEW_ALL, => FeatureEnum::ECOMMERCE,
         };
     }
 

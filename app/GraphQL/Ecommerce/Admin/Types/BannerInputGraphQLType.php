@@ -38,7 +38,7 @@ class BannerInputGraphQLType extends InputType
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:ecommerce_product,id',
+                    'exists:ecommerce_products,id',
                 ],
             ],
             'name_uz' => [

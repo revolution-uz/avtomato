@@ -281,6 +281,11 @@ enum PermissionGroupEnum: string
                 PermissionEnum::ORDER_ITEMS_VIEW_ALL,
                 PermissionEnum::USERS_VIEW_ALL,
                 PermissionEnum::USERS_VIEW,
+                PermissionEnum::DELIVERY_POINT_CREATE,
+                PermissionEnum::DELIVERY_POINT_EDIT,
+                PermissionEnum::DELIVERY_POINT_DELETE,
+                PermissionEnum::DELIVERY_POINT_VIEW,
+                PermissionEnum::DELIVERY_POINT_VIEW_ALL,
             ],
         };
     }

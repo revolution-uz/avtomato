@@ -36,11 +36,11 @@ class CreateOrderGraphQLMutation extends Mutation
                 ],
             ],
             'delivery_point_id' => [
-                'name' => 'address_id',
+                'name' => 'delivery_point_id',
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:delivery_points,id',
+                    'exists:ecommerce_delivery_points,id',
                 ],
             ],
             'installment_id' => [

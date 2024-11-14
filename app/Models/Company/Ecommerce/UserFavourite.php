@@ -21,7 +21,7 @@ class UserFavourite extends Model
     public $timestamps = false;
 
     // Define the table name if it doesn't follow the Laravel naming convention
-    protected $table = 'ecommerce_user_favourite';
+    protected $table = 'ecommerce_user_favourites';
 
     // Define fillable fields to allow mass assignment
     protected $fillable = [
