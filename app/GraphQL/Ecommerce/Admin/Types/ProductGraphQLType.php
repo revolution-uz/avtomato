@@ -60,7 +60,7 @@ class ProductGraphQLType extends GraphQLType
             ],
             'variations' => [
                 'type' => Type::listOf(GraphQL::type(ProductVariationGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Product $root) => $root->var,
+                'resolve' => fn (Product $root) => $root->variations,
             ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),

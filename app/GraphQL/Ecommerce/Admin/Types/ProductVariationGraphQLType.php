@@ -34,6 +34,10 @@ class ProductVariationGraphQLType extends GraphQLType
                 'type' => GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (ProductVariation $root) => $root->product,
             ],
+            'images' => [
+                'type' => Type::listOf(GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn(ProductVariation $root) => $root->images,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (ProductVariation $root) => $root->created_at->timestamp,
