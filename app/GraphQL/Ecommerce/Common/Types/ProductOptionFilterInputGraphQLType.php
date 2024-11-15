@@ -18,12 +18,12 @@ class ProductOptionFilterInputGraphQLType extends InputType
         return [
             'option_id' => [
                 'name' => 'group_id',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'rules' => ['required', 'exists:ecommerce_product_options,id'],
             ],
             'value_id' => [
                 'name' => 'group_id',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'rules' => ['required', 'exists:ecommerce_product_option_values,id'],
             ],
         ];

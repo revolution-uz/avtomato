@@ -19,7 +19,7 @@ class ProductFilterInputGraphQLType extends InputType
         return [
             'category_id' => [
                 'name' => 'category_id',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'rules' => [
                     'nullable',
                     'exists:ecommerce_product_categories,id',
@@ -27,23 +27,23 @@ class ProductFilterInputGraphQLType extends InputType
             ],
             'brand_id' => [
                 'name' => 'product_brand_id',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'rules' => [
                     'nullable',
                     'exists:ecommerce_product_brands,id',
                 ],
             ],
             'min_price' => [
-                'name' => 'cost',
-                'type' => Type::nonNull(Type::float()),
+                'name' => 'min_price',
+                'type' => Type::float(),
                 'rules' => [
                     'nullable',
                     'numeric',
                 ],
             ],
             'max_price' => [
-                'name' => 'cost',
-                'type' => Type::nonNull(Type::float()),
+                'name' => 'max_price',
+                'type' => Type::float(),
                 'rules' => [
                     'nullable',
                     'numeric',
@@ -51,7 +51,7 @@ class ProductFilterInputGraphQLType extends InputType
             ],
             'options' => [
                 'name' => 'options',
-                'type' => GraphQL::type(ProductOptionFilterInputGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => Type::listOf(GraphQL::type(ProductOptionFilterInputGraphQLType::GRAPHQL_TYPE_NAME)),
                 'rules' => [
                     'nullable',
                 ],

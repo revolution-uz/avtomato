@@ -2,13 +2,14 @@
 
 namespace App\GraphQL\Ecommerce\Common\Queries;
 
+use App\DTOs\Ecommerce\Base\BaseEcommerceFilterRequestDTO;
+use App\DTOs\Ecommerce\Product\EcommerceProductFilterRequestDTO;
 use App\GraphQL\Ecommerce\Admin\Types\ProductGraphQLType;
 use App\GraphQL\Ecommerce\Common\Types\ProductFilterInputGraphQLType;
-use App\Models\Company\Ecommerce\Product;
+use App\Services\Ecommerce\ProductService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -17,6 +18,8 @@ class FilterProductsGraphQLQuery extends Query
     protected $attributes = [
         'name' => 'filterProducts',
     ];
+
+    public function __construct(readonly ProductService $productService) {}
 
     public function type(): Type
     {
@@ -55,21 +58,6 @@ class FilterProductsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return Product::query()
-            ->when(isset($args['search']), function (Builder $q) use ($args) {
-                $search = '%' . $args['search'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('name_en', 'ILIKE', $search)
-                        ->orWhere('name_uz', 'ILIKE', $search)
-                        ->orWhere('name_oz', 'ILIKE', $search)
-                        ->orWhere('name_ru', 'ILIKE', $search);
-                });
-            })
-            ->when(
-                isset($args['sort']),
-                fn (Builder|Product $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|Product $q) => $q->orderByDesc('id')
-            )
-            ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
+        return $this->productService->filtering(BaseEcommerceFilterRequestDTO::from($args), EcommerceProductFilterRequestDTO::from($args['filter'] ?? []));
     }
 }
