@@ -6,6 +6,7 @@ use App\Clients\QrPayClient;
 use App\DTOs\QrPay\Base\BaseQrPayResponseDTO;
 use App\DTOs\QrPay\Payment\SbpCancelPaymentRequestDTO;
 use App\DTOs\QrPay\Payment\SbpCreatePaymentRequestDTO;
+use App\DTOs\QrPay\Payment\SbpTransferRegistryRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpAddTerminalRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpDeactivateTerminalRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpTerminalResponseDTO;
@@ -14,6 +15,7 @@ use App\Helpers\Utilities;
 use App\Models\Company\Feature;
 use App\Models\Company\SbpTerminal;
 use App\Models\Company\SbpTransaction;
+use Carbon\Carbon;
 
 class QrPayService
 {
@@ -55,6 +57,15 @@ class QrPayService
     public function cancelPayment(SbpTransaction $transaction): BaseQrPayResponseDTO
     {
         return $this->qrPayClient->cancelPayment(new SbpCancelPaymentRequestDTO(Utilities::generateIdByTenancy($transaction->id)));
+    }
+
+    public function transferRegistry(string $date): array
+    {
+        $date = Carbon::parse($date)->format('Y-m-d');
+
+        $uniredResponseDto = $this->qrPayClient->transferRegistry(new SbpTransferRegistryRequestDTO($date));
+
+        return $uniredResponseDto->result;
     }
 
     private function updateTerminalByResponse(SbpTerminal $terminal, BaseQrPayResponseDTO $sbpResponseDto)

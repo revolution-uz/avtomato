@@ -8,6 +8,7 @@ use App\DTOs\QrPay\Base\BaseQrPayRequestDTO;
 use App\DTOs\QrPay\Base\BaseQrPayResponseDTO;
 use App\DTOs\QrPay\Payment\SbpCancelPaymentRequestDTO;
 use App\DTOs\QrPay\Payment\SbpCreatePaymentRequestDTO;
+use App\DTOs\QrPay\Payment\SbpTransferRegistryRequestDTO;
 use App\DTOs\QrPay\System\QrPayLoginRequestDTO;
 use App\DTOs\QrPay\System\QrPayLoginResponseDTO;
 use App\DTOs\QrPay\Terminal\SbpAddTerminalRequestDTO;
@@ -83,6 +84,11 @@ class QrPayClient extends BaseClient
     public function cancelPayment(SbpCancelPaymentRequestDTO $params): BaseQrPayResponseDTO
     {
         return $this->makeRequest(self::PAYMENT_CANCEL, $params);
+    }
+
+    public function transferRegistry(SbpTransferRegistryRequestDTO $params): BaseQrPayResponseDTO
+    {
+        return $this->makeRequest(self::TRANSFER_REGISTRY, $params);
     }
 
     private function httpRequest(BaseQrPayRequestDTO $data, string $httpMethod): BaseQrPayResponseDTO
