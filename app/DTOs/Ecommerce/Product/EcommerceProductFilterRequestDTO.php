@@ -27,6 +27,6 @@ class EcommerceProductFilterRequestDTO extends BaseEcommerceDTO
 
     public function isFilterableOption(): bool
     {
-        return $this->options != null && is_array($this->options) && count($this->options);
+        return $this->options != null && count($this->options) > 0;
     }
 }
