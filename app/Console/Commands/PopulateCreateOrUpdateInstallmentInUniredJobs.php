@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Jobs\ImportInstallmentIntoUniredJob;
+use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Models\Company;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -13,14 +13,14 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
-class PopulateImportInstallmentIntoUniredJobs extends Command
+class PopulateCreateOrUpdateInstallmentInUniredJobs extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'populate:import-installment-into-unired-jobs';
+    protected $signature = 'populate:create-or-update-installment-in-unired-jobs';
 
     /**
      * The console command description.
@@ -55,7 +55,7 @@ class PopulateImportInstallmentIntoUniredJobs extends Command
             }
 
             foreach ($installments as $installment) {
-                ImportInstallmentIntoUniredJob::dispatch($installment->id);
+                CreateOrUpdateInstallmentInUniredJob::dispatch($installment->id);
             }
         }
 

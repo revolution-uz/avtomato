@@ -3,7 +3,6 @@
 namespace App\Clients;
 
 use App\DTOs\HttpRequestLogDTO;
-use App\DTOs\Unired\Base\BaseUniredDTO;
 use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
@@ -75,113 +74,118 @@ class UniredClient extends BaseClient
 
     public function setToken(UniredSetTokenRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::SYSTEM_SET_TOKEN, $params);
+        return $this->makeRequest(self::SYSTEM_SET_TOKEN, $params->toArray());
     }
 
     public function createBranch(UniredCreateBranchRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::FILIAL_CREATE, $params);
+        return $this->makeRequest(self::FILIAL_CREATE, $params->toArray());
     }
 
     public function updateBranch(UniredUpdateBranchRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::FILIAL_UPDATE, $params);
+        return $this->makeRequest(self::FILIAL_UPDATE, $params->toArray());
     }
 
     public function toggleBranchAuto(UniredToggleBranchAutoRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::FILIAL_TOGGLE_AUTO, $params);
+        return $this->makeRequest(self::FILIAL_TOGGLE_AUTO, $params->toArray());
     }
 
     public function createClient(UniredCreateOrUpdateClientRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::CLIENT_CREATE, $params);
+        return $this->makeRequest(self::CLIENT_CREATE, $params->toArray());
     }
 
     public function createOrUpdateClients(UniredCreateOrUpdateClientRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::CLIENT_CREATE_OR_UPDATE, $params);
+        return $this->makeRequest(self::CLIENT_CREATE_OR_UPDATE, [$params->toArray()]);
     }
 
     public function findClient(UniredFindClientRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::CLIENT_FIND, $params);
+        return $this->makeRequest(self::CLIENT_FIND, $params->toArray());
     }
 
     public function findMultipleClients(UniredFindClientsRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::CLIENT_FIND_MULTIPLE, $params);
+        return $this->makeRequest(self::CLIENT_FIND_MULTIPLE, $params->toArray());
     }
 
     public function addClientPhone(UniredAddClientPhoneRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::CLIENT_PHONE_ADD, $params);
+        return $this->makeRequest(self::CLIENT_PHONE_ADD, $params->toArray());
     }
 
     public function getAllClients(UniredPaginationRequestDTO $params): UniredResponseDTO
     {
         $params->filial_id = tenant('id');
 
-        return $this->makeRequest(self::CLIENT_ALL, $params);
+        return $this->makeRequest(self::CLIENT_ALL, $params->toArray());
     }
 
     public function toggleClientAuto(UniredToggleClientAutoRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::CLIENT_AUTO_TOGGLE, $params);
+        return $this->makeRequest(self::CLIENT_AUTO_TOGGLE, $params->toArray());
     }
 
     public function deleteClient(UniredClientExtIdDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::CLIENT_DELETE, $params);
+        return $this->makeRequest(self::CLIENT_DELETE, $params->toArray());
     }
 
     public function getPayments(UniredGetPaymentsPaginationRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_GET, $params);
+        return $this->makeRequest(self::PAYMENT_GET, $params->toArray());
     }
 
     public function registerPayment(UniredRegisterPaymentRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_REGISTER, $params);
+        return $this->makeRequest(self::PAYMENT_REGISTER, $params->toArray());
     }
 
     public function cancelPayment(UniredCancelPaymentRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_CANCEL, $params);
+        return $this->makeRequest(self::PAYMENT_CANCEL, $params->toArray());
     }
 
     public function changePaymentSendStatus(UniredChangePaymentSendStatusRequestDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_CHANGE_SEND_STATUS, $params);
+        return $this->makeRequest(self::PAYMENT_CHANGE_SEND_STATUS, $params->toArray());
     }
 
     public function getWebhook(): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_GET_WEBHOOK);
+        return $this->makeRequest(self::PAYMENT_GET_WEBHOOK, []);
     }
 
     public function setWebhook(UniredSetWebhookDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_SET_WEBHOOK, $params);
+        return $this->makeRequest(self::PAYMENT_SET_WEBHOOK, $params->toArray());
     }
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO
     {
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
-            ->$httpMethod($this->baseUrl . $path, $data);
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->token,
+        ];
+        $response = Http::withHeaders($headers)->$httpMethod($this->baseUrl . $path, $data);
+        $headers['Authorization'] = 'Bearer ****' . substr($this->token, -9);
         $this->logRequest(new HttpRequestLogDTO(
-            method: $httpMethod . $path,
-            url: $this->baseUrl,
+            method: $httpMethod,
+            url: $this->baseUrl . $path,
             status: $response->status(),
             response: $response->json(),
             duration: $response->transferStats?->getTransferTime(),
+            headers: $headers,
             body: $data,
         ));
 
         return UniredResponseDTO::from($response->json());
     }
 
-    private function makeRequest(string $method, ?BaseUniredDTO $params = null, string $httpMethod = 'post'): UniredResponseDTO
+    private function makeRequest($method, $params, $httpMethod = 'post'): UniredResponseDTO
     {
         $response = $this->httpRequest(['method' => $method, 'params' => $params], $httpMethod, '');
 

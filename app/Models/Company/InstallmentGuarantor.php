@@ -15,6 +15,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Installment $installment
  * @property int $customer_id
  * @property Customer $customer
+ * @property int|null $unired_id
  * @property bool $any_card_charge
  * @property string $plum_id
  * @property Carbon|null $created_at

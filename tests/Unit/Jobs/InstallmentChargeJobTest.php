@@ -12,12 +12,20 @@ use App\Models\Company\CompanySettings;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Services\AtmosService;
+use Illuminate\Support\Facades\Bus;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class InstallmentChargeJobTest extends TestCase
 {
     protected bool $tenancy = true;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Bus::fake();
+    }
 
     #[Test]
     public function dontChargeIfNotNeed(): void
