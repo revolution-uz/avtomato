@@ -17,7 +17,7 @@ class ProductOptionFilterInputGraphQLType extends InputType
     {
         return [
             'option_id' => [
-                'name' => 'group_id',
+                'name' => 'option_id',
                 'type' => Type::int(),
                 'rules' => ['required', 'exists:ecommerce_product_options,id'],
             ],
