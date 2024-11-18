@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Common\Types;
+namespace App\GraphQL\Ecommerce\Common\Types;
 
 use App\Models\Company\Region;
 use GraphQL\Type\Definition\Type;

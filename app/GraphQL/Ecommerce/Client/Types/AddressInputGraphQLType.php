@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Customer\Types;
+namespace App\GraphQL\Ecommerce\Client\Types;
 
 use App\Enums\Company\AddressTypeEnum;
 use GraphQL\Type\Definition\Type;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Customer\Types;
+namespace App\GraphQL\Ecommerce\Client\Types;
 
 use App\GraphQL\Common\Types\DistrictGraphQLType;
 use App\GraphQL\Common\Types\MahallaGraphQLType;

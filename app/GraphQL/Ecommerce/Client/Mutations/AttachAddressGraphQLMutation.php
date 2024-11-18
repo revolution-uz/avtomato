@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Customer\Mutations;
+namespace App\GraphQL\Ecommerce\Client\Mutations;
 
 use App\Enums\Company\AddressTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;

@@ -4,7 +4,6 @@ namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class OrderStatus extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes;
+    use OrderBySortable, SoftDeletes;
 
     protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'created_at', 'updated_at'];
 
@@ -32,6 +31,7 @@ class OrderStatus extends Model
     protected $table = 'ecommerce_order_statuses';
 
     protected $fillable = [
+        'id',
         'name_uz',
         'name_ru',
         'name_en',
