@@ -16,7 +16,7 @@ use Throwable;
 class SendOtpGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'ecommerceRegister',
+        'name' => 'ecommerceSendOtp',
     ];
 
     public function __construct(

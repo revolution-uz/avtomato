@@ -99,7 +99,6 @@ use App\GraphQL\Management\Types\PermissionGroupGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
-use App\GraphQL\Scoring\Types\BaseScoringRequestGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardScoringGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardScoringResponseGraphQLType;
 use App\GraphQL\Scoring\Types\Debt\DebtScoringGraphQLType;
@@ -241,7 +240,6 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 AddressGraphQLType::class,
                 BigInteger::class,
                 PhoneGraphQLType::class,
-                BaseScoringRequestGraphQLType::class,
                 ScoringRequestGraphQLType::class,
                 ScoringRequestUnionGraphQLType::class,
                 TagGraphQLType::class,
