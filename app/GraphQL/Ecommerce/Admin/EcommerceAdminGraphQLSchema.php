@@ -58,12 +58,14 @@ use App\GraphQL\Ecommerce\Admin\Queries\UserGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Types\BannerGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\BannerInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\DeliveryPointGraphQLType;
+use App\GraphQL\Ecommerce\Admin\Types\DeliveryPointInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderItemGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderItemInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderStatusGraphQLType;
+use App\GraphQL\Ecommerce\Admin\Types\OrderStatusHistoryGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderStatusInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductBrandGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductBrandInputGraphQLType;
@@ -93,11 +95,30 @@ use App\GraphQL\Installment\Types\TransactionTypeGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
+use App\GraphQL\Management\Types\PermissionGroupGraphQLType;
 use App\GraphQL\Management\Types\RoleGraphQLType;
+use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
+use App\GraphQL\Scalars\BigInteger;
+use App\GraphQL\Scoring\Types\BaseScoringRequestGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardScoringGraphQLType;
+use App\GraphQL\Scoring\Types\Card\CardScoringResponseGraphQLType;
 use App\GraphQL\Scoring\Types\Debt\DebtScoringGraphQLType;
+use App\GraphQL\Scoring\Types\Debt\DebtScoringResponseGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\CreditHistory\CreditHistoryGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\CreditHistory\KatmCreditHistoryAdditionalInfoGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\CreditHistory\KatmCreditHistoryResponseGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\CreditHistory\KatmCreditHistoryScoreGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\InpsHistory\InpsHistoryGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\InpsHistory\KatmIncomesGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\InpsHistory\KatmIncomesPeriodGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\InpsHistory\KatmInpsHistoryResponseGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\InpsHistory\KatmPresenceReportsGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\KatmClientGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\KatmCreateRequestGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionDataGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionInfoResponseGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionRowGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionSizePensionGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\PensionInfoGraphQLType;
 use App\GraphQL\Scoring\Types\ScoringRequestGraphQLType;
 use App\GraphQL\Scoring\Types\ScoringRequestUnionGraphQLType;
@@ -158,7 +179,6 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 SingleUserGraphQLQuery::class,
             ],
             'types' => [
-                AttachmentGraphQLType::class,
                 EcommerceImageGraphQLType::class,
                 ProductCategoryGraphQLType::class,
                 ProductCategoryInputGraphQLType::class,
@@ -185,25 +205,43 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 ProductOptionGroupGraphQLType::class,
                 UserGraphQLType::class,
                 OrderGraphQLType::class,
+                OrderStatusHistoryGraphQLType::class,
                 OrderItemGraphQLType::class,
                 CreditHistoryGraphQLType::class,
+                KatmCreditHistoryResponseGraphQLType::class,
+                KatmCreditHistoryAdditionalInfoGraphQLType::class,
+                KatmCreditHistoryScoreGraphQLType::class,
                 InpsHistoryGraphQLType::class,
+                KatmInpsHistoryResponseGraphQLType::class,
+                KatmIncomesPeriodGraphQLType::class,
+                KatmIncomesGraphQLType::class,
+                KatmPresenceReportsGraphQLType::class,
+                KatmClientGraphQLType::class,
                 PensionInfoGraphQLType::class,
+                KatmPensionInfoResponseGraphQLType::class,
+                KatmCreateRequestGraphQLType::class,
+                KatmPensionSizePensionGraphQLType::class,
+                KatmPensionDataGraphQLType::class,
+                KatmPensionRowGraphQLType::class,
                 CardScoringGraphQLType::class,
+                CardScoringResponseGraphQLType::class,
                 DebtScoringGraphQLType::class,
+                DebtScoringResponseGraphQLType::class,
                 InstallmentGraphQLType::class,
                 InstallmentGraphGraphQLType::class,
-                TransactionGraphQLType::class,
                 InstallmentGuarantorGraphQLType::class,
                 InstallmentCommentGraphQLType::class,
-                AttachmentGraphQLType::class,
                 BranchGraphQLType::class,
                 AdminGraphQLType::class,
+                AttachmentGraphQLType::class,
+                TemplateThemeGraphQLType::class,
                 TariffGraphQLType::class,
                 CustomerGraphQLType::class,
                 CardGraphQLType::class,
                 AddressGraphQLType::class,
+                BigInteger::class,
                 PhoneGraphQLType::class,
+                BaseScoringRequestGraphQLType::class,
                 ScoringRequestGraphQLType::class,
                 ScoringRequestUnionGraphQLType::class,
                 TagGraphQLType::class,
@@ -211,8 +249,11 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
                 TransactionTypeGraphQLType::class,
+                TransactionGraphQLType::class,
                 RoleGraphQLType::class,
+                PermissionGroupGraphQLType::class,
                 DeliveryPointGraphQLType::class,
+                DeliveryPointInputGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];

@@ -37,6 +37,22 @@ class DeliveryPointGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (DeliveryPoint $root) => $root->name_oz,
             ],
+            'description_uz' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (DeliveryPoint $root) => $root->description_uz,
+            ],
+            'description_ru' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (DeliveryPoint $root) => $root->description_ru,
+            ],
+            'description_en' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (DeliveryPoint $root) => $root->description_en,
+            ],
+            'description_oz' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (DeliveryPoint $root) => $root->description_oz,
+            ],
             'is_prepaid' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (DeliveryPoint $root) => $root->is_prepaid,
