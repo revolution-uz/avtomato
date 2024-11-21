@@ -19,11 +19,7 @@ class SbpCallbackController extends Controller
             tenancy()->initialize(Company::findOrFail($companyId));
             $terminal = SbpTerminal::findOrFail($request->getTerminalId());
             if ($terminal !== null) {
-                if ($request->isGuarantorPayment()) {
-                    if ($this->qrPayService->transferRegistry($request->ext_id)) {
-                        return response()->json(['success' => true, 'message' => 'OK'], 200);
-                    }
-                } elseif ($this->qrPayService->transferRegistry($request->ext_id)) {
+                if ($this->qrPayService->transferRegistry($request->ext_id)) {
                     return response()->json(['success' => true, 'message' => 'OK'], 200);
                 }
             }
