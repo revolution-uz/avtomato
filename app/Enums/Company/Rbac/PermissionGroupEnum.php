@@ -134,12 +134,10 @@ enum PermissionGroupEnum: string
                 PermissionEnum::TRANSACTION_TYPE_DELETE,
             ],
             self::BRANCH_MANAGEMENT => [
-                PermissionEnum::BRANCH_VIEW_ALL,
                 PermissionEnum::BRANCH_VIEW,
                 PermissionEnum::BRANCH_EDIT,
                 PermissionEnum::BRANCH_DELETE,
                 PermissionEnum::BRANCH_CREATE,
-                PermissionEnum::STATISTICS_BY_BRANCHES,
             ],
             self::COMPANY_MANAGEMENT => [
                 PermissionEnum::SETTINGS_EDIT,
@@ -225,6 +223,10 @@ enum PermissionGroupEnum: string
                 PermissionEnum::ACTIVITY_LOG_VIEW,
                 PermissionEnum::ACTIVITY_LOG_VIEW_ALL,
                 PermissionEnum::ACTIVITY_LOG_VIEW_OWN,
+            ],
+            self::VIEW_ALL => [
+                PermissionEnum::BRANCH_VIEW_ALL,
+                PermissionEnum::STATISTICS_BY_BRANCHES,
             ],
             self::ECOMMERCE => [
                 PermissionEnum::PRODUCT_CATEGORY_CREATE,
