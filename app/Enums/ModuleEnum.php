@@ -59,6 +59,7 @@ enum ModuleEnum: string
             FeatureEnum::BALANCE_FUND,
             FeatureEnum::BALANCE_CHARGE,
             FeatureEnum::THEME_MANAGEMENT,
+            FeatureEnum::GENERAL_FEATURE,
             FeatureEnum::COMPANY_MANAGEMENT => self::cases(),
         };
     }

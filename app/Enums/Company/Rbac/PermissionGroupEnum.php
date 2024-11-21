@@ -32,6 +32,7 @@ enum PermissionGroupEnum: string
     case SCORING_UZUM_NASIYA_LIMIT = 'scoring_uzum_nasiya_limit';
     case ACTIVITY_LOG = 'activity_log';
     case ECOMMERCE = 'ecommerce';
+    case VIEW_ALL = 'view_all';
 
     /**
      * @return PermissionEnum[]
