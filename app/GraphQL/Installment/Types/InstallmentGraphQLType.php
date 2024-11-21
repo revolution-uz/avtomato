@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Installment\Types;
 
-use App\Enums\Company\AttachmentTypeEnum;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
@@ -10,10 +9,8 @@ use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
 use App\GraphQL\Scalars\BigFloat;
 use App\Helpers\InstallmentGraphHelper;
-use App\Models\Company\Attachment;
 use App\Models\Company\Installment;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Carbon;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
@@ -63,45 +60,7 @@ class InstallmentGraphQLType extends GraphQLType
             ],
             'documents' => [
                 'type' => Type::listOf(GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => function (Installment $root) {
-                    $documents = [];
-
-                    $customerApplication = (new Attachment)->fill([
-                        'id' => 0,
-                        'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
-                        'name' => __('api.customer_application'),
-                        'original_name' => __('api.customer_application'),
-                        'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                        'path' => route('document.downloadCustomerApplication', ['installment_id' => $root->id]),
-                        'attachmentable_id' => $root->id,
-                        'attachmentable_type' => Installment::class,
-                    ]);
-                    $customerApplication->created_at = Carbon::now();
-                    $customerApplication->updated_at = Carbon::now();
-                    $documents[] = $customerApplication;
-
-                    if ($guarantor = $root->guarantors->first()) {
-                        $guarantorApplication = (new Attachment)->fill([
-                            'id' => 0,
-                            'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
-                            'name' => __('api.guarantor_application'),
-                            'original_name' => __('api.guarantor_application'),
-                            'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                            'path' => route('document.downloadGuarantorApplication', ['installment_id' => $root->id, 'guarantor_id' => $guarantor->id]),
-                            'attachmentable_id' => $root->id,
-                            'attachmentable_type' => Installment::class,
-                        ]);
-                        $guarantorApplication->created_at = Carbon::now();
-                        $guarantorApplication->updated_at = Carbon::now();
-                        $documents[] = $guarantorApplication;
-                    }
-
-                    foreach ($root->documents as $document) {
-                        $documents[] = $document;
-                    }
-
-                    return $documents;
-                },
+                'resolve' => fn (Installment $root) => $root->getDocuments(),
             ],
             'status' => [
                 'type' => Type::nonNull(Type::int()),

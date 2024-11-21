@@ -51,7 +51,6 @@ class UpdateAdminGraphQLMutation extends Mutation
     {
         $model = CompanyAdmin::findOrFail($args['id']);
         $model->updateOrFail($args);
-        $model->saveOrFail();
 
         return $model;
     }

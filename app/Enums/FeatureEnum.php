@@ -38,6 +38,7 @@ enum FeatureEnum: string
     case ATMOS_CARD_PAY = 'atmos_card_pay';
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
     case UNIRED_PAY = 'unired_pay';
+    case ECOMMERCE = 'ecommerce_management';
     case SBP_PAY = 'sbp_pay';
 
     public function getDefaultDescription(): ?string
@@ -77,6 +78,7 @@ enum FeatureEnum: string
             self::SMS => 'Sms yuborish xizmati',
             self::INSTALLMENT_AUTO_CHARGE => 'Muddatli to\'lovda kartadan avtomatik to\'lov',
             self::INSTALLMENT_AUTO_CHARGE_BY_PINFL => 'Muddatli to\'lovda PINFL orqali avtomatik to\'lov',
+            self::ECOMMERCE => 'Internet do\'kon boshqaruvi',
             self::SBP_PAY => 'SBP QR kodidan foydalangan holda to\'lovlar - Payments using QR code SBP',
         };
     }

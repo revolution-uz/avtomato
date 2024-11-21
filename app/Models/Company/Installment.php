@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\AttachmentTypeEnum;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
@@ -163,6 +164,47 @@ class Installment extends Model
             ->whereNull('installment_guarantors.deleted_at')
             ->select('customers.*')
             ->withTimestamps();
+    }
+
+    public function getDocuments(): array
+    {
+        $documents = [];
+
+        $customerApplication = (new Attachment)->fill([
+            'id' => 0,
+            'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
+            'name' => __('api.customer_application'),
+            'original_name' => __('api.customer_application'),
+            'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'path' => route('document.downloadCustomerApplication', ['installment_id' => $this->id]),
+            'attachmentable_id' => $this->id,
+            'attachmentable_type' => self::class,
+        ]);
+        $customerApplication->created_at = Carbon::now();
+        $customerApplication->updated_at = Carbon::now();
+        $documents[] = $customerApplication;
+
+        if ($guarantor = $this->guarantors->first()) {
+            $guarantorApplication = (new Attachment)->fill([
+                'id' => 0,
+                'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
+                'name' => __('api.guarantor_application'),
+                'original_name' => __('api.guarantor_application'),
+                'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'path' => route('document.downloadGuarantorApplication', ['installment_id' => $this->id, 'guarantor_id' => $guarantor->id]),
+                'attachmentable_id' => $this->id,
+                'attachmentable_type' => self::class,
+            ]);
+            $guarantorApplication->created_at = Carbon::now();
+            $guarantorApplication->updated_at = Carbon::now();
+            $documents[] = $guarantorApplication;
+        }
+
+        foreach ($this->documents as $document) {
+            $documents[] = $document;
+        }
+
+        return $documents;
     }
 
     public function documents(): MorphMany
