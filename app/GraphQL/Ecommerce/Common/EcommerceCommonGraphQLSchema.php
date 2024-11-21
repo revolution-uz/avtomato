@@ -8,6 +8,7 @@ use App\GraphQL\Common\Queries\RegionsGraphQLQuery;
 use App\GraphQL\Common\Types\DistrictGraphQLType;
 use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
+use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\BannerGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\DeliveryPointGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
@@ -72,6 +73,7 @@ class EcommerceCommonGraphQLSchema implements ConfigConvertible
                 ProductOptionValueGraphQLType::class,
                 ProductOptionGraphQLType::class,
                 ProductOptionGroupGraphQLType::class,
+                AddressGraphQLType::class,
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
                 RegionGraphQLType::class,
