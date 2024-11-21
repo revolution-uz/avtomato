@@ -220,6 +220,16 @@ return [
             'timeout' => 600,
             'nice' => 0,
         ],
+        'supervisor-6' => [
+            'connection' => 'redis',
+            'queue' => ['withdraw-balance'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 600,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [

@@ -20,13 +20,13 @@ class RoyxatCreditHistoryGraphQLType extends GraphQLType
     {
 
         return BaseScoringRequestGraphQLType::fields() + [
+            'request' => [
+                'type' => GraphQL::type(RoyxatCreditHistoryCreateRequestGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (ScoringRequest $root) => $root->request,
+            ],
             'response' => [
                 'type' => Type::listOf(GraphQL::type(RoyxatCreditHistoryResponseGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (ScoringRequest $root) => $root->response,
-            ],
-            'request' => [
-                'type' => GraphQL::type(RoyxatCreditHistoryCreateInputGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (ScoringRequest $root) => $root->request,
             ],
         ];
     }

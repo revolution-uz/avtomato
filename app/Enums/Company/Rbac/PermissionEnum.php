@@ -688,6 +688,10 @@ enum PermissionEnum: string
                 self::ACTIVITY_LOG_VIEW_ALL->value,
                 self::ACTIVITY_LOG_VIEW_OWN->value,
             ],
+            PermissionGroupEnum::VIEW_ALL->value => [
+                self::BRANCH_VIEW_ALL->value,
+                self::STATISTICS_BY_BRANCHES->value,
+            ],
             PermissionGroupEnum::ECOMMERCE->value => [
                 self::PRODUCT_CATEGORY_CREATE->value,
                 self::PRODUCT_CATEGORY_EDIT->value,
@@ -867,12 +871,10 @@ enum PermissionEnum: string
             self::TRANSACTION_TYPE_EDIT,
             self::TRANSACTION_TYPE_DELETE => FeatureEnum::TRANSACTION_TYPE_MANAGEMENT,
 
-            self::BRANCH_VIEW_ALL,
             self::BRANCH_VIEW,
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
-            self::BRANCH_CREATE,
-            self::STATISTICS_BY_BRANCHES => FeatureEnum::BRANCH_MANAGEMENT,
+            self::BRANCH_CREATE => FeatureEnum::BRANCH_MANAGEMENT,
 
             self::SETTINGS_EDIT => FeatureEnum::COMPANY_MANAGEMENT,
 
@@ -924,6 +926,9 @@ enum PermissionEnum: string
             self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,
             self::ACTIVITY_LOG_VIEW_OWN => FeatureEnum::ACTIVITY_LOG,
+
+            self::STATISTICS_BY_BRANCHES,
+            self::BRANCH_VIEW_ALL => FeatureEnum::GENERAL_FEATURE,
 
             self::PRODUCT_CATEGORY_CREATE,
             self::PRODUCT_CATEGORY_EDIT,

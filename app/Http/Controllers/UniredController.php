@@ -45,7 +45,7 @@ class UniredController extends Controller
                     'code' => 0,
                     'message' => 'SUCCESS',
                     'result' => [
-                        'debt' => $debt * 100,
+                        'debt' => $debt,
                     ],
                 ], 200);
             }
