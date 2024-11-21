@@ -11,9 +11,7 @@ class SbpCallbackController extends Controller
 {
     public function __construct(
         private readonly QrPayService $qrPayService
-    )
-    {
-    }
+    ) {}
 
     public function webHook(SbpPaymentWebhookCallbackRequest $request)
     {

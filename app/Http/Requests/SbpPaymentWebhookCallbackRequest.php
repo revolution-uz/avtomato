@@ -29,21 +29,14 @@ class SbpPaymentWebhookCallbackRequest extends FormRequest
         return $arr[0] ?? null;
     }
 
-    public function getInstallmentId(): ?int
+    public function getTerminalId(): ?int
     {
         $arr = explode(Utilities::TENANT_SEPARATOR, $this->ext_id);
 
         return isset($arr[1]) ? (int) $arr[1] : null;
     }
 
-    public function isGuarantorPayment(): bool
-    {
-        $arr = explode(Utilities::TENANT_SEPARATOR, $this->ext_id);
-
-        return is_array($arr) && count($arr) === 3;
-    }
-
-    public function getInstallmentGuarantorCustomerId(): ?int
+    public function getTransactionId(): ?int
     {
         $arr = explode(Utilities::TENANT_SEPARATOR, $this->ext_id);
 
