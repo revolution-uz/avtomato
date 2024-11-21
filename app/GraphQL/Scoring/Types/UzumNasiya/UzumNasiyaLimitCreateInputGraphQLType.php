@@ -18,8 +18,8 @@ class UzumNasiyaLimitCreateInputGraphQLType extends InputType
         return [
             'phone' => [
                 'name' => 'phone',
-                'type' => Type::int(),
-                'rules' => 'nullable|int|digits:12',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => 'required|int|digits:12',
             ],
         ];
     }

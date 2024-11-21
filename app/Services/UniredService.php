@@ -80,7 +80,7 @@ class UniredService
             $installment->customer->last_name,
             $installment->customer->middle_name,
             $branchFeatureDto->id,
-            $installment->debtAmount,
+            (int) ($installment->debtAmount * 100),
             $installment->customer->phones->pluck('phone')->toArray()
         ));
         if ($createClientResponse->status) {
@@ -105,7 +105,7 @@ class UniredService
             $installment->customer->last_name,
             $installment->customer->middle_name,
             $branchFeatureDto->id,
-            $installment->debtAmount,
+            (int) ($installment->debtAmount * 100),
             $installment->customer->phones->pluck('phone')->toArray()
         ));
 
@@ -126,7 +126,7 @@ class UniredService
             $installmentGuarantor->customer->last_name,
             $installmentGuarantor->customer->middle_name,
             $branchFeatureDto->id,
-            $installmentGuarantor->installment->debtAmount,
+            (int) ($installmentGuarantor->installment->debtAmount * 100),
             $installmentGuarantor->customer->phones->pluck('phone')->toArray()
         ));
         if ($createClientResponse->status) {
@@ -151,7 +151,7 @@ class UniredService
             $installmentGuarantor->customer->last_name,
             $installmentGuarantor->customer->middle_name,
             $branchFeatureDto->id,
-            $installmentGuarantor->installment->debtAmount,
+            (int) ($installmentGuarantor->installment->debtAmount * 100),
             $installmentGuarantor->customer->phones->pluck('phone')->toArray()
         ));
 
@@ -205,10 +205,10 @@ class UniredService
         return $this->uniredClient->setWebhook(new UniredSetWebhookDTO('http://automato.uz/api/unired-callback/web-hook'));
     }
 
-    public function getInstallmentDebt(?int $installment_id): ?float
+    public function getInstallmentDebt(?int $installment_id): ?int
     {
         if ($installment = Installment::find($installment_id)) {
-            return $installment->debtAmount;
+            return (int) ($installment->debtAmount * 100);
         }
 
         return null;

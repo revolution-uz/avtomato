@@ -273,6 +273,7 @@ class AttachPermissionsToRoleGraphQLMutationTest extends GraphQLTestCase
                 $this->buildGraphQLQuery($this->_role->id, $this->_permissionInput)
             );
 
+        $response->assertOk();
         $this->assertSuccessAttachPermissionsToRole($response, $this->_role, $this->_permissionInput);
     }
 
