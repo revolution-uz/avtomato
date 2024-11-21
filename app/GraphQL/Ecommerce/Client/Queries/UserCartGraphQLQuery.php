@@ -29,6 +29,6 @@ class UserCartGraphQLQuery extends Query
     {
         $authUser = auth('ecommerce-client')->user();
 
-        return $authUser->cart;
+        return $authUser->carts;
     }
 }
