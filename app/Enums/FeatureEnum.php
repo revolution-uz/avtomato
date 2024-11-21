@@ -39,7 +39,7 @@ enum FeatureEnum: string
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
     case UNIRED_PAY = 'unired_pay';
     case ECOMMERCE = 'ecommerce_management';
-    case GENERAL_FEATURE = 'general_future';
+    case GENERAL_FEATURE = 'general_feature';
 
     public function getDefaultDescription(): ?string
     {
