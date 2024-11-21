@@ -51,10 +51,6 @@ class OrderStatusHistoryGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (OrderStatusHistory $root) => $root->order_id,
             ],
-            'order' => [
-                'type' => GraphQL::type(OrderGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (OrderStatusHistory $root) => $root->order,
-            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (OrderStatusHistory $root) => $root->created_at->timestamp,

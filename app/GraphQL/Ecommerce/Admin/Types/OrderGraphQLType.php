@@ -3,7 +3,6 @@
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
 use App\GraphQL\Customer\Types\AddressGraphQLType;
-use App\GraphQL\Ecommerce\Client\Types\UserGraphQLType;
 use App\Models\Company\Ecommerce\Order;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -27,10 +26,6 @@ class OrderGraphQLType extends GraphQLType
             'user_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Order $root) => $root->user_id,
-            ],
-            'user' => [
-                'type' => GraphQL::type(UserGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Order $root) => $root->user,
             ],
             'address_id' => [
                 'type' => Type::nonNull(Type::int()),
