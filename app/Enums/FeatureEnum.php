@@ -39,6 +39,7 @@ enum FeatureEnum: string
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
     case UNIRED_PAY = 'unired_pay';
     case ECOMMERCE = 'ecommerce_management';
+    case GENERAL_FEATURE = 'general_future';
 
     public function getDefaultDescription(): ?string
     {
@@ -78,6 +79,7 @@ enum FeatureEnum: string
             self::INSTALLMENT_AUTO_CHARGE => 'Muddatli to\'lovda kartadan avtomatik to\'lov',
             self::INSTALLMENT_AUTO_CHARGE_BY_PINFL => 'Muddatli to\'lovda PINFL orqali avtomatik to\'lov',
             self::ECOMMERCE => 'Internet do\'kon boshqaruvi',
+            self::GENERAL_FEATURE => 'Umumiy ko\'rishlar uchun'
         };
     }
 
