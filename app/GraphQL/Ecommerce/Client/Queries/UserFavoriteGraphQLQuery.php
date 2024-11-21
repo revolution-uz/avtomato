@@ -47,6 +47,6 @@ class UserFavoriteGraphQLQuery extends Query
             throw new GeneralException(trans('validation.exists', ['attribute' => 'user id']));
         }
 
-        return User::query()->findOrFail($authUser)->favorite;
+        return User::query()->findOrFail($authUser)->favorites;
     }
 }

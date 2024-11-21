@@ -21,8 +21,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property Product[]|Collection<int, Product> $cart
- * @property Product[]|Collection<int, Product> $favorite
+ * @property Product[]|Collection<int, Product> $carts
+ * @property Product[]|Collection<int, Product> $favorites
  * @property Order[]|Collection<int, Order> $orders
  * @property-read  Customer|null $customer
  */
@@ -55,12 +55,12 @@ class User extends Authenticatable
         return $token->plainTextToken;
     }
 
-    public function cart(): BelongsToMany
+    public function carts(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'ecommerce_user_carts');
     }
 
-    public function favorite(): BelongsToMany
+    public function favorites(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'ecommerce_user_favourites');
     }

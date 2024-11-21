@@ -2,10 +2,12 @@
 
 namespace App\Models\Company\Ecommerce;
 
+use App\Models\Company\Address;
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -23,10 +25,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property Address $address
  */
 class DeliveryPoint extends Model
 {
     use HasFactory, OrderBySortable, SoftDeletes;
+
     protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'description_uz', 'description_ru', 'description_en', 'description_oz', 'is_prepaid'];
 
     protected $table = 'ecommerce_delivery_points';
@@ -42,4 +46,9 @@ class DeliveryPoint extends Model
         'description_oz',
         'is_prepaid',
     ];
+
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class);
+    }
 }

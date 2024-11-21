@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Ecommerce\Client\Types;
 
-use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductGraphQLType;
 use App\Models\Company\Ecommerce\User;
@@ -33,21 +32,17 @@ class UserGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (User $root) => $root->customer_id,
             ],
-            'customer' => [
-                'type' => GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (User $root) => $root->customer,
-            ],
             'orders' => [
                 'type' => Type::listOf(GraphQL::type(OrderGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (User $root) => $root->orders,
             ],
-            'cart' => [
+            'carts' => [
                 'type' => Type::listOf(GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (User $root) => $root->cart,
+                'resolve' => fn (User $root) => $root->carts,
             ],
             'favorites' => [
                 'type' => Type::listOf(GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (User $root) => $root->favorite,
+                'resolve' => fn (User $root) => $root->favorites,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),

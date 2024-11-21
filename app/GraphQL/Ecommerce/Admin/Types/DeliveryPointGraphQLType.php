@@ -2,8 +2,10 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
+use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\Models\Company\Ecommerce\DeliveryPoint;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class DeliveryPointGraphQLType extends GraphQLType
@@ -20,6 +22,14 @@ class DeliveryPointGraphQLType extends GraphQLType
             'id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (DeliveryPoint $root) => $root->id,
+            ],
+            'address_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (DeliveryPoint $root) => $root->address_id,
+            ],
+            'address' => [
+                'type' => Type::nonNull(GraphQL::type(AddressGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (DeliveryPoint $root) => $root->address,
             ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),

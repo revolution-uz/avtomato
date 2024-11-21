@@ -3,7 +3,7 @@
 namespace App\GraphQL\Ecommerce\Admin\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Ecommerce\ProductBrand;
 use App\Services\Ecommerce\ProductService;
@@ -44,7 +44,7 @@ class UploadImageProductBrandGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     /**
