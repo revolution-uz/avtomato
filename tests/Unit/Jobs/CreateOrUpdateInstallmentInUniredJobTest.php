@@ -5,15 +5,17 @@ namespace Tests\Unit\Jobs;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Main\SettingsTypeEnum;
-use App\Jobs\ImportInstallmentIntoUniredJob;
+use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Services\UniredService;
+use App\Services\User\BalanceService;
+use Illuminate\Support\Facades\Bus;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class ImportInstallmentIntoUniredJobTest extends TestCase
+class CreateOrUpdateInstallmentInUniredJobTest extends TestCase
 {
     protected bool $tenancy = true;
 
@@ -29,11 +31,13 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
             'guarantor_pinfl_after_due_days' => 0,
             'any_card_charge' => true,
         ]);
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createOrUpdateInstallment()->times(0);
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
-        $job->handle($mock);
+        $balanceServiceMock = $this->mock(BalanceService::class);
+        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+        $job->handle($mock, $balanceServiceMock);
     }
 
     #[Test]
@@ -48,11 +52,13 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
             'guarantor_pinfl_after_due_days' => 1,
             'any_card_charge' => true,
         ]);
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createOrUpdateInstallment()->times(0);
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
-        $job->handle($mock);
+        $balanceServiceMock = $this->mock(BalanceService::class);
+        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+        $job->handle($mock, $balanceServiceMock);
     }
 
     #[Test]
@@ -70,17 +76,19 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::PINFL_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
 
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createOrUpdateInstallment()->times(0);
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
-
-        $job->handle($mock);
+        $balanceServiceMock = $this->mock(BalanceService::class);
+        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+        $job->handle($mock, $balanceServiceMock);
     }
 
     #[Test]
     public function fullChargeFromCustomerAndGuarantor(): void
     {
+        Bus::fake();
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now(),
@@ -93,17 +101,19 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
 
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
-        $mock->expects()->createOrUpdateInstallment()->once()->withAnyArgs();
-        $mock->expects()->createOrUpdateInstallmentGuarantor()->once()->withAnyArgs();
-
-        $job->handle($mock);
+        $mock->expects()->createInstallment()->once()->withAnyArgs();
+        $mock->expects()->createInstallmentGuarantor()->once()->withAnyArgs();
+        $balanceServiceMock = $this->mock(BalanceService::class);
+        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+        $job->handle($mock, $balanceServiceMock);
     }
 
     #[Test]
     public function doesntChargeByPinflIfNotEnabled(): void
     {
+        Bus::fake();
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now(),
@@ -116,17 +126,19 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => false]);
 
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
-        $mock->expects()->createOrUpdateInstallment()->once()->withAnyArgs();
+        $mock->expects()->createInstallment()->once()->withAnyArgs();
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
-
-        $job->handle($mock);
+        $balanceServiceMock = $this->mock(BalanceService::class);
+        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+        $job->handle($mock, $balanceServiceMock);
     }
 
     #[Test]
     public function doesntChargeByGuarantorIfNotDueDay(): void
     {
+        Bus::fake();
         $installment = Installment::factory()->create([
             'status' => InstallmentStatusEnum::ACTIVE,
             'starts_in' => now(),
@@ -139,11 +151,14 @@ class ImportInstallmentIntoUniredJobTest extends TestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
 
-        $job = new ImportInstallmentIntoUniredJob($installment->id);
-        $mock = $this->mock(UniredService::class);
-        $mock->expects()->createOrUpdateInstallment()->once()->withAnyArgs();
-        $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
+        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
 
-        $job->handle($mock);
+        $mock = $this->mock(UniredService::class);
+        $mock->expects()->createInstallment()->once()->withAnyArgs();
+        $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
+        $balanceServiceMock = $this->mock(BalanceService::class);
+        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+
+        $job->handle($mock, $balanceServiceMock);
     }
 }

@@ -11,6 +11,7 @@ use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -25,6 +26,8 @@ class StatisticsInfoGraphQLQueryTest extends GraphQLTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        Bus::fake();
 
         Installment::query()->forceDelete();
 

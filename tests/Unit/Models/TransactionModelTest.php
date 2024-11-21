@@ -12,6 +12,7 @@ use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Bus;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -27,6 +28,9 @@ class TransactionModelTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        Bus::fake();
+
         $this->_installment = Installment::factory()->create();
         $this->_transactionType = TransactionType::factory()->create();
         $this->_customer = Customer::factory()->create();

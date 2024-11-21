@@ -15,5 +15,6 @@ enum ClientCodeEnum: int
     case ATMOS_BALANCE_PAY = 8;
     case SMS_SAYQAL = 9;
     case ROYXAT = 10;
+    case UNIRED = 11;
     case QR_PAY = 12;
 }

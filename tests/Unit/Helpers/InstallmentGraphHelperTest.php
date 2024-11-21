@@ -8,6 +8,7 @@ use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
 use App\Services\Installment\InstallmentService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Bus;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -57,6 +58,7 @@ class InstallmentGraphHelperTest extends TestCase
     #[Test]
     public function getInstallmentGraphForLastMonthPaymentInstallment(): void
     {
+        Bus::fake();
         Transaction::query()->delete();
         $installment = Installment::factory()->create(['starts_in' => Carbon::now()->subMonths(2)->subDays(5), 'period' => 3]);
         $amountPerMonth = round((($installment->amount - $installment->initial_fee) * $installment->portion) / $installment->period, 2);
@@ -97,6 +99,7 @@ class InstallmentGraphHelperTest extends TestCase
     #[Test]
     public function getInstallmentGraphForWellClosedInstallment(): void
     {
+        Bus::fake();
         Transaction::query()->delete();
         $installment = Installment::factory()->create(['starts_in' => Carbon::now()->subMonths(2)->subDays(5), 'period' => 3]);
         $amountPerMonth = round((($installment->amount - $installment->initial_fee) * $installment->portion) / $installment->period, 2);

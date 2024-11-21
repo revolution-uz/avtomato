@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
+use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -85,7 +86,9 @@ class Transaction extends Model
             if ($installment->wholeDebtAmount <= 1) {
                 $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
             }
-
+            if ($transaction->transactionType->is_system) {
+                CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
+            }
             SendTransactionSmsJob::dispatch($transaction->id);
         });
 
