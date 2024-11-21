@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Installment\Queries;
+namespace Tests\GraphQL\Installment\Queries;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;

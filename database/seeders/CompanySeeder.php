@@ -9,6 +9,7 @@ use App\Models\Company\Rbac\Role;
 use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\BranchSeeder;
 use Database\Seeders\Company\CompanySettingsSeeder;
+use Database\Seeders\Company\EcommerceOrderStatusSeeder;
 use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\LocationSeeder;
 use Database\Seeders\Company\ModuleSeeder;
@@ -34,6 +35,7 @@ class CompanySeeder extends Seeder
         $this->call(CompanySettingsSeeder::class);
         $this->call(SmsTemplateSeeder::class);
         $this->call(BranchSeeder::class);
+        $this->call(EcommerceOrderStatusSeeder::class);
         // TODO remove before production
         /** @var CompanyAdmin $admin */
         $admin = CompanyAdmin::query()->firstOrCreate(
