@@ -19,13 +19,14 @@ class UzumNasiyaLimitGraphQLType extends GraphQLType
     {
 
         return BaseScoringRequestGraphQLType::fields() + [
+            'request' => [
+                'type' => GraphQL::type(UzumNasiyaLimitCreateRequestGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (ScoringRequest $root) => $root->request,
+
+            ],
             'response' => [
                 'type' => GraphQL::type(UzumNasiyaLimitResponseGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (ScoringRequest $root) => $root->response,
-            ],
-            'request' => [
-                'type' => GraphQL::type(UzumNasiyaLimitCreateInputGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (ScoringRequest $root) => $root->request,
             ],
         ];
     }
