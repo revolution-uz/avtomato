@@ -2,9 +2,9 @@
 
 namespace App\DTOs\Scoring\RoyxatCreditHistory;
 
-use App\DTOs\Scoring\Base\BaseScoringRequest;
+use App\DTOs\Scoring\Base\BaseScoringResponse;
 
-class RoyxatCreditHistoryResponseDTO extends BaseScoringRequest
+class RoyxatCreditHistoryResponseDTO extends BaseScoringResponse
 {
     public function __construct(
         public bool $ok,

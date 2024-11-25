@@ -4,6 +4,7 @@ namespace App\Services\Scoring;
 
 use App\Clients\RoyxatClient;
 use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryInputDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Enums\FeatureEnum;
@@ -33,7 +34,7 @@ readonly class RoyxatCreditHistoryService
         $model->saveOrFail();
         $this->balanceService->chargeAmount(FeatureEnum::SCORING_ROYXAT_CREDIT_HISTORY, $model);
         try {
-            $model->response = $this->royxatClient->getCredits($dto);
+            $model->response = RoyxatCreditHistoryResponseDTO::from($this->royxatClient->getCredits($dto));
             $model->status = ScoringRequestStatusEnum::SUCCESS;
         } catch (Exception $e) {
             Log::error($e);

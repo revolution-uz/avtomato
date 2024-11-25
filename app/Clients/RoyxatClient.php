@@ -26,7 +26,7 @@ class RoyxatClient extends BaseClient
         return ClientCodeEnum::ROYXAT;
     }
 
-    public function getCredits(RoyxatCreditHistoryInputDTO $dto)
+    public function getCredits(RoyxatCreditHistoryInputDTO $dto): array
     {
         return $this->makeRequest('/loans/query', $dto->toArray(), 'POST');
     }
@@ -51,7 +51,7 @@ class RoyxatClient extends BaseClient
         return $this->makeRequest('/mass/create', ['credits' => $creditRequestDTO], 'POST');
     }
 
-    protected function makeRequest(string $path, mixed $data, string $method = 'post')
+    protected function makeRequest(string $path, mixed $data, string $method = 'post'): array
     {
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
