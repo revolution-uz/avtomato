@@ -81,7 +81,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'royxat' => [
-        'base_url' => 'https://service.royxat.uz/api/credits',
+        'base_url' => 'https://new-api.royxat.uz/api',
         'token' => env('ROYXAT_UZ_TOKEN', ''),
     ],
 ];

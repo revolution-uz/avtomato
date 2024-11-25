@@ -15,10 +15,10 @@ use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class SingleRoyxatCreditHistoryRequestGraphQLQuery extends Query
+class SingleRoyxatCreditHistoryGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'singleRoyxatCreditHistoryRequest',
+        'name' => 'singleRoyxatCreditHistory',
     ];
 
     public function type(): Type

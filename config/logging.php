@@ -89,9 +89,17 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'atmos-balance-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/atmos-balance-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
         'atmos-card-client' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/atmos-client.log'),
+            'path' => storage_path('logs/atmos-card-client.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
             'replace_placeholders' => true,
@@ -99,7 +107,7 @@ return [
 
         'atmos-pinfl-client' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/atmos-client.log'),
+            'path' => storage_path('logs/atmos-pinfl-client.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
             'replace_placeholders' => true,
@@ -121,9 +129,33 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'royxat-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/royxat-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
         'sms-fly-client' => [
             'driver' => 'daily',
             'path' => storage_path('logs/sms-fly-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'sms-sayqal-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/sms-sayqal-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'document-generator-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/document-generator-client.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
             'replace_placeholders' => true,

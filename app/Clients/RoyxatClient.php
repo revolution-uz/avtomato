@@ -26,9 +26,9 @@ class RoyxatClient extends BaseClient
         return ClientCodeEnum::ROYXAT;
     }
 
-    public function getCredits(RoyxatCreditHistoryInputDTO $dto)
+    public function getCredits(RoyxatCreditHistoryInputDTO $dto): array
     {
-        return $this->makeRequest('/search?' . http_build_query($dto->toArray()), 'GET');
+        return $this->makeRequest('/loans/query', $dto->toArray(), 'POST');
     }
 
     public function createCredit(CreateCreditRequestDTO $creditRequestDTO)
@@ -56,7 +56,7 @@ class RoyxatClient extends BaseClient
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'Token' => $this->token,
+            'Authorization' => 'Bearer ' . $this->token,
         ])->$method($this->baseUrl . $path, $data);
 
         if (
@@ -87,6 +87,6 @@ class RoyxatClient extends BaseClient
             body: $data,
         ));
 
-        return $response->json('data');
+        return $response->json();
     }
 }
