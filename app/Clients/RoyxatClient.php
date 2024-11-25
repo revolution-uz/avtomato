@@ -28,7 +28,7 @@ class RoyxatClient extends BaseClient
 
     public function getCredits(RoyxatCreditHistoryInputDTO $dto)
     {
-        return $this->makeRequest('/search?' . http_build_query($dto->toArray()), 'GET');
+        return $this->makeRequest('/loan/query', $dto->toArray(), 'POST');
     }
 
     public function createCredit(CreateCreditRequestDTO $creditRequestDTO)
@@ -56,7 +56,7 @@ class RoyxatClient extends BaseClient
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'Token' => $this->token,
+            'Authorization' => $this->token,
         ])->$method($this->baseUrl . $path, $data);
 
         if (

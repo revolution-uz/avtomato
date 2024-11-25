@@ -29,12 +29,6 @@ class RoyxatCreditHistoryCreateRequestGraphQLType extends GraphQLType
                     return $root->passport_id;
                 },
             ],
-            'tin' => [
-                'type' => Type::string(),
-                'resolve' => function (RoyxatCreditHistoryInputDTO $root) {
-                    return $root->passport_id;
-                },
-            ],
         ];
     }
 }

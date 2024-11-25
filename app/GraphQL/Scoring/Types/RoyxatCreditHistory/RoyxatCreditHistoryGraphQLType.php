@@ -4,7 +4,6 @@ namespace App\GraphQL\Scoring\Types\RoyxatCreditHistory;
 
 use App\GraphQL\Scoring\Types\BaseScoringRequestGraphQLType;
 use App\Models\Company\ScoringRequest;
-use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
@@ -25,7 +24,7 @@ class RoyxatCreditHistoryGraphQLType extends GraphQLType
                 'resolve' => fn (ScoringRequest $root) => $root->request,
             ],
             'response' => [
-                'type' => Type::listOf(GraphQL::type(RoyxatCreditHistoryResponseGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => GraphQL::type(RoyxatCreditHistoryResponseGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (ScoringRequest $root) => $root->response,
             ],
         ];
