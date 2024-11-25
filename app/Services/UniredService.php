@@ -9,6 +9,7 @@ use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredClientExtIdDTO;
 use App\DTOs\Unired\Client\UniredCreateClientResponseDTO;
+use App\DTOs\Unired\Client\UniredCreateClientResponseErrorDataDTO;
 use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
 use App\DTOs\Unired\Payment\UniredCancelPaymentRequestDTO;
@@ -86,6 +87,13 @@ class UniredService
         if ($createClientResponse->status) {
             $uniredCreatedClient = UniredCreateClientResponseDTO::from($createClientResponse->result);
             $installment->update(['unired_id' => $uniredCreatedClient->id]);
+        } else {
+            if (isset($createClientResponse->error->data) && is_array($createClientResponse->error->data)) {
+                $errorData = UniredCreateClientResponseErrorDataDTO::from($createClientResponse->error->data);
+                if (isset($errorData->loan_id)) {
+                    $installment->update(['unired_id' => -1]);
+                }
+            }
         }
 
         return true;
@@ -132,6 +140,13 @@ class UniredService
         if ($createClientResponse->status) {
             $uniredCreatedClient = UniredCreateClientResponseDTO::from($createClientResponse->result);
             $installmentGuarantor->update(['unired_id' => $uniredCreatedClient->id]);
+        } else {
+            if (isset($createClientResponse->error->data) && is_array($createClientResponse->error->data)) {
+                $errorData = UniredCreateClientResponseErrorDataDTO::from($createClientResponse->error->data);
+                if (isset($errorData->loan_id)) {
+                    $installmentGuarantor->update(['unired_id' => -1]);
+                }
+            }
         }
 
         return true;
