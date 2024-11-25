@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Scoring\Types\RoyxatCreditHistory;
 
-use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResultDTO;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -13,7 +13,7 @@ class RoyxatCreditHistoryResultGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'model' => RoyxatCreditHistoryResponseDTO::class,
+        'model' => RoyxatCreditHistoryResultDTO::class,
     ];
 
     public function fields(): array
@@ -21,11 +21,11 @@ class RoyxatCreditHistoryResultGraphQLType extends GraphQLType
         return [
             'borrower' => [
                 'type' => GraphQL::type(RoyxatCreditHistoryBorrowerGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (RoyxatCreditHistoryResponseDTO $root) => $root->borrower,
+                'resolve' => fn (RoyxatCreditHistoryResultDTO $root) => $root->borrower,
             ],
             'loans' => [
                 'type' => Type::listOf((GraphQL::type(RoyxatCreditHistoryLoanGraphQLType::GRAPHQL_TYPE_NAME))),
-                'resolve' => fn (RoyxatCreditHistoryResponseDTO $root) => $root->loans,
+                'resolve' => fn (RoyxatCreditHistoryResultDTO $root) => $root->loans,
             ],
         ];
     }
