@@ -5,6 +5,7 @@ namespace App\GraphQL\Scoring;
 use App\GraphQL\Common\Types\DistrictGraphQLType;
 use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
+use App\GraphQL\Scalars\BigInteger;
 use App\GraphQL\Scoring\Mutations\CreateCardScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\CreateDebtScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\CreateKatmScoringGraphQLMutation;
@@ -61,6 +62,7 @@ use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryCreateReque
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryLoanGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryResponseGraphQLType;
+use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryResultGraphQLType;
 use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaAvailablePeriodResponseGraphQLType;
 use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\UzumNasiya\UzumNasiyaLimitCreateRequestGraphQLType;
@@ -139,6 +141,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 MahallaGraphQLType::class,
 
                 RoyxatCreditHistoryResponseGraphQLType::class,
+                RoyxatCreditHistoryResultGraphQLType::class,
                 RoyxatCreditHistoryCreateRequestGraphQLType::class,
                 RoyxatCreditHistoryGraphQLType::class,
                 RoyxatCreditHistoryCreateInputGraphQLType::class,
@@ -150,6 +153,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 UzumNasiyaLimitResponseGraphQLType::class,
                 UzumNasiyaAvailablePeriodResponseGraphQLType::class,
                 UzumNasiyaLimitCreateInputGraphQLType::class,
+                BigInteger::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];

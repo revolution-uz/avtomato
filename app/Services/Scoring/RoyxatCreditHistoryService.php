@@ -26,7 +26,7 @@ readonly class RoyxatCreditHistoryService
     public function scoring(RoyxatCreditHistoryInputDTO $dto): ScoringRequest
     {
         $model = new ScoringRequest;
-        $model->type = ScoringRequestTypeEnum::UZUM_NASIYA_LIMIT;
+        $model->type = ScoringRequestTypeEnum::ROYXAT_CREDIT_HISTORY;
         $model->request = $dto;
         $model->client_code = $this->royxatClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;

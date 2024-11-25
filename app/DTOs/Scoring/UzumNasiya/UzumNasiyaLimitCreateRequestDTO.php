@@ -7,6 +7,6 @@ use App\DTOs\Scoring\Base\BaseScoringRequest;
 class UzumNasiyaLimitCreateRequestDTO extends BaseScoringRequest
 {
     public function __construct(
-        public int $phone
+        public string $phone
     ) {}
 }

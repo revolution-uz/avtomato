@@ -19,7 +19,7 @@ class UzumNasiyaLimitCreateRequestGraphQLType extends GraphQLType
         return [
             'phone' => [
                 'name' => 'phone',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::string()),
                 'resolve' => function (UzumNasiyaLimitCreateRequestDTO $root) {
                     return $root->phone;
                 },

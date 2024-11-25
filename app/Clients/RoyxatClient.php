@@ -28,7 +28,7 @@ class RoyxatClient extends BaseClient
 
     public function getCredits(RoyxatCreditHistoryInputDTO $dto)
     {
-        return $this->makeRequest('/loan/query', $dto->toArray(), 'POST');
+        return $this->makeRequest('/loans/query', $dto->toArray(), 'POST');
     }
 
     public function createCredit(CreateCreditRequestDTO $creditRequestDTO)
@@ -51,12 +51,12 @@ class RoyxatClient extends BaseClient
         return $this->makeRequest('/mass/create', ['credits' => $creditRequestDTO], 'POST');
     }
 
-    protected function makeRequest(string $path, mixed $data, string $method = 'post'): array
+    protected function makeRequest(string $path, mixed $data, string $method = 'post')
     {
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'Authorization' => $this->token,
+            'Authorization' => 'Bearer ' . $this->token,
         ])->$method($this->baseUrl . $path, $data);
 
         if (
@@ -87,6 +87,7 @@ class RoyxatClient extends BaseClient
             body: $data,
         ));
 
+        //print_r("<response>" . $response . "</response>");die;
         return $response->json('data');
     }
 }

@@ -19,13 +19,21 @@ class RoyxatCreditHistoryResponseGraphQLType extends GraphQLType
     public function fields(): array
     {
         return [
-            'borrower' => [
-                'type' => GraphQL::type(RoyxatCreditHistoryBorrowerGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (RoyxatCreditHistoryResponseDTO $root) => $root->borrower,
+            'ok' => [
+                'type' => Type::nonNull(Type::boolean()),
+                'resolve' => fn (RoyxatCreditHistoryResponseDTO $root) => $root->ok,
             ],
-            'loans' => [
-                'type' => Type::listOf((GraphQL::type(RoyxatCreditHistoryLoanGraphQLType::GRAPHQL_TYPE_NAME))),
-                'resolve' => fn (RoyxatCreditHistoryResponseDTO $root) => $root->loans,
+            'result' => [
+                'type' => GraphQL::type(RoyxatCreditHistoryResultGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (RoyxatCreditHistoryResponseDTO $root) => $root->result,
+            ],
+            'error_code' => [
+                'type' => Type::int(),
+                'resolve' => fn (RoyxatCreditHistoryResponseDTO $root) => $root->error_code,
+            ],
+            'description' => [
+                'type' => Type::string(),
+                'resolve' => fn (RoyxatCreditHistoryResponseDTO $root) => $root->description,
             ],
         ];
     }

@@ -3,14 +3,13 @@
 namespace App\DTOs\Scoring\RoyxatCreditHistory;
 
 use App\DTOs\Scoring\Base\BaseScoringRequest;
-use Spatie\LaravelData\Attributes\DataCollectionOf;
-use Spatie\LaravelData\DataCollection;
 
 class RoyxatCreditHistoryResponseDTO extends BaseScoringRequest
 {
     public function __construct(
-        public ?RoyxatCreditHistoryBorrowerDTO $borrower,
-        #[DataCollectionOf(RoyxatCreditHistoryLoanDTO::class)]
-        public ?DataCollection $loans,
+        public bool $ok,
+        public ?RoyxatCreditHistoryResultDTO $result,
+        public ?int $error_code,
+        public ?string $description
     ) {}
 }

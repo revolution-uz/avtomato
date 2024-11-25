@@ -9,6 +9,8 @@ use App\DTOs\Scoring\Katm\InpsHistory\KatmInpsHistoryResponseDTO;
 use App\DTOs\Scoring\Katm\PensionInfo\KatmPensionInfoResponseDTO;
 use App\DTOs\Scoring\Plum\Mib\MibInfoResponseDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoResponseDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
+use App\DTOs\Scoring\UzumNasiya\UzumNasiyaLimitResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
@@ -30,6 +32,8 @@ class ScoringResponseCast implements CastsAttributes
             ScoringRequestTypeEnum::PLUM_TAX_INFO->value => TaxInfoResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::HUMO->value,
             ScoringRequestTypeEnum::UZCARD->value => CardScoringResponseDTO::from(json_decode($value, true)),
+            ScoringRequestTypeEnum::ROYXAT_CREDIT_HISTORY->value => RoyxatCreditHistoryResponseDTO::from(json_decode($value, true)),
+            ScoringRequestTypeEnum::UZUM_NASIYA_LIMIT->value => UzumNasiyaLimitResponseDTO::from(json_decode($value, true)),
             default => throw new InvalidArgumentException,
         };
     }

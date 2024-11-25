@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Scoring\Types\RoyxatCreditHistory;
 
+use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class RoyxatCreditHistoryCreateInputGraphQLType extends InputType
@@ -18,11 +20,12 @@ class RoyxatCreditHistoryCreateInputGraphQLType extends InputType
         return [
             'passport_id' => [
                 'type' => Type::string(),
-                'rules' => 'required_without_all:pinfl|nullable|string|max:9|min:9',
+                'rules' => 'nullable|string|max:9|min:9',
             ],
             'pinfl' => [
-                'type' => Type::string(),
-                'rules' => 'required_without_all:passport_id|nullable|integer|digits:14',
+                'name' => 'pinfl',
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
+                'rules' => 'nullable|integer|digits:14',
             ],
         ];
     }
