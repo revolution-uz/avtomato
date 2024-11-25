@@ -23,7 +23,7 @@ use App\GraphQL\Scoring\Queries\SingleCreditHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleDebtScoringRequestGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleInpsHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SinglePensionInfoGraphQLQuery;
-use App\GraphQL\Scoring\Queries\SingleRoyxatCreditHistoryRequestGraphQLQuery;
+use App\GraphQL\Scoring\Queries\SingleRoyxatCreditHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleUzumNasiyaLimitRequestGraphQLQuery;
 use App\GraphQL\Scoring\Queries\UzumNasiyaLimitRequestsGraphQLQuery;
 use App\GraphQL\Scoring\Types\Card\CardCreateInputGraphQLType;
@@ -87,7 +87,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 SingleInpsHistoryGraphQLQuery::class,
                 SinglePensionInfoGraphQLQuery::class,
                 RoyxatCreditHistoriesGraphQLQuery::class,
-                SingleRoyxatCreditHistoryRequestGraphQLQuery::class,
+                SingleRoyxatCreditHistoryGraphQLQuery::class,
                 UzumNasiyaLimitRequestsGraphQLQuery::class,
                 SingleUzumNasiyaLimitRequestGraphQLQuery::class,
             ],

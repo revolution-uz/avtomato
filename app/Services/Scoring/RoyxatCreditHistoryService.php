@@ -31,7 +31,7 @@ readonly class RoyxatCreditHistoryService
         $model->client_code = $this->royxatClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
         $model->saveOrFail();
-        $this->balanceService->chargeAmount(FeatureEnum::SCORING_UZUM_NASIYA_LIMIT, $model);
+        $this->balanceService->chargeAmount(FeatureEnum::SCORING_ROYXAT_CREDIT_HISTORY, $model);
         try {
             $model->response = $this->royxatClient->getCredits($dto);
             $model->status = ScoringRequestStatusEnum::SUCCESS;

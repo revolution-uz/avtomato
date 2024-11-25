@@ -87,7 +87,6 @@ class RoyxatClient extends BaseClient
             body: $data,
         ));
 
-        //print_r("<response>" . $response . "</response>");die;
-        return $response->json('data');
+        return $response->json();
     }
 }
