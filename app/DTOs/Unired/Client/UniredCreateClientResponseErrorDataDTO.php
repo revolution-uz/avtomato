@@ -7,7 +7,7 @@ use App\DTOs\Unired\Base\BaseUniredDTO;
 /**
  * Class UniredCreateClientResponseErrorDataDTO
  *
- * @property int $loan_id
+ * @property string $loan_id
  */
 class UniredCreateClientResponseErrorDataDTO extends BaseUniredDTO
 {

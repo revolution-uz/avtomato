@@ -88,7 +88,7 @@ class UniredService
             $uniredCreatedClient = UniredCreateClientResponseDTO::from($createClientResponse->result);
             $installment->update(['unired_id' => $uniredCreatedClient->id]);
         } else {
-            if (isset($createClientResponse->error->data) && is_array($createClientResponse->error->data)) {
+            if (isset($createClientResponse->error->data)) {
                 $errorData = UniredCreateClientResponseErrorDataDTO::from($createClientResponse->error->data);
                 if (isset($errorData->loan_id)) {
                     $installment->update(['unired_id' => -1]);
@@ -141,7 +141,7 @@ class UniredService
             $uniredCreatedClient = UniredCreateClientResponseDTO::from($createClientResponse->result);
             $installmentGuarantor->update(['unired_id' => $uniredCreatedClient->id]);
         } else {
-            if (isset($createClientResponse->error->data) && is_array($createClientResponse->error->data)) {
+            if (isset($createClientResponse->error->data)) {
                 $errorData = UniredCreateClientResponseErrorDataDTO::from($createClientResponse->error->data);
                 if (isset($errorData->loan_id)) {
                     $installmentGuarantor->update(['unired_id' => -1]);
