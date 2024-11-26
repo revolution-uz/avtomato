@@ -197,6 +197,7 @@ class AtmosService
         $installment = $transactionAttempt->installment;
         $customer = $installment->customer;
         $detailCount = count($confirmWithPinfl->payload->details);
+        $amount = $transactionAttempt->amount;
         foreach ($confirmWithPinfl->payload->details as $detail) {
             /** @var AtmosTransactionDetailDTO $detail */
             if (! $detail->isSuccess()) {
