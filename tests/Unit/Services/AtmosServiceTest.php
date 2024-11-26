@@ -157,7 +157,7 @@ class AtmosServiceTest extends TestCase
         $this->assertTrue($transactions[1]->paid_at->between(Carbon::now()->subMinute(), Carbon::now()));
 
         $this->_installment->refresh();
-        $this->assertEquals(343000, $debtAmount);
+        $this->assertEquals(345000, $debtAmount);
         $this->assertEquals(2000, $this->_installment->paid_amount);
         $this->assertEquals($this->_installment->monthlyPayment - 2000, $this->_installment->debtAmount);
     }

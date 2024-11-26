@@ -168,7 +168,7 @@ class AtmosService
         }
 
         if ($confirmWithPinfl->payload->isSuccess()) {
-            $this->saveSuccessAttempt($transactionAttempt, $confirmWithPinfl);
+            $this->saveSuccessAttempt($customer, $installment, $transactionAttempt, $confirmWithPinfl);
 
             return;
         }
@@ -181,7 +181,7 @@ class AtmosService
         $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $transactionAttempt->transaction_id);
 
         if ($confirmWithPinfl->payload->isSuccess()) {
-            $this->saveSuccessAttempt($transactionAttempt, $confirmWithPinfl);
+            $this->saveSuccessAttempt($transactionAttempt->customer, $transactionAttempt->installment, $transactionAttempt, $confirmWithPinfl);
 
             return;
         }
@@ -191,11 +191,9 @@ class AtmosService
 
     }
 
-    private function saveSuccessAttempt(TransactionAttempt $transactionAttempt, AtmosTransactionInfoResponseDTO $confirmWithPinfl)
+    private function saveSuccessAttempt(Customer $customer, Installment $installment, TransactionAttempt $transactionAttempt, AtmosTransactionInfoResponseDTO $confirmWithPinfl): void
     {
         $paid_at = Carbon::now();
-        $installment = $transactionAttempt->installment;
-        $customer = $installment->customer;
         $detailCount = count($confirmWithPinfl->payload->details);
         $amount = $transactionAttempt->amount;
         foreach ($confirmWithPinfl->payload->details as $detail) {
