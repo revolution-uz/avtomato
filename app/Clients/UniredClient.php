@@ -12,6 +12,7 @@ use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredFindClientRequestDTO;
 use App\DTOs\Unired\Client\UniredFindClientsRequestDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
+use App\DTOs\Unired\Client\UniredUpdateClientDebitRequestDTO;
 use App\DTOs\Unired\Payment\UniredCancelPaymentRequestDTO;
 use App\DTOs\Unired\Payment\UniredChangePaymentSendStatusRequestDTO;
 use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
@@ -37,6 +38,7 @@ class UniredClient extends BaseClient
     // Client Module
     const CLIENT_CREATE = 'client.create';
     const CLIENT_CREATE_OR_UPDATE = 'client.createOrUpdate';
+    const CLIENT_DEBIT_UPDATE = 'client.debit.update';
     const CLIENT_FIND = 'client.find';
     const CLIENT_FIND_MULTIPLE = 'client.find.multiple';
     const CLIENT_PHONE_ADD = 'client.phone.add';
@@ -100,6 +102,11 @@ class UniredClient extends BaseClient
     public function createOrUpdateClients(UniredCreateOrUpdateClientRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest(self::CLIENT_CREATE_OR_UPDATE, [$params->toArray()]);
+    }
+
+    public function updateClientDebit(UniredUpdateClientDebitRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::CLIENT_DEBIT_UPDATE, $params->toArray());
     }
 
     public function findClient(UniredFindClientRequestDTO $params): UniredResponseDTO

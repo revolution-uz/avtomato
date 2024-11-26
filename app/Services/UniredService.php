@@ -12,6 +12,7 @@ use App\DTOs\Unired\Client\UniredCreateClientResponseDTO;
 use App\DTOs\Unired\Client\UniredCreateClientResponseErrorDataDTO;
 use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
+use App\DTOs\Unired\Client\UniredUpdateClientDebitRequestDTO;
 use App\DTOs\Unired\Payment\UniredCancelPaymentRequestDTO;
 use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
 use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationResponseDTO;
@@ -116,6 +117,7 @@ class UniredService
             (int) ($installment->debtAmount * 100),
             $installment->customer->phones->pluck('phone')->toArray()
         ));
+        $this->updateDebitAndSwitchOn(Utilities::generateIdByTenancy($installment->id), (int) $installment->debtAmount * 100);
 
         return true;
     }
@@ -169,6 +171,8 @@ class UniredService
             (int) ($installmentGuarantor->installment->debtAmount * 100),
             $installmentGuarantor->customer->phones->pluck('phone')->toArray()
         ));
+
+        $this->updateDebitAndSwitchOn(Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id), (int) ($installmentGuarantor->installment->debtAmount * 100));
 
         return true;
     }
@@ -247,5 +251,17 @@ class UniredService
         $transaction->paid_at = Carbon::parse($request->created_at);
 
         return $transaction->save();
+    }
+
+    private function updateDebitAndSwitchOn(string $loan_id, int $debit_amount): void
+    {
+        $this->uniredClient->updateClientDebit(new UniredUpdateClientDebitRequestDTO(
+            $loan_id,
+            $debit_amount,
+        ));
+        $this->uniredClient->toggleClientAuto(new UniredToggleClientAutoRequestDTO(
+            $loan_id,
+            true,
+        ));
     }
 }
