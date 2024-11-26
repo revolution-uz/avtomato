@@ -78,6 +78,11 @@ class TransactionAttempt extends Model
         $this->updateOrFail(['status' => TransactionAttemptStatusEnum::FAILED]);
     }
 
+    public function inProgress(): void
+    {
+        $this->updateOrFail(['status' => TransactionAttemptStatusEnum::FAILED]);
+    }
+
     public function success(int $transaction_id): void
     {
         $this->updateOrFail(['status' => TransactionAttemptStatusEnum::SUCCESS, 'transaction_id' => $transaction_id]);

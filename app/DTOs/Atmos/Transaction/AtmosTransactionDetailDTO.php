@@ -12,4 +12,11 @@ class AtmosTransactionDetailDTO extends Data
         public int $upper_commission,
         public string $status,
     ) {}
+
+
+
+    public function isSuccess(): bool
+    {
+        return $this->status == 'SUCCESS';
+    }
 }
