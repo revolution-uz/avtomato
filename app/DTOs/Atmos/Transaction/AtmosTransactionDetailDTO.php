@@ -13,8 +13,6 @@ class AtmosTransactionDetailDTO extends Data
         public string $status,
     ) {}
 
-
-
     public function isSuccess(): bool
     {
         return $this->status == 'SUCCESS';
