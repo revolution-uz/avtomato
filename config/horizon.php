@@ -230,6 +230,16 @@ return [
             'timeout' => 600,
             'nice' => 0,
         ],
+        'supervisor-7' => [
+            'connection' => 'redis',
+            'queue' => ['transaction-attempt-check'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 600,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [

@@ -7,6 +7,7 @@ use App\Clients\AtmosPinflClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionDetailDTO;
+use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
@@ -134,7 +135,6 @@ class AtmosService
 
     public function withdrawAmountAndCreatePINFLTransaction(Customer $customer, Installment $installment, float &$amount): void
     {
-        $paid_at = Carbon::now();
         /** @var TransactionAttempt $transactionAttempt */
         $transactionAttempt = TransactionAttempt::create([
             'installment_id' => $installment->id,
@@ -159,9 +159,48 @@ class AtmosService
 
             return;
         }
+
+        if ($confirmWithPinfl->payload->inProgress()) {
+            $transactionAttempt->updateOrFail(['transaction_id' => $confirmWithPinfl->payload->transaction_id]);
+            $transactionAttempt->inProgress();
+
+            return;
+        }
+
+        if ($confirmWithPinfl->payload->isSuccess()) {
+            $this->saveSuccessAttempt($customer, $installment, $transactionAttempt, $confirmWithPinfl);
+
+            return;
+        }
+        $transactionAttempt->failed();
+    }
+
+    public function checkInProgress(TransactionAttempt $transactionAttempt)
+    {
+        $ext_id = Utilities::generateIdByTenancy($transactionAttempt->id);
+        $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $transactionAttempt->transaction_id);
+
+        if ($confirmWithPinfl->payload->isSuccess()) {
+            $this->saveSuccessAttempt($transactionAttempt->customer, $transactionAttempt->installment, $transactionAttempt, $confirmWithPinfl);
+
+            return;
+        }
+        if (! $confirmWithPinfl->payload->inProgress()) {
+            $transactionAttempt->failed();
+        }
+
+    }
+
+    private function saveSuccessAttempt(Customer $customer, Installment $installment, TransactionAttempt $transactionAttempt, AtmosTransactionInfoResponseDTO $confirmWithPinfl): void
+    {
+        $paid_at = Carbon::now();
         $detailCount = count($confirmWithPinfl->payload->details);
+        $amount = $transactionAttempt->amount;
         foreach ($confirmWithPinfl->payload->details as $detail) {
             /** @var AtmosTransactionDetailDTO $detail */
+            if (! $detail->isSuccess()) {
+                continue;
+            }
             $transaction = new Transaction;
             $transaction->paid_at = $paid_at;
             $transaction->transaction_type_id = TransactionType::ATMOS_WITH_PINFL;
