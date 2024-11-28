@@ -4,7 +4,6 @@ namespace App\Nova;
 
 use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
-use Illuminate\Support\Carbon;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
@@ -33,7 +32,7 @@ class CompanyResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'owner_name', 'owner_phone',
+        'id', 'name', 'owner_name', 'owner_phone', 'address', 'bank_name', 'bank_code', 'account_number', 'tin', 'payment_day',
     ];
 
     /**
@@ -85,8 +84,8 @@ class CompanyResource extends Resource
                 ->creationRules('nullable')
                 ->updateRules('nullable')
                 ->rules('min:0', function ($attribute, $value, $fail) {
-                    if ($value > Carbon::now()->endOfMonth()->day) {
-                        $fail("{$attribute} joriy oyda mavjud kun bo'lishi kerak!");
+                    if ($value > 28) {
+                        $fail("{$attribute} 28 dan katta son kiritmang!");
                     }
                 }),
             HasMany::make('Domains', 'domains', DomainResource::class),

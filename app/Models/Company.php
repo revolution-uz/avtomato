@@ -32,7 +32,6 @@ class Company extends Tenant implements TenantWithDatabase
     protected $fillable = [
         'id',
         'name',
-        'status',
         'owner_name',
         'owner_phone',
         'address',
@@ -40,6 +39,7 @@ class Company extends Tenant implements TenantWithDatabase
         'bank_code',
         'account_number',
         'tin',
+        'status',
         'payment_day',
     ];
 
@@ -55,6 +55,15 @@ class Company extends Tenant implements TenantWithDatabase
             'status',
             'owner_name',
             'owner_phone',
+            'address',
+            'bank_name',
+            'bank_code',
+            'account_number',
+            'tin',
+            'status',
+            'payment_day',
+            'created_at',
+            'updated_at',
         ];
     }
 
