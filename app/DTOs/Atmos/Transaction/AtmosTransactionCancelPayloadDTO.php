@@ -11,4 +11,9 @@ class AtmosTransactionCancelPayloadDTO extends Data
         public int $ext_id,
         public string $transaction_status,
     ) {}
+
+    public function isCanceled(): bool
+    {
+        return $this->transaction_status == 'CANCELED';
+    }
 }

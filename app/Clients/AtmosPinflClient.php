@@ -39,7 +39,7 @@ class AtmosPinflClient extends BaseAtmosClient
     /**
      * @throws GeneralException
      */
-    public function payWithPinfl(string $ext_id, Customer $customer, string $contract_number, int $amount): AtmosTransactionCreateResponseDTO
+    public function payCreate(string $ext_id, Customer $customer, string $contract_number, int $amount): AtmosTransactionCreateResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,
@@ -61,7 +61,7 @@ class AtmosPinflClient extends BaseAtmosClient
     /**
      * @throws GeneralException
      */
-    public function payConfirmWithPinfl(string $ext_id, string $transaction_id): AtmosTransactionInfoResponseDTO
+    public function payConfirm(string $ext_id, string $transaction_id): AtmosTransactionInfoResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,
@@ -74,15 +74,15 @@ class AtmosPinflClient extends BaseAtmosClient
     /**
      * @throws GeneralException
      */
-    public function payCheckWithPinfl(string $ext_id, string $pinfl, string $passer, string $pasnum, string $contract_number, int $amount): AtmosTransactionInfoResponseDTO
+    public function payCheck(string $ext_id, Customer $customer, string $contract_number, int $amount): AtmosTransactionInfoResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,
-            'pinfl' => $pinfl,
-            'passport_series' => $passer,
-            'passport_number' => $pasnum,
+            'pinfl' => $customer->pinfl,
+            'passport_series' => $customer->passport_series,
+            'passport_number' => $customer->passport_number,
             'contract_number' => $contract_number,
-            'amount' => $amount,
+            'amount' => $amount * 100,
         ];
 
         return AtmosTransactionInfoResponseDTO::from($this->makeRequest(self::PAYMENT_CHECK, $data));
@@ -91,7 +91,7 @@ class AtmosPinflClient extends BaseAtmosClient
     /**
      * @throws GeneralException
      */
-    public function payCancelWithPinfl(string $ext_id, string $transaction_id): AtmosTransactionCancelResponseDTO
+    public function payCancel(string $ext_id, string $transaction_id): AtmosTransactionCancelResponseDTO
     {
         $data = [
             'ext_id' => $ext_id,
