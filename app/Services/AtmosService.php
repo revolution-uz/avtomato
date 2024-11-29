@@ -195,11 +195,15 @@ class AtmosService
             return;
         }
         $transactionAttempt->installment->decrement('paid_amount', $transactionAttempt->amount);
-        Transaction::query()->where('id', $transactionAttempt->transaction_id)->delete();
+        /** @var Transaction $transaction */
+        $transaction = Transaction::findOrFail($transactionAttempt->transaction_id);
         if ($confirmWithPinfl->payload->inProgress()) {
+            $transaction->delete();
             $transactionAttempt->inProgress();
         } else {
-            $transactionAttempt->inProgress();
+            $transaction->status = TransactionStatusEnum::CANCELED;
+            $transaction->saveOrFail();
+            $transactionAttempt->failed();
         }
     }
 
