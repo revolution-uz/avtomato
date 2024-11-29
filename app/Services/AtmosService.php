@@ -191,6 +191,9 @@ class AtmosService
     public function checkIsSuccess(TransactionAttempt $transactionAttempt): void
     {
         $confirmWithPinfl = $this->checkAttempt($transactionAttempt);
+        if (! $confirmWithPinfl->isSuccess()) {
+            return;
+        }
         if ($confirmWithPinfl->payload->isSuccess()) {
             return;
         }
