@@ -46,13 +46,11 @@ class AtmosService
      * @throws Throwable
      * @throws GeneralException
      */
-    public function reversePayment(Transaction $transaction): bool
+    public function reverseCardPayment(Transaction $transaction): bool
     {
         $response = $this->atmosCardClient->reversePayment($transaction->external_id);
         if ($response->result->isSuccess()) {
-            $installment = $transaction->installment;
-            $installment->paid_amount -= $transaction->amount;
-            $installment->saveOrFail();
+            $transaction->installment->decrement('paid_amount', $transaction->amount);
             $transaction->status = TransactionStatusEnum::CANCELED;
             $transaction->saveOrFail();
 
@@ -145,14 +143,14 @@ class AtmosService
         ]);
         $ext_id = Utilities::generateIdByTenancy($transactionAttempt->id);
 
-        $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment->id, $amount);
+        $createPayResponseDTO = $this->atmosPinflClient->payCreate($ext_id, $customer, $installment->id, $amount);
         if (! $createPayResponseDTO->isSuccess()) {
             $transactionAttempt->failed();
 
             return;
         }
 
-        $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $createPayResponseDTO->payload->transaction_id);
+        $confirmWithPinfl = $this->atmosPinflClient->payConfirm($ext_id, $createPayResponseDTO->payload->transaction_id);
 
         if (! $confirmWithPinfl->isSuccess()) {
             $transactionAttempt->failed();
@@ -175,10 +173,9 @@ class AtmosService
         $transactionAttempt->failed();
     }
 
-    public function checkInProgress(TransactionAttempt $transactionAttempt)
+    public function checkInProgress(TransactionAttempt $transactionAttempt): void
     {
-        $ext_id = Utilities::generateIdByTenancy($transactionAttempt->id);
-        $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $transactionAttempt->transaction_id);
+        $confirmWithPinfl = $this->checkAttempt($transactionAttempt);
 
         if ($confirmWithPinfl->payload->isSuccess()) {
             $this->saveSuccessAttempt($transactionAttempt->customer, $transactionAttempt->installment, $transactionAttempt, $confirmWithPinfl);
@@ -189,6 +186,56 @@ class AtmosService
             $transactionAttempt->failed();
         }
 
+    }
+
+    public function checkIsSuccess(TransactionAttempt $transactionAttempt): void
+    {
+        $confirmWithPinfl = $this->checkAttempt($transactionAttempt);
+        if ($confirmWithPinfl->payload->isSuccess()) {
+            return;
+        }
+        $transactionAttempt->installment->decrement('paid_amount', $transactionAttempt->amount);
+        Transaction::query()->where('id', $transactionAttempt->transaction_id)->delete();
+        if ($confirmWithPinfl->payload->inProgress()) {
+            $transactionAttempt->inProgress();
+        } else {
+            $transactionAttempt->inProgress();
+        }
+    }
+
+    /**
+     * @throws Throwable
+     * @throws GeneralException
+     */
+    public function reversePinflPayment(Transaction $transaction): bool
+    {
+        $transactionAttempts = TransactionAttempt::query()->where('transaction_id', $transaction->id)->get();
+        $isReversed = false;
+        foreach ($transactionAttempts as $transactionAttempt) {
+            $paymentState = $this->checkAttempt($transactionAttempt);
+            if ($paymentState->isSuccess() && $paymentState->payload->isSuccess()) {
+                $reversePaymentState = $this->atmosPinflClient->payCancel($paymentState->payload->ext_id, $paymentState->payload->transaction_id);
+                if ($reversePaymentState->isSuccess() && $reversePaymentState->payload->isCanceled()) {
+                    $isReversed = true;
+                }
+            }
+        }
+        if ($isReversed) {
+            $transaction->installment->decrement('paid_amount', $transaction->amount);
+            $transaction->status = TransactionStatusEnum::CANCELED;
+            $transaction->saveOrFail();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function checkAttempt(TransactionAttempt $transactionAttempt): AtmosTransactionInfoResponseDTO
+    {
+        $ext_id = Utilities::generateIdByTenancy($transactionAttempt->id);
+
+        return $this->atmosPinflClient->payCheck($ext_id, $transactionAttempt->customer, $transactionAttempt->installment_id, $transactionAttempt->amount);
     }
 
     private function saveSuccessAttempt(Customer $customer, Installment $installment, TransactionAttempt $transactionAttempt, AtmosTransactionInfoResponseDTO $confirmWithPinfl): void

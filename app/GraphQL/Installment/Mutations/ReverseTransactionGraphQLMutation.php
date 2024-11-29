@@ -22,7 +22,7 @@ class ReverseTransactionGraphQLMutation extends Mutation
     ];
 
     public function __construct(
-        private readonly AtmosService $atmosCardService,
+        private readonly AtmosService $atmosService,
         private readonly UniredService $uniredService,
     ) {}
 
@@ -72,8 +72,10 @@ class ReverseTransactionGraphQLMutation extends Mutation
     {
         $transaction = Transaction::findOrFail($args['id']);
 
-        if (TransactionType::isAutoPay($transaction->transaction_type_id)) {
-            return $this->atmosCardService->reversePayment($transaction);
+        if ($transaction->transaction_type_id == TransactionType::ATMOS_WITH_CARD) {
+            return $this->atmosService->reverseCardPayment($transaction);
+        } elseif ($transaction->transaction_type_id == TransactionType::ATMOS_WITH_PINFL) {
+            return $this->atmosService->reversePinflPayment($transaction);
         } elseif ($transaction->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
             return $this->uniredService->reversePayment($transaction);
         } else {
