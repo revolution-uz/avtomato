@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Ecommerce\Banner;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -9,6 +10,8 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class BannerGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'BannerGraphQLType';
 
     protected $attributes = [
@@ -37,6 +40,22 @@ class BannerGraphQLType extends GraphQLType
             'name_oz' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Banner $root) => $root->name_oz,
+            ],
+            'image_uz_url' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Banner $root) => $root->image_uz_url,
+            ],
+            'image_ru_url' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Banner $root) => $root->image_ru_url,
+            ],
+            'image_en_url' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Banner $root) => $root->image_en_url,
+            ],
+            'image_oz_url' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Banner $root) => $root->image_oz_url,
             ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),

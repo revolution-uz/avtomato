@@ -14,7 +14,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
- * @property int $parent_id
+ * @property int|null $parent_id
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en
@@ -25,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $deleted_at
  * @property Product[]|Collection<int, Product> $products
  * @property Banner[]|Collection<int, Banner> $banners
- * @property-read EcommerceImage|null $image
+ * @property-read Image|null $image
  */
 class ProductCategory extends Model
 {
@@ -56,6 +56,6 @@ class ProductCategory extends Model
 
     public function image(): MorphOne
     {
-        return $this->morphOne(EcommerceImage::class, 'attachmentable')->latestOfMany();
+        return $this->morphOne(Image::class, 'imagable')->latestOfMany();
     }
 }

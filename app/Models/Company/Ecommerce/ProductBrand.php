@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon|null $deleted_at
  * @property-read Product $products
  * @property-read Banner $banners
- * @property-read EcommerceImage|null $image
+ * @property-read Image|null $image
  */
 class ProductBrand extends Model
 {
@@ -51,6 +51,6 @@ class ProductBrand extends Model
 
     public function image(): MorphOne
     {
-        return $this->morphOne(EcommerceImage::class, 'attachmentable')->latestOfMany();
+        return $this->morphOne(Image::class, 'imagable')->latestOfMany();
     }
 }
