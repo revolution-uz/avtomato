@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\Company\TransactionAttemptStatusEnum;
-use App\Jobs\DeleteFailedTransactionAttemptJob;
+use App\Jobs\FailedTransactionAttemptJob;
 use App\Models\Company;
 use App\Models\Company\TransactionAttempt;
 use Illuminate\Console\Command;
@@ -46,7 +46,7 @@ class DeleteFailedTransactionAttempt extends Command
             }
 
             foreach ($transactionAttempts as $transactionAttempt) {
-                DeleteFailedTransactionAttemptJob::dispatch($transactionAttempt->id);
+                FailedTransactionAttemptJob::dispatch($transactionAttempt->id);
             }
         }
 
