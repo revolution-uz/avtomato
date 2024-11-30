@@ -16,7 +16,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property int $category_id
- * @property int $brand_id
+ * @property int|null $brand_id
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_oz
@@ -32,8 +32,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read ProductCategory $category
  * @property-read ProductBrand $brand
  * @property-read ProductVariation[] $variations
- * @property EcommerceImage[]|Collection<int, EcommerceImage> $images
- * @property EcommerceImage|Collection<int, EcommerceImage> $mainImage
+ * @property Image[]|Collection<int, Image> $images
+ * @property Image|Collection<int, Image> $mainImage
  */
 class Product extends Model
 {
@@ -42,6 +42,7 @@ class Product extends Model
     public static array $sortables = ['id', 'category_id', 'brand_id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'slug', 'cost', 'actual_price', 'old_price', 'created_at', 'updated_at'];
 
     protected $table = 'ecommerce_products';
+
     protected $fillable = [
         'category_id',
         'brand_id',
@@ -54,7 +55,6 @@ class Product extends Model
         'actual_price',
         'old_price',
         'is_active',
-
     ];
 
     public function category(): BelongsTo
@@ -74,11 +74,11 @@ class Product extends Model
 
     public function images(): MorphMany
     {
-        return $this->morphMany(EcommerceImage::class, 'attachmentable');
+        return $this->morphMany(Image::class, 'imagable');
     }
 
     public function mainImage(): MorphMany
     {
-        return $this->morphMany(EcommerceImage::class, 'attachmentable');
+        return $this->morphMany(Image::class, 'imagable');
     }
 }

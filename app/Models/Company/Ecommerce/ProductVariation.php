@@ -21,7 +21,7 @@ use Illuminate\Support\Collection;
  * @property Carbon|null $deleted_at
  * @property-read Product $product
  * @property-read ProductOption[]|Collection<int,ProductOption> $options
- * @property EcommerceImage[]|Collection<int, EcommerceImage> $images
+ * @property Image[]|Collection<int, Image> $images
  */
 class ProductVariation extends Model
 {
@@ -47,6 +47,6 @@ class ProductVariation extends Model
 
     public function images(): MorphMany
     {
-        return $this->morphMany(EcommerceImage::class, 'attachmentable');
+        return $this->morphMany(Image::class, 'imagable');
     }
 }

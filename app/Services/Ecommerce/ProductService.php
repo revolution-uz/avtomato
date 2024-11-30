@@ -5,7 +5,7 @@ namespace App\Services\Ecommerce;
 use App\DTOs\Ecommerce\Base\BaseEcommerceFilterRequestDTO;
 use App\DTOs\Ecommerce\Product\EcommerceProductFilterOptionRequestDTO;
 use App\DTOs\Ecommerce\Product\EcommerceProductFilterRequestDTO;
-use App\Models\Company\Ecommerce\EcommerceImage;
+use App\Models\Company\Ecommerce\Image;
 use App\Models\Company\Ecommerce\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +19,7 @@ class ProductService
      */
     public function uploadImage(Model $model, UploadedFile $file): Model
     {
-        EcommerceImage::uploadImage($file, $model);
+        Image::upload($file, $model);
         $model->refresh();
 
         return $model;
