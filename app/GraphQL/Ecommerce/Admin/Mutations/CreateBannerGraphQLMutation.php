@@ -59,7 +59,7 @@ class CreateBannerGraphQLMutation extends Mutation
         $imagePath = null;
 
         foreach (['uz', 'ru', 'en', 'oz'] as $locale) {
-            if ($locale !== 'image_uz' && !isset($args['banner']["image_{$locale}"])) {
+            if ($locale !== 'image_uz' && ! isset($args['banner']["image_{$locale}"])) {
                 continue;
             }
 
