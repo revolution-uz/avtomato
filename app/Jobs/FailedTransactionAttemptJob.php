@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 
-class DeleteFailedTransactionAttemptJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
+class FailedTransactionAttemptJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -23,7 +23,7 @@ class DeleteFailedTransactionAttemptJob implements ShouldBeUniqueUntilProcessing
 
     public function __construct(private readonly int $transactionAttemptId)
     {
-        $this->onQueue('delete-failed-transaction-attempt');
+        $this->onQueue('failed-transaction-attempt');
     }
 
     /**
@@ -41,7 +41,7 @@ class DeleteFailedTransactionAttemptJob implements ShouldBeUniqueUntilProcessing
      */
     public function uniqueId(): string
     {
-        return 'delete-failed-transaction-attempt-' . tenant('id') . '-' . $this->transactionAttemptId;
+        return 'failed-transaction-attempt-' . tenant('id') . '-' . $this->transactionAttemptId;
     }
 
     public function tags(): array
