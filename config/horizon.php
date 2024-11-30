@@ -242,7 +242,7 @@ return [
         ],
         'supervisor-8' => [
             'connection' => 'redis',
-            'queue' => ['delete:failed-transaction-attempt'],
+            'queue' => ['delete-failed-transaction-attempt'],
             'balance' => 'simple',
             'maxProcesses' => 1,
             'memory' => 128,
