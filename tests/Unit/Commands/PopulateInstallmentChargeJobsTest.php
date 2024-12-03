@@ -34,7 +34,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function isGetsCorrectInstallments(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
 
         (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
@@ -49,7 +49,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function dontPopulateIfStartDateIsSoonAndInitialFeeNotPaid(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
         Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->addDay()]);
 
         (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
@@ -60,7 +60,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function dontPopulateIfStartsSoon(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->addDay()]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
 
@@ -72,7 +72,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function dontPopulateIfPaid(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->subDay()]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->monthlyPayment]);
@@ -85,7 +85,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function successCheckingForTwoAvailableCompanies(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
         foreach (Company::query()->get() as $company) {
             tenancy()->initialize($company);
             Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::now()]);
@@ -106,7 +106,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function successWithOneAnyActiveFeature(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
         foreach (Company::all() as $company) {
             tenancy()->initialize($company);
             Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE)->update(['is_active' => true]);
@@ -122,7 +122,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function failWithInactiveFeature(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->times(0);
         foreach (Company::all() as $company) {
             tenancy()->initialize($company);
             Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE)->update(['is_active' => false]);
@@ -138,7 +138,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function failWithInsufficientBalance(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->twice()->andReturn(false);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(false);
         foreach (Company::all() as $company) {
             tenancy()->initialize($company);
             Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);

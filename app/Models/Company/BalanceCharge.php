@@ -42,7 +42,7 @@ class BalanceCharge extends Model
         parent::boot();
 
         static::created(function (self $balanceCharge) {
-            if (tenant()->status != CompanyStatusEnum::INACTIVE and ! BalanceService::isAvaiblableBalance()) {
+            if (tenant()->status != CompanyStatusEnum::INACTIVE and ! BalanceService::isAvailableBalance()) {
                 tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
             }
         });
