@@ -29,7 +29,6 @@ class PopulateCreateOrUpdateInstallmentInUniredJobsTest extends TestCase
 
         Bus::fake();
         $this->_balanceServiceMock = $this->mock(BalanceService::class);
-        Feature::$_cache = null;
     }
 
     #[Test]
