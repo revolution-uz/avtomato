@@ -292,7 +292,7 @@ class InstallmentService
 
     private function withdrawAutoCharge(Installment $installment): bool
     {
-        if ($this->balanceService->isAvaiblableCompany()) {
+        if ($this->balanceService->isAvailableCompany()) {
             $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
 
             return true;
@@ -303,7 +303,7 @@ class InstallmentService
 
     private function withdrawAnyCardCharge(Installment $installment): bool
     {
-        if ($this->balanceService->isAvaiblableCompany()) {
+        if ($this->balanceService->isAvailableCompany()) {
             $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment);
 
             return true;

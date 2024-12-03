@@ -22,7 +22,9 @@ use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredPaginationRequestDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\ClientCodeEnum;
+use App\Enums\FeatureEnum;
 use App\Exceptions\UniredException;
+use App\Models\Company\Feature;
 use Illuminate\Support\Facades\Http;
 
 class UniredClient extends BaseClient
@@ -173,6 +175,10 @@ class UniredClient extends BaseClient
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO
     {
+        if (! Feature::isFeatureActive(FeatureEnum::UNIRED_PAY)) {
+            throw new UniredException('Unired API is not active');
+        }
+
         $headers = [
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->token,

@@ -26,7 +26,7 @@ class BalanceService
         return BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
     }
 
-    public static function isAvaiblableBalance()
+    public static function isAvailableBalance()
     {
         return self::getBalance() > self::MIN_BALANCE_AMOUNT;
     }
@@ -44,9 +44,9 @@ class BalanceService
         ]);
     }
 
-    public function isAvaiblableCompany(): bool
+    public function isAvailableCompany(): bool
     {
-        return tenant('status') == CompanyStatusEnum::ACTIVE and self::isAvaiblableBalance();
+        return tenant('status') == CompanyStatusEnum::ACTIVE and self::isAvailableBalance();
     }
 
     /**

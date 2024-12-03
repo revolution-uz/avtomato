@@ -40,7 +40,7 @@ class SendDebtSmsJob implements ShouldBeUnique, ShouldQueue
         if (
             CompanySettings::getValue(CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT) == 0
             or ! $feature->is_active
-            or ! $balanceService->isAvaiblableCompany()
+            or ! $balanceService->isAvailableCompany()
             or ! $template
         ) {
             return;
