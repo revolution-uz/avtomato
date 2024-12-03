@@ -11,7 +11,6 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
 class StatisticsByBranchesGraphQLQuery extends Query
@@ -37,13 +36,11 @@ class StatisticsByBranchesGraphQLQuery extends Query
                 'name' => 'from_date',
                 'type' => Type::string(),
                 'rules' => 'nullable|date_format:Y-m-d',
-                'description' => 'Ex: 2024-01-01',
             ],
             'to_date' => [
                 'name' => 'to_date',
                 'type' => Type::string(),
                 'rules' => 'nullable|date_format:Y-m-d|after_or_equal:from_date',
-                'description' => 'Ex: 2024-01-01',
             ],
             'branch_ids' => [
                 'type' => Type::listOf(Type::nonNull(Type::int())),
@@ -54,7 +51,7 @@ class StatisticsByBranchesGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(StatisticsByBranchesGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(StatisticsByBranchesGraphQLType::type());
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool

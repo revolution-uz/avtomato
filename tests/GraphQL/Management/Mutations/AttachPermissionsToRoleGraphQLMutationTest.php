@@ -22,7 +22,6 @@ class AttachPermissionsToRoleGraphQLMutationTest extends GraphQLTestCase
 
     private array $_structure = [
         'id',
-        'id',
         'name',
         'created_at',
         'updated_at',
@@ -245,6 +244,11 @@ class AttachPermissionsToRoleGraphQLMutationTest extends GraphQLTestCase
             'ecommerce_order_items_view_all',
             'ecommerce_users_view_all',
             'ecommerce_users_view',
+            'ecommerce_delivery_point_create',
+            'ecommerce_delivery_point_edit',
+            'ecommerce_delivery_point_delete',
+            'ecommerce_delivery_point_view',
+            'ecommerce_delivery_point_view_all',
         ],
     ];
 

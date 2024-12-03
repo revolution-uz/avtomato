@@ -1065,7 +1065,6 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE,
-            self::STATISTICS_BY_BRANCHES,
 
             self::SETTINGS_EDIT,
 
