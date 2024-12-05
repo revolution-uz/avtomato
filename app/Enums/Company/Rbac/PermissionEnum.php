@@ -1087,7 +1087,8 @@ enum PermissionEnum: string
             self::SCORING_HUMO_DELETE,
 
             self::SCORING_UZCARD_CREATE,
-            self::SCORING_UZCARD_DELETE => true,
+            self::SCORING_UZCARD_DELETE,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_CREATE => true,
 
             default => false,
         };

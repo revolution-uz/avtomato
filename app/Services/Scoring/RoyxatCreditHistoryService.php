@@ -4,7 +4,6 @@ namespace App\Services\Scoring;
 
 use App\Clients\RoyxatClient;
 use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryInputDTO;
-use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Enums\FeatureEnum;
@@ -12,7 +11,6 @@ use App\Models\Company\ScoringRequest;
 use App\Services\User\BalanceService;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 readonly class RoyxatCreditHistoryService
 {
@@ -21,9 +19,6 @@ readonly class RoyxatCreditHistoryService
         private BalanceService $balanceService
     ) {}
 
-    /**
-     * @throws Throwable
-     */
     public function scoring(RoyxatCreditHistoryInputDTO $dto): ScoringRequest
     {
         $model = new ScoringRequest;
@@ -34,8 +29,15 @@ readonly class RoyxatCreditHistoryService
         $model->saveOrFail();
         $this->balanceService->chargeAmount(FeatureEnum::SCORING_ROYXAT_CREDIT_HISTORY, $model);
         try {
-            $model->response = RoyxatCreditHistoryResponseDTO::from($this->royxatClient->getCredits($dto));
-            $model->status = ScoringRequestStatusEnum::SUCCESS;
+            $royxatCreditHistoryDto = $this->royxatClient->getCredits($dto);
+
+            if ($royxatCreditHistoryDto->isSuccess()) {
+                $model->response = $royxatCreditHistoryDto;
+                $model->status = ScoringRequestStatusEnum::SUCCESS;
+            } else {
+                throw new Exception($royxatCreditHistoryDto->description);
+            }
+
         } catch (Exception $e) {
             Log::error($e);
             $model->status = ScoringRequestStatusEnum::FAILED;

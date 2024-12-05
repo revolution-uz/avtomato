@@ -10,7 +10,6 @@ use App\Services\Scoring\RoyxatCreditHistoryService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
 class CreateRoyxatCreditHistoryScoringGraphQLMutation extends Mutation
@@ -28,7 +27,7 @@ class CreateRoyxatCreditHistoryScoringGraphQLMutation extends Mutation
         return [
             'data' => [
                 'name' => 'data',
-                'type' => Type::nonNull(GraphQL::type(RoyxatCreditHistoryCreateInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(RoyxatCreditHistoryCreateInputGraphQLType::type()),
             ],
         ];
     }
@@ -46,10 +45,5 @@ class CreateRoyxatCreditHistoryScoringGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return $this->royxatCreditHistoryService->scoring(RoyxatCreditHistoryInputDTO::from($args['data']))->id;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return parent::rules($args);
     }
 }

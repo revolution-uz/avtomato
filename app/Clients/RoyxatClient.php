@@ -5,6 +5,7 @@ namespace App\Clients;
 use App\DTOs\HttpRequestLogDTO;
 use App\DTOs\Scoring\RoyxatCreditHistory\CreateCreditRequestDTO;
 use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryInputDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
 use App\Enums\ClientCodeEnum;
 use App\Exceptions\GeneralException;
 use Illuminate\Support\Facades\Http;
@@ -26,9 +27,11 @@ class RoyxatClient extends BaseClient
         return ClientCodeEnum::ROYXAT;
     }
 
-    public function getCredits(RoyxatCreditHistoryInputDTO $dto): array
+    public function getCredits(RoyxatCreditHistoryInputDTO $dto): RoyxatCreditHistoryResponseDTO
     {
-        return $this->makeRequest('/loans/query', $dto->toArray(), 'POST');
+        return RoyxatCreditHistoryResponseDTO::from(
+            $this->makeRequest('/loans/query', $dto->toArray(), 'POST')
+        );
     }
 
     public function createCredit(CreateCreditRequestDTO $creditRequestDTO)

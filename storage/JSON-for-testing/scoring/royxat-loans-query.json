@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "result": {
+    "borrower": {
+      "full_name": "Raximova Umida Ilxomovna",
+      "passport_id": "AA0027799",
+      "pinfl": null,
+      "birth_date": null
+    },
+    "loans": [
+      {
+        "id": 445640,
+        "amount": 437664000,
+        "contract_date": "2020-09-17",
+        "duration": 12,
+        "max_overdue_days": null,
+        "total_overdue_days": null,
+        "total_overdue_amount": null,
+        "status": "problem",
+        "updated_at": "2022-01-28",
+        "merchant": {
+          "name": "esavdo"
+        }
+      }
+    ]
+  }
+}

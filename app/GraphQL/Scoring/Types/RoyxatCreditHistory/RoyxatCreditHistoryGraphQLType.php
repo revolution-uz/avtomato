@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Scoring\Types\RoyxatCreditHistory;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\GraphQL\Scoring\Types\BaseScoringRequestGraphQLType;
 use App\Models\Company\ScoringRequest;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -9,6 +10,8 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class RoyxatCreditHistoryGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'RoyxatCreditHistoryGraphQLType';
 
     protected $attributes = [
@@ -17,7 +20,6 @@ class RoyxatCreditHistoryGraphQLType extends GraphQLType
 
     public function fields(): array
     {
-
         return BaseScoringRequestGraphQLType::fields() + [
             'request' => [
                 'type' => GraphQL::type(RoyxatCreditHistoryCreateRequestGraphQLType::GRAPHQL_TYPE_NAME),
