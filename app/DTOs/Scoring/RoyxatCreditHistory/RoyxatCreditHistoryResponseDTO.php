@@ -12,4 +12,9 @@ class RoyxatCreditHistoryResponseDTO extends BaseScoringResponse
         public ?int $error_code,
         public ?string $description
     ) {}
+
+    public function isSuccess(): bool
+    {
+        return $this->ok === true;
+    }
 }

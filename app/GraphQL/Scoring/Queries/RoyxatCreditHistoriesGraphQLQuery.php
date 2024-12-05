@@ -22,7 +22,7 @@ class RoyxatCreditHistoriesGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::listOf(GraphQL::type(RoyxatCreditHistoryGraphQLType::GRAPHQL_TYPE_NAME));
+        return GraphQL::paginate(GraphQL::type(RoyxatCreditHistoryGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
@@ -56,16 +56,14 @@ class RoyxatCreditHistoriesGraphQLQuery extends Query
     {
         return ScoringRequest::query()
             ->where('type', ScoringRequestTypeEnum::ROYXAT_CREDIT_HISTORY)
-            ->when(isset($args['search']), function (Builder $q) use ($args) {
-                $search = '%' . $args['search'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('request->phone', 'ILIKE', $search);
-                });
-            })
+            ->when(isset($args['search']), fn (Builder $query) => $query
+                ->where('request->passport_id', 'ILIKE', "%{$args['search']}%")
+                ->orWhere('request->pinfl', 'ILIKE', "%{$args['search']}%")
+            )
             ->when(
                 isset($args['sort']),
-                fn (Builder|ScoringRequest $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|ScoringRequest $q) => $q->orderByDesc('id')
+                fn (Builder|ScoringRequest $query) => $query->orderBySortable($args['sort']),
+                fn (Builder|ScoringRequest $query) => $query->orderByDesc('id')
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
