@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Scoring\Queries;
 
+use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Models\Company\ScoringRequest;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,7 +19,7 @@ class CardScoringRequestsGraphQLQueryTest extends GraphQLTestCase
         parent::setUp();
 
         ScoringRequest::query()->forceDelete();
-        ScoringRequest::factory()->count($this->_totalScoringCount)->create();
+        ScoringRequest::factory()->count($this->_totalScoringCount)->create(['type' => ScoringRequestTypeEnum::HUMO]);
         $this->mockUrl('https://api.abrand.uz/partner/katm/get-request*', json_decode(file_get_contents(storage_path('../JSON-for-testing/credit-history-create-response.json')), true));
     }
 

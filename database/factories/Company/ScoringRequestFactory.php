@@ -5,6 +5,9 @@ namespace Database\Factories\Company;
 use App\DTOs\Scoring\Base\BaseScoringRequest;
 use App\DTOs\Scoring\Base\BaseScoringResponse;
 use App\DTOs\Scoring\Card\CardCreateRequestDTO;
+use App\DTOs\Scoring\Card\CardScoringResponseDTO;
+use App\DTOs\Scoring\Card\DetailedAnalyticsInMonthDTO;
+use App\DTOs\Scoring\Card\MonthlyAnalyticsDTO;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
@@ -41,7 +44,8 @@ class ScoringRequestFactory extends Factory
             'client_code' => $this->faker->randomElement(ClientCodeEnum::cases()),
             'customer_id' => $this->faker->numberBetween(1, 10000),
             'card_id' => $this->faker->numberBetween(1, 10000),
-            'type' => $this->faker->randomElement(ScoringRequestTypeEnum::cases()),
+            // 'type' => $this->faker->randomElement(ScoringRequestTypeEnum::cases()),
+            'type' => ScoringRequestTypeEnum::ROYXAT_CREDIT_HISTORY,
         ];
     }
 
@@ -81,6 +85,25 @@ class ScoringRequestFactory extends Factory
     private function responsePayload($type): BaseScoringResponse
     {
         return match ($type) {
+            ScoringRequestTypeEnum::HUMO => CardScoringResponseDTO::from([
+                'report' => new DataCollection(
+                    MonthlyAnalyticsDTO::class,
+                    [
+                        MonthlyAnalyticsDTO::from([
+                            'month' => Carbon::now(),
+                            'full_amount' => 30303030,
+                            'details' => new DataCollection(
+                                DetailedAnalyticsInMonthDTO::class,
+                                [
+                                    new DetailedAnalyticsInMonthDTO('This is description', '206', 10101010),
+                                    new DetailedAnalyticsInMonthDTO('This is not description', '208', 20202020),
+                                ]
+                            ),
+                        ]),
+                    ]
+                ),
+            ]),
+
             ScoringRequestTypeEnum::ROYXAT_CREDIT_HISTORY => RoyxatCreditHistoryResponseDTO::from([
                 'ok' => true,
                 'result' => RoyxatCreditHistoryResultDTO::from([
@@ -110,25 +133,5 @@ class ScoringRequestFactory extends Factory
                 'description' => null,
             ]),
         };
-
-        // $details = new DataCollection(
-        //     DetailedAnalyticsInMonthDTO::class,
-        //     [
-        //         new DetailedAnalyticsInMonthDTO('This is description', '206', 10101010),
-        //         new DetailedAnalyticsInMonthDTO('This is not description', '208', 20202020),
-        //     ]
-        // );
-        //  // return match ($type) {
-        //     default => new CardScoringResponseDTO(new DataCollection(
-        //         MonthlyAnalyticsDTO::class,
-        //         [
-        //             new MonthlyAnalyticsDTO(
-        //                 Carbon::now(),
-        //                 30303030,
-        //                 $details
-        //             ),
-        //         ]
-        //     ))
-        // };
     }
 }
