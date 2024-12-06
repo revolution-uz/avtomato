@@ -219,8 +219,10 @@ class AtmosService
         if ($isReversed) {
             $transaction->status = TransactionStatusEnum::CANCELED;
             $transaction->saveOrFail();
+
             return true;
         }
+
         return false;
     }
 
