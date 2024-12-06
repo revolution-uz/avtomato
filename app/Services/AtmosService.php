@@ -221,7 +221,6 @@ class AtmosService
             $transaction->saveOrFail();
             return true;
         }
-
         return false;
     }
 
