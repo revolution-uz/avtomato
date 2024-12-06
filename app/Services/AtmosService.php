@@ -50,7 +50,6 @@ class AtmosService
     {
         $response = $this->atmosCardClient->reversePayment($transaction->external_id);
         if ($response->result->isSuccess()) {
-            $transaction->installment->decrement('paid_amount', $transaction->amount);
             $transaction->status = TransactionStatusEnum::CANCELED;
             $transaction->saveOrFail();
 
@@ -218,10 +217,8 @@ class AtmosService
             }
         }
         if ($isReversed) {
-            $transaction->installment->decrement('paid_amount', $transaction->amount);
             $transaction->status = TransactionStatusEnum::CANCELED;
             $transaction->saveOrFail();
-
             return true;
         }
 
