@@ -7,6 +7,7 @@ use App\Clients\AtmosPinflClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionDetailDTO;
+use App\DTOs\Atmos\Transaction\AtmosTransactionInfoPayloadDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
@@ -191,10 +192,7 @@ class AtmosService
     public function checkIsSuccess(TransactionAttempt $transactionAttempt): void
     {
         $confirmWithPinfl = $this->checkAttempt($transactionAttempt);
-        if (! $confirmWithPinfl->isSuccess()) {
-            return;
-        }
-        if ($confirmWithPinfl->payload->isSuccess()) {
+        if (! $confirmWithPinfl->isReversed() || $confirmWithPinfl->payload instanceof AtmosTransactionInfoPayloadDTO && $confirmWithPinfl->payload->isSuccess()) {
             return;
         }
         $transactionAttempt->installment->decrement('paid_amount', $transactionAttempt->amount);

@@ -2,6 +2,7 @@
 
 namespace App\DTOs\Atmos\Transaction;
 
+use App\Enums\Company\AtmosPinflPaymentCode;
 use Spatie\LaravelData\Data;
 
 class AtmosTransactionInfoResponseDTO extends Data
@@ -15,6 +16,11 @@ class AtmosTransactionInfoResponseDTO extends Data
 
     public function isSuccess(): bool
     {
-        return (int) $this->code == 200;
+        return (int) $this->code == AtmosPinflPaymentCode::SUCCESS->value;
+    }
+
+    public function isReversed(): bool
+    {
+        return (int) $this->code == AtmosPinflPaymentCode::TRANSACTION_FAILED->value;
     }
 }
