@@ -139,4 +139,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function canceled(): void
+    {
+        $this->updateOrFail(['status' => TransactionStatusEnum::CANCELED]);
+    }
 }
