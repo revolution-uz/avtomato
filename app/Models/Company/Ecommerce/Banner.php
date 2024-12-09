@@ -6,36 +6,34 @@ use App\Models\Company\OrderBySortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Throwable;
 
 /**
  * @property int $id
  * @property string $name_uz
  * @property string $name_ru
- * @property string $name_oz
  * @property string $name_en
- * @property string $image_uz_url
- * @property string $image_ru_url
- * @property string $image_oz_url
- * @property string $image_en_url
+ * @property string $name_oz
  * @property bool $is_active
- * @property string|null $url
+ * @property string $url
  * @property int|null $category_id
  * @property int|null $brand_id
  * @property int|null $product_id
- * @property Image $image
- * @property-read ProductCategory $category
- * @property-read ProductBrand $brand
- * @property-read Product $product
+ * @property int $image_uz_id
+ * @property int $image_ru_id
+ * @property int $image_en_id
+ * @property int $image_oz_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read ProductCategory|null $category
+ * @property-read ProductBrand|null $brand
+ * @property-read Product|null $product
+ * @property-read EcommerceImage $imageUz
+ * @property-read EcommerceImage $imageRu
+ * @property-read EcommerceImage $imageEn
+ * @property-read EcommerceImage $imageOz
  */
 class Banner extends Model
 {
@@ -56,8 +54,6 @@ class Banner extends Model
         'updated_at',
     ];
 
-    const string UPLOADS_PATH = 'uploads/ecommerce/banner';
-
     protected $table = 'ecommerce_banners';
 
     protected $fillable = [
@@ -70,38 +66,11 @@ class Banner extends Model
         'category_id',
         'brand_id',
         'product_id',
+        'image_uz_id',
+        'image_ru_id',
+        'image_oz_id',
+        'image_en_id',
     ];
-
-    public function getImageUzUrlAttribute(): string
-    {
-        return $this->getImageUrlAttribute('uz');
-    }
-
-    public function getImageRuUrlAttribute(): string
-    {
-        return $this->getImageUrlAttribute('ru');
-    }
-
-    public function getImageEnUrlAttribute(): string
-    {
-        return $this->getImageUrlAttribute('en');
-    }
-
-    public function getImageOzUrlAttribute(): string
-    {
-        return $this->getImageUrlAttribute('oz');
-    }
-
-    public function getImageUrlAttribute(string $locale): string
-    {
-        $localizedPath = self::UPLOADS_PATH . '/' . $locale . '/' . $this->image->path;
-
-        if (! Storage::disk('public')->exists($localizedPath)) {
-            $localizedPath = self::UPLOADS_PATH . '/uz/' . $this->image->path; // Fallback to 'uz'
-        }
-
-        return asset($localizedPath);
-    }
 
     public function category(): BelongsTo
     {
@@ -118,25 +87,23 @@ class Banner extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function image(): MorphOne
+    public function imageUz(): belongsTo
     {
-        return $this->morphOne(Image::class, 'imagable');
+        return $this->belongsTo(EcommerceImage::class);
     }
 
-    /**
-     * @throws Throwable
-     */
-    public function uploadImage(UploadedFile $file, ?string $locale, ?string $imageName = null): string
+    public function imageRu(): belongsTo
     {
-        $image = $this->image()->firstOrCreate([
-            'path' => is_null($imageName) ? uniqid() . '.' . $file->extension() : $imageName,
-        ], [
-            'original_name' => $file->getBasename(),
-            'mime' => Str::substr($file->getMimeType(), 0, 64),
-        ]);
+        return $this->belongsTo(EcommerceImage::class);
+    }
 
-        $file->storeAs(self::UPLOADS_PATH . '/' . $locale, $image->path, ['disk' => 'public']);
+    public function imageEn(): belongsTo
+    {
+        return $this->belongsTo(EcommerceImage::class);
+    }
 
-        return $image->path;
+    public function imageOz(): belongsTo
+    {
+        return $this->belongsTo(EcommerceImage::class);
     }
 }

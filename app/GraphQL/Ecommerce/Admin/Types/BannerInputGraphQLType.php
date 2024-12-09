@@ -3,8 +3,12 @@
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
 use App\GraphQL\GraphQLTypeHelper;
+use App\Models\Company\Ecommerce\EcommerceImage;
+use App\Models\Company\Ecommerce\Product;
+use App\Models\Company\Ecommerce\ProductBrand;
+use App\Models\Company\Ecommerce\ProductCategory;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\InputType;
 
 class BannerInputGraphQLType extends InputType
@@ -50,40 +54,61 @@ class BannerInputGraphQLType extends InputType
                 'type' => Type::nonNull(Type::boolean()),
                 'rules' => 'required|boolean',
             ],
-            'image_uz' => [
-                'name' => 'image_uz',
-                'type' => GraphQL::type('Upload'),
-                'rules' => 'required|mimes:jpg,jpeg,png|max:1024',
+            'image_uz_id' => [
+                'name' => 'image_uz_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    Rule::exists(EcommerceImage::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
-            'image_ru' => [
-                'name' => 'image_ru',
-                'type' => GraphQL::type('Upload'),
-                'rules' => 'nullable|mimes:jpg,jpeg,png|max:1024',
+            'image_ru_id' => [
+                'name' => 'image_ru_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    Rule::exists(EcommerceImage::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
-            'image_en' => [
-                'name' => 'image_en',
-                'type' => GraphQL::type('Upload'),
-                'rules' => 'nullable|mimes:jpg,jpeg,png|max:1024',
+            'image_en_id' => [
+                'name' => 'image_en_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    Rule::exists(EcommerceImage::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
-            'image_oz' => [
-                'name' => 'image_oz',
-                'type' => GraphQL::type('Upload'),
-                'rules' => 'nullable|mimes:jpg,jpeg,png|max:1024',
+            'image_oz_id' => [
+                'name' => 'image_oz_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    Rule::exists(EcommerceImage::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
             'category_id' => [
                 'name' => 'category_id',
                 'type' => Type::int(),
-                'rules' => 'nullable|exists:ecommerce_product_categories,id',
+                'rules' => [
+                    'nullable',
+                    Rule::exists(ProductCategory::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
             'brand_id' => [
                 'name' => 'brand_id',
                 'type' => Type::int(),
-                'rules' => 'nullable|exists:ecommerce_product_brands,id',
+                'rules' => [
+                    'nullable',
+                    Rule::exists(ProductBrand::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
             'product_id' => [
                 'name' => 'product_id',
                 'type' => Type::int(),
-                'rules' => 'nullable|exists:ecommerce_products,id',
+                'rules' => [
+                    'nullable',
+                    Rule::exists(Product::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
         ];
     }

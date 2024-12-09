@@ -27,6 +27,7 @@ use App\GraphQL\Ecommerce\Admin\Mutations\UpdateProductCategoryGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UpdateProductOptionGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UpdateProductOptionGroupGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UpdateProductOptionValueGraphQLMutation;
+use App\GraphQL\Ecommerce\Admin\Mutations\UploadEcommerceImageGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UploadImageProductBrandGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UploadImageProductCategoryGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UploadImageProductGraphQLMutation;
@@ -59,10 +60,7 @@ use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderItemGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\OrderItemInputGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\OrderStatusGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderStatusHistoryGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\OrderStatusInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductBrandGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductBrandInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductCategoryGraphQLType;
@@ -108,6 +106,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 UploadImageProductCategoryGraphQLMutation::class,
                 UploadImageProductBrandGraphQLMutation::class,
                 UploadImageProductGraphQLMutation::class,
+                UploadEcommerceImageGraphQLMutation::class,
                 UpdateProductCategoryGraphQLMutation::class,
                 UpdateBannerGraphQLMutation::class,
                 UpdateProductOptionGroupGraphQLMutation::class,

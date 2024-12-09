@@ -32,8 +32,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read ProductCategory $category
  * @property-read ProductBrand $brand
  * @property-read ProductVariation[] $variations
- * @property Image[]|Collection<int, Image> $images
- * @property Image|Collection<int, Image> $mainImage
+ * @property EcommerceImage[]|Collection<int, EcommerceImage> $images
+ * @property EcommerceImage|Collection<int, EcommerceImage> $mainImage
  */
 class Product extends Model
 {
@@ -74,11 +74,11 @@ class Product extends Model
 
     public function images(): MorphMany
     {
-        return $this->morphMany(Image::class, 'imagable');
+        return $this->morphMany(EcommerceImage::class, 'imagable');
     }
 
     public function mainImage(): MorphMany
     {
-        return $this->morphMany(Image::class, 'imagable');
+        return $this->morphMany(EcommerceImage::class, 'imagable');
     }
 }

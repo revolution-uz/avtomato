@@ -4,7 +4,7 @@ namespace App\GraphQL\Ecommerce\Admin\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Ecommerce\Image;
+use App\Models\Company\Ecommerce\EcommerceImage;
 use App\Models\Company\Ecommerce\ProductCategory;
 use Closure;
 use GraphQL\Error\Error;
@@ -52,7 +52,7 @@ class DeleteProductCategoryGraphQLMutation extends Mutation
         /** @var ProductCategory $category */
         foreach ($productCategory as $category) {
             if ($category->image) {
-                File::delete(storage_path(Image::UPLOADS_PATH . '/' . $category->image->path));
+                File::delete(storage_path(EcommerceImage::UPLOADS_PATH . '/' . $category->image->path));
                 $category->image->delete();
             }
             $category->delete();
