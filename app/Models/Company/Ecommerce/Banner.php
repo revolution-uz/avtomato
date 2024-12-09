@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property string $name_en
  * @property string $name_oz
  * @property bool $is_active
- * @property string $url
+ * @property string|null $url
  * @property int|null $category_id
  * @property int|null $brand_id
  * @property int|null $product_id
