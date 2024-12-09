@@ -23,6 +23,7 @@ return new class extends Migration
             $table->dropForeign(['image_ru_id']);
             $table->dropForeign(['image_en_id']);
             $table->dropForeign(['image_oz_id']);
+            $table->dropColumn(['image_uz_id', 'image_ru_id', 'image_en_id', 'image_oz_id']);
         });
     }
 };
