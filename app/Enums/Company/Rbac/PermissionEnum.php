@@ -1094,8 +1094,14 @@ enum PermissionEnum: string
             self::SCORING_UZCARD_CREATE,
             self::SCORING_UZCARD_DELETE,
             self::SCORING_ROYXAT_CREDIT_HISTORY_CREATE,
+
             self::ECOMMERCE_IMAGE_CREATE,
-            self::BANNER_CREATE => true,
+
+            self::BANNER_CREATE,
+
+            self::PRODUCT_CATEGORY_CREATE,
+            self::PRODUCT_CATEGORY_EDIT,
+            self::PRODUCT_CATEGORY_DELETE => true,
 
             default => false,
         };

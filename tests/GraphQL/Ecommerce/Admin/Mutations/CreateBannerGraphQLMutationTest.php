@@ -154,10 +154,7 @@ class CreateBannerGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successCreateBannerWithOnlyRequiredAttributes()
     {
-        $variables = Arr::only(
-            $this->getInputVariables(),
-            ['name_uz', 'name_ru', 'name_en', 'name_oz', 'url', 'is_active', 'image_uz_id', 'image_ru_id', 'image_en_id', 'image_oz_id']
-        );
+        $variables = $this->getInputVariables(true);
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -173,7 +170,7 @@ class CreateBannerGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($banner->name_en, $variables['name_en']);
         $this->assertEquals($banner->name_oz, $variables['name_oz']);
         $this->assertEquals($banner->is_active, $variables['is_active']);
-        $this->assertEquals($banner->url, $variables['url']);
+        $this->assertNull($banner->url);
         $this->assertNull($banner->category_id);
         $this->assertNull($banner->brand_id);
         $this->assertNull($banner->product_id);
@@ -209,7 +206,6 @@ class CreateBannerGraphQLMutationTest extends GraphQLTestCase
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$name_ru" of required type "String!" was not provided.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$name_en" of required type "String!" was not provided.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$name_oz" of required type "String!" was not provided.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$url" of required type "String!" was not provided.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$is_active" of required type "Boolean!" was not provided.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$image_uz_id" of required type "Int!" was not provided.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$image_ru_id" of required type "Int!" was not provided.'));
@@ -217,13 +213,12 @@ class CreateBannerGraphQLMutationTest extends GraphQLTestCase
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$image_oz_id" of required type "Int!" was not provided.'));
 
         // rule errors
-        $variables = [
+        $variables = $this->getInputVariables(false, [
             'name_uz' => Str::random(256),
             'name_ru' => Str::random(256),
             'name_en' => Str::random(256),
             'name_oz' => Str::random(256),
             'url' => Str::random(256),
-            'is_active' => true,
             'image_uz_id' => 999999999,
             'image_ru_id' => 999999999,
             'image_en_id' => 999999999,
@@ -231,7 +226,7 @@ class CreateBannerGraphQLMutationTest extends GraphQLTestCase
             'category_id' => 999999999,
             'brand_id' => 999999999,
             'product_id' => 999999999,
-        ];
+        ]);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($variables));
@@ -253,7 +248,7 @@ class CreateBannerGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function errorCreateCustomerWithInactiveCompany(): void
+    public function errorCreateBannerWithInactiveCompany(): void
     {
         tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
 
@@ -263,7 +258,7 @@ class CreateBannerGraphQLMutationTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
+        $this->assertEquals(trans('api.inactive_company'), $response->json('errors.0.message'));
     }
 
     protected function buildGraphQLQuery(array $variables = []): array
@@ -275,7 +270,7 @@ class CreateBannerGraphQLMutationTest extends GraphQLTestCase
                     \$name_ru: String!
                     \$name_en: String!
                     \$name_oz: String!
-                    \$url: String!
+                    \$url: String
                     \$is_active: Boolean!
                     \$image_uz_id: Int!
                     \$image_ru_id: Int!
@@ -310,22 +305,25 @@ class CreateBannerGraphQLMutationTest extends GraphQLTestCase
         ];
     }
 
-    private function getInputVariables()
+    private function getInputVariables(bool $isRequired = false, array $variables = [])
     {
-        return $variables = [
-            'name_uz' => Str::random(255),
-            'name_ru' => Str::random(255),
-            'name_en' => Str::random(255),
-            'name_oz' => Str::random(255),
-            'url' => Str::random(255),
-            'is_active' => (bool) random_int(0, 1),
-            'category_id' => ProductCategory::factory()->create()->id,
-            'brand_id' => ProductBrand::factory()->create()->id,
-            'product_id' => Product::factory()->create()->id,
-            'image_uz_id' => EcommerceImage::factory()->create()->id,
-            'image_ru_id' => EcommerceImage::factory()->create()->id,
-            'image_en_id' => EcommerceImage::factory()->create()->id,
-            'image_oz_id' => EcommerceImage::factory()->create()->id,
-        ];
+        return array_merge(
+            [
+                'name_uz' => Str::random(255),
+                'name_ru' => Str::random(255),
+                'name_en' => Str::random(255),
+                'name_oz' => Str::random(255),
+                'url' => ! $isRequired ? Str::random(255) : null,
+                'is_active' => (bool) random_int(0, 1),
+                'category_id' => ! $isRequired ? ProductCategory::factory()->create()->id : null,
+                'brand_id' => ! $isRequired ? ProductBrand::factory()->create()->id : null,
+                'product_id' => ! $isRequired ? Product::factory()->create()->id : null,
+                'image_uz_id' => EcommerceImage::factory()->create()->id,
+                'image_ru_id' => EcommerceImage::factory()->create()->id,
+                'image_en_id' => EcommerceImage::factory()->create()->id,
+                'image_oz_id' => EcommerceImage::factory()->create()->id,
+            ],
+            $variables
+        );
     }
 }

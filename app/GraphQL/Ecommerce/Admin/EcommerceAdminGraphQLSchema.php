@@ -29,7 +29,6 @@ use App\GraphQL\Ecommerce\Admin\Mutations\UpdateProductOptionGroupGraphQLMutatio
 use App\GraphQL\Ecommerce\Admin\Mutations\UpdateProductOptionValueGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UploadEcommerceImageGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UploadImageProductBrandGraphQLMutation;
-use App\GraphQL\Ecommerce\Admin\Mutations\UploadImageProductCategoryGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\UploadImageProductGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Queries\BannersGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\DeliveryPointsGraphQLQuery;
@@ -103,7 +102,6 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 CreateProductOptionGroupGraphQLMutation::class,
                 CreateProductOptionValueGraphQLMutation::class,
                 CreateDeliveryPointGraphQLMutation::class,
-                UploadImageProductCategoryGraphQLMutation::class,
                 UploadImageProductBrandGraphQLMutation::class,
                 UploadImageProductGraphQLMutation::class,
                 UploadEcommerceImageGraphQLMutation::class,

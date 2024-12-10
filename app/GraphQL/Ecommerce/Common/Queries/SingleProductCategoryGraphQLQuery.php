@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Ecommerce\Common\Queries;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Admin\Types\ProductCategoryGraphQLType;
+use App\Helpers\RbacHelper;
 use App\Models\Company\Ecommerce\ProductCategory;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -29,10 +31,7 @@ class SingleProductCategoryGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    Rule::exists('ecommerce_product_categories', 'id')
-                        ->where(function ($query) {
-                            $query->whereNull('deleted_at');
-                        }),
+                    Rule::exists('ecommerce_product_categories', 'id')->whereNull('deleted_at'),
                 ],
             ],
         ];
@@ -40,7 +39,7 @@ class SingleProductCategoryGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return true;
+        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_VIEW);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
