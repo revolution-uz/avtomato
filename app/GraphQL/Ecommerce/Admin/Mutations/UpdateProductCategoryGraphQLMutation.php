@@ -11,7 +11,7 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -27,18 +27,21 @@ class UpdateProductCategoryGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:ecommerce_product_categories,id'],
+                'rules' => [
+                    'required',
+                    Rule::exists(ProductCategory::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
-            'productCategoryInput' => [
-                'name' => 'productCategoryInput',
-                'type' => Type::nonNull(GraphQL::type(ProductCategoryInputGraphQLType::GRAPHQL_TYPE_NAME)),
+            'productCategory' => [
+                'name' => 'productCategory',
+                'type' => Type::nonNull(ProductCategoryInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ProductCategoryGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(ProductCategoryGraphQLType::type());
     }
 
     /**
@@ -54,10 +57,9 @@ class UpdateProductCategoryGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): ProductCategory
     {
-
         $model = ProductCategory::query()->findOrFail($args['id']);
-        $model->update($args['productCategory']);
-        $model->refresh();
+
+        $model->updateOrFail($args['productCategory']);
 
         return $model;
     }

@@ -46,8 +46,8 @@ class BannerInputGraphQLType extends InputType
             ],
             'url' => [
                 'name' => 'url',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|max:255',
+                'type' => Type::string(),
+                'rules' => 'nullable|string|max:255',
             ],
             'is_active' => [
                 'name' => 'is_active',

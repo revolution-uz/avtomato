@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 use Throwable;
@@ -52,6 +53,17 @@ class EcommerceImage extends Model
         $image->saveOrFail();
 
         return $image;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::forceDeleting(function (self $image) {
+            if (Storage::disk('public')->exists(self::UPLOADS_PATH . '/' . $image->path)) {
+                Storage::disk('public')->delete(self::UPLOADS_PATH . '/' . $image->path);
+            }
+        });
     }
 
     public function url(): Attribute

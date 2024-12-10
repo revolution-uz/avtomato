@@ -41,17 +41,33 @@ class BannerGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Banner $root) => $root->name_oz,
             ],
+            'image_uz_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->image_uz_id,
+            ],
             'image_uz' => [
                 'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
                 'resolve' => fn (Banner $root) => $root->imageUz,
+            ],
+            'image_ru_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->image_ru_id,
             ],
             'image_ru' => [
                 'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
                 'resolve' => fn (Banner $root) => $root->imageRu,
             ],
+            'image_en_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->image_en_id,
+            ],
             'image_en' => [
                 'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
                 'resolve' => fn (Banner $root) => $root->imageEn,
+            ],
+            'image_oz_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->image_oz_id,
             ],
             'image_oz' => [
                 'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
