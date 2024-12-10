@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('ecommerce_product_categories', function (Blueprint $table) {
-            $table->foreignId('image_id')->constrained('ecommerce_images', 'id');
+            $table->foreignId('image_id')->nullable()->constrained('ecommerce_images', 'id');
         });
     }
 
