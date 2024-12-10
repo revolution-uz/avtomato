@@ -11,7 +11,6 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Arr;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -49,23 +48,6 @@ class CreateBannerGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): Banner
     {
-        $banner = Banner::create(
-            Arr::only(
-                $args['banner'],
-                ['name_uz', 'name_ru', 'name_en', 'name_oz', 'url', 'is_active', 'category_id', 'brand_id', 'product_id']
-            )
-        );
-
-        $imagePath = null;
-
-        foreach (['uz', 'ru', 'en', 'oz'] as $locale) {
-            if ($locale !== 'image_uz' && ! isset($args['banner']["image_{$locale}"])) {
-                continue;
-            }
-
-            $imagePath = $banner->uploadImage($args['banner']["image_{$locale}"], $locale, $imagePath);
-        }
-
-        return $banner;
+        return Banner::query()->create($args['banner']);
     }
 }

@@ -25,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $deleted_at
  * @property Product[]|Collection<int, Product> $products
  * @property Banner[]|Collection<int, Banner> $banners
- * @property-read Image|null $image
+ * @property-read EcommerceImage|null $image
  */
 class ProductCategory extends Model
 {
@@ -56,6 +56,6 @@ class ProductCategory extends Model
 
     public function image(): MorphOne
     {
-        return $this->morphOne(Image::class, 'imagable')->latestOfMany();
+        return $this->morphOne(EcommerceImage::class, 'imagable')->latestOfMany();
     }
 }

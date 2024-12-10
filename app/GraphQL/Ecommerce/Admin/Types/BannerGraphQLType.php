@@ -41,21 +41,21 @@ class BannerGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Banner $root) => $root->name_oz,
             ],
-            'image_uz_url' => [
-                'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (Banner $root) => $root->image_uz_url,
+            'image_uz' => [
+                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
+                'resolve' => fn (Banner $root) => $root->imageUz,
             ],
-            'image_ru_url' => [
-                'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (Banner $root) => $root->image_ru_url,
+            'image_ru' => [
+                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
+                'resolve' => fn (Banner $root) => $root->imageRu,
             ],
-            'image_en_url' => [
-                'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (Banner $root) => $root->image_en_url,
+            'image_en' => [
+                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
+                'resolve' => fn (Banner $root) => $root->imageEn,
             ],
-            'image_oz_url' => [
-                'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (Banner $root) => $root->image_oz_url,
+            'image_oz' => [
+                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
+                'resolve' => fn (Banner $root) => $root->imageOz,
             ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),

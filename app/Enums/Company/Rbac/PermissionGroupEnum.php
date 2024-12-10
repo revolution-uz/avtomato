@@ -289,6 +289,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::DELIVERY_POINT_DELETE,
                 PermissionEnum::DELIVERY_POINT_VIEW,
                 PermissionEnum::DELIVERY_POINT_VIEW_ALL,
+                PermissionEnum::ECOMMERCE_IMAGE_CREATE,
             ],
         };
     }
