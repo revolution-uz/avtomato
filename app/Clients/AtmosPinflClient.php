@@ -2,6 +2,7 @@
 
 namespace App\Clients;
 
+use App\DTOs\Atmos\AtmosPINFLCardsUpdateResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionCancelResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionCreateResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
@@ -17,6 +18,7 @@ class AtmosPinflClient extends BaseAtmosClient
     const PAYMENT_CONFIRM = '/ppa/transaction/confirm';
     const PAYMENT_CHECK = '/ppa/transaction/check';
     const PAYMENT_CANCEL = '/ppa/transaction/cancel';
+    const UPDATE_CARDS_LIST = '/ppa/cards/update-cards-list';
 
     /**
      * @throws Throwable
@@ -102,5 +104,23 @@ class AtmosPinflClient extends BaseAtmosClient
     }
     /*
      * ------------- PINFL Payment module end --------------
+     */
+
+    /*
+     * ------------- CARDs module begin --------------
+     */
+    /**
+     * @throws GeneralException
+     */
+    public function updateCardsList(string $pinfl): AtmosPINFLCardsUpdateResponseDTO
+    {
+        $data = [
+            'pinfl' => $pinfl,
+        ];
+
+        return AtmosPINFLCardsUpdateResponseDTO::from($this->makeRequest(self::UPDATE_CARDS_LIST, $data));
+    }
+    /*
+     * ------------- CARDs module end --------------
      */
 }
