@@ -226,6 +226,14 @@ class AtmosService
         return false;
     }
 
+    /**
+     * @throws GeneralException
+     */
+    public function updatePinflCardsList(Customer $customer): bool
+    {
+        return $this->atmosPinflClient->updateCardsList($customer->pinfl)->isSuccess();
+    }
+
     private function checkAttempt(TransactionAttempt $transactionAttempt): AtmosTransactionInfoResponseDTO
     {
         $ext_id = Utilities::generateIdByTenancy($transactionAttempt->id);

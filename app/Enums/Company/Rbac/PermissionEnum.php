@@ -94,6 +94,7 @@ enum PermissionEnum: string
     case INSTALLMENT_CREATE = 'installment_create';
     case INSTALLMENT_EDIT = 'installment_edit';
     case INSTALLMENT_DELETE = 'installment_delete';
+    case INSTALLMENT_UPDATE_ATMOS_PINFL_CARD_LIST = 'installment_update_atmos_pinfl_card_list';
     case INSTALLMENT_ATTACH_CARD = 'installment_attach_card';
     case INSTALLMENT_DETACH_CARD = 'installment_detach_card';
     case INSTALLMENT_ATTACH_GUARANTOR = 'installment_attach_guarantor';
@@ -475,6 +476,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_FINISH,
             self::INSTALLMENT_EDIT,
             self::INSTALLMENT_DELETE,
+            self::INSTALLMENT_UPDATE_ATMOS_PINFL_CARD_LIST,
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD,
             self::INSTALLMENT_CUSTOMER_LIST,
@@ -561,6 +563,7 @@ enum PermissionEnum: string
                 self::INSTALLMENT_CUSTOMER_LIST->value,
                 self::INSTALLMENT_EDIT->value,
                 self::INSTALLMENT_DELETE->value,
+                self::INSTALLMENT_UPDATE_ATMOS_PINFL_CARD_LIST->value,
                 self::INSTALLMENT_ATTACH_CARD->value,
                 self::INSTALLMENT_DETACH_CARD->value,
                 self::INSTALLMENT_ATTACH_GUARANTOR->value,
@@ -840,6 +843,7 @@ enum PermissionEnum: string
 
             self::DASHBOARD_INFO_VIEW => FeatureEnum::INSTALLMENT_MANAGEMENT,
 
+            self::INSTALLMENT_UPDATE_ATMOS_PINFL_CARD_LIST,
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD => FeatureEnum::INSTALLMENT_AUTO_CHARGE,
 
@@ -1040,6 +1044,7 @@ enum PermissionEnum: string
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_EDIT,
             self::INSTALLMENT_DELETE,
+            self::INSTALLMENT_UPDATE_ATMOS_PINFL_CARD_LIST,
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD,
             self::INSTALLMENT_ATTACH_GUARANTOR,
