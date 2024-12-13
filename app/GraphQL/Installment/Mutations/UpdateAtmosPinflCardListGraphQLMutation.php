@@ -4,6 +4,7 @@ namespace App\GraphQL\Installment\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Customer;
 use App\Services\AtmosService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -46,6 +47,6 @@ class UpdateAtmosPinflCardListGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return $this->atmosService->updatePinflCardsList($args['customer_id']);
+        return $this->atmosService->updatePinflCardsList(Customer::findOrFail($args['customer_id']));
     }
 }
