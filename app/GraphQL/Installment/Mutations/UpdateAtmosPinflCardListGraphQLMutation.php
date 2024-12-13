@@ -18,9 +18,7 @@ class UpdateAtmosPinflCardListGraphQLMutation extends Mutation
         'name' => 'updateAtmosPinflCardList',
     ];
 
-    public function __construct(readonly AtmosService $atmosService)
-    {
-    }
+    public function __construct(readonly AtmosService $atmosService) {}
 
     public function args(): array
     {
