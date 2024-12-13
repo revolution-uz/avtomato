@@ -21,8 +21,6 @@ class UpdateAtmosPinflCardListGraphQLMutation extends Mutation
 
     public function args(): array
     {
-        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_UPDATE_ATMOS_PINFL_CARD_LIST);
-
         return [
             'customer_id' => [
                 'name' => 'customer_id',
@@ -30,7 +28,7 @@ class UpdateAtmosPinflCardListGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::exists('customers', 'id')->whereNull('deleted_at')->when($branches, fn ($q) => $q->whereIn('branch_id', $branches)),
+                    Rule::exists('customers', 'id')->whereNull('deleted_at'),
                 ],
             ],
         ];
