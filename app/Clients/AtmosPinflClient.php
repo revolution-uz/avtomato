@@ -118,7 +118,7 @@ class AtmosPinflClient extends BaseAtmosClient
             'pinfl' => $pinfl,
         ];
 
-        return AtmosPINFLCardsUpdateResponseDTO::from($this->makeRequest(self::UPDATE_CARDS_LIST, $data));
+        return AtmosPINFLCardsUpdateResponseDTO::from($this->makeRequest(self::UPDATE_CARDS_LIST, $data, 'post', false));
     }
     /*
      * ------------- CARDs module end --------------
