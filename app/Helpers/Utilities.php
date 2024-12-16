@@ -8,6 +8,8 @@ class Utilities
 {
     public const TENANT_SEPARATOR = '_';
 
+    const ATMOS_PINFL_CARD_UPDATE_MONTHS = 3; //3 month to update cards
+
     public static function getTimestampsOfMonthOfThisYear()
     {
         $currentYear = Carbon::now()->year;

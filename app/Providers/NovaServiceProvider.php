@@ -19,6 +19,7 @@ use App\Nova\Company\RoleResource;
 use App\Nova\Company\SmsTemplateResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
+use App\Nova\CustomerResource;
 use App\Nova\Dashboards\Main;
 use App\Nova\SettingsResource;
 use Illuminate\Http\Request;
@@ -71,6 +72,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuSection::make('Resources', [
                     MenuItem::resource(CompanyResource::class),
                     MenuItem::resource(AdminResource::class),
+                    MenuItem::resource(CustomerResource::class),
                     MenuItem::resource(SettingsResource::class),
                     MenuItem::resource(BaseModuleResource::class),
                     MenuItem::resource(BaseFeatureResource::class),
