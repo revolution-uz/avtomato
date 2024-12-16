@@ -11,9 +11,9 @@ class CustomerResource extends Resource
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Models\Customer>
+     * @var class-string<\App\Models\CentralCustomer>
      */
-    public static $model = \App\Models\Customer::class;
+    public static $model = \App\Models\CentralCustomer::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

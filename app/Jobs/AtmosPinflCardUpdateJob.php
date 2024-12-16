@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Customer;
+use App\Models\Company\Customer;
 use App\Services\AtmosService;
 use Exception;
 use Illuminate\Bus\Queueable;

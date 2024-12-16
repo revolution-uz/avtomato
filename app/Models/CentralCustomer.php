@@ -24,17 +24,19 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property Carbon|null $deleted_at
  *
  * @method static Builder|static query()
- * @method static Customer find(int $id)
- * @method static Customer findOrFail(int $id)
- * @method static Customer first()
- * @method static Customer firstOrFail()
- * @method Customer saveOrFail(array $array = [])
+ * @method static CentralCustomer find(int $id)
+ * @method static CentralCustomer findOrFail(int $id)
+ * @method static CentralCustomer first()
+ * @method static CentralCustomer firstOrFail()
+ * @method CentralCustomer saveOrFail(array $array = [])
  */
-class Customer extends Model
+class CentralCustomer extends Model
 {
     use CentralConnection, HasApiTokens, HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes;
 
     public static array $sortables = ['id', 'pinfl', 'first_name', 'last_name', 'birth_date'];
+
+    protected $table = 'customers';
 
     protected $fillable = [
         'pinfl',
