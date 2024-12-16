@@ -16,11 +16,11 @@ class AtmosTransactionCreateResponseDTO extends Data
 
     public function isSuccess(): bool
     {
-        return (int) $this->code == AtmosPinflPaymentCode::SUCCESS;
+        return (int) $this->code == AtmosPinflPaymentCode::SUCCESS->value;
     }
 
     public function isCardNotFound()
     {
-        return (int) $this->code == AtmosPinflPaymentCode::CARDS_NOT_FOUND;
+        return (int) $this->code == AtmosPinflPaymentCode::CARDS_NOT_FOUND->value;
     }
 }
