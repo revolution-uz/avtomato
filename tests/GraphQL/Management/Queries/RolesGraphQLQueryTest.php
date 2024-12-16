@@ -104,7 +104,6 @@ class RolesGraphQLQueryTest extends GraphQLTestCase
             'installment_create',
             'installment_edit',
             'installment_delete',
-            'installment_update_atmos_pinfl_card_list',
             'installment_attach_card',
             'installment_detach_card',
             'installment_attach_guarantor',

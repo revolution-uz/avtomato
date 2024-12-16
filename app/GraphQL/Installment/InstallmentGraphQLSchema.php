@@ -28,7 +28,6 @@ use App\GraphQL\Installment\Mutations\DeleteTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DetachCardGraphQLMutation;
 use App\GraphQL\Installment\Mutations\DetachGuarantorGraphQLMutation;
 use App\GraphQL\Installment\Mutations\ReverseTransactionGraphQLMutation;
-use App\GraphQL\Installment\Mutations\UpdateAtmosPinflCardListGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateGuarantorGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentCustomerAnyCardChargeGraphQLMutation;
@@ -157,7 +156,6 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 ChangeStatusGraphQLMutation::class,
                 UpdateInstallmentCustomerAnyCardChargeGraphQLMutation::class,
                 ChangeSettingsGraphQLMutation::class,
-                UpdateAtmosPinflCardListGraphQLMutation::class,
             ],
             'types' => [
                 InstallmentInputGraphQLType::class,

@@ -15,6 +15,7 @@ use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
 use App\Jobs\AtmosPinflCardUpdateJob;
 use App\Models\CentralCustomer;
+use App\Models\Company;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
@@ -253,6 +254,9 @@ class AtmosService
         }
 
         try {
+            tenancy()->initialize(Company::findOrFail(Company::REVO_TENANT_ID));
+            $this->atmosPinflClient = new AtmosPinflClient;
+
             $updateResult = $this->atmosPinflClient->updateCardsList($customer->pinfl);
             if ($updateResult->isSuccess()) {
                 $centralCustomer->atmos_pinfl_searched_at = Carbon::now();

@@ -27,6 +27,8 @@ class Company extends Tenant implements TenantWithDatabase
 {
     use CentralConnection, HasDatabase, HasDomains, HasFactory;
 
+    const REVO_TENANT_ID = 1;
+
     protected $table = 'companies';
 
     protected $fillable = [
