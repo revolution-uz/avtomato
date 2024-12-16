@@ -24,4 +24,4 @@ jobs:
           message: |
             User **${{github.actor}}** merged/pushed in `${{ github.repository }}` repository to production and run deploy. 
 
-            Last commit: ${{ github.event.workflow_run.head_commit.message }}
+            Last commit: ${{ github.event.commit.message }}
