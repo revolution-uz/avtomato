@@ -8,15 +8,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
  * @property int $category_id
  * @property int|null $brand_id
+ * @property string $name
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_oz
@@ -57,6 +59,16 @@ class Product extends Model
         'is_active',
     ];
 
+    public function setSlugAttribute($value)
+    {
+        $this->attributes['slug'] = Str::slug($value);
+    }
+
+    public function getNameAttribute(): string
+    {
+        return $this->{'name_' . app()->getLocale()};
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class);
@@ -72,13 +84,23 @@ class Product extends Model
         return $this->hasMany(ProductVariation::class, 'product_id');
     }
 
-    public function images(): MorphMany
+    public function images(): MorphToMany
     {
-        return $this->morphMany(EcommerceImage::class, 'imagable');
+        return $this->morphToMany(EcommerceImage::class, 'imageable', 'ecommerce_imageables', relatedPivotKey: 'image_id')
+            ->withPivot('order')
+            ->orderBy('pivot_order');
     }
 
-    public function mainImage(): MorphMany
+    public function syncImagesWithOrder(array $images): void
     {
-        return $this->morphMany(EcommerceImage::class, 'imagable');
+        $syncData = [];
+
+        foreach ($images as $image) {
+            if (isset($image['image_id'], $image['order'])) {
+                $syncData[$image['image_id']] = ['order' => $image['order']];
+            }
+        }
+
+        $this->images()->sync($syncData);
     }
 }

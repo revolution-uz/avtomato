@@ -1106,7 +1106,9 @@ enum PermissionEnum: string
 
             self::PRODUCT_CATEGORY_CREATE,
             self::PRODUCT_CATEGORY_EDIT,
-            self::PRODUCT_CATEGORY_DELETE => true,
+            self::PRODUCT_CATEGORY_DELETE,
+
+            self::PRODUCT_CREATE => true,
 
             default => false,
         };

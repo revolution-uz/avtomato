@@ -19,6 +19,7 @@ use Throwable;
  * @property string $path
  * @property string $original_name
  * @property string $mime
+ * @property mixed|null $pivot
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
