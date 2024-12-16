@@ -7,19 +7,12 @@ on:
 jobs:
   deploy:
     name: Deploy Production
-    runs-on: self-hosted
+    runs-on: deployer
     steps:
-      - name: Deploy to Production server
-        uses: appleboy/ssh-action@master
-        with:
-          host: 10.20.30.100
-          script_stop: true
-          port: ${{ secrets.SERVER_PORT }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: |
-            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S su - www-data -s /bin/bash -c 'cd /var/www/automato/ && git reset --hard && git pull'
-            cd /var/www/automato/ && echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S sh deploy.sh
+      - name: Connect to ssh and run deploy script
+        run: |
+          sudo -S su - www-data -s /bin/bash -c 'cd /var/www/automato/ && git reset --hard && git pull'
+          cd /var/www/automato/ && sudo -S sh deploy.sh
       - name: send message on success
         uses: appleboy/discord-action@master
         if: ${{ success() }}
