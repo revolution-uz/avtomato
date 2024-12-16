@@ -65,6 +65,7 @@ use App\GraphQL\Ecommerce\Admin\Types\ProductBrandInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductCategoryGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductCategoryInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductGraphQLType;
+use App\GraphQL\Ecommerce\Admin\Types\ProductImageInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductJoinOptionGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductJoinOptionInputGraphQLType;
@@ -185,6 +186,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 PermissionBranchItemGraphQLType::class,
                 DeliveryPointGraphQLType::class,
                 DeliveryPointInputGraphQLType::class,
+                ProductImageInputGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];

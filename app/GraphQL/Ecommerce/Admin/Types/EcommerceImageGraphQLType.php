@@ -36,6 +36,10 @@ class EcommerceImageGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (EcommerceImage $root) => $root->mime,
             ],
+            'order' => [
+                'type' => Type::int(),
+                'resolve' => fn (EcommerceImage $root) => $root->pivot?->order,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (EcommerceImage $root) => $root->created_at->timestamp,
