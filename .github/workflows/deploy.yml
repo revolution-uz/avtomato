@@ -15,3 +15,13 @@ jobs:
             sudo -S su - www-data -s /bin/bash -c 'cd /var/www/automato/ && git reset --hard && git pull'
             cd /var/www/automato/ && sudo -S sh deploy.sh
             "
+      - name: send telegram message on deploy
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            User **${{github.actor}}** merged/pushed in `${{ github.repository }}` repository to production and run deploy. 
+
+            Last commit: ${{ github.event.workflow_run.head_commit.message }}
