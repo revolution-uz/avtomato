@@ -15,27 +15,3 @@ jobs:
             sudo -S su - www-data -s /bin/bash -c 'cd /var/www/automato/ && git reset --hard && git pull'
             cd /var/www/automato/ && sudo -S sh deploy.sh
             "
-      - name: send message on success
-        uses: appleboy/discord-action@master
-        if: ${{ success() }}
-        with:
-          webhook_id: ${{ secrets.WEBHOOK_ID }}
-          webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
-          args: |
-            ✅ User **${{github.actor}}** pushed to master branch in `${{ github.repository }}` repository and changes deployed to server. 
-
-            Last commit: ${{ github.event.head_commit.message }}
-
-            Last commit link: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-      - name: send message on failure
-        uses: appleboy/discord-action@master
-        if: ${{ failure() }}
-        with:
-          webhook_id: ${{ secrets.WEBHOOK_ID }}
-          webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
-          args: |
-            ❌ User **${{github.actor}}** pushed to master branch in `${{ github.repository }}` repository and deploy pipeline is broken. 
-
-            Last commit: ${{ github.event.head_commit.message }}
-
-            Last commit link: https://github.com/${{ github.repository }}/commit/${{github.sha}}
