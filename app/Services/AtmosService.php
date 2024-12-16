@@ -13,6 +13,7 @@ use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
+use App\Jobs\AtmosPinflCardUpdateJob;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
@@ -20,6 +21,8 @@ use App\Models\Company\Transaction;
 use App\Models\Company\TransactionAttempt;
 use App\Models\Company\TransactionType;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class AtmosService
@@ -144,6 +147,9 @@ class AtmosService
 
         $createPayResponseDTO = $this->atmosPinflClient->payCreate($ext_id, $customer, $installment->id, $amount);
         if (! $createPayResponseDTO->isSuccess()) {
+            if ($createPayResponseDTO->isCardNotFound()) {
+                AtmosPinflCardUpdateJob::dispatch($customer->id);
+            }
             $transactionAttempt->failed();
 
             return;
@@ -231,7 +237,40 @@ class AtmosService
      */
     public function updatePinflCardsList(Customer $customer): bool
     {
-        return $this->atmosPinflClient->updateCardsList($customer->pinfl)->isSuccess();
+        $centralCustomer = \App\Models\Customer::where('pinfl', $customer->pinfl)->first();
+
+        if ($centralCustomer) {
+            if ($centralCustomer->atmos_pinfl_searched_at >= Carbon::now()->subMonths(Utilities::ATMOS_PINFL_CARD_UPDATE_MONTHS)) {
+                return true;
+            }
+        } else {
+            $centralCustomer = new \App\Models\Customer;
+            $centralCustomer->pinfl = $customer->pinfl;
+            $centralCustomer->first_name = $customer->first_name;
+            $centralCustomer->last_name = $customer->last_name;
+            $centralCustomer->middle_name = $customer->middle_name;
+        }
+
+        try {
+            $updateResult = $this->atmosPinflClient->updateCardsList($customer->pinfl);
+            if ($updateResult->isSuccess()) {
+                $centralCustomer->atmos_pinfl_searched_at = Carbon::now();
+
+                return $centralCustomer->save();
+            }
+        } catch (Exception $e) {
+            Log::channel('atmos-pinfl-client')->info(
+                'Error updating PINFL cards list',
+                [
+                    'class' => get_called_class(),
+                    'error' => $e->getMessage(),
+                    'pinfl' => $customer->pinfl,
+                ]
+            );
+            throw new GeneralException("Failed to update cards list for PINFL: {$customer->pinfl}");
+        }
+
+        return false; // Default fail case
     }
 
     private function checkAttempt(TransactionAttempt $transactionAttempt): AtmosTransactionInfoResponseDTO
