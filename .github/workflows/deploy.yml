@@ -11,8 +11,10 @@ jobs:
     steps:
       - name: Connect to ssh and run deploy script
         run: |
-          sudo -S su - www-data -s /bin/bash -c 'cd /var/www/automato/ && git reset --hard && git pull'
-          cd /var/www/automato/ && sudo -S sh deploy.sh
+          ssh root@10.20.30.100 "
+            sudo -S su - www-data -s /bin/bash -c 'cd /var/www/automato/ && git reset --hard && git pull'
+            cd /var/www/automato/ && sudo -S sh deploy.sh
+            "
       - name: send message on success
         uses: appleboy/discord-action@master
         if: ${{ success() }}
