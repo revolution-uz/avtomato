@@ -95,7 +95,6 @@ enum PermissionGroupEnum: string
                 PermissionEnum::INSTALLMENT_FINISH,
                 PermissionEnum::INSTALLMENT_EDIT,
                 PermissionEnum::INSTALLMENT_DELETE,
-                PermissionEnum::INSTALLMENT_UPDATE_ATMOS_PINFL_CARD_LIST,
                 PermissionEnum::INSTALLMENT_ATTACH_CARD,
                 PermissionEnum::INSTALLMENT_DETACH_CARD,
                 PermissionEnum::INSTALLMENT_CUSTOMER_LIST,
