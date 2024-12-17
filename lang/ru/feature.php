@@ -33,4 +33,8 @@ return [
     'activity_log' => 'История активности',
     'atmos_card_pay' => 'Вывод денег на карту Атмос',
     'atmos_pinfl_pay' => 'Вывод средств через Atmos ПИНФЛ',
+    'sms' => 'Сервис отправки СМС',
+    'unired_pay' => 'UNIRED для вывода через PINFL',
+    'ecommerce_management' => 'Управление интернет-магазином',
+    'general_feature' => 'Для общего просмотра',
 ];

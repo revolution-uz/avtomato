@@ -33,4 +33,8 @@ return [
     'activity_log' => 'Faollik tarixi',
     'atmos_card_pay' => 'Atmos karta orqali pul yechish',
     'atmos_pinfl_pay' => 'Atmos PINFL orqali pul yechish',
+    'sms' => 'SMS yuborish xizmati',
+    'unired_pay' => 'PINFL orqali pul yechish uchun UNIRED',
+    'ecommerce_management' => 'Internet do\'kon boshqaruvi',
+    'general_feature' => 'Umumiy ko\'rishlar uchun',
 ];
