@@ -26,9 +26,11 @@ use Illuminate\Support\Collection;
 class ProductOptionGroup extends Model
 {
     use HasFactory, OrderBySortable, SoftDeletes;
+
     protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'slug', 'description', 'created_at', 'updated_at'];
 
     protected $table = 'ecommerce_product_option_groups';
+
     protected $fillable = [
         'name_uz',
         'name_ru',
