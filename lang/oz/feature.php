@@ -33,4 +33,8 @@ return [
     'activity_log' => 'Фаоллик тарихи',
     'atmos_card_pay' => 'Атмос карта орқали пул ечиш',
     'atmos_pinfl_pay' => 'Атмос ПИНФЛ орқали пул ечиш',
+    'sms' => 'СМС юбориш хизмати',
+    'unired_pay' => 'ПИНФЛ орқали пул ечиш учун UNIRED',
+    'ecommerce_management' => 'Интернет дўкон бошқаруви',
+    'general_feature' => 'Умумий кўришлар учун',
 ];

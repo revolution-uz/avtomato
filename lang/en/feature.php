@@ -33,4 +33,8 @@ return [
     'activity_log' => 'Activity history',
     'atmos_card_pay' => 'Withdrawing money by Atmos card',
     'atmos_pinfl_pay' => 'Cashout through Atmos PINFL',
+    'sms' => 'SMS sending service',
+    'unired_pay' => 'UNIRED for withdrawal via PINFL',
+    'ecommerce_management' => 'Online store management',
+    'general_feature' => 'For general views',
 ];
