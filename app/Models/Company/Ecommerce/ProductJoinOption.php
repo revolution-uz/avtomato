@@ -4,7 +4,6 @@ namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,10 +24,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ProductJoinOption extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes;
+    use OrderBySortable, SoftDeletes;
+
     protected static array $sortables = ['id', 'option_id', 'value_id', 'product_id', 'product_variation_id', 'created_at', 'updated_at'];
 
     protected $table = 'ecommerce_product_join_options';
+
     protected $fillable = [
         'option_id',
         'value_id',
