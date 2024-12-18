@@ -35,6 +35,6 @@ return [
     'general_feature' => 'Умумий кўришлар учун',
     'company_management' => 'Компания бошқаруви',
     'scoring_pension_info' => 'KATM орқали пенсия тарихини олиш',
-    'scoring_royxat_credit_history' => 'Ro\'yxat.uz орқали кредит тарихини олиш',
-    'scoring_uzum_nasiya_limit' => 'Uzumnasiya.uz орқали кредит тарихини олиш',
+    'scoring_royxat_credit_history' => 'Ro\'yxat uz орқали кредит тарихини олиш',
+    'scoring_uzum_nasiya_limit' => 'Uzumnasiya uz орқали кредит тарихини олиш',
 ];

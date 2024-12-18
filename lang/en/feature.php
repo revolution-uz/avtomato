@@ -34,7 +34,7 @@ return [
     'ecommerce_management' => 'Online store management',
     'general_feature' => 'For general views',
     'company_management' => 'Company management',
-    'scoring_pension_info' => 'Obtaining pension history through KATM',
-    'scoring_royxat_credit_history' => 'Get credit history via Ro\'yxat.uz',
-    'scoring_uzum_nasiya_limit' => 'Obtaining credit history via Uzumnasiya.uz',
+    'scoring_pension_info' => 'Obtaining pension history via KATM',
+    'scoring_royxat_credit_history' => 'Get credit history via Ro\'yxat uz',
+    'scoring_uzum_nasiya_limit' => 'Obtaining credit history via Uzumnasiya uz',
 ];

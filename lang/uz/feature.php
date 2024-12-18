@@ -35,6 +35,6 @@ return [
     'general_feature' => 'Umumiy ko\'rishlar uchun',
     'company_management' => 'Kompaniya boshqaruvi',
     'scoring_pension_info' => 'KATM orqali pensiya tarixini olish',
-    'scoring_roxta_credit_history' => 'Ro\'xat.uz orqali kredit tarixini olish',
-    'scoring_uzum_nasiya_limit' => 'Uzumnasiya.uz orqali kredit tarixini olish',
+    'scoring_roxta_credit_history' => 'Ro\'yxat uz orqali kredit tarixini olish',
+    'scoring_uzum_nasiya_limit' => 'Uzumnasiya uz orqali kredit tarixini olish',
 ];

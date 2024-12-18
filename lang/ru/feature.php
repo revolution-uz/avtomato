@@ -35,6 +35,6 @@ return [
     'general_feature' => 'Для общего просмотра',
     'company_management' => 'Управление компанией',
     'scoring_pension_info' => 'Получение пенсионной истории через KATM',
-    'scoring_royxat_credit_history' => 'Получение кредитной истории через Ro\'yxat.uz',
-    'scoring_uzum_nasiya_limit' => 'Получение кредитной истории через Uzumnasiya.uz',
+    'scoring_royxat_credit_history' => 'Получение кредитной истории через Ro\'yxat uz',
+    'scoring_uzum_nasiya_limit' => 'Получение кредитной истории через Uzumnasiya uz',
 ];
