@@ -46,16 +46,7 @@ class ProductOption extends Model
 
     public function setSlugAttribute($value)
     {
-        $slug = Str::slug($value);
-        $originalSlug = $slug;
-
-        $count = 2;
-        while (static::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count;
-            $count++;
-        }
-
-        $this->attributes['slug'] = $slug;
+        $this->attributes['slug'] = Str::slug($value);
     }
 
     public function values(): HasMany
@@ -65,7 +56,7 @@ class ProductOption extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(ProductCategory::class, 'ecommerce_product_categories_join_options', 'option_id', 'category_id');
+        return $this->belongsToMany(ProductCategory::class, 'ecommerce_product_category_join_options', 'option_id', 'category_id');
     }
 
     public function productJoinOptions(): HasMany

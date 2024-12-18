@@ -5,7 +5,6 @@ namespace Tests\GraphQL\Ecommerce\Admin\Mutations;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company\Ecommerce\ProductCategory;
 use App\Models\Company\Ecommerce\ProductOption;
-use App\Models\Company\Ecommerce\ProductOptionValue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
@@ -82,24 +81,6 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successAutoGeneratingSlug()
-    {
-        /** @var ProductOption $option */
-        $option = ProductOption::factory()->make(['name_en' => 'thi$ !s n@me en']);
-        $option->slug = $option->name_en;
-        $option->saveOrFail();
-
-        $data = $this->getInputVariables(true, ['name_en' => $option->name_en]);
-
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($data));
-
-        $this->assertSuccessCreateProductOptionResponse($response, $data, true);
-        $this->assertEquals('thi-s-n-at-me-en-2', $response->json('data.createProductOption.slug'));
-    }
-
-    #[Test]
     public function errorValidation(): void
     {
         // GraphQL type errors
@@ -129,7 +110,6 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
                 'name_en' => Str::random(256),
                 'name_oz' => Str::random(256),
                 'description' => Str::random(256),
-                'values' => [999999999],
                 'categories' => [999999999],
             ]));
         $response->assertOk();
@@ -140,8 +120,27 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'product option.name en', 'max' => 255]), $response->json('errors.0.extensions.validation')['productOption.name_en'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'product option.name oz', 'max' => 255]), $response->json('errors.0.extensions.validation')['productOption.name_oz'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'product option.description', 'max' => 255]), $response->json('errors.0.extensions.validation')['productOption.description'][0]);
-        $this->assertEquals(trans('validation.exists', ['attribute' => 'productOption.values.0']), $response->json('errors.0.extensions.validation')['productOption.values.0'][0]);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'productOption.categories.0']), $response->json('errors.0.extensions.validation')['productOption.categories.0'][0]);
+    }
+
+    #[Test]
+    public function errorUniqueSlugValidation()
+    {
+        /** @var ProductOption $option */
+        $option = ProductOption::factory()->make(['name_en' => 'thi$ !s n@me en']);
+        $option->slug = $option->name_en;
+        $option->saveOrFail();
+
+        $data = $this->getInputVariables(true, ['name_en' => $option->name_en]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($data));
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.unique', ['attribute' => 'product option.name en', 'max' => 255]), $response->json('errors.0.extensions.validation')['productOption.name_en'][0]);
     }
 
     #[Test]
@@ -168,7 +167,6 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
                     \$name_en: String!
                     \$name_oz: String!
                     \$description: String!
-                    \$values: [Int]
                     \$categories: [Int]
                 ) {
                     createProductOption(
@@ -178,7 +176,6 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
                             name_en: \$name_en
                             name_oz: \$name_oz
                             description: \$description
-                            values: \$values
                             categories: \$categories
                         }
                     ) {
@@ -195,19 +192,13 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $response->assertJsonStructure(['data' => ['createProductOption']]);
 
-        $option = ProductOption::query()->with('values', 'categories')->findOrFail($response->json('data.createProductOption.id'));
+        $option = ProductOption::query()->with('categories')->findOrFail($response->json('data.createProductOption.id'));
 
         $this->assertEquals($option->name_uz, $data['name_uz']);
         $this->assertEquals($option->name_ru, $data['name_ru']);
         $this->assertEquals($option->name_en, $data['name_en']);
         $this->assertEquals($option->name_oz, $data['name_oz']);
         $this->assertEquals($option->description, $data['description']);
-        if (! $onlyRequired) {
-            $this->assertEquals($option->values->count(), count($data['values']));
-            $this->assertEquals($option->values()->whereIn('ecommerce_product_option_values.id', $data['values'])->count(), count($data['values']));
-        } else {
-            $this->assertEquals($option->values->count(), 0);
-        }
         if (! $onlyRequired) {
             $this->assertEquals($option->categories->count(), count($data['categories']));
             $this->assertEquals($option->categories()->whereIn('ecommerce_product_categories.id', $data['categories'])->count(), count($data['categories']));
@@ -232,10 +223,6 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
                 'name_en' => Str::random(255),
                 'name_oz' => Str::random(255),
                 'description' => Str::random(255),
-                'values' => ! $isRequired ? [
-                    ProductOptionValue::factory()->create()->id,
-                    ProductOptionValue::factory()->create()->id,
-                ] : null,
                 'categories' => ! $isRequired ? [
                     ProductCategory::factory()->create()->id,
                     ProductCategory::factory()->create()->id,

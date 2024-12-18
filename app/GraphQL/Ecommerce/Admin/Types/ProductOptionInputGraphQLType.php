@@ -32,7 +32,7 @@ class ProductOptionInputGraphQLType extends InputType
             'name_en' => [
                 'name' => 'name_en',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|max:255',
+                'rules' => 'required|string|max:255|unique:ecommerce_product_options,name_en',
             ],
             'name_oz' => [
                 'name' => 'name_oz',
@@ -43,11 +43,6 @@ class ProductOptionInputGraphQLType extends InputType
                 'name' => 'description',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => 'required|string|max:255',
-            ],
-            'values' => [
-                'name' => 'values',
-                'type' => Type::listOf(Type::int()),
-                'rules' => 'nullable|array',
             ],
             'categories' => [
                 'name' => 'categories',

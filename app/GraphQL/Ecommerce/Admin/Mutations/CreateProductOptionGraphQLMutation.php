@@ -8,7 +8,6 @@ use App\GraphQL\Ecommerce\Admin\Types\ProductOptionInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Ecommerce\ProductCategory;
 use App\Models\Company\Ecommerce\ProductOption;
-use App\Models\Company\Ecommerce\ProductOptionValue;
 use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -56,10 +55,6 @@ class CreateProductOptionGraphQLMutation extends Mutation
         $option->slug = $args['productOption']['name_en'];
         $option->saveOrFail();
 
-        if (! empty($args['productOption']['values'])) {
-            ProductOptionValue::query()->whereIn('id', $args['productOption']['values'])->update(['option_id' => $option->id]);
-        }
-
         if (! empty($args['productOption']['categories'])) {
             $option->categories()->attach($args['productOption']['categories']);
         }
@@ -70,10 +65,6 @@ class CreateProductOptionGraphQLMutation extends Mutation
     protected function rules(array $args = []): array
     {
         return [
-            'productOption.values.*' => [
-                'int',
-                Rule::exists(ProductOptionValue::class, 'id')->whereNull('deleted_at'),
-            ],
             'productOption.categories.*' => [
                 'int',
                 Rule::exists(ProductCategory::class, 'id')->whereNull('deleted_at'),
