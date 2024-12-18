@@ -8,6 +8,7 @@ use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionDetailDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
+use App\Enums\Company\AtmosPinflPaymentCode;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
@@ -150,7 +151,7 @@ class AtmosService
         $createPayResponseDTO = $this->atmosPinflClient->payCreate($ext_id, $customer, $installment->id, $amount);
         if (! $createPayResponseDTO->isSuccess()) {
             if ($createPayResponseDTO->isCardNotFound()) {
-                AtmosPinflCardUpdateJob::dispatch($customer->id);
+                AtmosPinflCardUpdateJob::dispatch($customer->id, (int) $createPayResponseDTO->code);
             }
             $transactionAttempt->failed();
 
@@ -237,13 +238,15 @@ class AtmosService
     /**
      * @throws GeneralException
      */
-    public function updatePinflCardsList(Customer $customer): bool
+    public function updatePinflCardsList(Customer $customer, ?int $atmos_status_code = null): bool
     {
         $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
 
         if ($centralCustomer) {
             if ($centralCustomer->atmos_pinfl_searched_at >= Carbon::now()->subMonths(Utilities::ATMOS_PINFL_CARD_UPDATE_MONTHS)) {
-                return true;
+                if ($atmos_status_code !== AtmosPinflPaymentCode::CARDS_NOT_FOUND->value || $centralCustomer->atmos_pinfl_searched_at >= Carbon::now()->subDays(Utilities::ATMOS_PINFL_CARD_UPDATE_REFRESH_DAYS)) {
+                    return true;
+                }
             }
         } else {
             $centralCustomer = new CentralCustomer;
