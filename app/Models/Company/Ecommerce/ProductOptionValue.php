@@ -19,11 +19,11 @@ use Illuminate\Support\Collection;
  * @property string $value_en
  * @property string $value_oz
  * @property string $slug
- * @property int $option_id
+ * @property int|null $option_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property ProductOption $option
+ * @property ProductOption|null $option
  * @property ProductJoinOption[]|Collection<int,ProductJoinOption> $productJoinOptions
  */
 class ProductOptionValue extends Model
