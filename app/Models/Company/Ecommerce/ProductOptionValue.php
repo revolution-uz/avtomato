@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -19,11 +20,11 @@ use Illuminate\Support\Collection;
  * @property string $value_en
  * @property string $value_oz
  * @property string $slug
- * @property int|null $option_id
+ * @property int $option_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property ProductOption|null $option
+ * @property ProductOption $option
  * @property ProductJoinOption[]|Collection<int,ProductJoinOption> $productJoinOptions
  */
 class ProductOptionValue extends Model
@@ -42,6 +43,11 @@ class ProductOptionValue extends Model
         'slug',
         'option_id',
     ];
+
+    public function setSlugAttribute($value)
+    {
+        $this->attributes['slug'] = Str::slug($value);
+    }
 
     public function option(): BelongsTo
     {
