@@ -21,7 +21,7 @@ class AtmosPinflCardUpdateJob implements ShouldBeUniqueUntilProcessing, ShouldQu
     use Queueable;
     use SerializesModels;
 
-    public function __construct(private readonly int $customerId)
+    public function __construct(private readonly int $customerId, private readonly ?int $atmos_status_code = null)
     {
         $this->onQueue('atmos-pinfl-card-update');
     }
@@ -31,7 +31,7 @@ class AtmosPinflCardUpdateJob implements ShouldBeUniqueUntilProcessing, ShouldQu
      */
     public function handle(AtmosService $atmosService): void
     {
-        $atmosService->updatePinflCardsList(Customer::findOrFail($this->customerId));
+        $atmosService->updatePinflCardsList(Customer::findOrFail($this->customerId), $this->atmos_status_code);
     }
 
     /**
