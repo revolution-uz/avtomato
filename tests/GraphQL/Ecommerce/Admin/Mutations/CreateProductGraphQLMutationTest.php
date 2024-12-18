@@ -81,9 +81,6 @@ class CreateProductGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($variables));
 
-        $response->assertOk();
-        $response->assertJsonStructure(['data' => ['createProduct' => $this->_structure]]);
-
         $this->assertSuccessCreateProductResponse($response, $variables);
     }
 
@@ -96,27 +93,25 @@ class CreateProductGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($variables));
 
-        $response->assertOk();
-        $response->assertJsonStructure(['data' => ['createProduct' => Arr::except($this->_structure, ['brand'])]]);
-
-        $this->assertSuccessCreateProductResponse($response, $variables);
-        $product = Product::query()->findOrFail($response->json('data.createProduct.id'));
-        $this->assertNull($product->brand_id);
-        $this->assertNull($product->old_price);
+        $this->assertSuccessCreateProductResponse($response, $variables, true);
     }
 
     #[Test]
     public function successAutoGeneratingSlug()
     {
-        $variables = $this->getInputVariables(variables: ['name_en' => 'thi$ i$ n@me en!!!']);
+        /** @var Product $product */
+        $product = Product::factory()->make(['name_en' => 'thi$ !s n@me en']);
+        $product->slug = $product->name_en;
+        $product->saveOrFail();
+
+        $variables = $this->getInputVariables(true, ['name_en' => $product->name_en]);
 
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($variables));
 
-        $response->assertOk();
-        $response->assertJsonStructure(['data' => ['createProduct' => $this->_structure]]);
-        $this->assertSuccessCreateProductResponse($response, $variables, 'thi-i-n-at-me-en');
+        $this->assertSuccessCreateProductResponse($response, $variables, true);
+        $this->assertEquals('thi-s-n-at-me-en-2', $response->json('data.createProduct.slug'));
     }
 
     #[Test]
@@ -211,8 +206,16 @@ class CreateProductGraphQLMutationTest extends GraphQLTestCase
         ];
     }
 
-    private function assertSuccessCreateProductResponse(TestResponse $response, array $variables, ?string $slug = null): void
+    private function assertSuccessCreateProductResponse(TestResponse $response, array $variables, bool $onlyRequired = false): void
     {
+        $response->assertOk();
+
+        if (! $onlyRequired) {
+            $response->assertJsonStructure(['data' => ['createProduct' => $this->_structure]]);
+        } else {
+            $response->assertJsonStructure(['data' => ['createProduct' => Arr::except($this->_structure, ['brand'])]]);
+        }
+
         $product = Product::query()->findOrFail($response->json('data.createProduct.id'));
 
         foreach ($variables as $key => $value) {
@@ -232,8 +235,6 @@ class CreateProductGraphQLMutationTest extends GraphQLTestCase
             $this->assertEquals($product->{$key}, $value);
         }
 
-        $this->assertEquals($product->slug, $slug ?? Str::slug($variables['name_en']));
-
         $this->assertEquals($product->id, $response->json('data.createProduct.id'));
         $this->assertEquals($product->name_uz, $response->json('data.createProduct.name_uz'));
         $this->assertEquals($product->name_ru, $response->json('data.createProduct.name_ru'));
@@ -242,10 +243,19 @@ class CreateProductGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($product->slug, $response->json('data.createProduct.slug'));
         $this->assertEquals($product->is_active, $response->json('data.createProduct.is_active'));
         $this->assertEquals($product->category_id, $response->json('data.createProduct.category_id'));
-        $this->assertEquals($product->brand_id, $response->json('data.createProduct.brand_id'));
+        $this->assertEquals($product->cost, $response->json('data.createProduct.cost'));
+        $this->assertEquals($product->actual_price, $response->json('data.createProduct.actual_price'));
         $this->assertEquals($product->created_at->timestamp, $response->json('data.createProduct.created_at'));
         $this->assertEquals($product->updated_at->timestamp, $response->json('data.createProduct.updated_at'));
         $this->assertEquals($product->deleted_at?->timestamp, $response->json('data.createProduct.deleted_at'));
+
+        if (! $onlyRequired) {
+            $this->assertEquals($product->brand_id, $response->json('data.createProduct.brand_id'));
+            $this->assertEquals($product->old_price, $response->json('data.createProduct.old_price'));
+        } else {
+            $this->assertNull($product->brand_id);
+            $this->assertNull($product->old_price);
+        }
     }
 
     private function getInputVariables(bool $isRequired = false, array $variables = [])
