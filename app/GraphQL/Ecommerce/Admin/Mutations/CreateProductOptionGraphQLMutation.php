@@ -6,13 +6,14 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Admin\Types\ProductOptionGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductOptionInputGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Ecommerce\ProductCategory;
 use App\Models\Company\Ecommerce\ProductOption;
+use App\Models\Company\Ecommerce\ProductOptionValue;
 use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Str;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -27,14 +28,14 @@ class CreateProductOptionGraphQLMutation extends Mutation
         return [
             'productOption' => [
                 'name' => 'productOption',
-                'type' => Type::nonNull(GraphQL::type(ProductOptionInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(ProductOptionInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ProductOptionGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(ProductOptionGraphQLType::type());
     }
 
     /**
@@ -50,12 +51,33 @@ class CreateProductOptionGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): ProductOption
     {
+        $option = new ProductOption;
+        $option->fill($args['productOption']);
+        $option->slug = $args['productOption']['name_en'];
+        $option->saveOrFail();
 
-        $model = new ProductOption;
-        $args['productOption']['slug'] = Str::slug($args['productOption']['name_en']);
-        $model->fill($args['productOption']);
-        $model->saveOrFail();
+        if (! empty($args['productOption']['values'])) {
+            ProductOptionValue::query()->whereIn('id', $args['productOption']['values'])->update(['option_id' => $option->id]);
+        }
 
-        return $model;
+        if (! empty($args['productOption']['categories'])) {
+            $option->categories()->attach($args['productOption']['categories']);
+        }
+
+        return $option;
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'productOption.values.*' => [
+                'int',
+                Rule::exists(ProductOptionValue::class, 'id')->whereNull('deleted_at'),
+            ],
+            'productOption.categories.*' => [
+                'int',
+                Rule::exists(ProductCategory::class, 'id')->whereNull('deleted_at'),
+            ],
+        ];
     }
 }

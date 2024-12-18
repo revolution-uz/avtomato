@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Ecommerce\ProductOption;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -9,6 +10,8 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class ProductOptionGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'ProductOptionGraphQLType';
 
     protected $attributes = [
@@ -21,10 +24,6 @@ class ProductOptionGraphQLType extends GraphQLType
             'id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (ProductOption $root) => $root->id,
-            ],
-            'group_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (ProductOption $root) => $root->group_id,
             ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),
@@ -62,9 +61,13 @@ class ProductOptionGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (ProductOption $root) => $root->deleted_at?->timestamp,
             ],
-            'product_option_groups' => [
-                'type' => Type::listOf(GraphQL::type(ProductOptionGroupGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (ProductOption $root) => $root->productOptionGroup,
+            'values' => [
+                'type' => Type::listOf(GraphQL::type(ProductOptionValueGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (ProductOption $root) => $root->values,
+            ],
+            'categories' => [
+                'type' => Type::listOf(GraphQL::type(ProductCategoryGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (ProductOption $root) => $root->categories,
             ],
         ];
     }
