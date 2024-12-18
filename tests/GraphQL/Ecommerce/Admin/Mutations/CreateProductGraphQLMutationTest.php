@@ -151,7 +151,7 @@ class CreateProductGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('validation.unique', ['attribute' => 'product.name en']), $response->json('errors.0.extensions.validation')['product.name_en'][0]);
+        $this->assertEquals(trans('validation.unique', ['attribute' => 'name']), $response->json('errors.0.extensions.validation')['product.name_en'][0]);
     }
 
     #[Test]
