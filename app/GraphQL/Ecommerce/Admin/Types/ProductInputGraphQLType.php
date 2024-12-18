@@ -35,7 +35,7 @@ class ProductInputGraphQLType extends InputType
             'name_en' => [
                 'name' => 'name_en',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|max:255',
+                'rules' => 'required|string|max:255|unique:ecommerce_products,name_en',
             ],
             'name_oz' => [
                 'name' => 'name_oz',

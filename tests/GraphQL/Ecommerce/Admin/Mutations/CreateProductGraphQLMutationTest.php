@@ -97,24 +97,6 @@ class CreateProductGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successAutoGeneratingSlug()
-    {
-        /** @var Product $product */
-        $product = Product::factory()->make(['name_en' => 'thi$ !s n@me en']);
-        $product->slug = $product->name_en;
-        $product->saveOrFail();
-
-        $variables = $this->getInputVariables(true, ['name_en' => $product->name_en]);
-
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($variables));
-
-        $this->assertSuccessCreateProductResponse($response, $variables, true);
-        $this->assertEquals('thi-s-n-at-me-en-2', $response->json('data.createProduct.slug'));
-    }
-
-    #[Test]
     public function errorValidation(): void
     {
         // GraphQL type errors
@@ -150,6 +132,26 @@ class CreateProductGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'product.name oz', 'max' => 255]), $response->json('errors.0.extensions.validation')['product.name_oz'][0]);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'product.category id']), $response->json('errors.0.extensions.validation')['product.category_id'][0]);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'product.brand id']), $response->json('errors.0.extensions.validation')['product.brand_id'][0]);
+    }
+
+    #[Test]
+    public function errorUniqueSlugValidation(): void
+    {
+        /** @var Product $product */
+        $product = Product::factory()->make(['name_en' => 'thi$ !s n@me en']);
+        $product->slug = $product->name_en;
+        $product->saveOrFail();
+
+        $variables = $this->getInputVariables(true, ['name_en' => $product->name_en]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($variables));
+
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.unique', ['attribute' => 'product.name en']), $response->json('errors.0.extensions.validation')['product.name_en'][0]);
     }
 
     #[Test]

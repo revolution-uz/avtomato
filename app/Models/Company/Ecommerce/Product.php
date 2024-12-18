@@ -61,16 +61,7 @@ class Product extends Model
 
     public function setSlugAttribute($value)
     {
-        $slug = Str::slug($value);
-        $originalSlug = $slug;
-
-        $count = 2;
-        while (static::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count;
-            $count++;
-        }
-
-        $this->attributes['slug'] = $slug;
+        $this->attributes['slug'] = Str::slug($value);
     }
 
     public function getNameAttribute(): string
