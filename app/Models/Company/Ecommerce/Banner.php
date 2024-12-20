@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $name_oz
  * @property bool $is_active
  * @property string|null $url
+ * @property int $order
  * @property int|null $category_id
  * @property int|null $brand_id
  * @property int|null $product_id
@@ -24,6 +25,8 @@ use Illuminate\Support\Carbon;
  * @property int $image_ru_id
  * @property int $image_en_id
  * @property int $image_oz_id
+ * @property Carbon $starts_at
+ * @property Carbon $ends_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -57,6 +60,7 @@ class Banner extends Model
     protected $table = 'ecommerce_banners';
 
     protected $fillable = [
+        'id',
         'name_uz',
         'name_ru',
         'name_en',
