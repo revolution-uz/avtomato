@@ -50,7 +50,7 @@ class ProductCategoryGraphQLType extends GraphQLType
                 'resolve' => fn (ProductCategory $root) => $root->is_active,
             ],
             'image_id' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'resolve' => fn (ProductCategory $root) => $root->image_id,
             ],
             'created_at' => [

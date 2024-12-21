@@ -49,6 +49,10 @@ class ProductOptionValueGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (ProductOptionValue $root) => $root->option_id,
             ],
+            'image_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (ProductOptionValue $root) => $root->image_id,
+            ],
             'product_join_options' => [
                 'type' => Type::listOf(GraphQL::type(ProductJoinOptionGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (ProductOptionValue $root) => $root->productJoinOptions(),
@@ -68,6 +72,10 @@ class ProductOptionValueGraphQLType extends GraphQLType
             'option' => [
                 'type' => GraphQL::type(ProductOptionGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (ProductOptionValue $root) => $root->option,
+            ],
+            'image' => [
+                'type' => GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (ProductOptionValue $root) => $root->image,
             ],
         ];
     }

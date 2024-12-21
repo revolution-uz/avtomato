@@ -21,10 +21,12 @@ use Illuminate\Support\Str;
  * @property string $value_oz
  * @property string $slug
  * @property int $option_id
+ * @property int|null $image_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property ProductOption $option
+ * @property EcommerceImage $image
  * @property ProductJoinOption[]|Collection<int,ProductJoinOption> $productJoinOptions
  */
 class ProductOptionValue extends Model
@@ -42,6 +44,7 @@ class ProductOptionValue extends Model
         'value_oz',
         'slug',
         'option_id',
+        'image_id',
     ];
 
     public function setSlugAttribute($value)
@@ -52,6 +55,11 @@ class ProductOptionValue extends Model
     public function option(): BelongsTo
     {
         return $this->belongsTo(ProductOption::class, 'option_id');
+    }
+
+    public function image(): BelongsTo
+    {
+        return $this->belongsTo(EcommerceImage::class, 'image_id');
     }
 
     public function productJoinOptions(): HasMany

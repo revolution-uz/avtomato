@@ -8,6 +8,8 @@ use App\Models\Company\Ecommerce\EcommerceImage;
 use App\Models\Company\Ecommerce\Product;
 use App\Models\Company\Ecommerce\ProductBrand;
 use App\Models\Company\Ecommerce\ProductCategory;
+use App\Models\Company\Ecommerce\ProductOption;
+use App\Models\Company\Ecommerce\ProductOptionValue;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
@@ -22,6 +24,7 @@ class EcommerceSeeder extends Seeder
     private Collection $_brands;
     private Collection $_categories;
     private Collection $_products;
+    private Collection $_options;
 
     public function run(): void
     {
@@ -32,6 +35,8 @@ class EcommerceSeeder extends Seeder
         $this->seedCategories();
         $this->seedProducts();
         $this->seedBanners();
+        $this->seedOptions();
+        $this->seedValues();
     }
 
     private function seedBanners()
@@ -216,6 +221,69 @@ class EcommerceSeeder extends Seeder
             $this->command->info('Images data imported successfully!');
         } else {
             $this->command->info('No new Images to import.');
+        }
+    }
+
+    private function seedOptions(): void
+    {
+        $data = $this->parseCsv(database_path('seeders/data/options.csv'));
+
+        $existingNames = ProductOption::query()->whereIn('name_uz', $data->pluck('name_uz'))->pluck('name_uz')->toArray();
+
+        $newData = $data->reject(fn ($item) => in_array($item['name_uz'], $existingNames))
+            ->map(fn ($item) => [
+                'name_uz' => $item['name_uz'],
+                'name_ru' => $item['name_ru'],
+                'name_en' => $item['name_uz'],
+                'name_oz' => $item['name_ru'],
+                'slug' => Str::slug($item['name_uz']),
+                'description' => 'description',
+                'type' => $item['type'],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+
+        if ($newData->isNotEmpty()) {
+            ProductOption::query()->insert($newData->toArray());
+            $this->command->info('Options data imported successfully!');
+        } else {
+            $this->command->info('No new Options to import.');
+        }
+
+        $optionsBySlug = ProductOption::query()->whereIn('name_uz', $data->pluck('name_uz'))->get()->keyBy('name_uz');
+        $this->_options = $data->mapWithKeys(function ($imported) use ($optionsBySlug) {
+            if (isset($optionsBySlug[$imported['name_uz']])) {
+                return [$imported['id'] => $optionsBySlug[$imported['name_uz']]->id];
+            }
+
+            return [];
+        });
+    }
+
+    private function seedValues(): void
+    {
+        $data = $this->parseCsv(database_path('seeders/data/values.csv'));
+
+        $existingValues = ProductOptionValue::query()->whereIn('value_uz', $data->pluck('value_uz'))->pluck('value_uz')->toArray();
+
+        $newData = $data->reject(fn ($item) => in_array($item['value_uz'], $existingValues))
+            ->map(fn ($item) => [
+                'value_uz' => $item['value_uz'],
+                'value_ru' => $item['value_ru'],
+                'value_en' => $item['value_uz'],
+                'value_oz' => $item['value_ru'],
+                'slug' => Str::slug($item['value_uz']),
+                'option_id' => $this->_options[$item['option_id']],
+                'image_id' => ! empty($item['image']) ? $this->downloadImage('', $item['image'])?->id : null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+
+        if ($newData->isNotEmpty()) {
+            ProductOptionValue::query()->insert($newData->toArray());
+            $this->command->info('Values data imported successfully!');
+        } else {
+            $this->command->info('No new Values to import.');
         }
     }
 
