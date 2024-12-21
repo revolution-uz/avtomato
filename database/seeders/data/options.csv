@@ -1,0 +1,19 @@
+id,name_uz,name_ru,type
+1,Effekt,Эффект,multiple_choice
+2,Teri turi,Тип кожи,multiple_choice
+3,Janr,Жанр,multiple_choice
+4,Muqova,Обложка,multiple_choice
+5,Til,Язык,multiple_choice
+6,Avtomobil modeli,Модель автомобиля,multiple_choice
+7,Mahkamlagich turi,Вид застежки,multiple_choice
+8,Mavsum,Сезон,multiple_choice
+9,Oʻlchami (razmeri),Размер,multiple_choice
+10,Asosiy material,Основной материал,multiple_choice
+11,"Narx, baho",Цена,ranged_value
+12,Rang,Цвет,multiple_choice
+13,RUS Oʻlchami,Размер RUS,multiple_choice
+14,Poshna turi,Вид каблука,multiple_choice
+15,"Platforma balandligi, sm","Высота платформы, см",ranged_value
+16,Yuqorining materiali,Материал верха,multiple_choice
+17,Taglik materiali,Материал подошвы,multiple_choice
+18,Patak materiali,Материал стельки,multiple_choice

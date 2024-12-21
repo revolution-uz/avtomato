@@ -1,0 +1,811 @@
+﻿id,parent_id,name_uz,name_oz,name_ru,slug,image
+1,"0",Mahsulotlar,Маҳсулотлар,Товары,root,
+3,1,Maishiy texnika,,Бытовая техника,bytovaya-tehnika,"/Fridge, Freezer_65ca31c95b013.svg"
+4,67,Sovutgichlar,,Холодильники,holodilniki,""
+5,67,"Kir yuvish, quritish uskunalari va aksessuarlari",,"Стирка, сушка и аксессуары для белья",stiralnye-mashiny,""
+6,67,Changyutgichlar,,Пылесосы  ,pylesosy,data/pilesos/9481.jpg
+7,1,Konditsionerlar,,Кондиционеры,kondicionery,air-conditioner.png
+8,67,Oshxona plitalari,,Кухонные плиты,gazovye-plity,""
+9,67,Isitgichlar,,Обогреватели,elektroobogrevateli-i-teplovye-zavesy,""
+10,1,Oshxona uchun texnika,,Техника для кухни,kuhnya,/kitchen.png
+11,83,Multivarkalar,,Мультиварки,multivarki,/6242d25b7a472.jpg
+12,83,Go‘shtqiymalagichlar,,Мясорубки,myasorubki,""
+13,83,Oshxona mashinalari va kombaynlari,,Кухонные машины и комбайны,kuhonnye-mashiny-i-kombajny,""
+14,83,Elektr choynaklar,,Электрочайники,chajniki-i-termopoty,""
+15,83,Non pishirgichlar,,Хлебопечки,hlebopechki,""
+16,83,Sharbat chiqargichlar,,Соковыжималки,sokovyzhimalki,""
+17,67,Dazmollar va aksessuarlar,,Утюги и аксессуары,utyugi,""
+18,83,Vafli pishirgichlar,,Вафельницы,tostery-sendvichnicy-vafelnicy,""
+19,83,Kofe mashinalari,,Кофемашины,kofevarki-i-kofemolki,""
+20,83,Idish yuvish mashinalari,,Посудомоечные машины,posudomoechnye-mashiny,""
+21,67,Epilatorlar va ayollar elektr soqollari,,Эпиляторы и женские электробритвы,elektrobritvy-epilyatory-trimmery,""
+22,83,Fenlar,,Фены,feny-i-vypryamiteli-dlya-volos,""
+24,83,Oshxona tarozisi,,Кухонные весы,kuhonnye-vesy,""
+25,1,Kompyuter texnikasi,,Компьютерная техника,kompyutery-i-orgtehnika,/laptop copy_65ca319add62c.svg
+26,1,Avto tovarlari,,Автотовары,instrumenty-i-avtotovary,/Car_65ca3070ae056.svg
+27,119,Shinalar va disklar,,Шины и диски,shiny-i-diski,""
+28,119,Avtotovush,,Автозвук,avtomagnitoly-i-avtoakustika,/623d6fff04b8a.jpg
+29,119,Radar - detektorlar,,Радар  -  детекторы,radar-detektory,""
+30,119,Avtomobil videoregistratorlari,,Автомобильные видеорегистраторы,avtomobilnye-videoregistratory,""
+32,119,Akkumulyator va aksessurlar,,Аккумуляторы и аксессуары,akkumulyatory,""
+33,67,Muzlatgichlar,,Морозильники,morozilniki,""
+34,83,O‘rnatiladigan maishiy texnika,,Встраиваемая техника,vstraivaemaya-tehnika,""
+35,67,Dudbo‘ronlar,,Вытяжки,vytyazhki,""
+36,128,O‘rnatiladigan pechlar,,Духовые шкафы,vstraivaemye-duhovki,/6242dcb668c7c.jpg
+37,128,Oshxona plitasi yuzalari,,Варочные поверхности,varochnye-poverhnosti,/6242dc607c747.jpg
+38,122,Avtomagnitofonlar,,Автомагнитолы,avtomagnitoly,/6242cdf8c7f58.jpg
+40,122,Avtomobil audiokuchaytirgichlari,,Автоусилители,avtousiliteli,""
+42,122,Avtomobil akustikasi,,Автоакустика,avtoakustika,""
+45,122,Sabvuferlar,,Сабвуферы,sabvufer,""
+47,140,Passiv korpusli sabvuferlar,,Пассивные корпуса сабвуферов,passivnyj-korpus,""
+49,67,Suv kulerlari,,Кулеры для воды,kulery-dlya-vody,""
+52,128,Oshxona jo’mrak-rakovinalari,,Мойки для кухни,kuhonnye-mojki,""
+53,151,Oshxona kranlari,,Смесители для кухни,smesiteli,""
+54,67,Tikuv mashinalari,,Швейные машины,shvejnye-mashiny-i-oborudovanie,""
+55,67,Kaminlar,,Камины,kaminy,""
+56,83,Bug‘ qozonlari,,Пароварки,parovarki,""
+57,103,Epilyatorlar,,Эпиляторы,epilyatory,""
+58,103,Elektrobritvalar,,Электробритвы,elektrobritvy,""
+59,103,Trimmerlar,,Триммеры,trimmery,""
+60,116,Sichqoncha,,Мыши,myshki,/641185278afe1.png
+61,1,Telefonlar va gadjetlar,,Телефоны и гаджеты,telefony-i-gadzhety,/Iphone_65ca31dfa4099.svg
+62,1,"Televizorlar, video va audio",,"Телевизоры, видео и аудио",televizory-video-i-audio,"/TV, Television_65ca3150d8c13.svg"
+63,171,Telefonlar,,Телефоны,telefony,""
+64,171,Planshetlar,,Планшеты,planshety,/6405ccabb02f2.png
+65,171,Smart-soatlar va brasletlar,,Смарт-часы и браслеты,umnye-chasy-i-braslety,""
+67,171,Smartfonlar va planshetlar uchun aksessuarlar,,Аксессуары для смартфонов и планшетов,aksessuary-mobile,""
+69,128,O‘rnatiladigan mikroto‘lqinli pechlar,,Встраиваемые микроволновые печи,vstraivaemye-mikrovolnovye-pechi,""
+70,179,PlayStation uchun o‘yinlar,,Игры для PlayStation,igry-dlya-playstation,""
+72,83,Gril,,Грили,grili-frityurnicy-shashlychnicy,""
+73,128,O‘rnatiladigan idish yuvish mashinalari,,Встраиваемые посудомоечные машины,vstraivaemye-posudomoechnye-mashiny,""
+74,77,Mobil konditsionerlar,,Кондиционеры мобильные,kondicionery-mobilnye,""
+77,116,Noutbuk uchun sumkalar,,Сумки для ноутбуков,sumki-dlya-noutbukov,""
+78,116,Kameralar,,Камеры,kamery,""
+79,173,Uy uchun gadjetlar,,Гаджеты для дома,tehnika-dlya-doma,""
+80,119,Avtomobillar uchun tovarlar,,Товары для авто,aksessuary-dlya-avto,""
+86,173,Uy kinoteatrlari va audio tizimlar,,Домашние кинотеатры и аудиосистемы ,domashnij-kinoteatr,""
+87,180,Telefon uchun himoya oynalari,,Защитные стекла на телефон,zashitnye-stekla-dlya-smartfonov,""
+88,180,Quloqchinlar,,Наушники,naushniki,/6242d2b4397d1.jpg
+89,180,Telefon g‘iloflari,,Чехлы для телефонов,chehly-dlya-telefonov,""
+90,1,Uy va ofis uchun tovarlar,,Товары для дома и офиса,dlya-doma,/Group_65ca2c7bc43fe.svg
+91,173,Televizor ilgich,,Кронштейны,kronshtejny,""
+92,116,Pul (kupyura) sanash mashinalari,,Счетчики банкнот (купюр),schetchiki-banknot-kupyur,""
+93,119,Ta'mirlash buyumlari,,Товары для ремонта,vse-dlya-remonta,""
+94,209,Suratga olish uskunalari,,Фототехника ,fototehnika,""
+95,173,Televizor tyunerlari,,ТВ тюнеры,tv-tyunery,""
+96,1,Kitoblar,,Книги,knigi,"/Book, Open.1_65ca31fa4f154.svg"
+98,218,Jahon adabiyoti,,Мировая литература,zhahon-adabiyoti,""
+99,218,O‘zbek adabiyoti,,Узбекская литература,uzbek-adabiyoti,""
+100,218,Biznes kitoblar,,Книги про бизнес,biznes,""
+101,218,Zamonaviy o‘zbek adabiyoti,,Современная узбекская литература,zamonavij-uzbek-adabiyoti,""
+102,218,Rus tilidagi kitoblar,,Книги на русском,na-russkom,""
+103,218,Bolalar adabiyoti,,Детская литература,bolalar-adabiyoti,""
+104,116,Kompyuter uchun aksessuarlar,,Аксессуары для компьютера,aksessuary-kompyutera,""
+105,229,Tarmoq filtrlari,,Сетевые фильтры,pitanie,""
+106,229,"Kabellar, adapterlar",,"Кабели, переходники",kabeli-perehodniki,""
+108,74,Kiyim quritgichlar,,Сушилки для белья,sushilki-dlya-belya,""
+109,74,Dazmollash taxtasi,,Гладильные доски,gladilnye-doski,""
+110,116,Axborot tashuvchilar,,Носители информации,nositeli-informacii,""
+111,236,Xotira kartalari,,Карты памяти,karty-pamyati,""
+112,173,Masofaviy boshkaruv pultlari,,Пульты ДУ,pulty-du,""
+113,116,Ofis jihozlari,,Офисная техника,ofisnaya-tehnika,""
+114,240,Skanerlar,,Сканеры,skanery,""
+115,240,Kalkulyatorlar,,Калькуляторы ,kalkulyatory,""
+116,180,Bluetooth-garnituralar,,Bluetooth гарнитуры ,bluetooth-garnitury,/634d2687d7e96.jpg
+117,209,Bio-kaminlar,,Био-камины,bio-kaminy,""
+118,209,Suv isitgichlari,,Водонагреватели,vodonagrevateli,""
+119,209,Video kuzatuv,,Видеонаблюдение,videonablyudenie,""
+120,250,Videokuzatuv kameralari,,Камеры видеонаблюдения ,kamery-videonablyudeniya,""
+121,250,NVR video yozuvchisi,,NVR видеорегистраторы ,registratory,""
+122,119,Yostiq va suyanchiqlar,,Подушки и спинки,podushki-i-spinki,""
+123,116,Operativ xotira (DDR),,Оперативная память (DDR),operativnaya-pamyat,""
+124,209,Basseynlar,,Бассейны,bassejny,""
+125,180,Zaryadlovchi qurilmalar va USB kabellari,,Зарядные устройства и USB Кабели,setevye-zaryadnye-ustrojstva,/634d23b51bf93.jpg
+126,180,O‘yin uchun gadjetlar,,Игровые гаджеты ,igrovye-gadzhety,""
+127,180,Simsiz quvvatlagichlar,,Беспроводные зарядные устройства ,besprovodnye-zaryadnye-ustrojstva,""
+128,209,Geymer stullari,,Геймерские кресла ,gejmerskie-kresla,""
+129,209,Soyabonlar,,Зонты ,zonty,""
+130,209,Xavfsizlik,,Безопасность ,bezopasnost,""
+131,209,Ofis kreslolari,,Офисные кресла,ofisnye-kresla,""
+132,218,Diniy adabiyotlar,,Религиозная литература,dinij-adabiyot,""
+133,218,Ilm-fan va darsliklar,,Наука и учебники,ilm-fan-va-darsliklar,""
+134,173,Televizion antennalar va aksessuarlar,,ТВ Антенны и аксессуары,tv-antenny-i-aksessuary,""
+135,209,Sport buyumlari,,Спорт товары,sport-tovary,""
+136,83,Idish-tovoqlar,,Посуда,posuda,/Group (1)_65ca30fb8f540.svg
+137,116,Videokartalar,,Видеокарты,videokarty,""
+138,116,Monitorlar,,Мониторы,monitory,/6411867d476fc.png
+139,116,"Modemlar, routerlar va tarmoq uskunalari",,"Модемы, роутеры и сетевое оборудование",modemy-routery-i-setevoe-oborudovanie,""
+140,116,Printerlar,,Принтеры,printery,/6242d4b5dd098.png
+141,116,Proyektorlar,,Проекторы,proektory,""
+142,173,Televizorlar,,Телевизоры,televizory,""
+143,116,Kompyuter akustika vositalari,,Компьютерная акустика,kompyuternaya-akustika,/6242ce3fb80db.jpeg
+144,83,Mikroto‘lqinli pechlar va pechlar,,Микроволновые и духовые печи,mikrovolnovye-i-duhovye-pechi,""
+145,83,Blenderlar va mikserlar,,Блендеры и Миксеры,blendery-i-miksery,""
+146,236,"Qattiq disklar, SSD va tarmoq adapterlari",,Жесткие диски,zhestkie-diski-ssd-i-setevye-nakopiteli,/6242d79c13f5a.png
+147,116,Stol kompyuterlari,,Настольные компьютеры,nastolnye-kompyutery,""
+148,209,Pol tarozilari,,Напольные  весы,napolnye-vesy,/6242cbd5b54e4.jpg
+149,209,Kosmetika jihozlari,,Косметические  приборы,kosmeticheskie-pribory,""
+150,173,Raqamli televideniye,,Цифровое телевидение,cifrovoe-televidenie,/satellite-dish (1).png
+151,116,Noutbuklar va aksessuarlar,,Ноутбуки и аксессуары,noutbuki,""
+152,116,Monobloklar,,Моноблоки,monobloki,/641186b0a6b4b.png
+153,209,Ventilyatorlar,,Вентиляторы,ventilyatory,""
+154,209,Kuchlanish stabilizatorlari ,,Стабилизаторы напряжения,stabilizatory-napryazheniya,""
+155,63,Tarmoq adapterlari,,Сетевое оборудование,setevoe-oborudovanie,""
+156,63,ADSL modemlari (Telefon tarmog‘i uchun),,ADSL модемы (для телефонной сети),wifi-routery-i-modemy-dlya-telefonnoj-seti,/6242cd1fb2243.png
+157,63,WiFi routerlar (Optika),,Wi-Fi роутеры (Оптика),wifi-routery-dlya-optovolokonnyh-setej,/6242cd56641be.jpg
+161,173,Smart TV uchun qo‘shimcha komponentlar,,Приставки Smart TV,pristavki-smart-tv,""
+162,180,Tashqi akkumulyator (Power bank),,Power bank (внешние аккумуляторы),vneshnij-akkumulyator-power-bank,/634d25940ec63.jpg
+163,209,Xiaomi gadjetlari,,Гаджеты Xiaomi,gadzhety-xiaomi,""
+164,236,USB fleshkalar,,Флешки USB,usb-fleshki,""
+165,63,3G/4G modemlari,,3G/4G модемы,oborudovanie-3g-4g,/6246bda4e3c98.jpg
+166,110,Atir-upa,,Парфюм,parfyum,""
+167,63,Wi-Fi adapterlari,,WiFi адаптеры,adaptery-wi-fi,/6246be3f156cc.jpg
+168,267,Skuterlar,,Скутеры,skutery,""
+169,"0",Abituriyentlar uchun kitoblar,,Книги для абитуриентов,abiturient,""
+170,"0",TOP-100 ta bestseller,,TOP-100 книг бестселлеров,bestseller,""
+171,"0",Go‘zallik va salomatlik uchun texnika,,Техника для красоты и здоровья,texniki-dlya-krasota-i-zdorove,/spa.png
+172,"0",Tovalar,,Сковороды,skovorody,""
+173,"0",Qozonlar,,Казаны,kazany,""
+174,"0",Kastryullar,,Кастрюли,kastryuli,""
+175,"0",Oshxona to'plamlari,,Наборы для кухни,nabory,""
+176,"0",Pishiriqlar uchun qoliplar,,Формы для выпечки,formy-vypechki,""
+177,"0",Tibbiyotga oid mahsulotlar,,Медицинские изделия и расходные материалы ,gigienicheskietovari,hand-wash.png
+178,"0",Suv filtrlari va suv yumshatgichlari,,Фильтры и умягчители для воды,filtri-i-umyagchiteli-dlya-vodi,""
+179,"0",Badiiy adabiyotlar,,Художественная литература,badiy-adabiyot,""
+180,1,Mebel,,Мебель,mebel,/armchair_65ca31120c75e.svg
+181,"0",Payvandlash uskunalari,,Сварочные аппараты ,svarochnie-apparati,""
+182,"0",Oshxona mebellari,,Кухонная мебель,kuxonnaya-mebel,""
+183,"0",Yumshoq mebel,,Мягкая мебель,myagkaya-mebel,""
+184,"0",Divanlar,,Диваны,divany,""
+185,"0",Klassik oshxona mebellari,,Классическая кухня,klassicheskaya-kuxnya,""
+186,"0",Burchak divanlar to‘plami,,Угловые диваны,uglovie-divani,""
+187,"0",Hi-tech oshxona mebellari,,Кухни Hi-tech,kuxni-hi-tech,""
+188,"0",Yotoqxona mebellari,,Спальная мебель,spalnaya-mebel,""
+189,"0",Mehmonxona mebellari,,Гостиная мебель,gostinaya-mebel,""
+190,"0",Ofis mebellari,,Офисная мебель,ofisnaya-mebel,""
+191,"0",Kresla,,Кресла,kreslo,""
+192,"0",Yozuv stollari,,Письменные столы,pismennie-stoli,""
+193,"0",Kompyuter stollari,,Компьютерные столы,kompyuterniy-stoli,""
+194,"0",Ofis shkaflari,,Офисные шкафы,ofisnie-shkafi,""
+196,"0",Shkaflar,,Шкафы,shkafi,""
+197,"0",Shkaf-kupelar,,Шкафы-купе,shkafi-kupe,""
+198,"0",Dahliz shkaflari,,Прихожие шкафы,prixojie-shkafi,""
+199,"0",Bolalar mebellari,,Детская мебель,detskaya-mebel,""
+200,"0",Hovli uchun mebellar,,Комплекты садовой мебели,sadovaya-mebel,""
+201,"0",Xorijiy mebellar,,Импортная мебель,importnaya-mebel,""
+202,"0",Lerom,,Лером ,lerom,/5eb135fc0e292.jpg
+203,"0",Shatura,,Шатура,shatura,/5eb136f1ea152.png
+204,"0",Krovatlar,,Кровати,odinarniy-krovati,""
+206,"0",Har turdagi mebellar,,Различная мебель,razlichnaya-mebel,""
+207,"0",Stol va stullar,,Столы и Стулья,stoli-i-stulya,""
+209,"0",Jurnal stollari,,Журнальные столы,jurnalniye-stoli,""
+210,"0",TV podstavka,,ТВ подставка,tv-podstavka,""
+211,"0",Buyurtmaga bolalar mebellari,,Детская мебель на заказ,detskaya-mebel-nazakaz,""
+213,"0",Buyurtmaga TV podstavka ,,ТВ подставка на заказ,tv-podstavka-nazakaz,""
+216,"0",Buyurtmaga jurnal stollari ,,Журнальные столы на заказ,jurnalnie-stoli-nazakaz,""
+218,"0",Buyurtmaga yumshoq mebellar,,Мягкая мебель на заказ,myagkaya-mebel-nazakaz-1,""
+219,"0",Yugurish uchun yo‘lkalar,,Беговые дорожки,begovie-dorojki,""
+220,"0",Kompleks trenajyorlar,,Комплексные тренажёры ,kompleksnie-trenajori,""
+221,"0",Velotrenajyorlar,,Велотренажеры ,velotrenojori,""
+222,"0",Elliptik trenajyorlar,,Эллиптические тренажеры,ellipticheskie-trenajori,""
+223,"0",Shatura yotoqxona mebellari,,Спальная мебель Шатура,spalnaya-mebel-shatura,""
+224,"0",Shatura bolalar mebellari,, Детская мебель Шатура,detskaya-mebel-shatura,""
+225,"0",Shatura mehmonxona mebellari,,Гостиная мебель Шатура,gostinaya-mebel-shatura,""
+226,"0",Shatura ofis mebellari,, Офисная мебель Шатура,ofisnaya-mebel-shatura,""
+227,"0",Shatura dahliz mebellari,, Мебель для прихожей Шатура,mebel-dlya-prixojey-shatura,""
+228,"0",Biografiya,,Биография,biography,""
+229,"0",LEROM dahliz shkaflari,,ЛЕРОМ Прихожие шкафы,lerom-prixojie-shkafi,""
+230,"0",Lerom shkaf-kupelari,,Лером Шкафы купе,lerom-shkafi-kupe,""
+231,"0",Lerom yotoqxona mebellari,,Лером Спальная мебель,lerom-spalnsya-mebel,""
+232,"0",ERA,,ЭРА,era,""
+233,"0",ERA yotoqxona mebellari,,ЭРА Спальная мебель,era-spalnaya-mebel,""
+234,"0",Lerom krovat,,Лером кровать,lerom-krovat,""
+235,"0",Lerom bolalar mebellari,,Лером Детская мебель,lerom-spalnaya-mebel,""
+236,"0",Lerom mehmonxona mebellari,,Лером гостиная мебель,lerom-gostinaya-mebel,""
+237,"0",ERA mehmonxona mebellari,,ЭРА гостиная мебель,era-gostinaya-mebel,""
+238,"0", ART kreslo,, АРТ кресло,art-kreslo,""
+240,"0",NEMAN,,НЕМАН,neman,""
+241,"0",Ofis to‘plami,,Офисный комплект,ofisniy-komplekt,""
+242,"0",Oshxona stol va stullari,,Кухонный стол и стулья,oshxona-stol-va-stullari,""
+243,"0",Mehmonxona stol va stullari,,Гостиный стол и стулья,mehmonxona-stol-stullari,""
+244,"0",SLONIM MEBEL,,СЛОНИММEБEЛ,slonimmebel,""
+245,"0",SLONIM mehmonxona mebellari,,Гостиная мебель СЛОНИМ,gostinaya-mebel-slonim,""
+246,"0",SLONIM yotoqxona mebellari,,Спальная мебель СЛОНИМ,spalnaya-mebel-slonim,""
+247,"0",Oshxona anjomlari,,Столовые приборы ,stolovie-pribori,""
+248,"0",Patnislar,,Подносы,podnosi,""
+249,"0",Choynaklar,,Заварочные чайники,chayniki,""
+250,"0",Stol xizmati,,Столовые сервизы,servizi,""
+251,"0",Kabelli telefonlar,,Проводные телефоны,provodniye-telefoni,""
+252,"0",Bowler shapka,,Котлы,kotly,""
+253,"0",Bosimli pishirgichlar,,Мантоварки,mantovarka,""
+254,"0",Idish-tovoq quritgichlar,,Сушилки для посуды,sushilki-dlya-posudi,""
+255,"0",Mahsulot saqlagichlar,,Хранение ,hranenie,""
+256,"0",Adapterlar,,Aдаптеры,perexodniki,""
+257,"0",Smart-soat va fitnes-brasletlar uchun aksessuarlar,,Аксессуары для смарт часов и фитнес браслетов,aksessuar-smart-braslet-watch-band,""
+258,"0",Simsiz quloqchinlar,,Беспроводные наушники,besprovodniye-naushniki,/6242cce23e0ee.jpg
+259,"0",Salat uchun idishchalar,,Салатницы и кремянки,salatniki-i-kremyanki,""
+260,"0",Grafin va bokallar,,Графины и бокалы,grafini-i-bakali,""
+262,"0",Aksessuarlar va jihozlar,,Аксессуары и принадлежности,aksessuri-dlya-avto,""
+263,"0",Avtomobil uchun telefon tutqichlari,,Автомобильные держатели для телефона,avtomobilniye-derjateli,""
+264,"0",Bestseller to‘plamlar,,Сборники бестселлеров,toplam,""
+265,"0",Ko‘chma akustika vositalari,,Портативные колонки,portativnaya-akustika,/6242cb75aaa1e.jpg
+266,"0",Elektron kitoblar,,Электронные книги,elektronnie-knigi,""
+267,"0",Xotira kartalari va fleshkalar,,Карты памяти и флешки ,fleshki,""
+269,"0",Terma chinni idishlar,,Сборные сервизы,sborniye-servizi,""
+270,"0",Audiotexnika va quloqchinlar,,Наушники и аудиотехника,naushniki-i-auditexniki,""
+271,"0",Mikrofonlar,,Микрофоны,mikrofon,""
+272,"0",Likopchalar,,Тарелки,tarelki,""
+273,"0",Smart-soatlar,,Смарт-часы,umniye-chasi,/6242cca01774f.jpg
+274,"0",Fitnes-bilaguzuklar,,Фитнес-браслеты,fitnes-brasleti,/6242cc5aeefd1.png
+275,"0",Veb-kameralar,,Веб-камеры,veb-kameri,""
+276,"0",Planshetlar uchun g‘iloflar,, Чехлы для планшетов ,chexol-planshet,/5f3fb8197491a.png
+277,"0",Stol o‘yinlari,, Настольные игры,nastolniye-igri,""
+278,"0",Tashqi optik drayvlar DVD RW,,Внешние оптические приводы DVD RW,dvd-rw-usb,""
+279,"0",Televizor kabellari va adapterlari,,ТВ кабели и переходники,kabeli-perexodniki-tv,""
+281,"0",Juft choynak,,Двойные чайники,dvoyniye,""
+282,"0",Piyola,,Пиалы ,piali,""
+283,"0",Kosalar,,Косы (косушки),kosi-kosushki,""
+284,"0",Laganlar,,Блюда для подачи и ляганы,lyagani,""
+286,"0",Bug‘li tozalagichlar,,Пароочистители,paroochistitel,""
+287,1,"O‘yinchoqlar, sovg‘alar va aksessuarlar",,"Игрушки, подарки и аксессуары",suvi,/christmas-gift_65ca308febdf2.svg
+288,"0",Pichoq va taxtachalar,,Ножи и разделочные доски,razdelochniye-doski-i-terki,""
+289,"0",Yumshoq mebel to‘plamlari,,Комплекты мягкой мебели,komplekty-myagkoy-mebeli,""
+290,"0",Gorka,,Горка,gorka,""
+291,"0",Penal va komod,,Пенал и комод,penalkamod,""
+292,"0",Penal va televizor qo‘yish mebeli,,Пенал и под тв,penalpodtv,""
+294,"0",Xorijiy mehmonxona mebellari,,Импортная гостиная мебель ,import-gostinayamebel,""
+295,"0",Penal,,Пенал,penal,""
+296,"0",Komod,,Комод,komod,""
+297,"0",Televizor uchun mebel,,Под ТВ,pod-tv,""
+298,"0",Gorka va penal,,Горка и пенал,gorka-penal,""
+299,"0",Gorka va komod,,Горка и комод,gorka-komod,""
+300,"0",Klassik yotoq mebeli,,Классик ,klassik-spalnaya-mebel,""
+301,"0",Hi-tech,,Хай-тек,hitech-spalnaya-mebel,""
+302,"0",Chester,,Честер,spalnaya-chester,""
+303,"0",Pufik,,Пуфик,pufik,""
+305,"0",Krujkalar,,Кружки,krujki,""
+306,"0",Miskalar,,Миски,miski,""
+307,"0",Loft,,Лофт,loft,""
+308,"0",Meva va qand uchun idishlar,,Фруктовницы и конфетницы,fruktovnici-i-konfetnici,""
+309,"0",Radiotelefonlar,,Радиотелефоны,radiotelefoni,/6242d040e03e4.jpg
+310,"0",Lug‘at va so‘zlashgichlar,,Словари и разговорники,lugatlar,""
+312,"0",Musulmonlar uchun sovg‘alar,,Идеи подарков для мусульман,musulmankiye,""
+313,"0",Detektiv va fantastika,,Детективы и фантастика,kit-da,""
+314,"0",Psixologiya va shaxsiy rivojlanish,,Психология и саморазвитие,psixologiya,""
+315,"0",Moyli isitgichlar,,Масляные обогреватели ,maslyanie-obogrevateli,/6512bd43d9caa6e02c990b0a82652dca2023102512070911369yHpmrwJ0on.jpg_65e19c19b3c89.jpg
+316,"0",Issiqlik ventilyatorlari,,Тепловентиляторы ,teploventilyatori,""
+317,"0",Konvektorlar,,Конвекторы ,konvektori,""
+318,"0",Infraqizil isitgichlar,,Инфракрасные обогреватели,infrakrasnie-obogrevateli,""
+319,"0",Noutbuk uchun Powerbank,,Power Bank для ноутбука,power-bank-noutbuk,""
+320,"0",Termoidishlar,,Термопосуда,termoposuda,""
+321,1,Geymerlar uchun tovarlar,,Товары для геймеров,dlya-gejmerov,/joystick-xbox_65ca313204e1f.svg
+322,"0",Garnitura va quloqchinlar,,Гарнитуры и наушники,garnituri-i-naushniki,/5ffc234090309.jpg
+323,"0",Klaviaturalar,,Клавиатуры,klaviaturi,""
+324,"0",O‘yin sichqonchalari,,Игровые мыши,igrovie-mishi,/641c3019d70e6.png
+325,"0",O‘yin kreslolari,,Игровые кресла,igrovie-kresla,""
+326,"0",O‘yin pristavkalari,,Игровые приставки,igrovie-konsoli,""
+327,"0",VR ko'zoynak,,VR-очки,ochki-virtualnoy-realnosti,""
+328,"0",Geympadlar va joystiklar,,Геймпады и джойстики ,geympadi-i-djoystiki,""
+329,"0",PlayStation,,PlayStation,playstation,""
+330,"0",Uzluksiz quvvat manbalari,,Источники бесперебойного питания,istochniki-bespereboynogo-pitaniya,""
+332,"0",Quvvat manbalari,,Блоки питания,bloki-pitaniya,""
+333,"0",Kompyuter jihozlari,,Комплектующие,kompyuteri-i-komplektyushiye,""
+334,"0",Kompyuterlar va monobloklar,,Компьютеры и моноблоки,kompyuteri-i-monobloki,""
+336,"0",Tizim platalari,,Материнские платы,materinskie-plati,""
+337,"0",Oshxona jihozlari,,Кухонные принадлежности,kuxonniye-prinadlejnosti,""
+338,"0",Protsessorlar,,Процессоры,protsessori,""
+339,"0",Issiqlik pushkalari ,,Тепловые пушки ,teplovie-pushki,""
+340,"0",Issiqlik pardalari,,Тепловые завесы,teplovie-zavesi,""
+341,"0",Kabellar uchun ushlagichlar,,Держатели для кабелей,derjateli,""
+342,"0",Ko‘chma printerlar,,Портативные принтеры,portativnie-printeri,/6242d554209d7.jpg
+343,"0",Kartridjlar,,Картриджи,kartridji,""
+344,"0",Kolleksiya o‘yinchoqlari,,Коллекционные игрушки,kollektsionnie-igrushki,""
+345,"0",Himoya ko‘zoynaklari,,Защитные очки,zashitnie-ochki,""
+346,"0",Narvon va zinapoyalar,,Лестницы и стремянки,lestnici-i-stremyanki,/5ffbf1b0eabc2.jpg
+347,"0",Oynalar,,Зеркала ,zerkala,""
+348,"0",Kiyim ilgichlar va kiyim uchun organayzerlar,,Вешалки и органайзеры для вещей,veshalki-i-organayzeri-dlya-veshey,""
+349,"0",Choy idishlari to‘plami,,Чайные сервизы,chayniye-servizi,""
+350,"0",Suv kulerlari,,Водяные кулеры,kuleri,""
+351,"0",O‘quv qurollari,,Учебные товары,kanstovar,""
+352,"0",Ijod,,Творчество,tvorchestvo,""
+353,"0",Raqamli rasmlar,,Картины по номерам,kartini-po-nomeram,""
+354,"0",Olmos rasmlari,,Алмазная живопись ,almaznaya-jivopis,""
+356,"0","Velosipedlar, samokatlar, rolikli konkilar",,"Велосипеды, самокаты, роликовые коньки",velosipedi-i-samokati,""
+357,"0",Optik kabellar va ulagichlar,,Оптические кабели и соеденители,opticheskie-kabeli,""
+358,"0",Blenderlar,,Блендеры,blenderi,/6242d3374a4cf.jpg
+359,"0",Mikserlar,,Миксеры,mikseri,/634d241417b4e.jpeg
+360,"0",Noutbuklarni zaryadlovchi qurilmalar,,Зарядные устройства для ноутбука,zaryadnie-ustroystva-dlya-noutbuka,""
+361,"0",1000 xil mayda-chuydalar,,1000 мелочей,1000-melochey,""
+362,1,"Kiyim, poyabzal va aksessuarlar",,"Одежда, обувь и аксессуары",odejda-obuv-i-aksessuari,/clothes_65ca30a89639e.svg
+364,"0",Chemodanlar va yo‘l sumkalari,,Чемоданы и дорожные сумки,sumki-rukzaki,""
+365,"0",Mini-pechlar,,Мини-печи,mini-pechi,/6242da8b25122.jpg
+366,"0",Mikroto‘lqinli pechlar,,Микроволновые печи,mikrovolnovie-pechi,/6246bac3a9007.jpg
+368,"0",Laminatorlar,,Ламинаторы,laminator,""
+369,"0",Radiostansiyalar,,Радиостанции,radiostancii,""
+370,"0",Futbolkalar,,Футболки,futbolki,/611a6648eb747.jpg
+371,"0",Meva-sabzavotlar uchun elektrik quritgichlar,,"Электросушилки для овощей, фруктов ",elektrosushilki-dlya-ovoshey-fruktov,""
+372,"0","Mangallar, o‘choqlar",,"Мангалы, учаги",mangali-uchagi,""
+373,"0",Kompyuter korpuslari,,Компьютерные корпуса ,kompyuternie-korpusa,""
+374,"0",Kompyuter korpus kulerlari,,Корпусные кулеры ,korpusnie-kuleri,""
+375,"0",Pishirish uchun idishlar,,Посуда для кухни ,posuda-dlya-prigotovleniya,""
+376,"0",Choynaklar,,Чайники,chay-kofe-napitki,""
+377,"0",Servirovka,,Посуда для столовой,servirovka,""
+378,"0",Oshxona idish-tovoqlari,,Столовая посуда ,stolovaya-posuda,""
+379,"0",Ichimliklar uchun idishlar,,Посуда для напитков ,posuda-dlya-napitkov,""
+380,"0",Bankalar va maxsus idishlar,,Банки и емкости,banki-i-emkosti,""
+381,"0",Ziravorlar uchun aksessuarlar,,Аксессуары для специй,aksessuari-dlya-speciy,""
+382,"0",Oziq-ovqat idishlari,,Пищевые контейнеры,pishevie-konteyneri,""
+383,"0",Sariyog‘ idishlari,,Масленки,maslenki,""
+384,"0",Salfetka idishlari,,Салфетницы,salfetnici,""
+385,"0",Shimlar ,,Брюки ,bryuki,""
+386,"0",Shortiklar,,Шорты,shorti,""
+387,"0",Siyosat,,Политика,siyosat,""
+388,"0",Asaxiy Books kitoblari,,Asaxiy Books китоблари,asaxiybooks-kitoblari,/634d1eada84d2.jpg
+389,1,Bolalar uchun tovarlar,,Детские товары,detskiye-tovari,/trolley_65ca30c30cfbf.svg
+390,"0","Erkaklar uchun kiyim-kechak, poyabzal va aksessuarlar",,"Одежда, обувь и аксессуары для мужчин ",dlya,""
+391,"0","Ayollar uchun kiyim-kechak, poyabzal va aksessuarlar",,"Одежда, обувь и аксессуары для женщин",dlya-jenshin,""
+392,"0",Ayollar shimlari,,Женские брюки,jenskie-bryuki,""
+394,"0",Ayollar uchun futbolkalar,,Женские футболки,jenskie-futbolki,""
+395,"0","O'g'il bolalar uchun kiyim-kechak, poyabzal va aksessuarlar",,"Одежда, обувь и аксессуары для мальчиков",dlya-malchikov,""
+396,"0",O‘g‘il bolalar uchun futbolkalar,,Футболки для мальчиков,futbolki-dlya-malchikov,""
+397,"0",Bolalar shortiklari,,Детские шорты,detskie-shorti,""
+398,"0","Qizlar uchun kiyim, poyabzal va aksessuarlar",,"Одежда, обувь и аксессуары для девочек",dlya-devochek,""
+399,"0",Qizlar uchun futbolkalar,,Футболки для девочек,futbolki-dlya-devochek,""
+400,"0",Bog‘ uchun jihozlar,,Садовый инвентарь ,sadoviy-inventar,""
+401,"0","Boltalar, arralar",,"Топоры, пилы",topori-pili,""
+402,"0","Shoxqirqqichlar, butaqirqqichlar, tokqaychilar",,"Сучкорезы, кусторезы, садовые ножницы",suchkorezi-kustorezi-sadovie-nojnici,""
+403,"0",Belkuraklar,,Лопаты,lopati,""
+404,"0",Bog‘ panshaxalari ,,Вилы садовые ,vili-sadovie,""
+405,"0",Bog‘ parmalari,,Садовые буры,sadovie-buri,""
+406,"0",Begona o‘tlarni yulgichlar,,Удалители сорняков,udaliteli-sornyakov,""
+407,"0",Ko‘chat o‘tqazish va ekish jihozlari,,Инструменты для посадки (Сеялки),instrumenti-dlya-posadki,""
+408,"0",Xaskashlar,,Грабли,grabli,""
+409,"0",Sport qo'lqoplari,,Перчатки рабочие,perchatki-rabochie,""
+410,"0","Sug‘orish, suv purkash",,"Полив, опрыскивание",poliv-opriskivanie,""
+411,"0",Otvyortkalar,,Отвертки,otvertki,""
+412,"0",Drellar va shurupovertlar,,"Дрели, шуроповерты",dreli-shurupoverti,""
+413,"0","Perforatorlar, otboyka bolg‘alari",,"Перфораторы, отбойные молотки",perforatori-otboynye-molotki,""
+414,"0",Shlifovka uskunalari,,Инструменты для шлифовки,instrumenty-dlya-shlifovki,""
+415,"0",Yog‘och kesish jihozlari,,Инструменты для распила ,instrumenty-dlya-raspila,""
+416,"0",Qizlar uchun pijamalar,,Пижамы для девочек,pijami-dlya-devochek,""
+417,"0",O‘g‘il bolalar uchun pijamalar,,Пижамы для мальчиков,pijami-dlya-malchikov,""
+418,"0",Qurilish mikserlari,,Строительные миксеры,stroitelnye-miksery,""
+419,"0",Havopurkagichlar,,Воздуходувы,vozduhoduvy,""
+420,"0",Qurilish fenlari,,Строительные фены,stroitelnye-feny,""
+421,"0",Stanok jihozlari,,Станочное оборудование,tochilnye-stanki,""
+422,"0",Havo kompressorlari,,Воздушные компрессоры,vozdushnye-kompressory,""
+423,"0",Yuqori bosimli yuvish mashinalari,,Мойки высокого давления,moiki-vysokogo-davleniya,""
+424,"0",Bo‘yash uchun jihozlar,,Инструменты для покраски,instrumenty-dlya-pokraski,""
+425,"0",Pnevmatik jihozlar ,,Пневматические инструменты ,pnevmaticheskie-instrumenty,""
+426,"0",Ta’mir uchun mayda asbob-anjomlar,,Ручные инструменты и принадлежности ,ruchnye-instrumenty,""
+427,"0",Slesar iskanjalari,,Слесарные тиски,slesarnye-tiski,""
+428,"0",Maysalar parvarishi,,Уход за газоном,uhod-za-gazonom,""
+429,"0",Akkumulyatorlar va zaryadlovchi qurilmalar,,Аккумуляторы и зарядные устройства,akkumulyatory-i-zaryadnye-ustroistva,""
+430,"0",Qurilish pistoletlari,,Пистолеты строительные,pistolety-stroitelnye,""
+431,"0",Fonarlar,,Фонари,fonari,""
+432,"0",Verstaklar,,Верстаки,verstaki,""
+433,"0",Yig‘im-terim mashinalari,,Уборочные машины,uborochnye-mashiny,""
+434,"0",O‘lchov asboblari,,Измерительные приборы,izmeritelnye-pribory,""
+435,"0",Jildlar va organayzerlar,,Чехлы и органайзеры,chehly-dlya-avtomobilei,""
+436,"0",Suv nasoslari,,Водяные насосы ,vodyanye-nasosy,""
+437,"0",Maishiy ximiya vositalari,,Бытовая химия,bytovaya-himiya,""
+438,"0",Tozalovchi gellar va kukunlar,,Гели и порошки,geli-i-poroshki,""
+439,"0",Hammom va hojatxona uchun mahsulotlar,,Товары для ванной и туалета,dlya-vannoi-i-tualeta,""
+440,"0",Hasharotlar va kemiruvchilarga qarshi vositalar,,Средства от насекомых и грызунов,sredstva-ot-nasekomyh-i-gryzunov,""
+441,"0",Ruchkalar,,Ручки,ruchki,""
+442,"0",Qayd kitobchalari va yondaftarlar,Қайд китобчалари ва ёндафтарлар,Записные книжки и блокноты,zapisnye-knizhki-i-bloknoty,""
+443,"0",Sovg‘a to‘plamlari,Совға тўпламлари,Подарочные наборы,podarochnye-nabory,""
+444,"0",Portmone va hamyonlar,Портмоне ва ҳамёнлар,Портмоне и кошельки,portmone-i-koshelki,""
+445,"0",Sport va sayohat uchun butilkalar,Спорт ва саёҳат учун бутилкалар,Бутылки для спорта и путешествий,butylki-dlya-sporta-i-puteshestvii,""
+446,"0",Adyol va yostiqlar,,Пледы и подушки,pledy-i-podushki,""
+448,"0",Organayzerlar,,Органайзеры,organaizery,""
+449,"0",Rasm chizish uchun to‘plamlar,,Наборы для рисования,nabory-dlya-risovaniya,""
+450,"0",Uy bezaklari va interyer,,Декор и интерьер,dekor-i-interer,""
+451,"0",Stol va devor soatlari,,Настольные и настенные часы,nastennye-chasy,/6242ceb6b7cf1.jpg
+452,"0",Ventilyatsiya tizimlari,,Системы вентиляции,sistemy-ventilyacii,""
+453,"0",Oshxona uchun katta texnika,,Крупная техника для кухни,krupnaya-tehnika-dlya-kuhni,""
+454,"0",Uy uchun texnika,,Техника для дома,tehnika-dlya-doma-2,/flashlight_65ca316e09a6f.svg
+455,"0",Iqlim texnikasi,,Климатическая техника,klimaticheskaya-tehnika,/Appliance_65ca31b39719b.svg
+456,"0",Soch olish mashinkalari va trimmerlar,,Машинки для стрижки и триммеры,mashinki-dlya-strizhki-i-trimmery,""
+457,"0",Erkaklar uchun elektr ustaralar,,Электробритвы мужские,elektrobritvy-muzhskie,""
+458,"0",Elektrik tish cho‘tkalari,,Электрические зубные щетки,elektricheskie-zubnye-shchetki,""
+459,"0",Dazmollar,,Утюги,utyugi-2,/634d2343d4420.jpg
+460,"0",Bug‘latuvchilar va bug‘ generatorlari,,Отпариватели и парогенераторы,otparivateli,""
+461,"0",Archa o‘yinchoqlari va bezaklari,Арча ўйинчоқлари ва безаклари,Ёлочные игрушки и украшения,elochnye-igrushki-i-ukrasheniya,""
+462,"0",Tunchiroqlar va krovat yoni chiroqlari,Тунчироқлар ва кроват ёни чироқлари,Ночники и прикроватные лампы,nochniki-i-prikrovatnye-lampy,""
+463,"0",Yoritish va elektr,,Освещение и электрика,osveshchenie,""
+464,"0",Pol va stol chiroqlari,Пол ва стол чироқлари,Напольные и настольные светильники,napolnye-i-nastolnye-svetilniki,""
+465,"0",Bakteritsid va ultrabinafsha nurli chiroqlar,Бактерицид ва ультрабинафша нурли чироқлар,Бактерицидные и ультрафиолетовые лампы,baktericidnye-i-ultrafioletovye-lampy,""
+466,"0",Xo‘jalik mollari,,Хозяйственные товары,hozyaistvennye-tovary,""
+467,"0",Chiqindi chelaklari va baklari,Чиқинди челаклари ва баклари,Мусорные ведра и баки,musornye-vedra-i-baki,""
+469,"0",Quritish mashinalari,,Сушильные машины,sushilnye-mashiny,""
+470,"0",Gel va boshqa yuvuvchi vositalar,,Гели для стирки,poroshki-geli-i-drugie-moyushchie-sredstva,""
+471,"0",Qizlar uchun svitshotlar,,Свитшоты для девочек,svitshoty-dlya-devochek,""
+473,"0",Barcha oila uchun kiyim-kechak,,Одежда для всей семьи,dlya-vsei-semi,""
+474,"0",Kirish nazorati tizimlari,,Системы контроля доступа,sistemy-kontrolya-dostupa,""
+475,"0",Domofonlar,,Домофоны,domofony,""
+476,"0",Noutbuklar,,Ноутбуки,noutbuki-2,/6242d96def996.jpg
+477,"0",Halqasimon chiroqlar,Ҳалқасимон чироқлар,Кольцевые лампы,kolcevye-lampy,""
+478,"0",Kameralar uchun g‘iloflar va sumkalar,,Чехлы и сумки для камер,chehly-i-sumki-dlya-kamer,""
+479,"0",Fotoapparatlar,,Фотоаппараты,fotoapparaty,""
+480,"0",Videokameralar,,Видеокамеры,videokamery,""
+481,"0",Bir zumda chop etuvchi fotoapparatlar,,Фотоаппараты моментальной печати,fotoapparaty-momentalnoi-pechati,""
+482,"0",Ekshn-kameralar,Экшн-камералар,Экшн-камеры,ekshn-kamery,""
+483,"0",Bir zumda chop etuvchi fotoapparat uchun plyonka,,Пленка для фотоаппаратов моментальной печати,plenka-dlya-fotoapparatov-momentalnoi-pechati,""
+484,"0",Smartfonlar uchun printerlar,Смартфонлар учун принтерлар,Принтеры для смартфонов,printery-dlya-smartfonov,""
+485,"0",Noutbuk tagliklari,,Подставки для ноутбуков,podstavki-dlya-noutbukov,""
+487,"0",Mini isitgichlar,Мини иситгичлар,Мини обогреватели,mini-obogrevateli,""
+488,"0",Tebranma kreslolar,Тебранма креслолар,Кресла-качалки,kresla-kachalki,""
+489,"0","Dispenserlar, dozatorlar","Диспенсерлар, дозаторлар","Диспенсеры, дозаторы",dispensery-dozatory,""
+494,"0",Termometrlar,Термометрлар,Термометры,termometry,""
+495,"0",Tish irrigatorlari,,Ирригаторы,irrigatory,""
+496,"0",Ko‘chma changyutgichlar,,Портативные пылесосы,portativnye-pylesosy,""
+497,"0",Massajyorlar,,Массажёры,massazhery,""
+498,"0",Hovli tunchiroqlari,Ҳовли тунчироқлари,Уличные светильники,ulichnye-svetilniki,""
+499,"0",Diktofonlar,,Диктофоны,diktofony,""
+500,"0",Wi-Fi kuchaytirgichlari,,Wi-Fi усилители,usiliteli-signala,/6246bdf40e598.jpg
+501,"0",Gadjetlar,,Гаджеты ,gadzhety,""
+502,"0",Stiluslar,,Стилусы,stilusy,/6242d20af3c78.jpg
+503,"0",Tugmachali telefonlar,,Кнопочные телефоны,knopochnye-telefony,/6242d00fe2cc6.png
+504,"0",Smartfonlar,,Смартфоны,smartfony,/6242cb117e0bc.jpg
+505,"0",Avtovizitkalar,Автовизиткалар,Парковочные номера (автовизитки),parkovochnye-nomera-avtovizitki,""
+506,"0",Oshxona taymerlari,,Кухонные таймеры,kuhonnye-taimery,""
+507,"0",Monitor kronshteynlari,,Кронштейны для мониторов,kronshteiny-dlya-monitorov,""
+508,"0",Qulflar,,Замки,zamki,""
+509,"0",Elektr quloq tayoqchalari,,Электрические ушные палочки,elektricheskie-ushnye-palochki,""
+510,"0",IT sohasiga oid kitoblar,IТ соҳасига оид китоблар,Книги про IT,it-sohasiga-oid-kitoblar,""
+511,"0",Chet tilini o‘rganish,,Изучение иностранных языков ,izuchenie-inostrannyh-yazykov,""
+512,"0",Aqlli rozetkalar,Ақлли розеткалар,Умные розетки,umnye-rozetki,""
+513,"0",Trevoga tugmachalari,,Тревожные кнопки,trevozhnye-knopki,""
+514,"0",Harakat va eshik ochilishi datchiklari,,Датчики движения и открытия дверей,datchiki-dvizheniya-i-otkrytiya-dverei,""
+515,"0",Sirenalar,,Сирены,sireny,""
+516,"0",Tutun datchiklari,,Датчики дыма,datchiki-dyma,""
+517,"0",Xavfsizlik tizimlari markazlari,,Центры системы безопасности,centry-sistemy-bezopasnosti,""
+518,"0",Xavfsizlik tizimlari to‘plamlari,,Комплекты систем безопасности,komplekty-sistem-bezopasnosti,""
+519,"0",Xavfsizlik breloklari va xaritalari,,Карты и брелки безопасности,klaviatury-karty-i-brelki-bezopasnosti,""
+520,"0",Fotoapparatlar uchun shtativlar,Штативы для фотоаппаратов,Штативы для фотоаппаратов,shtativy-dlya-fotoapparatov,""
+521,"0",Halqali lampalar va telefonlar uchun tripodlar,,Штативы для кольцевых ламп и телефонов,shtativy-dlya-kolcevyh-lamp-i-telefonov,""
+522,"0",Kamarlar,Камарлар,Ремни,remni,""
+523,"0",Yondirgichlar,Ёндиргичлар,Зажигалки,zazhigalki,""
+524,"0",Suv toshqini sensori,,Датчики затопления ,datchiki-zatopleniya,""
+525,"0",Chemodanlar,Чемоданлар,Чемоданы,chemodany,""
+526,"0",Karkassiz kreslolar,,Бескаркасные кресла,beskarkasnye-kresla,""
+527,"0",Bolalar aravachalari,,Коляски,kolyaski,""
+528,"0",Yumshoq o‘yinchoqlar,,Мягкие игрушки,myagkie-igrushki,""
+529,"0",Konstruktorlar,,Конструкторы,konstruktory,""
+530,"0",Gadjetlarni tozalash uchun buyumlar,,Товары для чистки гаджетов,dlya-chistki-gadzhetov,""
+531,"0",Sovg'a kitoblari,,Подарочные книги,knigi-2,""
+532,"0",Quloqchinlar uchun tagliklar,,Подставки для наушников,podstavki-dlya-naushnikov,""
+533,"0",Telefonlar va planshetlar uchun tagliklar,,Подставки для телефонов и планшетов,podstavki-dlya-smartfonov-i-planshetov,""
+534,"0",IP-telefonlar,,IP-телефоны,ip-telefony,""
+535,"0",Tuxum pishirgichlar,,Яйцеварки,yaicevarki,""
+536,"0",Grafik planshetlar,,Графические планшеты,graficheskie-planshety,/6242cfacf1817.png
+537,"0",Plotterlar,Плоттерлар,Плоттеры,plottery,""
+538,"0",Kastryulkalar,,Сотейники,soteiniki,""
+539,"0",Shisha qopqoqlar,,Стеклянные крышки,steklyannye-kryshki,""
+540,,Idishlarni yuvish uchun suyuqliklar,,Средства для мытья посуды,sredstva-dlya-mytya-posudy,""
+541,,Shtroborezlar,,Штроборезы,shtroborezy,""
+543,,Tish pastalari ,,Зубные пасты ,zubnye-pasty,""
+544,,Tana parvarishi vositalari,,Уход за телом,uhod-za-telom,""
+545,,Antiperspirantlar va dezodorantlar,,Антиперспиранты и дезодоранты,antiperspiranty-i-dezodoranty,""
+548,,Sport va dam olish,,Спорт и отдых,sport-i-otdyh,/tennis-racquet_65ca31838e0a1.svg
+550,,Skameykalar va tokchalar,,Скамьи и стойки,skami-i-stoiki,""
+551,,Goʻzallik va salomatlik,,Красота и здоровье,krasota-i-zdorove,/make-up-lipstick-open_65ca30e38f39d.svg
+552,,Yuzni parvarishlash uchun,,Средства по уходу за лицом,uhod-za-licom,""
+553,,Niqoblar,,Маски для лица,maski,""
+554,,Tozalovchi,,Очищение,ochishchenie,""
+555,,Oziqlantirib namlantiruvchi,,Питание и увлажнение,pitanie-i-uvlazhnenie,""
+557,,Yuzni oqartirish,,Отбеливание для лица,otbelivanie,""
+558,,Yoshartiruvchi,,Омолаживание,omolazhivanie,""
+559,,Husnbuzarga qarshi,,Акне,akne,""
+560,,Ko‘z atrofiga,, Вокруг глаз,vokrug-glaz,""
+562,,Sochni parvarish qilish,,Уход за волосами,uhod-za-volosami,""
+563,,Shampun,,Шампунь,shampun,""
+564,,Kompleks yog‘lar,,Комплексное масло,kompleksnoe-maslo,""
+565,,Soch uchun konditsioner,,Кондиционер для волос,kondicioner-dlya-volos,""
+566,,Yog‘,,Масло,maslo,""
+567,,Soch uchun niqob,,Маска для волос,maska-dlya-volos,""
+568,,Xina,,Хна,hna,""
+570,,Soch qalinlashtiruvchi,,Загуститель волос,zagustitel-volos,""
+572,,Tana parvarishi uchun,,Уход за телом,uhod-za-telom-2,""
+574,,Oqartirish,,Отбеливание,otbelivanie-2,""
+575,,Namlantirish,,Увлажнение,uvlazhnenie,""
+576,,Taranglashtirgich,,Подтягивание,podtyagivanie,""
+578,,Intim gigiyena,,Интимная гигиена,intimnaya-gigiena,""
+579,,Depilatsiya,,Депиляция,depilyaciya,""
+581,,Quyosh nurlariga qarshi,,Защита от солнца,zashchita-ot-solnca,""
+582,,Qo‘l uchun,,Для рук,dlya-ruk,""
+583,,Oyoq uchun,,Для ног,dlya-nog,""
+584,,Shifobaxsh vositalar,,Лечебные средства,lechebnye-sredstva,""
+585,,Shifobaxsh yog‘lar,,Лечебные масла,lechebnye-masla,""
+587,,Shifobaxsh kremlar va malhamlar,,Лечебные кремы и мази,lechebnye-kremy-i-mazi,""
+589,,Makiyaj,,Макияж,makiyazh,""
+590,,Yuz uchun,,Для лица,dlya-lica,""
+591,,Ko‘zlar,,Глаза,glaza,""
+592,,Dudoqlar,,Губы,guby,""
+594,,Qoshlar,,Брови,brovi,""
+595,,Parfyumeriya,,Парфюмерия,parfyumeriya,""
+596,,Atirlar,,Духи,duhi,""
+600,,Parfyumni tozalash vositasi,,Парфюмерный освежитель,parfyumernyi-osvezhitel,""
+601,,Parfyum sovun,,Парфюмерное мыло,parfyumernoe-mylo,""
+602,,To‘plamlar,,Наборы,nabory-2,""
+603,,Fitness aksessuarlar,,Фитнес аксессуары ,fitnes-aksessuary,""
+604,,"Belbog‘lar, korsetlar, ozdiruvchi kiyimlar",,"Пояса, корсеты, одежда для похудения",poyasa-korsety-odezhda-dlya-pohudeniya,""
+605,,Sakrash arg‘amchilari,,Скакалки,skakalki,""
+606,,Espanderlar,,Эспандеры,espandery,""
+607,,Obruchlar,,Обручи,obruchi,""
+608,,Fitbollar,,Фитболы,fitboly,""
+609,,Og‘irlashtiruvchilar,,Утяжелители,utyazheliteli,""
+610,,Qo‘lqoplar,,Перчатки спортивные,perchatki,""
+611,,Jang san'ati uchun tovarlar,,Товары для единоборства,edinoborstva,""
+612,,Og‘iz himoyalari,,Капы,kapy,""
+613,,Tennis,,"Теннис, бадминтон ",tennis,""
+614,,Tennis stollari,,Теннисные столы ,tennisnye-stoly,""
+615,,Katta tennis uchun to‘plar va raketkalar,,Мячи и ракетки для большого тенниса,myachi-i-raketki-dlya-bolshogo-tennisa,""
+616,,Stol tennisi uchun to‘plar va raketkalar,,Мячи и ракетки для настольного тенниса,myachi-i-raketki-dlya-nastolnogo-tennisa,""
+617,,Basketbol,,Баскетбол,basketbol,""
+618,,Basketbol to‘plari,,Баскетбольные мячи,basketbolnye-myachi,""
+619,,Nishonlar va ustunlar,,Щиты и стойки,shchity-i-stoiki,""
+620,,Futbol buyumlari,,Товары для футбола,futbol,""
+621,,Futbol to'plari,,Футбольные мячи,futbolnye-myachi,""
+622,,Sport poyafzali,,Спортивная обувь ,sportivnaya-obuv,""
+623,,Futbol formasi,,Футбольная форма,futbolnaya-forma,""
+625,,Kimonolar,,Кимоно,kimono,""
+626,,"Trenirovka panjalari, raketkalar",,"Лапы, ракетки ",lapy-raketki,""
+627,,Batareyka va akkumulyatorlar ,,Аккумуляторы и батарейки,batareiki-i-akkumulyatory-dlya-audio-i-videotehniki,""
+628,,Trenirovka niqoblari,,Тренировочные маски,trenirovochnye-maski,""
+630,,Suzish uchun ko'zoynaklar,,Очки для плавания,ochki-dlya-plavaniya,""
+631,,Ramkali hovuzlar,,Каркасные бассейны,karkasnye-basseiny,""
+632,,Dam beriluvchi basseynlar,,Надувные бассейны,naduvnye-basseiny,""
+633,,Bolalar basseynlari,,Детские бассейны,detskie-basseiny,""
+635,,Puflanadigan yotoqchalar,,Надувные кровати,naduvnye-krovati,""
+636,,Havo matraslari,,Надувные матрасы,naduvnye-matrasy,""
+637,,Hovuzlar uchun tentlar va choyshablar,,Тенты и подстилки для бассейнов,tenty-i-podstilki-dlya-basseinov,""
+638,,"Tozalash to'plamlari, skimmerlar, to'rlar",,"Наборы для чистки, скиммеры, сачки",nabory-dlya-chistki-skimmery-sachki,""
+639,,Hovuz narvonlari,,Лестницы для бассейна,lestnicy-dlya-basseina,""
+640,,"Filtrlar, nasoslar, isitgichlar, suvni tozalovchilar",,"Фильтры, насосы, нагреватели, обработка воды",filtry-nasosy,""
+641,,Qanotlar,,Ласты,lasty-dlya-plavaniya,""
+642,,Sport kiyimlari,,Спортивная одежда,sportivnye-odezhdy,""
+643,,Sport sekundomer lari,,Спортивные секундомеры ,sportivnye-sekundomery,""
+644,,Stol tennisi to'rlari,,Сетки для настольного тенниса,setki-dlya-nastolnogo-tennisa,""
+645,,Atletik shortilar,,Спортивные шорты,sportivnye-shorty,""
+646,,Futbol himoyasi,,Футбольные щитки,futbolnye-shchitki,""
+647,,Yakkakurashlar uchun himoyalar ,,Защита для единоборств ,zashchita-dlya-edinoborstv,""
+648,,Sport hushtaklari,,Спортивные свистки,sportivnye-svitki,""
+649,,Giroskuterlar,,Гироскутеры,giroskutery,""
+650,,Kauchuk tuflilar,,Резиновые тапочки,rezinovye-tapochki,""
+651,,Dorixona,,Аптека ,apteka,""
+653,,Sport uchun gorizontal barlar,,Турники,turniki,""
+654,,Sport uchun to'r,,Сетки спортивные,setki-sportivnye,""
+655,,Voleybol uchun mahsulot,,Волейбол,voleibol,""
+656,,Voleybollar,,Волейбольные мячи,voleibolnye-myachi,""
+657,,Yoga uchun hamma narsa,,Йога,ioga,""
+658,,Yoga matlari,,Коврики для йоги,kovriki-dlya-iogi,""
+659,,Yoga roliklari,,Ролики для йоги,roliki-dlya-iogi,""
+660,,Suzish uchun quloqchalar,,Беруши для плавания,berushi-dlya-plavaniya,""
+661,,Avtomobil kompressorlari,,Автомобильные компрессоры,avtomobilnye-kompressory,""
+662,,Generatorlarni,,Генераторы,generatory,""
+663,,Intim tovarlar,,Интимные товары ,intimnye-tovary,""
+665,,Gril uchun aksessuarlar,,Аксессуары для грилей,aksessuary-dlya-grilei,""
+666,,Turk adabiyoti,,Турецкая литература,tureckaya-literatura,""
+667,,"Bolg‘alar, to‘qmoqlar ",,"Молотки, кувалды ",molotki-kuvaldy,""
+668,,"Pense, pense, murvat kesgichlar, qurilish qaychi",,"Пассатижи, плоскогубцы, болторезы, ножницы строительные",passatizhi-i-ploskogubcy,""
+669,,Quvur va gayka buragich-kalitlari,,"Газовые, трубные, гаечные ключи",gazovye-i-trubnye-klyuchi,""
+670,,Gravyorlar (o‘ymakorlik anjomlari),,Граверы,gravery,""
+671,,Lehimlash dazmollari,,Паяльники,payalniki,""
+672,,Zımbalar,,"Скобы, патроны для степлера строительного ",skoby-patrony-dlya-steplera-stroitelnogo,""
+673,,"Matkaplar, bitlar, kesgichlar, to'plamlar",,"Сверла, биты, фрезы, наборы ",sverla-bity-nabory,""
+674,,"Arra pichoqlari, pichoqlar, pichoqlar",,"Пильные полотна, лезвия, ножовки",pilnye-polotna-lezviya,""
+675,,Iskanalar va turli burg‘ilash anjomlari,,"Зубила, долота и стамески",zubila-dolota-i-stameski,""
+676,,Usta anjomlari to‘plamlari,,Наборы ручных инструментов ,nabory-ruchnyh-instrumentov,""
+677,,Asboblarni saqlash,,Хранение инструментов ,hranenie-instrumentov,""
+678,,Multitullar,,Мультитулы,multituly,""
+679,,Qo'lda o'lchash asboblari,,Ручные измерительные инструменты,ruchnye-izmeritelnye-instrumenty,""
+680,,Xodimlar uchun kreslolar,,Кресла для персонала ,kresla-dlya-personala,/637299a79ee8b.jpg
+681,,Rahbariyat uchun kreslolar ,,Кресла руководительские ,kresla-rukovoditelskie,/6372993d0708d.jpg
+682,,Bolalar kreslolari,,Кресла детские,kresla-detskie,""
+685,,Avtomobil,,Автомобиль,avtomobil,/635bb102c5bc7.jpg
+688,,Tarmoq kalitlari,,Сетевые коммутаторы,setevye-kommutatory,""
+689,,Tashqi kameralar,,Уличные камеры ,ulichnye-kamery,""
+691,,O'yin stollari,,Игровые столы,igrovye-stoly,""
+695,,Masofaviy boshqarish,,Пульты управления,pulty-upravleniya,""
+696,,Sichqoncha tagliklari,,Коврики для мыши,kovriki-dlya-myshi,""
+697,,Javonlar ,,Этажерки ,etazherki,""
+698,,Poyafzal stendlari,,Подставки для обуви,podstavki-dlya-obuvi,""
+699,,Shamdonlar,,Подсвечники,podsvechniki,""
+700,,Trackpadlar,,Трекпады,trekpady,""
+701,,Kiyimlarni parvarish qilish mahsulotlari,,Товары для ухода за одеждой ,dlya-uhoda-za-odejdoy,""
+702,,Ofis jihozlari uchun sarflanadigan materiallar,,Расходные материалы для оргтехники,rashodnye-materialy-dlya-orgtehniki,""
+703,,Yuqori stullar,,Стульчики для кормления,stulchiki-dlya-kormleniya,""
+704,,Bolalar elektr avtomobili,,Детские электромобили,detskaya-mashina,""
+705,,Bolalar Mototsikli,,Детский мотоцикл,detskiy-motocikl,""
+706,,Ikki oyoqli velosiped,,Велосипед двуногий,velosiped-dvunogiy,""
+708,,Shkaflar,,Менажницы,menajnicy,""
+709,,Bulyonlar,,Бульонницы,bulonnicy,""
+710,,Turinlar,,Супницы,supnicy,""
+711,,Shakar idishlari,,Сахарницы,saharnicy,""
+712,,Kuldonlar,,Пепельницы,pepelnicy,""
+713,,Non qutilari,,Хлебницы,hlebnicy,""
+714,,Sosli qayiqlar,,Соусники,sousniki,""
+715,,Vazolar,,Вазы,vazy,""
+716,,Zamin qoplamalari,,Напольные покрытия ,napolnye-pokrytiya,""
+717,,Ostona gilamchalari,,Коврики от уличной грязи и влаги,kovriki-ot-ulichnoy-gryazi-i-vlagi,""
+720,,O'yinchoqlar,,Игрушки,igrushki,/6409ab777923a.jpg
+722,,Chuqur plitalar,,Тарелки глубокие,tarelki-glubokie,""
+723,,Katta kechki ovqat plitalari (26-30 sm),,Тарелки столовые большие (26-30 см),tarelki-stolovye-bolshie-26-30-sm,""
+724,,O'rtacha kechki ovqat plitalari (21-25 sm),,Тарелки столовые средние (21-25 см),tarelki-stolovye-srednie-21-25-sm,""
+725,,Aperatiflar va shirinliklar uchun plitalar (18-20 sm),,Тарелки для закусок и десертов (18-20 см),tarelki-dlya-zakusok-i-desertov-18-20-sm,""
+726,,Saucer va qandolat plitalari,,Блюдца и пирожковые тарелки,blyudca-i-pirojkovye-tarelki,""
+727,,Kvadrat plitalar,,Тарелки квадратные,tarelki-kvadratnye,""
+728,,To'rtburchaklar plitalar,,Тарелки прямоугольные ,tarelki-pryamougolnye,""
+729,,Uchburchak plitalar,,Тарелки треугольные,tarelki-treugolnye,""
+730,,Noto'g'ri shakldagi plitalar,,Тарелки нестандартной формы,tarelki-nestandartnoy-formy,""
+731,,Frantsuz matbuoti,,Френч-прессы,french-pressy,""
+732,,Qaynayotgan suv uchun choynaklar,,Чайники для кипячения воды,chayniki-dlya-kipyacheniya-vody,""
+733,,Yuviladigan kiyimlar uchun korzinalar,,Корзины для белья ,korziny-dlya-belya,""
+734,,Hammom va oshxona uchun tashkilotchilar,,Органайзеры для ванной комнаты и кухни,organayzery-dlya-zubnyh-shchetok,""
+735,,Sovundonlar va tokchalar  ,,Мыльницы и полочки  ,mylnicy,""
+736,,"Cho'tkalar, changyutgichlar, moplar, cho'tkalar",,"Щетки, совки, швабры, ершики",shchetki-sovki-shvabry-ershiki,""
+737,,"Chodirlar, tentlar va chodirlar",,"Палатки, тенты, шатры, зонты солнцезащитные",palatki-tenty-i-shatry,""
+738,,Hojatxona qog‘ozi ushlagichlari,,Держатели для туалетной бумаги,derjateli-dlya-tualetnoy-bumagi,""
+739,,Oshxona anjomlari uchun organayzerlar,,Органайзеры для кухонных приборов,organayzery-dlya-kuhonnyh-priborov,""
+740,,Aqlli dinamiklar,,Умные колонки,umnye-kolonki,""
+741,,Uzatma simlari va adapterlar,,Удлинители и переходники,udliniteli-i-perehodniki,""
+743,,Sport sumkalari va ryukzaklari,,Спортивные сумки и рюкзаки,sportivnye-sumki-i-ryukzaki,""
+744,,Makiyaj fiksatori,,Фиксатор макияжа,fiksator-makiyaja,""
+745,,Ayollar sumkalari va ryukzaklari,,Женские сумки и рюкзаки,jenskie-sumki-i-ryukzaki,""
+746,,Erkaklar sumkalari va ryukzaklari,,Мужские сумки и рюкзаки,mujskie-sumki-i-ryukzaki,""
+747,,Ayollar sumkasi,,Сумки женские,sumki,""
+748,,Ayollar uchun ryukzaklar,,Рюкзаки женские,ryukzaki,""
+749,,Erkaklar uchun sumkalar,,Сумки мужские,sumki-2,""
+750,,Erkaklar uchun ryukzaklar,,Рюкзаки мужские,ryukzaki-2,""
+751,,Gantellar,,Гантели,ganteli,""
+754,,O‘yin markazlari va o‘yinchoqlar,,Игровые центры и игрушки,igrovye-centry-i-igrushki,""
+755,,Gilamlar,,Ковры,kovry,""
+756,,Qog‘oz kesgichlar,,Резаки для бумаги,rezaki-dlya-bumagi,""
+757,,Broshyuralash mashinalari,,Брошюровальные машины,broshyurovalnye-mashiny,""
+758,,Ko‘chma quyosh panellari,,Портативные солнечные панели,portativnye-solnechnye-paneli,""
+759,,Erkaklar uchun atir,,Духи для мужчин,duhi-dlya-mujchin,""
+760,,Ayollar uchun atir,,Духи для женщин,duhi-dlya-jenshchin,""
+762,,Telefonlar uchun o`yin sovutgichlari,,Игровые кулеры для смартфонов,igrovye-kulery-dlya-smartfonov,/649ed83a6752b.jpeg
+763,,Turizm,,Туризм,turizm,/64d0bb2c6d468.png
+764,,"Turistlar uchun stullar, gilamchalar, o‘tirgichlar",,"Туристические стулья, коврики, сидушки",turisticheskie-kovriki-sidushki,""
+765,,Piknik uchun jihozlar,,Принадлежности для пикника,prinadlejnosti-dlya-piknika,""
+766,,O‘t oldirish aksessuarlari,,Аксессуары для розжига,aksessuary-dlya-rozjiga,""
+767,,Yomg‘irdan va hasharotdan himoya anjomlari,,Дождевики и накомарники,dojdeviki-i-nakomarniki,""
+768,,Gulxan va gril idishlari,,Посуда для костра и гриля,posuda-dlya-kostra-i-grilya,""
+769,,Dudlagichlar,,Коптильни,koptilni,""
+770,,Barbekyu uchun panjaralar,,Решетки для барбекю,reshetki-dlya-barbekyu,""
+771,,Piknik uchun dasturxonlar,,Скатерти для пикника,skaterti-dlya-piknika,""
+772,,Bolalar samokatlari,,Детские самокаты,detskie-samokaty,/64a53590112ba.jpg
+773,,Termosumkalar,,Термосумки,termosumki,""
+774,,Piknik uchun idish va to‘plamlar,,Посуда и наборы для пикника,posuda-i-nabory-dlya-piknika,""
+775,,Havo namlagichlar,,Увлажнители воздуха,uvlajniteli-vozduha,""
+776,,Havo tozalagichlar,, Воздухоочистители,vozduhoochistiteli,""
+777,,Videokonferensiya tizimlari,,Системы для видеоконференций,sistemy-dlya-videokonferenciy,""
+778,,Interaktiv panellar,,Интерактивные панели,interaktivnye-paneli,""
+779,,Kir yuvish mashinalari,,Стиральные машины,stiralnye-mashiny-2,""
+782,,Gaz qozonlari,,Газовые котлы,gazovye-kotly-2,/64f9d5ca474e5.jpg
+783,,Soatlar,,Часы,chasy,""
+784,,Qo‘l soati,,Наручные часы,naruchnye-chasy,""
+785,,Maydalagichlar (chopperlar),,Измельчители (Чопперы),izmelchiteli-choppery,""
+787,,Bolalar tuvagi va hojatxona o'rindiqlari,,Детские горшки и сиденья на унитаз,detskie-gorshki-i-sidenya-na-unitaz,""
+788,,Telefon uchun stabilizatorlar,,Стабилизаторы для телефона,stabilizatory,""
+789,,Bolalar vannasi,,Детские ванны,detskie-vanny,""
+790,,Tokchalar,,Стеллажи,stellaji,""
+791,,Hammom va hojatxonalar uchun santexnika asboblari,,Сантехника для ванной комнаты и туалета,santehnika-dlya-vannoy-komnaty-i-tualeta,""
+792,,Vannacha uchun jo‘mraklar,,Смесители для биде,smesiteli-dlya-bide,""
+793,,Hammom uchun kranlar,,Смесители для ванной ,smesiteli-dlya-vannoy,""
+794,,Dush tizimlari,,Душевые системы,dushevye-sistemy,""
+795,,Orgtexnika parvarishi vositalari,,Средства по уходу за оргтехникой,sredstva-po-uhodu-za-orgtehnikoy,""
+796,,Aqlli yoritish to‘plamlari va aksessuarlari,, Комплекты и аксессуары для умного освещения,komplekty-i-aksessuary-dlya-umnogo-osveshcheniya,""
+797,,Shaxsiy gigiena vositalari,,Предметы личной гигиены,predmety-lichnoy-gigieny,""
+799,,"Eshik to‘xtatgichlari, stopperlar, sirpantirmas tasmalar",,"Дверные ограничители, стопперы, противоскользящие ленты",dvernye-ogranichiteli-stoppery,""
+800,,Zargarlik buyumlari,,Ювелирные украшения,ukrasheniya,""
+801,,Bijuteriya,,Бижутерия,bijuteriya,""
+805,,Аксессуары для пылесосов,,Аксессуары для пылесосов,aksessuary-dlya-pylesosov,
+808,,Xo'jalik sumkalari,,Хозяйственные сумки,hozyaystvennye-sumki-2,
+809,,Taxlanadigan mebel,,Раскладная мебель,raskladnaya-mebel,
+810,,Kanselyariya tovarlari,,Канцелярские товары,kancelyarskie-tovary,/Frame 626914_65effb56c4818.svg
+813,,Xatcho‘plar,,Закладки,zakladki,
+815,,Jildlar va fayllar,,Папки и файлы,papki-i-fayly,
+816,,Skotch va stikerlar,,Скотч и наклейки,skotch-i-nakleyki,
+817,,Qog‘oz mahsulotlari,,Бумажная продукция,bumajnaya-produkciya,
+818,,Krossvordlar,,Кроссворды,krossvordy,
+820,,Shinalar va g'ildiraklar uchun parvarish ,,Уход за шинами и дисками,uhod-za-shinami-i-diskami,
+822,,Qurilish va ta'mirlash,,Строительство и ремонт,stroitelstvo-i-remont,/hammer-screwdriver_660d062fe4184.svg
+823,,Avtomobil extiyot qismlari,,Автозапчасти,avtozapchasti,
+825,,Avtochiroq,,Автосвет,avtosvet,
+829,,Oyna tozalagichlar,,Стеклоочистители,stekloochistiteli,
+831,,Rul boshqaruvi,,Рулевое управление,rulevoe-upravlenie,
+838,,Ta'minot tizimi,,Система питания,sistema-pitaniya,
+844,,Moy va avtomobil kimyoviy moddalari,,Масла и автохимия,masla-i-avtohimiya,
+846,,Yuvish va avtotozalash vositalari,,Промывки и очистители,promyvki-i-ochistiteli,
+847,,Moylash materiallari,,Смазки,smazki,
+854,,Avtomobil parvarishi,,Уход за автомобилем,uhod-za-avtomobilem,
+855,,"Eshik, oyna va furnitura",,"Двери, окна и фурнитура",dveri-okna-i-furnitura,
+867,,"Santexnika, isitish va gaz ta'minoti",,"Сантехника, отопление и газоснабжение",santehnika-otoplenie-i-gazosnabjenie,
+876,,Bo'lish uchun materiallar ,,Отделочные материалы,otdelochnye-materialy,
+889,,Xizmatlar,,Услуги,uslugi,/car-service-square_662103b626299.svg
+890,,Havo tozalagich,,Освежитель воздуха,osvejitel-vozduha,
+891,,Gullar,,Цветы,cvety,"/Flowers, Bouquet_662f6489dbe1d.svg"
+892,,Suzish uchun mahsulotlar,,Товары для плавания,tovary-dlya-plavaniya,
+896,,Avtokimyo to'plamlari ,,Наборы автохимии,nabory-avtohimii,
+898,,Tyuning va tashqi dekor,,Тюнинг и внешний декор,tyuning-i-vneshniy-dekor,
+900,,Onlayn kurslar,,Онлайн курсы,onlayn-kurs,/monitor-graduate-hat_665ff36ae5f8d.svg
+901,,Bolalar uchun rivojlantiruvchi o'yinchoqlar,,Развивающие игрушки для детей,razvivayushchie-igrushki-dlya-detey,
+902,,Pazllar,,Пазлы,pazly,
+903,,Termal krujkalar,,Термокружки,termokrujki,
+904,,Termoslar,,Термосы,termosy,
+905,,Termo butilkalar,,Термо-бутылки,termo-butylki,
+908,,Fri pishiruvchi,,Фритюрницы,frityurnicy,
+909,,Shashlik pishiruvchi,,Шашлычницы,shashlychnicy,
+912,,Tosterlar,,Тостеры,tostery,
+913,,Sendvich pishiruvchilar,,Сэндвичницы,sendvichnicy,
+914,,"Cho'tkalar, gubkalar, salfetkalar",,"Щетки ,губки,салфетки",shchetki-gubkisalfetki,
+915,,Avtomobil uchun hushbo'ylantirgichlar,,Ароматизаторы автомобильные,aromatizatory-avtomobilnye,
+916,,Avtomobil tozalagichlari,,Чистящие средства для автомобиля,chistyashchie-sredstva-dlya-avtomobilya,
+917,,Avtomobillar uchun elektronika,,Электроника для авто,elektronika-dlya-avto,
+918,,Avtomobil monitorlari,,Автомобильные мониторы,avtomobilnye-monitory,
+919,,Avtosignalizatsiyalar,,Автосигнализации,avtosignalizatciya,
+924,,Salon uchun jihozlar,,Обустройство салона,obustroystvo-salona,
+925,,Quyoshdan himoya qiluvchi pardalar,,Шторки солнцезащитные,shtorki-solncezashchitnye,
+926,,Vosklar va polirollar,,Воски и полироли,voski-i-poliroli,
+927,,FM-transmitterlari,,ФМ-трансмиттеры,fm-transmittery-2,
+928,,Stendlar va ushlagichlar,,Подставки и держатели,podstavki-i-derjateli,
+929,,Prisadkalar va qo'shimchalar,,Присадки и добавки,prisadki-i-dobavki,
+930,,O't oldirish simlari,,Провода прикуривания,provoda-prikurivaniya,
+931,,Avtomobil uchun karnaylar,,Калонки для авто,kalonki-dlya-avto,
+932,,Tirsak tagliklari  ,,Подлокотники,podlokotniki,
+933,,O't oldirish moslamalari,,Выключатели зажигания,vyklyuchateli-zajiganiya,
+934,,Qoplamalari va isitgichlar,,Чехлы и утеплители,chehly-i-utepliteli,
+938,,Ostona to'shamalari,,Накладки на пароги,nakladki-na-parogi-4,
+939,,Pedal uchun qoplamalar,,Накладки на педали,nakladki-na-pedali,
+940,,Telefon uchun avtomobil zaryadlovchisi,,Автомобильное зарядное устройство для телефона,avtomobilnoe-zaryadnoe-ustroystvo,
+941,,Avtomobil shinalari,,Автомобильные шины,avtomobilnye-shiny,
+943,,G'ildirak disklari,,Колесные диски,kolesnye-diski-2,
+944,,Avtomobil uchun suvenirlar,,Сувениры автомобильные,suveniry-avtomobilnye,
+945,,Garaj va avtoservis,,Гараж и автосервис,garaj-i-avtoservis,
+946,,Avtomobil suyuqliklarini almashtirish,,Замена жидкостей автомобиля,zamena-jidkostey-avtomobilya,
+947,,Avtomobillar uchun pnevmatik vositalar,,Пневмоинструменты для авто,pnevmoinstrumenty-dlya-avto,
+948,,Shinalarni o'rnatish uskunalari,,Шиномонтажное оборудование,shinomontajnoe-oborudovanie,
+949,,Ko'tarish uskunalari,,Подъемное оборудование,podemnoe-oborudovanie,
+950,,Diagnostika uskunalari,,Диагностические оборудование,diagnosticheskie-oborudovanie,
+952,,Bolalar parvarishi uchun kosmetika,,Детская уходовая косметика,detskaya-uhodovaya-kosmetika,
+953,,Yuz uchun yoglar,,Масла для лица,masla-dlya-lica,
+954,,Yuz uchun mitselyar tozalovchi suv,,Мицеллярная очищающая вода,micellyarnaya-ochishchayushchaya-voda,
+957,,Avtomobil gilamlari,,Ковры автомобильные,kovry-avtomobilnye-2,
+958,,Patchi,,Патчи,patchi,
+959,,Yuz uchun piling,,Пилинг для лица,piling-dlya-lica,
+960,,Torpedo uchun gilamchalari,,Коврики на торпеду,kovriki-na-torpedu,
+961,,O'rindiq uchun jildlar va qoplamalar,,Чехлы и накидки на сиденья,chehly-i-nakidki-na-sidenya,
+962,,Автохолодильники,,Автохолодильники,avtoholodilniki,
+964,,Ароматы для дома ,,Ароматы для дома ,aromaty-dlya-doma,
+966,,Oynalarining tusini o'zgartirishga ruxsatnoma olish xizmati,,Услуги по получение разрешения на тонировку,uslugi-po-poluchenie-razresheniya-na-tonirovku,
+967,,Radiatorlarning panjaralari va toʻrlari,,Решетки и сетки радиаторов,reshetki-i-setki-radiatorov,
+968,,Avtomobillar uchun chiqarish tizimi,,Система выпуска,sistema-vypuska,
+969,,Alifbo,,Азбука,azbuka,/Азбука_66b9ce701df48.jpg
+970,,Maktab to'plamlari,,Школьные наборы,shkolnye-nabory,
+971,,Ta'lim mahsulotlari,,Обучающие товары,obuchayushchie-tovary,
+972,,Hisoblash tayoqchalari ,,Счетные палочки,schetnye-palochki,
+973,,Yozuv daftarlari ,,Прописи,propisi,
+974,,Tarix,,История,istoriya,
+976,,Avtomobil breloklari uchun gʻiloflar,,Чехлы для автомобильных брелков,chehly-dlya-avtomobilnyh-brelkov,
+978,,Ostona to'shamalari,,Накладки на пороги,nakladki-na-porogi,
+979,,Sichqoncha va klaviatura,,Мыши и клавиатуры,myshi-i-klaviatury,
+980,,Kalit ilgichlar va dekorativ elementlar,,Брелоки и декоративные элементы,breloki-i-dekorativnye-elementy,
+981,,Raqamlar uchun ramkalar,,Рамки для номеров,ramki-dlya-nomerov,
+982,,Boshqa tyuning elementlari,,Прочие элементы тюнинга,prochie-elementy-tyuninga,
+983,,Mohirdev,,Mohirdev,mohirdev,
+985,,PDP Online,,PDP Online,pdp-online,
+987,,Elektr skuterlar,,Электроскутеры,elektroskutery-2,
+988,,Massaj kreslosi,,Массажный кресло,massajnyy-kreslo,
+990,,Yuvish suyuqliklari,,Жидкости омывателя,jidkosti-omyvatelya,
+991,,Avtomobil uchun datchiklar,,Датчики для авто,datchiki-dlya-avto,
+992,,wi-fi контроллеры,,wi-fi контроллеры,wi-fi-kontrollery,
+993,,SIM-kartalar,,SIM-карты,sim-karta,
+994,,Rul uchun qoplamalar va tutqichlar,,Оплетки и ручки на руль,opletki-i-ruchki-na-rul,
+995,,Vitaminlar va BFQlar ,,Витамины и БАДы,bady,
+996,,Qahva maydalagichlari,,Кофемолки,kofemolki,
+997,,Soch to'g'rilash vositalari,,Выпрямители  для  волос,vypryamiteli-dlya-volos,
+998,,Bagaj tizimlari,,Багажные системы,bagajnye-sistemy,

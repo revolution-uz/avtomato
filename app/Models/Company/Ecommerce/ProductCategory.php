@@ -19,15 +19,16 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_ru
  * @property string $name_en
  * @property string $name_oz
+ * @property string $slug
  * @property bool $is_active
- * @property int $image_id
+ * @property int|null $image_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property ProductCategory|null $parent
  * @property Product[]|Collection<int, Product> $products
  * @property Banner[]|Collection<int, Banner> $banners
- * @property-read EcommerceImage $image
+ * @property-read EcommerceImage|null $image
  */
 class ProductCategory extends Model
 {
@@ -54,6 +55,7 @@ class ProductCategory extends Model
         'name_ru',
         'name_en',
         'name_oz',
+        'slug',
         'is_active',
         'image_id',
     ];
