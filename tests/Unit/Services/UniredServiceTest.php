@@ -118,7 +118,7 @@ class UniredServiceTest extends TestCase
         $phones = Phone::factory()->count(5)->create();
         $installment->customer->phones()->attach($phones, ['type' => PhoneTypeEnum::PRIVATE]);
 
-        $response = $this->_uniredService->createOrUpdateInstallment($installment);
+        $response = $this->_uniredService->updateInstallment($installment);
 
         $this->assertTrue($response);
     }
