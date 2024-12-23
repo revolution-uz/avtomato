@@ -13,12 +13,15 @@ class BannerFactory extends Factory
     public function definition(): array
     {
         return [
-            'name_uz' => $this->faker->word,
-            'name_ru' => $this->faker->word,
-            'name_en' => $this->faker->word,
-            'name_oz' => $this->faker->word,
+            'name_uz' => $this->faker->unique()->text(),
+            'name_ru' => $this->faker->text,
+            'name_en' => $this->faker->text,
+            'name_oz' => $this->faker->text,
             'is_active' => $this->faker->boolean,
             'url' => $this->faker->url,
+            'order' => $this->faker->randomNumber(),
+            'starts_at' => $this->faker->date('Y-m-d H:i:s'),
+            'ends_at' => $this->faker->date('Y-m-d H:i:s'),
             'image_uz_id' => EcommerceImage::factory(),
             'image_ru_id' => EcommerceImage::factory(),
             'image_en_id' => EcommerceImage::factory(),

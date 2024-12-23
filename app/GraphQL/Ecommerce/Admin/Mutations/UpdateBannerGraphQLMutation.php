@@ -11,7 +11,7 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -27,18 +27,21 @@ class UpdateBannerGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:ecommerce_banners,id'],
+                'rules' => [
+                    'required',
+                    Rule::exists(Banner::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
             'banner' => [
                 'name' => 'banner',
-                'type' => Type::nonNull(GraphQL::type(BannerInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(BannerInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(BannerGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(BannerGraphQLType::type());
     }
 
     /**
@@ -54,10 +57,9 @@ class UpdateBannerGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): Banner
     {
-        $model = Banner::query()->findOrFail($args['id']);
-        $model->update($args['banner']);
-        $model->refresh();
+        $banner = Banner::query()->findOrFail($args['id']);
+        $banner->update($args['banner']);
 
-        return $model;
+        return $banner;
     }
 }

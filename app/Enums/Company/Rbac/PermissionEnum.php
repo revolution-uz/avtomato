@@ -1098,6 +1098,7 @@ enum PermissionEnum: string
             self::ECOMMERCE_IMAGE_CREATE,
 
             self::BANNER_CREATE,
+            self::BANNER_EDIT,
 
             self::PRODUCT_CATEGORY_CREATE,
             self::PRODUCT_CATEGORY_EDIT,

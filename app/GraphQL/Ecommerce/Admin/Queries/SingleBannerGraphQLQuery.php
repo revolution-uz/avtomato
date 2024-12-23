@@ -32,10 +32,7 @@ class SingleBannerGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    Rule::exists(Banner::class, 'id')
-                        ->where(function ($query) {
-                            $query->whereNull('deleted_at');
-                        }),
+                    Rule::exists(Banner::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
         ];
