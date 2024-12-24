@@ -11,7 +11,6 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -26,14 +25,14 @@ class CreateProductBrandGraphQLMutation extends Mutation
         return [
             'productBrand' => [
                 'name' => 'productBrand',
-                'type' => Type::nonNull(GraphQL::type(ProductBrandInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(ProductBrandInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ProductBrandGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(ProductBrandGraphQLType::type());
     }
 
     /**
@@ -49,16 +48,11 @@ class CreateProductBrandGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): ProductBrand
     {
+        $brand = new ProductBrand;
+        $brand->fill($args['productBrand']);
+        $brand->slug = $args['productBrand']['name_en'];
+        $brand->saveOrFail();
 
-        $model = new ProductBrand;
-        $model->fill($args['productBrand']);
-        $model->saveOrFail();
-
-        return $model;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return parent::rules($args);
+        return $brand;
     }
 }

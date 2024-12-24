@@ -11,7 +11,8 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -27,18 +28,22 @@ class UpdateProductBrandGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:ecommerce_product_brands,id'],
+                'rules' => [
+                    'required',
+                    'int',
+                    Rule::exists(ProductBrand::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
             'productBrand' => [
                 'name' => 'productBrand',
-                'type' => Type::nonNull(GraphQL::type(ProductBrandInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(ProductBrandInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ProductBrandGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(ProductBrandGraphQLType::type());
     }
 
     /**
@@ -54,10 +59,27 @@ class UpdateProductBrandGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): ProductBrand
     {
-        $model = ProductBrand::query()->findOrFail($args['id']);
-        $model->update($args['productBrand']);
-        $model->refresh();
+        $brand = ProductBrand::query()->findOrFail($args['id']);
+        $brand->fill($args['productBrand']);
+        $brand->slug = $args['productBrand']['name_en'];
+        $brand->saveOrFail();
 
-        return $model;
+        return $brand;
+    }
+
+    public function rules(?array $args = []): array
+    {
+        return array_merge(parent::rules(), [
+            'productBrand.name_en' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($args) {
+                    if (ProductBrand::query()->whereNot('id', $args['id'])->where('slug', Str::slug($value))->exists()) {
+                        $fail(trans('validation.unique', ['attribute' => 'name']));
+                    }
+                },
+            ],
+        ]);
     }
 }
