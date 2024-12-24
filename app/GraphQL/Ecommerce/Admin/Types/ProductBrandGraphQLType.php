@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Ecommerce\ProductBrand;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -9,6 +10,8 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class ProductBrandGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'ProductBrandGraphQLType';
 
     protected $attributes = [
@@ -38,13 +41,17 @@ class ProductBrandGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (ProductBrand $root) => $root->name_oz,
             ],
-            'image' => [
-                'type' => GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (ProductBrand $root) => $root->image,
+            'slug' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (ProductBrand $root) => $root->slug,
             ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (ProductBrand $root) => $root->is_active,
+            ],
+            'image_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (ProductBrand $root) => $root->image_id,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
@@ -57,6 +64,10 @@ class ProductBrandGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (ProductBrand $root) => $root->deleted_at?->timestamp,
+            ],
+            'image' => [
+                'type' => GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (ProductBrand $root) => $root->image,
             ],
         ];
     }
