@@ -49,6 +49,21 @@ class BannerInputGraphQLType extends InputType
                 'type' => Type::string(),
                 'rules' => 'nullable|string|max:255',
             ],
+            'order' => [
+                'name' => 'order',
+                'type' => Type::int(),
+                'rules' => 'nullable|int|min:1',
+            ],
+            'starts_at' => [
+                'name' => 'starts_at',
+                'type' => Type::string(),
+                'rules' => 'nullable|string|required_with:ends_at|date_format:Y-m-d H:i:s',
+            ],
+            'ends_at' => [
+                'name' => 'ends_at',
+                'type' => Type::string(),
+                'rules' => 'nullable|string|required_with:ends_at|date_format:Y-m-d H:i:s|after:starts_at',
+            ],
             'is_active' => [
                 'name' => 'is_active',
                 'type' => Type::nonNull(Type::boolean()),

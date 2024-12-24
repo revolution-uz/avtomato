@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $name_oz
  * @property bool $is_active
  * @property string|null $url
- * @property int $order
+ * @property int|null $order
  * @property int|null $category_id
  * @property int|null $brand_id
  * @property int|null $product_id
@@ -25,8 +25,8 @@ use Illuminate\Support\Carbon;
  * @property int $image_ru_id
  * @property int $image_en_id
  * @property int $image_oz_id
- * @property Carbon $starts_at
- * @property Carbon $ends_at
+ * @property Carbon|null $starts_at
+ * @property Carbon|null $ends_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -67,6 +67,9 @@ class Banner extends Model
         'name_oz',
         'is_active',
         'url',
+        'order',
+        'starts_at',
+        'ends_at',
         'category_id',
         'brand_id',
         'product_id',
@@ -74,6 +77,11 @@ class Banner extends Model
         'image_ru_id',
         'image_oz_id',
         'image_en_id',
+    ];
+
+    protected $casts = [
+        'starts_at' => 'datetime',
+        'ends_at' => 'datetime',
     ];
 
     public function category(): BelongsTo

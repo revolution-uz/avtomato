@@ -41,38 +41,6 @@ class BannerGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Banner $root) => $root->name_oz,
             ],
-            'image_uz_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Banner $root) => $root->image_uz_id,
-            ],
-            'image_uz' => [
-                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
-                'resolve' => fn (Banner $root) => $root->imageUz,
-            ],
-            'image_ru_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Banner $root) => $root->image_ru_id,
-            ],
-            'image_ru' => [
-                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
-                'resolve' => fn (Banner $root) => $root->imageRu,
-            ],
-            'image_en_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Banner $root) => $root->image_en_id,
-            ],
-            'image_en' => [
-                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
-                'resolve' => fn (Banner $root) => $root->imageEn,
-            ],
-            'image_oz_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Banner $root) => $root->image_oz_id,
-            ],
-            'image_oz' => [
-                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
-                'resolve' => fn (Banner $root) => $root->imageOz,
-            ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (Banner $root) => $root->is_active,
@@ -81,29 +49,45 @@ class BannerGraphQLType extends GraphQLType
                 'type' => Type::string(),
                 'resolve' => fn (Banner $root) => $root->url,
             ],
+            'order' => [
+                'type' => Type::int(),
+                'resolve' => fn (Banner $root) => $root->order,
+            ],
+            'starts_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (Banner $root) => $root->starts_at?->timestamp,
+            ],
+            'ends_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (Banner $root) => $root->ends_at?->timestamp,
+            ],
             'category_id' => [
                 'type' => Type::int(),
                 'resolve' => fn (Banner $root) => $root->category_id,
-            ],
-            'category' => [
-                'type' => GraphQL::type(ProductCategoryGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Banner $root) => $root->category,
             ],
             'brand_id' => [
                 'type' => Type::int(),
                 'resolve' => fn (Banner $root) => $root->brand_id,
             ],
-            'brand' => [
-                'type' => GraphQL::type(ProductBrandGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Banner $root) => $root->brand,
-            ],
             'product_id' => [
                 'type' => Type::int(),
                 'resolve' => fn (Banner $root) => $root->product_id,
             ],
-            'product' => [
-                'type' => GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Banner $root) => $root->product,
+            'image_uz_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->image_uz_id,
+            ],
+            'image_ru_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->image_ru_id,
+            ],
+            'image_oz_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->image_oz_id,
+            ],
+            'image_en_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Banner $root) => $root->image_en_id,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
@@ -116,6 +100,34 @@ class BannerGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (Banner $root) => $root->deleted_at?->timestamp,
+            ],
+            'image_uz' => [
+                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
+                'resolve' => fn (Banner $root) => $root->imageUz,
+            ],
+            'image_ru' => [
+                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
+                'resolve' => fn (Banner $root) => $root->imageRu,
+            ],
+            'image_en' => [
+                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
+                'resolve' => fn (Banner $root) => $root->imageEn,
+            ],
+            'image_oz' => [
+                'type' => Type::nonNull(EcommerceImageGraphQLType::type()),
+                'resolve' => fn (Banner $root) => $root->imageOz,
+            ],
+            'category' => [
+                'type' => GraphQL::type(ProductCategoryGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Banner $root) => $root->category,
+            ],
+            'brand' => [
+                'type' => GraphQL::type(ProductBrandGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Banner $root) => $root->brand,
+            ],
+            'product' => [
+                'type' => GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Banner $root) => $root->product,
             ],
         ];
     }
