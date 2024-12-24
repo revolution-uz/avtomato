@@ -1099,6 +1099,7 @@ enum PermissionEnum: string
 
             self::BANNER_CREATE,
             self::BANNER_EDIT,
+            self::BANNER_DELETE,
 
             self::PRODUCT_CATEGORY_CREATE,
             self::PRODUCT_CATEGORY_EDIT,

@@ -15,6 +15,7 @@ use App\GraphQL\Ecommerce\Admin\Mutations\CreateProductOptionGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\CreateProductOptionGroupGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\CreateProductOptionValueGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\CreateProductVariationsGraphQLMutation;
+use App\GraphQL\Ecommerce\Admin\Mutations\DeleteBannerGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\DeleteProductBrandGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\DeleteProductCategoryGraphQLMutation;
 use App\GraphQL\Ecommerce\Admin\Mutations\DeleteProductGraphQLMutation;
@@ -120,6 +121,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 DeleteProductOptionGraphQLMutation::class,
                 DeleteProductGraphQLMutation::class,
                 DeleteProductBrandGraphQLMutation::class,
+                DeleteBannerGraphQLMutation::class,
                 CreateProductVariationsGraphQLMutation::class,
             ],
             'query' => [
