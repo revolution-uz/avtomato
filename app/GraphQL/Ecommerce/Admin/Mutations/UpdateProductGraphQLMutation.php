@@ -12,7 +12,7 @@ use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Str;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -28,18 +28,22 @@ class UpdateProductGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:ecommerce_products,id'],
+                'rules' => [
+                    'required',
+                    'int',
+                    Rule::exists(Product::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
             'product' => [
                 'name' => 'product',
-                'type' => Type::nonNull(GraphQL::type(ProductInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(ProductInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(ProductGraphQLType::type());
     }
 
     /**
@@ -55,11 +59,30 @@ class UpdateProductGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): Product
     {
-        $model = Product::query()->findOrFail($args['id']);
-        $args['product']['slug'] = Str::slug($args['product']['name_en']);
-        $model->update($args['product']);
-        $model->refresh();
+        $product = Product::query()->findOrFail($args['id']);
+        $args['product']['slug'] = $args['product']['name_en'];
+        $product->update($args['product']);
 
-        return $model;
+        $product->syncImagesWithOrder($args['product']['images']);
+
+        return $product;
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return array_merge(parent::rules($args), [
+            'product.name_en' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($args) {
+                    if (
+                        Product::query()->whereNot('id', $args['id'])->where('slug', Str::slug($value))->exists()
+                    ) {
+                        $fail(trans('validation.unique', ['attribute' => 'name']));
+                    }
+                },
+            ],
+        ]);
     }
 }
