@@ -2,10 +2,12 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
+use App\Enums\Company\OptionTypeEnum;
 use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Ecommerce\ProductOption;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\InputType;
 
 class ProductOptionInputGraphQLType extends InputType
@@ -49,6 +51,16 @@ class ProductOptionInputGraphQLType extends InputType
                 'name' => 'name_oz',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => 'required|string|max:255',
+            ],
+            'type' => [
+                'name' => 'type',
+                'type' => Type::nonNull(Type::string()),
+                'rules' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::enum(OptionTypeEnum::class),
+                ],
             ],
             'description' => [
                 'name' => 'description',

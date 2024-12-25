@@ -1111,6 +1111,9 @@ enum PermissionEnum: string
 
             self::PRODUCT_CREATE,
             self::PRODUCT_OPTION_CREATE,
+            self::PRODUCT_OPTION_EDIT,
+            self::PRODUCT_OPTION_DELETE,
+
             self::PRODUCT_OPTION_VALUE_CREATE => true,
 
             default => false,

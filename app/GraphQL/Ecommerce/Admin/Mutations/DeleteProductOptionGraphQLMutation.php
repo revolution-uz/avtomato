@@ -9,6 +9,7 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -24,6 +25,7 @@ class DeleteProductOptionGraphQLMutation extends Mutation
             'ids' => [
                 'name' => 'ids',
                 'type' => Type::nonNull(Type::listOf(Type::int())),
+                'rules' => 'required|array',
             ],
         ];
     }
@@ -54,14 +56,10 @@ class DeleteProductOptionGraphQLMutation extends Mutation
     protected function rules(array $args = []): array
     {
         return [
-            'ids' => [
-                'required',
-                'array',
-            ],
             'ids.*' => [
                 'required',
                 'integer',
-                'exists:ecommerce_product_options,id',
+                Rule::exists(ProductOption::class, 'id')->whereNull('deleted_at'),
                 function ($attribute, $value, $fail) {
                     if (ProductOption::query()->whereHas('productJoinOptions')->find($value)) {
                         $fail(__('api.are used', [

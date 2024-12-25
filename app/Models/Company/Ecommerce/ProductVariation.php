@@ -4,6 +4,7 @@ namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -27,7 +28,7 @@ use Illuminate\Support\Collection;
  */
 class ProductVariation extends Model
 {
-    use OrderBySortable, SoftDeletes;
+    use HasFactory, OrderBySortable, SoftDeletes;
 
     protected static array $sortables = ['id', 'product_id', 'is_active', 'created_at', 'updated_at'];
 
