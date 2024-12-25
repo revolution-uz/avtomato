@@ -32,7 +32,7 @@ class ProductImageInputGraphQLType extends InputType
             'order' => [
                 'name' => 'order',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => 'required|integer',
+                'rules' => 'required|integer|min:0',
             ],
         ];
     }
