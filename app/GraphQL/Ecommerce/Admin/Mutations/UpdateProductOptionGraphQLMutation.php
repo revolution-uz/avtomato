@@ -6,13 +6,14 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Admin\Types\ProductOptionGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductOptionInputGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Ecommerce\ProductCategory;
 use App\Models\Company\Ecommerce\ProductOption;
 use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Str;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -28,18 +29,22 @@ class UpdateProductOptionGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:ecommerce_product_options,id'],
+                'rules' => [
+                    'required',
+                    'int',
+                    Rule::exists(ProductOption::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
             'productOption' => [
                 'name' => 'productOption',
-                'type' => Type::nonNull(GraphQL::type(ProductOptionInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(ProductOptionInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ProductOptionGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(ProductOptionGraphQLType::type());
     }
 
     /**
@@ -55,11 +60,35 @@ class UpdateProductOptionGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): ProductOption
     {
-        $model = ProductOption::query()->findOrFail($args['id']);
-        $args['productOption']['slug'] = Str::slug($args['productOption']['name_en']);
-        $model->update($args['productOption']);
-        $model->refresh();
+        $option = ProductOption::query()->findOrFail($args['id']);
+        $option->fill($args['productOption']);
+        $option->slug = $args['productOption']['name_en'];
+        $option->saveOrFail();
 
-        return $model;
+        $option->categories()->sync($args['productOption']['categories']);
+
+        return $option;
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return array_merge(parent::rules($args), [
+            'productOption.name_en' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($args) {
+                    if (
+                        ProductOption::query()->whereNot('id', $args['id'])->where('slug', Str::slug($value))->exists()
+                    ) {
+                        $fail(trans('validation.unique', ['attribute' => 'name']));
+                    }
+                },
+            ],
+            'productOption.categories.*' => [
+                'int',
+                Rule::exists(ProductCategory::class, 'id')->whereNull('deleted_at'),
+            ],
+        ]);
     }
 }

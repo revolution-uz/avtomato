@@ -145,6 +145,7 @@ return [
     'distinct' => ':attribute maydonи такрорланувчи қийматларга ега.',
     'email' => ':attribute maydonи ҳақиқий электрон почта бўлиши керак.',
     'ends_with' => ':attribute maydonи quyidagi qiymatlardan biri bilan tugashi kerak: :values.',
+    'enum' => 'Танланган :attribute нотўғри.',
     'exists' => 'Танланган :attribute нотўғри.',
     'file' => ':attribute maydonи файл бўлиши керак.',
     'filled' => ':attribute maydonи тўлдирилиши шарт.',

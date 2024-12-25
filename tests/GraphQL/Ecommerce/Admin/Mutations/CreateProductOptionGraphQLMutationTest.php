@@ -3,6 +3,7 @@
 namespace Tests\GraphQL\Ecommerce\Admin\Mutations;
 
 use App\Enums\Company\CompanyStatusEnum;
+use App\Enums\Company\OptionTypeEnum;
 use App\Models\Company\Ecommerce\ProductCategory;
 use App\Models\Company\Ecommerce\ProductOption;
 use Illuminate\Support\Arr;
@@ -22,6 +23,7 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
         'name_en',
         'name_oz',
         'slug',
+        'type',
         'description',
         'created_at',
         'updated_at',
@@ -91,6 +93,7 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
                 'name_ru' => null,
                 'name_en' => null,
                 'name_oz' => null,
+                'type' => null,
                 'description' => null,
             ]));
         $response->assertOk();
@@ -99,9 +102,10 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$name_ru" of non-null type "String!" must not be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$name_en" of non-null type "String!" must not be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$name_oz" of non-null type "String!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$type" of non-null type "String!" must not be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$description" of non-null type "String!" must not be null.'));
 
-        // rule errors
+        // Rule errors
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery([
@@ -109,6 +113,7 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
                 'name_ru' => Str::random(256),
                 'name_en' => Str::random(256),
                 'name_oz' => Str::random(256),
+                'type' => 'abc',
                 'description' => Str::random(256),
                 'categories' => [999999999],
             ]));
@@ -120,6 +125,7 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'product option.name en', 'max' => 255]), $response->json('errors.0.extensions.validation')['productOption.name_en'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'product option.name oz', 'max' => 255]), $response->json('errors.0.extensions.validation')['productOption.name_oz'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'product option.description', 'max' => 255]), $response->json('errors.0.extensions.validation')['productOption.description'][0]);
+        $this->assertEquals(trans('validation.enum', ['attribute' => 'product option.type']), $response->json('errors.0.extensions.validation')['productOption.type'][0]);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'productOption.categories.0']), $response->json('errors.0.extensions.validation')['productOption.categories.0'][0]);
     }
 
@@ -166,6 +172,7 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
                     \$name_ru: String!
                     \$name_en: String!
                     \$name_oz: String!
+                    \$type: String!
                     \$description: String!
                     \$categories: [Int]
                 ) {
@@ -175,6 +182,7 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
                             name_ru: \$name_ru
                             name_en: \$name_en
                             name_oz: \$name_oz
+                            type: \$type
                             description: \$description
                             categories: \$categories
                         }
@@ -198,6 +206,7 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($option->name_ru, $data['name_ru']);
         $this->assertEquals($option->name_en, $data['name_en']);
         $this->assertEquals($option->name_oz, $data['name_oz']);
+        $this->assertEquals($option->type->value, $data['type']);
         $this->assertEquals($option->description, $data['description']);
         if (! $onlyRequired) {
             $this->assertEquals($option->categories->count(), count($data['categories']));
@@ -211,6 +220,7 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($option->name_en, $response->json('data.createProductOption.name_en'));
         $this->assertEquals($option->name_oz, $response->json('data.createProductOption.name_oz'));
         $this->assertEquals($option->slug, $response->json('data.createProductOption.slug'));
+        $this->assertEquals($option->type->value, $response->json('data.createProductOption.type'));
         $this->assertEquals($option->description, $response->json('data.createProductOption.description'));
     }
 
@@ -222,6 +232,7 @@ class CreateProductOptionGraphQLMutationTest extends GraphQLTestCase
                 'name_ru' => Str::random(255),
                 'name_en' => Str::random(255),
                 'name_oz' => Str::random(255),
+                'type' => OptionTypeEnum::randomValue(),
                 'description' => Str::random(255),
                 'categories' => ! $isRequired ? [
                     ProductCategory::factory()->create()->id,
