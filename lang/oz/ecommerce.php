@@ -1,6 +1,7 @@
 <?php
 
 return [
-    'category' => 'Category',
-    'product' => 'Product',
+    'category' => 'Категория',
+    'product' => 'Маҳсулот',
+    'product_brand' => 'Бренд',
 ];

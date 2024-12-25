@@ -9,6 +9,7 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -57,20 +58,17 @@ class DeleteProductBrandGraphQLMutation extends Mutation
             'ids' => [
                 'required',
                 'array',
+                'min:1',
             ],
             'ids.*' => [
                 'required',
                 'integer',
-                'exists:ecommerce_product_brands,id',
+                Rule::exists(ProductBrand::class, 'id')->whereNull('deleted_at'),
                 function ($attribute, $value, $fail) {
                     if (ProductBrand::query()->whereHas('products')->find($value)) {
-                        $fail(__('api.are used', [
-                            'item' => __('ecommerce.product_brand'),
-                            'element' => __('ecommerce.product'),
-                        ]));
+                        $fail(__('api.are used', ['item' => __('ecommerce.product_brand'), 'element' => __('ecommerce.product')]));
                     }
                 },
-
             ],
         ];
     }
