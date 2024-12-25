@@ -43,12 +43,12 @@ class CompanyResource extends Resource
         return [
             ID::make()->sortable(),
             Text::make(__('nova.company.name'), 'name')
-                ->rules('required', 'max:32')
+                ->rules('required', 'max:64')
                 ->creationRules('unique:companies,name')
                 ->updateRules('unique:companies,name,{{resourceId}}')
                 ->filterable(),
             Text::make(__('nova.company.owner_name'), 'owner_name')
-                ->rules('required', 'max:32')
+                ->rules('required', 'max:64')
                 ->filterable(),
             Text::make(__('nova.company.owner_phone'), 'owner_phone')
                 ->rules('required', 'max:16')
