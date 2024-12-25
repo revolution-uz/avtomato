@@ -12,7 +12,7 @@ use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Str;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -28,18 +28,22 @@ class UpdateProductOptionValueGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:ecommerce_product_option_values,id'],
+                'rules' => [
+                    'required',
+                    'int',
+                    Rule::exists(ProductOptionValue::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
             'productOptionValue' => [
                 'name' => 'productOptionValue',
-                'type' => Type::nonNull(GraphQL::type(ProductOptionValueInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(ProductOptionValueInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ProductOptionValueGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(ProductOptionValueGraphQLType::type());
     }
 
     /**
@@ -55,11 +59,29 @@ class UpdateProductOptionValueGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): ProductOptionValue
     {
-        $model = ProductOptionValue::query()->findOrFail($args['id']);
-        $args['productOptionValue']['slug'] = Str::slug($args['productOptionValue']['value_en']);
-        $model->update($args['productOptionValue']);
-        $model->refresh();
+        $value = ProductOptionValue::query()->findOrFail($args['id']);
+        $value->fill($args['productOptionValue']);
+        $value->slug = $args['productOptionValue']['value_en'];
+        $value->saveOrFail();
 
-        return $model;
+        return $value;
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return array_merge(parent::rules($args), [
+            'productOptionValue.value_en' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($args) {
+                    if (
+                        ProductOptionValue::query()->whereNot('id', $args['id'])->where('slug', Str::slug($value))->exists()
+                    ) {
+                        $fail(trans('validation.unique', ['attribute' => 'value']));
+                    }
+                },
+            ],
+        ]);
     }
 }
