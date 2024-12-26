@@ -3,6 +3,7 @@
 namespace Tests\GraphQL\Ecommerce\Admin\Mutations;
 
 use App\Enums\Company\CompanyStatusEnum;
+use App\Models\Company\Ecommerce\EcommerceImage;
 use App\Models\Company\Ecommerce\ProductOption;
 use App\Models\Company\Ecommerce\ProductOptionValue;
 use Illuminate\Support\Arr;
@@ -23,6 +24,7 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
         'value_oz',
         'slug',
         'option_id',
+        'image_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -34,6 +36,16 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
             'name_oz',
             'slug',
             'description',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ],
+        'image' => [
+            'id',
+            'url',
+            'original_name',
+            'mime',
+            'order',
             'created_at',
             'updated_at',
             'deleted_at',
@@ -50,6 +62,18 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessCreateProductOptionValueResponse($response, $variables);
+    }
+
+    #[Test]
+    public function successCreateProductOptionValueWithOnlyRequiredAttributes()
+    {
+        $variables = $this->getInputVariables(true);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery($variables));
+
+        $this->assertSuccessCreateProductOptionValueResponse($response, $variables, true);
     }
 
     #[Test]
@@ -73,7 +97,7 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$value_oz" of non-null type "String!" must not be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$option_id" of non-null type "Int!" must not be null.'));
 
-        // rule errors
+        // Rule errors
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery([
@@ -82,6 +106,7 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
                 'value_en' => Str::random(256),
                 'value_oz' => Str::random(256),
                 'option_id' => 999999999,
+                'image_id' => 999999999,
             ]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -91,17 +116,18 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'product option value.value en', 'max' => 255]), $response->json('errors.0.extensions.validation')['productOptionValue.value_en'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'product option value.value oz', 'max' => 255]), $response->json('errors.0.extensions.validation')['productOptionValue.value_oz'][0]);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'product option value.option id']), $response->json('errors.0.extensions.validation')['productOptionValue.option_id'][0]);
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'product option value.image id']), $response->json('errors.0.extensions.validation')['productOptionValue.image_id'][0]);
     }
 
     #[Test]
     public function errorUniqueSlugValidation()
     {
         /** @var ProductOptionValue $value */
-        $value = ProductOptionValue::factory()->make(['value_en' => 'thi$ !s n@me en']);
+        $value = ProductOptionValue::factory()->make(['value_en' => 'thi$ !s v@lu3 en']);
         $value->slug = $value->value_en;
         $value->saveOrFail();
 
-        $variables = $this->getInputVariables(['value_en' => $value->value_en]);
+        $variables = $this->getInputVariables(false, ['value_en' => $value->value_en]);
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -114,7 +140,7 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function errorCreateProductVariationsWithInactiveCompany(): void
+    public function errorUpdateProductOptionValueWithInactiveCompany(): void
     {
         tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
 
@@ -137,6 +163,7 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
                     \$value_en: String!
                     \$value_oz: String!
                     \$option_id: Int!
+                    \$image_id: Int
                 ) {
                     createProductOptionValue(
                         productOptionValue: {
@@ -145,6 +172,7 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
                             value_en: \$value_en
                             value_oz: \$value_oz
                             option_id: \$option_id
+                            image_id: \$image_id
                         }
                     ) {
                        {$this->convertIntoQuery($this->_structure)}
@@ -155,28 +183,34 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
         ];
     }
 
-    private function assertSuccessCreateProductOptionValueResponse(TestResponse $response, array $variables): void
+    private function assertSuccessCreateProductOptionValueResponse(TestResponse $response, array $variables, bool $onlyRequired = false): void
     {
         $response->assertOk();
-        $response->assertJsonStructure(['data' => ['createProductOptionValue' => $this->_structure]]);
+        ! $onlyRequired ?
+            $response->assertJsonStructure(['data' => ['createProductOptionValue' => $this->_structure]]) :
+            $response->assertJsonStructure(['data' => ['createProductOptionValue' => Arr::except($this->_structure, 'image')]]);
 
-        $option = ProductOptionValue::query()->with('option')->findOrFail($response->json('data.createProductOptionValue.id'));
+        $value = ProductOptionValue::query()->with('option')->findOrFail($response->json('data.createProductOptionValue.id'));
 
-        $this->assertEquals($option->value_uz, $variables['value_uz']);
-        $this->assertEquals($option->value_ru, $variables['value_ru']);
-        $this->assertEquals($option->value_en, $variables['value_en']);
-        $this->assertEquals($option->value_oz, $variables['value_oz']);
-        $this->assertEquals($option->option_id, $variables['option_id']);
+        $this->assertEquals($value->value_uz, $variables['value_uz']);
+        $this->assertEquals($value->value_ru, $variables['value_ru']);
+        $this->assertEquals($value->value_en, $variables['value_en']);
+        $this->assertEquals($value->value_oz, $variables['value_oz']);
+        $this->assertEquals($value->option_id, $variables['option_id']);
+        ! $onlyRequired ?
+            $this->assertEquals($value->image_id, $variables['image_id']) :
+            $this->assertNull($value->image_id);
 
-        $this->assertEquals($option->value_uz, $response->json('data.createProductOptionValue.value_uz'));
-        $this->assertEquals($option->value_ru, $response->json('data.createProductOptionValue.value_ru'));
-        $this->assertEquals($option->value_en, $response->json('data.createProductOptionValue.value_en'));
-        $this->assertEquals($option->value_oz, $response->json('data.createProductOptionValue.value_oz'));
-        $this->assertEquals($option->slug, $response->json('data.createProductOptionValue.slug'));
-        $this->assertEquals($option->option_id, $response->json('data.createProductOptionValue.option_id'));
+        $this->assertEquals($value->value_uz, $response->json('data.createProductOptionValue.value_uz'));
+        $this->assertEquals($value->value_ru, $response->json('data.createProductOptionValue.value_ru'));
+        $this->assertEquals($value->value_en, $response->json('data.createProductOptionValue.value_en'));
+        $this->assertEquals($value->value_oz, $response->json('data.createProductOptionValue.value_oz'));
+        $this->assertEquals($value->slug, $response->json('data.createProductOptionValue.slug'));
+        $this->assertEquals($value->option_id, $response->json('data.createProductOptionValue.option_id'));
+        $this->assertEquals($value->image_id, $response->json('data.createProductOptionValue.image_id'));
     }
 
-    private function getInputVariables(array $variables = [])
+    private function getInputVariables(bool $isRequired = false, array $variables = [])
     {
         return array_merge(
             [
@@ -185,6 +219,7 @@ class CreateProductOptionValueGraphQLMutationTest extends GraphQLTestCase
                 'value_en' => Str::random(255),
                 'value_oz' => Str::random(255),
                 'option_id' => ProductOption::factory()->create()->id,
+                'image_id' => ! $isRequired ? EcommerceImage::factory()->create()->id : null,
             ],
             $variables
         );

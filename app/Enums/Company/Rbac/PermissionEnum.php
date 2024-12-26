@@ -1117,7 +1117,9 @@ enum PermissionEnum: string
             self::PRODUCT_OPTION_EDIT,
             self::PRODUCT_OPTION_DELETE,
 
-            self::PRODUCT_OPTION_VALUE_CREATE => true,
+            self::PRODUCT_OPTION_VALUE_CREATE,
+            self::PRODUCT_OPTION_VALUE_EDIT,
+            self::PRODUCT_OPTION_VALUE_DELETE => true,
 
             default => false,
         };

@@ -165,8 +165,8 @@ class BannersGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery(['sort' => 'id']));
 
         $this->assertSuccessBannersResponse($response);
-        $productCategoryIds = Banner::query()->orderBy('id')->limit(10)->pluck('id')->toArray();
-        $this->assertEquals($productCategoryIds, $response->json('data.banners.data.*.id'));
+        $bannerIds = Banner::query()->orderBy('id')->limit(10)->pluck('id')->toArray();
+        $this->assertEquals($bannerIds, $response->json('data.banners.data.*.id'));
     }
 
     #[Test]
@@ -177,21 +177,22 @@ class BannersGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery(['sort' => '-id']));
 
         $this->assertSuccessBannersResponse($response);
-        $productCategoryIds = Banner::query()->orderByDesc('id')->limit(10)->pluck('id')->toArray();
-        $this->assertEquals($productCategoryIds, $response->json('data.banners.data.*.id'));
+        $bannerIds = Banner::query()->orderByDesc('id')->limit(10)->pluck('id')->toArray();
+        $this->assertEquals($bannerIds, $response->json('data.banners.data.*.id'));
     }
 
     #[Test]
     public function successSearch()
     {
-        $productCategory = Banner::query()->first();
+        /** @var Banner $banner */
+        $banner = Banner::factory()->create(['name_uz' => 'test banner']);
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery(['search' => $productCategory->name_uz]));
+            ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery(['search' => $banner->name_uz]));
 
         $this->assertSuccessBannersResponse($response, total: 1);
-        $this->assertEquals($productCategory->name_uz, $response->json('data.banners.data.0.name_uz'));
+        $this->assertEquals('test banner', $response->json('data.banners.data.0.name_uz'));
     }
 
     #[Test]

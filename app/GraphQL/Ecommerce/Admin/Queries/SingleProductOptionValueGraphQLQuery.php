@@ -31,10 +31,7 @@ class SingleProductOptionValueGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    Rule::exists(ProductOptionValue::class, 'id')
-                        ->where(function ($query) {
-                            $query->whereNull('deleted_at');
-                        }),
+                    Rule::exists(ProductOptionValue::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
         ];

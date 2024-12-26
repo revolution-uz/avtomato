@@ -97,6 +97,10 @@ class ProductGraphQLType extends GraphQLType
                 'type' => Type::listOf(GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Product $root) => $root->images,
             ],
+            'options' => [
+                'type' => Type::listOf(GraphQL::type(ProductOptionGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Product $root) => $root->options,
+            ],
             'variations' => [
                 'type' => Type::listOf(GraphQL::type(ProductVariationGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Product $root) => $root->variations,

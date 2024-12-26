@@ -148,14 +148,15 @@ class ProductCategoriesGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successSearch()
     {
-        $productCategory = ProductCategory::query()->first();
+        /** @var ProductCategory $productCategory */
+        $productCategory = ProductCategory::factory()->create(['name_uz' => 'Test Product Category']);
 
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery(['search' => $productCategory->name_uz]));
 
         $this->assertSuccessProductCategoriesResponse($response, total: 1);
-        $this->assertEquals($productCategory->name_uz, $response->json('data.productCategories.data.0.name_uz'));
+        $this->assertEquals('Test Product Category', $response->json('data.productCategories.data.0.name_uz'));
     }
 
     #[Test]

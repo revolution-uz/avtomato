@@ -3,6 +3,7 @@
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
 use App\GraphQL\GraphQLTypeHelper;
+use App\Models\Company\Ecommerce\EcommerceImage;
 use App\Models\Company\Ecommerce\ProductOption;
 use App\Models\Company\Ecommerce\ProductOptionValue;
 use GraphQL\Type\Definition\Type;
@@ -59,6 +60,15 @@ class ProductOptionValueInputGraphQLType extends InputType
                     'required',
                     'int',
                     Rule::exists(ProductOption::class, 'id')->whereNull('deleted_at'),
+                ],
+            ],
+            'image_id' => [
+                'name' => 'image_id',
+                'type' => Type::int(),
+                'rules' => [
+                    'nullable',
+                    'int',
+                    Rule::exists(EcommerceImage::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
         ];

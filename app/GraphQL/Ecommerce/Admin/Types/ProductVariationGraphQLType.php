@@ -22,21 +22,13 @@ class ProductVariationGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (ProductVariation $root) => $root->id,
             ],
-            'product_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (ProductVariation $root) => $root->product_id,
-            ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (ProductVariation $root) => $root->is_active,
             ],
-            'product' => [
-                'type' => GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (ProductVariation $root) => $root->product,
-            ],
-            'images' => [
-                'type' => Type::listOf(GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (ProductVariation $root) => $root->images,
+            'product_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (ProductVariation $root) => $root->product_id,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
@@ -49,6 +41,18 @@ class ProductVariationGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (ProductVariation $root) => $root->deleted_at?->timestamp,
+            ],
+            'product' => [
+                'type' => GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (ProductVariation $root) => $root->product,
+            ],
+            'images' => [
+                'type' => Type::listOf(GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (ProductVariation $root) => $root->images,
+            ],
+            'option_values' => [
+                'type' => Type::listOf(GraphQL::type(ProductOptionValueGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (ProductVariation $root) => $root->optionValues,
             ],
         ];
     }
