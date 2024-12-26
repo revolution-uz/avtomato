@@ -103,14 +103,15 @@ class ProductBrandsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successSearch()
     {
-        $brand = ProductBrand::query()->first();
+        /** @var ProductBrand $brand */
+        $brand = ProductBrand::factory()->create(['name_uz' => 'test brand']);
 
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery(['search' => $brand->name_uz]));
 
         $this->assertSuccessProductBrandsResponse($response, total: 1);
-        $this->assertEquals($brand->name_uz, $response->json('data.productBrands.data.0.name_uz'));
+        $this->assertEquals('test brand', $response->json('data.productBrands.data.0.name_uz'));
     }
 
     #[Test]
