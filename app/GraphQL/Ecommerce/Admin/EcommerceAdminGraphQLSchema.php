@@ -50,6 +50,7 @@ use App\GraphQL\Ecommerce\Admin\Queries\SingleDeliveryPointGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductBrandGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductCategoryGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductGraphQLQuery;
+use App\GraphQL\Ecommerce\Admin\Queries\SingleProductOptionGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductOptionGroupGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductOptionValueGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductVariationGraphQLQuery;
@@ -150,6 +151,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 SingleProductBrandGraphQLQuery::class,
                 SingleBannerGraphQLQuery::class,
                 SingleUserGraphQLQuery::class,
+                SingleProductOptionGraphQLQuery::class,
             ],
             'types' => [
                 EcommerceImageGraphQLType::class,
