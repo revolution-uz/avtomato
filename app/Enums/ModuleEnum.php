@@ -74,7 +74,7 @@ enum ModuleEnum: string
             self::MULTIBRANCH_2 => LimitAdminEnum::MULTIBRANCH_2_ADMIN->value,
             self::MULTIBRANCH_3 => LimitAdminEnum::MULTIBRANCH_3_ADMIN->value,
             self::MULTIBRANCH_4 => LimitAdminEnum::MULTIBRANCH_4_ADMIN->value,
-            self::SCORING, self::MARKETING, self::INSTALLMENT, self::ECOMMERCE => throw new Exception('Is not limited'),
+            default => throw new Exception('Is not limited'),
         };
     }
 
@@ -88,7 +88,20 @@ enum ModuleEnum: string
             self::MULTIBRANCH_2 => LimitBranchEnum::MULTIBRANCH_2_BRANCH->value,
             self::MULTIBRANCH_3 => LimitBranchEnum::MULTIBRANCH_3_BRANCH->value,
             self::MULTIBRANCH_4 => LimitBranchEnum::MULTIBRANCH_4_BRANCH->value,
-            self::SCORING, self::INSTALLMENT, self::MARKETING, self::ECOMMERCE => throw new Exception('Is not limited'),
+            default => throw new Exception('Is not limited'),
         };
+    }
+
+    /**
+     * @return ModuleEnum[]
+     */
+    public static function getMultiBranchModules(): array
+    {
+        return [
+            self::MULTIBRANCH_1,
+            self::MULTIBRANCH_2,
+            self::MULTIBRANCH_3,
+            self::MULTIBRANCH_4,
+        ];
     }
 }

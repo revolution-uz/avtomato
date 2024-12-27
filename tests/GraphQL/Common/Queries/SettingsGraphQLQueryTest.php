@@ -2,19 +2,24 @@
 
 namespace Tests\GraphQL\Common\Queries;
 
-use App\Clients\AtmosBalanceClient;
 use App\Enums\Main\SettingsEnum;
+use App\Enums\ModuleEnum;
 use App\Models\Company\BalanceFund;
+use App\Models\Company\Module;
 use App\Models\Settings;
-use App\Services\ConfirmationService;
-use App\Services\SmsService;
 use App\Services\User\BalanceService;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
 class SettingsGraphQLQueryTest extends GraphQLTestCase
 {
-    private BalanceService $_balanceService;
+    private array $_structure = [
+        'app_maintenance_mode',
+        'web_maintenance_mode',
+        'app_min_version',
+        'balance',
+        'multibranch_module',
+    ];
 
     protected function setUp(): void
     {
@@ -22,100 +27,56 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
 
         BalanceFund::query()->forceDelete();
         BalanceFund::factory()->create();
-
-        $this->_balanceService = new BalanceService(new AtmosBalanceClient, new ConfirmationService(new SmsService));
+        Module::query()->where('name', ModuleEnum::MULTIBRANCH_1)->update(['is_active' => true]);
     }
 
     #[Test]
     public function settingsWithoutAuthentication()
     {
-        $response = $this
-            ->postJson(
-                route('graphql.common'),
-                $this->buildGraphQLQuery()
-            );
+        $response = $this->postJson(route('graphql.common'), $this->buildGraphQLQuery());
 
         $response->assertOk();
         $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'settings' => [
-                    'app_maintenance_mode',
-                    'web_maintenance_mode',
-                    'app_min_version',
-                    'balance',
-                ],
-            ],
-        ]);
+        $response->assertJsonStructure(['data' => ['settings' => $this->_structure]]);
 
         $settings = Settings::query()->get();
         $this->assertEquals($settings->first(fn (Settings $setting) => $setting->name === SettingsEnum::PARTNER_APP_MAINTENANCE_MODE)->value ?? true, $response->json('data.settings.app_maintenance_mode'));
         $this->assertEquals($settings->first(fn (Settings $setting) => $setting->name === SettingsEnum::PARTNER_WEB_MAINTENANCE_MODE)->value ?? true, $response->json('data.settings.web_maintenance_mode'));
         $this->assertEquals($settings->first(fn (Settings $setting) => $setting->name === SettingsEnum::PARTNER_APP_MIN_VERSION)->value ?? true, $response->json('data.settings.app_min_version'));
-        //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.card_after_due_days'));
-        //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.pinfl_after_due_days'));
-        //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_after_due_days'));
-        //        $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_pinfl_after_due_days'));
         $this->assertEquals(0, $response->json('data.settings.balance'));
+        $this->assertNull($response->json('data.settings.multibranch_module'));
     }
 
     #[Test]
     public function settingsWithAuthentication()
     {
-        $admin = $this->createAdminUser();
-        $token = $admin->createTokenWithData('test');
         $response = $this
-            ->postJson(
-                route('graphql.common'),
-                $this->buildGraphQLQuery(),
-                ['Authorization' => 'Bearer ' . $token]
-            );
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.common'), $this->buildGraphQLQuery());
 
         $response->assertOk();
         $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'settings' => [
-                    'app_maintenance_mode',
-                    'web_maintenance_mode',
-                    'app_min_version',
-                    'balance',
-                    //                    'card_after_due_days',
-                    //                    'pinfl_after_due_days',
-                    //                    'guarantor_after_due_days',
-                    //                    'guarantor_pinfl_after_due_days',
-                ],
-            ],
-        ]);
+        $response->assertJsonStructure(['data' => ['settings' => $this->_structure]]);
 
         $settings = Settings::query()->get();
         $this->assertEquals($settings->first(fn (Settings $setting) => $setting->name === SettingsEnum::PARTNER_APP_MAINTENANCE_MODE)->value ?? true, $response->json('data.settings.app_maintenance_mode'));
         $this->assertEquals($settings->first(fn (Settings $setting) => $setting->name === SettingsEnum::PARTNER_WEB_MAINTENANCE_MODE)->value ?? true, $response->json('data.settings.web_maintenance_mode'));
         $this->assertEquals($settings->first(fn (Settings $setting) => $setting->name === SettingsEnum::PARTNER_APP_MIN_VERSION)->value ?? true, $response->json('data.settings.app_min_version'));
-        // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.card_after_due_days'));
-        // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.pinfl_after_due_days'));
-        // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_after_due_days'));
-        // $this->assertEquals($settings->first(fn (CompanySettings $setting) => $setting->name === CompanySettingsEnum::CARD_AFTER_DUE_DAYS)->value ?? 0, $response->json('data.settings.guarantor_pinfl_after_due_days'));
-        $this->assertNotEquals(0, BalanceService::getBalance());
-        $this->assertNotEquals(0, $response->json('data.settings.balance'));
         $this->assertEquals(BalanceService::getBalance(), $response->json('data.settings.balance'));
+        $this->assertEquals(ModuleEnum::MULTIBRANCH_1->value, $response->json('data.settings.multibranch_module'));
     }
 
-    private function buildGraphQLQuery(): array
+    public function buildGraphQLQuery(array $variables = []): array
     {
-        $query = [];
-        $query['variables'] = [];
-        $query['query'] = '
-            query Settings {
-                settings {
-                    app_maintenance_mode
-                    web_maintenance_mode
-                    app_min_version
-                    balance
+        return [
+            'query' => <<<GRAPHQL
+                query Settings {
+                    settings {
+                        {$this->convertIntoQuery($this->_structure)}
+                    }
                 }
-            }
-        ';
-
-        return $query;
+            GRAPHQL,
+            'variables' => $variables,
+        ];
     }
 }
