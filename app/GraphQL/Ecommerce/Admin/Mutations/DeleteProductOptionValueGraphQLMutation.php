@@ -9,6 +9,7 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -61,7 +62,7 @@ class DeleteProductOptionValueGraphQLMutation extends Mutation
             'ids.*' => [
                 'required',
                 'integer',
-                'exists:ecommerce_product_option_values,id',
+                Rule::exists(ProductOptionValue::class, 'id')->whereNull('deleted_at'),
                 function ($attribute, $value, $fail) {
                     if (ProductOptionValue::query()->whereHas('productJoinOptions')->find($value)) {
                         $fail(__('api.are used', [
