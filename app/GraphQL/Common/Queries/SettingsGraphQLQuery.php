@@ -7,7 +7,6 @@ use App\Models\Settings;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
 class SettingsGraphQLQuery extends Query
@@ -18,12 +17,7 @@ class SettingsGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(SettingsGraphQLType::GRAPHQL_TYPE_NAME));
-    }
-
-    public function args(): array
-    {
-        return [];
+        return Type::nonNull(SettingsGraphQLType::type());
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

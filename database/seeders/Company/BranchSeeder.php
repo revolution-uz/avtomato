@@ -2,7 +2,6 @@
 
 namespace Database\Seeders\Company;
 
-use App\Models\Company;
 use App\Models\Company\Branch;
 use Illuminate\Database\Seeder;
 
@@ -14,7 +13,7 @@ class BranchSeeder extends Seeder
     public function run(): void
     {
         $branches = Branch::exists();
-        $company = Company::query()->findOrFail(tenant('id'));
+        $company = tenant();
         if (! $branches) {
             Branch::query()->create([
                 'name' => 'Asosiy filial',
