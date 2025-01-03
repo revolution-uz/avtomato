@@ -104,11 +104,6 @@ class UniredService
         ));
         if ($createClientResponse->status) {
             $installment->update(['unired_id' => 1]);
-
-            $this->uniredClient->addClientPhones(new UniredAddClientPhonesRequestDTO(
-                $installment->customer->pinfl,
-                $installment->customer->phones->pluck('phone')->toArray()
-            ));
         }
 
         return true;
@@ -187,9 +182,14 @@ class UniredService
         return $this->uniredClient->cancelPayment(new UniredCancelPaymentRequestDTO(Utilities::generateIdByTenancy($transaction->id), $transaction->external_id));
     }
 
-    public function setWebhook()
+    public function setWebhook(string $webhook, bool $status)
     {
-        return $this->uniredClient->setWebhook(new UniredSetWebhookDTO('http://automato.uz/api/unired-callback/web-hook'));
+        return $this->uniredClient->setWebhook(new UniredSetWebhookDTO($webhook, config('clients.unired.callback-token'), $status));
+    }
+
+    public function checkWebhook()
+    {
+        return $this->uniredClient->checkWebhook();
     }
 
     public function getInstallmentDebt(?int $installment_id): ?int
@@ -208,14 +208,17 @@ class UniredService
 
     public function createTransaction(Installment $installment, int $customer_id, UniredPaymentWebhookCallbackRequest $request): bool
     {
+        if (Transaction::query()->where('external_id', $request->ext)->exists()) {
+            return false;
+        }
         $transaction = new Transaction;
         $transaction->transaction_type_id = TransactionType::UNIRED_WITH_PINFL;
         $transaction->branch_id = $installment->branch_id;
-        $transaction->external_id = $request->ext_id;
+        $transaction->external_id = $request->ext;
         $transaction->amount = $request->amount / 100;
         $transaction->installment_id = $installment->id;
         $transaction->customer_id = $customer_id;
-        $transaction->card_pan = $request->card_mask;
+        $transaction->card_pan = $request->card['pan'] ?? '****';
         $transaction->paid_at = Carbon::parse($request->created_at);
 
         return $transaction->save();
