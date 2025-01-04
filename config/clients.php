@@ -58,7 +58,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'unired' => [
-        'base_url' => 'https://autopay-tezpay.unired.uz/api/partners',
+        'base_url' => 'https://autopaygroup.uz/api/v1/partners',
         'token' => env('UNIRED_TOKEN', ''),
         'callback-token' => env('CALLBACK_TOKEN', ''),
     ],
