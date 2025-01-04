@@ -3,13 +3,15 @@
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
 use App\GraphQL\Customer\Types\AddressGraphQLType;
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Ecommerce\DeliveryPoint;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class DeliveryPointGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'DeliveryPointGraphQLType';
 
     protected $attributes = [
@@ -22,14 +24,6 @@ class DeliveryPointGraphQLType extends GraphQLType
             'id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (DeliveryPoint $root) => $root->id,
-            ],
-            'address_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (DeliveryPoint $root) => $root->address_id,
-            ],
-            'address' => [
-                'type' => Type::nonNull(GraphQL::type(AddressGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (DeliveryPoint $root) => $root->address,
             ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),
@@ -67,6 +61,10 @@ class DeliveryPointGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (DeliveryPoint $root) => $root->is_prepaid,
             ],
+            'address_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (DeliveryPoint $root) => $root->address_id,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (DeliveryPoint $root) => $root->created_at->timestamp,
@@ -78,6 +76,10 @@ class DeliveryPointGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (DeliveryPoint $root) => $root->deleted_at?->timestamp,
+            ],
+            'address' => [
+                'type' => Type::nonNull(AddressGraphQLType::type()),
+                'resolve' => fn (DeliveryPoint $root) => $root->address,
             ],
         ];
     }

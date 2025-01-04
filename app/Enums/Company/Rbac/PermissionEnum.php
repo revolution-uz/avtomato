@@ -1119,7 +1119,11 @@ enum PermissionEnum: string
 
             self::PRODUCT_OPTION_VALUE_CREATE,
             self::PRODUCT_OPTION_VALUE_EDIT,
-            self::PRODUCT_OPTION_VALUE_DELETE => true,
+            self::PRODUCT_OPTION_VALUE_DELETE,
+
+            self::DELIVERY_POINT_CREATE,
+            self::DELIVERY_POINT_EDIT,
+            self::DELIVERY_POINT_DELETE => true,
 
             default => false,
         };
