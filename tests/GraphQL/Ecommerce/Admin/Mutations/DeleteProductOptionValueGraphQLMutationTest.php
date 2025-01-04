@@ -42,7 +42,7 @@ class DeleteProductOptionValueGraphQLMutationTest extends GraphQLTestCase
             ->post(route('graphql.ecommerce-admin'), $this->buildGraphQLQuery(['ids' => null]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn($item) => $item['message'] === 'Variable "$ids" of non-null type "[Int]!" must not be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$ids" of non-null type "[Int]!" must not be null.'));
 
         // Rule errors
         $response = $this

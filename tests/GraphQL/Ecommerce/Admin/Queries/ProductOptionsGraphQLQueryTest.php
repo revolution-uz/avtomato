@@ -38,7 +38,7 @@ class ProductOptionsGraphQLQueryTest extends GraphQLTestCase
                 'created_at',
                 'updated_at',
                 'deleted_at',
-            ]
+            ],
         ],
         'categories' => [
             '*' => [
@@ -53,7 +53,7 @@ class ProductOptionsGraphQLQueryTest extends GraphQLTestCase
                 'created_at',
                 'updated_at',
                 'deleted_at',
-            ]
+            ],
         ],
     ];
 
