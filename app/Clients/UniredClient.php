@@ -57,8 +57,8 @@ class UniredClient extends BaseClient
     const PAYMENT_CHANGE_SEND_STATUS = 'payment.change.send.status';
     const PAYMENT_REGISTER = 'payment.register';
     const PAYMENT_CANCEL = 'payment.cancel';
-    const PAYMENT_GET_WEBHOOK = 'payment.get.webhook';
-    const PAYMENT_SET_WEBHOOK = 'payment.set.webhook';
+    const CHECK_WEBHOOK = 'webhook.check';
+    const SET_WEBHOOK = 'webhook.set';
 
     const CONTRACT_UPDATE = 'contract.update';
     const CONTRACT_CREATE = 'contract.create';
@@ -167,14 +167,14 @@ class UniredClient extends BaseClient
         return $this->makeRequest(self::PAYMENT_CHANGE_SEND_STATUS, $params->toArray());
     }
 
-    public function getWebhook(): UniredResponseDTO
+    public function checkWebhook(): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_GET_WEBHOOK, []);
+        return $this->makeRequest(self::CHECK_WEBHOOK, []);
     }
 
     public function setWebhook(UniredSetWebhookDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_SET_WEBHOOK, $params->toArray());
+        return $this->makeRequest(self::SET_WEBHOOK, $params->toArray());
     }
 
     public function createClients(UniredCreateClientRequestDTO $params): UniredResponseDTO
