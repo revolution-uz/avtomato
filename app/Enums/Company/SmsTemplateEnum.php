@@ -8,8 +8,9 @@ enum SmsTemplateEnum: int
     case CARD_CONFIRMATION = 2;
     case CHARGE = 3;
     case DEBT = 4;
-
     case ECOMMERCE_OTP = 5;
+    case DEBT_10 = 6;
+    case DEBT_20 = 7;
 
     public static function getExampleData(): array
     {
@@ -54,6 +55,24 @@ enum SmsTemplateEnum: int
                 'status' => SmsTemplateStatusEnum::ACTIVE,
                 'original_template' => ':ecommerce dan ro\'yxatdan o\'tish uchun kod: :code',
                 'description' => 'Onlayn do\'kondan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+            self::DEBT_10 => [
+                'status' => SmsTemplateStatusEnum::ACTIVE,
+                'original_template' => 'N:credit_number shartnomaga asosan :company ga joriy oyda :amount so\'m qarzinggiz bor. Qarzdorlik muddatidan 10 kun o\'tdi. Ma\'lumot uchun: :phone',
+                'original_data' => [
+                    'category' => 'debt-templates',
+                    'overdue_days' => 10,
+                ],
+                'description' => 'Qarzdorlik bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+            self::DEBT_20 => [
+                'status' => SmsTemplateStatusEnum::ACTIVE,
+                'original_template' => 'N:credit_number shartnomaga asosan :company ga joriy oyda :amount so\'m qarzinggiz bor. Qarzdorlik muddatidan 20 kun o\'tdi. Ma\'lumot uchun: :phone',
+                'original_data' => [
+                    'category' => 'debt-templates',
+                    'overdue_days' => 20,
+                ],
+                'description' => 'Qarzdorlik bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
             ],
         };
     }
