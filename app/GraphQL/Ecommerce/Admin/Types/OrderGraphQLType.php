@@ -3,6 +3,7 @@
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
 use App\GraphQL\Customer\Types\AddressGraphQLType;
+use App\GraphQL\Ecommerce\Client\Types\UserGraphQLType;
 use App\Models\Company\Ecommerce\Order;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -31,29 +32,13 @@ class OrderGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Order $root) => $root->address_id,
             ],
-            'address' => [
-                'type' => GraphQL::type(AddressGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Order $root) => $root->address,
-            ],
             'status_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Order $root) => $root->status_id,
             ],
-            'status' => [
-                'type' => GraphQL::type(OrderStatusGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Order $root) => $root->status,
-            ],
-            'status_histories' => [
-                'type' => Type::listOf(GraphQL::type(OrderStatusHistoryGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Order $root) => $root->statusHistories,
-            ],
             'installment_id' => [
                 'type' => Type::int(),
                 'resolve' => fn (Order $root) => $root->installment_id,
-            ],
-            'order_items' => [
-                'type' => Type::listOf(GraphQL::type(OrderItemGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Order $root) => $root->orderItems,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
@@ -66,6 +51,30 @@ class OrderGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (Order $root) => $root->deleted_at?->timestamp,
+            ],
+            'user' => [
+                'type' => Type::nonNull(UserGraphQLType::type()),
+                'resolve' => fn (Order $root) => $root->user,
+            ],
+            'address' => [
+                'type' => Type::nonNull(AddressGraphQLType::type()),
+                'resolve' => fn (Order $root) => $root->address,
+            ],
+            'status' => [
+                'type' => Type::nonNull(OrderStatusGraphQLType::type()),
+                'resolve' => fn (Order $root) => $root->status,
+            ],
+            // 'installment' => [
+            //     'type' => GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME),
+            //     'resolve' => fn(Order $root) => $root->installment,
+            // ],
+            'status_histories' => [
+                'type' => Type::listOf(GraphQL::type(OrderStatusHistoryGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Order $root) => $root->statusHistories,
+            ],
+            'order_items' => [
+                'type' => Type::listOf(GraphQL::type(OrderItemGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Order $root) => $root->orderItems,
             ],
         ];
     }

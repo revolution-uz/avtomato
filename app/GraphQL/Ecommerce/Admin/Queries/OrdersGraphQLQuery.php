@@ -65,7 +65,10 @@ class OrdersGraphQLQuery extends Query
                         ->orWhere('name_en', 'ilike', $search)
                         ->orWhere('name_oz', 'ilike', $search)
                         ->orWhere('name_ru', 'ilike', $search);
-                });
+                })
+                    ->orWhereHas('user', function (Builder $q) use ($search) {
+                        $q->where('phone', 'ilike', $search);
+                    });
             })
             ->when(
                 isset($args['sort']),

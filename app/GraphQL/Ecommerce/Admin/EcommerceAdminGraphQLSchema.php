@@ -49,6 +49,7 @@ use App\GraphQL\Ecommerce\Admin\Queries\ProductsGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\ProductVariationsGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleBannerGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleDeliveryPointGraphQLQuery;
+use App\GraphQL\Ecommerce\Admin\Queries\SingleOrderGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductBrandGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductCategoryGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductGraphQLQuery;
@@ -66,6 +67,7 @@ use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderItemGraphQLType;
+use App\GraphQL\Ecommerce\Admin\Types\OrderStatusGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\OrderStatusHistoryGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductBrandGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductBrandInputGraphQLType;
@@ -157,6 +159,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 SingleBannerGraphQLQuery::class,
                 SingleUserGraphQLQuery::class,
                 SingleProductOptionGraphQLQuery::class,
+                SingleOrderGraphQLQuery::class,
             ],
             'types' => [
                 EcommerceImageGraphQLType::class,
@@ -169,9 +172,9 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 ProductBrandGraphQLType::class,
                 ProductBrandInputGraphQLType::class,
                 OrderInputGraphQLType::class,
-                //                OrderItemInputGraphQLType::class,
-                //                OrderStatusInputGraphQLType::class,
-                //                OrderStatusGraphQLType::class,
+                // OrderItemInputGraphQLType::class,
+                // OrderStatusInputGraphQLType::class,
+                OrderStatusGraphQLType::class,
                 ProductJoinOptionGraphQLType::class,
                 ProductJoinOptionInputGraphQLType::class,
                 ProductOptionValueGraphQLType::class,
