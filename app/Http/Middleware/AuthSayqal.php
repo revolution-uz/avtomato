@@ -13,7 +13,7 @@ class AuthSayqal
     /**
      * Handle an incoming request.
      *
-     * @param  Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -30,6 +30,6 @@ class AuthSayqal
         $originalData = $feature->original_data;
         $statusDate = $request->get('statusdate');
 
-        return md5("TransmitSMS {$originalData['username']} {$originalData['secret']} {$statusDate}");
+        return md5("TransmitSMSStatus {$originalData['username']} {$originalData['secret']} {$statusDate}");
     }
 }
