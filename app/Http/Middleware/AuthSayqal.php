@@ -30,6 +30,6 @@ class AuthSayqal
         $originalData = $feature->original_data;
         $statusDate = $request->get('statusdate');
 
-        return md5("TransmitSMS {$originalData['username']} {$originalData['secret']} {$statusDate}");
+        return md5("TransmitSMSStatus {$originalData['username']} {$originalData['secret']} {$statusDate}");
     }
 }
