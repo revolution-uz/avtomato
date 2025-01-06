@@ -32,10 +32,7 @@ class SingleUserGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    Rule::exists(User::class, 'id')
-                        ->where(function ($query) {
-                            $query->whereNull('deleted_at');
-                        }),
+                    Rule::exists(User::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
         ];

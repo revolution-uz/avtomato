@@ -21,17 +21,19 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property Product[]|Collection<int, Product> $carts
+ * @property UserCart[]|Collection<int, UserCart> $carts
  * @property Product[]|Collection<int, Product> $favorites
  * @property Order[]|Collection<int, Order> $orders
- * @property-read  Customer|null $customer
+ * @property-read Customer|null $customer
  */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, OrderBySortable, SoftDeletes;
+
     protected static array $sortables = ['id', 'phone', 'customer_id', 'created_at', 'updated_at'];
 
     protected $table = 'ecommerce_users';
+
     protected $fillable = [
         'phone',
         'customer_id',
@@ -55,9 +57,9 @@ class User extends Authenticatable
         return $token->plainTextToken;
     }
 
-    public function carts(): BelongsToMany
+    public function carts(): HasMany
     {
-        return $this->belongsToMany(Product::class, 'ecommerce_user_carts');
+        return $this->hasMany(UserCart::class);
     }
 
     public function favorites(): BelongsToMany
