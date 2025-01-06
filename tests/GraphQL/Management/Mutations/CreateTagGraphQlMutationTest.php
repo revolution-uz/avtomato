@@ -13,7 +13,7 @@ class CreateTagGraphQlMutationTest extends GraphQLTestCase
 
     private array $_input;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_input = [
