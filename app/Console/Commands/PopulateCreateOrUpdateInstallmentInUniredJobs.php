@@ -40,6 +40,7 @@ class PopulateCreateOrUpdateInstallmentInUniredJobs extends Command
             if (
                 ! Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
                 or ! $balanceService->isAvailableCompany()
+                or ! Feature::isFeatureActive(FeatureEnum::UNIRED_PAY)
             ) {
                 continue;
             }
