@@ -3,6 +3,7 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\Address;
+use App\Models\Company\Installment;
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,8 +24,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read User $user
  * @property-read Address $address
  * @property-read OrderStatus $status
+ * @property-read Installment|null $installment
  * @property-read OrderStatusHistory[] $statusHistories
- * @property-read OrderItem $orderItems
+ * @property-read OrderItem[] $orderItems
  */
 class Order extends Model
 {
@@ -33,6 +35,7 @@ class Order extends Model
     protected static array $sortables = ['id', 'user_id', 'address_id', 'status_id', 'installment_id', 'created_at', 'updated_at'];
 
     protected $table = 'ecommerce_orders';
+
     protected $fillable = [
         'user_id',
         'address_id',
@@ -53,6 +56,11 @@ class Order extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(OrderStatus::class, 'status_id');
+    }
+
+    public function installment(): BelongsTo
+    {
+        return $this->belongsTo(Installment::class, 'installment_id');
     }
 
     public function statusHistories(): HasMany

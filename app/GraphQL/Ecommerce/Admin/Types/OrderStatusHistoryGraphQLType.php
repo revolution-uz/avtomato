@@ -10,7 +10,7 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class OrderStatusHistoryGraphQLType extends GraphQLType
 {
-    public const string GRAPHQL_TYPE_NAME = 'OrderStatusGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'OrderStatusHistoryGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -28,7 +28,7 @@ class OrderStatusHistoryGraphQLType extends GraphQLType
                 'resolve' => fn (OrderStatusHistory $root) => $root->from_status_id,
             ],
             'from_status' => [
-                'type' => Type::nonNull(GraphQL::type(OrderStatusGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(OrderStatusGraphQLType::type()),
                 'resolve' => fn (OrderStatusHistory $root) => $root->fromStatus,
             ],
             'to_status_id' => [
@@ -36,7 +36,7 @@ class OrderStatusHistoryGraphQLType extends GraphQLType
                 'resolve' => fn (OrderStatusHistory $root) => $root->to_status_id,
             ],
             'to_status' => [
-                'type' => Type::nonNull(GraphQL::type(OrderStatusGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(OrderStatusGraphQLType::type()),
                 'resolve' => fn (OrderStatusHistory $root) => $root->toStatus,
             ],
             'admin_id' => [
