@@ -13,7 +13,7 @@
         "guzzlehttp/guzzle": "^7.9.2",
         "laravel/framework": "^11.17",
         "laravel/horizon": "^5.26",
-        "laravel/nova": "^4.34.3",
+        "laravel/nova": "^5.0",
         "laravel/sanctum": "^4.0.2",
         "opcodesio/log-viewer": "^3.10",
         "phpoffice/phpword": "^1.2",

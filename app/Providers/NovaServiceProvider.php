@@ -115,6 +115,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function register(): void
     {
+        parent::register();
+
         Nova::report(
             function ($exception) {
                 Log::error($exception);
