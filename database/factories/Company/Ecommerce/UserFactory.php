@@ -11,7 +11,13 @@ class UserFactory extends Factory
     {
         return [
             'phone' => $this->faker->phoneNumber,
-            'customer_id' => Customer::factory(),
         ];
+    }
+
+    public function withCustomer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'customer_id' => Customer::factory(),
+        ]);
     }
 }

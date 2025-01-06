@@ -58,7 +58,7 @@ use App\GraphQL\Ecommerce\Admin\Queries\SingleProductOptionGroupGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductOptionValueGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleProductVariationGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Queries\SingleUserGraphQLQuery;
-use App\GraphQL\Ecommerce\Admin\Queries\UserGraphQLQuery;
+use App\GraphQL\Ecommerce\Admin\Queries\UsersGraphQLQuery;
 use App\GraphQL\Ecommerce\Admin\Types\BannerGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\BannerInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\DeliveryPointGraphQLType;
@@ -87,6 +87,7 @@ use App\GraphQL\Ecommerce\Admin\Types\ProductOptionValueInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductVariationGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\ProductVariationInputGraphQLType;
 use App\GraphQL\Ecommerce\Admin\Types\UpdateProductVariationInputGraphQLType;
+use App\GraphQL\Ecommerce\Client\Types\UserCartGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserCartInputGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
@@ -147,7 +148,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 ProductJoinOptionsGraphQLQuery::class,
                 BannersGraphQLQuery::class,
                 OrdersGraphQLQuery::class,
-                UserGraphQLQuery::class,
+                UsersGraphQLQuery::class,
                 DeliveryPointsGraphQLQuery::class,
                 SingleDeliveryPointGraphQLQuery::class,
                 SingleProductGraphQLQuery::class,
@@ -206,6 +207,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 DeliveryPointInputGraphQLType::class,
                 ProductImageInputGraphQLType::class,
                 UpdateProductVariationInputGraphQLType::class,
+                UserCartGraphQLType::class,
             ],
             'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
         ];

@@ -4,15 +4,19 @@ namespace App\Models\Company\Ecommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class UserCart
  *
+ * @property int $id
+ * @property int $quantity Quantity of the product in the cart
  * @property int $user_id ID of the user
  * @property int $product_id ID of the product
- * @property int $quantity Quantity of the product in the cart
+ * @property int|null $variation_id ID of the variation
  * @property User $user
  * @property Product $product
+ * @property ProductVariation|null $variation
  */
 class UserCart extends Model
 {
@@ -26,9 +30,10 @@ class UserCart extends Model
 
     // Define fillable fields to allow mass assignment
     protected $fillable = [
+        'quantity',
         'user_id',
         'product_id',
-        'quantity',
+        'variation_id',
     ];
 
     public static function removeCart(int $user_id, int $product_id)
@@ -58,7 +63,7 @@ class UserCart extends Model
     /**
      * Define a relationship to the User model (assuming a User model exists)
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -66,8 +71,13 @@ class UserCart extends Model
     /**
      * Define a relationship to the Product model (assuming a Product model exists)
      */
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function variation(): BelongsTo
+    {
+        return $this->belongsTo(ProductVariation::class, 'variation_id');
     }
 }
