@@ -40,6 +40,7 @@ class SmsMessage extends Model
         'installment_id',
         'customer_id',
         'customer_type',
+        'updated_at',
     ];
 
     protected $casts = [
