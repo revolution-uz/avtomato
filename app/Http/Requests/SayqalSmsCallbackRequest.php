@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Helpers\Utilities;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 /**
  * @property string $transactionid
@@ -16,6 +17,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class SayqalSmsCallbackRequest extends FormRequest
 {
+    /** @var string[] */
+    private array $arr;
+
     public function rules(): array
     {
         return [
@@ -23,7 +27,7 @@ class SayqalSmsCallbackRequest extends FormRequest
             'smsid' => 'required|string',
             'status' => 'required|int',
             'description' => 'required|string',
-            'statusdate' => 'required|string',
+            'statusdate' => 'required|string|date_format:Y-m-d H:i:s',
             'partinfo' => 'required|string',
         ];
     }
@@ -35,14 +39,14 @@ class SayqalSmsCallbackRequest extends FormRequest
 
     public function getCompanyId()
     {
-        $arr = explode(Utilities::TENANT_SEPARATOR, $this->smsid);
+        $arr = $this->getArr();
 
         return $arr[0] ?? null;
     }
 
     public function getSmsId()
     {
-        $arr = explode(Utilities::TENANT_SEPARATOR, $this->smsid);
+        $arr = $this->getArr();
 
         return $arr[1] ?? null;
     }
@@ -52,5 +56,17 @@ class SayqalSmsCallbackRequest extends FormRequest
         $arr = explode(':', $this->partinfo);
 
         return $arr[0] ?? 1;
+    }
+
+    private function getArr()
+    {
+        if (! isset($this->arr)) {
+            if (! preg_match('/^\d+' . Utilities::TENANT_SEPARATOR . '\d+$/', $this->smsid)) {
+                throw new HttpResponseException(response()->json(['success'], 200));
+            }
+            $this->arr = explode(Utilities::TENANT_SEPARATOR, $this->smsid);
+        }
+
+        return $this->arr;
     }
 }
