@@ -23,11 +23,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $description_en
  * @property string $description_oz
  * @property string $is_prepaid
- * @property string|null $phone
- * @property string|null $address_uz
- * @property string|null $address_ru
- * @property string|null $address_en
- * @property string|null $address_oz
+ * @property string $phone
+ * @property string $address_uz
+ * @property string $address_ru
+ * @property string $address_en
+ * @property string $address_oz
  * @property string|null $landmark_uz
  * @property string|null $landmark_ru
  * @property string|null $landmark_en
