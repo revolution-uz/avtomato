@@ -27,13 +27,13 @@ final class BigFloat extends ScalarType implements TypeConvertible
      *
      * @throws Error
      */
-    public function serialize($value): mixed
+    public function serialize($value): int|float
     {
         if (! preg_match('/[+-]?([0-9]*[.])?[0-9]+/', (string) $value)) {
             throw new Error($value . ' cannot represent a big float.');
         }
 
-        return $value;
+        return strpos((string) $value, '.') === false ? (int) $value : (float) $value;
     }
 
     /**
