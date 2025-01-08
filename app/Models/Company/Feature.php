@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -26,6 +27,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $updated_at
  * @property-read Collection<Module> $modules
  * @property-read int $chargeable_amount
+ * @property-read BalanceCharge[]|Collection<int, BalanceCharge> $balanceCharges
  */
 class Feature extends Model
 {
@@ -68,7 +70,9 @@ class Feature extends Model
         parent::boot();
 
         static::updated(function (self $model) {
-            unset(self::$_cache[$model->name->value]);
+            if ($model->isDirty('is_active') && self::$_cache) {
+                self::$_cache[$model->name->value] = $model->is_active;
+            }
         });
     }
 
@@ -95,5 +99,10 @@ class Feature extends Model
             // @phpstan-ignore-next-line
             get: fn () => $this->name?->getDefaultDescription()
         );
+    }
+
+    public function balanceCharges(): HasMany
+    {
+        return $this->hasMany(BalanceCharge::class);
     }
 }

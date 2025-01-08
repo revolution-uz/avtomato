@@ -5,7 +5,10 @@ namespace Tests\GraphQL\Installment\Mutations;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Enums\FeatureEnum;
+use App\Models\Company\BalanceCharge;
 use App\Models\Company\Branch;
+use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
@@ -64,6 +67,64 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($this->_input));
 
         $this->assertSuccessResponse($response);
+    }
+
+    #[Test]
+    public function successCheckForCorrectPaymentCases()
+    {
+        /** @var Feature $feature */
+        $feature = Feature::query()->where('name', FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->firstOrFail();
+        $feature->update(['amount' => 29]);
+
+        // when period is equal to 1
+        $installment = Installment::factory()->create(['period' => 1, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
+        $this->assertCorrectPayment($response, $feature, $installment, 29);
+
+        // when period is equal to 3
+        $installment = Installment::factory()->create(['period' => 3, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITH_CARD]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
+        $this->assertCorrectPayment($response, $feature, $installment, 29);
+
+        // when period is equal to 4
+        $installment = Installment::factory()->create(['period' => 4, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
+        $this->assertCorrectPayment($response, $feature, $installment, 58);
+    }
+
+    #[Test]
+    public function successCheckNonPaymentCases()
+    {
+        /** @var Feature $feature */
+        $feature = Feature::query()->where('name', FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->firstOrFail();
+        $feature->update(['amount' => 29]);
+
+        // when any_card_charge is already true
+        $installment = Installment::factory()->create(['any_card_charge' => true, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
+        $this->assertNonPayment($response, $feature, $installment);
+
+        // when type is already WITH_PINFL
+        $installment = Installment::factory()->create(['any_card_charge' => false, 'type' => InstallmentTypeEnum::WITH_PINFL]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
+        $this->assertNonPayment($response, $feature, $installment);
+
+        // when type is already WITH_BOTH
+        $installment = Installment::factory()->create(['any_card_charge' => true, 'type' => InstallmentTypeEnum::WITH_BOTH]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
+        $this->assertNonPayment($response, $feature, $installment);
     }
 
     #[Test]
@@ -145,11 +206,7 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
     {
         $response->assertOk();
         $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'updateInstallmentCustomerAnyCardCharge' => self::STRUCTURE,
-            ],
-        ]);
+        $response->assertJsonStructure(['data' => ['updateInstallmentCustomerAnyCardCharge' => self::STRUCTURE]]);
 
         $this->_installment->refresh();
         $this->assertEquals($this->_installment->any_card_charge, $this->_input['any_card_charge']);
@@ -176,5 +233,33 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
         $this->assertEquals($this->_installment->updated_at->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.updated_at'));
         $this->assertEquals($this->_installment->canceled_at?->timestamp, $response->json('data.updateInstallmentCustomerAnyCardCharge.canceled_at'));
         $this->assertNull($response->json('data.updateInstallmentCustomerAnyCardCharge.deleted_at'));
+    }
+
+    private function assertCorrectPayment(TestResponse $response, Feature $feature, Installment $installment, int $amount): void
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure(['data' => ['updateInstallmentCustomerAnyCardCharge' => self::STRUCTURE]]);
+
+        /** @var BalanceCharge $charge */
+        $charge = $feature->balanceCharges()
+            ->where('chargeable_type', Installment::class)
+            ->where('chargeable_id', $installment->id)
+            ->first();
+
+        $this->assertNotNull($charge);
+        $this->assertEquals($amount, $charge->amount);
+    }
+
+    private function assertNonPayment(TestResponse $response, Feature $feature, Installment $installment): void
+    {
+        $response->assertOk();
+        $response->assertJsonIsObject();
+        $response->assertJsonStructure(['data' => ['updateInstallmentCustomerAnyCardCharge' => self::STRUCTURE]]);
+
+        $feature->balanceCharges()
+            ->where('chargeable_type', Installment::class)
+            ->where('chargeable_id', $installment->id)
+            ->doesntExist();
     }
 }
