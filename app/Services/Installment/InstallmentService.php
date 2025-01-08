@@ -9,6 +9,7 @@ use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Helpers\Utilities;
 use App\Models\Company\Branch;
+use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
@@ -303,8 +304,13 @@ class InstallmentService
 
     private function withdrawAnyCardCharge(Installment $installment): bool
     {
+        /** @var Feature $feature */
+        $feature = Feature::query()->where('name', FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->firstOrFail();
+
+        $amount = $feature->chargeable_amount * ceil($installment->period / 3);
+
         if ($this->balanceService->isAvailableCompany()) {
-            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment);
+            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment, $amount);
 
             return true;
         }

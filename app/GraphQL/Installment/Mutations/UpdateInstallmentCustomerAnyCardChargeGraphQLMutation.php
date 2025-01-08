@@ -11,7 +11,6 @@ use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
 class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
@@ -20,12 +19,7 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
         'name' => 'updateInstallmentCustomerAnyCardCharge',
     ];
 
-    private InstallmentService $installmentService;
-
-    public function __construct(InstallmentService $installmentService)
-    {
-        $this->installmentService = $installmentService;
-    }
+    public function __construct(private InstallmentService $installmentService) {}
 
     public function args(): array
     {
@@ -50,7 +44,7 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(InstallmentGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(InstallmentGraphQLType::type());
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
