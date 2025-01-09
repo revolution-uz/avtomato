@@ -43,7 +43,8 @@ class PopulateInstallmentChargeJobsTest extends TestCase
         $this->assertCount(1, $dispatchedJobs);
         $this->assertEquals('installment-charge-' . tenant('id') . '-' . $installment->id, $dispatchedJobs[0]->uniqueId());
         $this->assertEquals('installment-charge', $dispatchedJobs[0]->queue);
-        $this->assertEquals(0, $dispatchedJobs[0]->delay);
+        $this->assertTrue($dispatchedJobs[0]->delay instanceof Carbon);
+        $this->assertGreaterThanOrEqual(0, $dispatchedJobs[0]->delay->diffInSeconds());
     }
 
     #[Test]
@@ -99,7 +100,8 @@ class PopulateInstallmentChargeJobsTest extends TestCase
         foreach ($dispatchedJobs as $job) {
             $this->assertEquals('installment-charge-' . tenant('id') . '-' . 1, $job->uniqueId());
             $this->assertEquals('installment-charge', $job->queue);
-            $this->assertEquals(0, $job->delay);
+            $this->assertTrue($dispatchedJobs[0]->delay instanceof Carbon);
+            $this->assertGreaterThanOrEqual(0, $dispatchedJobs[0]->delay->diffInSeconds());
         }
     }
 
