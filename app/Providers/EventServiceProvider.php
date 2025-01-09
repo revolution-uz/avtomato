@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\TelegramEvents\TelegramDebugMessageEvent;
+use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
+use App\Listeners\TelegramEventListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,12 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        TransactionTelegramMessageEvent::class => [
+            TelegramEventListener::class,
+        ],
+        TelegramDebugMessageEvent::class => [
+            TelegramEventListener::class,
         ],
     ];
 

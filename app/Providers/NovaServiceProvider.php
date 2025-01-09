@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Enums\Main\AdminRoleEnum;
+use App\Events\TelegramEvents\TelegramDebugMessageEvent;
 use App\Helpers\UrlHelper;
 use App\Models\Admin;
 use App\Models\Company;
@@ -120,6 +121,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::report(
             function ($exception) {
                 Log::error($exception);
+                event(new TelegramDebugMessageEvent($exception->getMessage(), $exception->getFile(), $exception->getLine()));
             }
         );
     }
