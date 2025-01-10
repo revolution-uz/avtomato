@@ -16,16 +16,29 @@ enum CompanySettingsEnum: string
     case SMS_INSTALLMENT_AUTO_CHARGE = 'sms_installment_auto_charge'; // auto charge notification
     case SMS_INSTALLMENT_NOTIFICATION = 'sms_installment_notification'; // charge notification
     case SMS_INSTALLMENT_PAYMENT = 'sms_installment_payment'; // debt notification
+    case TELEGRAM_BOT_ENABLED = 'telegram_bot_enabled';
+    case TELEGRAM_BOT_TOKEN = 'telegram_bot_token';
+    case TELEGRAM_CHAT_ID = 'telegram_chat_id';
 
     public static function getType(self $type): SettingsTypeEnum
     {
         return match ($type) {
-            self::CARD_AFTER_DUE_DAYS, self::PINFL_AFTER_DUE_DAYS, self::GUARANTOR_AFTER_DUE_DAYS, self::GUARANTOR_PINFL_AFTER_DUE_DAYS => SettingsTypeEnum::INT,
-            self::SMS_INSTALLMENT_AUTO_CHARGE, self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT => SettingsTypeEnum::BOOLEAN,
+            self::CARD_AFTER_DUE_DAYS,
+            self::PINFL_AFTER_DUE_DAYS,
+            self::GUARANTOR_AFTER_DUE_DAYS,
+            self::GUARANTOR_PINFL_AFTER_DUE_DAYS => SettingsTypeEnum::INT,
+
+            self::SMS_INSTALLMENT_AUTO_CHARGE,
+            self::SMS_INSTALLMENT_NOTIFICATION,
+            self::SMS_INSTALLMENT_PAYMENT,
+            self::TELEGRAM_BOT_ENABLED => SettingsTypeEnum::BOOLEAN,
+
+            self::TELEGRAM_BOT_TOKEN,
+            self::TELEGRAM_CHAT_ID => SettingsTypeEnum::STRING,
         };
     }
 
-    public static function getDefaultValue(self $type): int|bool
+    public static function getDefaultValue(self $type): int|bool|string
     {
         return match ($type) {
             self::CARD_AFTER_DUE_DAYS => 1,
@@ -33,7 +46,8 @@ enum CompanySettingsEnum: string
             self::GUARANTOR_AFTER_DUE_DAYS => 10,
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS => 15,
             self::SMS_INSTALLMENT_AUTO_CHARGE => true,
-            self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT => false,
+            self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT, self::TELEGRAM_BOT_ENABLED => false,
+            self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID => '',
         };
     }
 
@@ -60,6 +74,9 @@ enum CompanySettingsEnum: string
             self::SMS_INSTALLMENT_AUTO_CHARGE => __('settings.sms_installment_auto_charge'),
             self::SMS_INSTALLMENT_NOTIFICATION => __('settings.sms_installment_notification'),
             self::SMS_INSTALLMENT_PAYMENT => __('settings.sms_installment_payment'),
+            self::TELEGRAM_BOT_ENABLED => __('settings.telegram_bot_enabled'),
+            self::TELEGRAM_BOT_TOKEN => __('settings.telegram_bot_token'),
+            self::TELEGRAM_CHAT_ID => __('settings.telegram_chat_id'),
         };
     }
 }
