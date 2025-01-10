@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Events\TelegramEvents\TelegramDebugMessageEvent;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -28,9 +29,14 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        $this->reportable(
+            function (Throwable $e) {
+                if (! app()->runningInConsole()) {
+                    $errorMessage = preg_replace('/[?&]psw=[^&]*/', '', $e->getMessage());
+                    event(new TelegramDebugMessageEvent($errorMessage, $e->getFile(), $e->getLine()));
+                }
+            }
+        );
     }
 
     /**

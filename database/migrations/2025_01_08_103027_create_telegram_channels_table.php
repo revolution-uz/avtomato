@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('telegram_channels', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('chat_id', 50);
+            $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('type');
+            //            $table->string('event', 128);
+            $table->foreignId('company_id')->nullable()->constrained('companies');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('telegram_channels');
+    }
+};

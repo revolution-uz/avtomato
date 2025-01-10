@@ -10,20 +10,33 @@ enum SettingsEnum: string
     case WEBSITE_MAINTENANCE_MODE = 'website_maintenance_mode';
     case PARTNER_APP_MIN_VERSION = 'partner_app_min_version';
     case CLIENT_APP_MIN_VERSION = 'client_app_min_version';
+    case ALLOW_TELEGRAM_NOTIFICATION = 'allow_telegram_notification';
 
     public static function getType(self $type): SettingsTypeEnum
     {
         return match ($type) {
-            self::PARTNER_APP_MAINTENANCE_MODE, self::CLIENT_API_MAINTENANCE_MODE, self::PARTNER_WEB_MAINTENANCE_MODE, self::WEBSITE_MAINTENANCE_MODE => SettingsTypeEnum::BOOLEAN,
-            self::PARTNER_APP_MIN_VERSION, self::CLIENT_APP_MIN_VERSION => SettingsTypeEnum::INT,
+            self::PARTNER_APP_MAINTENANCE_MODE,
+            self::CLIENT_API_MAINTENANCE_MODE,
+            self::PARTNER_WEB_MAINTENANCE_MODE,
+            self::WEBSITE_MAINTENANCE_MODE,
+            self::ALLOW_TELEGRAM_NOTIFICATION => SettingsTypeEnum::BOOLEAN,
+
+            self::PARTNER_APP_MIN_VERSION,
+            self::CLIENT_APP_MIN_VERSION => SettingsTypeEnum::INT,
         };
     }
 
     public static function getDefaultValue(self $type): string|int
     {
         return match ($type) {
-            self::PARTNER_APP_MAINTENANCE_MODE, self::CLIENT_API_MAINTENANCE_MODE, self::PARTNER_WEB_MAINTENANCE_MODE, self::WEBSITE_MAINTENANCE_MODE => 0,
-            self::PARTNER_APP_MIN_VERSION, self::CLIENT_APP_MIN_VERSION => 1,
+            self::PARTNER_APP_MAINTENANCE_MODE,
+            self::CLIENT_API_MAINTENANCE_MODE,
+            self::PARTNER_WEB_MAINTENANCE_MODE,
+            self::WEBSITE_MAINTENANCE_MODE => 0,
+
+            self::PARTNER_APP_MIN_VERSION,
+            self::CLIENT_APP_MIN_VERSION,
+            self::ALLOW_TELEGRAM_NOTIFICATION => 1,
         };
     }
 }
