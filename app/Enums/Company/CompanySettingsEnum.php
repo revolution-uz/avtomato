@@ -64,6 +64,15 @@ enum CompanySettingsEnum: string
         ];
     }
 
+    public static function telegramBotSettings(): array
+    {
+        return [
+            self::TELEGRAM_BOT_ENABLED,
+            self::TELEGRAM_BOT_TOKEN,
+            self::TELEGRAM_CHAT_ID,
+        ];
+    }
+
     public function getLabel(): string
     {
         return match ($this) {

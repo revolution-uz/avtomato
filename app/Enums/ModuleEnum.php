@@ -60,7 +60,8 @@ enum ModuleEnum: string
             FeatureEnum::BALANCE_CHARGE,
             FeatureEnum::THEME_MANAGEMENT,
             FeatureEnum::GENERAL_FEATURE,
-            FeatureEnum::COMPANY_MANAGEMENT => self::cases(),
+            FeatureEnum::COMPANY_MANAGEMENT,
+            FeatureEnum::TELEGRAM_BOT_FEATURE => self::cases(),
         };
     }
 

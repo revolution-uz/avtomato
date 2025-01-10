@@ -3,9 +3,11 @@
 namespace App\Listeners;
 
 use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\FeatureEnum;
 use App\Events\TelegramEvents\BaseTelegramEvent;
 use App\Jobs\SendMessageToTelegramJob;
 use App\Models\Company\CompanySettings;
+use App\Models\Company\Feature;
 use Exception;
 use Throwable;
 
@@ -21,7 +23,8 @@ class TelegramEventListener
     public function handle(BaseTelegramEvent $event): void
     {
         if (
-            CompanySettings::getConfig(CompanySettingsEnum::TELEGRAM_BOT_ENABLED) !== '1'
+            ! Feature::isFeatureActive(FeatureEnum::TELEGRAM_BOT_FEATURE)
+            or CompanySettings::getConfig(CompanySettingsEnum::TELEGRAM_BOT_ENABLED) !== '1'
             or empty($chatId = CompanySettings::getConfig(CompanySettingsEnum::TELEGRAM_CHAT_ID))
             or empty(CompanySettings::getConfig(CompanySettingsEnum::TELEGRAM_BOT_TOKEN))
         ) {
