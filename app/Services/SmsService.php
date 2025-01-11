@@ -111,7 +111,9 @@ class SmsService
 
         if ($request->status == SmsMessageStatusEnum::DELIVERED->value) {
             $feature = Feature::findByName(FeatureEnum::SMS);
-            $message->charge->update(['amount' => $feature->amount * $request->smsCount()]);
+            $message->charge->update(['amount' => $feature->chargeable_amount * $request->smsCount()]);
+        } else {
+            $message->charge->delete();
         }
 
         return true;
