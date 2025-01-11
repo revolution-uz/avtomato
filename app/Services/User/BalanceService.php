@@ -31,13 +31,26 @@ class BalanceService
         return self::getBalance() > self::MIN_BALANCE_AMOUNT;
     }
 
-    public function chargeAmount(FeatureEnum $featureName, Model $model, ?int $amount = null): BalanceCharge
+    public function chargeAmount(FeatureEnum $featureName, Model $model): BalanceCharge
     {
         /** @var Feature $feature */
         $feature = Feature::query()->where('name', $featureName)->firstOrFail();
 
         return BalanceCharge::query()->create([
-            'amount' => $amount ?? $feature->chargeable_amount,
+            'amount' => $feature->chargeable_amount,
+            'feature_id' => $feature->id,
+            'chargeable_id' => $model->getKey(),
+            'chargeable_type' => get_class($model),
+        ]);
+    }
+
+    public function chargeCustomAmount(FeatureEnum $featureName, Model $model, int $amount): BalanceCharge
+    {
+        /** @var Feature $feature */
+        $feature = Feature::query()->where('name', $featureName)->firstOrFail();
+
+        return BalanceCharge::query()->create([
+            'amount' => $amount,
             'feature_id' => $feature->id,
             'chargeable_id' => $model->getKey(),
             'chargeable_type' => get_class($model),

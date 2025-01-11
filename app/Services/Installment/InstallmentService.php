@@ -310,7 +310,7 @@ class InstallmentService
         $amount = $feature->chargeable_amount * ceil($installment->period / 3);
 
         if ($this->balanceService->isAvailableCompany()) {
-            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment, $amount);
+            $this->balanceService->chargeCustomAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment, $amount);
 
             return true;
         }
