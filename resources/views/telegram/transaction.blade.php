@@ -9,4 +9,4 @@
 💳 <b>Turi:</b> {{ $record->transactionType->name_uz }}
 🏢 <b>Filial:</b> {{ $record->branch->name }}
 
-🕰 <b>Sana va vaqt:</b> {{ $record->created_at }}
+🕰 <b>Sana va vaqt:</b> {{ $record->created_at->timezone('Asia/Tashkent')->format('d.m.Y H:i:s') }}
