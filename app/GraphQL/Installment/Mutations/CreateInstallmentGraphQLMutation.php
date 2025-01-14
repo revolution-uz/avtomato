@@ -70,6 +70,6 @@ class CreateInstallmentGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return $this->installmentService->create($args['installment'] + Arr::except($args, ['installments']));
+        return $this->installmentService->create($args['installment'] + Arr::except($args, ['installment']));
     }
 }
