@@ -18,14 +18,15 @@ class PassportInfoService
 
     public function getPassportData(string $passportSeries, string $passportNumber, Carbon $birthData): ?PassportDataDTO
     {
-        try {
-            return $this->oilaKreditClient->getDataByPassport($passportSeries, $passportNumber, $birthData);
-        } catch (PassportDataNotFoundException|Throwable) {
-        }
 
         try {
             return $this->onlineMahallaClient->getDataByPassport($passportSeries, $passportNumber, $birthData);
         } catch (PassportDataNotFoundException) {
+        }
+
+        try {
+            return $this->oilaKreditClient->getDataByPassport($passportSeries, $passportNumber, $birthData);
+        } catch (PassportDataNotFoundException|Throwable) {
         }
 
         return null;
