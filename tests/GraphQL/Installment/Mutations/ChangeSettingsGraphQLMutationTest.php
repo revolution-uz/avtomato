@@ -209,7 +209,7 @@ class ChangeSettingsGraphQLMutationTest extends GraphQLTestCase
     {
         tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
 
-        $companySettings = CompanySettings::query()->firstWhere('name', CompanySettingsEnum::randomValue());
+        $companySettings = CompanySettings::query()->firstWhere('name', CompanySettingsEnum::CARD_AFTER_DUE_DAYS);
         $input = [
             'settings_id' => $companySettings->id,
             'value' => (string) ($companySettings->value + 1),
