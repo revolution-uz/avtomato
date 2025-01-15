@@ -44,7 +44,7 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
             'amount' => rand($this->_tariff->min_amount, $this->_tariff->max_amount),
             'initial_fee' => rand($this->_tariff->min_initial_fee, $this->_tariff->max_initial_fee),
             'description' => 'test',
-            'starts_in' => '2022-01-01',
+            'starts_in' => '2025-03-14',
         ];
     }
 
