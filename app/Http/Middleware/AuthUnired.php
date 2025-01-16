@@ -15,7 +15,7 @@ class AuthUnired
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->header('Authorization') !== $this->getStaticToken()) {
+        if (str_replace('Bearer ', '', $request->header('Authorization')) !== $this->getStaticToken()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -24,6 +24,6 @@ class AuthUnired
 
     private function getStaticToken()
     {
-        return config('clients.unired.callback-token');
+        return config('clients.unired.callback-token', '');
     }
 }
