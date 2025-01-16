@@ -14,6 +14,7 @@ use App\Nova\Company\BalanceChargeResource;
 use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
 use App\Nova\Company\FeatureResource;
+use App\Nova\Company\InstallmentResource;
 use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SmsTemplateResource;
@@ -61,6 +62,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(BalanceFundResource::class),
                         MenuItem::resource(BalanceChargeResource::class),
                         MenuItem::resource(SmsTemplateResource::class),
+                        MenuItem::resource(InstallmentResource::class),
                     ])->collapsable(),
                 ];
             }

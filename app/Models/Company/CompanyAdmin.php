@@ -47,7 +47,6 @@ class CompanyAdmin extends Authenticatable
     protected $table = 'admins';
 
     protected $fillable = [
-        'status',
         'first_name',
         'last_name',
         'username',
