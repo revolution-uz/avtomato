@@ -44,11 +44,11 @@ class UniredPaymentWebhookCallbackRequest extends FormRequest
         return true;
     }
 
-    public function getCompanyId()
+    public function getCompanyId(): ?int
     {
         $arr = explode(Utilities::TENANT_SEPARATOR, $this->loan_id);
 
-        return $arr[0] ?? null;
+        return isset($arr[0]) ? (int) $arr[0] : null;
     }
 
     public function getInstallmentId(): ?int

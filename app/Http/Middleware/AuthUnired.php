@@ -22,8 +22,8 @@ class AuthUnired
         return $next($request);
     }
 
-    private function getStaticToken()
+    private function getStaticToken(): string
     {
-        return config('clients.unired.callback-token');
+        return 'Bearer ' . config('clients.unired.callback-token', '');
     }
 }

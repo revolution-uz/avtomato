@@ -25,6 +25,8 @@ class UniredController extends Controller
                     if ($this->uniredService->createTransaction($installment, $request->getInstallmentGuarantorCustomerId(), $request)) {
                         return response()->json(['success' => true, 'message' => 'OK'], 200);
                     }
+
+                    return response()->json(['success' => true, 'message' => 'Transaction was already created'], 200);
                 } elseif ($this->uniredService->createTransaction($installment, $installment->customer_id, $request)) {
                     return response()->json(['success' => true, 'message' => 'OK'], 200);
                 }
