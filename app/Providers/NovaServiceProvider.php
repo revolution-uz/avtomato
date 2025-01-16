@@ -14,6 +14,7 @@ use App\Nova\Company\BalanceChargeResource;
 use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
 use App\Nova\Company\FeatureResource;
+use App\Nova\Company\InstallmentResource;
 use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SmsTemplateResource;
@@ -22,6 +23,7 @@ use App\Nova\CompanyResource;
 use App\Nova\CustomerResource;
 use App\Nova\Dashboards\Main;
 use App\Nova\SettingsResource;
+use Avtomato\TransactionByCompanies\TransactionByCompanies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -60,6 +62,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(BalanceFundResource::class),
                         MenuItem::resource(BalanceChargeResource::class),
                         MenuItem::resource(SmsTemplateResource::class),
+                        MenuItem::resource(InstallmentResource::class),
                     ])->collapsable(),
                 ];
             }
@@ -77,6 +80,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(BaseModuleResource::class),
                     MenuItem::resource(BaseFeatureResource::class),
                     MenuItem::resource(BaseSmsTemplateResource::class),
+                    (new TransactionByCompanies)->menu($request),
                 ])->collapsable(),
             ];
         });
@@ -91,8 +95,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 $menu->append([
                     MenuItem::externalLink('Horizon dashboard', '/nova/horizon')->openInNewTab(),
                     MenuItem::externalLink('Log viewer', '/nova/log-viewer')->openInNewTab(),
-                ]
-                );
+                ]);
             }
 
             return $menu;
@@ -107,7 +110,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function tools(): array
     {
-        return [];
+        return [
+            new TransactionByCompanies,
+        ];
     }
 
     /**

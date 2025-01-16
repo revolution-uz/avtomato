@@ -44,4 +44,15 @@ enum InstallmentStatusEnum: int
             default => null,
         };
     }
+
+    public static function options(): array
+    {
+        return [
+            self::CANCELED->value => 'Canceled',
+            self::FROZEN->value => 'Frozen',
+            self::INACTIVE->value => 'Inactive',
+            self::ACTIVE->value => 'Active',
+            self::CLOSED->value => 'Closed',
+        ];
+    }
 }
