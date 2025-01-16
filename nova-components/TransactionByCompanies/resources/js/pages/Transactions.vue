@@ -149,6 +149,11 @@ export default {
       this.updateURL('page', value);
       this.refreshResource();
     },
+  },
+  watch: {
+    'meta.page'(newValue) {
+      this.updateURL('page', newValue);
+    }
   }
 }
 </script>
