@@ -22,6 +22,7 @@ use App\Nova\CompanyResource;
 use App\Nova\CustomerResource;
 use App\Nova\Dashboards\Main;
 use App\Nova\SettingsResource;
+use Avtomato\TransactionByCompanies\TransactionByCompanies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -77,6 +78,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(BaseModuleResource::class),
                     MenuItem::resource(BaseFeatureResource::class),
                     MenuItem::resource(BaseSmsTemplateResource::class),
+                    (new TransactionByCompanies)->menu($request),
                 ])->collapsable(),
             ];
         });
@@ -91,8 +93,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 $menu->append([
                     MenuItem::externalLink('Horizon dashboard', '/nova/horizon')->openInNewTab(),
                     MenuItem::externalLink('Log viewer', '/nova/log-viewer')->openInNewTab(),
-                ]
-                );
+                ]);
             }
 
             return $menu;
@@ -107,7 +108,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function tools(): array
     {
-        return [];
+        return [
+            new TransactionByCompanies,
+        ];
     }
 
     /**

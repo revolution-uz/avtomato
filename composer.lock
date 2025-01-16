@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66b6c865c70890318e25afe1a9c5a4f5",
+    "content-hash": "20b08fc2d6daca08d2495be9ee113a06",
     "packages": [
         {
             "name": "amphp/amp",
@@ -813,6 +813,47 @@
                 }
             ],
             "time": "2024-08-03T19:31:26+00:00"
+        },
+        {
+            "name": "avtomato/transaction-by-companies",
+            "version": "dev-AVTO-599-transaction-by-companies-in-nova",
+            "dist": {
+                "type": "path",
+                "url": "./nova-components/TransactionByCompanies",
+                "reference": "fe5dfebdebe920bfc7542331f745ac09798ace34"
+            },
+            "require": {
+                "illuminate/support": "^10.0|^11.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "laravel/nova": "^5.0",
+                "laravel/nova-devtool": "^1.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Avtomato\\TransactionByCompanies\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Avtomato\\TransactionByCompanies\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova tool.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -12729,7 +12770,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "avtomato/transaction-by-companies": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
