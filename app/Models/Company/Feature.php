@@ -33,8 +33,6 @@ class Feature extends Model
 {
     use HasFactory, TenantConnection;
 
-    public static ?array $_cache = null;
-
     protected $fillable = [
         'is_active',
         'amount',
@@ -56,24 +54,9 @@ class Feature extends Model
         return $feature;
     }
 
-    public static function isFeatureActive(FeatureEnum $feature)
+    public static function isFeatureActive(FeatureEnum $feature): bool
     {
-        if (! self::$_cache) {
-            self::$_cache = self::query()->pluck('is_active', 'name')->toArray();
-        }
-
-        return self::$_cache[$feature->value];
-    }
-
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::updated(function (self $model) {
-            if ($model->isDirty('is_active') && self::$_cache) {
-                self::$_cache[$model->name->value] = $model->is_active;
-            }
-        });
+        return self::findByName($feature)->is_active;
     }
 
     public function modules(): BelongsToMany

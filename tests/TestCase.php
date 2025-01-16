@@ -4,7 +4,6 @@ namespace Tests;
 
 use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
-use App\Models\Company\Feature;
 use App\Models\Company\Rbac\Role;
 use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\BranchSeeder;
@@ -68,8 +67,6 @@ abstract class TestCase extends BaseTestCase
         Artisan::call('tenants:seed', ['--class' => SmsTemplateSeeder::class, '--tenants' => [$tenant->id]]);
         Artisan::call('tenants:seed', ['--class' => CompanySettingsSeeder::class, '--tenants' => [$tenant->id]]);
         Artisan::call('tenants:seed', ['--class' => BranchSeeder::class, '--tenants' => [$tenant->id]]);
-
-        Feature::$_cache = null;
     }
 
     public function createAdminUser()
