@@ -84,10 +84,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::initialPath('/dashboards/main');
 
         Nova::userMenu(function (Request $request, Menu $menu) {
-            /** @var Admin $admin */
+            /** @var Admin|null $admin */
             $admin = $request->user();
 
-            if ($admin->role === AdminRoleEnum::SUPER_ADMIN) {
+            if ($admin && $admin->role === AdminRoleEnum::SUPER_ADMIN) {
                 $menu->append([
                     MenuItem::externalLink('Horizon dashboard', '/nova/horizon')->openInNewTab(),
                     MenuItem::externalLink('Log viewer', '/nova/log-viewer')->openInNewTab(),
