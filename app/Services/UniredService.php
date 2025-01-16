@@ -95,18 +95,19 @@ class UniredService
     {
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
         $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
-        $createClientResponse = $this->uniredClient->createContracts(new UniredCreateContractRequestDTO(
+        if ($this->uniredClient->createContracts(new UniredCreateContractRequestDTO(
             $installment->customer->pinfl,
             Utilities::generateIdByTenancy($installment->id),
             Utilities::generateIdByTenancy($installment->id),
             $branchFeatureDto->id,
             (int) ($installment->debtAmount * 100),
-        ));
-        if ($createClientResponse->status) {
-            $installment->update(['unired_id' => 1]);
+        ))->isSuccess()) {
+            $installment->updateOrFail(['unired_id' => 1]);
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public function updateInstallment(Installment $installment): ?bool
@@ -119,14 +120,13 @@ class UniredService
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
         $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
 
-        $createClientResponse = $this->uniredClient->createContracts(new UniredCreateContractRequestDTO(
+        if ($this->uniredClient->createContracts(new UniredCreateContractRequestDTO(
             $installmentGuarantor->customer->pinfl,
             Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
             Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
             $branchFeatureDto->id,
             (int) ($installmentGuarantor->installment->debtAmount * 100),
-        ));
-        if ($createClientResponse->status) {
+        ))->isSuccess()) {
             $installmentGuarantor->update(['unired_id' => 1]);
 
             return true;
