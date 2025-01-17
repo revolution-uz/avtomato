@@ -10,6 +10,7 @@ use App\Nova\AdminResource;
 use App\Nova\BaseFeatureResource;
 use App\Nova\BaseModuleResource;
 use App\Nova\BaseSmsTemplateResource;
+use App\Nova\CentralCustomerResource;
 use App\Nova\Company\BalanceChargeResource;
 use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
@@ -20,7 +21,6 @@ use App\Nova\Company\RoleResource;
 use App\Nova\Company\SmsTemplateResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
-use App\Nova\CustomerResource;
 use App\Nova\Dashboards\Main;
 use App\Nova\SettingsResource;
 use Avtomato\TransactionByCompanies\TransactionByCompanies;
@@ -75,7 +75,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuSection::make('Resources', [
                     MenuItem::resource(CompanyResource::class),
                     MenuItem::resource(AdminResource::class),
-                    MenuItem::resource(CustomerResource::class),
+                    MenuItem::resource(CentralCustomerResource::class),
                     MenuItem::resource(SettingsResource::class),
                     MenuItem::resource(BaseModuleResource::class),
                     MenuItem::resource(BaseFeatureResource::class),

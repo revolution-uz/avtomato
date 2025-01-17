@@ -60,7 +60,7 @@ Route::get('{companyId}', function (Request $request) {
     $page = max(1, min($page, (int) ceil($total / $perPage)));
 
     $resources = $transactionQuery->clone()
-        ->orderBy('id')
+        ->orderByDesc('id')
         ->with(['branch', 'transactionType'])
         ->skip($perPage * ($page - 1))
         ->take($perPage)
