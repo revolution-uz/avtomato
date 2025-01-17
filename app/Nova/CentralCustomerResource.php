@@ -6,7 +6,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class CustomerResource extends Resource
+class CentralCustomerResource extends Resource
 {
     /**
      * The model the resource corresponds to.
