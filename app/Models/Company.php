@@ -54,7 +54,6 @@ class Company extends Tenant implements TenantWithDatabase
         return [
             'id',
             'name',
-            'status',
             'owner_name',
             'owner_phone',
             'address',
@@ -76,5 +75,10 @@ class Company extends Tenant implements TenantWithDatabase
     public function getIncrementing(): bool
     {
         return true;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === CompanyStatusEnum::ACTIVE;
     }
 }

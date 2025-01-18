@@ -2,9 +2,6 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\IsSoftDeletedClientToken;
-use App\Http\Middleware\IsSoftDeletedToken;
-use App\Http\Middleware\OptionalAuthenticate;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -61,9 +58,10 @@ class Kernel extends HttpKernel
      */
     protected $middlewareAliases = [
         'auth' => \App\Http\Middleware\Authenticate::class,
-        'optional_auth' => OptionalAuthenticate::class,
-        'is_soft_delete_token' => IsSoftDeletedToken::class,
-        'is_soft_delete_client_token' => IsSoftDeletedClientToken::class,
+        'optional_auth' => \App\Http\Middleware\OptionalAuthenticate::class,
+        'is_soft_delete_token' => \App\Http\Middleware\IsSoftDeletedToken::class,
+        'is_soft_delete_client_token' => \App\Http\Middleware\IsSoftDeletedClientToken::class,
+        'ecommerce' => \App\Http\Middleware\CheckCompanyAndFeatureStatus::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'force.json' => \App\Http\Middleware\ForceJsonResponse::class,
