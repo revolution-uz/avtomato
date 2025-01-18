@@ -53,7 +53,7 @@ enum SmsTemplateEnum: int
             ],
             self::ECOMMERCE_OTP => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
-                'original_template' => ':ecommerce dan ro\'yxatdan o\'tish uchun kod: :code',
+                'original_template' => 'Ecommerce dan ro\'yxatdan o\'tish uchun kod: :code',
                 'description' => 'Onlayn do\'kondan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
             self::DEBT_10 => [
