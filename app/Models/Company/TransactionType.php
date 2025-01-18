@@ -47,7 +47,7 @@ class TransactionType extends Model
 
     public static function autoPayList(): array
     {
-        return [self::ATMOS_WITH_CARD, self::ATMOS_WITH_PINFL];
+        return [self::ATMOS_WITH_CARD, self::ATMOS_WITH_PINFL, self::UNIRED_WITH_PINFL];
     }
 
     public function setNames(string $name): void
