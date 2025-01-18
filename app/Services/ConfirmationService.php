@@ -8,31 +8,26 @@ use Exception;
 
 class ConfirmationService
 {
-    public function __construct(
-        private readonly SmsService $smsService
-    ) {}
+    public function __construct(private readonly SmsService $smsService) {}
 
     /**
      * @throws Exception
      */
     public function send(string $phone, bool $isEcommerceOtp = false): true
     {
-        /** @var CardConfirmationSms|null $authAttempt */
-        $authAttempt = CardConfirmationSms::query()
-            ->where('phone', $phone)
-            ->where('created_at', '>', Carbon::now()->subMinutes(2))
-            ->exists();
-
-        if ($authAttempt) {
-            return true;
+        if (
+            CardConfirmationSms::query()
+                ->where('phone', $phone)
+                ->where('created_at', '>', Carbon::now()->subMinutes(2))
+                ->doesntExist()
+        ) {
+            $code = $this->generateCode();
+            $confirmationSms = CardConfirmationSms::query()->create([
+                'phone' => $phone,
+                'code' => $code,
+            ]);
+            $this->smsService->sendConfirmationSms($confirmationSms, $isEcommerceOtp);
         }
-
-        $code = $this->generateCode();
-        $confirmationSms = CardConfirmationSms::query()->create([
-            'phone' => $phone,
-            'code' => $code,
-        ]);
-        $this->smsService->sendConfirmationSms($confirmationSms, $isEcommerceOtp);
 
         return true;
     }
