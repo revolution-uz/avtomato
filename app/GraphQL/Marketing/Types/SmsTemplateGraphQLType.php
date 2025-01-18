@@ -2,12 +2,15 @@
 
 namespace App\GraphQL\Marketing\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\SmsTemplate;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class SmsTemplateGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'SmsTemplateGraphQLType';
 
     protected $attributes = [
