@@ -70,7 +70,7 @@ class SendDebtSmsJobTest extends TestCase
     public function successSendDebtSmsForToday(): void
     {
         $this->_smsServiceMock->shouldReceive('sendSms')->once();
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->once()->andReturn(true);
         $this->_balanceServiceMock->shouldReceive('chargeAmount')->once();
 
         $this->_installment->update(['starts_in' => Carbon::today()]);
@@ -96,7 +96,7 @@ class SendDebtSmsJobTest extends TestCase
     public function successSendDebtSmsBeforeOneDay(): void
     {
         $this->_smsServiceMock->shouldReceive('sendSms')->once();
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->once()->andReturn(true);
         $this->_balanceServiceMock->shouldReceive('chargeAmount')->once();
 
         $this->_installment->update(['starts_in' => Carbon::today()->addDay()]);
@@ -114,7 +114,7 @@ class SendDebtSmsJobTest extends TestCase
     public function successSendDebtSmsAfterOneDay(): void
     {
         $this->_smsServiceMock->shouldReceive('sendSms')->once();
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->once()->andReturn(true);
         $this->_balanceServiceMock->shouldReceive('chargeAmount')->once();
 
         $this->_installment->update(['starts_in' => Carbon::today()->subDay()]);
@@ -132,7 +132,7 @@ class SendDebtSmsJobTest extends TestCase
     public function doNotSendDebtSmsIfThereIsNoAvailable(): void
     {
         $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->times(3)->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->times(3)->andReturn(true);
         $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
         SmsTemplate::debtTemplates()->update(['data->is_active' => false]);
@@ -154,7 +154,7 @@ class SendDebtSmsJobTest extends TestCase
         Feature::findByName(FeatureEnum::SMS)->update(['is_active' => false]);
 
         $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->times(0);
         $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
         (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
@@ -166,7 +166,7 @@ class SendDebtSmsJobTest extends TestCase
     public function failWithInsufficientBalance(): void
     {
         $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->once()->andReturn(false);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->once()->andReturn(false);
         $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
         (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
@@ -180,7 +180,7 @@ class SendDebtSmsJobTest extends TestCase
         CompanySettings::query()->where('name', CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT)->update(['value' => 0]);
 
         $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->times(0);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->times(0);
         $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
         (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);
@@ -197,7 +197,7 @@ class SendDebtSmsJobTest extends TestCase
         $this->_installment = Installment::factory()->create(['customer_id' => $this->_customer->id, 'starts_in' => Carbon::now()]);
 
         $this->_smsServiceMock->shouldReceive('sendSms')->times(0);
-        $this->_balanceServiceMock->shouldReceive('isAvaiblableCompany')->once()->andReturn(true);
+        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->once()->andReturn(true);
         $this->_balanceServiceMock->shouldReceive('chargeAmount')->times(0);
 
         (new SendDebtSmsJob($this->_installment->id))->handle($this->_smsServiceMock, $this->_balanceServiceMock);

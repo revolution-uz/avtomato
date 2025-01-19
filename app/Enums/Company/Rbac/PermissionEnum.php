@@ -264,6 +264,8 @@ enum PermissionEnum: string
     case DELIVERY_POINT_VIEW = 'ecommerce_delivery_point_view';
     case DELIVERY_POINT_VIEW_ALL = 'ecommerce_delivery_point_view_all';
 
+    case ECOMMERCE_IMAGE_CREATE = 'ecommerce_images_create';
+
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
         return match ($permission) {
@@ -460,6 +462,7 @@ enum PermissionEnum: string
             self::DELIVERY_POINT_EDIT,
             self::DELIVERY_POINT_VIEW,
             self::DELIVERY_POINT_VIEW_ALL,
+            self::ECOMMERCE_IMAGE_CREATE,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL,
@@ -753,6 +756,7 @@ enum PermissionEnum: string
                 self::DELIVERY_POINT_DELETE->value,
                 self::DELIVERY_POINT_VIEW->value,
                 self::DELIVERY_POINT_VIEW_ALL->value,
+                self::ECOMMERCE_IMAGE_CREATE->value,
             ],
         ];
     }
@@ -989,7 +993,8 @@ enum PermissionEnum: string
             self::DELIVERY_POINT_EDIT,
             self::DELIVERY_POINT_DELETE,
             self::DELIVERY_POINT_VIEW,
-            self::DELIVERY_POINT_VIEW_ALL, => FeatureEnum::ECOMMERCE,
+            self::DELIVERY_POINT_VIEW_ALL,
+            self::ECOMMERCE_IMAGE_CREATE => FeatureEnum::ECOMMERCE,
         };
     }
 
@@ -1065,7 +1070,6 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE,
-            self::STATISTICS_BY_BRANCHES,
 
             self::SETTINGS_EDIT,
 
@@ -1088,7 +1092,38 @@ enum PermissionEnum: string
             self::SCORING_HUMO_DELETE,
 
             self::SCORING_UZCARD_CREATE,
-            self::SCORING_UZCARD_DELETE => true,
+            self::SCORING_UZCARD_DELETE,
+            self::SCORING_ROYXAT_CREDIT_HISTORY_CREATE,
+
+            self::ECOMMERCE_IMAGE_CREATE,
+
+            self::BANNER_CREATE,
+            self::BANNER_EDIT,
+            self::BANNER_DELETE,
+
+            self::PRODUCT_CATEGORY_CREATE,
+            self::PRODUCT_CATEGORY_EDIT,
+            self::PRODUCT_CATEGORY_DELETE,
+
+            self::PRODUCT_BRAND_CREATE,
+            self::PRODUCT_BRAND_EDIT,
+            self::PRODUCT_BRAND_DELETE,
+
+            self::PRODUCT_CREATE,
+            self::PRODUCT_EDIT,
+            self::PRODUCT_DELETE,
+
+            self::PRODUCT_OPTION_CREATE,
+            self::PRODUCT_OPTION_EDIT,
+            self::PRODUCT_OPTION_DELETE,
+
+            self::PRODUCT_OPTION_VALUE_CREATE,
+            self::PRODUCT_OPTION_VALUE_EDIT,
+            self::PRODUCT_OPTION_VALUE_DELETE,
+
+            self::DELIVERY_POINT_CREATE,
+            self::DELIVERY_POINT_EDIT,
+            self::DELIVERY_POINT_DELETE => true,
 
             default => false,
         };

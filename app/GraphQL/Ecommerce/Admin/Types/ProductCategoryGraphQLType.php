@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Ecommerce\ProductCategory;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -9,6 +10,8 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class ProductCategoryGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'ProductCategoryGraphQLType';
 
     protected $attributes = [
@@ -42,21 +45,13 @@ class ProductCategoryGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (ProductCategory $root) => $root->name_oz,
             ],
-            'image' => [
-                'type' => GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (ProductCategory $root) => $root->image,
-            ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (ProductCategory $root) => $root->is_active,
             ],
-            'products' => [
-                'type' => Type::listOf(GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (ProductCategory $root) => $root->products,
-            ],
-            'banners' => [
-                'type' => Type::listOf(GraphQL::type(BannerGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (ProductCategory $root) => $root->banners,
+            'image_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (ProductCategory $root) => $root->image_id,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
@@ -69,6 +64,22 @@ class ProductCategoryGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (ProductCategory $root) => $root->deleted_at?->timestamp,
+            ],
+            'image' => [
+                'type' => GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (ProductCategory $root) => $root->image,
+            ],
+            'parent' => [
+                'type' => GraphQL::type(ProductCategoryGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (ProductCategory $root) => $root->parent,
+            ],
+            'products' => [
+                'type' => Type::listOf(GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (ProductCategory $root) => $root->products,
+            ],
+            'banners' => [
+                'type' => Type::listOf(GraphQL::type(BannerGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (ProductCategory $root) => $root->banners,
             ],
         ];
     }

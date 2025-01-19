@@ -52,7 +52,7 @@ class BalanceFund extends Model
         parent::boot();
 
         static::created(function (self $balanceFund) {
-            if (tenant()->status != CompanyStatusEnum::ACTIVE and BalanceService::isAvaiblableBalance()) {
+            if (tenant()->status != CompanyStatusEnum::ACTIVE and BalanceService::isAvailableBalance()) {
                 tenant()->updateOrFail(['status' => CompanyStatusEnum::ACTIVE]);
             }
         });

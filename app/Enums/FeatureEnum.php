@@ -40,6 +40,7 @@ enum FeatureEnum: string
     case UNIRED_PAY = 'unired_pay';
     case ECOMMERCE = 'ecommerce_management';
     case SBP_PAY = 'sbp_pay';
+    case TELEGRAM_BOT_FEATURE = 'telegram_bot_feature';
     case GENERAL_FEATURE = 'general_feature';
 
     public function getDefaultDescription(): ?string
@@ -81,7 +82,8 @@ enum FeatureEnum: string
             self::INSTALLMENT_AUTO_CHARGE_BY_PINFL => 'Muddatli to\'lovda PINFL orqali avtomatik to\'lov',
             self::ECOMMERCE => 'Internet do\'kon boshqaruvi',
             self::SBP_PAY => 'SBP QR kodidan foydalangan holda to\'lovlar - Payments using QR code SBP',
-            self::GENERAL_FEATURE => 'Umumiy ko\'rishlar uchun'
+            self::TELEGRAM_BOT_FEATURE => 'Telegram bot orqali xabar yuborish',
+            self::GENERAL_FEATURE => 'Umumiy ko\'rishlar uchun',
         };
     }
 
@@ -118,6 +120,7 @@ enum FeatureEnum: string
             self::SMS,
             self::INSTALLMENT_AUTO_CHARGE,
             self::INSTALLMENT_AUTO_CHARGE_BY_PINFL,
+            self::TELEGRAM_BOT_FEATURE,
         ]);
     }
 }

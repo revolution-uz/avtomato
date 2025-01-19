@@ -20,4 +20,9 @@ class AtmosTransactionInfoPayloadDTO extends Data
     {
         return $this->transaction_status == 'SUCCESS';
     }
+
+    public function inProgress(): bool
+    {
+        return $this->transaction_status == 'IN_PROGRESS';
+    }
 }

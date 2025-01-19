@@ -33,6 +33,7 @@ use App\GraphQL\Installment\Mutations\UpdateInstallmentCommentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentCustomerAnyCardChargeGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateInstallmentGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTariffGraphQLMutation;
+use App\GraphQL\Installment\Mutations\UpdateTelegramBotSettingsGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Queries\CalculateGraphQLQuery;
@@ -46,6 +47,7 @@ use App\GraphQL\Installment\Queries\StatisticsByBranchesGraphQLQuery;
 use App\GraphQL\Installment\Queries\StatisticsGraphQLQuery;
 use App\GraphQL\Installment\Queries\StatisticsInfoGraphQLQuery;
 use App\GraphQL\Installment\Queries\TariffsGraphQLQuery;
+use App\GraphQL\Installment\Queries\TelegramBotSettingsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionAttemptsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionsGraphQLQuery;
 use App\GraphQL\Installment\Queries\TransactionTypesGraphQLQuery;
@@ -129,6 +131,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 StatisticsGraphQLQuery::class,
                 StatisticsInfoGraphQLQuery::class,
                 StatisticsByBranchesGraphQLQuery::class,
+                TelegramBotSettingsGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateInstallmentGraphQLMutation::class,
@@ -156,6 +159,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 ChangeStatusGraphQLMutation::class,
                 UpdateInstallmentCustomerAnyCardChargeGraphQLMutation::class,
                 ChangeSettingsGraphQLMutation::class,
+                UpdateTelegramBotSettingsGraphQLMutation::class,
             ],
             'types' => [
                 InstallmentInputGraphQLType::class,

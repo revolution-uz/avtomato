@@ -7,11 +7,16 @@ use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhoneRequestDTO;
-use App\DTOs\Unired\Client\UniredClientExtIdDTO;
+use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
+use App\DTOs\Unired\Client\UniredContractLoanIdDTO;
+use App\DTOs\Unired\Client\UniredCreateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredFindClientRequestDTO;
 use App\DTOs\Unired\Client\UniredFindClientsRequestDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
+use App\DTOs\Unired\Client\UniredUpdateClientDebitRequestDTO;
+use App\DTOs\Unired\Contract\UniredCreateContractRequestDTO;
+use App\DTOs\Unired\Contract\UniredUpdateContractRequestDTO;
 use App\DTOs\Unired\Payment\UniredCancelPaymentRequestDTO;
 use App\DTOs\Unired\Payment\UniredChangePaymentSendStatusRequestDTO;
 use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
@@ -37,20 +42,26 @@ class UniredClient extends BaseClient
     // Client Module
     const CLIENT_CREATE = 'client.create';
     const CLIENT_CREATE_OR_UPDATE = 'client.createOrUpdate';
+    const CLIENT_DEBIT_UPDATE = 'client.debit.update';
     const CLIENT_FIND = 'client.find';
     const CLIENT_FIND_MULTIPLE = 'client.find.multiple';
     const CLIENT_PHONE_ADD = 'client.phone.add';
     const CLIENT_ALL = 'client.all';
     const CLIENT_AUTO_TOGGLE = 'client.auto.toggle';
-    const CLIENT_DELETE = 'client.delete';
+    const ADD_CLIENT_PHONE = 'client.phone.add';
 
     // Payment Module
     const PAYMENT_GET = 'payment.get';
     const PAYMENT_CHANGE_SEND_STATUS = 'payment.change.send.status';
     const PAYMENT_REGISTER = 'payment.register';
     const PAYMENT_CANCEL = 'payment.cancel';
-    const PAYMENT_GET_WEBHOOK = 'payment.get.webhook';
-    const PAYMENT_SET_WEBHOOK = 'payment.set.webhook';
+    const CHECK_WEBHOOK = 'webhook.check';
+    const SET_WEBHOOK = 'webhook.set';
+
+    const CONTRACT_UPDATE = 'contract.update';
+    const CONTRACT_CREATE = 'contract.create';
+    const CONTRACT_DELETE = 'contract.delete';
+    const TRANSACTION_GET = 'transaction.get';
 
     private string $baseUrl;
     private string $token;
@@ -102,6 +113,11 @@ class UniredClient extends BaseClient
         return $this->makeRequest(self::CLIENT_CREATE_OR_UPDATE, [$params->toArray()]);
     }
 
+    public function updateClientDebit(UniredUpdateClientDebitRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::CLIENT_DEBIT_UPDATE, $params->toArray());
+    }
+
     public function findClient(UniredFindClientRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest(self::CLIENT_FIND, $params->toArray());
@@ -129,11 +145,6 @@ class UniredClient extends BaseClient
         return $this->makeRequest(self::CLIENT_AUTO_TOGGLE, $params->toArray());
     }
 
-    public function deleteClient(UniredClientExtIdDTO $params): UniredResponseDTO
-    {
-        return $this->makeRequest(self::CLIENT_DELETE, $params->toArray());
-    }
-
     public function getPayments(UniredGetPaymentsPaginationRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest(self::PAYMENT_GET, $params->toArray());
@@ -154,14 +165,50 @@ class UniredClient extends BaseClient
         return $this->makeRequest(self::PAYMENT_CHANGE_SEND_STATUS, $params->toArray());
     }
 
-    public function getWebhook(): UniredResponseDTO
+    public function checkWebhook(): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_GET_WEBHOOK, []);
+        return $this->makeRequest(self::CHECK_WEBHOOK, []);
     }
 
     public function setWebhook(UniredSetWebhookDTO $params): UniredResponseDTO
     {
-        return $this->makeRequest(self::PAYMENT_SET_WEBHOOK, $params->toArray());
+        return $this->makeRequest(self::SET_WEBHOOK, $params->toArray());
+    }
+
+    public function createClients(UniredCreateClientRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::CLIENT_CREATE, [
+            'clients' => [$params->toArray()],
+        ]);
+    }
+
+    public function addClientPhones(UniredAddClientPhonesRequestDTO $params)
+    {
+        return $this->makeRequest(self::ADD_CLIENT_PHONE, [
+            'clients' => [$params->toArray()],
+        ]);
+    }
+
+    public function createContracts(UniredCreateContractRequestDTO $params)
+    {
+        return $this->makeRequest(self::CONTRACT_CREATE, [
+            'contracts' => [$params->toArray()],
+        ]);
+    }
+
+    public function updateContract(UniredUpdateContractRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::CONTRACT_UPDATE, $params->toArray());
+    }
+
+    public function deleteContract(UniredContractLoanIdDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::CONTRACT_DELETE, $params->toArray());
+    }
+
+    public function getTransactions(UniredGetPaymentsPaginationRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::TRANSACTION_GET, $params->toArray());
     }
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO

@@ -98,19 +98,25 @@ class SmsService
 
     public function callbackSayqalSms(SayqalSmsCallbackRequest $request): bool
     {
-        $message = SmsMessage::findOrFail($request->getSmsId());
+        $message = SmsMessage::query()->find($request->getSmsId());
+
+        if (! $message) {
+            return false;
+        }
+
         $message->update([
             'status' => $request->status,
             'updated_at' => $request->statusdate,
         ]);
+
         if ($request->status == SmsMessageStatusEnum::DELIVERED->value) {
             $feature = Feature::findByName(FeatureEnum::SMS);
-            $message->charge->update(['amount' => $feature->amount * $request->smsCount()]);
-
-            return true;
+            $message->charge->update(['amount' => $feature->chargeable_amount * $request->smsCount()]);
+        } else {
+            $message->charge->delete();
         }
 
-        return false;
+        return true;
     }
 
     public function callbackSayqalVoice(SayqalVoiceCallbackRequest $request)

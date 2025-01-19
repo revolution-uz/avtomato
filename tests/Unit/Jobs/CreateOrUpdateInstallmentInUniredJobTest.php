@@ -36,7 +36,7 @@ class CreateOrUpdateInstallmentInUniredJobTest extends TestCase
         $mock->expects()->createOrUpdateInstallment()->times(0);
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
         $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+        $balanceServiceMock->expects()->isAvailableCompany()->andReturn(true);
         $job->handle($mock, $balanceServiceMock);
     }
 
@@ -57,7 +57,7 @@ class CreateOrUpdateInstallmentInUniredJobTest extends TestCase
         $mock->expects()->createOrUpdateInstallment()->times(0);
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
         $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+        $balanceServiceMock->expects()->isAvailableCompany()->andReturn(true);
         $job->handle($mock, $balanceServiceMock);
     }
 
@@ -81,7 +81,7 @@ class CreateOrUpdateInstallmentInUniredJobTest extends TestCase
         $mock->expects()->createOrUpdateInstallment()->times(0);
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
         $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+        $balanceServiceMock->expects()->isAvailableCompany()->andReturn(true);
         $job->handle($mock, $balanceServiceMock);
     }
 
@@ -101,13 +101,14 @@ class CreateOrUpdateInstallmentInUniredJobTest extends TestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
 
-        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createInstallment()->once()->withAnyArgs();
+        $mock->expects()->createCustomer()->twice()->withAnyArgs();
         $mock->expects()->createInstallmentGuarantor()->once()->withAnyArgs();
         $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
-        $job->handle($mock, $balanceServiceMock);
+        $balanceServiceMock->expects()->isAvailableCompany()->andReturn(true);
+
+        (new CreateOrUpdateInstallmentInUniredJob($installment->id))->handle($mock, $balanceServiceMock);
     }
 
     #[Test]
@@ -126,13 +127,14 @@ class CreateOrUpdateInstallmentInUniredJobTest extends TestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => false]);
 
-        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
         $mock = $this->mock(UniredService::class);
+        $mock->expects()->createCustomer()->once()->withAnyArgs();
         $mock->expects()->createInstallment()->once()->withAnyArgs();
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
         $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
-        $job->handle($mock, $balanceServiceMock);
+        $balanceServiceMock->expects()->isAvailableCompany()->andReturn(true);
+
+        (new CreateOrUpdateInstallmentInUniredJob($installment->id))->handle($mock, $balanceServiceMock);
     }
 
     #[Test]
@@ -151,14 +153,13 @@ class CreateOrUpdateInstallmentInUniredJobTest extends TestCase
         $guarantor = Customer::factory()->create();
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
 
-        $job = new CreateOrUpdateInstallmentInUniredJob($installment->id);
-
         $mock = $this->mock(UniredService::class);
         $mock->expects()->createInstallment()->once()->withAnyArgs();
+        $mock->expects()->createCustomer()->once()->withAnyArgs();
         $mock->expects()->createOrUpdateInstallmentGuarantor()->times(0);
         $balanceServiceMock = $this->mock(BalanceService::class);
-        $balanceServiceMock->expects()->isAvaiblableCompany()->andReturn(true);
+        $balanceServiceMock->expects()->isAvailableCompany()->andReturn(true);
 
-        $job->handle($mock, $balanceServiceMock);
+        (new CreateOrUpdateInstallmentInUniredJob($installment->id))->handle($mock, $balanceServiceMock);
     }
 }

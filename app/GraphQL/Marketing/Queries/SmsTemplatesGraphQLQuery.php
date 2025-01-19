@@ -2,13 +2,15 @@
 
 namespace App\GraphQL\Marketing\Queries;
 
+use App\Enums\Company\SmsTemplateEnum;
+use App\Enums\FeatureEnum;
 use App\GraphQL\Marketing\Types\SmsTemplateGraphQLType;
+use App\Models\Company\Feature;
 use App\Models\Company\SmsTemplate;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
 class SmsTemplatesGraphQLQuery extends Query
@@ -19,7 +21,7 @@ class SmsTemplatesGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(SmsTemplateGraphQLType::GRAPHQL_TYPE_NAME))));
+        return Type::nonNull(Type::listOf(Type::nonNull(SmsTemplateGraphQLType::type())));
     }
 
     public function args(): array
@@ -44,6 +46,8 @@ class SmsTemplatesGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return SmsTemplate::query()
+            ->when(! Feature::isFeatureActive(FeatureEnum::ECOMMERCE), fn (Builder|SmsTemplate $q) => $q
+                ->whereNotIn('id', [SmsTemplateEnum::ECOMMERCE_OTP->value]))
             ->when(isset($args['search']), fn (Builder|SmsTemplate $q) => $q
                 ->where('template', 'ILIKE', "%{$args['search']}%")
                 ->orWhere('original_template', 'ILIKE', "%{$args['search']}%"))

@@ -41,7 +41,7 @@ abstract class BaseAtmosClient extends BaseClient
     /**
      * @throws GeneralException
      */
-    protected function makeRequest(string $path, array $data, string $method = 'post'): array
+    protected function makeRequest(string $path, array $data, string $method = 'post', $is_responsible = true): array
     {
         if (! $token = $this->getActiveToken()) {
             return ['result' => new AtmosResultDTO('ERROR', 'Cannot activate the token')];
@@ -58,7 +58,6 @@ abstract class BaseAtmosClient extends BaseClient
             ])->timeout(150)
                 ->connectTimeout(150)
                 ->$method($url, $data);
-
             parent::logRequest(new HttpRequestLogDTO(
                 method: $method,
                 url: $this->baseUrl . $path,
@@ -68,11 +67,11 @@ abstract class BaseAtmosClient extends BaseClient
                 body: $data,
             ));
 
-            if (! in_array($response->status(), [200, 201]) || empty($response->json())) {
+            if (! in_array($response->status(), [200, 201]) || $is_responsible && empty($response->json())) {
                 throw new GeneralException($response->json('description', 'Unexpected response'), $response->json('code', 0));
             }
 
-            return $response->json();
+            return $is_responsible ? $response->json() : ['code' => $response->status()];
         } catch (Throwable $exception) {
             parent::logRequest(new HttpRequestLogDTO(
                 method: $method,

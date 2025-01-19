@@ -6,9 +6,10 @@ use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -16,7 +17,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name_ru
  * @property string $name_oz
  * @property string $name_en
+ * @property string $slug
  * @property bool $is_active
+ * @property int|null $image_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -31,13 +34,21 @@ class ProductBrand extends Model
     public static array $sortables = ['id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'is_active', 'created_at', 'updated_at'];
 
     protected $table = 'ecommerce_product_brands';
+
     protected $fillable = [
         'name_uz',
         'name_ru',
         'name_en',
         'name_oz',
         'is_active',
+        'slug',
+        'image_id',
     ];
+
+    public function setSlugAttribute($value)
+    {
+        $this->attributes['slug'] = Str::slug($value);
+    }
 
     public function products(): HasMany
     {
@@ -49,8 +60,8 @@ class ProductBrand extends Model
         return $this->hasMany(Banner::class);
     }
 
-    public function image(): MorphOne
+    public function image(): BelongsTo
     {
-        return $this->morphOne(EcommerceImage::class, 'attachmentable')->latestOfMany();
+        return $this->belongsTo(EcommerceImage::class, 'image_id');
     }
 }

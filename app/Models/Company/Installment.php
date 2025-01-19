@@ -314,7 +314,7 @@ class Installment extends Model
 
     public function isPaidInitialFee(): bool
     {
-        return (float) $this->transactions()->where('is_initial_fee', true)->where('status', TransactionStatusEnum::SUCCESS)->sum('amount') == $this->initial_fee;
+        return $this->paidAmountByTransactionAmount(true) == $this->initial_fee;
     }
 
     public function isFullyPaid(): Attribute
@@ -357,8 +357,25 @@ class Installment extends Model
         return $query->sumCustomRaw(self::getProfitAmountRaw());
     }
 
+    public function fixPaidAmount(): void
+    {
+        $this->paid_amount = $this->paidAmountByTransactionAmount(false);
+        $this->saveOrFail();
+
+        if ($this->wholeDebtAmount <= 1) {
+            $this->updateOrFail(['status' => InstallmentStatusEnum::CLOSED]);
+        } elseif ($this->status == InstallmentStatusEnum::CLOSED) {
+            $this->updateOrFail(['status' => InstallmentStatusEnum::ACTIVE]);
+        }
+    }
+
     private function isAvailablePaymentDate(int $delay): bool
     {
         return (clone $this->nextPaymentDate)->addDays($delay) <= Carbon::now();
+    }
+
+    private function paidAmountByTransactionAmount(bool $is_initial_fee): float
+    {
+        return (float) $this->transactions()->where('is_initial_fee', $is_initial_fee)->where('status', TransactionStatusEnum::SUCCESS)->sum('amount');
     }
 }

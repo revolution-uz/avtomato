@@ -10,10 +10,12 @@ use App\Nova\AdminResource;
 use App\Nova\BaseFeatureResource;
 use App\Nova\BaseModuleResource;
 use App\Nova\BaseSmsTemplateResource;
+use App\Nova\CentralCustomerResource;
 use App\Nova\Company\BalanceChargeResource;
 use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
 use App\Nova\Company\FeatureResource;
+use App\Nova\Company\InstallmentResource;
 use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SbpTerminalResource;
@@ -22,6 +24,7 @@ use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
 use App\Nova\SettingsResource;
+use Avtomato\TransactionByCompanies\TransactionByCompanies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -61,6 +64,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(BalanceChargeResource::class),
                         MenuItem::resource(SmsTemplateResource::class),
                         MenuItem::resource(SbpTerminalResource::class),
+                        MenuItem::resource(InstallmentResource::class),
                     ])->collapsable(),
                 ];
             }
@@ -73,10 +77,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 MenuSection::make('Resources', [
                     MenuItem::resource(CompanyResource::class),
                     MenuItem::resource(AdminResource::class),
+                    MenuItem::resource(CentralCustomerResource::class),
                     MenuItem::resource(SettingsResource::class),
                     MenuItem::resource(BaseModuleResource::class),
                     MenuItem::resource(BaseFeatureResource::class),
                     MenuItem::resource(BaseSmsTemplateResource::class),
+                    (new TransactionByCompanies)->menu($request),
                 ])->collapsable(),
             ];
         });
@@ -84,15 +90,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::initialPath('/dashboards/main');
 
         Nova::userMenu(function (Request $request, Menu $menu) {
-            /** @var Admin $admin */
+            /** @var Admin|null $admin */
             $admin = $request->user();
 
-            if ($admin->role === AdminRoleEnum::SUPER_ADMIN) {
+            if ($admin && $admin->role === AdminRoleEnum::SUPER_ADMIN) {
                 $menu->append([
                     MenuItem::externalLink('Horizon dashboard', '/nova/horizon')->openInNewTab(),
                     MenuItem::externalLink('Log viewer', '/nova/log-viewer')->openInNewTab(),
-                ]
-                );
+                ]);
             }
 
             return $menu;
@@ -107,7 +112,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function tools(): array
     {
-        return [];
+        return [
+            new TransactionByCompanies,
+        ];
     }
 
     /**
@@ -115,6 +122,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function register(): void
     {
+        parent::register();
+
         Nova::report(
             function ($exception) {
                 Log::error($exception);

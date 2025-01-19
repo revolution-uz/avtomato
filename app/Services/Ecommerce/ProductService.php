@@ -19,7 +19,7 @@ class ProductService
      */
     public function uploadImage(Model $model, UploadedFile $file): Model
     {
-        EcommerceImage::uploadImage($file, $model);
+        EcommerceImage::upload($file);
         $model->refresh();
 
         return $model;

@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Management\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Rbac\Role;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -9,6 +10,8 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class RoleGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const GRAPHQL_TYPE_NAME = 'RoleGraphQLType';
 
     protected $attributes = [

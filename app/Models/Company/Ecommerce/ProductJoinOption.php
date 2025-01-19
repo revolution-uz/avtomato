@@ -26,9 +26,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ProductJoinOption extends Model
 {
     use HasFactory, OrderBySortable, SoftDeletes;
+
     protected static array $sortables = ['id', 'option_id', 'value_id', 'product_id', 'product_variation_id', 'created_at', 'updated_at'];
 
     protected $table = 'ecommerce_product_join_options';
+
     protected $fillable = [
         'option_id',
         'value_id',

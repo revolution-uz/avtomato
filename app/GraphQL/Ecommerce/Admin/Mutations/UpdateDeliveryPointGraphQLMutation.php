@@ -11,7 +11,7 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -27,18 +27,21 @@ class UpdateDeliveryPointGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['exists:ecommerce_delivery_points,id'],
+                'rules' => [
+                    'required',
+                    Rule::exists(DeliveryPoint::class, 'id')->whereNull('deleted_at'),
+                ],
             ],
-            'delivery_point' => [
-                'name' => 'delivery_point',
-                'type' => Type::nonNull(GraphQL::type(DeliveryPointInputGraphQLType::GRAPHQL_TYPE_NAME)),
+            'deliveryPoint' => [
+                'name' => 'deliveryPoint',
+                'type' => Type::nonNull(DeliveryPointInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(DeliveryPointGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(DeliveryPointGraphQLType::type());
     }
 
     /**
@@ -55,7 +58,7 @@ class UpdateDeliveryPointGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): DeliveryPoint
     {
         $model = DeliveryPoint::query()->findOrFail($args['id']);
-        $model->update($args['delivery_point']);
+        $model->update($args['deliveryPoint']);
         $model->refresh();
 
         return $model;

@@ -2,12 +2,15 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Ecommerce\OrderStatus;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class OrderStatusGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'OrderStatusGraphQLType';
 
     protected $attributes = [

@@ -3,6 +3,7 @@
 namespace App\Clients;
 
 use App\DTOs\PassportDataDTO;
+use App\Enums\ClientCodeEnum;
 use App\Exceptions\PassportDataNotFoundException;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -35,15 +36,19 @@ abstract class BaseRealSoftClient extends BaseClient
     ): PassportDataDTO {
         $response = Http::withHeaders(array_merge($this->getHeaders(), ['Accept-Language' => app()->getLocale()]))
             ->get(
-                $this->getBaseUrl() . '/api/v1/public/tax/passport',
+                $this->getBaseUrl() . '/api/v9/gcp/passport/birth-date',
                 [
                     'locale' => app()->getLocale(),
-                    'series' => $passportSeries,
-                    'number' => $passportNumber,
+                    'passport_serial' => $passportSeries,
+                    'passport_number' => $passportNumber,
                     'birth_date' => $birthDate->format('Y-m-d'),
                 ]
             )->json();
-
+        if ($this->getClientCode() == ClientCodeEnum::ONLINE_MAHALLA) {
+            if (Arr::has($response, 'data.data')) {
+                return PassportDataDTO::from($response['data']['data']);
+            }
+        }
         if (Arr::has($response, 'data.info.data')) {
             return PassportDataDTO::from($response['data']['info']['data']);
         }

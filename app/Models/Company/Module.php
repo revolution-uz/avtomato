@@ -32,6 +32,15 @@ class Module extends Model
         'name' => ModuleEnum::class,
     ];
 
+    public static function getMultiBranchModule(): ?self
+    {
+        return self::query()
+            ->whereIn('name', ModuleEnum::getMultiBranchModules())
+            ->where('is_active', true)
+            ->orderBy('name', 'desc')
+            ->first();
+    }
+
     protected static function boot(): void
     {
         parent::boot();

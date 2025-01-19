@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -26,12 +27,11 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $updated_at
  * @property-read Collection<Module> $modules
  * @property-read int $chargeable_amount
+ * @property-read BalanceCharge[]|Collection<int, BalanceCharge> $balanceCharges
  */
 class Feature extends Model
 {
     use HasFactory, TenantConnection;
-
-    private static ?array $features = null;
 
     protected $fillable = [
         'is_active',
@@ -54,13 +54,9 @@ class Feature extends Model
         return $feature;
     }
 
-    public static function isFeatureActive(FeatureEnum $feature)
+    public static function isFeatureActive(FeatureEnum $feature): bool
     {
-        if (! self::$features) {
-            self::$features = self::query()->pluck('is_active', 'name')->toArray();
-        }
-
-        return self::$features[$feature->value];
+        return self::findByName($feature)->is_active;
     }
 
     public function modules(): BelongsToMany
@@ -86,5 +82,10 @@ class Feature extends Model
             // @phpstan-ignore-next-line
             get: fn () => $this->name?->getDefaultDescription()
         );
+    }
+
+    public function balanceCharges(): HasMany
+    {
+        return $this->hasMany(BalanceCharge::class);
     }
 }

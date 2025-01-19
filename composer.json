@@ -13,14 +13,15 @@
         "guzzlehttp/guzzle": "^7.9.2",
         "laravel/framework": "^11.17",
         "laravel/horizon": "^5.26",
-        "laravel/nova": "^4.34.3",
+        "laravel/nova": "^5.0",
         "laravel/sanctum": "^4.0.2",
         "opcodesio/log-viewer": "^3.10",
         "phpoffice/phpword": "^1.2",
         "rebing/graphql-laravel": "^9.5",
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-data": "^4.7",
-        "stancl/tenancy": "^3.8"
+        "stancl/tenancy": "^3.8",
+        "avtomato/transaction-by-companies": "@dev"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
@@ -98,6 +99,10 @@
         "nova": {
             "type": "composer",
             "url": "https://nova.laravel.com"
+        },
+        "0": {
+            "type": "path",
+            "url": "./nova-components/TransactionByCompanies"
         }
     }
 }

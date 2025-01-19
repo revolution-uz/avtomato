@@ -2,12 +2,15 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class StatisticsByBranchesGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const GRAPHQL_TYPE_NAME = 'StatisticsByBranchesGraphQLType';
 
     protected $attributes = [

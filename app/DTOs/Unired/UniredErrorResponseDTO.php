@@ -8,10 +8,12 @@ use App\DTOs\Unired\Base\BaseUniredDTO;
  * Class UniredErrorResponseDTO
  *
  * @property string $message
+ * @property array|null $data
  */
 class UniredErrorResponseDTO extends BaseUniredDTO
 {
     public function __construct(
         public string $message,
+        public ?array $data
     ) {}
 }

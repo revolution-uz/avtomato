@@ -1,0 +1,37 @@
+{
+    "name": "avtomato/transaction-by-companies",
+    "description": "A Laravel Nova tool.",
+    "keywords": [
+        "laravel",
+        "nova"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0"
+    },
+    "require-dev": {
+        "laravel/nova": "^5.0",
+        "laravel/nova-devtool": "^1.2"
+    },
+    "repositories": [
+        { "type": "composer", "url": "https://nova.laravel.com" }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Avtomato\\TransactionByCompanies\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Avtomato\\TransactionByCompanies\\ToolServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

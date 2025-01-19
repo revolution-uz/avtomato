@@ -38,8 +38,9 @@ class PopulateCreateOrUpdateInstallmentInUniredJobs extends Command
             tenancy()->initialize($company);
 
             if (
-                ! Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->is_active
-                or ! $balanceService->isAvaiblableCompany()
+                ! Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
+                or ! $balanceService->isAvailableCompany()
+                or ! Feature::isFeatureActive(FeatureEnum::UNIRED_PAY)
             ) {
                 continue;
             }

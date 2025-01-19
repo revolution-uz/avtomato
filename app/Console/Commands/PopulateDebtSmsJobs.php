@@ -42,7 +42,7 @@ class PopulateDebtSmsJobs extends Command
             if (
                 CompanySettings::getValue(CompanySettingsEnum::SMS_INSTALLMENT_PAYMENT) == 0
                 or ! Feature::findByName(FeatureEnum::SMS)->is_active
-                or ! $balanceService->isAvaiblableCompany()
+                or ! $balanceService->isAvailableCompany()
                 or $overdueDays->isEmpty()
             ) {
                 continue;

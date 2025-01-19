@@ -11,7 +11,6 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -24,16 +23,16 @@ class CreateDeliveryPointGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
-            'delivery_point' => [
-                'name' => 'delivery_point',
-                'type' => Type::nonNull(GraphQL::type(DeliveryPointInputGraphQLType::GRAPHQL_TYPE_NAME)),
+            'deliveryPoint' => [
+                'name' => 'deliveryPoint',
+                'type' => Type::nonNull(DeliveryPointInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(DeliveryPointGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(DeliveryPointGraphQLType::type());
     }
 
     /**
@@ -49,16 +48,10 @@ class CreateDeliveryPointGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): DeliveryPoint
     {
-
         $model = new DeliveryPoint;
-        $model->fill($args['delivery_point']);
+        $model->fill($args['deliveryPoint']);
         $model->saveOrFail();
 
         return $model;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return parent::rules($args);
     }
 }

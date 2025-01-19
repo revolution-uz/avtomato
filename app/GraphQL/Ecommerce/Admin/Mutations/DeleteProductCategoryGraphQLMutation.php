@@ -4,13 +4,11 @@ namespace App\GraphQL\Ecommerce\Admin\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Ecommerce\EcommerceImage;
 use App\Models\Company\Ecommerce\ProductCategory;
 use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Facades\File;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -48,17 +46,7 @@ class DeleteProductCategoryGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): bool
     {
-        $productCategory = ProductCategory::query()->whereIn('id', $args['ids'])->get();
-        /** @var ProductCategory $category */
-        foreach ($productCategory as $category) {
-            if ($category->image) {
-                File::delete(storage_path(EcommerceImage::UPLOADS_PATH . '/' . $category->image->path));
-                $category->image->delete();
-            }
-            $category->delete();
-        }
-
-        return true;
+        return ProductCategory::query()->whereIn('id', $args['ids'])->forceDelete() > 0;
     }
 
     protected function rules(array $args = []): array
@@ -82,7 +70,6 @@ class DeleteProductCategoryGraphQLMutation extends Mutation
                         ]));
                     }
                 },
-
             ],
         ];
     }

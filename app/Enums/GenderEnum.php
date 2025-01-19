@@ -13,4 +13,12 @@ enum GenderEnum: int
     {
         return $oilaKreditGender === 1 ? self::MALE : self::FEMALE;
     }
+
+    public static function options(): array
+    {
+        return [
+            self::MALE->value => 'Male',
+            self::FEMALE->value => 'Female',
+        ];
+    }
 }

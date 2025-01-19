@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Ecommerce\Product;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -9,6 +10,8 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class ProductGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'ProductGraphQLType';
 
     protected $attributes = [
@@ -22,13 +25,9 @@ class ProductGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Product $root) => $root->id,
             ],
-            'category_id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Product $root) => $root->category_id,
-            ],
-            'brand_id' => [
-                'type' => Type::int(),
-                'resolve' => fn (Product $root) => $root->brand_id,
+            'name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Product $root) => $root->name,
             ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),
@@ -50,22 +49,6 @@ class ProductGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Product $root) => $root->slug,
             ],
-            'main_image' => [
-                'type' => GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Product $root) => $root->mainImage,
-            ],
-            'images' => [
-                'type' => Type::listOf(GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Product $root) => $root->images,
-            ],
-            'variations' => [
-                'type' => Type::listOf(GraphQL::type(ProductVariationGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Product $root) => $root->variations,
-            ],
-            'is_active' => [
-                'type' => Type::nonNull(Type::boolean()),
-                'resolve' => fn (Product $root) => $root->is_active,
-            ],
             'cost' => [
                 'type' => Type::nonNull(Type::float()),
                 'resolve' => fn (Product $root) => $root->cost,
@@ -78,6 +61,18 @@ class ProductGraphQLType extends GraphQLType
                 'type' => Type::float(),
                 'resolve' => fn (Product $root) => $root->old_price,
             ],
+            'is_active' => [
+                'type' => Type::nonNull(Type::boolean()),
+                'resolve' => fn (Product $root) => $root->is_active,
+            ],
+            'category_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Product $root) => $root->category_id,
+            ],
+            'brand_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (Product $root) => $root->brand_id,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Product $root) => $root->created_at->timestamp,
@@ -89,6 +84,26 @@ class ProductGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (Product $root) => $root->deleted_at?->timestamp,
+            ],
+            'category' => [
+                'type' => Type::nonNull(ProductCategoryGraphQLType::type()),
+                'resolve' => fn (Product $root) => $root->category,
+            ],
+            'brand' => [
+                'type' => GraphQL::type(ProductBrandGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Product $root) => $root->brand,
+            ],
+            'images' => [
+                'type' => Type::listOf(GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Product $root) => $root->images,
+            ],
+            'options' => [
+                'type' => Type::listOf(GraphQL::type(ProductOptionGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Product $root) => $root->options,
+            ],
+            'variations' => [
+                'type' => Type::listOf(GraphQL::type(ProductVariationGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Product $root) => $root->variations,
             ],
         ];
     }

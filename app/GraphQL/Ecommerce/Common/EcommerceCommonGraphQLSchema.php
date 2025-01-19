@@ -81,7 +81,7 @@ class EcommerceCommonGraphQLSchema implements ConfigConvertible
                 ProductOptionFilterInputGraphQLType::class,
                 DeliveryPointGraphQLType::class,
             ],
-            'middleware' => ['optional_auth:sanctum'],
+            'middleware' => ['optional_auth:sanctum', 'ecommerce'],
         ];
     }
 }

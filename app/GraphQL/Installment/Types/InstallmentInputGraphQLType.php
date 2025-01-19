@@ -70,6 +70,7 @@ class InstallmentInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'date',
+                    'date_format:Y-m-d',
                 ],
             ],
         ];

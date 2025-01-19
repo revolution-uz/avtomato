@@ -27,12 +27,13 @@ class Company extends Tenant implements TenantWithDatabase
 {
     use CentralConnection, HasDatabase, HasDomains, HasFactory;
 
+    const REVO_TENANT_ID = 1;
+
     protected $table = 'companies';
 
     protected $fillable = [
         'id',
         'name',
-        'status',
         'owner_name',
         'owner_phone',
         'address',
@@ -40,6 +41,7 @@ class Company extends Tenant implements TenantWithDatabase
         'bank_code',
         'account_number',
         'tin',
+        'status',
         'payment_day',
     ];
 
@@ -52,9 +54,17 @@ class Company extends Tenant implements TenantWithDatabase
         return [
             'id',
             'name',
-            'status',
             'owner_name',
             'owner_phone',
+            'address',
+            'bank_name',
+            'bank_code',
+            'account_number',
+            'tin',
+            'status',
+            'payment_day',
+            'created_at',
+            'updated_at',
         ];
     }
 
@@ -65,5 +75,10 @@ class Company extends Tenant implements TenantWithDatabase
     public function getIncrementing(): bool
     {
         return true;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === CompanyStatusEnum::ACTIVE;
     }
 }

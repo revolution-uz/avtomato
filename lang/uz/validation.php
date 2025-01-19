@@ -41,6 +41,7 @@ return [
     'distinct' => ':attribute maydoni takrorlanuvchi qiymatlarga ega.',
     'email' => ':attribute maydoni haqiqiy elektron pochta bo‘lishi kerak.',
     'ends_with' => ':attribute maydoni quyidagi qiymatlardan biri bilan tugashi kerak: :values.',
+    'enum' => 'Tanlangan :attribute noto‘g‘ri.',
     'exists' => 'Tanlangan :attribute noto‘g‘ri.',
     'file' => ':attribute maydoni fayl bo‘lishi kerak.',
     'filled' => ':attribute maydoni to‘ldirilishi shart.',

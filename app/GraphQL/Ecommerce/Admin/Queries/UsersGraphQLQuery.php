@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class UserGraphQLQuery extends Query
+class UsersGraphQLQuery extends Query
 {
     protected $attributes = [
         'name' => 'users',

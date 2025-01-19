@@ -2,12 +2,15 @@
 
 namespace App\GraphQL\Installment\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\CompanySettings;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class SettingsGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'SettingsGraphQLType';
 
     protected $attributes = [

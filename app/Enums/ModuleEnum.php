@@ -62,7 +62,8 @@ enum ModuleEnum: string
             FeatureEnum::BALANCE_CHARGE,
             FeatureEnum::THEME_MANAGEMENT,
             FeatureEnum::GENERAL_FEATURE,
-            FeatureEnum::COMPANY_MANAGEMENT => self::cases(),
+            FeatureEnum::COMPANY_MANAGEMENT,
+            FeatureEnum::TELEGRAM_BOT_FEATURE => self::cases(),
         };
     }
 
@@ -76,7 +77,7 @@ enum ModuleEnum: string
             self::MULTIBRANCH_2 => LimitAdminEnum::MULTIBRANCH_2_ADMIN->value,
             self::MULTIBRANCH_3 => LimitAdminEnum::MULTIBRANCH_3_ADMIN->value,
             self::MULTIBRANCH_4 => LimitAdminEnum::MULTIBRANCH_4_ADMIN->value,
-            self::SBP_PAY, self::ECOMMERCE, self::SCORING, self::MARKETING, self::INSTALLMENT => throw new Exception('Is not limited'),
+            default => throw new Exception('Is not limited'),
         };
     }
 
@@ -90,7 +91,20 @@ enum ModuleEnum: string
             self::MULTIBRANCH_2 => LimitBranchEnum::MULTIBRANCH_2_BRANCH->value,
             self::MULTIBRANCH_3 => LimitBranchEnum::MULTIBRANCH_3_BRANCH->value,
             self::MULTIBRANCH_4 => LimitBranchEnum::MULTIBRANCH_4_BRANCH->value,
-            self::SBP_PAY, self::ECOMMERCE, self::SCORING, self::INSTALLMENT, self::MARKETING => throw new Exception('Is not limited'),
+            default => throw new Exception('Is not limited'),
         };
+    }
+
+    /**
+     * @return ModuleEnum[]
+     */
+    public static function getMultiBranchModules(): array
+    {
+        return [
+            self::MULTIBRANCH_1,
+            self::MULTIBRANCH_2,
+            self::MULTIBRANCH_3,
+            self::MULTIBRANCH_4,
+        ];
     }
 }

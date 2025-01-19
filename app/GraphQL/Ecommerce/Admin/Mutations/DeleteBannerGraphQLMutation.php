@@ -9,6 +9,7 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -57,12 +58,12 @@ class DeleteBannerGraphQLMutation extends Mutation
             'ids' => [
                 'required',
                 'array',
+                'min:1',
             ],
             'ids.*' => [
                 'required',
                 'integer',
-                'exists:ecommerce_banners,id',
-
+                Rule::exists(Banner::class, 'id')->whereNull('deleted_at'),
             ],
         ];
     }

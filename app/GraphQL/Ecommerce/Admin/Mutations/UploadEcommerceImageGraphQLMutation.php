@@ -5,8 +5,7 @@ namespace App\GraphQL\Ecommerce\Admin\Mutations;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Ecommerce\ProductCategory;
-use App\Services\Ecommerce\ProductService;
+use App\Models\Company\Ecommerce\EcommerceImage;
 use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -15,36 +14,26 @@ use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
-class UploadImageProductCategoryGraphQLMutation extends Mutation
+class UploadEcommerceImageGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'UploadImageProductCategory',
+        'name' => 'uploadEcommerceImage',
     ];
 
     public function args(): array
     {
         return [
-            'category_id' => [
-                'name' => 'category_id',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:ecommerce_product_categories,id'],
-            ],
             'image' => [
                 'name' => 'image',
                 'type' => GraphQL::type('Upload'),
-                'rules' => [
-                    'required',
-                    'file',
-                    'mimes:jpeg,png,jpg',
-                    'max:10240',
-                ],
+                'rules' => 'required|file|mimes:jpeg,png,jpg|max:1024',
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(EcommerceImageGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(EcommerceImageGraphQLType::type());
     }
 
     /**
@@ -52,7 +41,7 @@ class UploadImageProductCategoryGraphQLMutation extends Mutation
      */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::PRODUCT_CATEGORY_EDIT);
+        return RbacHelper::checkPermission(PermissionEnum::ECOMMERCE_IMAGE_CREATE);
     }
 
     /**
@@ -60,9 +49,6 @@ class UploadImageProductCategoryGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $category = ProductCategory::query()->findOrFail($args['category_id']);
-        (new ProductService)->uploadImage($category, $args['image']);
-
-        return $category->image;
+        return EcommerceImage::upload($args['image']);
     }
 }

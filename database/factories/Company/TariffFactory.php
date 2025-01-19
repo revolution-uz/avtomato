@@ -14,7 +14,7 @@ class TariffFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'percent' => $this->faker->randomFloat(),
+            'percent' => $this->faker->randomFloat(2),
             'min_period' => $this->faker->randomNumber(1, true),
             'max_period' => $this->faker->randomNumber(2, true),
             'min_amount' => $this->faker->randomNumber(3, true),

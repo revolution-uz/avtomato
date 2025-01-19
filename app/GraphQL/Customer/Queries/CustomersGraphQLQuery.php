@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Customer\Queries;
 
+use App\Enums\Company\CustomerTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\Helpers\RbacHelper;
@@ -54,6 +55,7 @@ class CustomersGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return Customer::query()->with('tags')
+            ->where('type', CustomerTypeEnum::INSTALLMENT)
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {

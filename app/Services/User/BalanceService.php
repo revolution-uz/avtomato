@@ -26,27 +26,27 @@ class BalanceService
         return BalanceFund::query()->sum('amount') - BalanceCharge::query()->sum('amount');
     }
 
-    public static function isAvaiblableBalance()
+    public static function isAvailableBalance()
     {
         return self::getBalance() > self::MIN_BALANCE_AMOUNT;
     }
 
-    public function chargeAmount(FeatureEnum $featureName, Model $model): BalanceCharge
+    public function chargeAmount(FeatureEnum $featureName, Model $model, ?int $amount = null): BalanceCharge
     {
         /** @var Feature $feature */
         $feature = Feature::query()->where('name', $featureName)->firstOrFail();
 
         return BalanceCharge::query()->create([
-            'amount' => $feature->chargeable_amount,
+            'amount' => $amount ?? $feature->chargeable_amount,
             'feature_id' => $feature->id,
             'chargeable_id' => $model->getKey(),
             'chargeable_type' => get_class($model),
         ]);
     }
 
-    public function isAvaiblableCompany(): bool
+    public function isAvailableCompany(): bool
     {
-        return tenant('status') == CompanyStatusEnum::ACTIVE and self::isAvaiblableBalance();
+        return tenant('status') == CompanyStatusEnum::ACTIVE and self::isAvailableBalance();
     }
 
     /**

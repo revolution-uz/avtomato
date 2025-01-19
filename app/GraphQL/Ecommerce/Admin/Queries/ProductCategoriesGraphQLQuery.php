@@ -58,15 +58,12 @@ class ProductCategoriesGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return ProductCategory::query()
-            ->when(isset($args['search']), function (Builder $q) use ($args) {
-                $search = '%' . $args['search'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('name_en', 'ILIKE', $search)
-                        ->orWhere('name_uz', 'ILIKE', $search)
-                        ->orWhere('name_oz', 'ILIKE', $search)
-                        ->orWhere('name_ru', 'ILIKE', $search);
-                });
-            })
+            ->when(isset($args['search']), fn (Builder $query) => $query
+                ->where('name_en', 'ILIKE', "%{$args['search']}%")
+                ->orWhere('name_uz', 'ILIKE', "%{$args['search']}%")
+                ->orWhere('name_oz', 'ILIKE', "%{$args['search']}%")
+                ->orWhere('name_ru', 'ILIKE', "%{$args['search']}%")
+            )
             ->when(
                 isset($args['sort']),
                 fn (Builder|ProductCategory $q) => $q->orderBySortable($args['sort']),

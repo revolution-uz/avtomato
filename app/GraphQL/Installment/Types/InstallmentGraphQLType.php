@@ -4,6 +4,7 @@ namespace App\GraphQL\Installment\Types;
 
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
+use App\GraphQL\GraphQLTypeHelper;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\GraphQL\Management\Types\BranchGraphQLType;
@@ -16,6 +17,8 @@ use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class InstallmentGraphQLType extends GraphQLType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'InstallmentGraphQLType';
 
     protected $attributes = [

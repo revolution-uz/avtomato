@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Scoring\Types\RoyxatCreditHistory;
 
-use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryInputDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryRequestDTO;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
@@ -19,21 +19,11 @@ class RoyxatCreditHistoryCreateRequestGraphQLType extends GraphQLType
         return [
             'passport_id' => [
                 'type' => Type::string(),
-                'resolve' => function (RoyxatCreditHistoryInputDTO $root) {
-                    return $root->passport_id;
-                },
+                'resolve' => fn (RoyxatCreditHistoryRequestDTO $root) => $root->passport_id,
             ],
             'pinfl' => [
                 'type' => Type::string(),
-                'resolve' => function (RoyxatCreditHistoryInputDTO $root) {
-                    return $root->passport_id;
-                },
-            ],
-            'tin' => [
-                'type' => Type::string(),
-                'resolve' => function (RoyxatCreditHistoryInputDTO $root) {
-                    return $root->passport_id;
-                },
+                'resolve' => fn (RoyxatCreditHistoryRequestDTO $root) => $root->pinfl,
             ],
         ];
     }

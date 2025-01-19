@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
+use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
@@ -89,7 +90,9 @@ class Transaction extends Model
             if ($transaction->transactionType->is_system) {
                 CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
             }
+
             SendTransactionSmsJob::dispatch($transaction->id);
+            event(new TransactionTelegramMessageEvent($transaction));
         });
 
         static::updating(function (self $transaction) {
@@ -138,5 +141,10 @@ class Transaction extends Model
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    public function canceled(): void
+    {
+        $this->updateOrFail(['status' => TransactionStatusEnum::CANCELED]);
     }
 }

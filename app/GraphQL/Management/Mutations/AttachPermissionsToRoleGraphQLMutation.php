@@ -38,7 +38,7 @@ class AttachPermissionsToRoleGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(RoleGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(RoleGraphQLType::type());
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -73,9 +73,8 @@ class AttachPermissionsToRoleGraphQLMutation extends Mutation
         foreach ($filtered as $permission) {
             $role->permissions()->attach($permission['permission_id'], ['branch_id' => $permission['branch_id']]);
         }
-        $role->refresh();
 
-        return $role;
+        return $role->refresh();
     }
 
     public function rules(array $args = []): array

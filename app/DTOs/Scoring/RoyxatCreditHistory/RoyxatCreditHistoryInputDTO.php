@@ -8,7 +8,6 @@ class RoyxatCreditHistoryInputDTO extends BaseScoringRequest
 {
     public function __construct(
         public ?string $pinfl,
-        public ?string $tin,
         public ?string $passport_id,
     ) {}
 }

@@ -2,12 +2,19 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
+use App\GraphQL\GraphQLTypeHelper;
+use App\Models\Company\Ecommerce\EcommerceImage;
+use App\Models\Company\Ecommerce\Product;
+use App\Models\Company\Ecommerce\ProductBrand;
+use App\Models\Company\Ecommerce\ProductCategory;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\InputType;
 
 class BannerInputGraphQLType extends InputType
 {
+    use GraphQLTypeHelper;
+
     public const string GRAPHQL_TYPE_NAME = 'BannerInputGraphQLType';
 
     protected $attributes = [
@@ -17,12 +24,89 @@ class BannerInputGraphQLType extends InputType
     public function fields(): array
     {
         return [
+            'name_uz' => [
+                'name' => 'name_uz',
+                'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|string|max:255',
+            ],
+            'name_ru' => [
+                'name' => 'name_ru',
+                'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|string|max:255',
+            ],
+            'name_en' => [
+                'name' => 'name_en',
+                'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|string|max:255',
+            ],
+            'name_oz' => [
+                'name' => 'name_oz',
+                'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|string|max:255',
+            ],
+            'url' => [
+                'name' => 'url',
+                'type' => Type::string(),
+                'rules' => 'nullable|string|max:255',
+            ],
+            'order' => [
+                'name' => 'order',
+                'type' => Type::int(),
+                'rules' => 'nullable|int|min:1',
+            ],
+            'starts_at' => [
+                'name' => 'starts_at',
+                'type' => Type::string(),
+                'rules' => 'nullable|string|required_with:ends_at|date_format:Y-m-d H:i:s',
+            ],
+            'ends_at' => [
+                'name' => 'ends_at',
+                'type' => Type::string(),
+                'rules' => 'nullable|string|required_with:ends_at|date_format:Y-m-d H:i:s|after:starts_at',
+            ],
+            'is_active' => [
+                'name' => 'is_active',
+                'type' => Type::nonNull(Type::boolean()),
+                'rules' => 'required|boolean',
+            ],
+            'image_uz_id' => [
+                'name' => 'image_uz_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    Rule::exists(EcommerceImage::class, 'id')->whereNull('deleted_at'),
+                ],
+            ],
+            'image_ru_id' => [
+                'name' => 'image_ru_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    Rule::exists(EcommerceImage::class, 'id')->whereNull('deleted_at'),
+                ],
+            ],
+            'image_en_id' => [
+                'name' => 'image_en_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    Rule::exists(EcommerceImage::class, 'id')->whereNull('deleted_at'),
+                ],
+            ],
+            'image_oz_id' => [
+                'name' => 'image_oz_id',
+                'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    Rule::exists(EcommerceImage::class, 'id')->whereNull('deleted_at'),
+                ],
+            ],
             'category_id' => [
                 'name' => 'category_id',
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:ecommerce_product_categories,id',
+                    Rule::exists(ProductCategory::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
             'brand_id' => [
@@ -30,7 +114,7 @@ class BannerInputGraphQLType extends InputType
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:ecommerce_product_brands,id',
+                    Rule::exists(ProductBrand::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
             'product_id' => [
@@ -38,64 +122,7 @@ class BannerInputGraphQLType extends InputType
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:ecommerce_products,id',
-                ],
-            ],
-            'name_uz' => [
-                'name' => 'name_uz',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'string',
-                ],
-            ],
-            'name_ru' => [
-                'name' => 'name_ru',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'string',
-                ],
-            ],
-            'name_en' => [
-                'name' => 'name_en',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'string',
-                ],
-            ],
-            'name_oz' => [
-                'name' => 'name_oz',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'string',
-                ],
-            ],
-            'image' => [
-                'name' => 'image',
-                'type' => GraphQL::type('Upload'),
-                'rules' => [
-                    'required',
-                    'mimes:jpg,jpeg,png',
-                    'max:1024',
-                ],
-            ],
-            'url' => [
-                'name' => 'url',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'string',
-                ],
-            ],
-            'is_active' => [
-                'name' => 'is_active',
-                'type' => Type::nonNull(Type::boolean()),
-                'rules' => [
-                    'required',
-                    'boolean',
+                    Rule::exists(Product::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
         ];

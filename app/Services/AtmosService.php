@@ -7,11 +7,16 @@ use App\Clients\AtmosPinflClient;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionDetailDTO;
+use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
+use App\Enums\Company\AtmosPinflPaymentCode;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
+use App\Jobs\AtmosPinflCardUpdateJob;
+use App\Models\CentralCustomer;
+use App\Models\Company;
 use App\Models\Company\Card;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
@@ -19,6 +24,8 @@ use App\Models\Company\Transaction;
 use App\Models\Company\TransactionAttempt;
 use App\Models\Company\TransactionType;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class AtmosService
@@ -45,13 +52,10 @@ class AtmosService
      * @throws Throwable
      * @throws GeneralException
      */
-    public function reversePayment(Transaction $transaction): bool
+    public function reverseCardPayment(Transaction $transaction): bool
     {
         $response = $this->atmosCardClient->reversePayment($transaction->external_id);
         if ($response->result->isSuccess()) {
-            $installment = $transaction->installment;
-            $installment->paid_amount -= $transaction->amount;
-            $installment->saveOrFail();
             $transaction->status = TransactionStatusEnum::CANCELED;
             $transaction->saveOrFail();
 
@@ -134,7 +138,6 @@ class AtmosService
 
     public function withdrawAmountAndCreatePINFLTransaction(Customer $customer, Installment $installment, float &$amount): void
     {
-        $paid_at = Carbon::now();
         /** @var TransactionAttempt $transactionAttempt */
         $transactionAttempt = TransactionAttempt::create([
             'installment_id' => $installment->id,
@@ -145,23 +148,156 @@ class AtmosService
         ]);
         $ext_id = Utilities::generateIdByTenancy($transactionAttempt->id);
 
-        $createPayResponseDTO = $this->atmosPinflClient->payWithPinfl($ext_id, $customer, $installment->id, $amount);
+        $createPayResponseDTO = $this->atmosPinflClient->payCreate($ext_id, $customer, $installment->id, $amount);
         if (! $createPayResponseDTO->isSuccess()) {
+            if ($createPayResponseDTO->isCardNotFound()) {
+                AtmosPinflCardUpdateJob::dispatch($customer->id, (int) $createPayResponseDTO->code);
+            }
             $transactionAttempt->failed();
 
             return;
         }
 
-        $confirmWithPinfl = $this->atmosPinflClient->payConfirmWithPinfl($ext_id, $createPayResponseDTO->payload->transaction_id);
+        $confirmWithPinfl = $this->atmosPinflClient->payConfirm($ext_id, $createPayResponseDTO->payload->transaction_id);
 
         if (! $confirmWithPinfl->isSuccess()) {
             $transactionAttempt->failed();
 
             return;
         }
+
+        if ($confirmWithPinfl->payload->inProgress()) {
+            $transactionAttempt->updateOrFail(['transaction_id' => $confirmWithPinfl->payload->transaction_id]);
+            $transactionAttempt->inProgress();
+
+            return;
+        }
+
+        if ($confirmWithPinfl->payload->isSuccess()) {
+            $this->saveSuccessAttempt($customer, $installment, $transactionAttempt, $confirmWithPinfl);
+
+            return;
+        }
+        $transactionAttempt->failed();
+    }
+
+    public function checkInProgress(TransactionAttempt $transactionAttempt): void
+    {
+        $confirmWithPinfl = $this->checkAttempt($transactionAttempt);
+
+        if ($confirmWithPinfl->payload->isSuccess()) {
+            $this->saveSuccessAttempt($transactionAttempt->customer, $transactionAttempt->installment, $transactionAttempt, $confirmWithPinfl);
+
+            return;
+        }
+        if (! $confirmWithPinfl->payload->inProgress()) {
+            $transactionAttempt->failed();
+        }
+
+    }
+
+    public function checkIsSuccess(TransactionAttempt $transactionAttempt): void
+    {
+        $confirmWithPinfl = $this->checkAttempt($transactionAttempt);
+        if ($confirmWithPinfl->isReversed()) {
+            /** @var Transaction $transaction */
+            $transaction = Transaction::findOrFail($transactionAttempt->transaction_id);
+            $transaction->canceled();
+            $transactionAttempt->failed();
+            $transaction->installment->fixPaidAmount();
+        }
+    }
+
+    /**
+     * @throws Throwable
+     * @throws GeneralException
+     */
+    public function reversePinflPayment(Transaction $transaction): bool
+    {
+        $transactionAttempts = TransactionAttempt::query()->where('transaction_id', $transaction->id)->get();
+        $isReversed = false;
+        foreach ($transactionAttempts as $transactionAttempt) {
+            $paymentState = $this->checkAttempt($transactionAttempt);
+            if ($paymentState->isSuccess() && $paymentState->payload->isSuccess()) {
+                $reversePaymentState = $this->atmosPinflClient->payCancel($paymentState->payload->ext_id, $paymentState->payload->transaction_id);
+                if ($reversePaymentState->isSuccess() && $reversePaymentState->payload->isCanceled()) {
+                    $isReversed = true;
+                }
+            }
+        }
+        if ($isReversed) {
+            $transaction->status = TransactionStatusEnum::CANCELED;
+            $transaction->saveOrFail();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws GeneralException
+     */
+    public function updatePinflCardsList(Customer $customer, ?int $atmos_status_code = null): bool
+    {
+        $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
+
+        if ($centralCustomer) {
+            if ($centralCustomer->atmos_pinfl_searched_at >= Carbon::now()->subMonths(Utilities::ATMOS_PINFL_CARD_UPDATE_MONTHS)) {
+                if ($atmos_status_code !== AtmosPinflPaymentCode::CARDS_NOT_FOUND->value || $centralCustomer->atmos_pinfl_searched_at >= Carbon::now()->subDays(Utilities::ATMOS_PINFL_CARD_UPDATE_REFRESH_DAYS)) {
+                    return true;
+                }
+            }
+        } else {
+            $centralCustomer = new CentralCustomer;
+            $centralCustomer->pinfl = $customer->pinfl;
+            $centralCustomer->first_name = $customer->first_name;
+            $centralCustomer->last_name = $customer->last_name;
+            $centralCustomer->middle_name = $customer->middle_name;
+        }
+
+        try {
+            tenancy()->initialize(Company::findOrFail(Company::REVO_TENANT_ID));
+            $this->atmosPinflClient = new AtmosPinflClient;
+
+            $updateResult = $this->atmosPinflClient->updateCardsList($customer->pinfl);
+            if ($updateResult->isSuccess()) {
+                $centralCustomer->atmos_pinfl_searched_at = Carbon::now();
+
+                return $centralCustomer->save();
+            }
+        } catch (Exception $e) {
+            Log::channel('atmos-pinfl-client')->info(
+                'Error updating PINFL cards list',
+                [
+                    'class' => get_called_class(),
+                    'error' => $e->getMessage(),
+                    'pinfl' => $customer->pinfl,
+                ]
+            );
+            throw new GeneralException("Failed to update cards list for PINFL: {$customer->pinfl}");
+        }
+
+        return false; // Default fail case
+    }
+
+    private function checkAttempt(TransactionAttempt $transactionAttempt): AtmosTransactionInfoResponseDTO
+    {
+        $ext_id = Utilities::generateIdByTenancy($transactionAttempt->id);
+
+        return $this->atmosPinflClient->payCheck($ext_id, $transactionAttempt->customer, $transactionAttempt->installment_id, $transactionAttempt->amount);
+    }
+
+    private function saveSuccessAttempt(Customer $customer, Installment $installment, TransactionAttempt $transactionAttempt, AtmosTransactionInfoResponseDTO $confirmWithPinfl): void
+    {
+        $paid_at = Carbon::now();
         $detailCount = count($confirmWithPinfl->payload->details);
+        $amount = $transactionAttempt->amount;
         foreach ($confirmWithPinfl->payload->details as $detail) {
             /** @var AtmosTransactionDetailDTO $detail */
+            if (! $detail->isSuccess()) {
+                continue;
+            }
             $transaction = new Transaction;
             $transaction->paid_at = $paid_at;
             $transaction->transaction_type_id = TransactionType::ATMOS_WITH_PINFL;

@@ -2,49 +2,68 @@
 
 namespace App\Models\Company\Ecommerce;
 
+use App\Enums\Company\OptionTypeEnum;
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
- * @property int $group_id
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en
  * @property string $name_oz
  * @property string $slug
  * @property string $description
+ * @property OptionTypeEnum $type
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property ProductOptionGroup $productOptionGroup
  * @property ProductJoinOption[]|Collection<int,ProductJoinOption> $productJoinOptions
+ * @property ProductOptionValue[]|Collection<int,ProductOptionValue> $values
+ * @property ProductCategory[]|Collection<int,ProductCategory> $categories
  */
 class ProductOption extends Model
 {
     use HasFactory, OrderBySortable, SoftDeletes;
-    protected static array $sortables = ['id', 'group_id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'slug', 'description', 'created_at', 'updated_at'];
+
+    protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'slug', 'description', 'created_at', 'updated_at'];
 
     protected $table = 'ecommerce_product_options';
+
     protected $fillable = [
-        'group_id',
         'name_uz',
         'name_ru',
         'name_en',
         'name_oz',
         'slug',
         'description',
+        'type',
     ];
 
-    public function productOptionGroup(): BelongsTo
+    protected $casts = [
+        'type' => OptionTypeEnum::class,
+    ];
+
+    public function setSlugAttribute($value)
     {
-        return $this->belongsTo(ProductOptionGroup::class, 'group_id');
+        $this->attributes['slug'] = Str::slug($value);
+    }
+
+    public function values(): HasMany
+    {
+        return $this->hasMany(ProductOptionValue::class, 'option_id');
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductCategory::class, 'ecommerce_product_category_join_options', 'option_id', 'category_id');
     }
 
     public function productJoinOptions(): HasMany

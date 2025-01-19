@@ -36,8 +36,8 @@ class CreateOrUpdateInstallmentInUniredJob implements ShouldBeUniqueUntilProcess
     public function handle(UniredService $uniredService, BalanceService $balanceService): void
     {
         if (
-            ! Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->is_active
-            or ! $balanceService->isAvaiblableCompany()
+            ! Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
+            or ! $balanceService->isAvailableCompany()
         ) {
             return;
         }
@@ -47,8 +47,9 @@ class CreateOrUpdateInstallmentInUniredJob implements ShouldBeUniqueUntilProcess
         if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->any_card_charge && $installment->is_active) {
             if ($installment->isAvailableCustomerPinfl()) {
                 if ($installment->unired_id) {
-                    $uniredService->createOrUpdateInstallment($installment);
+                    $uniredService->updateInstallment($installment);
                 } elseif ($debt_amount > self::MINIMUM_INSTALLMENT_CREATE_AMOUNT) {
+                    $uniredService->createCustomer($installment->customer);
                     $uniredService->createInstallment($installment);
                 }
             }
@@ -56,8 +57,10 @@ class CreateOrUpdateInstallmentInUniredJob implements ShouldBeUniqueUntilProcess
                 foreach ($installment->guarantorList as $guarantor) {
                     if ($guarantor->any_card_charge) {
                         if ($guarantor->unired_id) {
-                            $uniredService->createOrUpdateInstallmentGuarantor($guarantor);
+
+                            $uniredService->updateInstallmentGuarantor($guarantor);
                         } elseif ($debt_amount > self::MINIMUM_INSTALLMENT_CREATE_AMOUNT) {
+                            $uniredService->createCustomer($guarantor->customer);
                             $uniredService->createInstallmentGuarantor($guarantor);
                         }
                     }

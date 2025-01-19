@@ -11,7 +11,6 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -26,14 +25,14 @@ class CreateBannerGraphQLMutation extends Mutation
         return [
             'banner' => [
                 'name' => 'banner',
-                'type' => Type::nonNull(GraphQL::type(BannerInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(BannerInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(BannerGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(BannerGraphQLType::type());
     }
 
     /**
@@ -49,16 +48,6 @@ class CreateBannerGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): Banner
     {
-
-        $model = new Banner;
-        $model->fill($args['banner']);
-        $model->saveOrFail();
-
-        return $model;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return parent::rules($args);
+        return Banner::query()->create($args['banner']);
     }
 }

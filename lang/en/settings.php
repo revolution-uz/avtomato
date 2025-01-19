@@ -8,4 +8,7 @@ return [
     'sms_installment_auto_charge' => 'Sending SMS after automatic payment',
     'sms_installment_notification' => 'Sending SMS after cash payment',
     'sms_installment_payment' => 'Sending SMS about debt',
+    'telegram_bot_enabled' => 'Send a message via Telegram bot',
+    'telegram_bot_token' => 'Telegram bot token',
+    'telegram_chat_id' => 'Telegram group chat ID',
 ];

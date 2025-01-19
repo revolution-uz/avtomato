@@ -34,15 +34,17 @@ class PopulateInstallmentChargeJobs extends Command
      */
     public function handle(BalanceService $balanceService): int
     {
+        $i = 0;
+
         foreach (Company::get() as $company) {
             tenancy()->initialize($company);
 
             if (
                 ! (
-                    Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE)->is_active
-                    or Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->is_active
+                    Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE)
+                    or Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
                 )
-                or ! $balanceService->isAvaiblableCompany()
+                or ! $balanceService->isAvailableCompany()
             ) {
                 continue;
             }
@@ -58,7 +60,8 @@ class PopulateInstallmentChargeJobs extends Command
             }
 
             foreach ($installments as $installment) {
-                InstallmentChargeJob::dispatch($installment->id);
+                InstallmentChargeJob::dispatch($installment->id)->delay(now()->addSeconds($i));
+                $i++;
             }
         }
 

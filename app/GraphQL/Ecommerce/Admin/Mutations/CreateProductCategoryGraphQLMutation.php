@@ -11,7 +11,6 @@ use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
 
@@ -26,14 +25,14 @@ class CreateProductCategoryGraphQLMutation extends Mutation
         return [
             'productCategory' => [
                 'name' => 'productCategory',
-                'type' => Type::nonNull(GraphQL::type(ProductCategoryInputGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(ProductCategoryInputGraphQLType::type()),
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(ProductCategoryGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(ProductCategoryGraphQLType::type());
     }
 
     /**
@@ -49,11 +48,6 @@ class CreateProductCategoryGraphQLMutation extends Mutation
      */
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): ProductCategory
     {
-
-        $model = new ProductCategory;
-        $model->fill($args['productCategory']);
-        $model->saveOrFail();
-
-        return $model;
+        return ProductCategory::query()->create($args['productCategory']);
     }
 }

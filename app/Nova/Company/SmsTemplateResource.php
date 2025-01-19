@@ -2,12 +2,16 @@
 
 namespace App\Nova\Company;
 
+use App\Enums\Company\CompanyStatusEnum;
+use App\Enums\Company\SmsTemplateStatusEnum;
 use App\Models\Company\SmsTemplate;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -34,7 +38,7 @@ class SmsTemplateResource extends Resource
 
     public static function authorizedToCreate(Request $request): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -44,11 +48,29 @@ class SmsTemplateResource extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make(__('nova.template.original_template'), 'original_template')->filterable()->exceptOnForms(),
-            Text::make(__('nova.template.template'), 'template')->filterable(),
-            Text::make(__('nova.template.description'), 'description')->filterable()->exceptOnForms()->displayUsing(fn ($item) => Str::limit($item, 50)),
-            DateTime::make(__('nova.template.created_at'), 'created_at')->filterable()->onlyOnDetail(),
-            DateTime::make(__('nova.template.updated_at'), 'updated_at')->filterable()->onlyOnDetail(),
+            Select::make(__('nova.status'), 'status')
+                ->options(CompanyStatusEnum::getAllCasesForDropdown())
+                ->displayUsingLabels()
+                ->default(SmsTemplateStatusEnum::DRAFT)
+                ->required(),
+            Text::make(__('nova.original_template'), 'original_template')
+                ->filterable()
+                ->required(),
+            Text::make(__('nova.template'), 'template')
+                ->filterable(),
+            Code::make(__('nova.data'), 'data')
+                ->json()
+                ->help('{"category": "debt-templates", "overdue_days": 0}'),
+            Text::make(__('nova.description'), 'description')
+                ->filterable()
+                ->displayUsing(fn ($item) => Str::limit($item, 50))
+                ->required(),
+            DateTime::make(__('nova.created_at'), 'created_at')
+                ->filterable()
+                ->onlyOnDetail(),
+            DateTime::make(__('nova.updated_at'), 'updated_at')
+                ->filterable()
+                ->onlyOnDetail(),
         ];
     }
 
