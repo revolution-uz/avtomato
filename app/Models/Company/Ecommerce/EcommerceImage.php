@@ -28,6 +28,7 @@ class EcommerceImage extends Model
 {
     use HasFactory, LogsActivityDirtyOnlyTrait, TenantConnection;
     public const string UPLOADS_PATH = 'uploads/ecommerce';
+
     public $table = 'ecommerce_images';
 
     protected $fillable = [
