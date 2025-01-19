@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Ecommerce\Common\Mutations;
+namespace Tests\GraphQL\Ecommerce\Common\Mutations;
 
 use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\FeatureEnum;
