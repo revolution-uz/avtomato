@@ -6,11 +6,14 @@ use App\Clients\QrPayClient;
 use App\DTOs\QrPay\Base\BaseQrPayResponseDTO;
 use App\DTOs\QrPay\Payment\SbpCancelPaymentRequestDTO;
 use App\DTOs\QrPay\Payment\SbpCreatePaymentRequestDTO;
+use App\DTOs\QrPay\Payment\SbpPaymentDTO;
 use App\DTOs\QrPay\Payment\SbpTransferRegistryRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpAddTerminalRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpDeactivateTerminalRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpTerminalResponseDTO;
 use App\Enums\FeatureEnum;
+use App\Helpers\Utilities;
+use App\Http\Requests\QrPayCreatePaymentRequest;
 use App\Models\Company\Feature;
 use App\Models\Company\SbpTransaction;
 use App\Models\SbpTerminal;
@@ -39,18 +42,23 @@ class QrPayService
         return $feature->saveOrFail();
     }
 
-    public function createPayment(SbpTransaction $transaction): array
+    public function createPayment(QrPayCreatePaymentRequest $request): SbpPaymentDTO
     {
-        $uniredResponseDto = $this->qrPayClient->createPayment(new SbpCreatePaymentRequestDTO($transaction->ext_id, $transaction->amount, 'QR PAY', $transaction->terminal_id, $transaction->getRedirectUrl()));
+        $terminal = SbpTerminal::query()->where('company_id', tenant('id'))->first();
+        $transaction = new SbpTransaction;
+        $transaction->terminal_id = $terminal->id;
+        $transaction->amount = $request->amount;
+        $transaction->ext_id = Utilities::generateIdByTenancy(1);
+        $transaction->saveOrFail();
+        $transaction->ext_id = Utilities::generateIdByTenancy($transaction->id);
+        $transaction->saveOrFail();
 
-        return $uniredResponseDto->result;
+        return SbpPaymentDTO::from($this->qrPayClient->createPayment(new SbpCreatePaymentRequestDTO($transaction->ext_id, $transaction->amount, 'QR PAY', $transaction->terminal_id, $request->root() . '/state/' . $transaction->ext_id))->result);
     }
 
-    public function statePayment(SbpTransaction $transaction): array
+    public function statePayment(string $ext_id): BaseQrPayResponseDTO
     {
-        $uniredResponseDto = $this->qrPayClient->statePayment(new SbpCancelPaymentRequestDTO($transaction->ext_id));
-
-        return $uniredResponseDto->result;
+        return $this->qrPayClient->statePayment(new SbpCancelPaymentRequestDTO($ext_id));
     }
 
     public function cancelPayment(SbpTransaction $transaction): BaseQrPayResponseDTO

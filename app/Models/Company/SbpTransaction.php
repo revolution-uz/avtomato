@@ -49,9 +49,4 @@ class SbpTransaction extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
-
-    public function getRedirectUrl()
-    {
-        return config('qr_pay.redirect_url') . '/' . $this->ext_id;
-    }
 }

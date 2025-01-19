@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PartnerApi\DocumentController;
+use App\Http\Controllers\PartnerApi\QrPayController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,5 +21,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // Route::get('installment-agreement', 'downloadInstallmentAgreement')->name('document.downloadInstallmentAgreement');
         Route::get('customer-application', 'downloadCustomerApplication')->name('document.downloadCustomerApplication');
         Route::get('guarantor-application', 'downloadGuarantorApplication')->name('document.downloadGuarantorApplication');
+    });
+});
+Route::group(['middleware' => ['optional_auth:sanctum']], function () {
+    // qr pay
+    Route::prefix('qr-pay')->controller(QrPayController::class)->group(function () {
+        // Route::get('installment-agreement', 'downloadInstallmentAgreement')->name('document.downloadInstallmentAgreement');
+        Route::get('', 'createPayment')->name('qr_pay.createPayment');
+        Route::get('state', 'checkPayment')->name('qr_pay.checkPayment');
     });
 });
