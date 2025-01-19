@@ -16,9 +16,7 @@ class QrPayController extends Controller
     public function createPayment(QrPayCreatePaymentRequest $request)
     {
         try {
-            if ($result = $this->qrPayService->createPayment($request)) {
-                redirect($result->payment->qr->url);
-            }
+            redirect($this->qrPayService->createPayment($request)->payment->qr->url);
         } catch (Exception $e) {
             throw new Exception('Failed to create cheque: ' . $e->getMessage());
         }
