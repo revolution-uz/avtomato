@@ -2,29 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SbpPaymentWebhookCallbackRequest;
+use App\DTOs\QrPay\Payment\SbpPaymentDTO;
+use App\Http\Requests\QrPay\SbpPaymentWebhookCallbackRequest;
 use App\Models\Company;
-use App\Models\SbpTerminal;
-use App\Services\QrPayService;
+use App\Models\Company\SbpTransaction;
+use App\Services\CompanyQrPayService;
 
 class SbpCallbackController extends Controller
 {
     public function __construct(
-        private readonly QrPayService $qrPayService
+        private readonly CompanyQrPayService $qrPayService
     ) {}
 
     public function webHook(SbpPaymentWebhookCallbackRequest $request)
     {
-        if ($companyId = $request->getCompanyId()) {
+        $requestDto = SbpPaymentDTO::from($request->toArray());
+        if ($companyId = $requestDto->payment->cheque->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
-            $terminal = SbpTerminal::findOrFail($request->getTerminalId());
-            if ($terminal !== null) {
-                if ($this->qrPayService->transferRegistry($request->ext_id)) {
-                    return response()->json(['success' => true, 'message' => 'OK'], 200);
+            $transaction = SbpTransaction::query()->where('ext_id', $requestDto->payment->cheque->ext_id);
+            if ($transaction !== null) {
+                if ($this->qrPayService->updatePaymentByCallback($requestDto->payment)) {
+                    return response()->json(['success' => true, 'message' => 'OK']);
                 }
             }
+
+            return response()->json(['message' => 'Transaction was not found'], 404);
         }
 
-        return response()->json(['message' => 'Terminal was not found'], 501);
+        return response()->json(['message' => 'Company was not found'], 404);
     }
 }

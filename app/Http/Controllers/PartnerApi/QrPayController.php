@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\PartnerApi;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\QrPayCreatePaymentRequest;
-use App\Services\QrPayService;
+use App\Http\Requests\QrPay\QrPayCreatePaymentRequest;
+use App\Services\CompanyQrPayService;
 use Exception;
 
 class QrPayController extends Controller
 {
     public function __construct(
-        private readonly QrPayService $qrPayService
+        private readonly CompanyQrPayService $qrPayService
     ) {}
 
-    public function createPayment(QrPayCreatePaymentRequest $request)
+    public function create(QrPayCreatePaymentRequest $request)
     {
         try {
             redirect($this->qrPayService->createPayment($request)->payment->qr->url);
@@ -22,7 +22,7 @@ class QrPayController extends Controller
         }
     }
 
-    public function checkPayment(string $ext_id)
+    public function check(string $ext_id)
     {
         return $this->qrPayService->statePayment($ext_id);
     }

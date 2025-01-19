@@ -4,20 +4,13 @@ namespace App\Services;
 
 use App\Clients\QrPayClient;
 use App\DTOs\QrPay\Base\BaseQrPayResponseDTO;
-use App\DTOs\QrPay\Payment\SbpCancelPaymentRequestDTO;
-use App\DTOs\QrPay\Payment\SbpCreatePaymentRequestDTO;
-use App\DTOs\QrPay\Payment\SbpPaymentDTO;
-use App\DTOs\QrPay\Payment\SbpTransferRegistryRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpAddTerminalRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpDeactivateTerminalRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpTerminalResponseDTO;
+use App\DTOs\QrPay\Terminal\SbpUpdateTerminalRequestDTO;
 use App\Enums\FeatureEnum;
-use App\Helpers\Utilities;
-use App\Http\Requests\QrPayCreatePaymentRequest;
 use App\Models\Company\Feature;
-use App\Models\Company\SbpTransaction;
 use App\Models\SbpTerminal;
-use Carbon\Carbon;
 
 class QrPayService
 {
@@ -30,7 +23,7 @@ class QrPayService
 
     public function updateTerminal(SbpTerminal $terminal): bool
     {
-        return $this->updateTerminalByResponse($terminal, $this->qrPayClient->updateTerminal(SbpAddTerminalRequestDTO::from($terminal)));
+        return $this->updateTerminalByResponse($terminal, $this->qrPayClient->updateTerminal(SbpUpdateTerminalRequestDTO::from($terminal)));
     }
 
     public function deactivateTerminal(): bool
@@ -42,40 +35,7 @@ class QrPayService
         return $feature->saveOrFail();
     }
 
-    public function createPayment(QrPayCreatePaymentRequest $request): SbpPaymentDTO
-    {
-        $terminal = SbpTerminal::query()->where('company_id', tenant('id'))->first();
-        $transaction = new SbpTransaction;
-        $transaction->terminal_id = $terminal->id;
-        $transaction->amount = $request->amount;
-        $transaction->ext_id = Utilities::generateIdByTenancy(1);
-        $transaction->saveOrFail();
-        $transaction->ext_id = Utilities::generateIdByTenancy($transaction->id);
-        $transaction->saveOrFail();
-
-        return SbpPaymentDTO::from($this->qrPayClient->createPayment(new SbpCreatePaymentRequestDTO($transaction->ext_id, $transaction->amount, 'QR PAY', $transaction->terminal_id, $request->root() . '/state/' . $transaction->ext_id))->result);
-    }
-
-    public function statePayment(string $ext_id): BaseQrPayResponseDTO
-    {
-        return $this->qrPayClient->statePayment(new SbpCancelPaymentRequestDTO($ext_id));
-    }
-
-    public function cancelPayment(SbpTransaction $transaction): BaseQrPayResponseDTO
-    {
-        return $this->qrPayClient->cancelPayment(new SbpCancelPaymentRequestDTO($transaction->ext_id));
-    }
-
-    public function transferRegistry(string $date): array
-    {
-        $date = Carbon::parse($date)->format('Y-m-d');
-
-        $uniredResponseDto = $this->qrPayClient->transferRegistry(new SbpTransferRegistryRequestDTO($date));
-
-        return $uniredResponseDto->result;
-    }
-
-    private function updateTerminalByResponse(SbpTerminal $terminal, BaseQrPayResponseDTO $sbpResponseDto)
+    private function updateTerminalByResponse(SbpTerminal $terminal, BaseQrPayResponseDTO $sbpResponseDto): bool
     {
         $terminalDto = SbpTerminalResponseDTO::from($sbpResponseDto->result);
         $terminal->terminal_id = $terminalDto->terminal_id;
