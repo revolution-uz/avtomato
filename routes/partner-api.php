@@ -26,7 +26,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::group(['middleware' => ['optional_auth:sanctum']], function () {
     // qr pay
     Route::prefix('qr-pay')->controller(QrPayController::class)->group(function () {
-        // Route::get('installment-agreement', 'downloadInstallmentAgreement')->name('document.downloadInstallmentAgreement');
         Route::get('', 'createPayment')->name('qr_pay.createPayment');
         Route::get('state', 'checkPayment')->name('qr_pay.checkPayment');
     });
