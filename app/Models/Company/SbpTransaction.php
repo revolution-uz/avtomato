@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\TransactionAttemptStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property TransactionAttemptStatusEnum $status
  */
 class SbpTransaction extends Model
 {
@@ -44,6 +46,7 @@ class SbpTransaction extends Model
         'exchange' => 'array',
         'qr' => 'array',
         'callback' => 'array',
+        'status' => TransactionAttemptStatusEnum::class,
         'payment_updated_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

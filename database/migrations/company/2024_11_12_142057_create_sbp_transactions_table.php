@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->integer('terminal_id');
             $table->string('ext_id');
+            $table->integer('status');
             $table->decimal('amount', 30);
             $table->json('cheque')->nullable();
             $table->json('exchange')->nullable();
