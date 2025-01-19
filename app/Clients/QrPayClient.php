@@ -8,6 +8,8 @@ use App\DTOs\QrPay\Base\BaseQrPayRequestDTO;
 use App\DTOs\QrPay\Base\BaseQrPayResponseDTO;
 use App\DTOs\QrPay\Payment\SbpCancelPaymentRequestDTO;
 use App\DTOs\QrPay\Payment\SbpCreatePaymentRequestDTO;
+use App\DTOs\QrPay\QrPayErrorResponseDTO;
+use App\DTOs\QrPay\System\QrPayCredentialsDTO;
 use App\DTOs\QrPay\System\QrPayLoginRequestDTO;
 use App\DTOs\QrPay\System\QrPayLoginResponseDTO;
 use App\DTOs\QrPay\Terminal\SbpAddTerminalRequestDTO;
@@ -33,16 +35,15 @@ class QrPayClient extends BaseClient
     const PAYMENT_CREATE = 'payment.create';
     const PAYMENT_STATE = 'payment.state';
     const PAYMENT_CANCEL = 'payment.cancel';
-    const TRANSFER_REGISTRY = 'transfer.registry';
 
-    private string $baseUrl;
-    private string $token;
+    private ?string $baseUrl;
+    private FeatureEnum $featureName;
 
     public function __construct()
     {
         $this->baseUrl = config('clients.qr_pay.base_url');
         $this->channel = 'qr-pay-client';
-        $this->setToken();
+        $this->featureName = FeatureEnum::SBP_PAY;
     }
 
     public function getClientCode(): ClientCodeEnum
@@ -50,9 +51,27 @@ class QrPayClient extends BaseClient
         return ClientCodeEnum::QR_PAY;
     }
 
-    public function login(QrPayLoginRequestDTO $params): BaseQrPayResponseDTO
+    public function login(string $username, string $password): BaseQrPayResponseDTO
     {
-        return $this->makeRequest(self::LOGIN, $params);
+        $params = new BaseQrPayRequestDTO(
+            self::LOGIN,
+            QrPayLoginRequestDTO::from(['username' => $username, 'password' => $password]),
+            '2.0',
+            time()
+        );
+
+        $response = Http::timeout(150)->connectTimeout(150)->post($this->baseUrl, $params);
+
+        $this->logRequest(new HttpRequestLogDTO(
+            method: 'post',
+            url: $this->baseUrl,
+            status: $response->status(),
+            response: $response->json(),
+            duration: $response->transferStats?->getTransferTime(),
+            body: $params->toArray(),
+        ));
+
+        return BaseQrPayResponseDTO::from($response->json());
     }
 
     public function addTerminal(SbpAddTerminalRequestDTO $params): BaseQrPayResponseDTO
@@ -87,15 +106,22 @@ class QrPayClient extends BaseClient
 
     private function httpRequest(BaseQrPayRequestDTO $data, string $httpMethod): BaseQrPayResponseDTO
     {
-        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->token])
+        if (! $token = $this->getActiveToken()) {
+            return BaseQrPayResponseDTO::from([
+                'error' => QrPayErrorResponseDTO::from(['error', 'Cannot activate the token']),
+            ]);
+        }
+
+        $response = Http::withHeaders(['Authorization' => "Bearer {$token}"])
             ->$httpMethod($this->baseUrl, $data);
+
         $this->logRequest(new HttpRequestLogDTO(
             method: $httpMethod,
             url: $this->baseUrl,
             status: $response->status(),
             response: $response->json(),
             duration: $response->transferStats?->getTransferTime(),
-            body: $data,
+            body: $data->toArray(),
         ));
 
         return BaseQrPayResponseDTO::from($response->json());
@@ -112,18 +138,30 @@ class QrPayClient extends BaseClient
         return $response;
     }
 
-    private function setToken(): void
+    private function getActiveToken(): ?string
     {
-        if (! $this->token) {
-            $feature = Feature::findByName(FeatureEnum::SBP_PAY);
-            if (! isset($feature->data['access_token_key']) || ! $feature->data['access_token_key']) {
-                $qrPayLoginResponse = $this->login(QrPayLoginRequestDTO::from($feature->data));
-                $loginResponse = QrPayLoginResponseDTO::from($qrPayLoginResponse->result);
-                $feature->data = array_merge($feature->data, ['access_token_key' => $loginResponse->access_token_key]);
-                $feature->saveOrFail();
-            } else {
-                $this->token = (string) $feature->data['access_token_key'];
-            }
+        if (! tenancy()->initialized) {
+            return null;
         }
+
+        $feature = Feature::findByName($this->featureName);
+
+        if (! $feature->is_active || ! $feature->data) {
+            return null;
+        }
+
+        $credentials = QrPayCredentialsDTO::from($feature->data);
+
+        if ($credentials->expires_in <= time()) {
+            $response = $this->login($credentials->username, $credentials->password);
+            $loginResponse = QrPayLoginResponseDTO::from($response->result);
+            $credentials->access_token_key = $loginResponse->access_token_key;
+            $credentials->expires_in = now()->addDays(config('clients.qr_pay.validity', 365))->timestamp;
+            $feature->data = $credentials->toArray();
+
+            $feature->saveOrFail();
+        }
+
+        return $credentials->access_token_key;
     }
 }

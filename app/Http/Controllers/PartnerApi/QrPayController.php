@@ -3,27 +3,29 @@
 namespace App\Http\Controllers\PartnerApi;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\QrPay\QrPayCreatePaymentRequest;
 use App\Services\CompanyQrPayService;
 use Exception;
+use Illuminate\Http\Request;
 
 class QrPayController extends Controller
 {
-    public function __construct(
-        private readonly CompanyQrPayService $qrPayService
-    ) {}
+    public function __construct(private readonly CompanyQrPayService $qrPayService) {}
 
-    public function create(QrPayCreatePaymentRequest $request)
+    public function create(Request $request)
     {
+        $request->validate(['amount' => 'required|numeric|min:1']);
+
         try {
-            redirect($this->qrPayService->createPayment($request)->payment->qr->url);
+            return redirect($this->qrPayService->createPayment($request->input('amount'))->payment->qr->url);
         } catch (Exception $e) {
             throw new Exception('Failed to create cheque: ' . $e->getMessage());
         }
     }
 
-    public function check(string $ext_id)
+    public function check(Request $request)
     {
-        return $this->qrPayService->statePayment($ext_id);
+        $request->validate(['ext_id' => 'required']);
+
+        return $this->qrPayService->statePayment($request->input('ext_id'));
     }
 }

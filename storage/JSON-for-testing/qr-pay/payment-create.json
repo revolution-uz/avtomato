@@ -1,0 +1,48 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "payment": {
+      "cheque": {
+        "partner": "Test",
+        "ext_id": "1234**********5423",
+        "amount": 13104.0,
+        "currency": 860,
+        "purpose": "Havas. Оптово-розничная торговля. Курс конвертации 1 RUB - 126.0 UZS, Сумма к оплате: 131.04 UZS",
+        "redirect_url": "https://example.com",
+        "merchant_id": "MA0001974248",
+        "created_at": "2023-08-03 12:10:11"
+      },
+      "exchange": {
+        "rate": 126.0
+      },
+      "qr": {
+        "amount": 104,
+        "currency": 643,
+        "qrc_id": "BD10001G6PEVLHRR9BI9HRCK6K0A2V19",
+        "local_qrc_id": 32054665,
+        "url": "http://revo.avtomato.test/api/qr-pay/state?ext_id=40522681",
+        "status": {
+          "locked": null,
+          "pay_status": null,
+          "pay_trx_id": null
+        }
+      },
+      "callback": {
+        "trx_id": null,
+        "trx_time": null,
+        "snd_pam": null,
+        "snd_phone_masked": null,
+        "add": null,
+        "at": null
+      },
+      "updated_at": "2023-08-03 07:10:11"
+    }
+  },
+  "id": 808,
+  "status": true,
+  "origin": "payment.create",
+  "host": {
+    "host": "QR-SBP",
+    "timestamp": "2023-08-03 07:10:13.786547"
+  }
+}

@@ -26,7 +26,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::group(['middleware' => ['optional_auth:sanctum']], function () {
     // qr pay
     Route::prefix('qr-pay')->controller(QrPayController::class)->group(function () {
-        Route::get('', 'create')->name('qr_pay.create');
-        Route::get('state', 'check')->name('qr_pay.check');
+        Route::view('/', 'partner-api.qr-pay.form');
+        Route::post('/', 'create')->name('qr-pay.create');
+        Route::get('state', 'check')->name('qr-pay.check');
     });
 });

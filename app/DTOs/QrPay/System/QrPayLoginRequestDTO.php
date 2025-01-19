@@ -16,6 +16,6 @@ class QrPayLoginRequestDTO extends BaseQrPayDTO
     public function __construct(
         public string $username,
         public string $password,
-        public bool $refresh
+        public bool $refresh = true
     ) {}
 }

@@ -3,18 +3,21 @@
 namespace App\DTOs\QrPay;
 
 use App\DTOs\QrPay\Base\BaseQrPayDTO;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 /**
  * Class QrPayHostResponseDTO
  *
- * @property int|null $host
+ * @property string|null $host
  * @property Carbon|null $timestamp
  */
 class QrPayHostResponseDTO extends BaseQrPayDTO
 {
     public function __construct(
-        public ?int $host,
+        public ?string $host,
+        #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d H:i:s', 'Y-m-d H:i:s.u'])]
         public ?Carbon $timestamp,
     ) {}
 }

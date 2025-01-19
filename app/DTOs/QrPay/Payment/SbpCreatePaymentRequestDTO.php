@@ -13,7 +13,7 @@ class SbpCreatePaymentRequestDTO extends BaseQrPayDTO
 {
     public function __construct(
         public string $ext_id,
-        public int $amount,
+        public float $amount,
         public string $purpose_code,
         public int $terminal_id,
         public string $redirect_url,
