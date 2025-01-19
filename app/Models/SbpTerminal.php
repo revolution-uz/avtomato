@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models;
 
 use App\Clients\QrPayClient;
 use App\Services\QrPayService;
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * SbpTransaction model
  *
  * @property int $id
+ * @property int $company_id
  * @property int $terminal_id
  * @property string $account
  * @property string $filial_code
@@ -24,6 +25,7 @@ class SbpTerminal extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'company_id',
         'terminal_id',
         'account',
         'filial_code',

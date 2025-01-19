@@ -10,13 +10,14 @@ return new class extends Migration
     {
         Schema::create('sbp_terminals', function (Blueprint $table) {
             $table->id();
-            $table->integer('terminal_id'); // terminal_id column
+            $table->integer('company_id');
+            $table->integer('terminal_id');
             $table->string('account', 20);
             $table->string('filial_code', 8);
             $table->string('inn', 9);
             $table->string('name', 64);
-            $table->integer('status'); // status column, using boolean for 0/1
-            $table->timestamps(); // created_at and updated_at columns
+            $table->integer('status');
+            $table->timestamps();
             $table->softDeletes();
         });
     }

@@ -11,10 +11,9 @@ use App\DTOs\QrPay\Terminal\SbpAddTerminalRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpDeactivateTerminalRequestDTO;
 use App\DTOs\QrPay\Terminal\SbpTerminalResponseDTO;
 use App\Enums\FeatureEnum;
-use App\Helpers\Utilities;
 use App\Models\Company\Feature;
-use App\Models\Company\SbpTerminal;
 use App\Models\Company\SbpTransaction;
+use App\Models\SbpTerminal;
 use Carbon\Carbon;
 
 class QrPayService
@@ -42,21 +41,21 @@ class QrPayService
 
     public function createPayment(SbpTransaction $transaction): array
     {
-        $uniredResponseDto = $this->qrPayClient->createPayment(new SbpCreatePaymentRequestDTO(Utilities::generateIdByTenancy($transaction->id), $transaction->cheque_amount, $transaction->cheque_purpose_code, $transaction->cheque_terminal_id, $transaction->cheque_redirect_url));
+        $uniredResponseDto = $this->qrPayClient->createPayment(new SbpCreatePaymentRequestDTO($transaction->ext_id, $transaction->amount, 'QR PAY', $transaction->terminal_id, $transaction->getRedirectUrl()));
 
         return $uniredResponseDto->result;
     }
 
     public function statePayment(SbpTransaction $transaction): array
     {
-        $uniredResponseDto = $this->qrPayClient->statePayment(new SbpCancelPaymentRequestDTO(Utilities::generateIdByTenancy($transaction->id)));
+        $uniredResponseDto = $this->qrPayClient->statePayment(new SbpCancelPaymentRequestDTO($transaction->ext_id));
 
         return $uniredResponseDto->result;
     }
 
     public function cancelPayment(SbpTransaction $transaction): BaseQrPayResponseDTO
     {
-        return $this->qrPayClient->cancelPayment(new SbpCancelPaymentRequestDTO(Utilities::generateIdByTenancy($transaction->id)));
+        return $this->qrPayClient->cancelPayment(new SbpCancelPaymentRequestDTO($transaction->ext_id));
     }
 
     public function transferRegistry(string $date): array

@@ -2,7 +2,7 @@
 
 namespace App\Nova\Company;
 
-use App\Models\Company\SbpTerminal;
+use App\Models\SbpTerminal;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
@@ -28,7 +28,7 @@ class SbpTerminalResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'terminal_id', 'name', 'account', 'filial_code', 'inn', 'status',
+        'id', 'company_id', 'terminal_id', 'name', 'account', 'filial_code', 'inn', 'status',
     ];
 
     public static function authorizedToCreate(Request $request): bool

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SbpPaymentWebhookCallbackRequest;
 use App\Models\Company;
-use App\Models\Company\SbpTerminal;
+use App\Models\SbpTerminal;
 use App\Services\QrPayService;
 
 class SbpCallbackController extends Controller
