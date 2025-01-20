@@ -2,12 +2,9 @@
 
 namespace App\GraphQL\Ecommerce\Common\Queries;
 
-use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Admin\Types\DeliveryPointGraphQLType;
-use App\Helpers\RbacHelper;
 use App\Models\Company\Ecommerce\DeliveryPoint;
 use Closure;
-use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
@@ -32,21 +29,10 @@ class SingleDeliveryPointGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    Rule::exists(DeliveryPoint::class, 'id')
-                        ->where(function ($query) {
-                            $query->whereNull('deleted_at');
-                        }),
+                    Rule::exists(DeliveryPoint::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
         ];
-    }
-
-    /**
-     * @throws Error
-     */
-    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    {
-        return RbacHelper::checkPermission(PermissionEnum::DELIVERY_POINT_VIEW);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
