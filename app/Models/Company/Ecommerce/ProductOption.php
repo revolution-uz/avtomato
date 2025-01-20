@@ -5,6 +5,7 @@ namespace App\Models\Company\Ecommerce;
 use App\Enums\Company\OptionTypeEnum;
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -15,6 +16,7 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
+ * @property-read string $name
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en
@@ -69,5 +71,10 @@ class ProductOption extends Model
     public function productJoinOptions(): HasMany
     {
         return $this->hasMany(ProductJoinOption::class, 'option_id');
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }
 }

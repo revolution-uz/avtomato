@@ -7,7 +7,7 @@ use App\Models\Company\Mahalla;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Database\Eloquent\Builder;
 use Rebing\GraphQL\Support\Query;
 
 class MahallasGraphQLQuery extends Query
@@ -18,7 +18,7 @@ class MahallasGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(MahallaGraphQLType::GRAPHQL_TYPE_NAME))));
+        return Type::nonNull(Type::listOf(Type::nonNull(MahallaGraphQLType::type())));
     }
 
     public function args(): array
@@ -27,17 +27,16 @@ class MahallasGraphQLQuery extends Query
             'district_id' => [
                 'name' => 'district_id',
                 'type' => Type::int(),
-                'rules' => ['nullable', 'exists:districts,id'],
+                'rules' => 'nullable|exists:districts,id',
             ],
         ];
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        if (isset($args['district_id'])) {
-            return Mahalla::query()->where('district_id', $args['district_id'])->get();
-        }
-
-        return Mahalla::query()->get();
+        return Mahalla::query()
+            ->when(isset($args['district_id']), fn (Builder|Mahalla $q) => $q
+                ->where('district_id', $args['district_id']))
+            ->get();
     }
 }

@@ -25,6 +25,10 @@ class ProductOptionGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (ProductOption $root) => $root->id,
             ],
+            'name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (ProductOption $root) => $root->name,
+            ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (ProductOption $root) => $root->name_uz,

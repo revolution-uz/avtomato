@@ -2,9 +2,9 @@
 
 namespace App\GraphQL\Ecommerce\Admin\Types;
 
-use App\GraphQL\Ecommerce\Common\Types\DistrictGraphQLType;
-use App\GraphQL\Ecommerce\Common\Types\MahallaGraphQLType;
-use App\GraphQL\Ecommerce\Common\Types\RegionGraphQLType;
+use App\GraphQL\Common\Types\DistrictGraphQLType;
+use App\GraphQL\Common\Types\MahallaGraphQLType;
+use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\Ecommerce\DeliveryPoint;
 use GraphQL\Type\Definition\Type;
@@ -28,6 +28,10 @@ class DeliveryPointGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (DeliveryPoint $root) => $root->id,
             ],
+            'name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (DeliveryPoint $root) => $root->name,
+            ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (DeliveryPoint $root) => $root->name_uz,
@@ -43,6 +47,10 @@ class DeliveryPointGraphQLType extends GraphQLType
             'name_oz' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (DeliveryPoint $root) => $root->name_oz,
+            ],
+            'description' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (DeliveryPoint $root) => $root->description,
             ],
             'description_uz' => [
                 'type' => Type::nonNull(Type::string()),
@@ -68,6 +76,10 @@ class DeliveryPointGraphQLType extends GraphQLType
                 'type' => Type::string(),
                 'resolve' => fn (DeliveryPoint $root) => $root->phone,
             ],
+            'address' => [
+                'type' => Type::string(),
+                'resolve' => fn (DeliveryPoint $root) => $root->address,
+            ],
             'address_uz' => [
                 'type' => Type::string(),
                 'resolve' => fn (DeliveryPoint $root) => $root->address_uz,
@@ -83,6 +95,10 @@ class DeliveryPointGraphQLType extends GraphQLType
             'address_oz' => [
                 'type' => Type::string(),
                 'resolve' => fn (DeliveryPoint $root) => $root->address_oz,
+            ],
+            'landmark' => [
+                'type' => Type::string(),
+                'resolve' => fn (DeliveryPoint $root) => $root->landmark,
             ],
             'landmark_uz' => [
                 'type' => Type::string(),
