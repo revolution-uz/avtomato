@@ -109,8 +109,8 @@ class Installment extends Model
     ];
 
     protected $casts = [
-        'canceled_at' => 'date:d-m-Y',
-        'starts_in' => 'date:d-m-Y',
+        'canceled_at' => 'date',
+        'starts_in' => 'date',
         'status' => InstallmentStatusEnum::class,
         'type' => InstallmentTypeEnum::class,
     ];

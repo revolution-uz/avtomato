@@ -67,11 +67,7 @@ class InstallmentInputGraphQLType extends InputType
             'starts_in' => [
                 'name' => 'starts_in',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'date',
-                    'date_format:Y-m-d',
-                ],
+                'rules' => 'required|date_format:Y-m-d',
             ],
         ];
     }

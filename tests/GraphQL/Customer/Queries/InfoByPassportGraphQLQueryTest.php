@@ -27,7 +27,7 @@ class InfoByPassportGraphQLQueryTest extends GraphQLTestCase
         $this->_input = [
             'passport_series' => 'AD',
             'passport_number' => '3119359',
-            'birth_date' => '15-03-1995',
+            'birth_date' => '1995-03-15',
         ];
     }
 
@@ -122,7 +122,7 @@ class InfoByPassportGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.regex', ['attribute' => 'passport series']), $response->json('errors.0.extensions.validation.passport_series.0'));
         $this->assertEquals(trans('validation.regex', ['attribute' => 'passport number']), $response->json('errors.0.extensions.validation.passport_number.0'));
-        $this->assertEquals(trans('validation.date', ['attribute' => 'birth date']), $response->json('errors.0.extensions.validation.birth_date.0'));
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'birth date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.birth_date.0'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

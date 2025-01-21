@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Enums\Company\CustomerTypeEnum;
 use App\Models\Company\Customer;
-use Carbon\Carbon;
 use Throwable;
 
 class CustomerService
@@ -25,9 +24,9 @@ class CustomerService
 
             return $customer;
         }
-        $customer->passport_given_date = Carbon::make($data['passport_given_date'])->format('Y-m-d');
-        $customer->passport_expiration_date = Carbon::make($data['passport_expiration_date'])->format('Y-m-d');
-        $customer->birth_date = Carbon::make($data['birth_date'])->format('Y-m-d');
+        $customer->passport_given_date = $data['passport_given_date'];
+        $customer->passport_expiration_date = $data['passport_expiration_date'];
+        $customer->birth_date = $data['birth_date'];
 
         $customer->saveOrFail();
 

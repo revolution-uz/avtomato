@@ -85,9 +85,9 @@ class Customer extends Model
     ];
 
     protected $casts = [
-        'passport_given_date' => 'date:d-m-Y',
-        'passport_expiration_date' => 'date:d-m-Y',
-        'birth_date' => 'date:d-m-Y',
+        'passport_given_date' => 'date',
+        'passport_expiration_date' => 'date',
+        'birth_date' => 'date',
         'gender' => GenderEnum::class,
         'type' => CustomerTypeEnum::class,
     ];

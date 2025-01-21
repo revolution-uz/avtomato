@@ -363,14 +363,14 @@ class CustomerByPassportGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customer->tin, $response->json('data.customerByPassport.tin'));
         $this->assertEquals($customer->passport_series, $response->json('data.customerByPassport.passport_series'));
         $this->assertEquals($customer->passport_number, $response->json('data.customerByPassport.passport_number'));
-        $this->assertEquals($customer->passport_given_date?->format('d-m-Y'), $response->json('data.customerByPassport.passport_given_date'));
-        $this->assertEquals($customer->passport_expiration_date?->format('d-m-Y'), $response->json('data.customerByPassport.passport_expiration_date'));
+        $this->assertEquals($customer->passport_given_date?->timestamp, $response->json('data.customerByPassport.passport_given_date'));
+        $this->assertEquals($customer->passport_expiration_date?->timestamp, $response->json('data.customerByPassport.passport_expiration_date'));
         $this->assertEquals($customer->passport_given_place, $response->json('data.customerByPassport.passport_given_place'));
         $this->assertEquals($customer->passport_citizenship, $response->json('data.customerByPassport.passport_citizenship'));
         $this->assertEquals($customer->first_name, $response->json('data.customerByPassport.first_name'));
         $this->assertEquals($customer->last_name, $response->json('data.customerByPassport.last_name'));
         $this->assertEquals($customer->middle_name, $response->json('data.customerByPassport.middle_name'));
-        $this->assertEquals($customer->birth_date?->format('d-m-Y'), $response->json('data.customerByPassport.birth_date'));
+        $this->assertEquals($customer->birth_date?->timestamp, $response->json('data.customerByPassport.birth_date'));
         $this->assertEquals($customer->birth_place, $response->json('data.customerByPassport.birth_place'));
         $this->assertEquals($customer->gender->value, $response->json('data.customerByPassport.gender'));
         $this->assertEquals($customer->created_at->timestamp, $response->json('data.customerByPassport.created_at'));
