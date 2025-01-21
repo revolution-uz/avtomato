@@ -92,7 +92,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             234,
             123,
             '1000',
-            '0000-01-01'
+            '01-01-0000'
         );
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -114,7 +114,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
             $response->json('errors.0.extensions.validation')['transaction_type_id'][0]
         );
         $this->assertEquals(
-            trans('validation.date', ['attribute' => 'paid at']),
+            trans('validation.date_format', ['attribute' => 'paid at', 'format' => 'Y-m-d']),
             $response->json('errors.0.extensions.validation')['paid_at'][0]
         );
     }
