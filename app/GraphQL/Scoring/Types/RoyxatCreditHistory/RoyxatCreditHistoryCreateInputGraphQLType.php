@@ -26,7 +26,7 @@ class RoyxatCreditHistoryCreateInputGraphQLType extends InputType
             ],
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => Type::nonNull(Type::STRING),
+                'type' => Type::string(),
                 'rules' => 'required_without:data.passport_id|digits:14',
             ],
         ];

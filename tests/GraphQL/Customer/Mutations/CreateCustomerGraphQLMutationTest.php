@@ -183,7 +183,7 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.pinfl"; Expected non-nullable type "BigInteger!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.pinfl"; Expected non-nullable type "String!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.passport_series"; Expected non-nullable type "String!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.passport_number"; Expected non-nullable type "String!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.passport_given_date"; Expected non-nullable type "String!" not to be null.'));
