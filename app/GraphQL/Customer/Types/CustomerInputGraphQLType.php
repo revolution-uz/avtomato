@@ -22,12 +22,8 @@ class CustomerInputGraphQLType extends InputType
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
-                'rules' => [
-                    'required',
-                    'string',
-                    'digits:14',
-                ],
+                'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|digits:14',
             ],
             'tin' => [
                 'name' => 'tin',

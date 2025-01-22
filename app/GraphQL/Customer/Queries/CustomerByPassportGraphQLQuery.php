@@ -79,9 +79,7 @@ class CustomerByPassportGraphQLQuery extends Query
         return [
             'pinfl' => [
                 'nullable',
-                'string',
-                'size:14',
-                'regex:/^[0-9]+$/',
+                'digits:14',
                 Rule::requiredIf(empty($args['passport_series']) && empty($args['passport_number'])),
             ],
             'passport_series' => [

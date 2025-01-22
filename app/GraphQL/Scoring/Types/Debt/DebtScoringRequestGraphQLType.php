@@ -4,9 +4,7 @@ namespace App\GraphQL\Scoring\Types\Debt;
 
 use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
-use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class DebtScoringRequestGraphQLType extends GraphQLType
@@ -22,7 +20,7 @@ class DebtScoringRequestGraphQLType extends GraphQLType
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
+                'type' => Type::string(),
                 'resolve' => fn (TaxInfoCreateRequestDTO|MibInfoCreateRequestDTO $root) => $root->pinfl,
             ],
             'phone' => [

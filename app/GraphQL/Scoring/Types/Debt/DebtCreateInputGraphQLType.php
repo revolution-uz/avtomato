@@ -2,9 +2,7 @@
 
 namespace App\GraphQL\Scoring\Types\Debt;
 
-use App\GraphQL\Scalars\BigInteger;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class DebtCreateInputGraphQLType extends InputType
@@ -20,8 +18,8 @@ class DebtCreateInputGraphQLType extends InputType
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
-                'rules' => 'required|integer|digits:14',
+                'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|digits:14',
             ],
             'phone' => [
                 'name' => 'phone',
