@@ -2,9 +2,6 @@
 
 namespace App\GraphQL\Ecommerce\Common;
 
-use App\GraphQL\Common\Queries\DistrictsGraphQLQuery;
-use App\GraphQL\Common\Queries\MahallasGraphQLQuery;
-use App\GraphQL\Common\Queries\RegionsGraphQLQuery;
 use App\GraphQL\Common\Types\DistrictGraphQLType;
 use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
@@ -24,10 +21,13 @@ use App\GraphQL\Ecommerce\Common\Mutations\LoginGraphQLMutation;
 use App\GraphQL\Ecommerce\Common\Mutations\SendOtpGraphQLMutation;
 use App\GraphQL\Ecommerce\Common\Queries\BannersGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\DeliveryPointsGraphQLQuery;
+use App\GraphQL\Ecommerce\Common\Queries\DistrictsGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\FilterProductsGraphQLQuery;
+use App\GraphQL\Ecommerce\Common\Queries\MahallasGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\ProductBrandsGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\ProductCategoriesGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\ProductsGraphQLQuery;
+use App\GraphQL\Ecommerce\Common\Queries\RegionsGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\SingleBannerGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\SingleDeliveryPointGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\SingleProductBrandGraphQLQuery;

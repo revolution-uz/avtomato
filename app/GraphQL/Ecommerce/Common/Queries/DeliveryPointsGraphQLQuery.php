@@ -2,12 +2,9 @@
 
 namespace App\GraphQL\Ecommerce\Common\Queries;
 
-use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Ecommerce\Admin\Types\DeliveryPointGraphQLType;
-use App\Helpers\RbacHelper;
 use App\Models\Company\Ecommerce\DeliveryPoint;
 use Closure;
-use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
@@ -47,29 +44,19 @@ class DeliveryPointsGraphQLQuery extends Query
         ];
     }
 
-    /**
-     * @throws Error
-     */
-    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    {
-        return RbacHelper::checkPermission(PermissionEnum::DELIVERY_POINT_VIEW_ALL);
-    }
-
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return DeliveryPoint::query()
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('name_en', 'ILIKE', $search)
-                        ->orWhere('name_uz', 'ILIKE', $search)
-                        ->orWhere('name_oz', 'ILIKE', $search)
-                        ->orWhere('name_ru', 'ILIKE', $search)
-                        ->orWhere('description_uz', 'ILIKE', $search)
-                        ->orWhere('description_oz', 'ILIKE', $search)
-                        ->orWhere('description_ru', 'ILIKE', $search)
-                        ->orWhere('description_en', 'ILIKE', $search);
-                });
+                $q->where('name_en', 'ILIKE', $search)
+                    ->orWhere('name_uz', 'ILIKE', $search)
+                    ->orWhere('name_oz', 'ILIKE', $search)
+                    ->orWhere('name_ru', 'ILIKE', $search)
+                    ->orWhere('description_uz', 'ILIKE', $search)
+                    ->orWhere('description_oz', 'ILIKE', $search)
+                    ->orWhere('description_ru', 'ILIKE', $search)
+                    ->orWhere('description_en', 'ILIKE', $search);
             })
             ->when(
                 isset($args['sort']),

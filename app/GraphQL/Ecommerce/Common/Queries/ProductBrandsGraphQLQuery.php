@@ -54,12 +54,10 @@ class ProductBrandsGraphQLQuery extends Query
         return ProductBrand::query()
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('name_en', 'ILIKE', $search)
-                        ->orWhere('name_uz', 'ILIKE', $search)
-                        ->orWhere('name_oz', 'ILIKE', $search)
-                        ->orWhere('name_ru', 'ILIKE', $search);
-                });
+                $q->where('name_en', 'ILIKE', $search)
+                    ->orWhere('name_uz', 'ILIKE', $search)
+                    ->orWhere('name_oz', 'ILIKE', $search)
+                    ->orWhere('name_ru', 'ILIKE', $search);
             })
             ->when(
                 isset($args['sort']),

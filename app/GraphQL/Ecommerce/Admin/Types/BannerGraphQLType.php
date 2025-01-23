@@ -25,6 +25,10 @@ class BannerGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Banner $root) => $root->id,
             ],
+            'name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Banner $root) => $root->name,
+            ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Banner $root) => $root->name_uz,

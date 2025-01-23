@@ -3,6 +3,7 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property-read string $name
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en
@@ -117,5 +119,10 @@ class Banner extends Model
     public function imageOz(): belongsTo
     {
         return $this->belongsTo(EcommerceImage::class);
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }
 }

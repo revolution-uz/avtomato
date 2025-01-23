@@ -4,6 +4,7 @@ namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,13 +15,14 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
- * @property int|null $parent_id
+ * @property-read string $name
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en
  * @property string $name_oz
  * @property string $slug
  * @property bool $is_active
+ * @property int|null $parent_id
  * @property int|null $image_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -78,5 +80,10 @@ class ProductCategory extends Model
     public function image(): BelongsTo
     {
         return $this->belongsTo(EcommerceImage::class);
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }
 }

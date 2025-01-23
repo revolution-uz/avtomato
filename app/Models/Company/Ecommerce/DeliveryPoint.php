@@ -7,6 +7,7 @@ use App\Models\Company\Mahalla;
 use App\Models\Company\OrderBySortable;
 use App\Models\Company\Region;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,20 +15,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
+ * @property-read string $name
  * @property string $name_uz
  * @property string $name_en
  * @property string $name_ru
  * @property string $name_oz
+ * @property-read string $description
  * @property string $description_uz
  * @property string $description_ru
  * @property string $description_en
  * @property string $description_oz
  * @property string $is_prepaid
  * @property string $phone
+ * @property-read string $address
  * @property string $address_uz
  * @property string $address_ru
  * @property string $address_en
  * @property string $address_oz
+ * @property-read string|null $landmark
  * @property string|null $landmark_uz
  * @property string|null $landmark_ru
  * @property string|null $landmark_en
@@ -93,5 +98,25 @@ class DeliveryPoint extends Model
     public function mahalla(): BelongsTo
     {
         return $this->belongsTo(Mahalla::class);
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
+    }
+
+    public function description(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->{'description_' . app()->getLocale()});
+    }
+
+    public function address(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->{'address_' . app()->getLocale()});
+    }
+
+    public function landmark(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->{'landmark_' . app()->getLocale()});
     }
 }

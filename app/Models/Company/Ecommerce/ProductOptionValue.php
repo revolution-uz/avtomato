@@ -4,6 +4,7 @@ namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,12 +15,13 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
- * @property int $group_id
+ * @property-read string $value
  * @property string $value_uz
  * @property string $value_ru
  * @property string $value_en
  * @property string $value_oz
  * @property string $slug
+ * @property int $group_id
  * @property int $option_id
  * @property int|null $image_id
  * @property Carbon $created_at
@@ -65,5 +67,10 @@ class ProductOptionValue extends Model
     public function productJoinOptions(): HasMany
     {
         return $this->hasMany(ProductJoinOption::class, 'value_id');
+    }
+
+    public function value(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->{'value_' . app()->getLocale()});
     }
 }
