@@ -3,15 +3,12 @@
 namespace App\GraphQL\Ecommerce\Common\Mutations;
 
 use App\Enums\Company\CustomerTypeEnum;
-use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\Ecommerce\User;
 use App\Rules\PhoneRule;
 use App\Services\ConfirmationService;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Str;
-use Rebing\GraphQL\Error\AuthorizationError;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
 class LoginGraphQLMutation extends Mutation
@@ -20,9 +17,7 @@ class LoginGraphQLMutation extends Mutation
         'name' => 'ecommerceLogin',
     ];
 
-    public function __construct(
-        private readonly ConfirmationService $confirmationService,
-    ) {}
+    public function __construct(private readonly ConfirmationService $confirmationService) {}
 
     public function type(): Type
     {
@@ -34,32 +29,34 @@ class LoginGraphQLMutation extends Mutation
         return [
             'phone' => [
                 'name' => 'phone',
-                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
-                'rules' => ['distinct', 'required', 'int', new PhoneRule],
+                'type' => Type::nonNull(Type::string()),
+                'rules' => ['required', 'digits:12', new PhoneRule],
             ],
             'code' => [
                 'name' => 'code',
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::string()),
+                'rules' => ['required', 'digits:6'],
             ],
         ];
     }
 
     /**
-     * @throws AuthenticationException
-     * @throws AuthorizationError
+     * @throws Error
      */
     public function resolve($root, array $args): string
     {
-        $confirm = $this->confirmationService->confirm($args['phone'], $args['code']);
-        if (! $confirm) {
-            throw new AuthenticationException('Phone or code is wrong');
+        if (
+            ! $this->confirmationService->confirm($args['phone'], $args['code'])
+            || (! request()->hasHeader('Device-Name') || ! request()->hasHeader('Device-Type') || ! request()->hasHeader('Device-OS'))
+        ) {
+            throw new Error('Phone or code is wrong');
         }
-        if (! request()->hasHeader('Device-Name') || ! request()->hasHeader('Device-Type') || ! request()->hasHeader('Device-OS')) {
-            throw new AuthorizationError('Phone or code is wrong');
-        }
+
         $user = User::query()->firstOrCreate(['phone' => $args['phone']]);
 
-        $user->customer()->create(['type' => CustomerTypeEnum::ECOMMERCE]);
+        if (! $user->customer) {
+            $user->customer()->create(['type' => CustomerTypeEnum::ECOMMERCE]);
+        }
 
         return $user->createTokenWithData(
             Str::substr(request()->header('Device-Name'), 0, 255),
@@ -69,6 +66,5 @@ class LoginGraphQLMutation extends Mutation
                 'device_ip' => request()->ip(),
             ]
         );
-
     }
 }

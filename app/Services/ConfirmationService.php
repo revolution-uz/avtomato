@@ -34,15 +34,14 @@ class ConfirmationService
 
     public function confirm(string $phone, string $otp): bool
     {
-        $authAttempt = CardConfirmationSms::query()
-            ->where('phone', $phone)
-            ->orderBy('created_at', 'desc')
-            ->first();
-
-        if ($authAttempt && $authAttempt->code == $otp && $authAttempt->created_at->gt(Carbon::now()->subMinutes(2))) {
-            $authAttempt->delete();
-
-            return true;
+        if (
+            $authAttempt = CardConfirmationSms::query()
+                ->where('created_at', '>=', Carbon::now()->subMinutes(2))
+                ->where('phone', $phone)
+                ->where('code', $otp)
+                ->first()
+        ) {
+            return $authAttempt->delete();
         }
 
         return false;
