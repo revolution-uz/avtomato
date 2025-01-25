@@ -22,7 +22,7 @@ class PassportDataGraphQLType extends GraphQLType
     {
         return [
             'pinfl' => [
-                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
+                'type' => Type::nonNull(Type::string()),
                 'description' => 'Pinfl',
                 'resolve' => function (PassportDataDTO $root) {
                     return $root->pinfl;

@@ -48,7 +48,7 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
         $this->_customer = Customer::factory()->create();
 
         $this->_customerInput = [
-            'pinfl' => rand(10000000000000, 99999999999999),
+            'pinfl' => (string) rand(10000000000000, 99999999999999),
             'tin' => rand(100000000, 999999999),
             'passport_series' => 'AB',
             'passport_number' => (string) rand(1000000, 9999999),
