@@ -141,7 +141,7 @@ class UpdateInstallmentGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals("The period must be between {$this->_tariff->min_period} and {$this->_tariff->max_period}.", $response->json('errors.0.extensions.validation')['installment.period'][0]);
         $this->assertEquals("The amount must be between {$this->_tariff->min_amount} and {$this->_tariff->max_amount}.", $response->json('errors.0.extensions.validation')['installment.amount'][0]);
         $this->assertEquals("The initial_fee must be between {$this->_tariff->min_initial_fee} and {$this->_tariff->max_initial_fee}.", $response->json('errors.0.extensions.validation')['installment.initial_fee'][0]);
-        $this->assertEquals(trans('validation.date', ['attribute' => 'installment.starts in']), $response->json('errors.0.extensions.validation')['installment.starts_in'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'installment.starts in', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation')['installment.starts_in'][0]);
     }
 
     #[Test]

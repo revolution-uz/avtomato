@@ -688,7 +688,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($installment->auto_pay, $response->json('data.singleInstallment.auto_pay'));
         $this->assertEquals($installment->any_card_charge, $response->json('data.singleInstallment.auto_pay_by_pinfl'));
         $this->assertEquals($installment->branch_id, $response->json('data.singleInstallment.branch.id'));
-        $this->assertEquals($installment->canceled_at?->format('d-m-Y H:i:s'), $response->json('data.singleInstallment.canceled_at'));
+        $this->assertEquals($installment->canceled_at?->timestamp, $response->json('data.singleInstallment.canceled_at'));
         $this->assertEquals($installment->cancellation_details, $response->json('data.singleInstallment.cancellation_details'));
         $this->assertEquals($installment->created_at->timestamp, $response->json('data.singleInstallment.created_at'));
         $this->assertEquals($installment->deleted_at, $response->json('data.singleInstallment.deleted_at'));
@@ -915,14 +915,14 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($customer->tin, Arr::get($customerData, 'tin'));
         $this->assertEquals($customer->passport_series, Arr::get($customerData, 'passport_series'));
         $this->assertEquals($customer->passport_number, Arr::get($customerData, 'passport_number'));
-        $this->assertEquals($customer->passport_given_date?->format('d-m-Y'), Arr::get($customerData, 'passport_given_date'));
-        $this->assertEquals($customer->passport_expiration_date?->format('d-m-Y'), Arr::get($customerData, 'passport_expiration_date'));
+        $this->assertEquals($customer->passport_given_date?->timestamp, Arr::get($customerData, 'passport_given_date'));
+        $this->assertEquals($customer->passport_expiration_date?->timestamp, Arr::get($customerData, 'passport_expiration_date'));
         $this->assertEquals($customer->passport_given_place, Arr::get($customerData, 'passport_given_place'));
         $this->assertEquals($customer->passport_citizenship, Arr::get($customerData, 'passport_citizenship'));
         $this->assertEquals($customer->first_name, Arr::get($customerData, 'first_name'));
         $this->assertEquals($customer->last_name, Arr::get($customerData, 'last_name'));
         $this->assertEquals($customer->middle_name, Arr::get($customerData, 'middle_name'));
-        $this->assertEquals($customer->birth_date?->format('d-m-Y'), Arr::get($customerData, 'birth_date'));
+        $this->assertEquals($customer->birth_date?->timestamp, Arr::get($customerData, 'birth_date'));
         $this->assertEquals($customer->birth_place, Arr::get($customerData, 'birth_place'));
         $this->assertEquals($customer->gender->value, Arr::get($customerData, 'gender'));
         $this->assertEquals($customer->created_at->timestamp, Arr::get($customerData, 'created_at'));

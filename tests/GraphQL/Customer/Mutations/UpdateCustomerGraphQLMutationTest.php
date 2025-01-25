@@ -52,14 +52,14 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
             'tin' => rand(100000000, 999999999),
             'passport_series' => 'AB',
             'passport_number' => (string) rand(1000000, 9999999),
-            'passport_given_date' => now()->format('d-m-Y'),
-            'passport_expiration_date' => now()->format('d-m-Y'),
+            'passport_given_date' => now()->format('Y-m-d'),
+            'passport_expiration_date' => now()->format('Y-m-d'),
             'passport_given_place' => Str::random(128),
             'passport_citizenship' => Str::random(32),
             'first_name' => Str::random(32),
             'last_name' => Str::random(32),
             'middle_name' => Str::random(32),
-            'birth_date' => now()->format('d-m-Y'),
+            'birth_date' => now()->format('Y-m-d'),
             'birth_place' => Str::random(32),
             'gender' => (int) GenderEnum::randomValue(),
         ];
@@ -182,16 +182,16 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.digits', ['attribute' => 'customer.tin', 'digits' => 9]), $response->json('errors.0.extensions.validation')['customer.tin'][0]);
         $this->assertEquals(trans('validation.regex', ['attribute' => 'customer.passport series']), $response->json('errors.0.extensions.validation')['customer.passport_series'][0]);
         $this->assertEquals(trans('validation.digits', ['attribute' => 'customer.passport number', 'digits' => 7]), $response->json('errors.0.extensions.validation')['customer.passport_number'][0]);
-        $this->assertEquals(trans('validation.date', ['attribute' => 'customer.passport given date']), $response->json('errors.0.extensions.validation')['customer.passport_given_date'][0]);
-        $this->assertEquals(trans('validation.date', ['attribute' => 'customer.passport expiration date']), $response->json('errors.0.extensions.validation')['customer.passport_expiration_date'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'customer.passport given place', 'max' => 128]), $response->json('errors.0.extensions.validation')['customer.passport_given_place'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'customer.passport citizenship', 'max' => 32]), $response->json('errors.0.extensions.validation')['customer.passport_citizenship'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'customer.first name', 'max' => 32]), $response->json('errors.0.extensions.validation')['customer.first_name'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'customer.last name', 'max' => 32]), $response->json('errors.0.extensions.validation')['customer.last_name'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'customer.middle name', 'max' => 32]), $response->json('errors.0.extensions.validation')['customer.middle_name'][0]);
-        $this->assertEquals(trans('validation.date', ['attribute' => 'customer.birth date']), $response->json('errors.0.extensions.validation')['customer.birth_date'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'customer.birth place', 'max' => 32]), $response->json('errors.0.extensions.validation')['customer.birth_place'][0]);
         $this->assertEquals(trans('validation.in', ['attribute' => 'customer.gender']), $response->json('errors.0.extensions.validation')['customer.gender'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'customer.birth date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation')['customer.birth_date'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'customer.passport given date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation')['customer.passport_given_date'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'customer.passport expiration date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation')['customer.passport_expiration_date'][0]);
     }
 
     #[Test]
@@ -239,14 +239,14 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($this->_customer->tin, $this->_customerInput['tin']);
         $this->assertEquals($this->_customer->passport_series, $this->_customerInput['passport_series']);
         $this->assertEquals($this->_customer->passport_number, $this->_customerInput['passport_number']);
-        $this->assertEquals($this->_customer->passport_given_date?->format('d-m-Y'), $this->_customerInput['passport_given_date']);
-        $this->assertEquals($this->_customer->passport_expiration_date?->format('d-m-Y'), $this->_customerInput['passport_expiration_date']);
+        $this->assertEquals($this->_customer->passport_given_date?->format('Y-m-d'), $this->_customerInput['passport_given_date']);
+        $this->assertEquals($this->_customer->passport_expiration_date?->format('Y-m-d'), $this->_customerInput['passport_expiration_date']);
         $this->assertEquals($this->_customer->passport_given_place, $this->_customerInput['passport_given_place']);
         $this->assertEquals($this->_customer->passport_citizenship, $this->_customerInput['passport_citizenship']);
         $this->assertEquals($this->_customer->first_name, $this->_customerInput['first_name']);
         $this->assertEquals($this->_customer->last_name, $this->_customerInput['last_name']);
         $this->assertEquals($this->_customer->middle_name, $this->_customerInput['middle_name']);
-        $this->assertEquals($this->_customer->birth_date?->format('d-m-Y'), $this->_customerInput['birth_date']);
+        $this->assertEquals($this->_customer->birth_date?->format('Y-m-d'), $this->_customerInput['birth_date']);
         $this->assertEquals($this->_customer->birth_place, $this->_customerInput['birth_place']);
         $this->assertEquals($this->_customer->gender->value, $this->_customerInput['gender']);
 
@@ -255,14 +255,14 @@ class UpdateCustomerGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($this->_customer->tin, $response->json('data.updateCustomer.tin'));
         $this->assertEquals($this->_customer->passport_series, $response->json('data.updateCustomer.passport_series'));
         $this->assertEquals($this->_customer->passport_number, $response->json('data.updateCustomer.passport_number'));
-        $this->assertEquals($this->_customer->passport_given_date?->format('d-m-Y'), $response->json('data.updateCustomer.passport_given_date'));
-        $this->assertEquals($this->_customer->passport_expiration_date?->format('d-m-Y'), $response->json('data.updateCustomer.passport_expiration_date'));
+        $this->assertEquals($this->_customer->passport_given_date?->timestamp, $response->json('data.updateCustomer.passport_given_date'));
+        $this->assertEquals($this->_customer->passport_expiration_date?->timestamp, $response->json('data.updateCustomer.passport_expiration_date'));
         $this->assertEquals($this->_customer->passport_given_place, $response->json('data.updateCustomer.passport_given_place'));
         $this->assertEquals($this->_customer->passport_citizenship, $response->json('data.updateCustomer.passport_citizenship'));
         $this->assertEquals($this->_customer->first_name, $response->json('data.updateCustomer.first_name'));
         $this->assertEquals($this->_customer->last_name, $response->json('data.updateCustomer.last_name'));
         $this->assertEquals($this->_customer->middle_name, $response->json('data.updateCustomer.middle_name'));
-        $this->assertEquals($this->_customer->birth_date?->format('d-m-Y'), $response->json('data.updateCustomer.birth_date'));
+        $this->assertEquals($this->_customer->birth_date?->timestamp, $response->json('data.updateCustomer.birth_date'));
         $this->assertEquals($this->_customer->birth_place, $response->json('data.updateCustomer.birth_place'));
         $this->assertEquals($this->_customer->gender->value, $response->json('data.updateCustomer.gender'));
         $this->assertEquals($this->_customer->created_at->timestamp, $response->json('data.updateCustomer.created_at'));

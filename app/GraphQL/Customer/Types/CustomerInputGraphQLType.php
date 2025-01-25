@@ -56,18 +56,12 @@ class CustomerInputGraphQLType extends InputType
             'passport_given_date' => [
                 'name' => 'passport_given_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'date',
-                ],
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'passport_expiration_date' => [
                 'name' => 'passport_expiration_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'date',
-                ],
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'passport_given_place' => [
                 'name' => 'passport_given_place',
@@ -117,10 +111,7 @@ class CustomerInputGraphQLType extends InputType
             'birth_date' => [
                 'name' => 'birth_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'date',
-                ],
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'birth_place' => [
                 'name' => 'birth_place',

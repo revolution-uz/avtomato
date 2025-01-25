@@ -8,10 +8,10 @@ use App\GraphQL\Scalars\BigInteger;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Tariff;
 use App\Services\Installment\InstallmentService;
-use Carbon\Carbon;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
@@ -53,10 +53,7 @@ class CalculateGraphQLQuery extends Query
             'starts_in' => [
                 'name' => 'starts_in',
                 'type' => Type::string(),
-                'rules' => [
-                    'nullable',
-                    'date',
-                ],
+                'rules' => 'nullable|date_format:Y-m-d',
             ],
         ];
     }
@@ -86,10 +83,11 @@ class CalculateGraphQLQuery extends Query
         $calculated = [];
         $i = 1;
 
+        /** @var Carbon $periodCarbon */
         foreach ($periodCarbons as $periodCarbon) {
             $calculated[] = [
                 'id' => $i,
-                'date' => $periodCarbon->format('Y-m-d'),
+                'date' => $periodCarbon->timestamp,
                 'amount' => $monthlyAmount,
                 'portion' => $monthlyInstallmentAmount - $monthlyAmount,
                 'monthly' => $monthlyInstallmentAmount,

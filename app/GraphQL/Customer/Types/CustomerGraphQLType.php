@@ -44,11 +44,11 @@ class CustomerGraphQLType extends GraphQLType
             ],
             'passport_given_date' => [
                 'type' => Type::string(),
-                'resolve' => fn (Customer $root) => $root->passport_given_date?->format('d-m-Y'),
+                'resolve' => fn (Customer $root) => $root->passport_given_date?->timestamp,
             ],
             'passport_expiration_date' => [
                 'type' => Type::string(),
-                'resolve' => fn (Customer $root) => $root->passport_expiration_date?->format('d-m-Y'),
+                'resolve' => fn (Customer $root) => $root->passport_expiration_date?->timestamp,
             ],
             'passport_given_place' => [
                 'type' => Type::string(),
@@ -72,7 +72,7 @@ class CustomerGraphQLType extends GraphQLType
             ],
             'birth_date' => [
                 'type' => Type::string(),
-                'resolve' => fn (Customer $root) => $root->birth_date?->format('d-m-Y'),
+                'resolve' => fn (Customer $root) => $root->birth_date?->timestamp,
             ],
             'birth_place' => [
                 'type' => Type::string(),

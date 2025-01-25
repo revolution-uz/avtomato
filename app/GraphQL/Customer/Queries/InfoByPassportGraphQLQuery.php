@@ -54,10 +54,7 @@ class InfoByPassportGraphQLQuery extends Query
             'birth_date' => [
                 'name' => 'birth_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'date',
-                ],
+                'rules' => 'required|date_format:Y-m-d',
             ],
         ];
     }
@@ -72,7 +69,7 @@ class InfoByPassportGraphQLQuery extends Query
         return $this->passportInfoService->getPassportData(
             passportSeries: $args['passport_series'],
             passportNumber: $args['passport_number'],
-            birthData: Carbon::parse($args['birth_date'])
+            birthData: Carbon::make($args['birth_date'])
         );
     }
 }

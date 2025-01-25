@@ -34,7 +34,7 @@ class KatmCreateInputGraphQLType extends InputType
             'passport_given_date' => [
                 'name' => 'passport_given_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|date',
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'first_name' => [
                 'name' => 'first_name',
@@ -64,7 +64,7 @@ class KatmCreateInputGraphQLType extends InputType
             'birth_date' => [
                 'name' => 'birth_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|date',
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'region_id' => [
                 'name' => 'region_id',

@@ -85,11 +85,7 @@ class UpdateTransactionGraphQLMutation extends Mutation
             'paid_at' => [
                 'name' => 'paid_at',
                 'type' => Type::string(),
-                'rules' => [
-                    'nullable',
-                    'date',
-                    'date_format:Y-m-d',
-                ],
+                'rules' => 'nullable|date_format:Y-m-d',
             ],
         ];
     }

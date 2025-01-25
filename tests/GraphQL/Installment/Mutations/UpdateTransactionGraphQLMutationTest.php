@@ -119,7 +119,7 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
             $response->json('errors.0.extensions.validation')['amount'][0]
         );
         $this->assertEquals(
-            trans('validation.date', ['attribute' => 'paid at']),
+            trans('validation.date_format', ['attribute' => 'paid at', 'format' => 'Y-m-d']),
             $response->json('errors.0.extensions.validation')['paid_at'][0]
         );
     }
