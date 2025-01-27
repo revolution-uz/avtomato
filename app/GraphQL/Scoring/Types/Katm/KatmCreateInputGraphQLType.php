@@ -55,7 +55,7 @@ class KatmCreateInputGraphQLType extends InputType
             'phone' => [
                 'name' => 'phone',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => ['nullable', 'digits:12', new PhoneRule],
+                'rules' => ['required', 'digits:12', new PhoneRule],
             ],
             'extra_phone' => [
                 'name' => 'extra_phone',
