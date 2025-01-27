@@ -2,7 +2,7 @@
 
 namespace App\Models\Company;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,7 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Region extends Model
 {
-    use HasFactory, TenantConnection;
+    use HasFactory, HasTranslations, TenantConnection;
 
     public $timestamps = false;
 
@@ -31,11 +31,6 @@ class Region extends Model
         'name_ru',
         'name_en',
     ];
-
-    public function name(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
-    }
 
     public function districts(): HasMany
     {

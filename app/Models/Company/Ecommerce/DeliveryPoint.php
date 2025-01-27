@@ -6,8 +6,8 @@ use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\OrderBySortable;
 use App\Models\Company\Region;
+use App\Traits\HasTranslations;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,7 +52,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class DeliveryPoint extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes;
 
     protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'description_uz', 'description_ru', 'description_en', 'description_oz', 'is_prepaid'];
 
@@ -98,25 +98,5 @@ class DeliveryPoint extends Model
     public function mahalla(): BelongsTo
     {
         return $this->belongsTo(Mahalla::class);
-    }
-
-    public function name(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
-    }
-
-    public function description(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'description_' . app()->getLocale()});
-    }
-
-    public function address(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'address_' . app()->getLocale()});
-    }
-
-    public function landmark(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'landmark_' . app()->getLocale()});
     }
 }

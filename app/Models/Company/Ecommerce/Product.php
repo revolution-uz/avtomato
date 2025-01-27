@@ -3,6 +3,7 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
+use App\Traits\HasTranslations;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,7 +42,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Product extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id', 'category_id', 'brand_id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'slug', 'cost', 'actual_price', 'old_price', 'created_at', 'updated_at'];
 
@@ -64,11 +65,6 @@ class Product extends Model
     public function setSlugAttribute($value)
     {
         $this->attributes['slug'] = Str::slug($value);
-    }
-
-    public function getNameAttribute(): string
-    {
-        return $this->{'name_' . app()->getLocale()};
     }
 
     public function category(): BelongsTo

@@ -2,7 +2,7 @@
 
 namespace App\Models\Company;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Mahalla extends Model
 {
-    use HasFactory, TenantConnection;
+    use HasFactory, HasTranslations, TenantConnection;
 
     public $timestamps = false;
 
@@ -37,10 +37,5 @@ class Mahalla extends Model
     public function district(): BelongsTo
     {
         return $this->belongsTo(District::class);
-    }
-
-    public function name(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }
 }

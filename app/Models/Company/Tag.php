@@ -2,8 +2,8 @@
 
 namespace App\Models\Company;
 
+use App\Traits\HasTranslations;
 use App\Traits\LogsActivityDirtyOnlyTrait;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -25,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Tag extends Model
 {
-    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
+    use HasFactory, HasTranslations, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id', 'name_uz', 'name_ru', 'name_oz', 'name_en', 'created_at', 'updated_at'];
 
@@ -41,11 +41,6 @@ class Tag extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
-
-    public function name(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
-    }
 
     public function customers(): BelongsToMany
     {
