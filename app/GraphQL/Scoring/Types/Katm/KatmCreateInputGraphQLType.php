@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Scoring\Types\Katm;
 
+use App\Rules\PhoneRule;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\InputType;
 
@@ -54,12 +55,12 @@ class KatmCreateInputGraphQLType extends InputType
             'phone' => [
                 'name' => 'phone',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|int|digits:12',
+                'rules' => ['required', 'digits:12', new PhoneRule],
             ],
             'extra_phone' => [
                 'name' => 'extra_phone',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|int|digits:12',
+                'type' => Type::string(),
+                'rules' => ['nullable', 'digits:12', new PhoneRule],
             ],
             'birth_date' => [
                 'name' => 'birth_date',
