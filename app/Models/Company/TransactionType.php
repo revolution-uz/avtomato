@@ -40,6 +40,8 @@ class TransactionType extends Model
         'is_system',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public static function isAutoPay($value): bool
     {
         return in_array($value, self::autoPayList());

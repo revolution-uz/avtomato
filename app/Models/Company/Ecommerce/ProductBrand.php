@@ -47,6 +47,8 @@ class ProductBrand extends Model
         'image_id',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function setSlugAttribute($value)
     {
         $this->attributes['slug'] = Str::slug($value);

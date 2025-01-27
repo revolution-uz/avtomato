@@ -41,4 +41,6 @@ class OrderStatus extends Model
         'name_oz',
         'is_active',
     ];
+
+    protected $translatedColumns = ['name'];
 }

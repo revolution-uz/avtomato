@@ -42,6 +42,8 @@ class Tag extends Model
         'deleted_at' => 'datetime',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function customers(): BelongsToMany
     {
         return $this->belongsToMany(Customer::class, 'customer_tags');

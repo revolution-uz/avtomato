@@ -86,6 +86,8 @@ class Banner extends Model
         'ends_at' => 'datetime',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class);

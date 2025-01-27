@@ -50,6 +50,8 @@ class ProductOptionValue extends Model
         'image_id',
     ];
 
+    protected $translatedColumns = ['value'];
+
     public function setSlugAttribute($value)
     {
         $this->attributes['slug'] = Str::slug($value);

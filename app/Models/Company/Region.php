@@ -32,6 +32,8 @@ class Region extends Model
         'name_en',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function districts(): HasMany
     {
         return $this->hasMany(District::class);

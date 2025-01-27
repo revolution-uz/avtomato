@@ -34,6 +34,8 @@ class Mahalla extends Model
         'name_en',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function district(): BelongsTo
     {
         return $this->belongsTo(District::class);

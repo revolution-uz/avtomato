@@ -62,6 +62,8 @@ class ProductCategory extends Model
         'image_id',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id', 'id');

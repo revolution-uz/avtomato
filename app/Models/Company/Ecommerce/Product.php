@@ -62,6 +62,8 @@ class Product extends Model
         'is_active',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function setSlugAttribute($value)
     {
         $this->attributes['slug'] = Str::slug($value);

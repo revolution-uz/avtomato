@@ -85,6 +85,8 @@ class DeliveryPoint extends Model
         'mahalla_id',
     ];
 
+    protected $translatedColumns = ['name', 'description', 'address', 'landmark'];
+
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);

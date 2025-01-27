@@ -53,6 +53,8 @@ class ProductOption extends Model
         'type' => OptionTypeEnum::class,
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function setSlugAttribute($value)
     {
         $this->attributes['slug'] = Str::slug($value);

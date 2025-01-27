@@ -36,6 +36,8 @@ class District extends Model
         'name_en',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
