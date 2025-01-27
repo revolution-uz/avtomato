@@ -22,7 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property UserCart[]|Collection<int, UserCart> $carts
- * @property Product[]|Collection<int, Product> $favorites
+ * @property Product[]|Collection<int, Product> $favourites
  * @property Order[]|Collection<int, Order> $orders
  * @property-read Customer|null $customer
  */
@@ -62,7 +62,7 @@ class User extends Authenticatable
         return $this->hasMany(UserCart::class);
     }
 
-    public function favorites(): BelongsToMany
+    public function favourites(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'ecommerce_user_favourites');
     }

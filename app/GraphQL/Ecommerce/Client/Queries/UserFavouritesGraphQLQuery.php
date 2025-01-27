@@ -11,10 +11,10 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
-class UserFavoriteGraphQLQuery extends Query
+class UserFavouritesGraphQLQuery extends Query
 {
     protected $attributes = [
-        'name' => 'UserFavorite',
+        'name' => 'userFavourites',
     ];
 
     public function type(): Type
@@ -47,6 +47,6 @@ class UserFavoriteGraphQLQuery extends Query
             throw new GeneralException(trans('validation.exists', ['attribute' => 'user id']));
         }
 
-        return User::query()->findOrFail($authUser)->favorites;
+        return User::query()->findOrFail($authUser)->favourites;
     }
 }

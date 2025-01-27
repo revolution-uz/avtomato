@@ -76,7 +76,7 @@ class UsersGraphQLQueryTest extends GraphQLTestCase
                 ],
             ],
         ],
-        'favorites' => [
+        'favourites' => [
             '*' => [
                 'id',
                 'name',
