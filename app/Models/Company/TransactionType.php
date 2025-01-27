@@ -2,9 +2,9 @@
 
 namespace App\Models\Company;
 
+use App\Traits\HasTranslations;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class TransactionType extends Model
 {
-    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
+    use HasFactory, HasTranslations, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['id', 'name', 'is_system', 'created_at', 'updated_at'];
 
@@ -39,6 +39,8 @@ class TransactionType extends Model
         'name_en',
         'is_system',
     ];
+
+    protected $translatedColumns = ['name'];
 
     public static function isAutoPay($value): bool
     {
@@ -55,11 +57,6 @@ class TransactionType extends Model
         $this->name_uz = $name;
         $this->name_ru = $name;
         $this->name_en = $name;
-    }
-
-    public function name(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }
 
     public function transactions(): HasMany

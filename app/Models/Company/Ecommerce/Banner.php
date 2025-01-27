@@ -3,7 +3,7 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,7 +42,7 @@ use Illuminate\Support\Carbon;
  */
 class Banner extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes;
 
     protected static array $sortables = [
         'id',
@@ -86,6 +86,8 @@ class Banner extends Model
         'ends_at' => 'datetime',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class);
@@ -119,10 +121,5 @@ class Banner extends Model
     public function imageOz(): belongsTo
     {
         return $this->belongsTo(EcommerceImage::class);
-    }
-
-    public function name(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }
 }

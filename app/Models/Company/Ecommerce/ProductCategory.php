@@ -3,8 +3,8 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
+use App\Traits\HasTranslations;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +34,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class ProductCategory extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = [
         'id',
@@ -62,6 +62,8 @@ class ProductCategory extends Model
         'image_id',
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id', 'id');
@@ -80,10 +82,5 @@ class ProductCategory extends Model
     public function image(): BelongsTo
     {
         return $this->belongsTo(EcommerceImage::class);
-    }
-
-    public function name(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }
 }

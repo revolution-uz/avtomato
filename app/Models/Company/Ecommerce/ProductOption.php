@@ -4,8 +4,8 @@ namespace App\Models\Company\Ecommerce;
 
 use App\Enums\Company\OptionTypeEnum;
 use App\Models\Company\OrderBySortable;
+use App\Traits\HasTranslations;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -33,7 +33,7 @@ use Illuminate\Support\Str;
  */
 class ProductOption extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes;
 
     protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'slug', 'description', 'created_at', 'updated_at'];
 
@@ -53,6 +53,8 @@ class ProductOption extends Model
         'type' => OptionTypeEnum::class,
     ];
 
+    protected $translatedColumns = ['name'];
+
     public function setSlugAttribute($value)
     {
         $this->attributes['slug'] = Str::slug($value);
@@ -71,10 +73,5 @@ class ProductOption extends Model
     public function productJoinOptions(): HasMany
     {
         return $this->hasMany(ProductJoinOption::class, 'option_id');
-    }
-
-    public function name(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'name_' . app()->getLocale()});
     }
 }
