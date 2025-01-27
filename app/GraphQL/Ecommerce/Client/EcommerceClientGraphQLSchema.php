@@ -26,7 +26,7 @@ use App\GraphQL\Ecommerce\Client\Mutations\RemoveCartGraphQLMutation;
 use App\GraphQL\Ecommerce\Client\Mutations\RemoveFavouriteGraphQLMutation;
 use App\GraphQL\Ecommerce\Client\Queries\OrdersGraphQLQuery;
 use App\GraphQL\Ecommerce\Client\Queries\UserCartGraphQLQuery;
-use App\GraphQL\Ecommerce\Client\Queries\UserFavoriteGraphQLQuery;
+use App\GraphQL\Ecommerce\Client\Queries\UserFavouritesGraphQLQuery;
 use App\GraphQL\Ecommerce\Client\Types\UserCartGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserCartInputGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserFavouriteGraphQLType;
@@ -58,7 +58,7 @@ class EcommerceClientGraphQLSchema implements ConfigConvertible
                 SingleProductBrandGraphQLQuery::class,
                 OrdersGraphQLQuery::class,
                 UserCartGraphQLQuery::class,
-                UserFavoriteGraphQLQuery::class,
+                UserFavouritesGraphQLQuery::class,
             ],
             'mutation' => [
                 AddCartGraphQLMutation::class,
