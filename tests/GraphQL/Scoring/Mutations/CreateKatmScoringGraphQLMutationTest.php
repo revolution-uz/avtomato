@@ -50,26 +50,6 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successCreateWithOnlyRequiredAttributes(): void
-    {
-        $this->mockUrl('https://api.abrand.uz/partner/katm/create-request*', json_decode(file_get_contents(storage_path('../JSON-for-testing/scoring/katm-create-request-response.json')), true));
-        $response = $this->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.scoring'),
-                $this->buildGraphQLQuery($this->input(), $this->_type)
-            );
-        $this->assertSuccessCreateKatmScoringResponse($response);
-
-        $balanceCharge = BalanceCharge::query()->latest()->firstOrFail();
-        $feature = Feature::query()->where('name', FeatureEnum::SCORING_INPS_HISTORY)->firstOrFail();
-
-        $this->assertEquals($feature->id, $balanceCharge->feature_id);
-        $this->assertEquals($this->_featureAmount, $balanceCharge->amount);
-        $this->assertEquals($response->json('data.createKatmScoring'), $balanceCharge->chargeable_id);
-        $this->assertEquals(ScoringRequest::class, $balanceCharge->chargeable_type);
-    }
-
-    #[Test]
     public function errorCreate(): void
     {
         $this->mockUrl('https://api.abrand.uz/partner/katm/create-request*', json_decode(file_get_contents(storage_path('../JSON-for-testing/scoring/katm-create-request-failed-response.json')), true));
@@ -137,7 +117,7 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
     }
 
-    private function input(bool $isOnlyRequired = false): array
+    private function input(): array
     {
         $region = Region::query()->first();
         $district = District::query()->where('region_id', $region->id)->first();
@@ -151,7 +131,7 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
             'last_name' => 'Drsaliev',
             'middle_name' => 'Sharipovich',
             'phone' => '998901234567',
-            'extra_phone' => ! $isOnlyRequired ? '998901234567' : null,
+            'extra_phone' => '998901234567',
             'birth_date' => '1990-01-01',
             'region_id' => $region->id,
             'district_id' => $district->id,
