@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class UserCart
+ * Class UserFavourite
  *
- * @property int $user_id ID of the user
- * @property int $product_id ID of the product
+ * @property int $id
+ * @property int $user_id
+ * @property int $product_id
  * @property User $user
  * @property Product $product
  */
@@ -17,13 +18,10 @@ class UserFavourite extends Model
 {
     use HasFactory;
 
-    // Disable timestamps if they are not used in this table
     public $timestamps = false;
 
-    // Define the table name if it doesn't follow the Laravel naming convention
     protected $table = 'ecommerce_user_favourites';
 
-    // Define fillable fields to allow mass assignment
     protected $fillable = [
         'user_id',
         'product_id',
@@ -51,17 +49,11 @@ class UserFavourite extends Model
         return $model;
     }
 
-    /**
-     * Define a relationship to the User model (assuming a User model exists)
-     */
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Define a relationship to the Product model (assuming a Product model exists)
-     */
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');

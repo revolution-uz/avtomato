@@ -1,0 +1,59 @@
+<?php
+
+namespace App\GraphQL\Ecommerce\Client\Types;
+
+use App\GraphQL\Ecommerce\Admin\Types\OrderStatusGraphQLType;
+use App\Models\Company\Ecommerce\OrderStatusHistory;
+use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Type as GraphQLType;
+
+class OrderStatusHistoryGraphQLType extends GraphQLType
+{
+    public const string GRAPHQL_TYPE_NAME = 'OrderStatusHistoryGraphQLType';
+
+    protected $attributes = [
+        'name' => self::GRAPHQL_TYPE_NAME,
+    ];
+
+    public function fields(): array
+    {
+        return [
+            'id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (OrderStatusHistory $root) => $root->id,
+            ],
+            'from_status_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (OrderStatusHistory $root) => $root->from_status_id,
+            ],
+            'from_status' => [
+                'type' => Type::nonNull(OrderStatusGraphQLType::type()),
+                'resolve' => fn (OrderStatusHistory $root) => $root->fromStatus,
+            ],
+            'to_status_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (OrderStatusHistory $root) => $root->to_status_id,
+            ],
+            'to_status' => [
+                'type' => Type::nonNull(OrderStatusGraphQLType::type()),
+                'resolve' => fn (OrderStatusHistory $root) => $root->toStatus,
+            ],
+            'order_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (OrderStatusHistory $root) => $root->order_id,
+            ],
+            'created_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (OrderStatusHistory $root) => $root->created_at->timestamp,
+            ],
+            'updated_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (OrderStatusHistory $root) => $root->updated_at->timestamp,
+            ],
+            'deleted_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (OrderStatusHistory $root) => $root->deleted_at?->timestamp,
+            ],
+        ];
+    }
+}

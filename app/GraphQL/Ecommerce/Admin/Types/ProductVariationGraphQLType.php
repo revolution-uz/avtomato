@@ -26,6 +26,18 @@ class ProductVariationGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (ProductVariation $root) => $root->is_active,
             ],
+            'cost' => [
+                'type' => Type::nonNull(Type::float()),
+                'resolve' => fn (ProductVariation $root) => $root->cost,
+            ],
+            'actual_price' => [
+                'type' => Type::nonNull(Type::float()),
+                'resolve' => fn (ProductVariation $root) => $root->actual_price,
+            ],
+            'old_price' => [
+                'type' => Type::nonNull(Type::float()),
+                'resolve' => fn (ProductVariation $root) => $root->old_price,
+            ],
             'product_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (ProductVariation $root) => $root->product_id,
