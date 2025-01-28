@@ -129,8 +129,8 @@ class LoginGraphQLMutationTest extends GraphQLTestCase
     {
         $query = [
             'query' => <<<'GRAPHQL'
-                query UserCart {
-                    userCart {
+                query UserCarts {
+                    userCarts {
                         id
                     }
                 }
@@ -142,6 +142,6 @@ class LoginGraphQLMutationTest extends GraphQLTestCase
         );
 
         $response->assertOk();
-        $response->assertJsonStructure(['data' => ['userCart']]);
+        $response->assertJsonStructure(['data' => ['userCarts']]);
     }
 }
