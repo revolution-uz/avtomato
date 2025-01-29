@@ -47,10 +47,10 @@ class UserGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (User $root) => $root->deleted_at?->timestamp,
             ],
-            'customer' => [
-                'type' => GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (User $root) => $root->customer,
-            ],
+            // 'customer' => [
+            //     'type' => GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME),
+            //     'resolve' => fn (User $root) => $root->customer,
+            // ],
             'orders' => [
                 'type' => Type::listOf(GraphQL::type(OrderGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (User $root) => $root->orders,
