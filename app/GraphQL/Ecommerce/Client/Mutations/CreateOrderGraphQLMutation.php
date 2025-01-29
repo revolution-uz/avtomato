@@ -5,8 +5,11 @@ namespace App\GraphQL\Ecommerce\Client\Mutations;
 use App\Exceptions\GeneralException;
 use App\GraphQL\Ecommerce\Admin\Types\OrderGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserCartInputGraphQLType;
+use App\Models\Company\Address;
+use App\Models\Company\Ecommerce\DeliveryPoint;
 use App\Services\Ecommerce\OrderService;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 use Throwable;
@@ -32,7 +35,7 @@ class CreateOrderGraphQLMutation extends Mutation
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    'exists:addresses,id',
+                    Rule::exists(Address::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
             'delivery_point_id' => [
@@ -40,7 +43,7 @@ class CreateOrderGraphQLMutation extends Mutation
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:ecommerce_delivery_points,id',
+                    Rule::exists(DeliveryPoint::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
             'installment_id' => [

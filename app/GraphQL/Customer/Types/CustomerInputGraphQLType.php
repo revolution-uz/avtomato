@@ -67,7 +67,7 @@ class CustomerInputGraphQLType extends InputType
                 'name' => 'passport_given_place',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => [
-                    'nullable',
+                    'required',
                     'string',
                     'max:128',
                 ],
@@ -76,7 +76,7 @@ class CustomerInputGraphQLType extends InputType
                 'name' => 'passport_citizenship',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => [
-                    'nullable',
+                    'required',
                     'string',
                     'max:32',
                 ],
@@ -117,7 +117,7 @@ class CustomerInputGraphQLType extends InputType
                 'name' => 'birth_place',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => [
-                    'nullable',
+                    'required',
                     'string',
                     'max:32',
                 ],

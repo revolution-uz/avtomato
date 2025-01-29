@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
@@ -24,11 +25,11 @@ use Laravel\Sanctum\HasApiTokens;
  * @property UserCart[]|Collection<int, UserCart> $carts
  * @property Product[]|Collection<int, Product> $favourites
  * @property Order[]|Collection<int, Order> $orders
- * @property-read Customer|null $customer
+ * @property Customer|null $customer
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, OrderBySortable, SoftDeletes;
+    use HasApiTokens, HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
 
     protected static array $sortables = ['id', 'phone', 'customer_id', 'created_at', 'updated_at'];
 
