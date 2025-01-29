@@ -20,15 +20,10 @@ class OrdersGraphQLQuery extends Query
         return Type::listOf(GraphQL::type(OrderGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
-    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    {
-        return true;
-    }
-
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $authUser = auth('ecommerce-client')->user();
 
-        return $authUser->orders;
+        return $authUser->orders()->orderBy('created_at', 'desc')->get();
     }
 }
