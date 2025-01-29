@@ -10,25 +10,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class UserCart
  *
  * @property int $id
- * @property int $quantity Quantity of the product in the cart
- * @property int $user_id ID of the user
- * @property int $product_id ID of the product
- * @property int|null $variation_id ID of the variation
+ * @property int $quantity
+ * @property int $user_id
+ * @property int $product_id
+ * @property int $variation_id
  * @property User $user
  * @property Product $product
- * @property ProductVariation|null $variation
+ * @property ProductVariation $variation
  */
 class UserCart extends Model
 {
     use HasFactory;
 
-    // Disable timestamps if they are not used in this table
     public $timestamps = false;
 
-    // Define the table name if it doesn't follow the Laravel naming convention
     protected $table = 'ecommerce_user_carts';
 
-    // Define fillable fields to allow mass assignment
     protected $fillable = [
         'quantity',
         'user_id',
@@ -36,41 +33,31 @@ class UserCart extends Model
         'variation_id',
     ];
 
-    public static function removeCart(int $user_id, int $product_id)
+    public static function removeCart(int $user_id, int $variation_id)
     {
         return self::where('user_id', $user_id)
-            ->where('product_id', $product_id)
+            ->where('variation_id', $variation_id)
             ->delete();
     }
 
-    public static function addCart(int $user_id, int $product_id, int $quantity)
+    public static function addCart(int $user_id, int $variation_id, int $quantity)
     {
-        if ($model = self::where('user_id', $user_id)
-            ->where('product_id', $product_id)
-            ->first()) {
-            $model->quantity = $quantity;
-        } else {
-            $model = new self;
-            $model->user_id = $user_id;
-            $model->product_id = $product_id;
-            $model->quantity = $quantity;
-            $model->saveOrFail();
-        }
+        $model = self::firstOrNew(
+            ['user_id' => $user_id, 'variation_id' => $variation_id],
+            ['product_id' => ProductVariation::query()->find($variation_id)->product_id]
+        );
+
+        $model->quantity = $quantity;
+        $model->saveOrFail();
 
         return $model;
     }
 
-    /**
-     * Define a relationship to the User model (assuming a User model exists)
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Define a relationship to the Product model (assuming a Product model exists)
-     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');

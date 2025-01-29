@@ -49,7 +49,7 @@ class UserGraphQLType extends GraphQLType
             ],
             // 'customer' => [
             //     'type' => GraphQL::type(CustomerGraphQLType::GRAPHQL_TYPE_NAME),
-            //     'resolve' => fn (User $root) => $root->customer,
+            //     'resolve' => fn(User $root) => $root->customer,
             // ],
             'orders' => [
                 'type' => Type::listOf(GraphQL::type(OrderGraphQLType::GRAPHQL_TYPE_NAME)),
