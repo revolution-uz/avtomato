@@ -2,16 +2,16 @@
 
 namespace App\GraphQL\Ecommerce\Client\Mutations;
 
-use App\Exceptions\GeneralException;
+use App\Models\Company\Ecommerce\Product;
 use App\Models\Company\Ecommerce\UserFavourite;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
-use Throwable;
 
 class RemoveFavouriteGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'removeCart',
+        'name' => 'removeFavourite',
     ];
 
     public function type(): Type
@@ -27,23 +27,27 @@ class RemoveFavouriteGraphQLMutation extends Mutation
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    'exists:ecommerce_products,id',
+                    Rule::exists(Product::class, 'id')->whereNull('deleted_at'),
+                    function ($attribute, $value, $fail) {
+                        if (
+                            UserFavourite::query()
+                                ->where('user_id', auth('ecommerce-client')->id())
+                                ->where('product_id', $value)
+                                ->doesntExist()
+                        ) {
+                            $fail('The ' . $attribute . ' is not in your favourite list.');
+                        }
+                    },
                 ],
             ],
         ];
     }
 
-    /**
-     * @throws GeneralException
-     * @throws Throwable
-     */
-    public function resolve($root, $args)
+    public function resolve($root, $args): bool
     {
-        $authUser = auth('ecommerce-client')->user();
-        if (is_null($authUser->customer_id)) {
-            throw new GeneralException('Iltimos profilni to\'ldiring');
-        }
-
-        return UserFavourite::removeCart($authUser->id, $args['product_id']);
+        return UserFavourite::query()
+            ->where('user_id', auth('ecommerce-client')->id())
+            ->where('product_id', $args['product_id'])
+            ->delete();
     }
 }

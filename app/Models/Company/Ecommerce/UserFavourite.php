@@ -34,21 +34,6 @@ class UserFavourite extends Model
             ->delete();
     }
 
-    public static function addCart(int $user_id, int $product_id, int $quantity)
-    {
-        if ($model = self::where('user_id', $user_id)
-            ->where('product_id', $product_id)
-            ->first()) {
-        } else {
-            $model = new self;
-            $model->user_id = $user_id;
-            $model->product_id = $product_id;
-            $model->saveOrFail();
-        }
-
-        return $model;
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

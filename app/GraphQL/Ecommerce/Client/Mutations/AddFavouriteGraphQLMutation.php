@@ -2,24 +2,21 @@
 
 namespace App\GraphQL\Ecommerce\Client\Mutations;
 
-use App\Exceptions\GeneralException;
-use App\GraphQL\Ecommerce\Client\Types\UserFavouriteGraphQLType;
+use App\Models\Company\Ecommerce\Product;
 use App\Models\Company\Ecommerce\UserFavourite;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Error\AuthorizationError;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
-use Throwable;
 
 class AddFavouriteGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'addCart',
+        'name' => 'addFavourite',
     ];
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(UserFavouriteGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(Type::boolean());
     }
 
     public function args(): array
@@ -30,22 +27,24 @@ class AddFavouriteGraphQLMutation extends Mutation
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    'exists:ecommerce_products,id',
+                    Rule::exists(Product::class, 'id')->whereNull('deleted_at'),
+                    function ($attribute, $value, $fail) {
+                        if (
+                            UserFavourite::query()
+                                ->where('user_id', auth('ecommerce-client')->id())
+                                ->where('product_id', $value)
+                                ->exists()
+                        ) {
+                            $fail('The ' . $attribute . ' has already been taken.');
+                        }
+                    },
                 ],
             ],
         ];
     }
 
-    /**
-     * @throws GeneralException
-     * @throws Throwable
-     */
     public function resolve($root, $args)
     {
-        if (! auth('ecommerce-client')->check()) {
-            throw new AuthorizationError('Unauthenticated');
-        }
-
-        return UserFavourite::addCart(auth('ecommerce-client')->user()->id, $args['product_id'], $args['quantity'] ?? 1);
+        return UserFavourite::query()->create(['user_id' => auth('ecommerce-client')->id(), 'product_id' => $args['product_id']]);
     }
 }

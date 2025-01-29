@@ -29,10 +29,10 @@ use App\GraphQL\Ecommerce\Client\Mutations\RemoveFavouriteGraphQLMutation;
 use App\GraphQL\Ecommerce\Client\Queries\OrdersGraphQLQuery;
 use App\GraphQL\Ecommerce\Client\Queries\UserCartsGraphQLQuery;
 use App\GraphQL\Ecommerce\Client\Queries\UserFavouritesGraphQLQuery;
+use App\GraphQL\Ecommerce\Client\Types\CustomerGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\OrderStatusHistoryGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserCartGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserCartInputGraphQLType;
-use App\GraphQL\Ecommerce\Client\Types\UserFavouriteGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserGraphQLType;
 use App\GraphQL\Management\Types\AdminInputGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
@@ -71,7 +71,6 @@ class EcommerceClientGraphQLSchema implements ConfigConvertible
                 UserCartInputGraphQLType::class,
                 CustomerInputGraphQLType::class,
                 UserGraphQLType::class,
-                UserFavouriteGraphQLType::class,
                 UserCartGraphQLType::class,
                 DistrictGraphQLType::class,
                 MahallaGraphQLType::class,
@@ -80,8 +79,9 @@ class EcommerceClientGraphQLSchema implements ConfigConvertible
                 AdminInputGraphQLType::class,
                 OrderStatusGraphQLType::class,
                 OrderStatusHistoryGraphQLType::class,
+                CustomerGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum', 'is_soft_delete_client_token'],
+            'middleware' => ['auth:ecommerce-client', 'is_soft_delete_client_token', 'ecommerce'],
         ];
     }
 }
