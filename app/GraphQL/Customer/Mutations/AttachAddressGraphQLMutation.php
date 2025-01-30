@@ -34,7 +34,7 @@ class AttachAddressGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'int',
-                    Rule::in(AddressTypeEnum::customerAddresses()),
+                    Rule::in(AddressTypeEnum::customerAddressTypes()),
                 ],
             ],
             'address' => [

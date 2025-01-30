@@ -26,7 +26,7 @@ enum AddressTypeEnum: int
         };
     }
 
-    public static function customerAddresses(): array
+    public static function customerAddressTypes(): array
     {
         return [
             self::BIRTH_PLACE,
