@@ -3,10 +3,8 @@
 namespace App\GraphQL\Ecommerce\Client\Mutations;
 
 use App\Enums\Company\AddressTypeEnum;
-use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\AddressGraphQLType;
-use App\Helpers\RbacHelper;
-use App\Models\Company\Customer;
+use App\Models\Company\Ecommerce\User;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -22,16 +20,6 @@ class AttachAddressGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
-            'customer_id' => [
-                'name' => 'customer_id',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'int', 'exists:customers,id'],
-            ],
-            'type' => [
-                'name' => 'type',
-                'type' => Type::nonNull(Type::int()),
-                'rules' => 'required|int|in:' . implode(',', AddressTypeEnum::values()),
-            ],
             'address' => [
                 'name' => 'address',
                 'type' => Type::nonNull(Type::string()),
@@ -60,15 +48,13 @@ class AttachAddressGraphQLMutation extends Mutation
         return Type::nonNull(GraphQL::type(AddressGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
-    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_EDIT);
-    }
-
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $customer = Customer::findOrFail($args['customer_id']);
+        /** @var User $user */
+        $user = auth('ecommerce-client')->user();
 
-        return $customer->addresses()->create($args);
+        $args['type'] = AddressTypeEnum::DELIVERY_PLACE;
+
+        return $user->addresses()->create($args);
     }
 }

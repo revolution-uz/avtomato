@@ -2,6 +2,7 @@
 
 namespace App\Models\Company\Ecommerce;
 
+use App\Models\Company\Address;
 use App\Models\Company\Customer;
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
@@ -26,6 +28,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Product[]|Collection<int, Product> $favourites
  * @property Order[]|Collection<int, Order> $orders
  * @property Customer|null $customer
+ * @property Address[]|Collection<int, Address> $addresses
  */
 class User extends Authenticatable
 {
@@ -66,5 +69,10 @@ class User extends Authenticatable
     public function favourites(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'ecommerce_user_favourites');
+    }
+
+    public function addresses(): MorphMany
+    {
+        return $this->morphMany(Address::class, 'addressable');
     }
 }
