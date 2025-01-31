@@ -143,7 +143,7 @@ class ManagementGraphQLSchema implements ConfigConvertible
                 CustomerGraphQLType::class,
                 InstallmentGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
+            'middleware' => ['auth:user', 'is_soft_delete_token', 'tenant_logging'],
         ];
     }
 }
