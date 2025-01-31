@@ -119,7 +119,7 @@ class UserFavouritesGraphQLQueryTest extends GraphQLTestCase
     public function successUserFavourites(): void
     {
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
 
         $this->assertSuccessUserFavouritesResponse($response);

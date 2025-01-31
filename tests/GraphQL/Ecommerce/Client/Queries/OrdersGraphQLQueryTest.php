@@ -100,7 +100,7 @@ class OrdersGraphQLQueryTest extends GraphQLTestCase
     public function successOrders(): void
     {
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
 
         $this->assertSuccessOrdersResponse($response);
