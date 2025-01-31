@@ -70,7 +70,7 @@ class AddCartGraphQLMutationTest extends GraphQLTestCase
         ];
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessAddCartResponse($response, $variables);
@@ -84,7 +84,7 @@ class AddCartGraphQLMutationTest extends GraphQLTestCase
         $variables = array_merge($cart->toArray(), ['quantity' => 999]);
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessAddCartResponse($response, $variables);
@@ -97,7 +97,7 @@ class AddCartGraphQLMutationTest extends GraphQLTestCase
     {
         // GraphQL type errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -106,7 +106,7 @@ class AddCartGraphQLMutationTest extends GraphQLTestCase
 
         // Rule errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['variation_id' => 999999999, 'quantity' => 0]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
