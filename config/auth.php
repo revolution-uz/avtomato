@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'user',
+        'guard' => 'company-admin',
         'passwords' => 'users',
     ],
 
@@ -40,13 +40,13 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
-        'user' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
         'admin' => [
-            'driver' => 'session',
+            'driver' => 'sanctum',
             'provider' => 'admins',
+        ],
+        'company-admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'company-admins',
         ],
         'ecommerce-client' => [
             'driver' => 'sanctum',
@@ -72,13 +72,13 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Company\CompanyAdmin::class,
-        ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+        'company-admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Company\CompanyAdmin::class,
         ],
         'ecommerce-clients' => [
             'driver' => 'eloquent',

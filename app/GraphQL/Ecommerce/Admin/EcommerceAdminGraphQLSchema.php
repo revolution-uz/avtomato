@@ -209,7 +209,7 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 UpdateProductVariationInputGraphQLType::class,
                 UserCartGraphQLType::class,
             ],
-            'middleware' => ['auth:user', 'is_soft_delete_token', 'tenant_logging'],
+            'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'tenant_logging'],
         ];
     }
 }
