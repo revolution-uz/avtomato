@@ -2,13 +2,12 @@
 
 namespace App\GraphQL\Ecommerce\Client\Mutations;
 
-use App\Enums\Company\Rbac\PermissionEnum;
-use App\Helpers\RbacHelper;
-use App\Models\Company\Customer;
+use App\Models\Company\Address;
+use App\Models\Company\Ecommerce\User;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 
 class DetachAddressGraphQLMutation extends Mutation
@@ -20,23 +19,17 @@ class DetachAddressGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
-            'customer_id' => [
-                'name' => 'customer_id',
+            'address_id' => [
+                'name' => 'address_id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'int', 'exists:customers,id'],
-            ],
-            'ids' => [
-                'name' => 'ids',
-                'type' => Type::nonNull(Type::listOf(Type::nonNull(Type::int()))),
-                'rules' => ['required', 'array', 'distinct', function (string $attribute, mixed $value, Closure $fail) {
-                    $validator = Validator::make([$attribute => $value], [
-                        $attribute => 'array',
-                        $attribute . '.*' => 'integer|exists:addresses,id',
-                    ]);
-                    if ($validator->fails()) {
-                        return $fail($validator->errors());
-                    }
-                }, ],
+                'rules' => [
+                    'required',
+                    'integer',
+                    Rule::exists(Address::class, 'id')
+                        ->where('addressable_type', User::class)
+                        ->where('addressable_id', auth('ecommerce-client')->id())
+                        ->whereNull('deleted_at'),
+                ],
             ],
         ];
     }
@@ -46,16 +39,11 @@ class DetachAddressGraphQLMutation extends Mutation
         return Type::nonNull(Type::boolean());
     }
 
-    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_EDIT);
-    }
-
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $customer = Customer::findOrFail($args['customer_id']);
-        $customer->addresses()->whereIn('id', $args['ids'])->delete();
+        /** @var User $user */
+        $user = auth('ecommerce-client')->user();
 
-        return true;
+        return $user->addresses()->where('id', $args['address_id'])->delete();
     }
 }
