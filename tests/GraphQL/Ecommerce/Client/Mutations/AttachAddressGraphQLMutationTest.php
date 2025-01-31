@@ -45,7 +45,7 @@ class AttachAddressGraphQLMutationTest extends GraphQLTestCase
         $variables = $this->getInputVariables(true);
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessAttachAddressResponse($response, $variables);
@@ -57,7 +57,7 @@ class AttachAddressGraphQLMutationTest extends GraphQLTestCase
         $variables = $this->getInputVariables();
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessAttachAddressResponse($response, $variables);
@@ -68,7 +68,7 @@ class AttachAddressGraphQLMutationTest extends GraphQLTestCase
     {
         // GraphQL type errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -84,7 +84,7 @@ class AttachAddressGraphQLMutationTest extends GraphQLTestCase
             'mahalla_id' => 999999999,
         ]);
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());

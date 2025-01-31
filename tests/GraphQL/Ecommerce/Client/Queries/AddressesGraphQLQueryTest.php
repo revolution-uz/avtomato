@@ -70,7 +70,7 @@ class AddressesGraphQLQueryTest extends GraphQLTestCase
     public function successAddress(): void
     {
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
 
         $this->assertSuccessAddressResponse($response);
