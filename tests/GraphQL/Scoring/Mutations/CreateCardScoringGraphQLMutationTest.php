@@ -20,8 +20,8 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
     protected bool $tenancy = true;
 
     private int $_featureAmount = 65;
-    private array $_humoInput = ['number' => '9860353506066262', 'expiry' => '0430'];
-    private array $_uzCardInput = ['number' => '8600353506066262', 'expiry' => '0430'];
+    private array $_humoInput = ['number' => '9860353506066262', 'expiry' => '2804'];
+    private array $_uzCardInput = ['number' => '8600353506066262', 'expiry' => '3004'];
 
     protected function setUp(): void
     {
@@ -132,6 +132,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.in', ['attribute' => 'type']), $response->json('errors.0.extensions.validation')['type'][0]);
+
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
@@ -143,6 +144,18 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.digits', ['attribute' => 'data.number', 'digits' => 16]), $response->json('errors.0.extensions.validation')['data.number'][0]);
         $this->assertEquals(trans('validation.digits', ['attribute' => 'data.expiry', 'digits' => 4]), $response->json('errors.0.extensions.validation')['data.expiry'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'data.expiry', 'format' => 'ym']), $response->json('errors.0.extensions.validation')['data.expiry'][1]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(
+                route('graphql.scoring'),
+                $this->buildGraphQLQuery(['number' => '9860353506066262', 'expiry' => '0428'], ScoringRequestTypeEnum::HUMO)
+            );
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'data.expiry', 'format' => 'ym']), $response->json('errors.0.extensions.validation')['data.expiry'][0]);
     }
 
     #[Test]
