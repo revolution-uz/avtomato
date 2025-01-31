@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Ecommerce\Client\Queries;
+namespace Tests\GraphQL\Ecommerce\Client\Queries;
 
 use App\Models\Company\Ecommerce\Product;
 use App\Models\Company\Ecommerce\User;

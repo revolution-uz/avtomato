@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Ecommerce\Client\Mutations;
+namespace Tests\GraphQL\Ecommerce\Client\Mutations;
 
 use App\Models\Company\Ecommerce\Product;
 use App\Models\Company\Ecommerce\User;

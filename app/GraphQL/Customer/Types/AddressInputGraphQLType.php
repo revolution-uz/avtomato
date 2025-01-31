@@ -24,7 +24,7 @@ class AddressInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'integer',
-                    Rule::in(AddressTypeEnum::values()),
+                    Rule::in(AddressTypeEnum::customerAddressTypes()),
                 ],
             ],
             'address' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Ecommerce\Client\Mutations;
+namespace Tests\GraphQL\Ecommerce\Client\Mutations;
 
 use App\Enums\GenderEnum;
 use App\Models\Company\Customer;

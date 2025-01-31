@@ -10,6 +10,7 @@ use App\Models\Company\Customer;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
@@ -30,7 +31,11 @@ class AttachAddressGraphQLMutation extends Mutation
             'type' => [
                 'name' => 'type',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => 'required|int|in:' . implode(',', AddressTypeEnum::values()),
+                'rules' => [
+                    'required',
+                    'int',
+                    Rule::in(AddressTypeEnum::customerAddressTypes()),
+                ],
             ],
             'address' => [
                 'name' => 'address',
