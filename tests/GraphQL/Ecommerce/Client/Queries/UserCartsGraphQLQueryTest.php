@@ -75,7 +75,7 @@ class UserCartsGraphQLQueryTest extends GraphQLTestCase
     public function successUserCarts(): void
     {
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
 
         $this->assertSuccessUserCartsResponse($response);

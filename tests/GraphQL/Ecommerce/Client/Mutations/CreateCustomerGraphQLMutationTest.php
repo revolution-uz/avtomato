@@ -53,7 +53,7 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
         $variables = $this->getInputVariables();
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessCreateCustomerResponse($response, $variables);
@@ -65,7 +65,7 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
         $variables = $this->getInputVariables(true);
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessCreateCustomerResponse($response, $variables, true);
@@ -86,7 +86,7 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
         ]);
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessCreateCustomerResponse($response, $variables);
@@ -109,7 +109,7 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
         // Unique PINFL
         Customer::factory()->create(['pinfl' => $variables['pinfl']]);
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -119,7 +119,7 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
         // Unique passport
         Customer::factory()->create(['passport_series' => $variables['passport_series'], 'passport_number' => $variables['passport_number']]);
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -132,7 +132,7 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
     {
         // GraphQL errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -167,7 +167,7 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
             'gender' => 999,
         ]);
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());

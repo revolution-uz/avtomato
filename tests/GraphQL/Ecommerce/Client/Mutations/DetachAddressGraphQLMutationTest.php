@@ -30,7 +30,7 @@ class DetachAddressGraphQLMutationTest extends GraphQLTestCase
         $address = Address::factory()->create(['addressable_type' => User::class, 'addressable_id' => $this->_user->id]);
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['address_id' => $address->id]));
 
         $this->assertSuccessDetachAddressResponse($response);
@@ -41,7 +41,7 @@ class DetachAddressGraphQLMutationTest extends GraphQLTestCase
     {
         // GraphQL type errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -49,7 +49,7 @@ class DetachAddressGraphQLMutationTest extends GraphQLTestCase
 
         // Rule errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['address_id' => 999999999]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -58,7 +58,7 @@ class DetachAddressGraphQLMutationTest extends GraphQLTestCase
 
         $address = Address::factory()->create();
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['address_id' => $address->id]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());

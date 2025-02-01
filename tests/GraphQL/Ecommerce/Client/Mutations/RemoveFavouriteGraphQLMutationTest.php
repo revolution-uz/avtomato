@@ -30,7 +30,7 @@ class RemoveFavouriteGraphQLMutationTest extends GraphQLTestCase
         $userFavorite = UserFavourite::query()->create(['user_id' => $this->_user->id, 'product_id' => $product->id]);
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['product_id' => $userFavorite->product_id]));
 
         $this->assertSuccessRemoveFavouriteResponse($response, $product);
@@ -41,7 +41,7 @@ class RemoveFavouriteGraphQLMutationTest extends GraphQLTestCase
     {
         // GraphQL type errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -49,7 +49,7 @@ class RemoveFavouriteGraphQLMutationTest extends GraphQLTestCase
 
         // Rule errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['product_id' => 999999999]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -58,7 +58,7 @@ class RemoveFavouriteGraphQLMutationTest extends GraphQLTestCase
 
         $product = Product::factory()->create();
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['product_id' => $product->id]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());

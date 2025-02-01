@@ -30,7 +30,7 @@ class RemoveCartGraphQLMutationTest extends GraphQLTestCase
         $cart = UserCart::factory()->create(['user_id' => $this->_user->id, 'variation_id' => $variation->id]);
 
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['variation_id' => $cart->variation_id]));
 
         $this->assertSuccessRemoveCartResponse($response, $variation);
@@ -41,7 +41,7 @@ class RemoveCartGraphQLMutationTest extends GraphQLTestCase
     {
         // GraphQL type errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery());
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -49,7 +49,7 @@ class RemoveCartGraphQLMutationTest extends GraphQLTestCase
 
         // Rule errors
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['variation_id' => 999999999]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
@@ -58,7 +58,7 @@ class RemoveCartGraphQLMutationTest extends GraphQLTestCase
 
         $variation = ProductVariation::factory()->create();
         $response = $this
-            ->actingAs($this->_user)
+            ->actingAs($this->_user, 'ecommerce-client')
             ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery(['variation_id' => $variation->id]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
