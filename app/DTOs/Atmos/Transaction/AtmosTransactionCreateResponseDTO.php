@@ -23,4 +23,9 @@ class AtmosTransactionCreateResponseDTO extends Data
     {
         return (int) $this->code == AtmosPinflPaymentCode::CARDS_NOT_FOUND->value;
     }
+
+    public function isCardNotSufficientBalance()
+    {
+        return (int) $this->code == AtmosPinflPaymentCode::NO_CARDS_WITH_BALANCE->value || (int) $this->code == AtmosPinflPaymentCode::CARDS_BALANCE_UNAVAILABLE->value;
+    }
 }

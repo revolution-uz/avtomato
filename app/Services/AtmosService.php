@@ -150,7 +150,7 @@ class AtmosService
 
         $createPayResponseDTO = $this->atmosPinflClient->payCreate($ext_id, $customer, $installment->id, $amount);
         if (! $createPayResponseDTO->isSuccess()) {
-            if ($createPayResponseDTO->isCardNotFound()) {
+            if ($createPayResponseDTO->isCardNotFound() || $createPayResponseDTO->isCardNotSufficientBalance()) {
                 AtmosPinflCardUpdateJob::dispatch($customer->id, (int) $createPayResponseDTO->code);
             }
             $transactionAttempt->failed();
