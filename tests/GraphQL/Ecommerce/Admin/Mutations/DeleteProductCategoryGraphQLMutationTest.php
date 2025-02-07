@@ -69,7 +69,7 @@ class DeleteProductCategoryGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(
-            trans('api.are used', ['item' => trans('ecommerce.category'), 'element' => trans('ecommerce.product')]),
+            trans('api.cannot_delete', ['item' => trans('ecommerce.category'), 'element' => trans('ecommerce.product')]),
             $response->json('errors.0.extensions.validation')['ids.0'][0]
         );
     }

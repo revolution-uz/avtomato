@@ -84,7 +84,7 @@ class DeleteTransactionTypeGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('api.are used', ['item' => __('api.Transaction Type'), 'element' => __('api.Transaction')]), $response->json('errors.0.extensions.validation')['ids.0'][0]);
+        $this->assertEquals(trans('api.cannot_delete', ['item' => __('api.Transaction Type'), 'element' => __('api.Transaction')]), $response->json('errors.0.extensions.validation')['ids.0'][0]);
     }
 
     #[Test]

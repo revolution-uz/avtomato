@@ -9,12 +9,11 @@ use App\Helpers\RbacHelper;
 use App\Models\Company\Branch;
 use App\Models\Company\Module;
 use Closure;
-use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Database\Eloquent\Model;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
-use Throwable;
 
 class CreateBranchGraphQLMutation extends Mutation
 {
@@ -33,14 +32,32 @@ class CreateBranchGraphQLMutation extends Mutation
             'name' => [
                 'name' => 'name',
                 'type' => Type::nonNull(Type::string()),
+                'rules' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    function ($attribute, $value, $fail) {
+                        if (! $module = Module::getActiveMultiBranchModule()) {
+                            $fail('There is no active branch module');
+
+                            return;
+                        }
+                        $branchLimit = ModuleEnum::getBranchLimit($module->name);
+                        if ($branchLimit <= Branch::query()->count()) {
+                            $fail(__('api.n_branches', ['n' => $branchLimit]));
+                        }
+                    },
+                ],
             ],
             'address' => [
                 'name' => 'address',
                 'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|string|max:255',
             ],
             'inn' => [
                 'name' => 'inn',
                 'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|string|max:9',
             ],
         ];
     }
@@ -50,45 +67,8 @@ class CreateBranchGraphQLMutation extends Mutation
         return RbacHelper::checkPermission(PermissionEnum::BRANCH_CREATE);
     }
 
-    /**
-     * @throws Throwable
-     */
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
+    public function resolve($root, array $args): Model|Branch
     {
-        $module = Module::query()
-            ->where('name', 'ILIKE', 'multibranch_%')
-            ->where('is_active', true)
-            ->first();
-        $branchCount = Branch::query()->count();
-        $branchLimit = ModuleEnum::getBranchLimit($module->name);
-        if ($module && $branchLimit <= $branchCount) {
-            return throw new Exception(__('api.n_branches', ['n' => $branchLimit]));
-        }
-        $model = new Branch;
-        $model->fill($args);
-        $model->saveOrFail();
-
-        return $model;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-            'address' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-            'inn' => [
-                'required',
-                'string',
-                'max:9',
-            ],
-        ];
+        return Branch::query()->create($args);
     }
 }

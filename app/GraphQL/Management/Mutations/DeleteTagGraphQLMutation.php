@@ -62,7 +62,7 @@ class DeleteTagGraphQLMutation extends Mutation
                         $fail(__('api.not found'));
                     }
                     if (Tag::query()->whereHas('customers')->find($value)) {
-                        $fail(__('api.are used', [
+                        $fail(__('api.cannot_delete', [
                             'item' => __('api.tag'),
                             'element' => __('api.User'),
                         ]));

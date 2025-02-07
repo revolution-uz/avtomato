@@ -3,7 +3,7 @@
 return [
     'guarantor' => 'Гарант',
     'debtor' => 'Должник',
-    'are used' => 'Следующие :item невозможно удалить, поскольку :element был создан с их помощью.',
+    'cannot_delete' => 'Следующие :item невозможно удалить, поскольку :element был создан с их помощью.',
     'You cannot delete admin' => 'Вы не можете удалить администратора',
     'not found' => 'Не найдено',
     'Role' => 'Роль',
@@ -27,7 +27,7 @@ return [
     'feature_not_active' => 'Функция не активна',
     'customer_application' => 'Договор с клиентом',
     'guarantor_application' => 'Договор с гарантором',
-    'n_branches' => 'Вы можете создать только до :n филиалов!',
+    'n_branches' => 'Вы можете создать только до :n филиалов',
     'n_admins' => 'Вы можете создать только до :n админов!',
     'You cannot activate an installment without withdrawing initial fee' => 'Внесите первоначальный платеж за активацию',
 ];

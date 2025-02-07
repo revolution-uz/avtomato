@@ -55,7 +55,7 @@ class SettingsGraphQLType extends GraphQLType
             ],
             'multibranch_module' => [
                 'type' => Type::string(),
-                'resolve' => fn ($root) => auth()->check() ? Module::getMultiBranchModule()?->name->value : null,
+                'resolve' => fn ($root) => auth()->check() ? Module::getActiveMultiBranchModule()?->name->value : null,
             ],
         ];
     }

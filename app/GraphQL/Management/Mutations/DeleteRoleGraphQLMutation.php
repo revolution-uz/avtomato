@@ -62,7 +62,7 @@ class DeleteRoleGraphQLMutation extends Mutation
                         $fail(__('api.You cannot delete', ['item' => Role::query()->where('id', $value)->first()->name]));
                     }
                     if (CompanyAdmin::query()->where('role_id', $value)->exists()) {
-                        $fail(__('api.are used', [
+                        $fail(__('api.cannot_delete', [
                             'item' => __('api.Role'),
                             'element' => __('api.User'),
                         ]));
