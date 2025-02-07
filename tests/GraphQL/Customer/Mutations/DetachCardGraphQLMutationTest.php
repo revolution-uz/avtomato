@@ -88,7 +88,7 @@ class DetachCardGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('api.are used', ['item' => __('api.Card'), 'element' => __('api.Installment')]), $response->json('errors.0.extensions.validation.ids.0'));
+        $this->assertEquals(trans('api.cannot_delete', ['item' => __('api.Card'), 'element' => __('api.Installment')]), $response->json('errors.0.extensions.validation.ids.0'));
 
         // error with unavailable ids
         $response = $this

@@ -65,7 +65,7 @@ class DeleteProductOptionValueGraphQLMutation extends Mutation
                 Rule::exists(ProductOptionValue::class, 'id')->whereNull('deleted_at'),
                 function ($attribute, $value, $fail) {
                     if (ProductOptionValue::query()->whereHas('productJoinOptions')->find($value)) {
-                        $fail(__('api.are used', [
+                        $fail(__('api.cannot_delete', [
                             'item' => __('ecommerce.product_option_value'),
                             'element' => __('ecommerce.product_join_option'),
                         ]));

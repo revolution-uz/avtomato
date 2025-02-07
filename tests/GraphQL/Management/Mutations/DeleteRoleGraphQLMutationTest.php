@@ -159,7 +159,7 @@ class DeleteRoleGraphQLMutationTest extends GraphQLTestCase
             ],
         ]);
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('api.are used', ['item' => __('api.Role'), 'element' => __('api.User')]), $response->json('errors.0.extensions.validation')['ids.0'][0]);
+        $this->assertEquals(trans('api.cannot_delete', ['item' => __('api.Role'), 'element' => __('api.User')]), $response->json('errors.0.extensions.validation')['ids.0'][0]);
     }
 
     #[Test]

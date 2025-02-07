@@ -64,7 +64,7 @@ class DeleteProductCategoryGraphQLMutation extends Mutation
                         $fail(__('api.not found'));
                     }
                     if (ProductCategory::query()->whereHas('products')->find($value)) {
-                        $fail(__('api.are used', [
+                        $fail(__('api.cannot_delete', [
                             'item' => __('ecommerce.category'),
                             'element' => __('ecommerce.product'),
                         ]));

@@ -6,9 +6,11 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Branch;
 use App\Models\Company\Installment;
+use App\Models\Company\Transaction;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 
 class DeleteBranchGraphQLMutation extends Mutation
@@ -54,15 +56,15 @@ class DeleteBranchGraphQLMutation extends Mutation
             'ids.*' => [
                 'required',
                 'integer',
+                Rule::exists(Branch::class, 'id')->whereNull('deleted_at'),
                 function ($attribute, $value, $fail) {
-                    if (! Branch::query()->where('id', $value)->exists()) {
-                        $fail(__('api.not found'));
-                    }
                     if (Installment::query()->where('branch_id', $value)->exists()) {
-                        $fail(__('api.are used', [
-                            'item' => __('api.Branch'),
-                            'element' => __('api.Installment'),
-                        ]));
+                        $fail(__('api.cannot_delete', ['item' => __('api.Branch'), 'element' => __('api.Installment')]));
+
+                        return;
+                    }
+                    if (Transaction::query()->where('branch_id', $value)->exists()) {
+                        $fail(__('api.cannot_delete', ['item' => __('api.Branch'), 'element' => __('api.Transaction')]));
                     }
                 },
             ],

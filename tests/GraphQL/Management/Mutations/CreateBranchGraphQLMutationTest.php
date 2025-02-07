@@ -160,7 +160,7 @@ class CreateBranchGraphQLMutationTest extends GraphQLTestCase
                 $this->buildGraphQLQuery($branchInput)
             );
 
-        $this->assertEquals(__('api.n_branches', ['n' => $branchLimit]), $response->json('errors.0.extensions.debugMessage'));
+        $this->assertEquals(__('api.n_branches', ['n' => $branchLimit]), $response->json('errors.0.extensions.validation.name.0'));
     }
 
     private function buildGraphQLQuery(array $variables = []): array

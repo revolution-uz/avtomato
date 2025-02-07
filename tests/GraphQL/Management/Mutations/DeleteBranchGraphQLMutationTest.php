@@ -4,6 +4,7 @@ namespace Tests\GraphQL\Management\Mutations;
 
 use App\Models\Company\Branch;
 use App\Models\Company\Installment;
+use App\Models\Company\Transaction;
 use Illuminate\Support\Arr;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -16,19 +17,15 @@ class DeleteBranchGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        Branch::factory()->count(5)->create();
-
-        foreach (Branch::query()->inRandomOrder()->limit(3)->pluck('id') as $branch) {
-            Installment::factory()->create([
-                'branch_id' => $branch,
-            ]);
-        }
+        Branch::factory()->count(3)->create();
+        Installment::factory()->count(3)->create();
+        Transaction::factory()->count(3)->create();
     }
 
     #[Test]
     public function successDeleteBranch()
     {
-        $idsInput = Branch::query()->doesntHave('installments')->inRandomOrder()->limit(3)->pluck('id')->toArray();
+        $idsInput = Branch::query()->doesntHave('installments')->doesntHave('transactions')->inRandomOrder()->limit(3)->pluck('id')->toArray();
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -103,7 +100,7 @@ class DeleteBranchGraphQLMutationTest extends GraphQLTestCase
             ],
         ]);
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('api.not found', ['attribute' => 'ids.0']), $response->json('errors.0.extensions.validation')['ids.0'][0]);
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'ids.0']), $response->json('errors.0.extensions.validation')['ids.0'][0]);
     }
 
     #[Test]
@@ -131,7 +128,32 @@ class DeleteBranchGraphQLMutationTest extends GraphQLTestCase
             ],
         ]);
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('api.are used', ['item' => 'api.Branch', 'element' => 'api.Installment']), $response->json('errors.0.extensions.validation')['ids.0'][0]);
+        $this->assertEquals(trans('api.cannot_delete', ['item' => 'api.Branch', 'element' => 'api.Installment']), $response->json('errors.0.extensions.validation')['ids.0'][0]);
+    }
+
+    #[Test]
+    public function errorWhenTransactionsExist()
+    {
+        $idsInput = Branch::query()->has('transactions')->inRandomOrder()->limit(1)->pluck('id')->toArray();
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery(['ids' => $idsInput]));
+
+        $response->assertJsonStructure([
+            'errors' => [
+                [
+                    'message',
+                    'extensions' => [
+                        'validation' => [
+                            'ids.0',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('api.cannot_delete', ['item' => 'api.Branch', 'element' => 'api.Transaction']), $response->json('errors.0.extensions.validation')['ids.0'][0]);
     }
 
     private function buildGraphQLQuery(array $variables = []): array

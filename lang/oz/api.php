@@ -3,7 +3,7 @@
 return [
     'guarantor' => 'Кафил',
     'debtor' => 'Қарз олувчи',
-    'are used' => 'Қуйидаги :item-ларни ўчириб бўлмайди чунки улар орқали :element яратилган',
+    'cannot_delete' => 'Қуйидаги :item-ларни ўчириб бўлмайди чунки улар орқали :element яратилган',
     'You cannot delete admin' => 'Админни ўчиролмайсиз',
     'not found' => 'Топилмади',
     'success' => 'Муваффақиятли',
@@ -23,7 +23,7 @@ return [
     'feature_not_active' => 'Хусусият фаол эмас',
     'customer_application' => 'Мижоз билан шартнома',
     'guarantor_application' => 'Кафил билан шартнома',
-    'n_branches' => 'Сиз фақат :n та филиал яратишингиз мумкин!',
+    'n_branches' => 'Сиз фақат :n та филиал яратишингиз мумкин',
     'n_admins' => 'Сиз фақат :n та админ яратишингиз мумкин!',
     'You cannot activate an installment without withdrawing initial fee' => 'Фаоллаштириш учун бошланғич тўловни амалга оширинг',
 ];

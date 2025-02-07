@@ -21,7 +21,7 @@ class PassportDataDTO extends Data
         public string $full_name,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]
         public Carbon $birth_date,
-        public string $birth_place,
+        public ?string $birth_place,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]
         public Carbon $given_date,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]

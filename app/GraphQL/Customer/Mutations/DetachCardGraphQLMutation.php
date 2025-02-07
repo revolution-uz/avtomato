@@ -34,7 +34,7 @@ class DetachCardGraphQLMutation extends Mutation
                             $fail(__('api.not found'));
                         }
                         if (InstallmentCard::query()->where('card_id', $cardId)->exists()) {
-                            $fail(__('api.are used', [
+                            $fail(__('api.cannot_delete', [
                                 'item' => __('api.Card'),
                                 'element' => __('api.Installment'),
                             ]));

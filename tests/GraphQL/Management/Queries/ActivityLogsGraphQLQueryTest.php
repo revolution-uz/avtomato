@@ -3,6 +3,7 @@
 namespace Tests\GraphQL\Management\Queries;
 
 use App\Models\Company\ActivityLog;
+use App\Models\Company\CompanyAdmin;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -384,6 +385,21 @@ class ActivityLogsGraphQLQueryTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.regex', ['attribute' => 'sort']), $response->json('errors.0.extensions.validation.sort.0'));
+    }
+
+    #[Test]
+    public function successWithDeletedAdmin()
+    {
+        $deletedAdmin = CompanyAdmin::factory()->create();
+        ActivityLog::query()->forceDelete();
+        ActivityLog::factory()->create(['causer_id' => $deletedAdmin->id, 'causer_type' => CompanyAdmin::class]);
+        $deletedAdmin->delete();
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery());
+
+        $this->assertSuccessActivityLogsResponse($response, 1);
     }
 
     private function buildGraphQLQuery(array $variables = []): array

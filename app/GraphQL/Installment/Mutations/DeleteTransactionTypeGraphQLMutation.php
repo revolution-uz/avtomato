@@ -64,7 +64,7 @@ class DeleteTransactionTypeGraphQLMutation extends Mutation
                         $fail(__('api.not found'));
                     }
                     if (Transaction::query()->where('transaction_type_id', $value)->exists()) {
-                        $fail(__('api.are used', [
+                        $fail(__('api.cannot_delete', [
                             'item' => __('api.Transaction Type'),
                             'element' => __('api.Transaction'),
                         ]));

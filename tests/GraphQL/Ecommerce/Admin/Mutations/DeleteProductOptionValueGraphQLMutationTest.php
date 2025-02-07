@@ -70,7 +70,7 @@ class DeleteProductOptionValueGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(
-            trans('api.are used', ['item' => trans('ecommerce.product_option_value'), 'element' => trans('ecommerce.product_join_option')]),
+            trans('api.cannot_delete', ['item' => trans('ecommerce.product_option_value'), 'element' => trans('ecommerce.product_join_option')]),
             $response->json('errors.0.extensions.validation')['ids.0'][0]
         );
     }
