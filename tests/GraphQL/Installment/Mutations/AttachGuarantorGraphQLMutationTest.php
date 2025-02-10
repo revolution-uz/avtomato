@@ -92,6 +92,10 @@ class AttachGuarantorGraphQLMutationTest extends GraphQLTestCase
             trans('validation.exists', ['attribute' => 'customer id']),
             $response->json('errors.0.extensions.validation')['customer_id'][0]
         );
+
+        // Client cannot be attached as a guarantor.
+        $response = $this->sendGraphQLRequest($this->_installment->id, $this->_installment->customer_id);
+        $this->assertEquals(__('Client cannot be attached as a guarantor.'), $response->json('errors.0.extensions.validation')['customer_id'][0]);
     }
 
     #[Test]
