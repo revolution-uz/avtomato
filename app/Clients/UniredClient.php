@@ -218,9 +218,10 @@ class UniredClient extends BaseClient
 
     public function getPinflCardCounts(string $pinfl): UniredClientPinflCardCountDTO
     {
-        if (($response = $this->makeRequest(self::CARD_COUNT, [
+        $response = $this->makeRequest(self::CARD_COUNT, [
             'pinfl' => [$pinfl],
-        ])) && $response->isSuccess()) {
+        ]);
+        if ($response->isSuccess()) {
             $result = $response->result;
             foreach ($result as $pinfl => $item) {
                 return UniredClientPinflCardCountDTO::from($item);
