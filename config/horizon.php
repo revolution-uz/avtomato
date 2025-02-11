@@ -260,6 +260,16 @@ return [
             'timeout' => 600,
             'nice' => 0,
         ],
+        'supervisor-unired-search-card' => [
+            'connection' => 'redis',
+            'queue' => ['search-customer-card-in-unired'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 600,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [
