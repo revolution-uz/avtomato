@@ -16,7 +16,7 @@ class QrPayController extends Controller
         $request->validate(['amount' => 'required|numeric|min:1']);
 
         try {
-            return redirect($this->qrPayService->createPayment($request->input('amount'))->transfer->qr->url);
+            return redirect($this->qrPayService->createPayment($request->input('amount'))->transfer->debit->url);
         } catch (Exception $e) {
             throw new Exception('Failed to create cheque: ' . $e->getMessage());
         }
