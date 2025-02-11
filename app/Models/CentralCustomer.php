@@ -19,6 +19,8 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property string|null $last_name
  * @property string|null $middle_name
  * @property Carbon $atmos_pinfl_searched_at
+ * @property Carbon $unired_humo_searched_at
+ * @property Carbon $unired_uzcard_searched_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
