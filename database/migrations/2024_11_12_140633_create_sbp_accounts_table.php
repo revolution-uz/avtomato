@@ -8,15 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('sbp_terminals', function (Blueprint $table) {
+        Schema::create('sbp_accounts', function (Blueprint $table) {
             $table->id();
             $table->integer('company_id');
             $table->integer('terminal_id');
-            $table->string('account', 20);
+            $table->string('number', 20);
             $table->string('filial_code', 8);
-            $table->string('inn', 9);
+            $table->string('tax', 9);
             $table->string('name', 64);
-            $table->integer('status');
+            $table->string('status');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -24,6 +24,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('sbp_terminals');
+        Schema::dropIfExists('sbp_accounts');
     }
 };

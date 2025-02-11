@@ -15,22 +15,22 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property int $id
  * @property int $company_id
  * @property int $terminal_id
- * @property string $account
+ * @property string $number
  * @property string $filial_code
  * @property string $inn
  * @property string $name
- * @property int $status
+ * @property string $status
  */
-class SbpTerminal extends Model
+class SbpAccount extends Model
 {
     use CentralConnection, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'company_id',
         'terminal_id',
-        'account',
+        'number',
         'filial_code',
-        'inn',
+        'tax',
         'name',
         'status',
     ];
@@ -42,11 +42,6 @@ class SbpTerminal extends Model
         self::created(function (self $terminal) {
             $service = new QrPayService(new QrPayClient);
             $service->addTerminal($terminal);
-        });
-
-        self::updated(function (self $terminal) {
-            $service = new QrPayService(new QrPayClient);
-            $service->updateTerminal($terminal);
         });
     }
 }

@@ -3,15 +3,14 @@
 namespace App\Services;
 
 use App\Clients\QrPayClient;
-use App\DTOs\QrPay\Base\BaseQrPayResponseDTO;
-use App\DTOs\QrPay\Payment\SbpCancelPaymentRequestDTO;
-use App\DTOs\QrPay\Payment\SbpCreatePaymentRequestDTO;
+use App\DTOs\QrPay\Payment\SbpCreateTransferRequestDTO;
 use App\DTOs\QrPay\Payment\SbpPaymentDTO;
+use App\DTOs\QrPay\Payment\SbpPaymentRequestDTO;
 use App\DTOs\QrPay\Payment\SbpPaymentResponseDTO;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Helpers\Utilities;
 use App\Models\Company\SbpTransaction;
-use App\Models\SbpTerminal;
+use App\Models\SbpAccount;
 
 class CompanyQrPayService
 {
@@ -19,7 +18,7 @@ class CompanyQrPayService
 
     public function createPayment(float $amount): SbpPaymentDTO
     {
-        $terminal = SbpTerminal::query()->where('company_id', tenant('id'))->first();
+        $terminal = SbpAccount::query()->where('company_id', tenant('id'))->first();
         $transaction = new SbpTransaction;
         $transaction->terminal_id = $terminal->id;
         $transaction->amount = $amount;
@@ -29,13 +28,12 @@ class CompanyQrPayService
         $transaction->ext_id .= Utilities::TENANT_SEPARATOR . $transaction->id;
         $transaction->saveOrFail();
 
-        $response = $this->qrPayClient->createPayment(
-            new SbpCreatePaymentRequestDTO(
+        $response = $this->qrPayClient->createTransfer(
+            new SbpCreateTransferRequestDTO(
                 $transaction->ext_id,
                 $transaction->amount,
-                'Payment for retail whose terminal name is  ' . $terminal->name,
-                $transaction->terminal_id,
-                tenant_route('qr-pay.check', ['ext_id' => $transaction->ext_id])
+                Utilities::QR_PAY_UZS_CURRENCY,
+                $terminal->company_id . Utilities::TENANT_SEPARATOR . $terminal->id
             )
         );
 
@@ -44,16 +42,13 @@ class CompanyQrPayService
 
     public function updatePaymentByCallback(SbpPaymentResponseDTO $payment)
     {
-        $transaction = SbpTransaction::query()->where('ext_id', $payment->cheque->ext_id)->first();
+        $transaction = SbpTransaction::query()->where('ext_id', $payment->credit->ext_id)->first();
         $transaction->updateOrFail($payment->toArray());
-        if ($payment->qr->status->pay_status == 'ACWP') {
+        if ($payment->credit->isSuccess() && $payment->debit->isSuccess()) {
             $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::SUCCESS]);
         }
-        if ($payment->qr->status->pay_status == 'NTST') {
+        if ($payment->credit->isSuccess()) {
             $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::IN_PROGRESS]);
-        }
-        if ($payment->qr->refund_status->pay_status == 'ACWP') {
-            $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::REFUND]);
         }
 
         return $transaction;
@@ -62,15 +57,10 @@ class CompanyQrPayService
     public function statePayment(string $ext_id)
     {
         if (SbpTransaction::query()->where('ext_id', $ext_id)->exists()) {
-            $response = SbpPaymentDTO::from($this->qrPayClient->statePayment(new SbpCancelPaymentRequestDTO($ext_id))->result);
-            $this->updatePaymentByCallback($response->payment);
+            $response = SbpPaymentDTO::from($this->qrPayClient->stateTransfer(new SbpPaymentRequestDTO($ext_id))->result);
+            $this->updatePaymentByCallback($response->transfer);
         }
 
         return null;
-    }
-
-    public function cancelPayment(SbpTransaction $transaction): BaseQrPayResponseDTO
-    {
-        return $this->qrPayClient->cancelPayment(new SbpCancelPaymentRequestDTO($transaction->ext_id));
     }
 }

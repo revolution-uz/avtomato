@@ -17,11 +17,11 @@ class SbpCallbackController extends Controller
     public function webHook(SbpPaymentWebhookCallbackRequest $request)
     {
         $requestDto = SbpPaymentDTO::from($request->toArray());
-        if ($companyId = $requestDto->payment->cheque->getCompanyId()) {
+        if ($companyId = $requestDto->transfer->credit->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
-            $transaction = SbpTransaction::query()->where('ext_id', $requestDto->payment->cheque->ext_id);
+            $transaction = SbpTransaction::query()->where('ext_id', $requestDto->transfer->credit->ext_id);
             if ($transaction !== null) {
-                if ($this->qrPayService->updatePaymentByCallback($requestDto->payment)) {
+                if ($this->qrPayService->updatePaymentByCallback($requestDto->transfer)) {
                     return response()->json(['success' => true, 'message' => 'OK']);
                 }
             }

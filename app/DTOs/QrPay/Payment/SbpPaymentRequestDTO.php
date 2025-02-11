@@ -9,7 +9,7 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
  *
  * @property string $ext_id
  */
-class SbpCancelPaymentRequestDTO extends BaseQrPayDTO
+class SbpPaymentRequestDTO extends BaseQrPayDTO
 {
     public function __construct(
         public string $ext_id,

@@ -92,6 +92,9 @@ return [
     */
     'qr_pay' => [
         'base_url' => env('QR_PAY_BASE_URL', ''),
+        'login' => env('QR_PAY_LOGIN', ''),
+        'password' => env('QR_PAY_PASSWORD', ''),
+        'secret' => env('QR_PAY_SECRET', ''),
         'validity' => 365,
     ],
 ];

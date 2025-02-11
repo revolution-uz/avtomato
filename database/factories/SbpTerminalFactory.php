@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\SbpTerminal;
+use App\Models\SbpAccount;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SbpTerminalFactory extends Factory
 {
-    protected $model = SbpTerminal::class;
+    protected $model = SbpAccount::class;
 
     public function definition(): array
     {

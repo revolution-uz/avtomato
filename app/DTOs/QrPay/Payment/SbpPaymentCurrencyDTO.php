@@ -5,11 +5,11 @@ namespace App\DTOs\QrPay\Payment;
 use App\DTOs\QrPay\Base\BaseQrPayDTO;
 
 /**
- * Class SbpPaymentExchangeDTO
+ * Class SbpPaymentCurrencyDTO
  *
  * @property float $rate
  */
-class SbpPaymentExchangeDTO extends BaseQrPayDTO
+class SbpPaymentCurrencyDTO extends BaseQrPayDTO
 {
     public function __construct(
         public float $rate

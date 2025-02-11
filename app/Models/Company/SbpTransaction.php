@@ -16,10 +16,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $terminal_id
  * @property string $ext_id
  * @property float $amount
- * @property array|null $cheque
- * @property array|null $exchange
- * @property array|null $qr
- * @property array|null $callback
+ * @property array|null $credit
+ * @property array|null $debit
+ * @property array|null $currency
  * @property Carbon|null $payment_updated_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -34,19 +33,17 @@ class SbpTransaction extends Model
         'terminal_id',
         'ext_id',
         'amount',
-        'cheque',
-        'exchange',
-        'qr',
-        'callback',
+        'credit',
+        'debit',
+        'currency',
         'payment_updated_at',
     ];
 
     protected $casts = [
         'amount' => 'decimal:30',
-        'cheque' => 'array',
-        'exchange' => 'array',
-        'qr' => 'array',
-        'callback' => 'array',
+        'credit' => 'array',
+        'debit' => 'array',
+        'currency' => 'array',
         'status' => TransactionAttemptStatusEnum::class,
         'payment_updated_at' => 'datetime',
     ];

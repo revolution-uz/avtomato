@@ -14,10 +14,9 @@ return new class extends Migration
             $table->string('ext_id');
             $table->integer('status');
             $table->decimal('amount', 30);
-            $table->json('cheque')->nullable();
-            $table->json('exchange')->nullable();
-            $table->json('qr')->nullable();
-            $table->json('callback')->nullable();
+            $table->json('credit')->nullable();
+            $table->json('debit')->nullable();
+            $table->json('currency')->nullable();
             $table->timestamp('payment_updated_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

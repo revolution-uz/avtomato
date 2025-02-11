@@ -2,7 +2,7 @@
 
 namespace App\Nova\Company;
 
-use App\Models\SbpTerminal;
+use App\Models\SbpAccount;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
@@ -11,16 +11,16 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
- * @property SbpTerminal $resource
+ * @property SbpAccount $resource
  */
 class SbpTerminalResource extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<SbpTerminal>
+     * @var class-string<SbpAccount>
      */
-    public static string $model = SbpTerminal::class;
+    public static string $model = SbpAccount::class;
 
     /**
      * The columns that should be searched.

@@ -7,11 +7,11 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
 /**
  * Class SbpPaymentDTO
  *
- * @property SbpPaymentResponseDTO $payment
+ * @property SbpPaymentResponseDTO $transfer
  */
 class SbpPaymentDTO extends BaseQrPayDTO
 {
     public function __construct(
-        public ?SbpPaymentResponseDTO $payment,
+        public ?SbpPaymentResponseDTO $transfer,
     ) {}
 }
