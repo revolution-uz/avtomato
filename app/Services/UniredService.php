@@ -37,7 +37,9 @@ use Illuminate\Support\Facades\Log;
 
 class UniredService
 {
-    public function __construct(private UniredClient $uniredClient) {}
+    public function __construct(private UniredClient $uniredClient)
+    {
+    }
 
     public function createBranch(UniredCreateBranchRequestDTO $params): bool
     {
@@ -87,7 +89,7 @@ class UniredService
         if ($response->status) {
             $response = $this->uniredClient->addClientPhones(new UniredAddClientPhonesRequestDTO(
                 $customer->pinfl,
-                array_map(fn ($phone) => substr($phone, -9), $customer->phones->pluck('phone')->toArray())
+                array_map(fn($phone) => substr($phone, -9), $customer->phones->pluck('phone')->toArray())
             ));
 
             return $response->status;
@@ -105,7 +107,7 @@ class UniredService
             Utilities::generateIdByTenancy($installment->id),
             Utilities::generateIdByTenancy($installment->id),
             $branchFeatureDto->id,
-            (int) ($installment->debtAmount * 100),
+            (int)($installment->debtAmount * 100),
         ))->isSuccess()) {
             $installment->updateOrFail(['unired_id' => 1]);
 
@@ -117,7 +119,7 @@ class UniredService
 
     public function updateInstallment(Installment $installment): ?bool
     {
-        return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int) $installment->debtAmount * 100, true);
+        return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int)$installment->debtAmount * 100, true);
     }
 
     public function createInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): bool
@@ -130,7 +132,7 @@ class UniredService
             Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
             Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
             $branchFeatureDto->id,
-            (int) ($installmentGuarantor->installment->debtAmount * 100),
+            (int)($installmentGuarantor->installment->debtAmount * 100),
         ))->isSuccess()) {
             $installmentGuarantor->update(['unired_id' => 1]);
 
@@ -142,17 +144,17 @@ class UniredService
 
     public function updateInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): bool
     {
-        return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id), (int) ($installmentGuarantor->installment->debtAmount * 100), true);
+        return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id), (int)($installmentGuarantor->installment->debtAmount * 100), true);
     }
 
     public function switchOffInstallment(Installment $installment): ?bool
     {
-        return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int) ($installment->debtAmount * 100), false);
+        return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int)($installment->debtAmount * 100), false);
     }
 
     public function switchOnInstallment(Installment $installment): void
     {
-        $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int) ($installment->debtAmount * 100), true);
+        $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int)($installment->debtAmount * 100), true);
     }
 
     public function deleteInstallment(Installment $installment)
@@ -200,7 +202,7 @@ class UniredService
     public function getInstallmentDebt(?int $installment_id): ?int
     {
         if ($installment = Installment::find($installment_id)) {
-            return (int) ($installment->debtAmount * 100);
+            return (int)($installment->debtAmount * 100);
         }
 
         return null;
@@ -231,14 +233,14 @@ class UniredService
 
     public function updatePinflCardsList(Customer $customer): bool
     {
-        $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
-        $is_uzcard_update = ! $response->uzcard || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
-        $is_humo_update = ! $response->humo || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
         $centralCustomer = CentralCustomer::query()->where('pinfl', $customer->pinfl)->first();
+        $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
+        $is_uzcard_update = !$response->uzcard || !Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
+        $is_humo_update = !$response->humo || !Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
 
         if ($centralCustomer) {
             if (
-                ! $is_uzcard_update && ! $is_humo_update
+                !$is_uzcard_update && !$is_humo_update
                 &&
                 Utilities::isNotAllowedRefresheCards($centralCustomer->unired_uzcard_searched_at)
                 &&
