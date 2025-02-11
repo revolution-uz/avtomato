@@ -240,7 +240,7 @@ class AtmosService
      */
     public function updatePinflCardsList(Customer $customer, ?int $atmos_status_code = null): bool
     {
-        $centralCustomer = CentralCustomer::query()->where('pinfl', $customer->pinfl)->first();
+        $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
 
         if ($centralCustomer) {
             if (! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->atmos_pinfl_searched_at)) {
