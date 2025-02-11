@@ -19,6 +19,8 @@ return [
         'avtomato.test',
         'avtomato.uz',
         'automato.uz',
+        'avtomato.testpay.uz',
+        'automato.testpay.uz',
     ],
 
     /**
