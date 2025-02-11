@@ -202,20 +202,17 @@ class QrPayClient extends BaseClient
         if (isset($uniredException['message'])) {
             if (isset($uniredException['message']['message'])) {
                 throw new UniredException(
-                    $this->getErrorMessageFromUniredProperty($uniredException['message']['message']),
-                    intval($errorCode)
+                    $this->getErrorMessageFromUniredProperty($uniredException['message']['message'])
                 );
             }
 
             throw new UniredException(
-                $this->getErrorMessageFromUniredProperty($uniredException['message']),
-                intval($errorCode)
+                $this->getErrorMessageFromUniredProperty($uniredException['message'])
             );
         }
 
         throw new UniredException(
-            $this->getErrorMessageFromUniredProperty($uniredException),
-            intval($errorCode)
+            $this->getErrorMessageFromUniredProperty($uniredException)
         );
     }
 

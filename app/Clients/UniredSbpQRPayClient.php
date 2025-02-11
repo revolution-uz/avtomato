@@ -102,9 +102,9 @@ class UniredSbpQRPayClient
                 'exception' => $th->getMessage(),
             ]);
             if (str_starts_with($th->getMessage(), 'cURL error')) {
-                throw new UniredException(trans('api.request_create_error'), $th->getCode());
+                throw new UniredException(trans('api.request_create_error'));
             }
-            throw new UniredException($th->getMessage(), $th->getCode());
+            throw new UniredException($th->getMessage());
         }
 
         if (is_array($jsonResponse) && isset($jsonResponse['error'])) {
@@ -225,20 +225,17 @@ class UniredSbpQRPayClient
         if (isset($uniredException['message'])) {
             if (isset($uniredException['message']['message'])) {
                 throw new UniredException(
-                    $this->getErrorMessageFromUniredProperty($uniredException['message']['message']),
-                    intval($errorCode)
+                    $this->getErrorMessageFromUniredProperty($uniredException['message']['message'])
                 );
             }
 
             throw new UniredException(
-                $this->getErrorMessageFromUniredProperty($uniredException['message']),
-                intval($errorCode)
+                $this->getErrorMessageFromUniredProperty($uniredException['message'])
             );
         }
 
         throw new UniredException(
-            $this->getErrorMessageFromUniredProperty($uniredException),
-            intval($errorCode)
+            $this->getErrorMessageFromUniredProperty($uniredException)
         );
     }
 
