@@ -231,13 +231,12 @@ class UniredService
 
     public function updatePinflCardsList(Customer $customer): bool
     {
-        /** @var CentralCustomer $centralCustomer */
         $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
         $is_uzcard_update = ! $response->uzcard || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
         $is_humo_update = ! $response->humo || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
         $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
 
-        if ($centralCustomer instanceof CentralCustomer) {
+        if ($centralCustomer) {
             if (
                 ! $is_uzcard_update && ! $is_humo_update
                 &&
