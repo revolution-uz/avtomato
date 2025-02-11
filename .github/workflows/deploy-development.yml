@@ -1,0 +1,50 @@
+name: Deploy Development
+
+on:
+  push:
+    branches: [development]
+
+jobs:
+  deploy:
+    name: Deploy Development
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Deploy to Development server
+        uses: appleboy/ssh-action@master
+        with:
+          host: 92.63.207.33
+          script_stop: true
+          port: ${{ secrets.DEVELOPMENT_PORT }}
+          username: ${{ secrets.DEVELOPMENT_USER }}
+          password: ${{ secrets.DEVELOPMENT_PASSWORD }}
+          script: |
+            echo "${{ secrets.DEVELOPMENT_PASSWORD }}" | sudo -S su - www-data -s /bin/bash -c 'cd /var/www/automato && git reset --hard && git pull'
+            cd /var/www/automato && echo "${{ secrets.DEVELOPMENT_PASSWORD }}" | sudo -S sh deploy.sh
+      - name: Send success telegram notification
+        uses: appleboy/telegram-action@master
+        if: ${{ failure() }}
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: html
+          message: |
+            <blockquote>
+            🆘🔙🔚 User <b>${{ github.actor }}</b> pushed to <code>${{ github.head_ref || github.ref_name }}</code> branch and run deploy.
+            🆘🔙🔚 Repository: <code>${{ github.repository }}</code>
+            </blockquote>
+
+            🆘🔙🔚 See changes: <a href="https://github.com/${{ github.repository }}/commit/${{github.sha}}">${{ github.event.commits[0].message }}</a>
+      - name: Send error telegram notification
+        uses: appleboy/telegram-action@master
+        if: ${{ success() }}
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: html
+          message: |
+            <blockquote>
+            🆗🔙🔚 User <b>${{ github.actor }}</b> pushed to <code>${{ github.head_ref || github.ref_name }}</code> branch and run deploy.
+            🆗🔙🔚 Repository: <code>${{ github.repository }}</code>
+            </blockquote>
+            
+            🆗🔙🔚 See changes: <a href="https://github.com/${{ github.repository }}/commit/${{github.sha}}">${{ github.event.commits[0].message }}</a>
