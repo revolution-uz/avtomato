@@ -28,7 +28,7 @@ class SbpAccountResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'company_id', 'terminal_id', 'number', 'filial_code', 'tax', 'name',
+        'id', 'company_id', 'terminal_id', 'number', 'filial_code', 'tax', 'name', 'status',
     ];
 
     /**
@@ -62,6 +62,10 @@ class SbpAccountResource extends Resource
                 ->rules('nullable', 'max:255'),
 
             Text::make('Name')
+                ->sortable()
+                ->rules('nullable', 'max:255'),
+
+            Text::make('Status')
                 ->sortable()
                 ->rules('nullable', 'max:255'),
 
