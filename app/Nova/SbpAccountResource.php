@@ -20,7 +20,7 @@ class SbpAccountResource extends Resource
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'number';
 
     /**
      * The columns that should be searched.
@@ -28,7 +28,7 @@ class SbpAccountResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'number', 'filial_code', 'tax', 'name',
+        'id', 'company_id', 'terminal_id', 'number', 'filial_code', 'tax', 'name',
     ];
 
     /**
@@ -40,6 +40,14 @@ class SbpAccountResource extends Resource
     {
         return [
             ID::make()->sortable(),
+
+            Text::make('Company ID')
+                ->sortable()
+                ->rules('required', 'max:16'),
+
+            Text::make('Terminal ID')
+                ->sortable()
+                ->rules('required', 'max:16'),
 
             Text::make('Number')
                 ->sortable()

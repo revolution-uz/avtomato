@@ -18,11 +18,11 @@ use App\Nova\Company\FeatureResource;
 use App\Nova\Company\InstallmentResource;
 use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
-use App\Nova\Company\SbpTerminalResource;
 use App\Nova\Company\SmsTemplateResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
+use App\Nova\SbpAccountResource;
 use App\Nova\SettingsResource;
 use Avtomato\TransactionByCompanies\TransactionByCompanies;
 use Illuminate\Http\Request;
@@ -63,7 +63,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(BalanceFundResource::class),
                         MenuItem::resource(BalanceChargeResource::class),
                         MenuItem::resource(SmsTemplateResource::class),
-                        MenuItem::resource(SbpTerminalResource::class),
+                        MenuItem::resource(SbpAccountResource::class),
                         MenuItem::resource(InstallmentResource::class),
                     ])->collapsable(),
                 ];

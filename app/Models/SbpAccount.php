@@ -17,7 +17,7 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property int $terminal_id
  * @property string $number
  * @property string $filial_code
- * @property string $inn
+ * @property string $tax
  * @property string $name
  * @property string $status
  */
