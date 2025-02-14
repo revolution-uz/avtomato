@@ -7,11 +7,11 @@ use App\DTOs\Unired\Base\BaseUniredDTO;
 /**
  * Class UniredClientPinflCardUpdateRequestDTO
  *
- * @property string $pinfl
+ * @property array $pinfl
  */
 class UniredClientPinflCardUpdateRequestDTO extends BaseUniredDTO
 {
     public function __construct(
-        public string $pinfl,
+        public array $pinfl,
     ) {}
 }
