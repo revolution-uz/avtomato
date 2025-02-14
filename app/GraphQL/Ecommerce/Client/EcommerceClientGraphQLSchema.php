@@ -49,6 +49,8 @@ class EcommerceClientGraphQLSchema implements ConfigConvertible
                 \App\GraphQL\Ecommerce\Admin\Types\OrderStatusGraphQLType::class,
                 \App\GraphQL\Ecommerce\Client\Types\OrderStatusHistoryGraphQLType::class,
                 \App\GraphQL\Ecommerce\Client\Types\CustomerGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\DeliveryPointGraphQLType::class,
+                \App\GraphQL\Management\Types\InstallmentGraphQLType::class,
             ],
             'middleware' => ['auth:ecommerce-client', 'is_soft_delete_client_token', 'ecommerce'],
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Models\Company\Ecommerce;
 
+use App\Models\Company\Branch;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\OrderBySortable;
@@ -25,7 +26,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $description_ru
  * @property string $description_en
  * @property string $description_oz
- * @property string $is_prepaid
+ * @property bool $is_prepaid
+ * @property float $delivery_fee - default: 0.00
  * @property string $phone
  * @property-read string $address
  * @property string $address_uz
@@ -43,12 +45,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $region_id
  * @property int|null $district_id
  * @property int|null $mahalla_id
+ * @property int|null $branch_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property Region|null $region
  * @property District|null $district
  * @property Mahalla|null $mahalla
+ * @property Branch|null $branch
  */
 class DeliveryPoint extends Model
 {
@@ -68,6 +72,7 @@ class DeliveryPoint extends Model
         'description_en',
         'description_oz',
         'is_prepaid',
+        'delivery_fee',
         'phone',
         'address_uz',
         'address_ru',
@@ -83,6 +88,7 @@ class DeliveryPoint extends Model
         'region_id',
         'district_id',
         'mahalla_id',
+        'branch_id',
     ];
 
     protected $translatedColumns = ['name', 'description', 'address', 'landmark'];
@@ -100,5 +106,10 @@ class DeliveryPoint extends Model
     public function mahalla(): BelongsTo
     {
         return $this->belongsTo(Mahalla::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
     }
 }
