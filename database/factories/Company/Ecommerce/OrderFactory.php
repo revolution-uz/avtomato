@@ -18,7 +18,7 @@ class OrderFactory extends Factory
         return [
             'delivery_type' => OrderDeliveryTypeEnum::randomValue(),
             'payment_method' => OrderPaymentMethodEnum::randomValue(),
-            'shipping_price' => $this->faker->randomFloat(2),
+            'shipping_price' => $this->faker->randomFloat(2, 0, pow(10, 8)),
             'user_id' => User::factory(),
             'address_id' => Address::factory(),
             'delivery_point_id' => DeliveryPoint::factory(),
