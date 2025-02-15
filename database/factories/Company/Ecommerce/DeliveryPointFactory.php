@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Company\Ecommerce;
 
+use App\Models\Company\Branch;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
@@ -21,6 +22,7 @@ class DeliveryPointFactory extends Factory
             'description_en' => $this->faker->text(),
             'description_oz' => $this->faker->text(),
             'is_prepaid' => $this->faker->boolean(),
+            'delivery_fee' => $this->faker->randomFloat(2, 0, 10),
             'phone' => $this->faker->e164PhoneNumber(),
             'address_uz' => $this->faker->text(),
             'address_ru' => $this->faker->text(),
@@ -33,9 +35,11 @@ class DeliveryPointFactory extends Factory
             'location_url' => $this->faker->url(),
             'lat' => $this->faker->longitude(),
             'lng' => $this->faker->latitude(),
+
             'region_id' => Region::factory(),
             'district_id' => District::factory(),
             'mahalla_id' => Mahalla::factory(),
+            'branch_id' => Branch::factory(),
         ];
     }
 }

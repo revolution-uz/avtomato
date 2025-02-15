@@ -33,10 +33,10 @@ class UserCart extends Model
         'variation_id',
     ];
 
-    public static function removeCart(int $user_id, int $variation_id)
+    public static function clearCart(int $user_id, int|array $variationIds): int
     {
         return self::where('user_id', $user_id)
-            ->where('variation_id', $variation_id)
+            ->whereIn('variation_id', (array) $variationIds)
             ->delete();
     }
 

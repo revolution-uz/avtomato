@@ -16,7 +16,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property AddressTypeEnum $type
  * @property string|null $address
- * @property string|null $full_address
  * @property int|null $region_id
  * @property int|null $district_id
  * @property int|null $mahalla_id
@@ -25,6 +24,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read string|null $full_address
  * @property Region|null $region
  * @property District|null $district
  * @property Mahalla|null $mahalla

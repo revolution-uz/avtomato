@@ -2,17 +2,20 @@
 
 namespace App\GraphQL\Ecommerce\Client\Mutations;
 
-use App\Exceptions\GeneralException;
+use App\Enums\Company\OrderDeliveryTypeEnum;
+use App\Enums\Company\OrderPaymentMethodEnum;
 use App\GraphQL\Ecommerce\Admin\Types\OrderGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserCartInputGraphQLType;
 use App\Models\Company\Address;
 use App\Models\Company\Ecommerce\DeliveryPoint;
+use App\Models\Company\Ecommerce\Order;
+use App\Models\Company\Ecommerce\ShippingPrice;
 use App\Services\Ecommerce\OrderService;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
-use Throwable;
 
 class CreateOrderGraphQLMutation extends Mutation
 {
@@ -30,12 +33,39 @@ class CreateOrderGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
-            'address_id' => [
-                'name' => 'address_id',
+            'delivery_type' => [
+                'name' => 'delivery_type',
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    Rule::exists(Address::class, 'id')->whereNull('deleted_at'),
+                    Rule::in(OrderDeliveryTypeEnum::values()),
+                ],
+            ],
+            'payment_method' => [
+                'name' => 'payment_method',
+                'type' => Type::nonNull(Type::int()),
+            ],
+            'address_id' => [
+                'name' => 'address_id',
+                'type' => Type::int(),
+                'rules' => [
+                    'nullable',
+                    'required_if:delivery_type,' . OrderDeliveryTypeEnum::DELIVERY_TO_ADDRESS->value,
+                    function ($attribute, $value, $fail) {
+                        if (! $address = Address::query()->find($value)) {
+                            $fail(__('validation.exists', ['attribute' => 'address id']));
+                        } elseif (
+                            ShippingPrice::query()
+                                ->where('region_id', $address->region_id)
+                                ->where('district_id', $address->district_id)
+                                ->where(fn ($q) => $q
+                                    ->where('mahalla_id', $address->mahalla_id)
+                                    ->orWhereNull('mahalla_id'))
+                                ->doesntExist()
+                        ) {
+                            $fail('Delivery service to the specified address is currently unavailable');
+                        }
+                    },
                 ],
             ],
             'delivery_point_id' => [
@@ -43,6 +73,7 @@ class CreateOrderGraphQLMutation extends Mutation
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
+                    'required_if:delivery_type,' . OrderDeliveryTypeEnum::SELF_PICKUP->value,
                     Rule::exists(DeliveryPoint::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
@@ -51,27 +82,46 @@ class CreateOrderGraphQLMutation extends Mutation
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
+                    'required_if:payment_method,' . OrderPaymentMethodEnum::PAY_BY_INSTALLMENT->value,
                     'exists:installments,id',
                 ],
             ],
             'cart' => [
                 'name' => 'cart',
-                'type' => Type::listOf(Type::nonNull(GraphQL::type(UserCartInputGraphQLType::GRAPHQL_TYPE_NAME))),
+                'type' => Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(UserCartInputGraphQLType::GRAPHQL_TYPE_NAME)))),
             ],
         ];
     }
 
-    /**
-     * @throws GeneralException
-     * @throws Throwable
-     */
-    public function resolve($root, $args)
+    public function resolve($root, $args): Order
     {
         $authUser = auth('ecommerce-client')->user();
-        if (is_null($authUser->customer_id)) {
-            throw new GeneralException('Iltimos profilni to\'ldiring');
+
+        if (! $authUser->customer_id) {
+            throw new Error('Please create a customer first');
         }
 
-        return $this->orderService->createOrder($authUser, $args['cart'], $args['address_id'], $args['installment_id'] ?? null);
+        return $this->orderService->createOrder($authUser, $args);
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'payment_method' => [
+                'required',
+                Rule::in(OrderPaymentMethodEnum::values()),
+                function ($attribute, $value, $fail) use ($args) {
+                    if (
+                        in_array($value, OrderPaymentMethodEnum::payAfterDeliveryMethods()) &&
+                        (
+                            $args['delivery_type'] === OrderDeliveryTypeEnum::DELIVERY_TO_ADDRESS->value ||
+                            DeliveryPoint::query()->whereNotNull('branch_id')->where('id', $args['delivery_point_id'])->doesntExist()
+                        )
+                    ) {
+                        $fail('This payment method is not allowed for the selected delivery type');
+                    }
+                },
+            ],
+        ];
     }
 }
