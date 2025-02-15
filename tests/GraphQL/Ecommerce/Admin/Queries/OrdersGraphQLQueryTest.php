@@ -6,7 +6,9 @@ use App\Models\Company\Ecommerce\Order;
 use App\Models\Company\Ecommerce\OrderItem;
 use App\Models\Company\Ecommerce\Product;
 use App\Models\Company\Ecommerce\User;
+use Database\Seeders\Company\EcommerceOrderStatusSeeder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -140,6 +142,7 @@ class OrdersGraphQLQueryTest extends GraphQLTestCase
 
         Order::query()->forceDelete();
         Order::factory()->count($this->_totalOrdersCount)->create();
+        Artisan::call('tenants:seed', ['--class' => EcommerceOrderStatusSeeder::class, '--tenants' => [tenant('id')]]);
     }
 
     #[Test]

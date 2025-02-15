@@ -34,6 +34,6 @@ class RemoveCartGraphQLMutation extends Mutation
 
     public function resolve($root, $args)
     {
-        return UserCart::removeCart(auth('ecommerce-client')->id(), $args['variation_id']);
+        return UserCart::clearCart(auth('ecommerce-client')->id(), $args['variation_id']);
     }
 }
