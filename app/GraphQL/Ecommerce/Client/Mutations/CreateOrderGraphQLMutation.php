@@ -77,15 +77,15 @@ class CreateOrderGraphQLMutation extends Mutation
                     Rule::exists(DeliveryPoint::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
-            'installment_id' => [
-                'name' => 'installment_id',
-                'type' => Type::int(),
-                'rules' => [
-                    'nullable',
-                    'required_if:payment_method,' . OrderPaymentMethodEnum::PAY_BY_INSTALLMENT->value,
-                    'exists:installments,id',
-                ],
-            ],
+            // 'installment_id' => [
+            //     'name' => 'installment_id',
+            //     'type' => Type::int(),
+            //     'rules' => [
+            //         'nullable',
+            //         'required_if:payment_method,' . OrderPaymentMethodEnum::PAY_BY_INSTALLMENT->value,
+            //         'exists:installments,id',
+            //     ],
+            // ],
             'cart' => [
                 'name' => 'cart',
                 'type' => Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(UserCartInputGraphQLType::GRAPHQL_TYPE_NAME)))),

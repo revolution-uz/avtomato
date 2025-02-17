@@ -28,6 +28,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read float $full_amount
  * @property User $user
  * @property Address|null $address
  * @property DeliveryPoint|null $deliveryPoint
@@ -59,6 +60,11 @@ class Order extends Model
         'delivery_type' => OrderDeliveryTypeEnum::class,
         'payment_method' => OrderPaymentMethodEnum::class,
     ];
+
+    public function getFullAmountAttribute(): float
+    {
+        return $this->orderItems()->sum('price') + $this->shipping_price;
+    }
 
     public function user(): BelongsTo
     {

@@ -34,6 +34,14 @@ class EcommerceOrderStatusSeeder extends Seeder
                 'name_oz' => 'Еткaзиб берилди',
                 'is_active' => true,
             ],
+            [
+                'id' => OrderStatus::WAITING_FOR_PAYMENT,
+                'name_uz' => 'To\'lov kutilmoqda',
+                'name_ru' => 'Ожидание оплаты',
+                'name_en' => 'Waiting for payment',
+                'name_oz' => 'Тўлов кутилмоқда',
+                'is_active' => true,
+            ],
         ];
 
         foreach ($orderStatuses as $orderStatus) {
