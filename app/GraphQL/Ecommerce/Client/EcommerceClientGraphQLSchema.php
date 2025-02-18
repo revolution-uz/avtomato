@@ -24,6 +24,8 @@ class EcommerceClientGraphQLSchema implements ConfigConvertible
                 \App\GraphQL\Ecommerce\Client\Mutations\CreateCustomerGraphQLMutation::class,
                 \App\GraphQL\Ecommerce\Client\Mutations\AttachAddressGraphQLMutation::class,
                 \App\GraphQL\Ecommerce\Client\Mutations\DetachAddressGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\PayForOrderGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\PayForOrderConfirmGraphQLMutation::class,
             ],
             'types' => [
                 \App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType::class,
@@ -51,6 +53,7 @@ class EcommerceClientGraphQLSchema implements ConfigConvertible
                 \App\GraphQL\Ecommerce\Client\Types\CustomerGraphQLType::class,
                 \App\GraphQL\Ecommerce\Admin\Types\DeliveryPointGraphQLType::class,
                 \App\GraphQL\Management\Types\InstallmentGraphQLType::class,
+                \App\GraphQL\Ecommerce\Client\Types\PaymentGraphQLType::class,
             ],
             'middleware' => ['auth:ecommerce-client', 'is_soft_delete_client_token', 'ecommerce'],
         ];

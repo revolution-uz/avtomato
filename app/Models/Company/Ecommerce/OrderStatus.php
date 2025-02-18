@@ -30,6 +30,7 @@ class OrderStatus extends Model
     const int CREATED = 1;
     const int CANCELLED = 2;
     const int FINISHED = 3;
+    const int WAITING_FOR_PAYMENT = 4;
 
     protected $table = 'ecommerce_order_statuses';
 
