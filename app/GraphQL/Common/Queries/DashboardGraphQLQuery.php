@@ -18,9 +18,7 @@ class DashboardGraphQLQuery extends Query
         'name' => 'dashboard',
     ];
 
-    public function __construct(
-        private readonly InstallmentService $installmentService
-    ) {}
+    public function __construct(private readonly InstallmentService $installmentService) {}
 
     public function type(): Type
     {
