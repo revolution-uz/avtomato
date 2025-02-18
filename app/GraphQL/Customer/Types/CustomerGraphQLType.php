@@ -2,12 +2,10 @@
 
 namespace App\GraphQL\Customer\Types;
 
-use App\Clients\UniredClient;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Scoring\Types\ScoringRequestGraphQLType;
 use App\GraphQL\Scoring\Types\ScoringRequestUnionGraphQLType;
 use App\Models\Company\Customer;
-use App\Services\UniredService;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
@@ -102,7 +100,7 @@ class CustomerGraphQLType extends GraphQLType
             ],
             'unired_cards' => [
                 'type' => Type::listOf(GraphQL::type(UniredCardGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Customer $root) => (new UniredService(new UniredClient))->getCards($root),
+                'resolve' => fn (Customer $root) => $root->uniredCards,
             ],
             'addresses' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(AddressGraphQLType::GRAPHQL_TYPE_NAME))),
