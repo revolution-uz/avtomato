@@ -152,7 +152,7 @@ class UniredService
         return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int) ($installment->debtAmount * 100), false);
     }
 
-    public function getCards(Customer $customer)
+    public function getCards(Customer $customer): array
     {
         $response = $this->uniredClient->getCards(new UniredClientPinflGetCardRequestDTO($customer->pinfl));
         if ($response->isSuccess()) {

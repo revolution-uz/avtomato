@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Customer\Types;
 
-use App\DTOs\Unired\Client\UniredCardResponseDTO;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
@@ -19,39 +18,39 @@ class UniredCardGraphQLType extends GraphQLType
         return [
             'pinfl' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (UniredCardResponseDTO $root) => $root->pinfl,
+                'resolve' => fn (array $root) => $root['pinfl'],
             ],
             'uuid' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (UniredCardResponseDTO $root) => $root->uuid,
+                'resolve' => fn (array $root) => $root['uuid'],
             ],
             'pan' => [
                 'type' => Type::string(),
-                'resolve' => fn (UniredCardResponseDTO $root) => $root->pan,
+                'resolve' => fn (array $root) => $root['pan'],
             ],
             'owner' => [
                 'type' => Type::string(),
-                'resolve' => fn (UniredCardResponseDTO $root) => $root->owner,
+                'resolve' => fn (array $root) => $root['owner'],
             ],
             'auto' => [
                 'type' => Type::boolean(),
-                'resolve' => fn (UniredCardResponseDTO $root) => $root->auto,
+                'resolve' => fn (array $root) => $root['auto'],
             ],
             'is_verified' => [
                 'type' => Type::boolean(),
-                'resolve' => fn (UniredCardResponseDTO $root) => $root->is_verified,
+                'resolve' => fn (array $root) => $root['is_verified'],
             ],
             'is_blocked' => [
                 'type' => Type::boolean(),
-                'resolve' => fn (UniredCardResponseDTO $root) => $root->is_blocked,
+                'resolve' => fn (array $root) => $root['is_blocked'],
             ],
             'block_reason' => [
                 'type' => Type::string(),
-                'resolve' => fn (UniredCardResponseDTO $root) => $root->block_reason,
+                'resolve' => fn (array $root) => $root['block_reason'],
             ],
             'blocked_at' => [
                 'type' => Type::int(),
-                'resolve' => fn (UniredCardResponseDTO $root) => $root->blocked_at->timestamp,
+                'resolve' => fn (array $root) => $root['blocked_at->timestamp'],
             ],
         ];
     }
