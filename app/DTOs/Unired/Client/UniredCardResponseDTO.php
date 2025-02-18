@@ -4,6 +4,8 @@ namespace App\DTOs\Unired\Client;
 
 use App\DTOs\Unired\Base\BaseUniredDTO;
 use Carbon\Carbon;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 /**
  * Class UniredCardResponseDTO
@@ -28,6 +30,7 @@ class UniredCardResponseDTO extends BaseUniredDTO
         public ?bool $is_verified,
         public ?bool $is_blocked,
         public ?string $block_reason,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i:s')]
         public ?Carbon $blocked_at,
         public ?string $owner,
         public ?string $pan,
