@@ -10,7 +10,6 @@ use Spatie\LaravelData\DataCollection;
  * Class UniredCardsResponseDTO
  *
  * @property int $count
- * @property UniredCardResponseDTO[] $data
  */
 class UniredCardsResponseDTO extends BaseUniredDTO
 {
