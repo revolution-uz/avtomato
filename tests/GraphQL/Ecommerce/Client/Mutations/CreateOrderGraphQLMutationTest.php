@@ -8,10 +8,10 @@ use App\Enums\Company\OrderPaymentMethodEnum;
 use App\Models\Company\Address;
 use App\Models\Company\Ecommerce\DeliveryPoint;
 use App\Models\Company\Ecommerce\Order;
+use App\Models\Company\Ecommerce\OrderStatus;
 use App\Models\Company\Ecommerce\ProductVariation;
 use App\Models\Company\Ecommerce\ShippingPrice;
 use App\Models\Company\Ecommerce\User;
-use App\Models\Company\Installment;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -70,6 +70,7 @@ class CreateOrderGraphQLMutationTest extends GraphQLTestCase
         $this->assertNull($order->address_id);
         $this->assertEquals($variables['delivery_point_id'], $order->delivery_point_id);
         $this->assertNull($order->installment_id);
+        $this->assertEquals($order->status_id, OrderStatus::WAITING_FOR_PAYMENT);
 
         $this->assertEquals(count($variables['cart']), $order->orderItems->count());
         $orderItem = $order->orderItems()->first();
@@ -110,12 +111,15 @@ class CreateOrderGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($shippingPrice->price, $order->shipping_price);
         $this->assertNull($order->delivery_point_id);
         $this->assertNull($order->installment_id);
+        $this->assertEquals($order->status_id, OrderStatus::WAITING_FOR_PAYMENT);
 
         $this->assertEquals(count($variables['cart']), $order->orderItems->count());
         $orderItem = $order->orderItems()->first();
         $this->assertEquals($variables['cart'][0]['variation_id'], $orderItem->variation_id);
         $this->assertEquals($variables['cart'][0]['quantity'], $orderItem->quantity);
     }
+
+    // todo: test for created status
 
     #[Test]
     public function errorValidation(): void
@@ -136,7 +140,6 @@ class CreateOrderGraphQLMutationTest extends GraphQLTestCase
             'payment_method' => 9,
             'address_id' => 999999999,
             'delivery_point_id' => 999999999,
-            'installment_id' => 999999999,
             'cart' => [
                 [
                     'variation_id' => 999999999,
@@ -154,7 +157,6 @@ class CreateOrderGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(__('validation.in', ['attribute' => 'payment method']), $response->json('errors.0.extensions.validation.payment_method.0'));
         $this->assertEquals(__('validation.exists', ['attribute' => 'address id']), $response->json('errors.0.extensions.validation.address_id.0'));
         $this->assertEquals(__('validation.exists', ['attribute' => 'delivery point id']), $response->json('errors.0.extensions.validation.delivery_point_id.0'));
-        $this->assertEquals(__('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
         $this->assertEquals(__('validation.exists', ['attribute' => 'cart.0.variation id']), $response->json('errors.0.extensions.validation')['cart.0.variation_id'][0]);
         $this->assertEquals(__('validation.min.numeric', ['attribute' => 'cart.0.quantity', 'min' => 1]), $response->json('errors.0.extensions.validation')['cart.0.quantity'][0]);
     }
@@ -224,22 +226,6 @@ class CreateOrderGraphQLMutationTest extends GraphQLTestCase
             __('validation.required_if', ['attribute' => 'delivery point id', 'other' => 'delivery type', 'value' => 1]),
             $response->json('errors.0.extensions.validation.delivery_point_id.0')
         );
-
-        // Installment ID
-        $variables = $this->getInputVariables(variables: [
-            'payment_method' => OrderPaymentMethodEnum::PAY_BY_INSTALLMENT,
-            'installment_id' => null,
-        ]);
-        $response = $this
-            ->actingAs($this->_user, 'ecommerce-client')
-            ->postJson(route('graphql.ecommerce-client'), $this->buildGraphQLQuery($variables));
-        $response->assertOk();
-        $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(
-            __('validation.required_if', ['attribute' => 'installment id', 'other' => 'payment method', 'value' => 3]),
-            $response->json('errors.0.extensions.validation.installment_id.0')
-        );
     }
 
     #[Test]
@@ -269,7 +255,6 @@ class CreateOrderGraphQLMutationTest extends GraphQLTestCase
                     \$payment_method: Int!
                     \$address_id: Int
                     \$delivery_point_id: Int
-                    \$installment_id: Int
                     \$cart: [UserCartInputGraphQLType!]!
                 ) {
                     createOrder(
@@ -277,7 +262,6 @@ class CreateOrderGraphQLMutationTest extends GraphQLTestCase
                         payment_method: \$payment_method
                         address_id: \$address_id
                         delivery_point_id: \$delivery_point_id
-                        installment_id: \$installment_id
                         cart: \$cart
                     ) {
                         {$this->convertIntoQuery($this->_structure)}
@@ -303,7 +287,6 @@ class CreateOrderGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($order->address_id, $response->json('data.createOrder.address_id'));
         $this->assertEquals($order->delivery_point_id, $response->json('data.createOrder.delivery_point_id'));
         $this->assertEquals($order->status_id, $response->json('data.createOrder.status_id'));
-        $this->assertEquals($order->installment_id, $response->json('data.createOrder.installment_id'));
         $this->assertEquals($order->created_at->timestamp, $response->json('data.createOrder.created_at'));
         $this->assertEquals($order->updated_at->timestamp, $response->json('data.createOrder.updated_at'));
         $this->assertEquals($order->deleted_at?->timestamp, $response->json('data.createOrder.deleted_at'));
@@ -317,7 +300,6 @@ class CreateOrderGraphQLMutationTest extends GraphQLTestCase
                 'payment_method' => (int) OrderPaymentMethodEnum::randomValue(),
                 'address_id' => Address::factory()->create()->id,
                 'delivery_point_id' => DeliveryPoint::factory()->create()->id,
-                'installment_id' => Installment::factory()->create()->id,
                 'cart' => [
                     [
                         'variation_id' => ProductVariation::factory()->create(['is_active' => true])->id,
