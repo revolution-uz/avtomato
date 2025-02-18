@@ -9,8 +9,10 @@ use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
+use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
 use App\DTOs\Unired\Client\UniredContractLoanIdDTO;
 use App\DTOs\Unired\Client\UniredCreateClientRequestDTO;
+use App\DTOs\Unired\Client\UniredPinflCardsResponseDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
 use App\DTOs\Unired\Contract\UniredCreateContractRequestDTO;
 use App\DTOs\Unired\Contract\UniredUpdateContractDataRequestDTO;
@@ -148,6 +150,18 @@ class UniredService
     public function switchOffInstallment(Installment $installment): ?bool
     {
         return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int) ($installment->debtAmount * 100), false);
+    }
+
+    public function getCards(Customer $customer)
+    {
+        $response = $this->uniredClient->getCards(new UniredClientPinflGetCardRequestDTO($customer->pinfl));
+        if ($response->isSuccess()) {
+            $cardDto = UniredPinflCardsResponseDTO::from($response->result);
+
+            return array_merge($cardDto->uzcard->data->toArray(), $cardDto->humo->data->toArray());
+        }
+
+        return [];
     }
 
     public function switchOnInstallment(Installment $installment): void
