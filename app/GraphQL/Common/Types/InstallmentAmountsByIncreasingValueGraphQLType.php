@@ -13,39 +13,34 @@ class InstallmentAmountsByIncreasingValueGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Installment or Transaction Amount, Count and Percent GraphQL Type',
     ];
 
     public function fields(): array
     {
         return [
             'count' => [
-                'type' => Type::nonNull(Type::int()),
-                'description' => 'The number of installments or transactions',
-                'resolve' => function (array $root) {
-                    return $root['count'];
-                },
+                'type' => Type::int(),
+                'resolve' => fn (array $root) => $root['count'] ?? null,
             ],
             'count_increasing_percent' => [
-                'type' => Type::nonNull(Type::float()),
-                'description' => 'The percent of increasing of count of installments or transactions',
-                'resolve' => function (array $root) {
-                    return $root['count_increasing_percent'];
-                },
+                'type' => Type::float(),
+                'resolve' => fn (array $root) => $root['count_increasing_percent'] ?? null,
+            ],
+            'current_month_count' => [
+                'type' => Type::int(),
+                'resolve' => fn (array $root) => $root['current_month_count'] ?? null,
             ],
             'amount' => [
-                'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'description' => 'The sum of amount of installments or transactions',
-                'resolve' => function (array $root) {
-                    return $root['amount'];
-                },
+                'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (array $root) => $root['amount'] ?? null,
             ],
             'amount_increasing_percent' => [
-                'type' => Type::nonNull(Type::float()),
-                'description' => 'The percent of increasing of amount of installments or transactions',
-                'resolve' => function (array $root) {
-                    return $root['amount_increasing_percent'];
-                },
+                'type' => Type::float(),
+                'resolve' => fn (array $root) => $root['amount_increasing_percent'] ?? null,
+            ],
+            'current_month_amount' => [
+                'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (array $root) => $root['current_month_amount'] ?? null,
             ],
         ];
     }

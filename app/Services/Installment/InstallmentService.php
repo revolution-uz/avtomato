@@ -17,8 +17,6 @@ use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
-use Illuminate\Contracts\Database\Query\Expression;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -320,41 +318,45 @@ class InstallmentService
 
     private function getInstallmentAmounts(): array
     {
-        return [
-            'transaction' => $this->calculateByIncreasingPercent(Transaction::query()->where('status', TransactionStatusEnum::SUCCESS), 'id', 'amount'),
-            'installment' => $this->calculateByIncreasingPercent(Installment::query(), 'id', 'amount'),
-            'installment_future_profit' => $this->calculateByIncreasingPercent(
-                Installment::query()->where('status', '>', InstallmentStatusEnum::INACTIVE),
-                'id',
-                Installment::getProfitAmountRaw()
-            ),
-            'installment_overdue' => $this->calculateByIncreasingPercent(
-                Installment::query()
-                    ->where('status', '=', InstallmentStatusEnum::ACTIVE)
-                    ->whereNextPayDate('<', Carbon::now()),
-                'id',
-                Installment::getDebtAmountRaw()
-            ),
-            'npl' => $this->calculateNpl(60, 7),
-            'enpl' => $this->calculateNpl(30, 7),
+        $installment_amounts = [];
+        $start_of_month = Carbon::today()->startOfMonth();
 
-        ];
-    }
+        $transactionQuery = Transaction::query()->onlySuccess();
 
-    private function calculateByIncreasingPercent(Builder $query, Expression|string $fieldCount, Expression|string $fieldAmount, string $created_at = 'created_at'): array
-    {
-        $beforeWeekQuery = (clone $query)->where($created_at, '<', Carbon::today()->startOfWeek());
-        $count = $query->count($fieldCount);
-        $beforeWeekCount = $beforeWeekQuery->count($fieldCount);
-        $amount = $query->sum($fieldAmount);
-        $beforeWeekAmount = $beforeWeekQuery->sum($fieldAmount);
+        $installment_amounts['transaction']['count'] = $transactionQuery->clone()->count();
+        $installment_amounts['transaction']['current_month_count'] = $transactionQuery->clone()->where('paid_at', '>=', $start_of_month)->count();
+        $installment_amounts['transaction']['amount'] = $transactionQuery->clone()->sum('amount');
+        $installment_amounts['transaction']['current_month_amount'] = $transactionQuery->clone()->where('paid_at', '>=', $start_of_month)->sum('amount');
 
-        return [
-            'count' => $count,
-            'count_increasing_percent' => max(0, Utilities::preventDivideByZero($count, $beforeWeekCount) * 100 - 100),
-            'amount' => $amount,
-            'amount_increasing_percent' => max(0, Utilities::preventDivideByZero($amount, $beforeWeekAmount) * 100 - 100),
-        ];
+        $installmentQuery = Installment::query()->where('status', '>', InstallmentStatusEnum::INACTIVE);
+
+        $installment_amounts['installment']['amount'] = $installmentQuery->clone()->sum('amount');
+        $installment_amounts['installment']['current_month_amount'] = $installmentQuery->clone()->where('created_at', '>=', $start_of_month)->sum('amount');
+
+        $installment_amounts['installment_future_profit']['amount'] = Installment::query()->where('status', InstallmentStatusEnum::ACTIVE)->sum(Installment::getProfitAmountRaw());
+        $installment_amounts['installment_future_profit']['current_month_amount'] = Transaction::query()
+            ->leftJoin('installments', 'transactions.installment_id', '=', 'installments.id')
+            ->where('transactions.status', TransactionStatusEnum::SUCCESS)
+            ->where('transactions.paid_at', '>=', $start_of_month)
+            ->where('transactions.is_initial_fee', false)
+            ->sum(DB::raw('transactions.amount * installments.percent / 100'));
+
+        $installmentOverdueCountQuery = Installment::query()->where('status', InstallmentStatusEnum::ACTIVE)->whereNextPayDate('<', Carbon::now());
+        $installmentOverdueBeforeWeekQuery = $installmentOverdueCountQuery->clone()->where('created_at', '<', Carbon::today()->startOfWeek());
+        $installment_overdue_count = $installmentOverdueCountQuery->clone()->count();
+        $installment_overdue_amount = $installmentOverdueCountQuery->clone()->sum('amount');
+        $before_week_count = $installmentOverdueBeforeWeekQuery->clone()->where('created_at', '<', Carbon::today()->startOfWeek())->count();
+        $before_week_amount = $installmentOverdueBeforeWeekQuery->clone()->where('created_at', '<', Carbon::today()->startOfWeek())->sum('amount');
+
+        $installment_amounts['installment_overdue']['count'] = $installment_overdue_count;
+        $installment_amounts['installment_overdue']['count_increasing_percent'] = max(0, Utilities::preventDivideByZero($installment_overdue_count, $before_week_count) * 100 - 100);
+        $installment_amounts['installment_overdue']['amount'] = $installment_overdue_count;
+        $installment_amounts['installment_overdue']['amount_increasing_percent'] = max(0, Utilities::preventDivideByZero($installment_overdue_amount, $before_week_amount) * 100 - 100);
+
+        $installment_amounts['npl'] = $this->calculateNpl(60, 7);
+        $installment_amounts['enpl'] = $this->calculateNpl(30, 7);
+
+        return $installment_amounts;
     }
 
     private function calculateNpl(int $overdueDays, int $beforeDays): array
