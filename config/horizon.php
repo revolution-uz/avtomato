@@ -215,7 +215,7 @@ return [
             'queue' => [
                 'create-or-update-installment-in-unired',
                 'search-customer-card-in-unired',
-                'update-customer-cards-in-unired',
+                'create-or-update-customer-unired-cards-job',
             ],
             'balance' => 'simple',
             'maxProcesses' => 1,
