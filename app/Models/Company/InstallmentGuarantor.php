@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class InstallmentGuarantor extends Model
 {
-    use LogsActivityDirtyOnlyTrait, SoftDeletes, TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, SoftDeletes, TenantConnection;
 
     protected $fillable = [
         'installment_id',

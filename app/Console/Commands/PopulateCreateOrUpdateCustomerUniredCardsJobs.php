@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Jobs\UpdateCustomerCardsUniredJob;
+use App\Jobs\CreateOrUpdateCustomerUniredCardsJob;
 use App\Models\Company;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
@@ -12,21 +12,21 @@ use App\Services\User\BalanceService;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
-class PopulateUpdateCustomerCardsUniredJobs extends Command
+class PopulateCreateOrUpdateCustomerUniredCardsJobs extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'populate:update-customer-cards-in-unired-jobs';
+    protected $signature = 'populate:create-or-update-customer-unired-cards-jobs';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Populate update customer cards in Unired jobs for customers which has active installments';
+    protected $description = 'Populate CreateOrUpdateCustomerUniredCardsJob for customers which has active installments';
 
     /**
      * Execute the console command.
@@ -45,16 +45,15 @@ class PopulateUpdateCustomerCardsUniredJobs extends Command
                 continue;
             }
 
-            /** @var Customer[] $customers */
-            $customers = Customer::query()
+            $customerIds = Customer::query()
                 ->whereHas('installments', fn ($q) => $q
                     ->where('status', InstallmentStatusEnum::ACTIVE))
-                ->whereHas('guaranteedInstallments', fn ($q) => $q
+                ->orWhereHas('guaranteedInstallments', fn ($q) => $q
                     ->where('status', InstallmentStatusEnum::ACTIVE))
                 ->pluck('id');
 
-            foreach ($customers as $customer) {
-                UpdateCustomerCardsUniredJob::dispatch($customer->id)->delay(now()->addSeconds($i));
+            foreach ($customerIds as $customerId) {
+                CreateOrUpdateCustomerUniredCardsJob::dispatch($customerId)->delay(now()->addSeconds($i));
                 $i++;
             }
         }

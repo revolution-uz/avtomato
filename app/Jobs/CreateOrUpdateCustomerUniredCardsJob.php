@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\FeatureEnum;
+use App\Exceptions\UniredException;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Services\UniredService;
@@ -17,11 +18,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 
-class UpdateCustomerCardsUniredJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
+class CreateOrUpdateCustomerUniredCardsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    const JOB_ID = 'update-customer-cards-in-unired';
+    const JOB_ID = 'create-or-update-customer-unired-cards-job';
 
     public function __construct(private readonly int $customerId)
     {
@@ -41,7 +42,18 @@ class UpdateCustomerCardsUniredJob implements ShouldBeUniqueUntilProcessing, Sho
         }
 
         $customer = Customer::query()->findOrFail($this->customerId);
-        $customer->uniredCards()->createMany($uniredService->getCards($customer));
+
+        try {
+            $cards = $uniredService->getCards($customer);
+        } catch (UniredException $e) {
+            return;
+        }
+
+        $customer->uniredCards()->upsert(
+            $cards,
+            ['uuid'],
+            ['pinfl', 'auto', 'is_verified', 'is_blocked', 'block_reason', 'blocked_at', 'owner', 'pan', 'phone']
+        );
     }
 
     /**
