@@ -44,10 +44,12 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $deleted_at
  * @property Attachment[] $attachments
  * @property Installment[] $installments
+ * @property Installment[] $guaranteedInstallments
  * @property Address[]|Collection<int,Address> $addresses
  * @property Phone[]|Collection<int,Phone> $phones
  * @property Card[]|Collection<int,Card> $cards
  * @property Tag[]|Collection<int, Tag> $tags
+ * @property UniredCard[]|Collection<int,UniredCard> $uniredCards
  * @property ScoringRequest[]|Collection<int,ScoringRequest> $scoringRequests
  * @property CustomerTypeEnum $type
  * @property-read string $full_name
@@ -140,6 +142,18 @@ class Customer extends Model
     public function installments(): HasMany
     {
         return $this->hasMany(Installment::class);
+    }
+
+    public function guaranteedInstallments(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Installment::class, 'installment_guarantors', 'customer_id', 'installment_id')
+            ->wherePivotNull('deleted_at');
+    }
+
+    public function uniredCards(): HasMany
+    {
+        return $this->hasMany(UniredCard::class);
     }
 
     public function fullName(): Attribute

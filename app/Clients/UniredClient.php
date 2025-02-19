@@ -10,6 +10,7 @@ use App\DTOs\Unired\Client\UniredAddClientPhoneRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardCountDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
+use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
 use App\DTOs\Unired\Client\UniredContractLoanIdDTO;
 use App\DTOs\Unired\Client\UniredCreateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
@@ -65,6 +66,7 @@ class UniredClient extends BaseClient
     const CONTRACT_DELETE = 'contract.delete';
     const TRANSACTION_GET = 'transaction.get';
     const CARD_COUNT = 'card.count';
+    const CARD_INFO = 'card.info';
     const PROCESSING_HUMO_SEARCH = 'processing.humo.search';
     const PROCESSING_UZCARD_SEARCH = 'processing.uzcard.search';
 
@@ -229,6 +231,11 @@ class UniredClient extends BaseClient
         }
 
         return new UniredClientPinflCardCountDTO(0, 0);
+    }
+
+    public function getCards(UniredClientPinflGetCardRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::CARD_INFO, $params->toArray());
     }
 
     public function updateHumoCards(UniredClientPinflCardUpdateRequestDTO $params)

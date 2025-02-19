@@ -36,6 +36,7 @@ use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Customer\Types\PhoneInputGraphQLType;
 use App\GraphQL\Customer\Types\TagGraphQLType;
 use App\GraphQL\Customer\Types\TagInputGraphQLType;
+use App\GraphQL\Customer\Types\UniredCardGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentCommentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
@@ -118,6 +119,7 @@ class CustomerQLSchema implements ConfigConvertible
                 AttachCardDataGraphQLType::class,
                 AttachCardGraphQLType::class,
                 CardGraphQLType::class,
+                UniredCardGraphQLType::class,
                 CustomerGraphQLType::class,
                 TagGraphQLType::class,
                 TagInputGraphQLType::class,
