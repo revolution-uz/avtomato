@@ -212,7 +212,11 @@ return [
         ],
         'supervisor-5' => [
             'connection' => 'redis',
-            'queue' => ['create-or-update-installment-in-unired'],
+            'queue' => [
+                'create-or-update-installment-in-unired',
+                'search-customer-card-in-unired',
+                'update-customer-cards-in-unired',
+            ],
             'balance' => 'simple',
             'maxProcesses' => 1,
             'memory' => 128,
@@ -253,16 +257,6 @@ return [
         'supervisor-9' => [
             'connection' => 'redis',
             'queue' => ['atmos-pinfl-card-update'],
-            'balance' => 'simple',
-            'maxProcesses' => 1,
-            'memory' => 128,
-            'tries' => 1,
-            'timeout' => 600,
-            'nice' => 0,
-        ],
-        'supervisor-unired-search-card' => [
-            'connection' => 'redis',
-            'queue' => ['search-customer-card-in-unired'],
             'balance' => 'simple',
             'maxProcesses' => 1,
             'memory' => 128,

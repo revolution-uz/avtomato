@@ -1,0 +1,40 @@
+{
+  "status": true,
+  "result": {
+    "uzcard": {
+      "count": 1,
+      "data": [
+        {
+          "pinfl": "413109***0086",
+          "uuid": "KB0RWS53CAQDVHFZ9J11T560Y",
+          "auto": true,
+          "is_verified": true,
+          "is_blocked": false,
+          "block_reason": null,
+          "blocked_at": null,
+          "owner": "John Doe",
+          "pan": "860006******6735",
+          "phone": ""
+        }
+      ]
+    },
+    "humo": {
+      "count": 1,
+      "data": [
+        {
+          "pinfl": "413109***0086",
+          "uuid": "3Y1JYBWQQDY1V0T93WCS6HF1",
+          "auto": true,
+          "is_verified": true,
+          "is_blocked": true,
+          "block_reason": "Card not found",
+          "blocked_at": "2025-01-17 08:32:44",
+          "owner": "John Doe",
+          "pan": "986060******8244",
+          "phone": "9989939**000"
+        }
+      ]
+    }
+  },
+  "error": null
+}
