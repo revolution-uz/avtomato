@@ -18,8 +18,8 @@ class CentralCustomerFactory extends Factory
             'last_name' => $this->faker->lastName(),
             'middle_name' => $this->faker->name(),
             'atmos_pinfl_searched_at' => Carbon::now(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'unired_humo_searched_at' => Carbon::now(),
+            'unired_uzcard_searched_at' => Carbon::now(),
         ];
     }
 }
