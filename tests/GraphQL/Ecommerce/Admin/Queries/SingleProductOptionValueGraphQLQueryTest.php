@@ -48,7 +48,7 @@ class SingleProductOptionValueGraphQLQueryTest extends GraphQLTestCase
         ],
     ];
 
-    // [Test]
+    #[Test]
     public function successSingleProductOptionValue()
     {
         $value = ProductOptionValue::factory()->create();

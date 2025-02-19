@@ -30,7 +30,7 @@ class CreateOrUpdateCustomerUniredCardsJobTest extends TestCase
     public function successCreatingCustomerUniredCards(): void
     {
         UniredFaker::getCards();
-        $this->_balanceServiceMock->expects()->isAvailableCompany()->twice()->andReturn(true); // todo: twice
+        $this->_balanceServiceMock->expects()->isAvailableCompany()->twice()->andReturn(true);
 
         $customer = Customer::factory()->create();
         Installment::factory()->create(['customer_id' => $customer->id, 'status' => InstallmentStatusEnum::ACTIVE]);
@@ -41,7 +41,7 @@ class CreateOrUpdateCustomerUniredCardsJobTest extends TestCase
         $this->assertCount(2, $customer->uniredCards);
     }
 
-    // [Test]
+    #[Test]
     public function successUpdatingCustomerUniredCards(): void
     {
         UniredFaker::getCards();
