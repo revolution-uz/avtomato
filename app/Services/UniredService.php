@@ -252,8 +252,6 @@ class UniredService
 
         if ($centralCustomer) {
             if (
-                ! $is_uzcard_update && ! $is_humo_update
-                &&
                 Utilities::isNotAllowedRefresheCards($centralCustomer->unired_uzcard_searched_at)
                 &&
                 Utilities::isNotAllowedRefresheCards($centralCustomer->unired_humo_searched_at)
@@ -270,17 +268,13 @@ class UniredService
 
         try {
             if ($is_uzcard_update) {
-                $updateResult = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
-                if ($updateResult->isSuccess()) {
-                    $centralCustomer->unired_uzcard_searched_at = Carbon::now();
-                }
+                $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
             }
             if ($is_humo_update) {
-                $updateResult = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
-                if ($updateResult->isSuccess()) {
-                    $centralCustomer->unired_humo_searched_at = Carbon::now();
-                }
+                $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
             }
+            $centralCustomer->unired_uzcard_searched_at = Carbon::now();
+            $centralCustomer->unired_humo_searched_at = Carbon::now();
 
             return $centralCustomer->save();
         } catch (Exception $e) {
