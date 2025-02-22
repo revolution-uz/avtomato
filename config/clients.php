@@ -87,11 +87,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Royxat Client
+    | QR pay Client
     |--------------------------------------------------------------------------
     */
     'qr_pay' => [
-        'base_url' => 'https://gw.cloudgate.uz/pg/api/v1/jsonrpc',
+        'base_url' => 'https://gw.cloudgate.uz/mts/api/v1/jsonrpc/',
         'login' => env('QR_PAY_LOGIN', ''),
         'password' => env('QR_PAY_PASSWORD', ''),
         'secret' => env('QR_PAY_SECRET', ''),
