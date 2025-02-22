@@ -127,7 +127,7 @@ class CurrentProfileDevicesGraphQLQueryTest extends GraphQLTestCase
             ->actingAs($this->_admin)
             ->postJson(
                 route('graphql.management'),
-                $this->buildGraphQLQuery(['search' => $currentProfileDevice->company_name])
+                $this->buildGraphQLQuery(['search' => $currentProfileDevice->name])
             );
         $this->assertSuccessCurrentProfileDevicesResponse($response, total: 1);
         $this->assertEquals($currentProfileDevice->id, $response->json('data.currentProfileDevices.data.0.id'));
@@ -136,7 +136,7 @@ class CurrentProfileDevicesGraphQLQueryTest extends GraphQLTestCase
             ->actingAs($this->_admin)
             ->postJson(
                 route('graphql.management'),
-                $this->buildGraphQLQuery(['search' => $currentProfileDevice->company_name])
+                $this->buildGraphQLQuery(['search' => $currentProfileDevice->name])
             );
         $this->assertSuccessCurrentProfileDevicesResponse($response, total: 1);
         $this->assertEquals($currentProfileDevice->id, $response->json('data.currentProfileDevices.data.0.id'));
@@ -168,7 +168,7 @@ class CurrentProfileDevicesGraphQLQueryTest extends GraphQLTestCase
         $this->assertSuccessCurrentProfileDevicesResponse($response, total: 1);
         $this->assertEquals($currentProfileDevice->id, $response->json('data.currentProfileDevices.data.0.id'));
 
-        $this->assertEquals($currentProfileDevice->company_name, $response->json('data.currentProfileDevices.data.0.name'));
+        $this->assertEquals($currentProfileDevice->name, $response->json('data.currentProfileDevices.data.0.name'));
         $this->assertEquals($currentProfileDevice->device_ip, $response->json('data.currentProfileDevices.data.0.device_ip'));
         $this->assertEquals($currentProfileDevice->device_type, $response->json('data.currentProfileDevices.data.0.device_type'));
         $this->assertEquals($currentProfileDevice->device_os, $response->json('data.currentProfileDevices.data.0.device_os'));
