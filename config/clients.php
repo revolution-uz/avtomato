@@ -91,7 +91,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'qr_pay' => [
-        'base_url' => env('QR_PAY_BASE_URL', ''),
+        'base_url' => 'https://gw.cloudgate.uz/pg/api/v1/jsonrpc',
         'login' => env('QR_PAY_LOGIN', ''),
         'password' => env('QR_PAY_PASSWORD', ''),
         'secret' => env('QR_PAY_SECRET', ''),

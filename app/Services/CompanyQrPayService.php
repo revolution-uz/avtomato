@@ -2,19 +2,19 @@
 
 namespace App\Services;
 
-use App\Clients\QrPayClient;
+use App\Clients\UniredSbpQRPayClient;
 use App\DTOs\QrPay\Payment\SbpCreateTransferRequestDTO;
 use App\DTOs\QrPay\Payment\SbpPaymentDTO;
-use App\DTOs\QrPay\Payment\SbpPaymentRequestDTO;
 use App\DTOs\QrPay\Payment\SbpPaymentResponseDTO;
 use App\Enums\Company\TransactionAttemptStatusEnum;
+use App\Exceptions\UniredException;
 use App\Helpers\Utilities;
 use App\Models\Company\SbpTransaction;
 use App\Models\SbpAccount;
 
 class CompanyQrPayService
 {
-    public function __construct(private QrPayClient $qrPayClient) {}
+    public function __construct(private UniredSbpQRPayClient $qrPayClient) {}
 
     public function createPayment(float $amount): SbpPaymentDTO
     {
@@ -33,11 +33,20 @@ class CompanyQrPayService
                 $transaction->ext_id,
                 $transaction->amount,
                 Utilities::QR_PAY_UZS_CURRENCY,
-                $terminal->company_id . Utilities::TENANT_SEPARATOR . $terminal->id
+                $terminal->account_number
             )
         );
+        if (! $response->isSuccess()) {
+            $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::FAILED]);
+            throw new UniredException('Failed to create cheque: ' . $response->error->message);
+        }
+        $result = SbpPaymentDTO::from($response->result);
+        $transaction->credit = $result->transfer->credit->toArray();
+        $transaction->debit = $result->transfer->debit->toArray();
+        $transaction->currency = $result->transfer->currency;
+        $transaction->saveOrFail();
 
-        return SbpPaymentDTO::from($response->result);
+        return $result;
     }
 
     public function updatePaymentByCallback(SbpPaymentResponseDTO $payment)
@@ -57,7 +66,7 @@ class CompanyQrPayService
     public function statePayment(string $ext_id)
     {
         if (SbpTransaction::query()->where('ext_id', $ext_id)->exists()) {
-            $response = SbpPaymentDTO::from($this->qrPayClient->stateTransfer(new SbpPaymentRequestDTO($ext_id))->result);
+            $response = SbpPaymentDTO::from($this->qrPayClient->stateTransfer($ext_id)->result);
             $this->updatePaymentByCallback($response->transfer);
         }
 

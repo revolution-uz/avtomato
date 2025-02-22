@@ -2,6 +2,9 @@
 
 namespace App\Clients;
 
+use App\DTOs\QrPay\Base\BaseQrPayResponseDTO;
+use App\DTOs\QrPay\Payment\SbpCreateTransferRequestDTO;
+use App\DTOs\QrPay\Terminal\SbpCreateAccountRequestDTO;
 use App\Exceptions\UniredException;
 use App\Helpers\HideSensitiveDataFromLogging;
 use GuzzleHttp\Utils;
@@ -16,6 +19,7 @@ class UniredSbpQRPayClient
     protected const METHOD_LOGIN = 'login';
 
     private const METHOD_ACCOUNT_CREATE = 'account.create';
+    private const METHOD_ACCOUNT_DEACTIVATE = 'account.deactivate';
     private const METHOD_TRANSFER_CREATE = 'qr.transfer.create';
     private const METHOD_TRANSFER_STATE = 'qr.transfer.state';
 
@@ -40,43 +44,39 @@ class UniredSbpQRPayClient
     /**
      * @throws UniredException
      */
-    public function createAccount($number, $filial_code, $tax, $name): array
+    public function createAccount(SbpCreateAccountRequestDTO $params): BaseQrPayResponseDTO
     {
-        return $this->makeRequest(self::METHOD_ACCOUNT_CREATE, [
-            'number' => $number,
-            'filial_code' => $filial_code,
-            'tax' => $tax,
-            'name' => $name,
-        ]);
+        return $this->makeRequest(self::METHOD_ACCOUNT_CREATE, $params->toArray());
     }
 
     /**
      * @throws UniredException
      */
-    public function createTransfer($ext_id, $amount, $currency, $account): array
+    public function deactivateAccount(int $account_id): BaseQrPayResponseDTO
     {
-        return $this->makeRequest(self::METHOD_TRANSFER_CREATE, [
-            'ext_id' => $ext_id,
-            'amount' => $amount,
-            'currency' => $currency,
-            'account' => $account,
-        ]);
+        return $this->makeRequest(self::METHOD_ACCOUNT_DEACTIVATE, ['account_id' => $account_id]);
     }
 
     /**
      * @throws UniredException
      */
-    public function stateTransfer($ext_id): array
+    public function createTransfer(SbpCreateTransferRequestDTO $params): BaseQrPayResponseDTO
     {
-        return $this->makeRequest(self::METHOD_TRANSFER_STATE, [
-            'ext_id' => $ext_id,
-        ]);
+        return $this->makeRequest(self::METHOD_TRANSFER_CREATE, $params->toArray());
     }
 
     /**
      * @throws UniredException
      */
-    public function makeRequest(string $method, array $originalParams, bool $isTriedReAuthorize = false): array|string
+    public function stateTransfer(string $ext_id): BaseQrPayResponseDTO
+    {
+        return $this->makeRequest(self::METHOD_TRANSFER_STATE, ['ext_id' => $ext_id]);
+    }
+
+    /**
+     * @throws UniredException
+     */
+    public function makeRequest(string $method, array $originalParams, bool $isTriedReAuthorize = false): BaseQrPayResponseDTO|string
     {
         $params = [
             'id' => uniqid(),
@@ -111,7 +111,7 @@ class UniredSbpQRPayClient
             $errorCode = $jsonResponse['error']['code'] ?? 0;
 
             if (! $isTriedReAuthorize && ($errorCode === -32001 || $errorCode === -32106 || $errorCode === -36042)) { // this means unauthorized
-                $this->getAccessToken(false);
+                $this->getAccessNewToken(false);
 
                 return $this->makeRequest($method, $originalParams, true);
             }
@@ -127,7 +127,7 @@ class UniredSbpQRPayClient
             throw new UniredException(json_encode($jsonResponse));
         }
 
-        return $jsonResponse['result'];
+        return BaseQrPayResponseDTO::from($jsonResponse);
     }
 
     public function getAuthorizationNewHeaders(array $params): array
@@ -137,35 +137,6 @@ class UniredSbpQRPayClient
             'Header-Login' => $this->login,
             'Authorization' => 'Bearer ' . $this->getAccessNewToken(),
         ];
-    }
-
-    public function getAccessToken(bool $fromCache = true): ?string
-    {
-        $accessToken = null;
-
-        if ($fromCache) {
-            $accessToken = Cache::get($this->baseUrl);
-        }
-
-        if (! $accessToken || ! is_string($accessToken) || empty(trim($accessToken))) {
-            $params = [
-                'jsonrpc' => '2.0',
-                'id' => uniqid(),
-                'method' => self::METHOD_LOGIN,
-                'params' => [
-                    'username' => $this->login,
-                    'password' => $this->password,
-                ],
-            ];
-
-            $response = Http::acceptJson()->post($this->baseUrl, $params)->json();
-
-            if ($accessToken = Arr::get($response, 'result.access_token')) {
-                Cache::put($this->baseUrl, $accessToken);
-            }
-        }
-
-        return $accessToken;
     }
 
     public function getAccessNewToken(bool $fromCache = true): ?string

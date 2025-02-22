@@ -9,7 +9,7 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
  *
  * @property string $ext_id
  * @property int $amount
- * @property int $curreny
+ * @property int $currency
  * @property int $account
  */
 class SbpCreateTransferRequestDTO extends BaseQrPayDTO
@@ -17,7 +17,7 @@ class SbpCreateTransferRequestDTO extends BaseQrPayDTO
     public function __construct(
         public string $ext_id,
         public int $amount,
-        public int $curreny,
+        public int $currency,
         public string $account,
     ) {}
 }

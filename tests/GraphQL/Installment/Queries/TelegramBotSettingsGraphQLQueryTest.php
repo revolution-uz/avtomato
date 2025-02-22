@@ -97,8 +97,8 @@ class TelegramBotSettingsGraphQLQueryTest extends GraphQLTestCase
 
         foreach ($telegramBotSettings as $index => $item) {
             $this->assertEquals($item->id, $response->json("data.telegramBotSettings.{$index}.id"));
-            $this->assertEquals($item->name->value, $response->json("data.telegramBotSettings.{$index}.name"));
-            $this->assertEquals($item->name->getLabel(), $response->json("data.telegramBotSettings.{$index}.label"));
+            $this->assertEquals($item->company_name->value, $response->json("data.telegramBotSettings.{$index}.name"));
+            $this->assertEquals($item->company_name->getLabel(), $response->json("data.telegramBotSettings.{$index}.label"));
             $this->assertEquals($item->type->value, $response->json("data.telegramBotSettings.{$index}.type"));
             $this->assertEquals($item->value, $response->json("data.telegramBotSettings.{$index}.value"));
         }

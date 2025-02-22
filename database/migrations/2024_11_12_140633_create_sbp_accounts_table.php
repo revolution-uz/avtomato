@@ -11,12 +11,12 @@ return new class extends Migration
         Schema::create('sbp_accounts', function (Blueprint $table) {
             $table->id();
             $table->integer('company_id');
-            $table->integer('terminal_id');
-            $table->string('number', 20);
-            $table->string('filial_code', 8);
-            $table->string('tax', 9);
-            $table->string('name', 64);
-            $table->string('status');
+            $table->integer('terminal_id')->nullable();
+            $table->string('account_number', 20);
+            $table->string('mfo', 8);
+            $table->string('inn', 9);
+            $table->string('company_name', 64);
+            $table->string('status')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

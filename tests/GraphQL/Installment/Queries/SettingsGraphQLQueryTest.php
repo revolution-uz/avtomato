@@ -133,8 +133,8 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
         $i = 0;
         foreach ($companySettings as $item) {
             $this->assertEquals($item->id, $response->json("data.settings.{$i}.id"));
-            $this->assertEquals($item->name->value, $response->json("data.settings.{$i}.name"));
-            $this->assertEquals($item->name->getLabel(), $response->json("data.settings.{$i}.label"));
+            $this->assertEquals($item->company_name->value, $response->json("data.settings.{$i}.name"));
+            $this->assertEquals($item->company_name->getLabel(), $response->json("data.settings.{$i}.label"));
             $this->assertEquals($item->type->value, $response->json("data.settings.{$i}.type"));
             $this->assertEquals($item->value, $response->json("data.settings.{$i}.value"));
             $i++;

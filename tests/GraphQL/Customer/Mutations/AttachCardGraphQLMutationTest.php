@@ -128,7 +128,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.customer'),
-                $this->buildGraphQLQuery(['customer_id' => $this->_customer->id, 'number' => $card->number, 'expiry' => $card->expiry])
+                $this->buildGraphQLQuery(['customer_id' => $this->_customer->id, 'number' => $card->account_number, 'expiry' => $card->expiry])
             );
 
         $response->assertOk();
@@ -149,7 +149,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($this->createAdminUser())
             ->postJson(
                 route('graphql.customer'),
-                $this->buildGraphQLQuery(['customer_id' => $this->_customer->id, 'number' => $deletedCard->number, 'expiry' => $deletedCard->expiry])
+                $this->buildGraphQLQuery(['customer_id' => $this->_customer->id, 'number' => $deletedCard->account_number, 'expiry' => $deletedCard->expiry])
             );
         $response->assertOk();
         $response->assertJsonIsObject();
@@ -173,7 +173,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($card->created_at->timestamp, $response->json('data.attachCard.card.created_at'));
         $this->assertEquals($card->updated_at->timestamp, $response->json('data.attachCard.card.updated_at'));
         $this->assertEquals($card->customer_id, $this->_customer->id);
-        $this->assertEquals($card->number, $deletedCard->number);
+        $this->assertEquals($card->number, $deletedCard->account_number);
         $this->assertEquals($card->expiry, $deletedCard->expiry);
         $this->assertIsArray($response->json('data.attachCard.attachData'));
         $this->assertEquals($response->json('data.attachCard.card.id'), $response->json('data.attachCard.attachData.transaction_id'));
@@ -192,7 +192,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
 
         $this->_input = [
             'customer_id' => $this->_customer->id,
-            'number' => $card->number,
+            'number' => $card->account_number,
             'expiry' => $card->expiry,
         ];
 
@@ -248,7 +248,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
 
         $this->_input = [
             'customer_id' => $this->_customer->id,
-            'number' => $card->number,
+            'number' => $card->account_number,
             'expiry' => $card->expiry,
         ];
 
@@ -269,7 +269,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
                 route('graphql.customer'),
                 $this->buildGraphQLQuery([
                     'customer_id' => $this->_customer->id,
-                    'number' => $card->number,
+                    'number' => $card->account_number,
                     'expiry' => $card->expiry,
                 ])
             );

@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -20,7 +21,7 @@ class SbpAccountResource extends Resource
      *
      * @var string
      */
-    public static $title = 'number';
+    public static $title = 'account_number';
 
     /**
      * The columns that should be searched.
@@ -28,7 +29,7 @@ class SbpAccountResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'company_id', 'terminal_id', 'number', 'filial_code', 'tax', 'name', 'status',
+        'id', 'company_id', 'terminal_id', 'account_number', 'mfo', 'inn', 'company_name', 'status',
     ];
 
     /**
@@ -41,31 +42,33 @@ class SbpAccountResource extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Company ID')
+            BelongsTo::make('Company', 'company', CompanyResource::class)
                 ->sortable()
                 ->rules('required', 'max:16'),
 
             Text::make('Terminal ID')
+                ->exceptOnForms()
                 ->sortable()
                 ->rules('required', 'max:16'),
 
-            Text::make('Number')
+            Text::make('Account Number')
                 ->sortable()
-                ->rules('required', 'max:16'),
+                ->rules('required', 'max:20'),
 
-            Text::make('Filial Code')
+            Text::make('Mfo')
                 ->sortable()
-                ->rules('nullable', 'max:255'),
+                ->rules('nullable', 'max:5'),
 
-            Text::make('Tax')
+            Text::make('Inn')
                 ->sortable()
-                ->rules('nullable', 'max:255'),
+                ->rules('nullable', 'max:9'),
 
-            Text::make('Name')
+            Text::make('Company Name')
                 ->sortable()
                 ->rules('nullable', 'max:255'),
 
             Text::make('Status')
+                ->exceptOnForms()
                 ->sortable()
                 ->rules('nullable', 'max:255'),
 
