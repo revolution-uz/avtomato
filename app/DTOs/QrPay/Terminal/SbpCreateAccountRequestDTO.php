@@ -15,7 +15,7 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
 class SbpCreateAccountRequestDTO extends BaseQrPayDTO
 {
     public function __construct(
-        public string $account,
+        public string $number,
         public string $filial_code,
         public string $inn,
         public string $name,
