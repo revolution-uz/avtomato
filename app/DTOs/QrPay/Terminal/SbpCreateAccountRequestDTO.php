@@ -16,7 +16,7 @@ class SbpCreateAccountRequestDTO extends BaseQrPayDTO
 {
     public function __construct(
         public string $number,
-        public string $filial_code,
+        public string $branch,
         public string $inn,
         public string $name,
     ) {}
