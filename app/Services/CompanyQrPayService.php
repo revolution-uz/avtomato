@@ -31,9 +31,9 @@ class CompanyQrPayService
         $response = $this->qrPayClient->createTransfer(
             new SbpCreateTransferRequestDTO(
                 $transaction->ext_id,
-                $transaction->amount,
-                Utilities::QR_PAY_UZS_CURRENCY,
-                $terminal->account_number
+                $transaction->amount * 100,
+                $terminal->terminal_id,
+                'https://api.avtomato.uz/qr-pay/callback/' . $transaction->ext_id
             )
         );
         if (! $response->isSuccess()) {
@@ -43,7 +43,7 @@ class CompanyQrPayService
         $result = SbpPaymentDTO::from($response->result);
         $transaction->credit = $result->transfer->credit->toArray();
         $transaction->debit = $result->transfer->debit->toArray();
-        $transaction->currency = $result->transfer->currency->toArray();
+        $transaction->currency = $result->transfer->currency->rate;
         $transaction->saveOrFail();
 
         return $result;

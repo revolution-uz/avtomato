@@ -7,7 +7,7 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
 /**
  * Class QrCreateAccountRequestDTO
  *
- * @property string $number
+ * @property string $account
  * @property string $filial_code
  * @property string $tax
  * @property string $name
@@ -15,9 +15,9 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
 class SbpCreateAccountRequestDTO extends BaseQrPayDTO
 {
     public function __construct(
-        public string $number,
+        public string $account,
         public string $filial_code,
-        public string $tax,
+        public string $inn,
         public string $name,
     ) {}
 }

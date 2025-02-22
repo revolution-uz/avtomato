@@ -4,11 +4,13 @@ namespace App\Nova\Company;
 
 use App\Models\Company\SbpTransaction;
 use App\Nova\Actions\SbpTransactionAmountAction;
+use App\Nova\Actions\SbpTransactionRefreshAction;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -79,7 +81,7 @@ class SbpTransactionResource extends Resource
                 ->rules('required', 'max:20'),
             Code::make('Credit')->json(),
             Code::make('Debit')->json(),
-            Code::make('Currency')->json(),
+            Number::make('Currency'),
             DateTime::make('Created At'),
             DateTime::make('Payment Updated At'),
         ];
@@ -124,6 +126,7 @@ class SbpTransactionResource extends Resource
     {
         return [
             (new SbpTransactionAmountAction)->standalone(),
+            (new SbpTransactionRefreshAction)->onlyInline(),
         ];
     }
 }

@@ -20,8 +20,8 @@ class UniredSbpQRPayClient
 
     private const METHOD_ACCOUNT_CREATE = 'account.create';
     private const METHOD_ACCOUNT_DEACTIVATE = 'account.deactivate';
-    private const METHOD_TRANSFER_CREATE = 'qr.transfer.create';
-    private const METHOD_TRANSFER_STATE = 'qr.transfer.state';
+    private const METHOD_TRANSFER_CREATE = 'transfer.create.qr.acc';
+    private const METHOD_TRANSFER_STATE = 'payment.state';
 
     protected string $baseUrl;
 

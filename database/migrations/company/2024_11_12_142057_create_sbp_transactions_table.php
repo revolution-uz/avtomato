@@ -16,7 +16,7 @@ return new class extends Migration
             $table->decimal('amount', 30);
             $table->json('credit')->nullable();
             $table->json('debit')->nullable();
-            $table->json('currency')->nullable();
+            $table->decimal('currency')->nullable();
             $table->timestamp('payment_updated_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
