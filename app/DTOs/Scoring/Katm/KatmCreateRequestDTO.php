@@ -15,14 +15,14 @@ class KatmCreateRequestDTO extends BaseScoringRequest
         public string $pinfl,
         public string $passport_series,
         public string $passport_number,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'd-m-Y')]
+        #[WithCast(DateTimeInterfaceCast::class, format: ['d-m-Y', 'Y-m-d'])]
         public Carbon $passport_given_date,
         public string $first_name,
         public string $last_name,
         public ?string $middle_name,
         public string $phone,
         public ?string $extra_phone,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'd-m-Y')]
+        #[WithCast(DateTimeInterfaceCast::class, format: ['d-m-Y', 'Y-m-d'])]
         public Carbon $birth_date,
         public int $region_id,
         public int $district_id,

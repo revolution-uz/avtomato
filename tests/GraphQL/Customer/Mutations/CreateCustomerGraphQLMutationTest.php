@@ -26,15 +26,15 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
         'tin' => '520212090',
         'passport_series' => 'AD',
         'passport_number' => '3119359',
-        'birth_date' => '15-03-1995',
+        'birth_date' => '1995-03-15',
         'birth_place' => 'URGANCH SHAHRI',
         'first_name' => 'YO‘LDOSHBOY',
         'gender' => 0,
         'last_name' => 'SULTONOV',
         'middle_name' => 'O‘RAZMETBOYEVICH',
         'passport_citizenship' => 'O‘ZBEKISTON',
-        'passport_expiration_date' => '24-04-2033',
-        'passport_given_date' => '25-04-2023',
+        'passport_expiration_date' => '2033-04-24',
+        'passport_given_date' => '2023-04-25',
         'passport_given_place' => 'XORAZM VILOYATI YANGIBOZOR TUMANI IIB',
     ];
 
@@ -183,7 +183,7 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
 
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.pinfl"; Expected non-nullable type "BigInteger!" not to be null.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.pinfl"; Expected non-nullable type "String!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.passport_series"; Expected non-nullable type "String!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.passport_number"; Expected non-nullable type "String!" not to be null.'));
         $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$customer" got invalid value null at "customer.passport_given_date"; Expected non-nullable type "String!" not to be null.'));
@@ -230,9 +230,9 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'customer.middle name', 'max' => 32]), $response->json('errors.0.extensions.validation')['customer.middle_name'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'customer.birth place', 'max' => 32]), $response->json('errors.0.extensions.validation')['customer.birth_place'][0]);
         $this->assertEquals(trans('validation.in', ['attribute' => 'customer.gender']), $response->json('errors.0.extensions.validation')['customer.gender'][0]);
-        $this->assertEquals(trans('validation.date', ['attribute' => 'customer.birth date']), $response->json('errors.0.extensions.validation')['customer.birth_date'][0]);
-        $this->assertEquals(trans('validation.date', ['attribute' => 'customer.passport expiration date']), $response->json('errors.0.extensions.validation')['customer.passport_expiration_date'][0]);
-        $this->assertEquals(trans('validation.date', ['attribute' => 'customer.passport given date']), $response->json('errors.0.extensions.validation')['customer.passport_given_date'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'customer.birth date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation')['customer.birth_date'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'customer.passport expiration date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation')['customer.passport_expiration_date'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'customer.passport given date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation')['customer.passport_given_date'][0]);
     }
 
     #[Test]
@@ -367,15 +367,15 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($customer->tin, $this->_customerInput['tin']);
         $this->assertEquals($customer->passport_series, $this->_customerInput['passport_series']);
         $this->assertEquals($customer->passport_number, $this->_customerInput['passport_number']);
-        $this->assertEquals($customer->birth_date->format('d-m-Y'), $this->_customerInput['birth_date']);
+        $this->assertEquals($customer->birth_date->format('Y-m-d'), $this->_customerInput['birth_date']);
         $this->assertEquals($customer->birth_place, $this->_customerInput['birth_place']);
         $this->assertEquals($customer->first_name, $this->_customerInput['first_name']);
         $this->assertEquals($customer->last_name, $this->_customerInput['last_name']);
         $this->assertEquals($customer->middle_name, $this->_customerInput['middle_name']);
         $this->assertEquals($customer->gender->value, $this->_customerInput['gender']);
         $this->assertEquals($customer->passport_citizenship, $this->_customerInput['passport_citizenship']);
-        $this->assertEquals($customer->passport_expiration_date->format('d-m-Y'), $this->_customerInput['passport_expiration_date']);
-        $this->assertEquals($customer->passport_given_date->format('d-m-Y'), $this->_customerInput['passport_given_date']);
+        $this->assertEquals($customer->passport_expiration_date->format('Y-m-d'), $this->_customerInput['passport_expiration_date']);
+        $this->assertEquals($customer->passport_given_date->format('Y-m-d'), $this->_customerInput['passport_given_date']);
         $this->assertEquals($customer->passport_given_place, $this->_customerInput['passport_given_place']);
 
         if ($addresses) {

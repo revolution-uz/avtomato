@@ -9,6 +9,7 @@ use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\UniredException;
+use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\Phone;
@@ -121,6 +122,43 @@ class UniredServiceTest extends TestCase
         $response = $this->_uniredService->updateInstallment($installment);
 
         $this->assertTrue($response);
+    }
+
+    #[Test]
+    public function successGetCards()
+    {
+        UniredFaker::getCards();
+        $customer = Customer::factory()->create();
+
+        $response = $this->_uniredService->getCards($customer);
+
+        $this->assertCount(2, $response);
+        $this->assertEquals($response, [
+            [
+                'pinfl' => '413109***0086',
+                'uuid' => 'KB0RWS53CAQDVHFZ9J11T560Y',
+                'auto' => true,
+                'is_verified' => true,
+                'is_blocked' => false,
+                'block_reason' => null,
+                'blocked_at' => null,
+                'owner' => 'John Doe',
+                'pan' => '860006******6735',
+                'phone' => '',
+            ],
+            [
+                'pinfl' => '413109***0086',
+                'uuid' => '3Y1JYBWQQDY1V0T93WCS6HF1',
+                'auto' => true,
+                'is_verified' => true,
+                'is_blocked' => true,
+                'block_reason' => 'Card not found',
+                'blocked_at' => '2025-01-17T08:32:44+00:00',
+                'owner' => 'John Doe',
+                'pan' => '986060******8244',
+                'phone' => '9989939**000',
+            ],
+        ]);
     }
 
     #[Test]

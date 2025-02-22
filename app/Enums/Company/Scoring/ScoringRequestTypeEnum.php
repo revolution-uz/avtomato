@@ -18,6 +18,14 @@ enum ScoringRequestTypeEnum: int
     case ROYXAT_CREDIT_HISTORY = 8;
     case UZUM_NASIYA_LIMIT = 9;
 
+    public static function cardTypes(): array
+    {
+        return [
+            self::HUMO,
+            self::UZCARD,
+        ];
+    }
+
     public function convertToAsaxiyFormat(): AsaxiyKatmTypeEnum
     {
         return match ($this) {

@@ -11,14 +11,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $product_id
- * @property int $order_id
  * @property float $price
  * @property float $quantity
+ * @property int $order_id
+ * @property int $product_id
+ * @property int $variation_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Product $product
+ * @property Order $order
+ * @property Product $product
+ * @property ProductVariation $variation
  */
 class OrderItem extends Model
 {
@@ -29,14 +32,25 @@ class OrderItem extends Model
     protected $table = 'ecommerce_order_items';
 
     protected $fillable = [
-        'product_id',
-        'order_id',
         'price',
         'quantity',
+        'order_id',
+        'product_id',
+        'variation_id',
     ];
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
+    }
 
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function variation(): BelongsTo
+    {
+        return $this->belongsTo(ProductVariation::class);
     }
 }

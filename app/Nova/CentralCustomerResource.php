@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -28,7 +29,7 @@ class CentralCustomerResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'pinfl', 'first_name', 'last_name', 'birth_date',
+        'id', 'pinfl', 'first_name', 'last_name', 'middle_name',
     ];
 
     /**
@@ -40,23 +41,13 @@ class CentralCustomerResource extends Resource
     {
         return [
             ID::make()->sortable(),
-
-            Text::make('Pinfl')
-                ->sortable()
-                ->rules('required', 'max:16'),
-
-            Text::make('First Name')
-                ->sortable()
-                ->rules('nullable', 'max:255'),
-
-            Text::make('Last Name')
-                ->sortable()
-                ->rules('nullable', 'max:255'),
-
-            Text::make('Middle Name')
-                ->sortable()
-                ->rules('nullable', 'max:255'),
-
+            Text::make('pinfl')->sortable()->rules('required', 'max:16'),
+            Text::make('first_name')->sortable()->rules('nullable', 'max:255'),
+            Text::make('last_name')->sortable()->rules('nullable', 'max:255'),
+            Text::make('middle_name')->sortable()->rules('nullable', 'max:255'),
+            DateTime::make('atmos_pinfl_searched_at')->sortable()->readonly(),
+            DateTime::make('unired_humo_searched_at')->sortable()->readonly(),
+            DateTime::make('unired_uzcard_searched_at')->sortable()->readonly(),
         ];
     }
 

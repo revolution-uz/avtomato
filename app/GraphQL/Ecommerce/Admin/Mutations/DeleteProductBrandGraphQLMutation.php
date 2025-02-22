@@ -66,7 +66,7 @@ class DeleteProductBrandGraphQLMutation extends Mutation
                 Rule::exists(ProductBrand::class, 'id')->whereNull('deleted_at'),
                 function ($attribute, $value, $fail) {
                     if (ProductBrand::query()->whereHas('products')->find($value)) {
-                        $fail(__('api.are used', ['item' => __('ecommerce.product_brand'), 'element' => __('ecommerce.product')]));
+                        $fail(__('api.cannot_delete', ['item' => __('ecommerce.product_brand'), 'element' => __('ecommerce.product')]));
                     }
                 },
             ],

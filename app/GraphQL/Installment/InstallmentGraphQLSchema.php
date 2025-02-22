@@ -10,6 +10,7 @@ use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
 use App\GraphQL\Customer\Types\PhoneGraphQLType;
 use App\GraphQL\Customer\Types\TagGraphQLType;
+use App\GraphQL\Customer\Types\UniredCardGraphQLType;
 use App\GraphQL\Installment\Mutations\AttachCardGraphQLMutation;
 use App\GraphQL\Installment\Mutations\AttachGuarantorGraphQLMutation;
 use App\GraphQL\Installment\Mutations\ChangeSettingsGraphQLMutation;
@@ -184,6 +185,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 TransactionTypeGraphQLType::class,
                 CustomerGraphQLType::class,
                 CardGraphQLType::class,
+                UniredCardGraphQLType::class,
                 AttachmentGraphQLType::class,
                 TransactionAttemptGraphQLType::class,
                 TransactionGraphQLType::class,
@@ -242,7 +244,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 ScoringRequestUnionGraphQLType::class,
                 ScoringRequestGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
+            'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'tenant_logging'],
         ];
     }
 }

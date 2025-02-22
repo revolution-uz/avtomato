@@ -2,10 +2,12 @@
 
 namespace App\Models\Company\Ecommerce;
 
+use App\Models\Company\Branch;
 use App\Models\Company\District;
 use App\Models\Company\Mahalla;
 use App\Models\Company\OrderBySortable;
 use App\Models\Company\Region;
+use App\Traits\HasTranslations;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,20 +16,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
+ * @property-read string $name
  * @property string $name_uz
  * @property string $name_en
  * @property string $name_ru
  * @property string $name_oz
+ * @property-read string $description
  * @property string $description_uz
  * @property string $description_ru
  * @property string $description_en
  * @property string $description_oz
- * @property string $is_prepaid
+ * @property bool $is_prepaid
+ * @property float $delivery_fee - default: 0.00
  * @property string $phone
+ * @property-read string $address
  * @property string $address_uz
  * @property string $address_ru
  * @property string $address_en
  * @property string $address_oz
+ * @property-read string|null $landmark
  * @property string|null $landmark_uz
  * @property string|null $landmark_ru
  * @property string|null $landmark_en
@@ -38,16 +45,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $region_id
  * @property int|null $district_id
  * @property int|null $mahalla_id
+ * @property int|null $branch_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property Region|null $region
  * @property District|null $district
  * @property Mahalla|null $mahalla
+ * @property Branch|null $branch
  */
 class DeliveryPoint extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes;
 
     protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'description_uz', 'description_ru', 'description_en', 'description_oz', 'is_prepaid'];
 
@@ -63,6 +72,7 @@ class DeliveryPoint extends Model
         'description_en',
         'description_oz',
         'is_prepaid',
+        'delivery_fee',
         'phone',
         'address_uz',
         'address_ru',
@@ -78,7 +88,10 @@ class DeliveryPoint extends Model
         'region_id',
         'district_id',
         'mahalla_id',
+        'branch_id',
     ];
+
+    protected $translatedColumns = ['name', 'description', 'address', 'landmark'];
 
     public function region(): BelongsTo
     {
@@ -93,5 +106,10 @@ class DeliveryPoint extends Model
     public function mahalla(): BelongsTo
     {
         return $this->belongsTo(Mahalla::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
     }
 }

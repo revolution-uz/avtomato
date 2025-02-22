@@ -2,9 +2,8 @@
 
 namespace App\GraphQL\Scoring\Types\Katm;
 
-use App\GraphQL\Scalars\BigInteger;
+use App\Rules\PhoneRule;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\InputType;
 
 class KatmCreateInputGraphQLType extends InputType
@@ -20,8 +19,8 @@ class KatmCreateInputGraphQLType extends InputType
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
-                'rules' => 'required|integer|digits:14',
+                'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|digits:14',
             ],
             'passport_series' => [
                 'name' => 'passport_series',
@@ -36,7 +35,7 @@ class KatmCreateInputGraphQLType extends InputType
             'passport_given_date' => [
                 'name' => 'passport_given_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|date',
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'first_name' => [
                 'name' => 'first_name',
@@ -56,17 +55,17 @@ class KatmCreateInputGraphQLType extends InputType
             'phone' => [
                 'name' => 'phone',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|int|digits:12',
+                'rules' => ['required', 'digits:12', new PhoneRule],
             ],
             'extra_phone' => [
                 'name' => 'extra_phone',
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|int|digits:12',
+                'type' => Type::string(),
+                'rules' => ['nullable', 'digits:12', new PhoneRule],
             ],
             'birth_date' => [
                 'name' => 'birth_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|date',
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'region_id' => [
                 'name' => 'region_id',

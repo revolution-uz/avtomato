@@ -92,14 +92,14 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'data.passport series', 'max' => 2]), $response->json('errors.0.extensions.validation')['data.passport_series'][0]);
         $this->assertEquals(trans('validation.max.string', ['attribute' => 'data.passport number', 'max' => 7]), $response->json('errors.0.extensions.validation')['data.passport_number'][0]);
         $this->assertEquals(trans('validation.regex', ['attribute' => 'data.passport number']), $response->json('errors.0.extensions.validation')['data.passport_number'][1]);
-        $this->assertEquals(trans('validation.date', ['attribute' => 'data.passport given date']), $response->json('errors.0.extensions.validation')['data.passport_given_date'][0]);
-        $this->assertEquals(trans('validation.integer', ['attribute' => 'data.phone']), $response->json('errors.0.extensions.validation')['data.phone'][0]);
-        $this->assertEquals(trans('validation.digits', ['attribute' => 'data.phone', 'digits' => 12]), $response->json('errors.0.extensions.validation')['data.phone'][1]);
-        $this->assertEquals(trans('validation.integer', ['attribute' => 'data.extra phone']), $response->json('errors.0.extensions.validation')['data.extra_phone'][0]);
-        $this->assertEquals(trans('validation.digits', ['attribute' => 'data.extra phone', 'digits' => 12]), $response->json('errors.0.extensions.validation')['data.extra_phone'][1]);
-        $this->assertEquals(trans('validation.date', ['attribute' => 'data.birth date']), $response->json('errors.0.extensions.validation')['data.birth_date'][0]);
+        $this->assertEquals(trans('validation.digits', ['attribute' => 'data.phone', 'digits' => 12]), $response->json('errors.0.extensions.validation')['data.phone'][0]);
+        $this->assertEquals('The data.phone is invalid phone number.', $response->json('errors.0.extensions.validation')['data.phone'][1]);
+        $this->assertEquals(trans('validation.digits', ['attribute' => 'data.extra phone', 'digits' => 12]), $response->json('errors.0.extensions.validation')['data.extra_phone'][0]);
+        $this->assertEquals('The data.extra_phone is invalid phone number.', $response->json('errors.0.extensions.validation')['data.extra_phone'][1]);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'data.region id']), $response->json('errors.0.extensions.validation')['data.region_id'][0]);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'data.district id']), $response->json('errors.0.extensions.validation')['data.district_id'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'data.birth date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation')['data.birth_date'][0]);
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'data.passport given date', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation')['data.passport_given_date'][0]);
     }
 
     #[Test]
@@ -126,13 +126,13 @@ class CreateKatmScoringGraphQLMutationTest extends GraphQLTestCase
             'pinfl' => '50203040506070',
             'passport_series' => 'AA',
             'passport_number' => '2234334',
-            'passport_given_date' => Carbon::now()->format('d-m-Y'),
+            'passport_given_date' => Carbon::now()->format('Y-m-d'),
             'first_name' => 'Ismiddin',
             'last_name' => 'Drsaliev',
             'middle_name' => 'Sharipovich',
             'phone' => '998901234567',
             'extra_phone' => '998901234567',
-            'birth_date' => Carbon::createFromFormat('Y-m-d', '1990-01-01')->format('d-m-Y'),
+            'birth_date' => '1990-01-01',
             'region_id' => $region->id,
             'district_id' => $district->id,
         ];

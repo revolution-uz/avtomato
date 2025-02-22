@@ -39,10 +39,7 @@ class CreateCardScoringGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'integer',
-                    Rule::in([
-                        ScoringRequestTypeEnum::HUMO->value,
-                        ScoringRequestTypeEnum::UZCARD->value,
-                    ]),
+                    Rule::in(ScoringRequestTypeEnum::cardTypes()),
                 ],
             ],
         ];

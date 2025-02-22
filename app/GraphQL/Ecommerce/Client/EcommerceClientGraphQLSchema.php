@@ -2,44 +2,6 @@
 
 namespace App\GraphQL\Ecommerce\Client;
 
-use App\GraphQL\Common\Types\DistrictGraphQLType;
-use App\GraphQL\Common\Types\MahallaGraphQLType;
-use App\GraphQL\Common\Types\RegionGraphQLType;
-use App\GraphQL\Customer\Types\AddressGraphQLType;
-use App\GraphQL\Customer\Types\CustomerInputGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\BannerGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\OrderGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\OrderInputGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\OrderItemGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\ProductBrandGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\ProductCategoryGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\ProductGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\ProductJoinOptionGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\ProductOptionGraphQLType;
-use App\GraphQL\Ecommerce\Admin\Types\ProductOptionValueGraphQLType;
-use App\GraphQL\Ecommerce\Client\Mutations\AddCartGraphQLMutation;
-use App\GraphQL\Ecommerce\Client\Mutations\AddFavouriteGraphQLMutation;
-use App\GraphQL\Ecommerce\Client\Mutations\CreateCustomerGraphQLMutation;
-use App\GraphQL\Ecommerce\Client\Mutations\CreateOrderGraphQLMutation;
-use App\GraphQL\Ecommerce\Client\Mutations\RemoveCartGraphQLMutation;
-use App\GraphQL\Ecommerce\Client\Mutations\RemoveFavouriteGraphQLMutation;
-use App\GraphQL\Ecommerce\Client\Queries\OrdersGraphQLQuery;
-use App\GraphQL\Ecommerce\Client\Queries\UserCartGraphQLQuery;
-use App\GraphQL\Ecommerce\Client\Queries\UserFavoriteGraphQLQuery;
-use App\GraphQL\Ecommerce\Client\Types\UserCartGraphQLType;
-use App\GraphQL\Ecommerce\Client\Types\UserCartInputGraphQLType;
-use App\GraphQL\Ecommerce\Client\Types\UserFavouriteGraphQLType;
-use App\GraphQL\Ecommerce\Client\Types\UserGraphQLType;
-use App\GraphQL\Ecommerce\Common\Queries\BannersGraphQLQuery;
-use App\GraphQL\Ecommerce\Common\Queries\ProductBrandsGraphQLQuery;
-use App\GraphQL\Ecommerce\Common\Queries\ProductCategoriesGraphQLQuery;
-use App\GraphQL\Ecommerce\Common\Queries\ProductsGraphQLQuery;
-use App\GraphQL\Ecommerce\Common\Queries\SingleBannerGraphQLQuery;
-use App\GraphQL\Ecommerce\Common\Queries\SingleProductBrandGraphQLQuery;
-use App\GraphQL\Ecommerce\Common\Queries\SingleProductCategoryGraphQLQuery;
-use App\GraphQL\Ecommerce\Common\Queries\SingleProductGraphQLQuery;
-use App\GraphQL\Management\Types\AdminInputGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class EcommerceClientGraphQLSchema implements ConfigConvertible
@@ -48,51 +10,52 @@ class EcommerceClientGraphQLSchema implements ConfigConvertible
     {
         return [
             'query' => [
-                BannersGraphQLQuery::class,
-                ProductCategoriesGraphQLQuery::class,
-                ProductsGraphQLQuery::class,
-                ProductBrandsGraphQLQuery::class,
-                SingleBannerGraphQLQuery::class,
-                SingleProductGraphQLQuery::class,
-                SingleProductCategoryGraphQLQuery::class,
-                SingleProductBrandGraphQLQuery::class,
-                OrdersGraphQLQuery::class,
-                UserCartGraphQLQuery::class,
-                UserFavoriteGraphQLQuery::class,
+                \App\GraphQL\Ecommerce\Client\Queries\OrdersGraphQLQuery::class,
+                \App\GraphQL\Ecommerce\Client\Queries\UserCartsGraphQLQuery::class,
+                \App\GraphQL\Ecommerce\Client\Queries\UserFavouritesGraphQLQuery::class,
+                \App\GraphQL\Ecommerce\Client\Queries\AddressesGraphQLQuery::class,
             ],
             'mutation' => [
-                AddCartGraphQLMutation::class,
-                AddFavouriteGraphQLMutation::class,
-                RemoveCartGraphQLMutation::class,
-                RemoveFavouriteGraphQLMutation::class,
-                CreateOrderGraphQLMutation::class,
-                CreateCustomerGraphQLMutation::class,
-
+                \App\GraphQL\Ecommerce\Client\Mutations\AddCartGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\AddFavouriteGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\RemoveCartGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\RemoveFavouriteGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\CreateOrderGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\CreateCustomerGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\AttachAddressGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\DetachAddressGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\PayForOrderGraphQLMutation::class,
+                \App\GraphQL\Ecommerce\Client\Mutations\PayForOrderConfirmGraphQLMutation::class,
             ],
             'types' => [
-                EcommerceImageGraphQLType::class,
-                ProductCategoryGraphQLType::class,
-                ProductGraphQLType::class,
-                BannerGraphQLType::class,
-                ProductBrandGraphQLType::class,
-                OrderGraphQLType::class,
-                OrderItemGraphQLType::class,
-                OrderInputGraphQLType::class,
-                ProductJoinOptionGraphQLType::class,
-                ProductOptionValueGraphQLType::class,
-                ProductOptionGraphQLType::class,
-                UserCartInputGraphQLType::class,
-                CustomerInputGraphQLType::class,
-                UserGraphQLType::class,
-                UserFavouriteGraphQLType::class,
-                UserCartGraphQLType::class,
-                DistrictGraphQLType::class,
-                MahallaGraphQLType::class,
-                RegionGraphQLType::class,
-                AddressGraphQLType::class,
-                AdminInputGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\EcommerceImageGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\ProductCategoryGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\ProductGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\BannerGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\ProductBrandGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\ProductVariationGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\OrderGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\OrderItemGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\OrderInputGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\ProductJoinOptionGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\ProductOptionValueGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\ProductOptionGraphQLType::class,
+                \App\GraphQL\Ecommerce\Client\Types\UserCartInputGraphQLType::class,
+                \App\GraphQL\Customer\Types\CustomerInputGraphQLType::class,
+                \App\GraphQL\Ecommerce\Client\Types\UserGraphQLType::class,
+                \App\GraphQL\Ecommerce\Client\Types\UserCartGraphQLType::class,
+                \App\GraphQL\Common\Types\DistrictGraphQLType::class,
+                \App\GraphQL\Common\Types\MahallaGraphQLType::class,
+                \App\GraphQL\Common\Types\RegionGraphQLType::class,
+                \App\GraphQL\Customer\Types\AddressGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\OrderStatusGraphQLType::class,
+                \App\GraphQL\Ecommerce\Client\Types\OrderStatusHistoryGraphQLType::class,
+                \App\GraphQL\Ecommerce\Client\Types\CustomerGraphQLType::class,
+                \App\GraphQL\Ecommerce\Admin\Types\DeliveryPointGraphQLType::class,
+                \App\GraphQL\Management\Types\InstallmentGraphQLType::class,
+                \App\GraphQL\Ecommerce\Client\Types\PaymentGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum', 'is_soft_delete_client_token'],
+            'middleware' => ['auth:ecommerce-client', 'is_soft_delete_client_token', 'ecommerce'],
         ];
     }
 }

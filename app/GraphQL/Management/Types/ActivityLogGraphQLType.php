@@ -41,7 +41,7 @@ class ActivityLogGraphQLType extends GraphQLType
             'admin' => [
                 'type' => Type::nonNull(GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => function (ActivityLog $root) {
-                    return $root->causer;
+                    return $root->causer()->withTrashed()->first();
                 },
             ],
             // TODO write format for

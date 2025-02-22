@@ -2,14 +2,13 @@
 
 namespace App\GraphQL\Ecommerce\Client\Mutations;
 
-use App\Exceptions\GeneralException;
 use App\GraphQL\Ecommerce\Client\Types\UserCartGraphQLType;
+use App\Models\Company\Ecommerce\ProductVariation;
 use App\Models\Company\Ecommerce\UserCart;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Error\AuthorizationError;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
-use Throwable;
 
 class AddCartGraphQLMutation extends Mutation
 {
@@ -25,34 +24,28 @@ class AddCartGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
-            'product_id' => [
-                'name' => 'product_id',
+            'variation_id' => [
+                'name' => 'variation_id',
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    'exists:ecommerce_products,id',
+                    Rule::exists(ProductVariation::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
             'quantity' => [
                 'name' => 'quantity',
-                'type' => Type::int(),
+                'type' => Type::nonNull(Type::int()),
                 'rules' => [
-                    'nullable',
+                    'required',
+                    'integer',
+                    'min:1',
                 ],
             ],
         ];
     }
 
-    /**
-     * @throws GeneralException
-     * @throws Throwable
-     */
     public function resolve($root, $args)
     {
-        if (! auth('ecommerce-client')->check()) {
-            throw new AuthorizationError('Unauthenticated');
-        }
-
-        return UserCart::addCart(auth('ecommerce-client')->user()->id, $args['product_id'], $args['quantity'] ?? 1);
+        return UserCart::addCart(auth('ecommerce-client')->id(), $args['variation_id'], $args['quantity']);
     }
 }

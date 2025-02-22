@@ -3,6 +3,7 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
+use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property-read string $name
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en
@@ -40,7 +42,7 @@ use Illuminate\Support\Carbon;
  */
 class Banner extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes;
 
     protected static array $sortables = [
         'id',
@@ -83,6 +85,8 @@ class Banner extends Model
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
     ];
+
+    protected $translatedColumns = ['name'];
 
     public function category(): BelongsTo
     {

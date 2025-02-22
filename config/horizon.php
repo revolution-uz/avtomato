@@ -212,7 +212,11 @@ return [
         ],
         'supervisor-5' => [
             'connection' => 'redis',
-            'queue' => ['create-or-update-installment-in-unired'],
+            'queue' => [
+                'create-or-update-installment-in-unired',
+                'search-customer-card-in-unired',
+                'create-or-update-customer-unired-cards-job',
+            ],
             'balance' => 'simple',
             'maxProcesses' => 1,
             'memory' => 128,

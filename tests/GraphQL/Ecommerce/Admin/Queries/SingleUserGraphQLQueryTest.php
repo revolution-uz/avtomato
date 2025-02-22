@@ -76,7 +76,7 @@ class SingleUserGraphQLQueryTest extends GraphQLTestCase
                 ],
             ],
         ],
-        'favorites' => [
+        'favourites' => [
             '*' => [
                 'id',
                 'name',
@@ -169,7 +169,7 @@ class SingleUserGraphQLQueryTest extends GraphQLTestCase
 
         Order::factory()->count(3)->create(['user_id' => $user->id]);
         UserCart::factory()->count(3)->create(['user_id' => $user->id]);
-        $user->favorites()->attach(Product::factory()->count(3)->create());
+        $user->favourites()->attach(Product::factory()->count(3)->create());
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -200,7 +200,7 @@ class SingleUserGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($user->deleted_at?->timestamp, $response->json('data.singleUser.deleted_at'));
         $this->assertEquals(0, count($response->json('data.singleUser.orders')));
         $this->assertEquals(0, count($response->json('data.singleUser.carts')));
-        $this->assertEquals(0, count($response->json('data.singleUser.favorites')));
+        $this->assertEquals(0, count($response->json('data.singleUser.favourites')));
     }
 
     #[Test]
@@ -308,25 +308,25 @@ class SingleUserGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($cart->variation->updated_at->timestamp, $response->json('data.singleUser.carts.0.variation.updated_at'));
         $this->assertEquals($cart->variation->deleted_at?->timestamp, $response->json('data.singleUser.carts.0.variation.deleted_at'));
 
-        // favorites
-        $this->assertEquals($user->favorites()->count(), count($response->json('data.singleUser.favorites')));
-        /** @var Product $favoriteProduct */
-        $favoriteProduct = $user->favorites->first();
-        $this->assertEquals($favoriteProduct->id, $response->json('data.singleUser.favorites.0.id'));
-        $this->assertEquals($favoriteProduct->name, $response->json('data.singleUser.favorites.0.name'));
-        $this->assertEquals($favoriteProduct->name_uz, $response->json('data.singleUser.favorites.0.name_uz'));
-        $this->assertEquals($favoriteProduct->name_ru, $response->json('data.singleUser.favorites.0.name_ru'));
-        $this->assertEquals($favoriteProduct->name_en, $response->json('data.singleUser.favorites.0.name_en'));
-        $this->assertEquals($favoriteProduct->name_oz, $response->json('data.singleUser.favorites.0.name_oz'));
-        $this->assertEquals($favoriteProduct->slug, $response->json('data.singleUser.favorites.0.slug'));
-        $this->assertEquals($favoriteProduct->cost, $response->json('data.singleUser.favorites.0.cost'));
-        $this->assertEquals($favoriteProduct->actual_price, $response->json('data.singleUser.favorites.0.actual_price'));
-        $this->assertEquals($favoriteProduct->old_price, $response->json('data.singleUser.favorites.0.old_price'));
-        $this->assertEquals($favoriteProduct->is_active, $response->json('data.singleUser.favorites.0.is_active'));
-        $this->assertEquals($favoriteProduct->category_id, $response->json('data.singleUser.favorites.0.category_id'));
-        $this->assertEquals($favoriteProduct->brand_id, $response->json('data.singleUser.favorites.0.brand_id'));
-        $this->assertEquals($favoriteProduct->created_at->timestamp, $response->json('data.singleUser.favorites.0.created_at'));
-        $this->assertEquals($favoriteProduct->updated_at->timestamp, $response->json('data.singleUser.favorites.0.updated_at'));
-        $this->assertEquals($favoriteProduct->deleted_at?->timestamp, $response->json('data.singleUser.favorites.0.deleted_at'));
+        // favourites
+        $this->assertEquals($user->favourites()->count(), count($response->json('data.singleUser.favourites')));
+        /** @var Product $favouriteProduct */
+        $favouriteProduct = $user->favourites->first();
+        $this->assertEquals($favouriteProduct->id, $response->json('data.singleUser.favourites.0.id'));
+        $this->assertEquals($favouriteProduct->name, $response->json('data.singleUser.favourites.0.name'));
+        $this->assertEquals($favouriteProduct->name_uz, $response->json('data.singleUser.favourites.0.name_uz'));
+        $this->assertEquals($favouriteProduct->name_ru, $response->json('data.singleUser.favourites.0.name_ru'));
+        $this->assertEquals($favouriteProduct->name_en, $response->json('data.singleUser.favourites.0.name_en'));
+        $this->assertEquals($favouriteProduct->name_oz, $response->json('data.singleUser.favourites.0.name_oz'));
+        $this->assertEquals($favouriteProduct->slug, $response->json('data.singleUser.favourites.0.slug'));
+        $this->assertEquals($favouriteProduct->cost, $response->json('data.singleUser.favourites.0.cost'));
+        $this->assertEquals($favouriteProduct->actual_price, $response->json('data.singleUser.favourites.0.actual_price'));
+        $this->assertEquals($favouriteProduct->old_price, $response->json('data.singleUser.favourites.0.old_price'));
+        $this->assertEquals($favouriteProduct->is_active, $response->json('data.singleUser.favourites.0.is_active'));
+        $this->assertEquals($favouriteProduct->category_id, $response->json('data.singleUser.favourites.0.category_id'));
+        $this->assertEquals($favouriteProduct->brand_id, $response->json('data.singleUser.favourites.0.brand_id'));
+        $this->assertEquals($favouriteProduct->created_at->timestamp, $response->json('data.singleUser.favourites.0.created_at'));
+        $this->assertEquals($favouriteProduct->updated_at->timestamp, $response->json('data.singleUser.favourites.0.updated_at'));
+        $this->assertEquals($favouriteProduct->deleted_at?->timestamp, $response->json('data.singleUser.favourites.0.deleted_at'));
     }
 }

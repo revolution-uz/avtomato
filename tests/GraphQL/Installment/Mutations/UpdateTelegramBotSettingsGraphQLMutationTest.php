@@ -33,39 +33,39 @@ class UpdateTelegramBotSettingsGraphQLMutationTest extends GraphQLTestCase
     public function successUpdateTelegramBotEnabled()
     {
         $companySettings = CompanySettings::query()->firstWhere('name', CompanySettingsEnum::TELEGRAM_BOT_ENABLED);
-        $variables = ['id' => $companySettings->id, 'value' => (string) ($companySettings->value + 1)];
+        $value = (string) ($companySettings->value + 1);
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($variables));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['bot_enabled' => $value]));
 
-        $this->assertSuccessUpdateTelegramBotSettingsResponse($response, $companySettings, $variables);
+        $this->assertSuccessUpdateTelegramBotSettingsResponse($response, $companySettings, $value);
     }
 
     #[Test]
     public function successUpdateTelegramBotToken()
     {
         $companySettings = CompanySettings::query()->firstWhere('name', CompanySettingsEnum::TELEGRAM_BOT_TOKEN);
-        $variables = ['id' => $companySettings->id, 'value' => 'new-bot-token'];
+        $value = 'new-bot-token';
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($variables));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['bot_token' => $value]));
 
-        $this->assertSuccessUpdateTelegramBotSettingsResponse($response, $companySettings, $variables);
+        $this->assertSuccessUpdateTelegramBotSettingsResponse($response, $companySettings, $value);
     }
 
     #[Test]
     public function successUpdateTelegramChatId()
     {
         $companySettings = CompanySettings::query()->firstWhere('name', CompanySettingsEnum::TELEGRAM_CHAT_ID);
-        $variables = ['id' => $companySettings->id, 'value' => 'new-chat-id'];
+        $value = 'new-chat-id';
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($variables));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['chat_id' => $value]));
 
-        $this->assertSuccessUpdateTelegramBotSettingsResponse($response, $companySettings, $variables);
+        $this->assertSuccessUpdateTelegramBotSettingsResponse($response, $companySettings, $value);
     }
 
     #[Test]
@@ -74,27 +74,39 @@ class UpdateTelegramBotSettingsGraphQLMutationTest extends GraphQLTestCase
         // GraphQL type errors
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery());
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery(['bot_enabled' => 1, 'bot_token' => 1, 'chat_id' => 1])
+            );
         $response->assertOk();
         $response->assertJsonIsObject();
         $response->assertJsonStructure(['errors' => ['*' => ['message']]]);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$id" of required type "Int!" was not provided.'));
-        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$value" of required type "String!" was not provided.'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$bot_enabled" got invalid value 1; String cannot represent a non string value: 1'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$bot_token" got invalid value 1; String cannot represent a non string value: 1'));
+        $this->assertNotNull(Arr::first($response->json('errors'), fn ($item) => $item['message'] === 'Variable "$chat_id" got invalid value 1; String cannot represent a non string value: 1'));
 
         // Rule errors
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => 999999999, 'value' => Str::random(256)]));
+            ->postJson(
+                route('graphql.installment'),
+                $this->buildGraphQLQuery([
+                    'bot_enabled' => Str::random(256),
+                    'bot_token' => Str::random(256),
+                    'chat_id' => Str::random(256),
+                ])
+            );
         $response->assertOk();
         $response->assertJsonIsObject();
         $response->assertJsonStructure(['errors' => ['*' => ['message']]]);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
-        $this->assertEquals(trans('validation.max.string', ['attribute' => 'value', 'max' => 255]), $response->json('errors.0.extensions.validation.value.0'));
+        $this->assertEquals(trans('validation.max.string', ['attribute' => 'bot enabled', 'max' => 255]), $response->json('errors.0.extensions.validation.bot_enabled.0'));
+        $this->assertEquals(trans('validation.max.string', ['attribute' => 'bot token', 'max' => 255]), $response->json('errors.0.extensions.validation.bot_token.0'));
+        $this->assertEquals(trans('validation.max.string', ['attribute' => 'chat id', 'max' => 255]), $response->json('errors.0.extensions.validation.chat_id.0'));
     }
 
     #[Test]
@@ -102,12 +114,12 @@ class UpdateTelegramBotSettingsGraphQLMutationTest extends GraphQLTestCase
     {
         tenant()->updateOrFail(['status' => CompanyStatusEnum::INACTIVE]);
 
-        $companySettings = CompanySettings::query()->firstWhere('name', CompanySettingsEnum::TELEGRAM_BOT_ENABLED);
-        $variables = ['id' => $companySettings->id, 'value' => (string) ($companySettings->value + 1)];
+        $companySettings = CompanySettings::query()->firstWhere('name', CompanySettingsEnum::TELEGRAM_BOT_TOKEN);
+        $value = 'new-bot-token';
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($variables));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['bot_token' => $value]));
 
         $response->assertOk();
         $this->assertEquals(__('api.inactive_company'), $response->json('errors.0.message'));
@@ -117,8 +129,16 @@ class UpdateTelegramBotSettingsGraphQLMutationTest extends GraphQLTestCase
     {
         return [
             'query' => <<<GRAPHQL
-                mutation UpdateTelegramBotSettings(\$id: Int!, \$value: String!) {
-                    updateTelegramBotSettings(id: \$id, value: \$value) {
+                mutation UpdateTelegramBotSettings(
+                    \$bot_enabled: String
+                    \$bot_token: String
+                    \$chat_id: String
+                ) {
+                    updateTelegramBotSettings(
+                        bot_enabled: \$bot_enabled
+                        bot_token: \$bot_token
+                        chat_id: \$chat_id
+                    ) {
                         {$this->convertIntoQuery($this->_structure)}
                     }
                 }
@@ -127,19 +147,27 @@ class UpdateTelegramBotSettingsGraphQLMutationTest extends GraphQLTestCase
         ];
     }
 
-    private function assertSuccessUpdateTelegramBotSettingsResponse(TestResponse $response, CompanySettings $companySettings, array $variables)
+    private function assertSuccessUpdateTelegramBotSettingsResponse(TestResponse $response, CompanySettings $companySettings, $value)
     {
         $response->assertOk();
         $response->assertJsonIsObject();
-        $response->assertJsonStructure(['data' => ['updateTelegramBotSettings' => $this->_structure]]);
+        $response->assertJsonStructure(['data' => ['updateTelegramBotSettings' => ['*' => $this->_structure]]]);
+
+        $telegramBotSettings = CompanySettings::query()
+            ->whereIn('name', CompanySettingsEnum::telegramBotSettings())
+            ->orderBy('id')
+            ->get();
+        $this->assertEquals($telegramBotSettings->count(), count($response->json('data.updateTelegramBotSettings')));
+
+        foreach ($telegramBotSettings as $index => $item) {
+            $this->assertEquals($item->id, $response->json("data.updateTelegramBotSettings.{$index}.id"));
+            $this->assertEquals($item->name->value, $response->json("data.updateTelegramBotSettings.{$index}.name"));
+            $this->assertEquals($item->name->getLabel(), $response->json("data.updateTelegramBotSettings.{$index}.label"));
+            $this->assertEquals($item->type->value, $response->json("data.updateTelegramBotSettings.{$index}.type"));
+            $this->assertEquals($item->value, $response->json("data.updateTelegramBotSettings.{$index}.value"));
+        }
 
         $companySettings->refresh();
-        $this->assertEquals($variables['value'], $companySettings->value);
-
-        $this->assertEquals($companySettings->id, $response->json('data.updateTelegramBotSettings.id'));
-        $this->assertEquals($companySettings->name->value, $response->json('data.updateTelegramBotSettings.name'));
-        $this->assertEquals($companySettings->name->getLabel(), $response->json('data.updateTelegramBotSettings.label'));
-        $this->assertEquals($companySettings->type->value, $response->json('data.updateTelegramBotSettings.type'));
-        $this->assertEquals($companySettings->value, $response->json('data.updateTelegramBotSettings.value'));
+        $this->assertEquals($value, $companySettings->value);
     }
 }

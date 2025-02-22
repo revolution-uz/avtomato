@@ -86,4 +86,13 @@ abstract class TestCase extends BaseTestCase
             'password' => Hash::make('password'),
         ]);
     }
+
+    public function createEcommerceClientUser(bool $hasCustomer = false): Company\Ecommerce\User
+    {
+        return Company\Ecommerce\User::query()
+            ->when($hasCustomer, fn ($q) => $q->whereHas('customer'))
+            ->firstOr(fn () => $hasCustomer
+                ? Company\Ecommerce\User::factory()->withCustomer()->create()
+                : Company\Ecommerce\User::factory()->create());
+    }
 }

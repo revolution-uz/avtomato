@@ -11,6 +11,9 @@ class Utilities
     const ATMOS_PINFL_CARD_UPDATE_MONTHS = 3; //3 month to update cards
     const ATMOS_PINFL_CARD_UPDATE_REFRESH_DAYS = 5; //5 days to refresh cards
     const QR_PAY_UZS_CURRENCY = 643;
+  
+    const PINFL_CARD_UPDATE_MONTHS = 3; //3 month to update cards
+    const PINFL_CARD_UPDATE_REFRESH_DAYS = 5; //5 days to refresh cards
 
     public static function getTimestampsOfMonthOfThisYear()
     {
@@ -55,5 +58,15 @@ class Utilities
     public static function generateIdByTenancy(int $id): string
     {
         return tenant('id') . self::TENANT_SEPARATOR . $id;
+    }
+
+    public static function isNotAllowedAutoUpdateCards(Carbon $searched_at): bool
+    {
+        return $searched_at >= Carbon::now()->subMonths(self::PINFL_CARD_UPDATE_MONTHS);
+    }
+
+    public static function isNotAllowedRefresheCards(Carbon $searched_at): bool
+    {
+        return $searched_at >= Carbon::now()->subMonths(self::PINFL_CARD_UPDATE_REFRESH_DAYS);
     }
 }

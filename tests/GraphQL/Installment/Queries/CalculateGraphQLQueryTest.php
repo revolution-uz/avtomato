@@ -162,7 +162,7 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'tariff id']), $response->json('errors.0.extensions.validation.tariff_id.0'));
-        $this->assertEquals(trans('validation.date', ['attribute' => 'starts in']), $response->json('errors.0.extensions.validation.starts_in.0'));
+        $this->assertEquals(trans('validation.date_format', ['attribute' => 'starts in', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.starts_in.0'));
     }
 
     #[Test]
@@ -239,11 +239,14 @@ class CalculateGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($this->_input['period'], count($response->json('data.calculate')));
 
         $data = $this->_annualTestData;
-        $periods = InstallmentService::generatePeriods(Carbon::parse($this->_input['starts_in'] ?? now()->format('Y-m-d')), $this->_input['period']);
+        $periods = InstallmentService::generatePeriods(
+            isset($this->_input['starts_in']) ? Carbon::make($this->_input['starts_in']) : null,
+            $this->_input['period']
+        );
 
         for ($i = 0; $i < $this->_input['period']; $i++) {
             $this->assertEquals($i + 1, $response->json("data.calculate.{$i}.id"));
-            $this->assertEquals($periods[$i]?->format('Y-m-d'), $response->json("data.calculate.{$i}.date"));
+            $this->assertEquals($periods[$i]?->timestamp, $response->json("data.calculate.{$i}.date"));
             $this->assertEquals($data[$i]['amount'], $response->json("data.calculate.{$i}.amount"));
             $this->assertEquals($data[$i]['portion'], $response->json("data.calculate.{$i}.portion"));
             $this->assertEquals($data[$i]['monthly'], $response->json("data.calculate.{$i}.monthly"));

@@ -4,6 +4,7 @@ namespace App\Models\Company\Ecommerce;
 
 use App\Enums\Company\OptionTypeEnum;
 use App\Models\Company\OrderBySortable;
+use App\Traits\HasTranslations;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
+ * @property-read string $name
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en
@@ -31,7 +33,7 @@ use Illuminate\Support\Str;
  */
 class ProductOption extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes;
 
     protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'slug', 'description', 'created_at', 'updated_at'];
 
@@ -50,6 +52,8 @@ class ProductOption extends Model
     protected $casts = [
         'type' => OptionTypeEnum::class,
     ];
+
+    protected $translatedColumns = ['name'];
 
     public function setSlugAttribute($value)
     {

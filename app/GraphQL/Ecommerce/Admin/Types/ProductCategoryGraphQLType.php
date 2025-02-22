@@ -25,9 +25,9 @@ class ProductCategoryGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (ProductCategory $root) => $root->id,
             ],
-            'parent_id' => [
-                'type' => Type::int(),
-                'resolve' => fn (ProductCategory $root) => $root->parent_id,
+            'name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (ProductCategory $root) => $root->name,
             ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),
@@ -48,6 +48,10 @@ class ProductCategoryGraphQLType extends GraphQLType
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (ProductCategory $root) => $root->is_active,
+            ],
+            'parent_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (ProductCategory $root) => $root->parent_id,
             ],
             'image_id' => [
                 'type' => Type::int(),

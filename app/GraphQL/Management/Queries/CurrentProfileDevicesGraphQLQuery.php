@@ -5,6 +5,7 @@ namespace App\GraphQL\Management\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\DeviceGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\PersonalAccessToken;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -53,7 +54,10 @@ class CurrentProfileDevicesGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return auth()->user()->tokens()
+        /** @var CompanyAdmin $admin */
+        $admin = auth()->user();
+
+        return $admin->tokens()
             ->when(isset($args['search']), function (Builder $q) use ($args) {
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {

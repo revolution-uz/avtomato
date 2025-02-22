@@ -32,7 +32,7 @@ class Module extends Model
         'name' => ModuleEnum::class,
     ];
 
-    public static function getMultiBranchModule(): ?self
+    public static function getActiveMultiBranchModule(): ?self
     {
         return self::query()
             ->whereIn('name', ModuleEnum::getMultiBranchModules())

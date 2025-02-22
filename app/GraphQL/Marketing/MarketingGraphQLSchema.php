@@ -18,7 +18,7 @@ class MarketingGraphQLSchema implements ConfigConvertible
             'types' => [
                 \App\GraphQL\Marketing\Types\SmsTemplateGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum'],
+            'middleware' => ['auth:company-admin'],
         ];
     }
 }

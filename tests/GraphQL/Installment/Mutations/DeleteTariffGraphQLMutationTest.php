@@ -78,7 +78,7 @@ class DeleteTariffGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('api.not found'), $response->json('errors.0.extensions.validation')['ids.0'][0]);
-        $this->assertEquals(trans('api.are used', ['item' => __('api.Tariff'), 'element' => __('api.Installment')]), $response->json('errors.0.extensions.validation')['ids.1'][0]);
+        $this->assertEquals(trans('api.cannot_delete', ['item' => __('api.Tariff'), 'element' => __('api.Installment')]), $response->json('errors.0.extensions.validation')['ids.1'][0]);
     }
 
     private function buildGraphQLQuery(array $variables = []): array

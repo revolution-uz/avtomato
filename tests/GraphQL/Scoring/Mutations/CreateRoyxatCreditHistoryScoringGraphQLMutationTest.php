@@ -122,12 +122,6 @@ class CreateRoyxatCreditHistoryScoringGraphQLMutationTest extends GraphQLTestCas
                 fn ($item) => $item['message'] === 'Variable "$passport_id" got invalid value 123; String cannot represent a non string value: 123'
             )
         );
-        $this->assertNotNull(
-            Arr::first(
-                $response->json('errors'),
-                fn ($item) => $item['message'] === 'Variable "$pinfl" got invalid value "abc"; abc cannot represent a big integer.'
-            )
-        );
 
         // rule errors
         $response = $this
@@ -171,7 +165,7 @@ class CreateRoyxatCreditHistoryScoringGraphQLMutationTest extends GraphQLTestCas
         $query['query'] = '
             mutation CreateRoyxatCreditHistoryScoring(
                 $passport_id: String
-                $pinfl: BigInteger
+                $pinfl: String
             ) {
                 createRoyxatCreditHistoryScoring(
                     data: { pinfl: $pinfl, passport_id: $passport_id }

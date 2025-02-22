@@ -11,7 +11,6 @@ class InstallmentNplByIncreasingValueGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Installment NPL Percent GraphQL Type',
     ];
 
     public function fields(): array
@@ -19,24 +18,15 @@ class InstallmentNplByIncreasingValueGraphQLType extends GraphQLType
         return [
             'value' => [
                 'type' => Type::nonNull(Type::float()),
-                'description' => 'NPL',
-                'resolve' => function (array $root) {
-                    return $root['value'];
-                },
+                'resolve' => fn (array $root) => $root['value'],
             ],
             'value_of_last_week' => [
                 'type' => Type::nonNull(Type::float()),
-                'description' => 'NPL of Last Week',
-                'resolve' => function (array $root) {
-                    return $root['value_of_last_week'];
-                },
+                'resolve' => fn (array $root) => $root['value_of_last_week'],
             ],
             'value_increasing_percent' => [
                 'type' => Type::nonNull(Type::float()),
-                'description' => 'The percent of increasing of NPL',
-                'resolve' => function (array $root) {
-                    return $root['value_increasing_percent'];
-                },
+                'resolve' => fn (array $root) => $root['value_increasing_percent'],
             ],
         ];
     }

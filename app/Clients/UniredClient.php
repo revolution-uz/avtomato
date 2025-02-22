@@ -8,6 +8,9 @@ use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhoneRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
+use App\DTOs\Unired\Client\UniredClientPinflCardCountDTO;
+use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
+use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
 use App\DTOs\Unired\Client\UniredContractLoanIdDTO;
 use App\DTOs\Unired\Client\UniredCreateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
@@ -62,6 +65,10 @@ class UniredClient extends BaseClient
     const CONTRACT_CREATE = 'contract.create';
     const CONTRACT_DELETE = 'contract.delete';
     const TRANSACTION_GET = 'transaction.get';
+    const CARD_COUNT = 'card.count';
+    const CARD_INFO = 'card.info';
+    const PROCESSING_HUMO_SEARCH = 'processing.humo.search';
+    const PROCESSING_UZCARD_SEARCH = 'processing.uzcard.search';
 
     private string $baseUrl;
     private string $token;
@@ -209,6 +216,36 @@ class UniredClient extends BaseClient
     public function getTransactions(UniredGetPaymentsPaginationRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest(self::TRANSACTION_GET, $params->toArray());
+    }
+
+    public function getPinflCardCounts(string $pinfl): UniredClientPinflCardCountDTO
+    {
+        $response = $this->makeRequest(self::CARD_COUNT, [
+            'pinfl' => [$pinfl],
+        ]);
+        if ($response->isSuccess()) {
+            $result = $response->result;
+            foreach ($result as $pinfl => $item) {
+                return UniredClientPinflCardCountDTO::from($item);
+            }
+        }
+
+        return new UniredClientPinflCardCountDTO(0, 0);
+    }
+
+    public function getCards(UniredClientPinflGetCardRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::CARD_INFO, $params->toArray());
+    }
+
+    public function updateHumoCards(UniredClientPinflCardUpdateRequestDTO $params)
+    {
+        return $this->makeRequest(self::PROCESSING_HUMO_SEARCH, $params->toArray());
+    }
+
+    public function updateUzcardCards(UniredClientPinflCardUpdateRequestDTO $params)
+    {
+        return $this->makeRequest(self::PROCESSING_UZCARD_SEARCH, $params->toArray());
     }
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO

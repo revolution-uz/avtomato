@@ -13,6 +13,7 @@ use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Bus;
+use Laravel\Sanctum\Sanctum;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -80,7 +81,7 @@ class TransactionModelTest extends TestCase
     #[Test]
     public function setsAdminWhenNotGiven(): void
     {
-        auth()->login($this->_admin);
+        Sanctum::actingAs($this->_admin);
         $transaction = new Transaction;
         $transaction->installment_id = $this->_installment->id;
         $transaction->transaction_type_id = $this->_transactionType->id;

@@ -9,6 +9,7 @@ use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +37,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read  CompanyAdmin $admin
  * @property Carbon|null $paid_at
  * @property TransactionStatusEnum $status
+ *
+ * @method static Builder onlySuccess()
  */
 class Transaction extends Model
 {
@@ -146,5 +149,10 @@ class Transaction extends Model
     public function canceled(): void
     {
         $this->updateOrFail(['status' => TransactionStatusEnum::CANCELED]);
+    }
+
+    public function scopeOnlySuccess($query)
+    {
+        return $query->where('status', TransactionStatusEnum::SUCCESS);
     }
 }

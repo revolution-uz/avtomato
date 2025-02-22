@@ -5,6 +5,8 @@ namespace App\GraphQL\Installment\Mutations;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Customer;
+use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -52,7 +54,6 @@ class AttachGuarantorGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-
         $attributes = $args;
         $attributes['any_card_charge'] = false;
 
@@ -65,10 +66,9 @@ class AttachGuarantorGraphQLMutation extends Mutation
             'customer_id' => [
                 'required',
                 'integer',
-                Rule::exists('customers', 'id'),
-                Rule::unique('installment_guarantors', 'customer_id')
-                    ->where('installment_id', $args['installment_id'])
-                    ->whereNull('deleted_at'),
+                Rule::exists(Customer::class, 'id')->whereNull('deleted_at'),
+                Rule::unique(InstallmentGuarantor::class, 'customer_id')->where('installment_id', $args['installment_id'])->whereNull('deleted_at'),
+                fn ($attribute, $value, $fail) => Installment::query()->where('id', $args['installment_id'])->where('customer_id', $value)->doesntExist() ?: $fail(__('Client cannot be attached as a guarantor.')),
             ],
         ];
     }

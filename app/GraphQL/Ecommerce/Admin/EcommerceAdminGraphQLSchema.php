@@ -92,6 +92,7 @@ use App\GraphQL\Ecommerce\Client\Types\UserCartInputGraphQLType;
 use App\GraphQL\Ecommerce\Client\Types\UserGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\InstallmentGraphQLType;
 use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
 use App\GraphQL\Management\Types\PermissionGraphQLType;
@@ -208,8 +209,9 @@ class EcommerceAdminGraphQLSchema implements ConfigConvertible
                 ProductImageInputGraphQLType::class,
                 UpdateProductVariationInputGraphQLType::class,
                 UserCartGraphQLType::class,
+                InstallmentGraphQLType::class,
             ],
-            'middleware' => ['auth:sanctum', 'is_soft_delete_token', 'tenant_logging'],
+            'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'tenant_logging'],
         ];
     }
 }

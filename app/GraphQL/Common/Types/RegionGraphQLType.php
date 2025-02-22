@@ -13,7 +13,6 @@ class RegionGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Region GraphQL Type',
     ];
 
     public function fields(): array
@@ -21,23 +20,31 @@ class RegionGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'ID of region',
-                'resolve' => function (Region $root) {
-                    return $root->id;
-                },
+                'resolve' => fn (Region $root) => $root->id,
             ],
             'name' => [
                 'type' => Type::string(),
-                'description' => 'Name of region',
-                'resolve' => function (Region $root) {
-                    return $root->name;
-                },
+                'resolve' => fn (Region $root) => $root->name,
+            ],
+            'name_uz' => [
+                'type' => Type::string(),
+                'resolve' => fn (Region $root) => $root->name_uz,
+            ],
+            'name_oz' => [
+                'type' => Type::string(),
+                'resolve' => fn (Region $root) => $root->name_oz,
+            ],
+            'name_ru' => [
+                'type' => Type::string(),
+                'resolve' => fn (Region $root) => $root->name_ru,
+            ],
+            'name_en' => [
+                'type' => Type::string(),
+                'resolve' => fn (Region $root) => $root->name_en,
             ],
             'districts' => [
                 'type' => Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(DistrictGraphQLType::GRAPHQL_TYPE_NAME)))),
-                'resolve' => function (Region $root) {
-                    return $root->districts;
-                },
+                'resolve' => fn (Region $root) => $root->districts,
             ],
         ];
     }

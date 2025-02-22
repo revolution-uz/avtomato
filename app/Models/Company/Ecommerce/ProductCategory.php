@@ -3,6 +3,7 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
+use App\Traits\HasTranslations;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,13 +15,14 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
- * @property int|null $parent_id
+ * @property-read string $name
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_en
  * @property string $name_oz
  * @property string $slug
  * @property bool $is_active
+ * @property int|null $parent_id
  * @property int|null $image_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -32,7 +34,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class ProductCategory extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = [
         'id',
@@ -59,6 +61,8 @@ class ProductCategory extends Model
         'is_active',
         'image_id',
     ];
+
+    protected $translatedColumns = ['name'];
 
     public function parent(): BelongsTo
     {

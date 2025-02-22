@@ -44,11 +44,11 @@ class CustomerGraphQLType extends GraphQLType
             ],
             'passport_given_date' => [
                 'type' => Type::string(),
-                'resolve' => fn (Customer $root) => $root->passport_given_date?->format('d-m-Y'),
+                'resolve' => fn (Customer $root) => $root->passport_given_date?->timestamp,
             ],
             'passport_expiration_date' => [
                 'type' => Type::string(),
-                'resolve' => fn (Customer $root) => $root->passport_expiration_date?->format('d-m-Y'),
+                'resolve' => fn (Customer $root) => $root->passport_expiration_date?->timestamp,
             ],
             'passport_given_place' => [
                 'type' => Type::string(),
@@ -72,7 +72,7 @@ class CustomerGraphQLType extends GraphQLType
             ],
             'birth_date' => [
                 'type' => Type::string(),
-                'resolve' => fn (Customer $root) => $root->birth_date?->format('d-m-Y'),
+                'resolve' => fn (Customer $root) => $root->birth_date?->timestamp,
             ],
             'birth_place' => [
                 'type' => Type::string(),
@@ -97,6 +97,10 @@ class CustomerGraphQLType extends GraphQLType
             'cards' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME))),
                 'resolve' => fn (Customer $root) => $root->cards,
+            ],
+            'unired_cards' => [
+                'type' => Type::listOf(GraphQL::type(UniredCardGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Customer $root) => $root->uniredCards,
             ],
             'addresses' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(AddressGraphQLType::GRAPHQL_TYPE_NAME))),

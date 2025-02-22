@@ -59,9 +59,9 @@ class UserGraphQLType extends GraphQLType
                 'type' => Type::listOf(GraphQL::type(UserCartGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (User $root) => $root->carts,
             ],
-            'favorites' => [
+            'favourites' => [
                 'type' => Type::listOf(GraphQL::type(ProductGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (User $root) => $root->favorites,
+                'resolve' => fn (User $root) => $root->favourites,
             ],
         ];
     }

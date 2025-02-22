@@ -22,12 +22,8 @@ class CustomerInputGraphQLType extends InputType
         return [
             'pinfl' => [
                 'name' => 'pinfl',
-                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
-                'rules' => [
-                    'required',
-                    'string',
-                    'digits:14',
-                ],
+                'type' => Type::nonNull(Type::string()),
+                'rules' => 'required|digits:14',
             ],
             'tin' => [
                 'name' => 'tin',
@@ -60,24 +56,18 @@ class CustomerInputGraphQLType extends InputType
             'passport_given_date' => [
                 'name' => 'passport_given_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'date',
-                ],
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'passport_expiration_date' => [
                 'name' => 'passport_expiration_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'date',
-                ],
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'passport_given_place' => [
                 'name' => 'passport_given_place',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => [
-                    'nullable',
+                    'required',
                     'string',
                     'max:128',
                 ],
@@ -86,7 +76,7 @@ class CustomerInputGraphQLType extends InputType
                 'name' => 'passport_citizenship',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => [
-                    'nullable',
+                    'required',
                     'string',
                     'max:32',
                 ],
@@ -121,16 +111,13 @@ class CustomerInputGraphQLType extends InputType
             'birth_date' => [
                 'name' => 'birth_date',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => [
-                    'required',
-                    'date',
-                ],
+                'rules' => 'required|date_format:Y-m-d',
             ],
             'birth_place' => [
                 'name' => 'birth_place',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => [
-                    'nullable',
+                    'required',
                     'string',
                     'max:32',
                 ],

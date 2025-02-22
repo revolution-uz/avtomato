@@ -1,0 +1,23 @@
+name: Merge changes from master to development
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  merge-down:
+    name: Merge changes from master to development
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout master branch
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.COMPOSER_TOKEN }}
+      - name: Merge master -> development
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          message: Merge master into development
+          from_branch: master
+          target_branch: development
+          github_token: ${{ secrets.COMPOSER_TOKEN }}

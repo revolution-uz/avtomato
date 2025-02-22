@@ -59,7 +59,7 @@ class DeleteTariffGraphQLMutation extends Mutation
                         $fail(__('api.not found'));
                     }
                     if (Installment::query()->where('tariff_id', $value)->exists()) {
-                        $fail(__('api.are used', [
+                        $fail(__('api.cannot_delete', [
                             'item' => __('api.Tariff'),
                             'element' => __('api.Installment'),
                         ]));

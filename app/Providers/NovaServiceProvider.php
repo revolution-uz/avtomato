@@ -29,6 +29,7 @@ use Avtomato\TransactionByCompanies\TransactionByCompanies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Laravel\Fortify\Features;
 use Laravel\Nova\Menu\Menu;
 use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
@@ -134,12 +135,27 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     }
 
     /**
+     * Register the configurations for Laravel Fortify.
+     */
+    protected function fortify(): void
+    {
+        Nova::fortify()
+            ->features([
+                Features::updatePasswords(),
+                // Features::emailVerification(),
+                // Features::twoFactorAuthentication(['confirm' => true, 'confirmPassword' => true]),
+            ])
+            ->register();
+    }
+
+    /**
      * Register the Nova routes.
      */
     protected function routes(): void
     {
         Nova::routes()
-            ->withAuthenticationRoutes()
+            ->withAuthenticationRoutes(default: true)
+            ->withPasswordResetRoutes()
             ->register();
     }
 

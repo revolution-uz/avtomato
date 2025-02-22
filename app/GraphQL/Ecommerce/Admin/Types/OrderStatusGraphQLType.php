@@ -24,6 +24,10 @@ class OrderStatusGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (OrderStatus $root) => $root->id,
             ],
+            'name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (OrderStatus $root) => $root->name,
+            ],
             'name_uz' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (OrderStatus $root) => $root->name_uz,

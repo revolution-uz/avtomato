@@ -349,14 +349,14 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($transaction->customer->tin, $response->json('data.singleTransaction.customer.tin'));
         $this->assertEquals($transaction->customer->passport_series, $response->json('data.singleTransaction.customer.passport_series'));
         $this->assertEquals($transaction->customer->passport_number, $response->json('data.singleTransaction.customer.passport_number'));
-        $this->assertEquals($transaction->customer->passport_given_date->format('d-m-Y'), $response->json('data.singleTransaction.customer.passport_given_date'));
-        $this->assertEquals($transaction->customer->passport_expiration_date->format('d-m-Y'), $response->json('data.singleTransaction.customer.passport_expiration_date'));
+        $this->assertEquals($transaction->customer->passport_given_date->timestamp, $response->json('data.singleTransaction.customer.passport_given_date'));
+        $this->assertEquals($transaction->customer->passport_expiration_date->timestamp, $response->json('data.singleTransaction.customer.passport_expiration_date'));
         $this->assertEquals($transaction->customer->passport_given_place, $response->json('data.singleTransaction.customer.passport_given_place'));
         $this->assertEquals($transaction->customer->passport_citizenship, $response->json('data.singleTransaction.customer.passport_citizenship'));
         $this->assertEquals($transaction->customer->first_name, $response->json('data.singleTransaction.customer.first_name'));
         $this->assertEquals($transaction->customer->last_name, $response->json('data.singleTransaction.customer.last_name'));
         $this->assertEquals($transaction->customer->middle_name, $response->json('data.singleTransaction.customer.middle_name'));
-        $this->assertEquals($transaction->customer->birth_date->format('d-m-Y'), $response->json('data.singleTransaction.customer.birth_date'));
+        $this->assertEquals($transaction->customer->birth_date->timestamp, $response->json('data.singleTransaction.customer.birth_date'));
         $this->assertEquals($transaction->customer->birth_place, $response->json('data.singleTransaction.customer.birth_place'));
     }
 

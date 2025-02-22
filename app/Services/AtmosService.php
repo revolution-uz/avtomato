@@ -23,8 +23,8 @@ use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionAttempt;
 use App\Models\Company\TransactionType;
-use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -150,7 +150,7 @@ class AtmosService
 
         $createPayResponseDTO = $this->atmosPinflClient->payCreate($ext_id, $customer, $installment->id, $amount);
         if (! $createPayResponseDTO->isSuccess()) {
-            if ($createPayResponseDTO->isCardNotFound()) {
+            if ($createPayResponseDTO->isCardNotFound() || $createPayResponseDTO->isCardNotSufficientBalance()) {
                 AtmosPinflCardUpdateJob::dispatch($customer->id, (int) $createPayResponseDTO->code);
             }
             $transactionAttempt->failed();
@@ -243,8 +243,8 @@ class AtmosService
         $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
 
         if ($centralCustomer) {
-            if ($centralCustomer->atmos_pinfl_searched_at >= Carbon::now()->subMonths(Utilities::ATMOS_PINFL_CARD_UPDATE_MONTHS)) {
-                if ($atmos_status_code !== AtmosPinflPaymentCode::CARDS_NOT_FOUND->value || $centralCustomer->atmos_pinfl_searched_at >= Carbon::now()->subDays(Utilities::ATMOS_PINFL_CARD_UPDATE_REFRESH_DAYS)) {
+            if (! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->atmos_pinfl_searched_at)) {
+                if ($atmos_status_code !== AtmosPinflPaymentCode::CARDS_NOT_FOUND->value || Utilities::isNotAllowedRefresheCards($centralCustomer->atmos_pinfl_searched_at)) {
                     return true;
                 }
             }

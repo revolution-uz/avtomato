@@ -3,6 +3,7 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Models\Company\OrderBySortable;
+use App\Traits\HasTranslations;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
+ * @property-read string $name
  * @property string $name_uz
  * @property string $name_ru
  * @property string $name_oz
@@ -29,7 +31,7 @@ use Illuminate\Support\Str;
  */
 class ProductBrand extends Model
 {
-    use HasFactory, OrderBySortable, SoftDeletes;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes;
 
     public static array $sortables = ['id', 'name_uz', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'is_active', 'created_at', 'updated_at'];
 
@@ -44,6 +46,8 @@ class ProductBrand extends Model
         'slug',
         'image_id',
     ];
+
+    protected $translatedColumns = ['name'];
 
     public function setSlugAttribute($value)
     {

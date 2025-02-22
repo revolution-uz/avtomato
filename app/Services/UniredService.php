@@ -8,8 +8,11 @@ use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
+use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
+use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
 use App\DTOs\Unired\Client\UniredContractLoanIdDTO;
 use App\DTOs\Unired\Client\UniredCreateClientRequestDTO;
+use App\DTOs\Unired\Client\UniredPinflCardsResponseDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
 use App\DTOs\Unired\Contract\UniredCreateContractRequestDTO;
 use App\DTOs\Unired\Contract\UniredUpdateContractDataRequestDTO;
@@ -20,15 +23,19 @@ use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationResponseDTO;
 use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\FeatureEnum;
+use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
 use App\Http\Requests\UniredPaymentWebhookCallbackRequest;
+use App\Models\CentralCustomer;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
-use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UniredService
 {
@@ -145,6 +152,18 @@ class UniredService
         return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int) ($installment->debtAmount * 100), false);
     }
 
+    public function getCards(Customer $customer): array
+    {
+        $response = $this->uniredClient->getCards(new UniredClientPinflGetCardRequestDTO($customer->pinfl));
+        if ($response->isSuccess()) {
+            $cardDto = UniredPinflCardsResponseDTO::from($response->result);
+
+            return array_merge($cardDto->uzcard->data->toArray(), $cardDto->humo->data->toArray());
+        }
+
+        return [];
+    }
+
     public function switchOnInstallment(Installment $installment): void
     {
         $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int) ($installment->debtAmount * 100), true);
@@ -222,6 +241,53 @@ class UniredService
         $transaction->paid_at = Carbon::parse($request->created_at);
 
         return $transaction->save();
+    }
+
+    public function updatePinflCardsList(Customer $customer): bool
+    {
+        $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
+        $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
+        $is_uzcard_update = ! $response->uzcard || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
+        $is_humo_update = ! $response->humo || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
+
+        if ($centralCustomer) {
+            if (
+                Utilities::isNotAllowedRefresheCards($centralCustomer->unired_uzcard_searched_at)
+                &&
+                Utilities::isNotAllowedRefresheCards($centralCustomer->unired_humo_searched_at)
+            ) {
+                return true;
+            }
+        } else {
+            $centralCustomer = new CentralCustomer;
+            $centralCustomer->pinfl = $customer->pinfl;
+            $centralCustomer->first_name = $customer->first_name;
+            $centralCustomer->last_name = $customer->last_name;
+            $centralCustomer->middle_name = $customer->middle_name;
+        }
+
+        try {
+            if ($is_uzcard_update) {
+                $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+            }
+            if ($is_humo_update) {
+                $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+            }
+            $centralCustomer->unired_uzcard_searched_at = Carbon::now();
+            $centralCustomer->unired_humo_searched_at = Carbon::now();
+
+            return $centralCustomer->save();
+        } catch (Exception $e) {
+            Log::channel('unired-client')->info(
+                'Error updating PINFL cards list',
+                [
+                    'class' => get_called_class(),
+                    'error' => $e->getMessage(),
+                    'pinfl' => $customer->pinfl,
+                ]
+            );
+            throw new GeneralException("Failed to update cards list for PINFL: {$customer->pinfl}");
+        }
     }
 
     private function updateDebitAndSwitchAuto(string $loan_id, int $debit_amount, bool $auto): ?bool

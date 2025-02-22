@@ -12,7 +12,6 @@ class DashboardGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Dashboard GraphQL Type',
     ];
 
     public function fields(): array
@@ -20,24 +19,15 @@ class DashboardGraphQLType extends GraphQLType
         return [
             'installment_amounts' => [
                 'type' => GraphQL::type(InstallmentAmountsGraphQLType::GRAPHQL_TYPE_NAME),
-                'description' => 'Amount of installments',
-                'resolve' => function (array $root) {
-                    return $root['installment_amounts'];
-                },
+                'resolve' => fn (array $root) => $root['installment_amounts'],
             ],
             'installment_info_by_status' => [
                 'type' => Type::listOf(GraphQL::type(InstallmentMonthlyInfoGraphQLType::GRAPHQL_TYPE_NAME)),
-                'description' => 'Chart of Installment monthly statuses',
-                'resolve' => function (array $root) {
-                    return $root['installment_info_by_status'];
-                },
+                'resolve' => fn (array $root) => $root['installment_info_by_status'],
             ],
             'installment_overdues' => [
                 'type' => Type::listOf(GraphQL::type(InstallmentOverdueGraphQLType::GRAPHQL_TYPE_NAME)),
-                'description' => 'Chart of Installment overdues',
-                'resolve' => function (array $root) {
-                    return $root['installment_overdues'];
-                },
+                'resolve' => fn (array $root) => $root['installment_overdues'],
             ],
         ];
     }

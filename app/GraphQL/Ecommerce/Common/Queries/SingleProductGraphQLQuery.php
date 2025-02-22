@@ -29,18 +29,10 @@ class SingleProductGraphQLQuery extends Query
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
-                    Rule::exists('ecommerce_products', 'id')
-                        ->where(function ($query) {
-                            $query->whereNull('deleted_at');
-                        }),
+                    Rule::exists(Product::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
         ];
-    }
-
-    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    {
-        return true;
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
