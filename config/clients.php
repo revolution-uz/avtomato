@@ -65,7 +65,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Sms Fly Client
+    | Sms Clients
     |--------------------------------------------------------------------------
     */
     'sms_fly' => [
@@ -83,5 +83,18 @@ return [
     'royxat' => [
         'base_url' => 'https://new-api.royxat.uz/api',
         'token' => env('ROYXAT_UZ_TOKEN', ''),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Royxat Client
+    |--------------------------------------------------------------------------
+    */
+    'qr_pay' => [
+        'base_url' => 'https://gw.cloudgate.uz/pg/api/v1/jsonrpc',
+        'login' => env('QR_PAY_LOGIN', ''),
+        'password' => env('QR_PAY_PASSWORD', ''),
+        'secret' => env('QR_PAY_SECRET', ''),
+        'validity' => 365,
     ],
 ];

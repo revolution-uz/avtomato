@@ -16,4 +16,5 @@ enum ClientCodeEnum: int
     case SMS_SAYQAL = 9;
     case ROYXAT = 10;
     case UNIRED = 11;
+    case QR_PAY = 12;
 }

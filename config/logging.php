@@ -225,6 +225,13 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 3,
         ],
+
+        'qr-pay-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/qr-pay-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 3,
+        ],
     ],
 
 ];
