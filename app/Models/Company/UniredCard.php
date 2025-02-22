@@ -2,9 +2,12 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\CardStatusEnum;
+use App\Enums\Company\CardTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -20,12 +23,17 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $owner
  * @property string|null $pan
  * @property string|null $phone
+ * @property CardTypeEnum|null $type
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property-read CardStatusEnum $status
+ * @property Customer $customer
  */
 class UniredCard extends Model
 {
-    use HasFactory, TenantConnection;
+    use HasFactory, OrderBySortable, TenantConnection;
+
+    public static array $sortables = ['id', 'pinfl'];
 
     protected $fillable = [
         'customer_id',
@@ -39,9 +47,27 @@ class UniredCard extends Model
         'owner',
         'pan',
         'phone',
+        'type',
     ];
 
     protected $casts = [
         'blocked_at' => 'datetime',
+        'type' => CardTypeEnum::class,
     ];
+
+    public function getStatusAttribute(): CardStatusEnum
+    {
+        if ($this->is_verified && ! $this->is_blocked) {
+            return CardStatusEnum::ACTIVE;
+        } elseif (! $this->is_verified && ! $this->is_blocked) {
+            return CardStatusEnum::INACTIVE;
+        } else {
+            return CardStatusEnum::BLOCKED;
+        }
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

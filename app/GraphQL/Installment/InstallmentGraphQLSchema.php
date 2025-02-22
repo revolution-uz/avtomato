@@ -38,6 +38,7 @@ use App\GraphQL\Installment\Mutations\UpdateTelegramBotSettingsGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionGraphQLMutation;
 use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Queries\CalculateGraphQLQuery;
+use App\GraphQL\Installment\Queries\InstallmentPinflCardsGraphQLQuery;
 use App\GraphQL\Installment\Queries\InstallmentsGraphQLQuery;
 use App\GraphQL\Installment\Queries\SettingsGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleInstallmentGraphQLQuery;
@@ -133,6 +134,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 StatisticsInfoGraphQLQuery::class,
                 StatisticsByBranchesGraphQLQuery::class,
                 TelegramBotSettingsGraphQLQuery::class,
+                InstallmentPinflCardsGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateInstallmentGraphQLMutation::class,
@@ -243,6 +245,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 // unions last
                 ScoringRequestUnionGraphQLType::class,
                 ScoringRequestGraphQLType::class,
+                UniredCardGraphQLType::class,
             ],
             'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'tenant_logging'],
         ];
