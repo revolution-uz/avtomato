@@ -43,7 +43,7 @@ class CompanyQrPayService
         $result = SbpPaymentDTO::from($response->result);
         $transaction->credit = $result->transfer->credit->toArray();
         $transaction->debit = $result->transfer->debit->toArray();
-        $transaction->currency = $result->transfer->currency;
+        $transaction->currency = $result->transfer->currency->toArray();
         $transaction->saveOrFail();
 
         return $result;
