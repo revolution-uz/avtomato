@@ -39,8 +39,9 @@ enum FeatureEnum: string
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
     case UNIRED_PAY = 'unired_pay';
     case ECOMMERCE = 'ecommerce_management';
-    case GENERAL_FEATURE = 'general_feature';
+    case SBP_PAY = 'sbp_pay';
     case TELEGRAM_BOT_FEATURE = 'telegram_bot_feature';
+    case GENERAL_FEATURE = 'general_feature';
 
     public function getDefaultDescription(): ?string
     {
@@ -80,8 +81,9 @@ enum FeatureEnum: string
             self::INSTALLMENT_AUTO_CHARGE => 'Muddatli to\'lovda kartadan avtomatik to\'lov',
             self::INSTALLMENT_AUTO_CHARGE_BY_PINFL => 'Muddatli to\'lovda PINFL orqali avtomatik to\'lov',
             self::ECOMMERCE => 'Internet do\'kon boshqaruvi',
+            self::SBP_PAY => 'SBP QR kodidan foydalangan holda to\'lovlar - Payments using QR code SBP',
+            self::TELEGRAM_BOT_FEATURE => 'Telegram bot orqali xabar yuborish',
             self::GENERAL_FEATURE => 'Umumiy ko\'rishlar uchun',
-            self::TELEGRAM_BOT_FEATURE => 'Telegram bot orqali xabar yuborish'
         };
     }
 
@@ -91,6 +93,7 @@ enum FeatureEnum: string
             self::ATMOS_PINFL_PAY,
             self::ATMOS_CARD_PAY => '{"username": "", "password": "", "store_id": 0, "expires_in": 0, "access_token": "", "token_type": "Bearer"}',
             self::UNIRED_PAY => '{"id" : 0, "name" : "", "merchant_uzcard" : "", "terminal_uzcard" : "", "merchant_humo" : "", "terminal_humo" : "", "phone" : ""}',
+            self::SBP_PAY => '{"username": "", "password": "", "access_token_key": "", "expires_in": 0}',
             self::SCORING_CREDIT_HISTORY,
             self::SCORING_PENSION_INFO,
             self::SCORING_INPS_HISTORY,

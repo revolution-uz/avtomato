@@ -8,6 +8,10 @@ class Utilities
 {
     public const TENANT_SEPARATOR = '_';
 
+    const ATMOS_PINFL_CARD_UPDATE_MONTHS = 3; //3 month to update cards
+    const ATMOS_PINFL_CARD_UPDATE_REFRESH_DAYS = 5; //5 days to refresh cards
+    const QR_PAY_UZS_CURRENCY = 860;
+
     const PINFL_CARD_UPDATE_MONTHS = 3; //3 month to update cards
     const PINFL_CARD_UPDATE_REFRESH_DAYS = 5; //5 days to refresh cards
 

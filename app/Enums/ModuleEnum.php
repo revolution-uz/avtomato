@@ -18,6 +18,7 @@ enum ModuleEnum: string
     case MULTIBRANCH_3 = 'multibranch_3';
     case MULTIBRANCH_4 = 'multibranch_4';
     case ECOMMERCE = 'ecommerce';
+    case SBP_PAY = 'sbp_pay';
 
     /**
      * @return ModuleEnum[]
@@ -32,6 +33,7 @@ enum ModuleEnum: string
             FeatureEnum::SMS => [self::INSTALLMENT, self::MARKETING],
             FeatureEnum::CUSTOMER_MANAGEMENT => [self::INSTALLMENT, self::SCORING],
             FeatureEnum::ECOMMERCE => [self::ECOMMERCE],
+            FeatureEnum::SBP_PAY => [self::SBP_PAY],
             FeatureEnum::CUSTOMER_CARDS_MANAGEMENT,
             FeatureEnum::CALCULATOR_INSTALLMENT,
             FeatureEnum::INSTALLMENT_AUTO_CHARGE,
