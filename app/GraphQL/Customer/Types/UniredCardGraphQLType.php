@@ -37,6 +37,10 @@ class UniredCardGraphQLType extends GraphQLType
                 'type' => Type::string(),
                 'resolve' => fn (UniredCard $root) => $root->pan,
             ],
+            'phone' => [
+                'type' => Type::string(),
+                'resolve' => fn (UniredCard $root) => $root->phone,
+            ],
             'owner' => [
                 'type' => Type::string(),
                 'resolve' => fn (UniredCard $root) => $root->owner,
@@ -52,6 +56,10 @@ class UniredCardGraphQLType extends GraphQLType
             'is_blocked' => [
                 'type' => Type::boolean(),
                 'resolve' => fn (UniredCard $root) => $root->is_blocked,
+            ],
+            'status' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (UniredCard $root) => $root->status->value,
             ],
             'block_reason' => [
                 'type' => Type::string(),

@@ -52,7 +52,7 @@ class CreateOrUpdateCustomerUniredCardsJob implements ShouldBeUniqueUntilProcess
         $customer->uniredCards()->upsert(
             $cards,
             ['uuid'],
-            ['pinfl', 'auto', 'is_verified', 'is_blocked', 'block_reason', 'blocked_at', 'owner', 'pan', 'phone']
+            ['pinfl', 'auto', 'is_verified', 'is_blocked', 'block_reason', 'blocked_at', 'owner', 'pan', 'phone', 'type']
         );
     }
 

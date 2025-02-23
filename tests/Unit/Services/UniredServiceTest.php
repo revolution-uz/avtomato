@@ -145,6 +145,7 @@ class UniredServiceTest extends TestCase
                 'owner' => 'John Doe',
                 'pan' => '860006******6735',
                 'phone' => '',
+                'type' => 1,
             ],
             [
                 'pinfl' => '413109***0086',
@@ -157,6 +158,7 @@ class UniredServiceTest extends TestCase
                 'owner' => 'John Doe',
                 'pan' => '986060******8244',
                 'phone' => '9989939**000',
+                'type' => 2,
             ],
         ]);
     }
