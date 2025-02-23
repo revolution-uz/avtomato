@@ -16,6 +16,8 @@ use Throwable;
 
 class UniredSbpQRPayClient
 {
+    const METHOD_ACCOUNT_LIST = 'account.list';
+
     protected const METHOD_LOGIN = 'login';
 
     private const METHOD_ACCOUNT_CREATE = 'account.create';
@@ -185,6 +187,11 @@ class UniredSbpQRPayClient
         $digest = hash_hmac('sha256', Utils::jsonEncode($data), $this->secret, true);
 
         return base64_encode($digest);
+    }
+
+    public function syncAccounts(): BaseQrPayResponseDTO
+    {
+        return $this->makeRequest(self::METHOD_ACCOUNT_LIST, []);
     }
 
     /**
