@@ -36,10 +36,6 @@ class UserGraphQLType extends GraphQLType
                 'type' => Type::string(),
                 'resolve' => fn (User $root) => $root->last_name,
             ],
-            'avatar' => [
-                'type' => Type::string(),
-                'resolve' => fn (User $root) => $root->avatar,
-            ],
             'birth_date' => [
                 'type' => Type::int(),
                 'resolve' => fn (User $root) => $root->birth_date?->timestamp,

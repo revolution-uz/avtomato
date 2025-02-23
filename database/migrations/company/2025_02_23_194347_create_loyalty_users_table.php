@@ -13,7 +13,6 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('avatar')->nullable();
             $table->date('birth_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
