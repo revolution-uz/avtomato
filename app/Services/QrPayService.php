@@ -9,9 +9,7 @@ use App\Models\SbpAccount;
 
 class QrPayService
 {
-    public function __construct(private UniredSbpQRPayClient $qrPayClient)
-    {
-    }
+    public function __construct(private UniredSbpQRPayClient $qrPayClient) {}
 
     public function addAccount(SbpAccount $sbpAccount): bool
     {
@@ -39,6 +37,7 @@ class QrPayService
 
             return true;
         }
+
         return false;
     }
 
