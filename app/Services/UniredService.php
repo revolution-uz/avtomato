@@ -22,6 +22,7 @@ use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
 use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationResponseDTO;
 use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredResponseDTO;
+use App\Enums\Company\CardTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
@@ -158,7 +159,10 @@ class UniredService
         if ($response->isSuccess()) {
             $cardDto = UniredPinflCardsResponseDTO::from($response->result);
 
-            return array_merge($cardDto->uzcard->data->toArray(), $cardDto->humo->data->toArray());
+            return array_merge(
+                array_map(fn ($card) => $card + ['type' => CardTypeEnum::UZCARD->value], $cardDto->uzcard->data->toArray()),
+                array_map(fn ($card) => $card + ['type' => CardTypeEnum::HUMO->value], $cardDto->humo->data->toArray()),
+            );
         }
 
         return [];
