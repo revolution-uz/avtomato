@@ -19,6 +19,7 @@ enum ModuleEnum: string
     case MULTIBRANCH_4 = 'multibranch_4';
     case ECOMMERCE = 'ecommerce';
     case SBP_PAY = 'sbp_pay';
+    case LOYALTY_PROGRAM = 'loyalty_program';
 
     /**
      * @return ModuleEnum[]

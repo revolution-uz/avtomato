@@ -3,9 +3,9 @@
 namespace App\GraphQL\Ecommerce\Admin\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\Ecommerce\Client\Types\UserGraphQLType;
+use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Ecommerce\User;
+use App\Models\Company\LoyaltyProgram\User;
 use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -43,7 +43,7 @@ class SingleUserGraphQLQuery extends Query
      */
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::USERS_VIEW);
+        return RbacHelper::checkPermission(PermissionEnum::LOYALTY_PROGRAM_USERS_VIEW);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)

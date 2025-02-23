@@ -11,10 +11,12 @@ return new class extends Migration
         Schema::create('loyalty_program_users', function (Blueprint $table) {
             $table->id();
             $table->string('phone')->unique();
-            $table->string('device_id')->nullable();
-            $table->integer('login_attempts')->default(0);
-            $table->rememberToken();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('avatar')->nullable();
+            $table->date('birth_date')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

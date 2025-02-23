@@ -266,6 +266,9 @@ enum PermissionEnum: string
 
     case ECOMMERCE_IMAGE_CREATE = 'ecommerce_images_create';
 
+    case LOYALTY_PROGRAM_USERS_VIEW_ALL = 'loyalty_program_users_view_all';
+    case LOYALTY_PROGRAM_USERS_VIEW = 'loyalty_program_users_view';
+
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
         return match ($permission) {
@@ -464,6 +467,9 @@ enum PermissionEnum: string
             self::DELIVERY_POINT_VIEW_ALL,
             self::ECOMMERCE_IMAGE_CREATE,
 
+            //loyalty program
+            self::LOYALTY_PROGRAM_USERS_VIEW_ALL,
+            self::LOYALTY_PROGRAM_USERS_VIEW,
             // branch related
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
@@ -758,6 +764,11 @@ enum PermissionEnum: string
                 self::DELIVERY_POINT_VIEW_ALL->value,
                 self::ECOMMERCE_IMAGE_CREATE->value,
             ],
+
+            PermissionGroupEnum::LOYALTY_PROGRAM->value => [
+                self::LOYALTY_PROGRAM_USERS_VIEW_ALL->value,
+                self::LOYALTY_PROGRAM_USERS_VIEW->value,
+            ],
         ];
     }
 
@@ -995,6 +1006,9 @@ enum PermissionEnum: string
             self::DELIVERY_POINT_VIEW,
             self::DELIVERY_POINT_VIEW_ALL,
             self::ECOMMERCE_IMAGE_CREATE => FeatureEnum::ECOMMERCE,
+
+            self::LOYALTY_PROGRAM_USERS_VIEW_ALL,
+            self::LOYALTY_PROGRAM_USERS_VIEW => FeatureEnum::LOYALTY_PROGRAM,
         };
     }
 
