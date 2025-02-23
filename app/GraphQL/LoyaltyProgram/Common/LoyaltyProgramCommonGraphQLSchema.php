@@ -1,0 +1,25 @@
+<?php
+
+namespace App\GraphQL\LoyaltyProgram\Common;
+
+use App\GraphQL\LoyaltyProgram\Common\Mutations\LoginGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Common\Mutations\SendOtpGraphQLMutation;
+use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
+
+class LoyaltyProgramCommonGraphQLSchema implements ConfigConvertible
+{
+    public function toConfig(): array
+    {
+        return [
+            'query' => [
+            ],
+            'mutation' => [
+                SendOtpGraphQLMutation::class,
+                LoginGraphQLMutation::class,
+            ],
+            'types' => [
+            ],
+            'middleware' => ['optional_auth:sanctum', 'loyalty_program'],
+        ];
+    }
+}
