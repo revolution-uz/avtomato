@@ -35,6 +35,7 @@ enum ModuleEnum: string
             FeatureEnum::CUSTOMER_MANAGEMENT => [self::INSTALLMENT, self::SCORING],
             FeatureEnum::ECOMMERCE => [self::ECOMMERCE],
             FeatureEnum::SBP_PAY => [self::SBP_PAY],
+            FeatureEnum::LOYALTY_PROGRAM => [self::LOYALTY_PROGRAM],
             FeatureEnum::CUSTOMER_CARDS_MANAGEMENT,
             FeatureEnum::CALCULATOR_INSTALLMENT,
             FeatureEnum::INSTALLMENT_AUTO_CHARGE,
