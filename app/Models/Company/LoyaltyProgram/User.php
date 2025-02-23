@@ -24,6 +24,8 @@ class User extends Model
 {
     use HasApiTokens, HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
 
+    public static array $sortables = ['phone', 'first_name', 'last_name', 'birth_date'];
+
     public $table = 'loyalty_program_users';
 
     protected $fillable = ['phone', 'first_name', 'last_name', 'birth_date'];
