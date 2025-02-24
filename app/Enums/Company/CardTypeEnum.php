@@ -30,4 +30,12 @@ enum CardTypeEnum: int
     {
         return ['9860', '4073', '5555'];
     }
+
+    public static function getAllCasesForDropdown(): array
+    {
+        return [
+            self::UZCARD->value => 'Uzcard',
+            self::HUMO->value => 'Humo',
+        ];
+    }
 }

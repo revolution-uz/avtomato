@@ -20,6 +20,7 @@ use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SbpTransactionResource;
 use App\Nova\Company\SmsTemplateResource;
+use App\Nova\Company\UniredCardResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
@@ -67,6 +68,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(SmsTemplateResource::class),
                         MenuItem::resource(InstallmentResource::class),
                         MenuItem::resource(SbpTransactionResource::class),
+                        MenuItem::resource(UniredCardResource::class),
                     ])->collapsable(),
                 ];
             }
