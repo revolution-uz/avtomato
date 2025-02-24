@@ -8,7 +8,7 @@ use Spatie\LaravelData\Data;
 class AtmosTransactionCreateResponseDTO extends Data
 {
     public function __construct(
-        public string $code,
+        public ?string $code,
         public ?string $description,
         public ?string $message,
         public ?AtmosTransactionCreatePayloadDTO $payload
@@ -22,10 +22,5 @@ class AtmosTransactionCreateResponseDTO extends Data
     public function isCardNotFound()
     {
         return (int) $this->code == AtmosPinflPaymentCode::CARDS_NOT_FOUND->value;
-    }
-
-    public function isCardNotSufficientBalance()
-    {
-        return (int) $this->code == AtmosPinflPaymentCode::NO_CARDS_WITH_BALANCE->value || (int) $this->code == AtmosPinflPaymentCode::CARDS_BALANCE_UNAVAILABLE->value;
     }
 }
