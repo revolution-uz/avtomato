@@ -41,6 +41,10 @@ class UniredCardGraphQLType extends GraphQLType
                 'type' => Type::string(),
                 'resolve' => fn (UniredCard $root) => $root->phone,
             ],
+            'type' => [
+                'type' => Type::int(),
+                'resolve' => fn (UniredCard $root) => $root->type?->value,
+            ],
             'owner' => [
                 'type' => Type::string(),
                 'resolve' => fn (UniredCard $root) => $root->owner,

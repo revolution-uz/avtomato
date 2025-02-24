@@ -22,6 +22,7 @@ class InstallmentPinflCardsGraphQLQueryTest extends GraphQLTestCase
         'uuid',
         'pan',
         'phone',
+        'type',
         'owner',
         'auto',
         'is_verified',
