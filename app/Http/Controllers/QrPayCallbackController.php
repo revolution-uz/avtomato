@@ -8,7 +8,7 @@ use App\Models\Company;
 use App\Models\Company\SbpTransaction;
 use App\Services\CompanyQrPayService;
 
-class SbpCallbackController extends Controller
+class QrPayCallbackController extends Controller
 {
     public function __construct(
         private readonly CompanyQrPayService $qrPayService

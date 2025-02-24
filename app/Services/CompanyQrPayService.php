@@ -33,7 +33,8 @@ class CompanyQrPayService
                 $transaction->ext_id,
                 $transaction->amount * 100,
                 $terminal->terminal_id,
-                'https://api.avtomato.uz/qr-pay/callback/' . $transaction->ext_id
+                'https://api.avtomato.uz/qr-pay/callback/' . $transaction->ext_id,
+                $terminal->purpose_code
             )
         );
         if (! $response->isSuccess()) {
