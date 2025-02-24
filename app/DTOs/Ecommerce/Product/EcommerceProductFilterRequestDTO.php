@@ -3,8 +3,6 @@
 namespace App\DTOs\Ecommerce\Product;
 
 use App\DTOs\Ecommerce\Base\BaseEcommerceDTO;
-use Spatie\LaravelData\Attributes\DataCollectionOf;
-use Spatie\LaravelData\DataCollection;
 
 /**
  * Class EcommerceProductFilterRequestDTO
@@ -13,6 +11,7 @@ use Spatie\LaravelData\DataCollection;
  * @property int|null $brand_id
  * @property float|null $min_price
  * @property float|null $max_price
+ * @property array|null $option_values
  */
 class EcommerceProductFilterRequestDTO extends BaseEcommerceDTO
 {
@@ -21,12 +20,11 @@ class EcommerceProductFilterRequestDTO extends BaseEcommerceDTO
         public ?int $brand_id,
         public ?float $min_price,
         public ?float $max_price,
-        #[DataCollectionOf(EcommerceProductFilterOptionRequestDTO::class)]
-        public ?DataCollection $options,
+        public ?array $option_values,
     ) {}
 
     public function isFilterableOption(): bool
     {
-        return $this->options != null && count($this->options) > 0;
+        return is_array($this->option_values) && count($this->option_values) > 0;
     }
 }

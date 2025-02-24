@@ -3,7 +3,6 @@
 namespace App\Services\Ecommerce;
 
 use App\DTOs\Ecommerce\Base\BaseEcommerceFilterRequestDTO;
-use App\DTOs\Ecommerce\Product\EcommerceProductFilterOptionRequestDTO;
 use App\DTOs\Ecommerce\Product\EcommerceProductFilterRequestDTO;
 use App\Models\Company\Ecommerce\EcommerceImage;
 use App\Models\Company\Ecommerce\Product;
@@ -40,50 +39,28 @@ class ProductService
                     });
                 }
             });
+
         if ($productFilterRequestDTO !== null) {
             $query
-                ->when(isset($productFilterRequestDTO->category_id), function (Builder $q) use ($productFilterRequestDTO) {
-                    $q->where(function (Builder $query) use ($productFilterRequestDTO) {
-                        $query->where('category_id', $productFilterRequestDTO->category_id);
-                    });
-                })
-                ->when(isset($productFilterRequestDTO->brand_id), function (Builder $q) use ($productFilterRequestDTO) {
-                    $q->where(function (Builder $query) use ($productFilterRequestDTO) {
-                        $query->where('brand_id', $productFilterRequestDTO->brand_id);
-                    });
-                })
-                ->when(isset($productFilterRequestDTO->min_price), function (Builder $q) use ($productFilterRequestDTO) {
-                    $q->where(function (Builder $query) use ($productFilterRequestDTO) {
-                        $query->where('actual_price', '>=', $productFilterRequestDTO->min_price);
-                    });
-                })
-                ->when(isset($productFilterRequestDTO->max_price), function (Builder $q) use ($productFilterRequestDTO) {
-                    $q->where(function (Builder $query) use ($productFilterRequestDTO) {
-                        $query->where('actual_price', '<=', $productFilterRequestDTO->max_price);
-                    });
-                });
-            if ($productFilterRequestDTO->isFilterableOption()) {
-                $query->join('ecommerce_product_join_options', 'products.id', '=', 'ecommerce_product_join_options.product_id');
-                foreach ($productFilterRequestDTO->options as $option) {
-                    /** @var EcommerceProductFilterOptionRequestDTO $option */
-                    $query
-                        ->when(isset($option->option_id) && isset($option->value_id), function (Builder $q) use ($option) {
-                            $q->where(function (Builder $query) use ($option) {
-                                $query
-                                    ->where('ecommerce_product_join_options.option_id', $option->option_id)
-                                    ->where('ecommerce_product_join_options.value_id', $option->value_id);
-                            });
-                        });
-                }
-                $query->select('products.*');
-            }
+                ->when(isset($productFilterRequestDTO->category_id), fn (Builder $q) => $q
+                    ->where('category_id', $productFilterRequestDTO->category_id))
+                ->when(isset($productFilterRequestDTO->brand_id), fn (Builder $q) => $q
+                    ->where('brand_id', $productFilterRequestDTO->brand_id))
+                ->when(isset($productFilterRequestDTO->min_price), fn (Builder $q) => $q
+                    ->where('actual_price', '>=', $productFilterRequestDTO->min_price))
+                ->when(isset($productFilterRequestDTO->max_price), fn (Builder $q) => $q
+                    ->where('actual_price', '<=', $productFilterRequestDTO->max_price))
+                ->when($productFilterRequestDTO->isFilterableOption(), fn (Builder $q) => $q
+                    ->whereHas('values', fn (Builder $q) => $q
+                        ->whereIn('ecommerce_product_option_values.id', $productFilterRequestDTO->option_values)));
         }
 
-        return $query->when(
-            isset($ecommerceFilterRequestDTO->sort),
-            fn (Builder|Product $q) => $q->orderBySortable($ecommerceFilterRequestDTO->sort),
-            fn (Builder|Product $q) => $q->orderByDesc('products.id')
-        )
+        return $query
+            ->when(
+                isset($ecommerceFilterRequestDTO->sort),
+                fn (Builder|Product $q) => $q->orderBySortable($ecommerceFilterRequestDTO->sort),
+                fn (Builder|Product $q) => $q->orderByDesc('id')
+            )
             ->paginate(perPage: $ecommerceFilterRequestDTO->per_page ?? 10, page: $ecommerceFilterRequestDTO->page ?? 1);
     }
 }

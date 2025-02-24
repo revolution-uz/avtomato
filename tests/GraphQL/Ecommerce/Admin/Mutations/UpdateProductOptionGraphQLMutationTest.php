@@ -3,7 +3,6 @@
 namespace Tests\GraphQL\Ecommerce\Admin\Mutations;
 
 use App\Enums\Company\CompanyStatusEnum;
-use App\Enums\Company\OptionTypeEnum;
 use App\Models\Company\Ecommerce\ProductCategory;
 use App\Models\Company\Ecommerce\ProductOption;
 use Illuminate\Support\Arr;
@@ -290,7 +289,6 @@ class UpdateProductOptionGraphQLMutationTest extends GraphQLTestCase
                 'name_ru' => Str::random(255),
                 'name_en' => Str::random(255),
                 'name_oz' => Str::random(255),
-                'type' => OptionTypeEnum::randomValue(),
                 'description' => Str::random(255),
                 'categories' => ! $isRequired ? [
                     ProductCategory::factory()->create()->id,
