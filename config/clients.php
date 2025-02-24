@@ -95,6 +95,7 @@ return [
         'login' => env('QR_PAY_LOGIN', ''),
         'password' => env('QR_PAY_PASSWORD', ''),
         'secret' => env('QR_PAY_SECRET', ''),
+        'callback-token' => env('QR_PAY_CALLBACK_TOKEN', ''),
         'validity' => 365,
     ],
 ];

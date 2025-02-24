@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\QrPayCallbackController;
 use App\Http\Controllers\SayqalController;
 use App\Http\Controllers\UniredController;
 use Illuminate\Http\Request;
@@ -27,4 +28,7 @@ Route::middleware('auth.unired')->prefix('unired-callback')->controller(UniredCo
     Route::post('web-hook', 'webHook')->name('uniredCallback.webHook');
     Route::get('check-payment', 'checkPayment')->name('uniredCallback.checkPayment');
     Route::post('send-sms', 'sendSms')->name('uniredCallback.sendSms');
+});
+Route::middleware('auth.qr-pay')->prefix('qr-pay')->controller(QrPayCallbackController::class)->group(function () {
+    Route::post('web-hook', 'webHook')->name('qrPayCallback.webHook');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\SbpSyncAccountsAction;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -29,7 +30,7 @@ class SbpAccountResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'company_id', 'terminal_id', 'account_number', 'mfo', 'inn', 'company_name', 'status',
+        'id', 'company_id', 'terminal_id', 'account_number', 'mfo', 'inn', 'purpose_code', 'company_name', 'status',
     ];
 
     /**
@@ -60,6 +61,10 @@ class SbpAccountResource extends Resource
                 ->rules('nullable', 'max:5'),
 
             Text::make('Inn')
+                ->sortable()
+                ->rules('nullable', 'max:9'),
+
+            Text::make('Purpose Code')
                 ->sortable()
                 ->rules('nullable', 'max:9'),
 
@@ -112,6 +117,8 @@ class SbpAccountResource extends Resource
      */
     public function actions(NovaRequest $request)
     {
-        return [];
+        return [
+            (new SbpSyncAccountsAction)->standalone(),
+        ];
     }
 }

@@ -11,14 +11,34 @@ class QrPayService
 {
     public function __construct(private UniredSbpQRPayClient $qrPayClient) {}
 
-    public function addAccount(SbpAccount $terminal): bool
+    public function addAccount(SbpAccount $sbpAccount): bool
     {
-        $sbpResponseDto = $this->qrPayClient->createAccount(new SbpCreateAccountRequestDTO($terminal->account_number, $terminal->mfo, $terminal->inn, $terminal->company_name));
-        $terminalDto = SbpAccountResponseDTO::from($sbpResponseDto->result);
-        $terminal->terminal_id = $terminalDto->id;
-        $terminal->status = $terminalDto->status;
+        $sbpResponseDto = $this->qrPayClient->createAccount(new SbpCreateAccountRequestDTO($sbpAccount->account_number, $sbpAccount->mfo, $sbpAccount->inn, $sbpAccount->company_name));
+        if ($sbpResponseDto->isSuccess()) {
+            $this->updateAccount($sbpAccount, SbpAccountResponseDTO::from($sbpResponseDto->result));
+        }
 
-        return $terminal->saveOrFail();
+        return false;
+    }
+
+    public function syncAccounts(): bool
+    {
+        $accounts = $this->qrPayClient->syncAccounts();
+        if ($accounts->isSuccess()) {
+            foreach ($accounts->result as $account) {
+                $sbpAccount = SbpAccount::query()->where('terminal_id', $account->id)->first();
+                if ($sbpAccount) {
+                    $this->updateAccount($sbpAccount, SbpAccountResponseDTO::from($account));
+                } else {
+                    $sbpAccount = new SbpAccount;
+                    $this->updateAccount($sbpAccount, SbpAccountResponseDTO::from($account));
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     public function deleteAccount(SbpAccount $terminal)
@@ -28,5 +48,13 @@ class QrPayService
         $terminal->status = $terminalDto->status;
 
         return $terminal->saveOrFail();
+    }
+
+    private function updateAccount(SbpAccount $sbpAccount, SbpAccountResponseDTO $responseAccount)
+    {
+        $sbpAccount->terminal_id = $responseAccount->id;
+        $sbpAccount->status = $responseAccount->status;
+
+        return $sbpAccount->saveOrFail();
     }
 }
