@@ -2,8 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Common\Mutations;
 
-use App\Enums\Company\CustomerTypeEnum;
-use App\Models\Company\Ecommerce\User;
+use App\Models\Company\LoyaltyProgram\User;
 use App\Rules\PhoneRule;
 use App\Services\ConfirmationService;
 use GraphQL\Error\Error;
@@ -53,10 +52,6 @@ class LoginGraphQLMutation extends Mutation
         }
 
         $user = User::query()->firstOrCreate(['phone' => $args['phone']]);
-
-        if (! $user->customer) {
-            $user->customer()->create(['type' => CustomerTypeEnum::ECOMMERCE]);
-        }
 
         return $user->createTokenWithData(
             Str::substr(request()->header('Device-Name'), 0, 255),
