@@ -18,6 +18,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property float $amount
  * @property array|null $credit
  * @property array|null $debit
+ * @property array|null $sender
+ * @property array|null $receiver
  * @property float|null $currency
  * @property Carbon|null $payment_updated_at
  * @property Carbon $created_at
@@ -35,6 +37,8 @@ class SbpTransaction extends Model
         'amount',
         'credit',
         'debit',
+        'sender',
+        'receiver',
         'currency',
         'payment_updated_at',
     ];
@@ -43,6 +47,8 @@ class SbpTransaction extends Model
         'amount' => 'decimal:30',
         'credit' => 'array',
         'debit' => 'array',
+        'sender' => 'array',
+        'receiver' => 'array',
         'status' => TransactionAttemptStatusEnum::class,
         'payment_updated_at' => 'datetime',
     ];

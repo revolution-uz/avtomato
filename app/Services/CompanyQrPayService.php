@@ -11,6 +11,7 @@ use App\Exceptions\UniredException;
 use App\Helpers\Utilities;
 use App\Models\Company\SbpTransaction;
 use App\Models\SbpAccount;
+use Carbon\Carbon;
 
 class CompanyQrPayService
 {
@@ -45,6 +46,8 @@ class CompanyQrPayService
         $transaction->credit = $result->transfer->credit->toArray();
         $transaction->debit = $result->transfer->debit->toArray();
         $transaction->currency = $result->transfer->currency->rate;
+        $transaction->sender = $result->transfer->sender->toArray();
+        $transaction->receiver = $result->transfer->receiver->toArray();
         $transaction->saveOrFail();
 
         return $result;
@@ -55,7 +58,7 @@ class CompanyQrPayService
         $transaction = SbpTransaction::query()->where('ext_id', $payment->credit->ext_id)->first();
         $transaction->updateOrFail($payment->toArray());
         if ($payment->credit->isSuccess() && $payment->debit->isSuccess()) {
-            $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::SUCCESS]);
+            $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::SUCCESS, 'payment_updated_at' => Carbon::now()]);
         }
         if ($payment->credit->isSuccess()) {
             $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::IN_PROGRESS]);
