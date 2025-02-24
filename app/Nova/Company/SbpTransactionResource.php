@@ -81,6 +81,8 @@ class SbpTransactionResource extends Resource
                 ->rules('required', 'max:20'),
             Code::make('Credit')->json(),
             Code::make('Debit')->json(),
+            Code::make('Sender')->json(),
+            Code::make('Receiver')->json(),
             Number::make('Currency'),
             DateTime::make('Created At'),
             DateTime::make('Payment Updated At'),
