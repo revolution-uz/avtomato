@@ -2,6 +2,7 @@
 
 namespace App\Nova\Company;
 
+use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Models\Company\SbpTransaction;
 use App\Nova\Actions\SbpTransactionAmountAction;
 use App\Nova\Actions\SbpTransactionRefreshAction;
@@ -11,6 +12,7 @@ use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -79,6 +81,7 @@ class SbpTransactionResource extends Resource
             Text::make('Amount')
                 ->sortable()
                 ->rules('required', 'max:20'),
+            Select::make('status')->options(TransactionAttemptStatusEnum::options())->displayUsingLabels()->exceptOnForms(),
             Code::make('Credit')->json(),
             Code::make('Debit')->json(),
             Code::make('Sender')->json(),
