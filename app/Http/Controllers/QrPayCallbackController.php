@@ -19,9 +19,9 @@ class QrPayCallbackController extends Controller
         $requestDto = SbpPaymentDTO::from($request->toArray());
         if ($companyId = $requestDto->transfer->credit->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
-            $transaction = SbpTransaction::query()->where('ext_id', $requestDto->transfer->credit->ext_id);
+            $transaction = SbpTransaction::query()->where('ext_id', $requestDto->transfer->credit->ext_id)->first();
             if ($transaction !== null) {
-                if ($this->qrPayService->updatePaymentByCallback($requestDto->transfer)) {
+                if ($this->qrPayService->updatePaymentByCallback($transaction, $requestDto->transfer)) {
                     return response()->json(['success' => true, 'message' => 'OK']);
                 }
             }
