@@ -33,4 +33,14 @@ class SbpPaymentCreditDTO extends BaseQrPayDTO
     {
         return $this->state == UniredPaymentCreditState::SUCCESS->value;
     }
+
+    public function isFailed(): bool
+    {
+        return $this->state == UniredPaymentCreditState::UNKNOWN_ERROR->value;
+    }
+
+    public function isCancelled(): bool
+    {
+        return $this->state == UniredPaymentCreditState::CANCELLED->value;
+    }
 }

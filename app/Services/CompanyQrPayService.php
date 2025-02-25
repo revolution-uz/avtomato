@@ -17,7 +17,7 @@ class CompanyQrPayService
 {
     public function __construct(private UniredSbpQRPayClient $qrPayClient) {}
 
-    public function createPayment(float $amount): SbpPaymentDTO
+    public function createPayment(float $amount): SbpPaymentResponseDTO
     {
         $terminal = SbpAccount::query()->where('company_id', tenant('id'))->first();
         $transaction = new SbpTransaction;
@@ -42,28 +42,32 @@ class CompanyQrPayService
             $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::FAILED]);
             throw new UniredException('Failed to create cheque: ' . $response->error->message);
         }
-        $result = SbpPaymentDTO::from($response->result);
-        $transaction->credit = $result->transfer->credit->toArray();
-        $transaction->debit = $result->transfer->debit->toArray();
-        $transaction->currency = $result->transfer->currency->rate;
-        $transaction->sender = $result->transfer->sender->toArray();
-        $transaction->receiver = $result->transfer->receiver->toArray();
-        $transaction->saveOrFail();
 
-        return $result;
+        return $this->updatePaymentByCallback($transaction, SbpPaymentDTO::from($response->result)->transfer);
     }
 
     public function updatePaymentByCallback(SbpTransaction $transaction, SbpPaymentResponseDTO $payment)
     {
-        $transaction->updateOrFail($payment->toArray());
+        $transaction->credit = $payment->credit->toArray();
+        $transaction->debit = $payment->debit->toArray();
+        $transaction->currency = $payment->currency->rate;
+        $transaction->sender = $payment->sender->toArray();
+        $transaction->receiver = $payment->receiver->toArray();
+
         if ($payment->credit->isSuccess() && $payment->debit->isSuccess()) {
-            $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::SUCCESS, 'payment_updated_at' => Carbon::now()]);
-        }
-        if ($payment->credit->isSuccess()) {
-            $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::IN_PROGRESS]);
+            $transaction->status = TransactionAttemptStatusEnum::SUCCESS;
+            $transaction->payment_updated_at = Carbon::now();
+        } elseif ($payment->credit->isSuccess()) {
+            $transaction->status = TransactionAttemptStatusEnum::IN_PROGRESS;
+        } elseif ($payment->credit->isCancelled() || $payment->debit->isCancelled()) {
+            $transaction->status = TransactionAttemptStatusEnum::REFUND;
+        } elseif ($payment->credit->isFailed()) {
+            $transaction->status = TransactionAttemptStatusEnum::FAILED;
         }
 
-        return $transaction;
+        $transaction->saveOrFail();
+
+        return $payment;
     }
 
     public function statePayment(string $ext_id)
