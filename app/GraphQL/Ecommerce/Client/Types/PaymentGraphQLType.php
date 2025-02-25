@@ -41,7 +41,7 @@ class PaymentGraphQLType extends GraphQLType
                 'resolve' => fn (Payment $root) => $root->paid_at?->timestamp,
             ],
             'external_id' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Payment $root) => $root->external_id,
             ],
             'order_id' => [

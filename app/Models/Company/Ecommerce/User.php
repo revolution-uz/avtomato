@@ -29,6 +29,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Order[]|Collection<int, Order> $orders
  * @property Customer|null $customer
  * @property Address[]|Collection<int, Address> $addresses
+ * @property Payment[] $payments
  */
 class User extends Authenticatable
 {
@@ -74,5 +75,10 @@ class User extends Authenticatable
     public function addresses(): MorphMany
     {
         return $this->morphMany(Address::class, 'addressable');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 }
