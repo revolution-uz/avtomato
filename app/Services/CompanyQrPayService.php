@@ -53,9 +53,8 @@ class CompanyQrPayService
         return $result;
     }
 
-    public function updatePaymentByCallback(SbpPaymentResponseDTO $payment)
+    public function updatePaymentByCallback(SbpTransaction $transaction, SbpPaymentResponseDTO $payment)
     {
-        $transaction = SbpTransaction::query()->where('ext_id', $payment->credit->ext_id)->first();
         $transaction->updateOrFail($payment->toArray());
         if ($payment->credit->isSuccess() && $payment->debit->isSuccess()) {
             $transaction->updateOrFail(['status' => TransactionAttemptStatusEnum::SUCCESS, 'payment_updated_at' => Carbon::now()]);
@@ -69,9 +68,10 @@ class CompanyQrPayService
 
     public function statePayment(string $ext_id)
     {
-        if (SbpTransaction::query()->where('ext_id', $ext_id)->exists()) {
+        $transaction = SbpTransaction::query()->where('ext_id', $ext_id)->first();
+        if ($transaction != null) {
             $response = SbpPaymentDTO::from($this->qrPayClient->stateTransfer($ext_id)->result);
-            $this->updatePaymentByCallback($response->transfer);
+            $this->updatePaymentByCallback($transaction, $response->transfer);
         }
 
         return null;
