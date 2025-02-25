@@ -6,9 +6,10 @@ use App\Exceptions\GeneralException;
 use App\GraphQL\Ecommerce\Client\Types\PaymentGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\Ecommerce\Order;
-use App\Models\Company\Ecommerce\Payment;
 use App\Services\Ecommerce\OrderService;
+use Closure;
 use GraphQL\Error\Error;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -52,7 +53,7 @@ class PayForOrderGraphQLMutation extends Mutation
         return Type::nonNull(GraphQL::type(PaymentGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
-    public function resolve(array $args): Payment
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         try {
             return $this->_orderService->payForOrder(Order::query()->find($args['order_id']), $args);
