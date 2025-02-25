@@ -2,7 +2,6 @@
 
 namespace App\Models\Company\Ecommerce;
 
-use App\Enums\Company\OptionTypeEnum;
 use App\Models\Company\OrderBySortable;
 use App\Traits\HasTranslations;
 use Carbon\Carbon;
@@ -23,7 +22,6 @@ use Illuminate\Support\Str;
  * @property string $name_oz
  * @property string $slug
  * @property string $description
- * @property OptionTypeEnum $type
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -46,11 +44,6 @@ class ProductOption extends Model
         'name_oz',
         'slug',
         'description',
-        'type',
-    ];
-
-    protected $casts = [
-        'type' => OptionTypeEnum::class,
     ];
 
     protected $translatedColumns = ['name'];

@@ -34,7 +34,6 @@ use App\GraphQL\Ecommerce\Common\Queries\SingleProductBrandGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\SingleProductCategoryGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Queries\SingleProductGraphQLQuery;
 use App\GraphQL\Ecommerce\Common\Types\ProductFilterInputGraphQLType;
-use App\GraphQL\Ecommerce\Common\Types\ProductOptionFilterInputGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class EcommerceCommonGraphQLSchema implements ConfigConvertible
@@ -78,7 +77,6 @@ class EcommerceCommonGraphQLSchema implements ConfigConvertible
                 MahallaGraphQLType::class,
                 RegionGraphQLType::class,
                 ProductFilterInputGraphQLType::class,
-                ProductOptionFilterInputGraphQLType::class,
                 DeliveryPointGraphQLType::class,
             ],
             'middleware' => ['optional_auth:sanctum', 'ecommerce'],

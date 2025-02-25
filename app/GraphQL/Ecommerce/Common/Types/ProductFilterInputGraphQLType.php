@@ -2,8 +2,10 @@
 
 namespace App\GraphQL\Ecommerce\Common\Types;
 
+use App\Models\Company\Ecommerce\ProductBrand;
+use App\Models\Company\Ecommerce\ProductCategory;
 use GraphQL\Type\Definition\Type;
-use Rebing\GraphQL\Support\Facades\GraphQL;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\InputType;
 
 class ProductFilterInputGraphQLType extends InputType
@@ -22,39 +24,30 @@ class ProductFilterInputGraphQLType extends InputType
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:ecommerce_product_categories,id',
+                    Rule::exists(ProductCategory::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
             'brand_id' => [
-                'name' => 'product_brand_id',
+                'name' => 'brand_id',
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
-                    'exists:ecommerce_product_brands,id',
+                    Rule::exists(ProductBrand::class, 'id')->whereNull('deleted_at'),
                 ],
             ],
             'min_price' => [
                 'name' => 'min_price',
                 'type' => Type::float(),
-                'rules' => [
-                    'nullable',
-                    'numeric',
-                ],
+                'rules' => 'nullable|numeric',
             ],
             'max_price' => [
                 'name' => 'max_price',
                 'type' => Type::float(),
-                'rules' => [
-                    'nullable',
-                    'numeric',
-                ],
+                'rules' => 'nullable|numeric',
             ],
-            'options' => [
-                'name' => 'options',
-                'type' => Type::listOf(GraphQL::type(ProductOptionFilterInputGraphQLType::GRAPHQL_TYPE_NAME)),
-                'rules' => [
-                    'nullable',
-                ],
+            'option_values' => [
+                'name' => 'option_values',
+                'type' => Type::listOf(Type::nonNull(Type::int())),
             ],
         ];
     }

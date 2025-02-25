@@ -2,7 +2,6 @@
 
 namespace Database\Factories\Company\Ecommerce;
 
-use App\Enums\Company\OptionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -19,7 +18,6 @@ class ProductOptionFactory extends Factory
             'name_oz' => $this->faker->word,
             'slug' => Str::slug($nameEn),
             'description' => $this->faker->word,
-            'type' => OptionTypeEnum::randomValue(),
         ];
     }
 }

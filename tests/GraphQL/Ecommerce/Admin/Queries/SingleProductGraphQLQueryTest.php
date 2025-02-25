@@ -79,7 +79,6 @@ class SingleProductGraphQLQueryTest extends GraphQLTestCase
                 'name_en',
                 'name_oz',
                 'slug',
-                'type',
                 'description',
                 'created_at',
                 'updated_at',
@@ -126,7 +125,6 @@ class SingleProductGraphQLQueryTest extends GraphQLTestCase
                             'name_en',
                             'name_oz',
                             'slug',
-                            'type',
                             'description',
                             'created_at',
                             'updated_at',
@@ -289,7 +287,6 @@ class SingleProductGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($product->options[0]->name_en, $response->json('data.singleProduct.options.0.name_en'));
         $this->assertEquals($product->options[0]->name_oz, $response->json('data.singleProduct.options.0.name_oz'));
         $this->assertEquals($product->options[0]->slug, $response->json('data.singleProduct.options.0.slug'));
-        $this->assertEquals($product->options[0]->type->value, $response->json('data.singleProduct.options.0.type'));
         $this->assertEquals($product->options[0]->description, $response->json('data.singleProduct.options.0.description'));
         $this->assertEquals($product->options[0]->created_at->timestamp, $response->json('data.singleProduct.options.0.created_at'));
         $this->assertEquals($product->options[0]->updated_at->timestamp, $response->json('data.singleProduct.options.0.updated_at'));
@@ -340,7 +337,6 @@ class SingleProductGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($value->option->name_en, $response->json('data.singleProduct.variations.0.option_values.0.option.name_en'));
         $this->assertEquals($value->option->name_oz, $response->json('data.singleProduct.variations.0.option_values.0.option.name_oz'));
         $this->assertEquals($value->option->slug, $response->json('data.singleProduct.variations.0.option_values.0.option.slug'));
-        $this->assertEquals($value->option->type->value, $response->json('data.singleProduct.variations.0.option_values.0.option.type'));
         $this->assertEquals($value->option->description, $response->json('data.singleProduct.variations.0.option_values.0.option.description'));
         $this->assertEquals($value->option->created_at->timestamp, $response->json('data.singleProduct.variations.0.option_values.0.option.created_at'));
         $this->assertEquals($value->option->updated_at->timestamp, $response->json('data.singleProduct.variations.0.option_values.0.option.updated_at'));

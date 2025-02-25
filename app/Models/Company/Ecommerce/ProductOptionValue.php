@@ -5,7 +5,6 @@ namespace App\Models\Company\Ecommerce;
 use App\Models\Company\OrderBySortable;
 use App\Traits\HasTranslations;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -70,10 +69,5 @@ class ProductOptionValue extends Model
     public function productJoinOptions(): HasMany
     {
         return $this->hasMany(ProductJoinOption::class, 'value_id');
-    }
-
-    public function value(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->{'value_' . app()->getLocale()});
     }
 }
