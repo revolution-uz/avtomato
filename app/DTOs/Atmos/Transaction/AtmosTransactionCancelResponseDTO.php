@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 class AtmosTransactionCancelResponseDTO extends Data
 {
     public function __construct(
-        public string $code,
+        public ?string $code,
         public ?string $description,
         public ?string $message,
         public ?AtmosTransactionCancelPayloadDTO $payload,
