@@ -140,7 +140,6 @@ class SingleUserGraphQLQueryTest extends GraphQLTestCase
                         'name_en',
                         'name_oz',
                         'slug',
-                        'type',
                         'description',
                         'created_at',
                         'updated_at',

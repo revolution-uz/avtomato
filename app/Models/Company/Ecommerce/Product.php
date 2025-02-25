@@ -35,8 +35,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $deleted_at
  * @property-read ProductCategory $category
  * @property-read ProductBrand $brand
- * @property-read ProductOption[]|Collection<int, ProductOption> $options
  * @property-read ProductVariation[]|Collection<int, ProductVariation> $variations
+ * @property-read ProductOption[]|Collection<int, ProductOption> $options
+ * @property-read ProductOptionValue[]|Collection<int, ProductOptionValue> $values
  * @property EcommerceImage[]|Collection<int, EcommerceImage> $images
  * @property EcommerceImage|Collection<int, EcommerceImage> $mainImage
  */
@@ -91,6 +92,11 @@ class Product extends Model
                 ProductOption::class, 'ecommerce_product_join_options', 'product_id', 'option_id'
             )
             ->distinct();
+    }
+
+    public function values(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductOptionValue::class, 'ecommerce_product_join_options', 'product_id', 'value_id');
     }
 
     public function images(): MorphToMany

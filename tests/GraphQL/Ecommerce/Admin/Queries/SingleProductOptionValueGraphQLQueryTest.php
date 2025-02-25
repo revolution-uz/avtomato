@@ -30,7 +30,6 @@ class SingleProductOptionValueGraphQLQueryTest extends GraphQLTestCase
             'name_en',
             'name_oz',
             'slug',
-            'type',
             'description',
             'created_at',
             'updated_at',
@@ -126,7 +125,6 @@ class SingleProductOptionValueGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($value->option->name_en, $response->json('data.singleProductOptionValue.option.name_en'));
         $this->assertEquals($value->option->name_oz, $response->json('data.singleProductOptionValue.option.name_oz'));
         $this->assertEquals($value->option->slug, $response->json('data.singleProductOptionValue.option.slug'));
-        $this->assertEquals($value->option->type->value, $response->json('data.singleProductOptionValue.option.type'));
         $this->assertEquals($value->option->description, $response->json('data.singleProductOptionValue.option.description'));
         $this->assertEquals($value->option->created_at->timestamp, $response->json('data.singleProductOptionValue.option.created_at'));
         $this->assertEquals($value->option->updated_at->timestamp, $response->json('data.singleProductOptionValue.option.updated_at'));
