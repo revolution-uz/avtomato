@@ -33,4 +33,9 @@ class SbpPaymentDebitDTO extends BaseQrPayDTO
     {
         return $this->state == PaygineDebitState::SUCCESS->value;
     }
+
+    public function isCancelled(): bool
+    {
+        return $this->state == PaygineDebitState::CANCELLED->value;
+    }
 }
