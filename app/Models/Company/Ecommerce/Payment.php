@@ -3,15 +3,16 @@
 namespace App\Models\Company\Ecommerce;
 
 use App\Enums\Company\PaymentStatusEnum;
+use App\Models\Admin;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\OrderBySortable;
 use App\Models\Company\TransactionType;
 use App\Traits\LogsActivityDirtyOnlyTrait;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -27,6 +28,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int|null $admin_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Admin|null $admin
+ * @property User $user
+ * @property Order $order
+ * @property TransactionType $transactionType
  */
 class Payment extends Model
 {
@@ -54,6 +59,7 @@ class Payment extends Model
         'transaction_type_id',
         'user_id',
         'admin_id',
+        'order_id',
     ];
 
     protected $casts = [
@@ -69,8 +75,8 @@ class Payment extends Model
             if ($record->paid_at === null && $record->status === PaymentStatusEnum::SUCCESS) {
                 $record->paid_at = Carbon::now();
             }
-            if (auth()->check()) {
-                $record->admin_id = auth()->id();
+            if (auth('company-admin')->check()) {
+                $record->admin_id = auth('company-admin')->id();
             }
         });
     }
