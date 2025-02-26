@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Enums\Company\LoyaltyProgramm\CanLoginTypeEnum;
+use App\Helpers\Utilities;
 use App\Models\Company\CardConfirmationSms;
+use App\Models\Company\LoyaltyProgram\User;
 use Carbon\Carbon;
 use Exception;
 
@@ -45,6 +48,24 @@ class ConfirmationService
         }
 
         return false;
+    }
+
+    public function canLogin(User $user, string $deviceName, int $attempts): CanLoginTypeEnum
+    {
+        if ($success_login_attempts = $user->getSuccessLoginAttempts($deviceName, Utilities::A_MONTH)) {
+            return $success_login_attempts < $attempts ? CanLoginTypeEnum::LAST_CHANCE : CanLoginTypeEnum::CANNOT_LOGIN;
+        }
+
+        return CanLoginTypeEnum::CAN_LOGIN;
+    }
+
+    public function canLoginIntoLoyaltyProgramm(string $phone, string $deviceName): CanLoginTypeEnum
+    {
+        if ($user = User::query()->where('phone', $phone)->first()) {
+            return $this->canLogin($user, $deviceName, Utilities::LOYALTY_USER_MAX_SESSIONS);
+        }
+
+        return CanLoginTypeEnum::CAN_LOGIN;
     }
 
     /**

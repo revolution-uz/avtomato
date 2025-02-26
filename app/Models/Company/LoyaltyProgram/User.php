@@ -36,9 +36,20 @@ class User extends Model
 
     public function createTokenWithData(string $deviceName, array $data = []): string
     {
+        $this->tokens()
+            ->delete();
         $token = $this->createToken($deviceName);
         $token->accessToken->update([...$data, 'expires_at' => now()->addDays(30)->format('Y-m-d H:i:s')]);
 
         return $token->plainTextToken;
+    }
+
+    public function getSuccessLoginAttempts(string $deviceName, int $last_time): int
+    {
+        return $this->tokens()
+            ->where('created_at', '>', now()->subSeconds($last_time))
+            ->where('expires_at', '>', now())
+            ->where('name', '!=', $deviceName)
+            ->count('id');
     }
 }

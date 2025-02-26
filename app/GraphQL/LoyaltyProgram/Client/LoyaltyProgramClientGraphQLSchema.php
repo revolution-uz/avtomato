@@ -3,6 +3,7 @@
 namespace App\GraphQL\LoyaltyProgram\Client;
 
 use App\GraphQL\Ecommerce\Admin\Queries\SingleUserGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Client\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
@@ -12,6 +13,7 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
     {
         return [
             'mutation' => [
+                LogoutGraphQLMutation::class,
             ],
             'query' => [
                 SingleUserGraphQLQuery::class,

@@ -39,6 +39,10 @@ class SendOtpGraphQLMutation extends Mutation
     public function resolve($root, $args): bool
     {
         try {
+            if (! $this->confirmationService->canLoginIntoLoyaltyProgramm($args['phone'], request()->header('Device-Name'))->isValid()) {
+                throw new GeneralException('You cannot login');
+            }
+
             return $this->confirmationService->send($args['phone'], isEcommerceOtp: true);
 
         } catch (Throwable $e) {
