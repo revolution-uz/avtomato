@@ -5,7 +5,7 @@ namespace App\DTOs\QrPay\Payment;
 enum PaygineDebitState: string
 {
     case FORM_CREATED = 'REGISTERED';
-    case SUCCESS = 'APPROVED';
+    case SUCCESS = 'ACWP';
     case CANCELLED = 'REJECTED';
 
     public static function getStatusText(string|self|null $state): string
