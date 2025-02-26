@@ -13,7 +13,7 @@ class QrPayService
 
     public function addAccount(SbpAccount $sbpAccount): bool
     {
-        $sbpResponseDto = $this->qrPayClient->createAccount(new SbpCreateAccountRequestDTO($sbpAccount->account_number, $sbpAccount->mfo, $sbpAccount->inn, $sbpAccount->company_name));
+        $sbpResponseDto = $this->qrPayClient->createAccount(new SbpCreateAccountRequestDTO($sbpAccount->account_number, $sbpAccount->mfo, $sbpAccount->inn, $sbpAccount->company_name, $sbpAccount->commission));
         if ($sbpResponseDto->isSuccess()) {
             $this->updateAccount($sbpAccount, SbpAccountResponseDTO::from($sbpResponseDto->result));
         }

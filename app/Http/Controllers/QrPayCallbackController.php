@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\QrPay\Payment\SbpPaymentDTO;
+use App\DTOs\QrPay\Payment\SbpTransferDTO;
 use App\Http\Requests\QrPay\SbpPaymentWebhookCallbackRequest;
 use App\Models\Company;
 use App\Models\Company\SbpTransaction;
@@ -21,7 +22,7 @@ class QrPayCallbackController extends Controller
             tenancy()->initialize(Company::findOrFail($companyId));
             $transaction = SbpTransaction::query()->where('ext_id', $requestDto->transfer->credit->ext_id)->first();
             if ($transaction !== null) {
-                if ($this->qrPayService->updatePaymentByCallback($transaction, $requestDto->transfer)) {
+                if ($this->qrPayService->updatePaymentByCallback($transaction, SbpTransferDTO::from($request->toArray()))) {
                     return response()->json(['success' => true, 'message' => 'OK']);
                 }
             }
