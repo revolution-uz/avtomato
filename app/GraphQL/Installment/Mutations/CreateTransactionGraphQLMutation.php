@@ -115,7 +115,7 @@ class CreateTransactionGraphQLMutation extends Mutation
             $model->is_initial_fee = true;
         }
 
-        if ($installment->wholeDebtAmount < $args['amount']) {
+        if (! $model->is_initial_fee && $installment->wholeDebtAmount < $args['amount']) {
             throw ValidationException::withMessages(['amount' => __('api.max_amount', ['amount' => $installment->wholeDebtAmount])]);
         }
 
@@ -129,6 +129,6 @@ class CreateTransactionGraphQLMutation extends Mutation
 
         $model->saveOrFail();
 
-        return $model;
+        return $model->refresh();
     }
 }

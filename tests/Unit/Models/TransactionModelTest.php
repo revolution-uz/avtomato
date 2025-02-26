@@ -81,7 +81,7 @@ class TransactionModelTest extends TestCase
     #[Test]
     public function setsAdminWhenNotGiven(): void
     {
-        Sanctum::actingAs($this->_admin);
+        Sanctum::actingAs($this->_admin, guard: 'company-admin');
         $transaction = new Transaction;
         $transaction->installment_id = $this->_installment->id;
         $transaction->transaction_type_id = $this->_transactionType->id;
