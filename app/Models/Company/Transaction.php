@@ -76,8 +76,8 @@ class Transaction extends Model
             if ($transaction->paid_at === null) {
                 $transaction->paid_at = Carbon::now();
             }
-            if (auth()->check()) {
-                $transaction->admin_id = auth()->user()->id;
+            if (auth('company-admin')->check()) {
+                $transaction->admin_id = auth('company-admin')->user()->id;
             }
         });
 
