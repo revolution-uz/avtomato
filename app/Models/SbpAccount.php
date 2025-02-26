@@ -20,6 +20,7 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property string $mfo
  * @property string $inn
  * @property string $purpose_code
+ * @property float $commission
  * @property string $company_name
  * @property string $status
  */
@@ -34,6 +35,7 @@ class SbpAccount extends Model
         'mfo',
         'inn',
         'purpose_code',
+        'commission',
         'company_name',
         'status',
     ];

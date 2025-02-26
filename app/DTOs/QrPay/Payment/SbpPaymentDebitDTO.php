@@ -12,9 +12,9 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
  * @property string $state
  * @property string $description
  * @property int $amount
+ * @property float $commission
  * @property int $currency
  * @property string $url
- * @property int|null $qrc_id
  */
 class SbpPaymentDebitDTO extends BaseQrPayDTO
 {
@@ -24,9 +24,9 @@ class SbpPaymentDebitDTO extends BaseQrPayDTO
         public ?string $state,
         public ?string $description,
         public ?int $amount,
+        public ?float $commission,
         public ?int $currency,
         public ?string $url,
-        public ?int $qrc_id,
     ) {}
 
     public function isSuccess(): bool

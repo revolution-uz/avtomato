@@ -11,6 +11,7 @@ use App\DTOs\QrPay\Base\BaseQrPayDTO;
  * @property string $filial_code
  * @property string $tax
  * @property string $name
+ * @property float $commission
  */
 class SbpCreateAccountRequestDTO extends BaseQrPayDTO
 {
@@ -19,5 +20,6 @@ class SbpCreateAccountRequestDTO extends BaseQrPayDTO
         public string $branch,
         public string $tax,
         public string $name,
+        public float $commission,
     ) {}
 }
