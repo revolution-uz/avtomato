@@ -103,20 +103,20 @@ class CreateTransactionGraphQLMutation extends Mutation
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($args['installment_id']);
 
-        if ($installment->wholeDebtAmount < $args['amount']) {
-            throw ValidationException::withMessages(['amount' => __('api.max_amount', ['amount' => $installment->wholeDebtAmount])]);
-        }
-
         $model = new Transaction;
         $model->fill($args);
         $model->external_id = 'local_' . Str::random();
-        $model->admin_id = auth()->id();
+        $model->admin_id = auth('company-admin')->id();
 
         if (! $model->installment->is_active && ! $model->installment->isPaidInitialFee()) {
             if ($model->amount != $model->installment->initial_fee) {
                 throw ValidationException::withMessages(['amount' => __('api.Please create initial fee amount first')]);
             }
             $model->is_initial_fee = true;
+        }
+
+        if ($installment->wholeDebtAmount < $args['amount']) {
+            throw ValidationException::withMessages(['amount' => __('api.max_amount', ['amount' => $installment->wholeDebtAmount])]);
         }
 
         if (isset($args['paid_at'])) {
