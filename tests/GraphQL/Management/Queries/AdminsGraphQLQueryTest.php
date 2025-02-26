@@ -256,6 +256,8 @@ class AdminsGraphQLQueryTest extends GraphQLTestCase
                 'ecommerce_delivery_point_view',
                 'ecommerce_delivery_point_view_all',
                 'ecommerce_images_create',
+                'loyalty_program_users_view_all',
+                'loyalty_program_users_view',
             ],
         ],
     ];
