@@ -68,7 +68,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read  CompanyAdmin $admin
  * @property-read float $debtAmount
  * @property-read float $monthlyPayment
- * @property-read float $is_active
+ * @property-read bool $is_active
  * @property-read float $is_fully_paid
  * @property-read Carbon $nextPaymentDate
  * @property mixed $wholeDebtAmount
