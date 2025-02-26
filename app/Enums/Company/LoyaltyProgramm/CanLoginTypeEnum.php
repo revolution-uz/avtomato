@@ -14,6 +14,6 @@ enum CanLoginTypeEnum: int
 
     public function isValid(): bool
     {
-        return in_array($this->value, [self::CAN_LOGIN, self::LAST_CHANCE]);
+        return $this !== self::CANNOT_LOGIN;
     }
 }
