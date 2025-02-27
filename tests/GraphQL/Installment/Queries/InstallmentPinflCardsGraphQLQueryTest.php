@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\GraphQL\Common\Queries;
+namespace Tests\GraphQL\Installment\Queries;
 
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
