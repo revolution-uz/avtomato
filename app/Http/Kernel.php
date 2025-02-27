@@ -64,7 +64,7 @@ class Kernel extends HttpKernel
         'is_soft_delete_client_token' => \App\Http\Middleware\IsSoftDeletedClientToken::class,
         'is_soft_delete_loyalty_client_token' => \App\Http\Middleware\IsSoftDeletedLoyaltyClientToken::class,
         'ecommerce' => \App\Http\Middleware\CheckCompanyAndFeatureStatus::class,
-        'loyalty' => \App\Http\Middleware\LoyaltyProgramMiddleware::class,
+        'loyalty_program' => \App\Http\Middleware\LoyaltyProgramMiddleware::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'force.json' => \App\Http\Middleware\ForceJsonResponse::class,
