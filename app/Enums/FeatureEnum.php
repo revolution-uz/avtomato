@@ -43,6 +43,8 @@ enum FeatureEnum: string
     case TELEGRAM_BOT_FEATURE = 'telegram_bot_feature';
     case GENERAL_FEATURE = 'general_feature';
 
+    case LOYALTY_PROGRAM = 'loyalty_program';
+
     public function getDefaultDescription(): ?string
     {
         return match ($this) {
@@ -84,6 +86,7 @@ enum FeatureEnum: string
             self::SBP_PAY => 'SBP QR kodidan foydalangan holda to\'lovlar - Payments using QR code SBP',
             self::TELEGRAM_BOT_FEATURE => 'Telegram bot orqali xabar yuborish',
             self::GENERAL_FEATURE => 'Umumiy ko\'rishlar uchun',
+            self::LOYALTY_PROGRAM => 'Mijozlarga bonuslar berish tizimi',
         };
     }
 
@@ -121,6 +124,7 @@ enum FeatureEnum: string
             self::INSTALLMENT_AUTO_CHARGE,
             self::INSTALLMENT_AUTO_CHARGE_BY_PINFL,
             self::TELEGRAM_BOT_FEATURE,
+            self::LOYALTY_PROGRAM,
         ]);
     }
 }

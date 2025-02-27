@@ -52,6 +52,10 @@ return [
             'driver' => 'sanctum',
             'provider' => 'ecommerce-clients',
         ],
+        'loyalty-program-client' => [
+            'driver' => 'sanctum',
+            'provider' => 'loyalty-program-users',
+        ],
     ],
 
     /*
@@ -83,6 +87,10 @@ return [
         'ecommerce-clients' => [
             'driver' => 'eloquent',
             'model' => App\Models\Company\Ecommerce\User::class,
+        ],
+        'loyalty-program-users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Company\LoyaltyProgram\User::class,
         ],
         // 'users' => [
         //     'driver' => 'database',

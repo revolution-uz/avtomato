@@ -33,6 +33,7 @@ enum PermissionGroupEnum: string
     case ACTIVITY_LOG = 'activity_log';
     case ECOMMERCE = 'ecommerce';
     case VIEW_ALL = 'view_all';
+    case LOYALTY_PROGRAM = 'loyalty_program';
 
     /**
      * @return PermissionEnum[]
@@ -290,6 +291,11 @@ enum PermissionGroupEnum: string
                 PermissionEnum::DELIVERY_POINT_VIEW,
                 PermissionEnum::DELIVERY_POINT_VIEW_ALL,
                 PermissionEnum::ECOMMERCE_IMAGE_CREATE,
+            ],
+
+            self::LOYALTY_PROGRAM => [
+                PermissionEnum::LOYALTY_PROGRAM_USERS_VIEW_ALL,
+                PermissionEnum::LOYALTY_PROGRAM_USERS_VIEW,
             ],
         };
     }
