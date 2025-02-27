@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Throwable;
 
-class IsSoftDeletedLoyaltyClientToken
+class IsSoftDeletedLoyaltyProgramClientToken
 {
     /**
      * Handle an incoming request.

@@ -21,7 +21,7 @@ class LoyaltyProgramCommonGraphQLSchema implements ConfigConvertible
             ],
             'types' => [
             ],
-            'middleware' => ['optional_auth:sanctum', 'loyalty'],
+            'middleware' => ['optional_auth:sanctum', 'loyalty_program'],
         ];
     }
 }

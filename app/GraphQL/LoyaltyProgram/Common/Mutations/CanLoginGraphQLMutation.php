@@ -12,7 +12,7 @@ use Throwable;
 class CanLoginGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'canLogin',
+        'name' => 'loyaltyProgramCanLogin',
     ];
 
     public function __construct(private readonly ConfirmationService $confirmationService) {}

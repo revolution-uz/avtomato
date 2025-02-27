@@ -23,7 +23,7 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
             'types' => [
                 UserGraphQLType::class,
             ],
-            'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_loyalty_client_token', 'loyalty'],
+            'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_loyalty_program_client_token', 'loyalty_program'],
         ];
     }
 }
