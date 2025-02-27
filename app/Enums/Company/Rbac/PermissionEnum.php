@@ -268,6 +268,11 @@ enum PermissionEnum: string
 
     case LOYALTY_PROGRAM_USERS_VIEW_ALL = 'loyalty_program_users_view_all';
     case LOYALTY_PROGRAM_USERS_VIEW = 'loyalty_program_users_view';
+    case LOYALTY_PROGRAM_TARIFF_VIEW_ALL = 'loyalty_program_tariff_view_all';
+    case LOYALTY_PROGRAM_TARIFF_VIEW = 'loyalty_program_tariff_view';
+    case LOYALTY_PROGRAM_TARIFF_EDIT = 'loyalty_program_tariff_edit';
+    case LOYALTY_PROGRAM_TARIFF_DELETE = 'loyalty_program_tariff_delete';
+    case LOYALTY_PROGRAM_TARIFF_CREATE = 'loyalty_program_tariff_create';
 
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
@@ -505,6 +510,8 @@ enum PermissionEnum: string
             self::TRANSACTION_EDIT,
             self::TRANSACTION_DELETE,
             self::TRANSACTION_REVERSE => true,
+
+            default => false,
         };
     }
 
@@ -768,6 +775,11 @@ enum PermissionEnum: string
             PermissionGroupEnum::LOYALTY_PROGRAM->value => [
                 self::LOYALTY_PROGRAM_USERS_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_USERS_VIEW->value,
+                self::LOYALTY_PROGRAM_TARIFF_VIEW_ALL->value,
+                self::LOYALTY_PROGRAM_TARIFF_VIEW->value,
+                self::LOYALTY_PROGRAM_TARIFF_EDIT->value,
+                self::LOYALTY_PROGRAM_TARIFF_DELETE->value,
+                self::LOYALTY_PROGRAM_TARIFF_CREATE->value,
             ],
         ];
     }
@@ -1008,7 +1020,12 @@ enum PermissionEnum: string
             self::ECOMMERCE_IMAGE_CREATE => FeatureEnum::ECOMMERCE,
 
             self::LOYALTY_PROGRAM_USERS_VIEW_ALL,
-            self::LOYALTY_PROGRAM_USERS_VIEW => FeatureEnum::LOYALTY_PROGRAM,
+            self::LOYALTY_PROGRAM_USERS_VIEW,
+            self::LOYALTY_PROGRAM_TARIFF_VIEW_ALL,
+            self::LOYALTY_PROGRAM_TARIFF_VIEW,
+            self::LOYALTY_PROGRAM_TARIFF_EDIT,
+            self::LOYALTY_PROGRAM_TARIFF_DELETE,
+            self::LOYALTY_PROGRAM_TARIFF_CREATE => FeatureEnum::LOYALTY_PROGRAM,
         };
     }
 

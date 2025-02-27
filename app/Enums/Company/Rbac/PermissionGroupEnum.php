@@ -296,6 +296,11 @@ enum PermissionGroupEnum: string
             self::LOYALTY_PROGRAM => [
                 PermissionEnum::LOYALTY_PROGRAM_USERS_VIEW_ALL,
                 PermissionEnum::LOYALTY_PROGRAM_USERS_VIEW,
+                PermissionEnum::LOYALTY_PROGRAM_TARIFF_VIEW_ALL,
+                PermissionEnum::LOYALTY_PROGRAM_TARIFF_VIEW,
+                PermissionEnum::LOYALTY_PROGRAM_TARIFF_EDIT,
+                PermissionEnum::LOYALTY_PROGRAM_TARIFF_DELETE,
+                PermissionEnum::LOYALTY_PROGRAM_TARIFF_CREATE,
             ],
         };
     }

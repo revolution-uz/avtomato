@@ -258,6 +258,11 @@ class AdminsGraphQLQueryTest extends GraphQLTestCase
                 'ecommerce_images_create',
                 'loyalty_program_users_view_all',
                 'loyalty_program_users_view',
+                'loyalty_program_tariff_view_all',
+                'loyalty_program_tariff_view',
+                'loyalty_program_tariff_edit',
+                'loyalty_program_tariff_delete',
+                'loyalty_program_tariff_create',
             ],
         ],
     ];
