@@ -2,8 +2,9 @@
 
 namespace App\GraphQL\LoyaltyProgram\Client;
 
-use App\GraphQL\Ecommerce\Admin\Queries\SingleUserGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\LogoutGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Client\Mutations\ProfileUpdateGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Client\Queries\ProfileMeGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
@@ -13,15 +14,16 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
     {
         return [
             'mutation' => [
+                ProfileUpdateGraphQLMutation::class,
                 LogoutGraphQLMutation::class,
             ],
             'query' => [
-                SingleUserGraphQLQuery::class,
+                ProfileMeGraphQLQuery::class,
             ],
             'types' => [
                 UserGraphQLType::class,
             ],
-            'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_client_token', 'loyalty-program'],
+            'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_loyalty_program_client_token', 'loyalty_program'],
         ];
     }
 }

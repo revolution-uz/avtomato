@@ -90,6 +90,9 @@ return [
         'ecommerce-admin' => \App\GraphQL\Ecommerce\Admin\EcommerceAdminGraphQLSchema::class,
         'ecommerce-client' => \App\GraphQL\Ecommerce\Client\EcommerceClientGraphQLSchema::class,
         'ecommerce-common' => \App\GraphQL\Ecommerce\Common\EcommerceCommonGraphQLSchema::class,
+        'loyalty-program-admin' => \App\GraphQL\LoyaltyProgram\Admin\LoyaltyProgramAdminGraphQLSchema::class,
+        'loyalty-program-client' => \App\GraphQL\LoyaltyProgram\Client\LoyaltyProgramClientGraphQLSchema::class,
+        'loyalty-program-common' => \App\GraphQL\LoyaltyProgram\Common\LoyaltyProgramCommonGraphQLSchema::class,
     ],
 
     // The global types available to all schemas.

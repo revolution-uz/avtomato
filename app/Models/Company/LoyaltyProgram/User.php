@@ -28,7 +28,12 @@ class User extends Model
 
     public $table = 'loyalty_program_users';
 
-    protected $fillable = ['phone', 'first_name', 'last_name', 'birth_date'];
+    protected $fillable = [
+        'phone',
+        'first_name',
+        'last_name',
+        'birth_date',
+    ];
 
     protected $casts = [
         'birth_date' => 'date',
@@ -36,8 +41,7 @@ class User extends Model
 
     public function createTokenWithData(string $deviceName, array $data = []): string
     {
-        $this->tokens()
-            ->delete();
+        $this->tokens()->delete();
         $token = $this->createToken($deviceName);
         $token->accessToken->update([...$data, 'expires_at' => now()->addDays(30)->format('Y-m-d H:i:s')]);
 
