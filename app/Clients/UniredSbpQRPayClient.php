@@ -87,7 +87,7 @@ class UniredSbpQRPayClient
             'params' => $originalParams,
         ];
         try {
-            $headers = $this->getAuthorizationNewHeaders($params);
+            $headers = $this->getAuthorizationHeaders($params);
 
             $response = Http::withHeaders($headers)->acceptJson()->post($this->baseUrl, $params);
             $jsonResponse = $response->json();
@@ -113,7 +113,7 @@ class UniredSbpQRPayClient
             $errorCode = $jsonResponse['error']['code'] ?? 0;
 
             if (! $isTriedReAuthorize && ($errorCode === -32001 || $errorCode === -32106 || $errorCode === -36042)) { // this means unauthorized
-                $this->getAccessNewToken(false);
+                $this->getAccessToken(false);
 
                 return $this->makeRequest($method, $originalParams, true);
             }
@@ -132,16 +132,16 @@ class UniredSbpQRPayClient
         return BaseQrPayResponseDTO::from($jsonResponse);
     }
 
-    public function getAuthorizationNewHeaders(array $params): array
+    public function getAuthorizationHeaders(array $params): array
     {
         return [
             'Header-Sign' => $this->generateSignature($params),
             'Header-Login' => $this->login,
-            'Authorization' => 'Bearer ' . $this->getAccessNewToken(),
+            'Authorization' => 'Bearer ' . $this->getAccessToken(),
         ];
     }
 
-    public function getAccessNewToken(bool $fromCache = true): ?string
+    public function getAccessToken(bool $fromCache = true): ?string
     {
         $accessToken = null;
 
@@ -167,7 +167,7 @@ class UniredSbpQRPayClient
             ];
 
             $response = Http::withHeaders($header)->acceptJson()->post($this->baseUrl, $params)->json();
-            Log::channel($this->channel)->info('response', [
+            Log::channel($this->channel)->info('getAccessToken', [
                 'header' => $header,
                 'client' => get_called_class(),
                 'method' => self::METHOD_LOGIN,
