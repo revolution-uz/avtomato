@@ -67,16 +67,16 @@ class Role extends Model
         $result = [];
 
         foreach ($rolePermissions as $rolePermission) {
-            if ($rolePermission->permission->feature?->is_active === false) {
+            if ($rolePermission->permission->feature->is_active === false) {
                 continue;
             }
 
             $result[$rolePermission->permission->slug->value] = $result[$rolePermission->permission->slug->value] ?? [];
 
-            if ($rolePermission->branch_id !== null) {
-                $result[$rolePermission->permission->slug->value]['branch_' . $rolePermission->branch_id] = true;
-            } else {
+            if (! $rolePermission->permission->is_branch_related) {
                 $result[$rolePermission->permission->slug->value]['all'] = true;
+            } else {
+                $result[$rolePermission->permission->slug->value]['branch_' . $rolePermission->branch_id] = true;
             }
         }
 

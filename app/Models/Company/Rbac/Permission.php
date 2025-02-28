@@ -7,24 +7,27 @@ use App\Models\Company\Feature;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property PermissionEnum $slug
+ * @property bool $is_branch_related
  * @property int $permission_group_id
  * @property int $feature_id
- * @property bool $is_branch_related
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property PermissionGroup $permissionGroup
+ * @property Feature $feature
  * @property-read string $name
- * @property-read PermissionGroup $permissionGroup
- * @property-read Feature|null $feature
  */
 class Permission extends Model
 {
     protected $fillable = [
         'slug',
+        'is_branch_related',
         'permission_group_id',
         'feature_id',
-        'guard_name',
     ];
 
     protected $casts = [

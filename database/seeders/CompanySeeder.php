@@ -26,6 +26,7 @@ class CompanySeeder extends Seeder
     public function run(): void
     {
         activity()->disableLogging();
+
         $this->call(LocationSeeder::class);
         $this->call(ModuleSeeder::class);
         $this->call(FeatureSeeder::class);
@@ -36,19 +37,19 @@ class CompanySeeder extends Seeder
         $this->call(SmsTemplateSeeder::class);
         $this->call(BranchSeeder::class);
         $this->call(EcommerceOrderStatusSeeder::class);
+
         // TODO remove before production
-        /** @var CompanyAdmin $admin */
-        $admin = CompanyAdmin::query()->firstOrCreate(
-            ['username' => 'admin'],
-            [
-                'username' => 'admin',
-                'first_name' => 'Yura',
-                'last_name' => 'Sultonov',
-                'status' => UserStatusEnum::ACTIVE,
-                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-                'role_id' => Role::where('name', UserRoleEnum::ADMIN)->first()->id,
-            ]
-        );
+        CompanyAdmin::query()->firstOrCreate([
+            'username' => 'admin',
+        ], [
+            'username' => 'admin',
+            'first_name' => 'Yura',
+            'last_name' => 'Sultonov',
+            'status' => UserStatusEnum::ACTIVE,
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'role_id' => Role::where('name', UserRoleEnum::ADMIN)->first()->id,
+        ]);
+
         activity()->enableLogging();
     }
 }
