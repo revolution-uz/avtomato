@@ -27,8 +27,8 @@ class BranchesGraphQLQueryTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        Branch::query()->forceDelete();
-        Branch::factory()->count($this->_totalBranchesCount)->create();
+        $count = Branch::query()->count();
+        Branch::factory()->count($this->_totalBranchesCount - $count)->create();
     }
 
     #[Test]
