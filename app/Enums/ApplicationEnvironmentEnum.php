@@ -17,4 +17,9 @@ enum ApplicationEnvironmentEnum: string
     {
         return self::getCurrent() === self::PRODUCTION;
     }
+
+    public static function getFirebaseTopicPrefix(): string
+    {
+        return self::getCurrent() === self::PRODUCTION ? 'avtomato_' : 'avtomato_test_';
+    }
 }
