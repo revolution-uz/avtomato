@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Laravel\Sanctum\HasApiTokens;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -26,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Tariff extends Model
 {
-    use HasApiTokens, HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
+    use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
 
     public static array $sortables = ['name_uz', 'name_ru', 'amount'];
 

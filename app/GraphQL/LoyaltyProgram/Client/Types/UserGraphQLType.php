@@ -3,8 +3,10 @@
 namespace App\GraphQL\LoyaltyProgram\Client\Types;
 
 use App\GraphQL\GraphQLTypeHelper;
+use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionGraphQLType;
 use App\Models\Company\LoyaltyProgram\User;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class UserGraphQLType extends GraphQLType
@@ -51,6 +53,10 @@ class UserGraphQLType extends GraphQLType
             'deleted_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (User $root) => $root->deleted_at?->timestamp,
+            ],
+            'subscriptions' => [
+                'type' => Type::listOf(GraphQL::type(SubscriptionGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (User $root) => $root->subscriptions,
             ],
         ];
     }
