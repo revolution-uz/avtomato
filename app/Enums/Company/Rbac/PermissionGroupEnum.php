@@ -301,6 +301,12 @@ enum PermissionGroupEnum: string
                 PermissionEnum::LOYALTY_PROGRAM_TARIFF_EDIT,
                 PermissionEnum::LOYALTY_PROGRAM_TARIFF_DELETE,
                 PermissionEnum::LOYALTY_PROGRAM_TARIFF_CREATE,
+                PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_VIEW_ALL,
+                PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_VIEW,
+                PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_EDIT,
+                PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_DELETE,
+                PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_CREATE,
+                PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_SEND,
             ],
         };
     }
