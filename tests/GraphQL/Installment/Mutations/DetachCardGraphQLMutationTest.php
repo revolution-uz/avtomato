@@ -24,7 +24,8 @@ class DetachCardGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        Installment::factory()->count(5)->create();
+        $branch = Branch::query()->firstOrFail();
+        Installment::factory()->count(5)->create(['branch_id' => $branch->id]);
         foreach (Installment::all() as $installment) {
             $installment->cards()->attach(Card::factory()->count(5)->create());
         }

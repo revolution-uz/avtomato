@@ -25,6 +25,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     private Installment $_installment;
     private TransactionType $_transactionType;
     private Customer $_customer;
+    private Branch $_branch;
 
     protected function setUp(): void
     {
@@ -32,12 +33,14 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
         Installment::query()->forceDelete();
         Customer::query()->forceDelete();
         TransactionType::query()->forceDelete();
+        $this->_branch = Branch::query()->firstOrFail();
         $this->_installment = Installment::factory()->create([
             'amount' => 1000000,
             'initial_fee' => 100000,
             'percent' => 15,
             'paid_amount' => 100000,
             'status' => InstallmentStatusEnum::ACTIVE,
+            'branch_id' => $this->_branch->id,
         ]);
         $this->_customer = Customer::factory()->create();
         $this->_transactionType = TransactionType::factory()->create();
@@ -73,7 +76,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successCreateTransactionWithInactiveInstallment()
     {
-        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE, 'branch_id' => $this->_branch->id]);
         $response = $this->sendGraphQLRequest(
             $this->_installment->id,
             $this->_customer->id,
@@ -152,7 +155,7 @@ class CreateTransactionGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function errorCreateTransactionWithInactiveInstallment()
     {
-        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE, 'branch_id' => $this->_branch->id]);
 
         $response = $this->sendGraphQLRequest(
             $this->_installment->id,

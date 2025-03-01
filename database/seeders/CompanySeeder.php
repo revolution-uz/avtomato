@@ -27,6 +27,7 @@ class CompanySeeder extends Seeder
     {
         activity()->disableLogging();
 
+        $this->call(BranchSeeder::class);
         $this->call(LocationSeeder::class);
         $this->call(ModuleSeeder::class);
         $this->call(FeatureSeeder::class);
@@ -35,7 +36,6 @@ class CompanySeeder extends Seeder
         $this->call(TransactionTypeSeeder::class);
         $this->call(CompanySettingsSeeder::class);
         $this->call(SmsTemplateSeeder::class);
-        $this->call(BranchSeeder::class);
         $this->call(EcommerceOrderStatusSeeder::class);
 
         // TODO remove before production

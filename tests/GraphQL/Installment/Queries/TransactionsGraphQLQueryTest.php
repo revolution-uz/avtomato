@@ -49,14 +49,17 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
             ],
         ],
     ];
+    private Branch $_branch;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->_branch = Branch::query()->firstOrFail();
+
         Installment::query()->forceDelete();
-        Transaction::factory()->count(5)->create(['paid_at' => Carbon::now()->subWeek()]);
-        Transaction::factory()->count($this->_totalTransactionsCount - 5)->create();
+        Transaction::factory()->count(5)->create(['paid_at' => Carbon::now()->subWeek(), 'branch_id' => $this->_branch->id]);
+        Transaction::factory()->count($this->_totalTransactionsCount - 5)->create(['branch_id' => $this->_branch->id]);
     }
 
     #[Test]
@@ -167,10 +170,9 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successBranchesOnlyTransactionBranchId()
     {
-        /** @var Branch $branch */
-        $branch = Branch::factory()->create();
-        $transactions = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
-        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        Transaction::query()->forceDelete();
+        $transactions = Transaction::factory()->count(5)->create(['branch_id' => $this->_branch->id]);
+        $response = $this->sendToGraphQL(['branches' => [$this->_branch->id]]);
         $this->assertSuccessTransactionsResponse($response, total: 5);
         foreach ($transactions as $transaction) {
             $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
@@ -180,15 +182,15 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successBranchesOnlyTransactionBranchIdIsNull()
     {
-        /** @var Branch $branch */
-        $branch = Branch::factory()->create();
-        $installments = Installment::factory()->count(2)->create(['branch_id' => $branch->id]);
+        Installment::query()->forceDelete();
+        Transaction::query()->forceDelete();
+        $installments = Installment::factory()->count(2)->create(['branch_id' => $this->_branch->id]);
         $transactions = Transaction::factory()->count(5)->create(['installment_id' => $installments[0]->id, 'branch_id' => null]);
         Transaction::factory()->count(5)->create(['installment_id' => $installments[1]->id, 'branch_id' => null]);
 
         $response = $this->sendToGraphQL([
             'installment_id' => $installments[0]->id,
-            'branches' => [$branch->id],
+            'branches' => [$this->_branch->id],
         ]);
         $this->assertSuccessTransactionsResponse($response, total: 5);
         foreach ($transactions as $transaction) {
@@ -199,11 +201,11 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successBranchesOnlyInstallmentBranchId()
     {
-        /** @var Branch $branch */
-        $branch = Branch::factory()->create();
-        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        Installment::query()->forceDelete();
+        Transaction::query()->forceDelete();
+        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
         $transactions = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
-        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        $response = $this->sendToGraphQL(['branches' => [$this->_branch->id]]);
         $this->assertSuccessTransactionsResponse($response, total: 5);
         foreach ($transactions as $transaction) {
             $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
@@ -213,12 +215,12 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successBranches()
     {
-        /** @var Branch $branch */
-        $branch = Branch::factory()->create();
-        $transactionsWithBranch = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
-        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        Installment::query()->forceDelete();
+        Transaction::query()->forceDelete();
+        $transactionsWithBranch = Transaction::factory()->count(5)->create(['branch_id' => $this->_branch->id]);
+        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
         $transactionsWithoutBranch = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
-        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+        $response = $this->sendToGraphQL(['branches' => [$this->_branch->id]]);
         $this->assertSuccessTransactionsResponse($response, total: 10);
         foreach ($transactionsWithBranch->merge($transactionsWithoutBranch) as $transaction) {
             $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
@@ -246,17 +248,17 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successSearch()
     {
-        /** @var Branch $branch */
-        $branch = Branch::factory()->create(['name' => 'Test Branch']);
+        Installment::query()->forceDelete();
+        Transaction::query()->forceDelete();
         /** @var Installment $installment */
-        $installment = Installment::factory()->create();
+        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
         /** @var Customer $customer */
         $customer = Customer::factory()->create(['first_name' => 'Test Firstname', 'last_name' => 'Test Lastname']);
 
         /** @var Transaction $transaction */
         $transaction = Transaction::factory()->create([
             'external_id' => 'test_external_id',
-            'branch_id' => $branch->id,
+            'branch_id' => $this->_branch->id,
             'installment_id' => $installment->id,
             'customer_id' => $customer->id,
         ]);
@@ -272,7 +274,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
 
         // Branch name
-        $response = $this->sendToGraphQL(['search' => $branch->name]);
+        $response = $this->sendToGraphQL(['search' => $this->_branch->name]);
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
 

@@ -30,13 +30,12 @@ class CreateInstallmentGraphQLMutationTest extends GraphQLTestCase
         parent::setUp();
         Customer::query()->forceDelete();
         Tariff::query()->forceDelete();
-        Branch::query()->forceDelete();
         Installment::query()->forceDelete();
         CompanyAdmin::query()->forceDelete();
 
         $this->_customer = Customer::factory()->create();
         $this->_tariff = Tariff::factory()->create();
-        $this->_branch = Branch::factory()->create();
+        $this->_branch = Branch::query()->firstOrFail();
 
         $this->_input = [
             'tariff_id' => $this->_tariff->id,

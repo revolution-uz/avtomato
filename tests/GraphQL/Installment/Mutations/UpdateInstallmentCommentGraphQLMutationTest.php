@@ -24,7 +24,9 @@ class UpdateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        InstallmentComment::factory()->count(10)->create();
+        $branch = Branch::query()->firstOrFail();
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        InstallmentComment::factory()->count(10)->create(['installment_id' => $installment->id]);
     }
 
     #[Test]
@@ -114,7 +116,7 @@ class UpdateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($simpleAdmin)
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($input));
         $this->assertSuccessResponse($response, $input);
     }

@@ -145,14 +145,18 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
             ],
         ],
     ];
+    private Branch $_branch;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->_branch = Branch::query()->firstOrFail();
+
         Artisan::call('tenants:seed', ['--class' => TransactionTypeSeeder::class, '--tenants' => [tenant()->id]]);
+        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
         TransactionAttempt::query()->forceDelete();
-        TransactionAttempt::factory()->count($this->_totalTransactionAttemptsCount)->create();
+        TransactionAttempt::factory()->count($this->_totalTransactionAttemptsCount)->create(['installment_id' => $installment->id]);
     }
 
     #[Test]
@@ -240,7 +244,8 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successInstallmentId()
     {
-        $transactionAttempt = TransactionAttempt::query()->inRandomOrder()->first();
+        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
+        $transactionAttempt = TransactionAttempt::factory()->create(['installment_id' => $installment->id]);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(
@@ -381,6 +386,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
             'period' => 10,
             'paid_amount' => 0,
             'starts_in' => Carbon::now(),
+            'branch_id' => $this->_branch->id,
         ]);
 
         $transaction = Transaction::factory()->create([
@@ -496,8 +502,10 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successOnTypePayWithCard()
     {
+        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
         $transactionAttempt = TransactionAttempt::factory()->create([
             'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_CARD,
+            'installment_id' => $installment->id,
         ]);
 
         $response = $this
@@ -519,9 +527,11 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successOnTypePayWithPinfl()
     {
+        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
         $transactionAttempt = TransactionAttempt::factory()->create([
             'card_id' => null,
             'type' => TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL,
+            'installment_id' => $installment->id,
         ]);
 
         $response = $this

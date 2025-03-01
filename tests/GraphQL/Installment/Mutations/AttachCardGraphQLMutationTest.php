@@ -29,9 +29,10 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
         parent::setUp();
         Installment::query()->forceDelete();
         Card::query()->forceDelete();
+        $branch = Branch::query()->firstOrFail();
 
         $this->_card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE]);
-        $this->_installment = Installment::factory()->create();
+        $this->_installment = Installment::factory()->create(['branch_id' => $branch->id]);
     }
 
     #[Test]

@@ -23,7 +23,8 @@ class InstallmentsGraphQLQueryTest extends GraphQLTestCase
         parent::setUp();
 
         Installment::query()->forceDelete();
-        Installment::factory()->count($this->_totalInstallmentsCount)->create();
+        $branch = Branch::query()->firstOrFail();
+        Installment::factory()->count($this->_totalInstallmentsCount)->create(['branch_id' => $branch->id]);
     }
 
     #[Test]

@@ -39,8 +39,10 @@ class StatisticsByBranchesGraphQLQueryTest extends GraphQLTestCase
             'status' => InstallmentStatusEnum::ACTIVE,
         ];
 
+        $branch = Branch::query()->firstOrFail();
         Transaction::factory(10)->create([
             'transaction_type_id' => TransactionType::query()->inRandomOrder()->firstOrFail()->id,
+            'branch_id' => $branch->id,
         ]);
     }
 

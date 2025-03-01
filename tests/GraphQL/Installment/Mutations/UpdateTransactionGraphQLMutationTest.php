@@ -44,11 +44,13 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $this->_transaction = Transaction::factory()->create();
+        $branch = Branch::query()->firstOrFail();
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        $this->_transaction = Transaction::factory()->create(['installment_id' => $installment->id]);
 
         $this->_input = [
             'id' => $this->_transaction->id,
-            'installment_id' => Installment::factory()->create()?->id,
+            'installment_id' => $installment->id,
             'customer_id' => Customer::factory()->create()?->id,
             'transaction_type_id' => TransactionType::factory()->create()?->id,
             'amount' => rand(100, 1000),
@@ -148,7 +150,7 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($simpleAdmin)
             ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery($this->_input));
         $this->assertSuccessResponse($response);
     }

@@ -22,7 +22,9 @@ class DeleteInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
         parent::setUp();
 
         InstallmentComment::query()->forceDelete();
-        InstallmentComment::factory()->count(5)->create();
+        $branch = Branch::query()->firstOrFail();
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        InstallmentComment::factory()->count(5)->create(['installment_id' => $installment->id]);
     }
 
     #[Test]
@@ -96,7 +98,7 @@ class DeleteInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($simpleAdmin)
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['ids' => $idsInput]));
         $this->assertSuccessResponse($response, $idsInput);
     }

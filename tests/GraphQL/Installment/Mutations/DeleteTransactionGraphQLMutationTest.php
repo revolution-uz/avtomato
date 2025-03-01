@@ -28,8 +28,10 @@ class DeleteTransactionGraphQLMutationTest extends GraphQLTestCase
 
         Artisan::call('tenants:seed', ['--class' => TransactionTypeSeeder::class, '--tenants' => [tenant('id')]]);
         $transactionType = TransactionType::query()->where('id', '<', 100)->first();
-        Transaction::factory()->count(5)->create(['transaction_type_id' => $transactionType->id, 'is_initial_fee' => false]);
-        Transaction::factory()->count(5)->create(['is_initial_fee' => false]);
+        $branch = Branch::query()->firstOrFail();
+        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        Transaction::factory()->count(5)->create(['transaction_type_id' => $transactionType->id, 'is_initial_fee' => false, 'installment_id' => $installment->id]);
+        Transaction::factory()->count(5)->create(['is_initial_fee' => false, 'installment_id' => $installment->id]);
     }
 
     #[Test]

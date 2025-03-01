@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\RolePermission;
 use GraphQL\Error\Error;
 
@@ -15,12 +16,10 @@ class RbacHelper
             throw new Error(__('api.inactive_company'));
         }
 
-        return RolePermission::query()
-            ->join('permissions', 'role_permissions.permission_id', '=', 'permissions.id')
-            ->join('features', 'permissions.feature_id', '=', 'features.id')
-            ->where('permissions.slug', $permission)
-            ->where('features.is_active', true)
-            ->where('role_permissions.role_id', auth()->user()->role_id)
+        return Permission::query()
+            ->where('slug', $permission)
+            ->whereHas('feature', fn ($q) => $q->where('is_active', true))
+            ->whereHas('roles', fn ($q) => $q->where('roles.id', auth('company-admin')->user()->role_id))
             ->exists();
     }
 

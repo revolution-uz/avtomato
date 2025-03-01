@@ -25,7 +25,8 @@ class DetachGuarantorGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        Installment::factory()->count(5)->create();
+        $branch = Branch::query()->firstOrFail();
+        Installment::factory()->count(5)->create(['branch_id' => $branch->id]);
         foreach (Installment::all() as $installment) {
             $installment->guarantors()->attach(Customer::factory()->count(5)->create(), ['any_card_charge' => true]);
         }

@@ -28,7 +28,8 @@ class CreateDocumentGraphQLMutationTest extends GraphQLTestCase
 
         Attachment::query()->forceDelete();
         Installment::query()->forceDelete();
-        $this->_installment = Installment::factory()->create();
+        $branch = Branch::query()->firstOrFail();
+        $this->_installment = Installment::factory()->create(['branch_id' => $branch->id]);
     }
 
     #[Test]
