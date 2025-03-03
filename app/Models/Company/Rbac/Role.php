@@ -73,10 +73,10 @@ class Role extends Model
 
             $result[$rolePermission->permission->slug->value] = $result[$rolePermission->permission->slug->value] ?? [];
 
-            if (! $rolePermission->permission->is_branch_related) {
-                $result[$rolePermission->permission->slug->value]['all'] = true;
-            } else {
+            if ($rolePermission->branch_id !== null) {
                 $result[$rolePermission->permission->slug->value]['branch_' . $rolePermission->branch_id] = true;
+            } else {
+                $result[$rolePermission->permission->slug->value]['all'] = true;
             }
         }
 

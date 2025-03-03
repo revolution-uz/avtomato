@@ -18,28 +18,28 @@ class AdminRoleSeeder extends Seeder
      */
     public function run(): void
     {
-        /** @var Role $adminRole */
-        $adminRole = Role::query()->firstOrCreate(['name' => UserRoleEnum::ADMIN->value]);
+        /** @var Role $admin */
+        $admin = Role::query()->firstOrCreate(['name' => UserRoleEnum::ADMIN->value]);
 
         try {
             $permissions = Permission::all();
             foreach ($permissions as $permission) {
                 if (
-                    ! $adminRole->permissions()->where('permissions.id', $permission->id)->exists()
+                    ! $admin->permissions()->where('permission_id', $permission->id)->exists()
                 ) {
-                    if (PermissionEnum::getIsBranchRelated($permission->slug)) {
-                        foreach (Branch::all() as $branch) {
-                            if (
-                                ! $adminRole->permissions()
-                                    ->where('permissions.id', $permission->id)
-                                    ->where('branch_id', $branch->id)
-                                    ->exists()
-                            ) {
-                                $adminRole->permissions()->attach($permission->id, ['branch_id' => $branch->id]);
-                            }
+                    $admin->permissions()->attach($permission->id);
+                }
+
+                if (PermissionEnum::getIsBranchRelated($permission->slug)) {
+                    foreach (Branch::all() as $branch) {
+                        if (
+                            ! $admin->permissions()
+                                ->where('permission_id', $permission->id)
+                                ->where('branch_id', $branch->id)
+                                ->exists()
+                        ) {
+                            $admin->permissions()->attach($permission->id, ['branch_id' => $branch->id]);
                         }
-                    } else {
-                        $adminRole->permissions()->attach($permission->id);
                     }
                 }
             }

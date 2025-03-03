@@ -48,19 +48,12 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
 
     private Installment $_installment;
     private array $_input;
-    private Branch $_branch;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->_branch = Branch::query()->firstOrFail();
-        Installment::factory()->count(5)->create([
-            'status' => InstallmentStatusEnum::ACTIVE,
-            'any_card_charge' => false,
-            'type' => InstallmentTypeEnum::WITHOUT_CARD,
-            'branch_id' => $this->_branch->id,
-        ]);
+        Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
 
         $this->_installment = Installment::query()->inRandomOrder()->first();
         $this->_input = ['id' => $this->_installment->id, 'any_card_charge' => true];
@@ -84,35 +77,21 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
         $feature->update(['amount' => 29]);
 
         // when period is equal to 1
-        $installment = Installment::factory()->create([
-            'period' => 1, 'any_card_charge' => false,
-            'type' => InstallmentTypeEnum::WITHOUT_CARD,
-            'branch_id' => $this->_branch->id,
-        ]);
+        $installment = Installment::factory()->create(['period' => 1, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
         $this->assertCorrectPayment($response, $feature, $installment, 29);
 
         // when period is equal to 3
-        $installment = Installment::factory()->create([
-            'period' => 3,
-            'any_card_charge' => false,
-            'type' => InstallmentTypeEnum::WITH_CARD,
-            'branch_id' => $this->_branch->id,
-        ]);
+        $installment = Installment::factory()->create(['period' => 3, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITH_CARD]);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
         $this->assertCorrectPayment($response, $feature, $installment, 29);
 
         // when period is equal to 4
-        $installment = Installment::factory()->create([
-            'period' => 4,
-            'any_card_charge' => false,
-            'type' => InstallmentTypeEnum::WITHOUT_CARD,
-            'branch_id' => $this->_branch->id,
-        ]);
+        $installment = Installment::factory()->create(['period' => 4, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
@@ -127,33 +106,21 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
         $feature->update(['amount' => 29]);
 
         // when any_card_charge is already true
-        $installment = Installment::factory()->create([
-            'any_card_charge' => true,
-            'type' => InstallmentTypeEnum::WITHOUT_CARD,
-            'branch_id' => $this->_branch->id,
-        ]);
+        $installment = Installment::factory()->create(['any_card_charge' => true, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
         $this->assertNonPayment($response, $feature, $installment);
 
         // when type is already WITH_PINFL
-        $installment = Installment::factory()->create([
-            'any_card_charge' => false,
-            'type' => InstallmentTypeEnum::WITH_PINFL,
-            'branch_id' => $this->_branch->id,
-        ]);
+        $installment = Installment::factory()->create(['any_card_charge' => false, 'type' => InstallmentTypeEnum::WITH_PINFL]);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
         $this->assertNonPayment($response, $feature, $installment);
 
         // when type is already WITH_BOTH
-        $installment = Installment::factory()->create([
-            'any_card_charge' => true,
-            'type' => InstallmentTypeEnum::WITH_BOTH,
-            'branch_id' => $this->_branch->id,
-        ]);
+        $installment = Installment::factory()->create(['any_card_charge' => true, 'type' => InstallmentTypeEnum::WITH_BOTH]);
         $response = $this
             ->actingAs($this->createAdminUser())
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));

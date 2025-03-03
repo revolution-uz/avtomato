@@ -44,13 +44,11 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $branch = Branch::query()->firstOrFail();
-        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
-        $this->_transaction = Transaction::factory()->create(['installment_id' => $installment->id]);
+        $this->_transaction = Transaction::factory()->create();
 
         $this->_input = [
             'id' => $this->_transaction->id,
-            'installment_id' => $installment->id,
+            'installment_id' => Installment::factory()->create()?->id,
             'customer_id' => Customer::factory()->create()?->id,
             'transaction_type_id' => TransactionType::factory()->create()?->id,
             'amount' => rand(100, 1000),

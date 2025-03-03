@@ -18,13 +18,10 @@ class ChangeStatusGraphQLMutationTest extends GraphQLTestCase
 
     protected bool $tenancy = true;
 
-    private $_branch;
-
     protected function setUp(): void
     {
         parent::setUp();
         Installment::query()->forceDelete();
-        $this->_branch = Branch::query()->firstOrFail();
     }
 
     #[Test]
@@ -33,7 +30,6 @@ class ChangeStatusGraphQLMutationTest extends GraphQLTestCase
         $installment = Installment::factory()->create(
             [
                 'status' => InstallmentStatusEnum::ACTIVE,
-                'branch_id' => $this->_branch->id,
             ]
         );
         $response = $this->sendGraphQLRequest(
@@ -49,7 +45,6 @@ class ChangeStatusGraphQLMutationTest extends GraphQLTestCase
         $installment = Installment::factory()->create(
             [
                 'status' => InstallmentStatusEnum::ACTIVE,
-                'branch_id' => $this->_branch->id,
             ]
         );
         $response = $this->sendGraphQLRequest(
@@ -66,7 +61,6 @@ class ChangeStatusGraphQLMutationTest extends GraphQLTestCase
         $installment = Installment::factory()->create(
             [
                 'status' => InstallmentStatusEnum::CANCELED,
-                'branch_id' => $this->_branch->id,
             ]
         );
         $response = $this->sendGraphQLRequest(
@@ -99,7 +93,7 @@ class ChangeStatusGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function failActivate(): void
     {
-        $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE, 'branch_id' => $this->_branch->id]);
+        $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
         $response = $this->sendGraphQLRequest($installment->id, InstallmentStatusEnum::ACTIVE->value);
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());

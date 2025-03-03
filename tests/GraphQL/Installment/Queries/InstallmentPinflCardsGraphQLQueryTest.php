@@ -2,7 +2,6 @@
 
 namespace Tests\GraphQL\Installment\Queries;
 
-use App\Models\Company\Branch;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\UniredCard;
@@ -45,8 +44,7 @@ class InstallmentPinflCardsGraphQLQueryTest extends GraphQLTestCase
         UniredCard::factory()->count(floor($this->_totalCardsCount / 2))->create(['customer_id' => $customer->id]);
         UniredCard::factory()->count(ceil($this->_totalCardsCount / 2))->create(['customer_id' => $guarantor->id]);
 
-        $branch = Branch::query()->firstOrFail();
-        $this->_installment = Installment::factory()->create(['customer_id' => $customer->id, 'branch_id' => $branch->id]);
+        $this->_installment = Installment::factory()->create(['customer_id' => $customer->id]);
         $this->_installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
     }
 

@@ -23,7 +23,6 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     private array $_input;
 
     private Carbon $_carbon;
-    private Branch $_branch;
 
     protected function setUp(): void
     {
@@ -47,13 +46,12 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         /** @var Installment[] $installments */
         $installments = [];
 
-        $this->_branch = Branch::query()->firstOrFail();
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subMonth(), 'branch_id' => $this->_branch->id]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['branch_id' => $this->_branch->id]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['branch_id' => $this->_branch->id]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(1), 'branch_id' => $this->_branch->id]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(2), 'branch_id' => $this->_branch->id]));
-        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(3), 'branch_id' => $this->_branch->id]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subMonth()]));
+        $installments[] = Installment::factory()->create($this->_input);
+        $installments[] = Installment::factory()->create($this->_input);
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(1)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(2)]));
+        $installments[] = Installment::factory()->create(array_merge($this->_input, ['starts_in' => (clone $this->_carbon)->subDays(3)]));
 
         Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 345000]); // 345000 is debt amount for the second installment
         Transaction::factory()->create(['installment_id' => $installments[1]->id, 'amount' => 100000]);
@@ -309,7 +307,7 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
     public function successStatisticsForEndOfMonths()
     {
         /** @var Installment $installment */
-        $installment = Installment::factory()->create(array_merge($this->_input, ['starts_in' => '2024-12-31', 'branch_id' => $this->_branch->id]));
+        $installment = Installment::factory()->create(array_merge($this->_input, ['starts_in' => '2024-12-31']));
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => 862500]);
 
         $to = Carbon::createFromFormat('Y-m-d', '2025-02-28')->startOfDay();
@@ -366,12 +364,13 @@ class StatisticsGraphQLQueryTest extends GraphQLTestCase
         $to = $this->_carbon;
         $from = (clone $to)->subDays(6);
 
-        Installment::query()->forceDelete();
-        Installment::factory()->create(array_merge($this->_input, ['branch_id' => $this->_branch->id]));
+        /** @var Branch $branch */
+        $branch = Branch::factory()->create();
+        Installment::factory()->create(array_merge($this->_input, ['branch_id' => $branch->id]));
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($from, $to, [$this->_branch->id]));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($from, $to, [$branch->id]));
 
         $expectedData = [
             [

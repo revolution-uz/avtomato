@@ -24,9 +24,7 @@ class UpdateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $branch = Branch::query()->firstOrFail();
-        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
-        InstallmentComment::factory()->count(10)->create(['installment_id' => $installment->id]);
+        InstallmentComment::factory()->count(10)->create();
     }
 
     #[Test]

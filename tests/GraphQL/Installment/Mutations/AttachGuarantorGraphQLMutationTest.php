@@ -29,9 +29,8 @@ class AttachGuarantorGraphQLMutationTest extends GraphQLTestCase
         parent::setUp();
         Installment::query()->forceDelete();
         Customer::query()->forceDelete();
-        $branch = Branch::query()->firstOrFail();
 
-        $this->_installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        $this->_installment = Installment::factory()->create();
         $this->_customer = Customer::factory()->create();
     }
 

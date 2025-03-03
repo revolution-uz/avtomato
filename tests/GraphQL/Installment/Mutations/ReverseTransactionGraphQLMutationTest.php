@@ -31,7 +31,7 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        Artisan::call('tenants:seed', ['--class' => TransactionTypeSeeder::class, '--tenants' => [tenant('id')]]);
+        Artisan::call('tenants:seed', ['--class' => TransactionTypeSeeder::class, '--tenants' => [tenant()->id]]);
         $feature = Feature::findByName('atmos_card_pay');
         $feature->data = json_encode([
             'username' => 'username',
@@ -42,7 +42,6 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
             'token_type' => 'token_type',
         ]);
         $feature->saveOrFail();
-        $this->_branch = Branch::query()->firstOrFail();
     }
 
     #[Test]
@@ -52,7 +51,6 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         AtmosFaker::reversePayment();
         $installment = Installment::factory()->create([
             'paid_amount' => 10000,
-            'branch_id' => $this->_branch->id,
         ]);
         $this->_transaction = Transaction::factory()->create([
             'installment_id' => $installment->id,
@@ -72,7 +70,6 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
     {
         $installment = Installment::factory()->create([
             'paid_amount' => 10000,
-            'branch_id' => $this->_branch->id,
         ]);
         $transactionType = TransactionType::factory()->create([
             'id' => rand(500, 1000),
@@ -94,8 +91,7 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function cannotReverseInitialFeeTransaction()
     {
-        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
-        $this->_transaction = Transaction::factory()->create(['is_initial_fee' => true, 'installment_id' => $installment->id]);
+        $this->_transaction = Transaction::factory()->create(['is_initial_fee' => true]);
 
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -136,10 +132,8 @@ class ReverseTransactionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.exists', ['attribute' => 'id']), $response->json('errors.0.extensions.validation.id.0'));
 
         // already cancelled transaction
-        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
         $this->_transaction = Transaction::factory()->create([
             'status' => TransactionStatusEnum::CANCELED,
-            'installment_id' => $installment->id,
         ]);
         $this->actingAs($this->createAdminUser())
             ->postJson(

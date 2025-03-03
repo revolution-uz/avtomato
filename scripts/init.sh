@@ -27,9 +27,9 @@ echo 'Seeding dummy data. Started.'
 docker exec -t avtomato php artisan db:seed DummySeeder
 echo 'Seeding dummy data. Finished.'
 
-#echo 'Seeding data for tenants. Started.'
-#docker exec -t avtomato php artisan tenants:seed
-#echo 'Seeding data for tenants. Finished.'
+echo 'Seeding data for tenants. Started.'
+docker exec -t avtomato php artisan tenants:seed
+echo 'Seeding data for tenants. Finished.'
 
 echo 'Clearing cache. Started.'
 docker exec -t avtomato php artisan optimize:clear

@@ -35,8 +35,7 @@ class SingleInstallmentGraphQLQueryTest extends GraphQLTestCase
         parent::setUp();
 
         Installment::query()->forceDelete();
-        $branch = Branch::query()->firstOrFail();
-        $this->_installment = Installment::factory()->create(['starts_in' => now()->addDays(5), 'branch_id' => $branch->id]);
+        $this->_installment = Installment::factory()->create(['starts_in' => now()->addDays(5)]);
         Attachment::upload(UploadedFile::fake()->image('photo1.jpg'), AttachmentTypeEnum::AVATAR, $this->_installment->admin, 'photo1.jpg');
         $guarantor = Customer::factory()->create();
         $this->_installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);

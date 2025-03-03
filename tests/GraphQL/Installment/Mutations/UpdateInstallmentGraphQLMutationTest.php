@@ -52,8 +52,7 @@ class UpdateInstallmentGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $branch = Branch::query()->firstOrFail();
-        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE, 'branch_id' => $branch->id]);
+        $this->_installment = Installment::factory()->create(['status' => InstallmentStatusEnum::INACTIVE]);
         $this->_tariff = Tariff::factory()->create([
             'min_period' => 1,
             'max_period' => 10,

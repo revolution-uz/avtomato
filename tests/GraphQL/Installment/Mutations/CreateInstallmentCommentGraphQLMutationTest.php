@@ -20,20 +20,18 @@ class CreateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
     protected bool $tenancy = true;
 
     private string $_comment = 'This is a comment';
-    private $_branch;
 
     protected function setUp(): void
     {
         parent::setUp();
         Installment::query()->forceDelete();
         InstallmentComment::query()->forceDelete();
-        $this->_branch = Branch::query()->firstOrFail();
     }
 
     #[Test]
     public function successComment()
     {
-        $installment = Installment::factory()->create(['branch_id' => $this->_branch->id]);
+        $installment = Installment::factory()->create();
         $response = $this->sendGraphQLRequest(
             installment_id: $installment->id,
             comment: $this->_comment,

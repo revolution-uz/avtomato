@@ -23,8 +23,7 @@ class DeleteDocumentGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $branch = Branch::query()->firstOrFail();
-        Installment::factory()->count(5)->create(['branch_id' => $branch->id]);
+        Installment::factory()->count(5)->create();
         foreach (Installment::all() as $installment) {
             Attachment::factory()->count(5)->create([
                 'attachmentable_id' => $installment->id,

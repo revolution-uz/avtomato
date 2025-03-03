@@ -22,9 +22,7 @@ class DeleteInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
         parent::setUp();
 
         InstallmentComment::query()->forceDelete();
-        $branch = Branch::query()->firstOrFail();
-        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
-        InstallmentComment::factory()->count(5)->create(['installment_id' => $installment->id]);
+        InstallmentComment::factory()->count(5)->create();
     }
 
     #[Test]

@@ -26,8 +26,7 @@ class SingleTransactionGraphQLQueryTest extends GraphQLTestCase
 
         Installment::query()->forceDelete();
         Transaction::query()->forceDelete();
-        $branch = Branch::query()->firstOrFail();
-        $this->_installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        $this->_installment = Installment::factory()->create();
         $this->_transaction = Transaction::factory()->create(['installment_id' => $this->_installment->id, 'branch_id' => $this->_installment->branch_id]);
     }
 

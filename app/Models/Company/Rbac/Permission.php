@@ -13,7 +13,6 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property PermissionEnum $slug
- * @property bool $is_branch_related
  * @property int $permission_group_id
  * @property int $feature_id
  * @property Carbon $created_at
@@ -21,12 +20,12 @@ use Illuminate\Support\Carbon;
  * @property PermissionGroup $permissionGroup
  * @property Feature $feature
  * @property-read string $name
+ * @property-read bool $is_branch_related
  */
 class Permission extends Model
 {
     protected $fillable = [
         'slug',
-        'is_branch_related',
         'permission_group_id',
         'feature_id',
     ];
@@ -55,5 +54,10 @@ class Permission extends Model
         return Attribute::make(
             get: fn () => __('permission.' . $this->slug->value)
         );
+    }
+
+    public function getIsBranchRelatedAttribute()
+    {
+        return PermissionEnum::getIsBranchRelated($this->slug);
     }
 }
