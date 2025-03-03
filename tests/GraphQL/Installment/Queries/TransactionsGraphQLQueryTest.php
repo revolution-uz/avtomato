@@ -249,7 +249,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         /** @var Branch $branch */
         $branch = Branch::factory()->create(['name' => 'Test Branch']);
         /** @var Installment $installment */
-        $installment = Installment::factory()->create(['branch_id' => $branch->id]);
+        $installment = Installment::factory()->create();
         /** @var Customer $customer */
         $customer = Customer::factory()->create(['first_name' => 'Test Firstname', 'last_name' => 'Test Lastname']);
 

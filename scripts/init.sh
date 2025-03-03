@@ -34,3 +34,4 @@ echo 'Seeding data for tenants. Finished.'
 echo 'Clearing cache. Started.'
 docker exec -t avtomato php artisan optimize:clear
 echo 'Clearing cache. Finished.'
+

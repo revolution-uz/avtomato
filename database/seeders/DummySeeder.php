@@ -28,6 +28,7 @@ class DummySeeder extends Seeder
             'owner_name' => 'Yura Sultonov',
             'is_active' => true,
         ]);
+
         $company->domains()->create(['domain' => 'revo.avtomato.test']);
         $company->domains()->create(['domain' => 'revo.avtomato.uz']);
         $company->domains()->create(['domain' => 'revo']);
