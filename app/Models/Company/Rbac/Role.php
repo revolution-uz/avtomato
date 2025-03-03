@@ -102,16 +102,13 @@ class Role extends Model
                 $permissionItem['name'] = $permission->name;
                 $permissionItem['branches'] = [];
 
-                $allBranchEnabled = true;
+                $allBranchEnabled = $this->rolePermissions()->whereNull('branch_id')->exists();
                 foreach (Branch::all() as $branch) {
                     $branchItem['id'] = $branch->id;
                     $branchItem['name'] = $branch->name;
                     $branchItem['editable'] = $permission->is_branch_related;
-                    $branchItem['enabled'] = in_array($branch->id, $permissionBranches[$permission->id] ?? [], true);
+                    $branchItem['enabled'] = $allBranchEnabled ?: in_array($branch->id, $permissionBranches[$permission->id] ?? [], true);
 
-                    if ($allBranchEnabled) {
-                        $allBranchEnabled = $branchItem['enabled'];
-                    }
                     $permissionItem['branches'][] = $branchItem;
                 }
                 // Add All branch
@@ -121,6 +118,7 @@ class Role extends Model
                     'editable' => true,
                     'enabled' => $allBranchEnabled,
                 ];
+
                 $groupItem['permissions'][] = $permissionItem;
             }
 
