@@ -56,6 +56,11 @@ class AtmosFaker
         }
     }
 
+    public static function getCardInfo(): void
+    {
+        self::fakeResponse(AtmosCardClient::CARD_CHECK, '../JSON-for-testing/atmos/card/get-card-info.json');
+    }
+
     public static function fakeResponse(string $path, string $jsonPath, $status = 200): void
     {
         Http::fake([

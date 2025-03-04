@@ -1,0 +1,33 @@
+{
+  "result": {
+    "code": "OK",
+    "description": "Нет ошибок"
+  },
+  "id": 5056300,
+  "card": {
+    "id": "422f03c2-34a8-30a7-94c9-88123cdc8568",
+    "balance": 62217,
+    "expiry": "2808",
+    "full_name": "John Doe",
+    "pan": "986012******3456",
+    "phone": "998901234567",
+    "sms": true,
+    "status": 0,
+    "card_type": "private",
+    "result": null,
+    "balance_sum": 622000000
+  },
+  "bank": {
+    "id": 3,
+    "code": "12",
+    "mfo": "00443",
+    "name": "Хамкорбанк",
+    "logo": "hamkor.png",
+    "sum_max_onetime": 0,
+    "sum_max_month": 20000000,
+    "intrabank_pcnt": 0.50,
+    "interbank_pcnt": 0.50,
+    "p2p_enable": true,
+    "visa_code": null
+  }
+}
