@@ -5,7 +5,6 @@ namespace App\Models\Company\LoyaltyProgram;
 use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Helpers\CardHelper;
-use App\Models\Company\ScoringRequest;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -73,22 +72,6 @@ class Card extends Model
 
         return $hashValue;
     }
-
-    //    protected static function boot()
-    //    {
-    //        parent::boot();
-    //
-    //        static::created(function (self $card) {
-    //            $scoringRequests = ScoringRequest::query()->whereNull('card_id')->when(function ($query) use ($card) {
-    //                $query->where('request->number', $card->number);
-    //            })->get();
-    //            foreach ($scoringRequests as $scoringRequest) {
-    //                $scoringRequest->card_id = $card->id;
-    //                $scoringRequest->user_id = $card->user_id;
-    //                $scoringRequest->save();
-    //            }
-    //        });
-    //    }
 
     public function setPan(): void
     {
