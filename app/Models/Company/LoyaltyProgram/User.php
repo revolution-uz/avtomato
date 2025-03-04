@@ -6,6 +6,7 @@ use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -19,6 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property Subscription[] $subscriptions
  */
 class User extends Model
 {
@@ -38,6 +40,11 @@ class User extends Model
     protected $casts = [
         'birth_date' => 'date',
     ];
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
 
     public function createTokenWithData(string $deviceName, array $data = []): string
     {

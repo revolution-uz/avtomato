@@ -307,6 +307,11 @@ enum PermissionGroupEnum: string
                 PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_DELETE,
                 PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_CREATE,
                 PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_SEND,
+                PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL,
+                PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW,
+                PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
+                PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
+                PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE,
             ],
         };
     }

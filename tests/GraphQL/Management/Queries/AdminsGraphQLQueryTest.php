@@ -269,6 +269,11 @@ class AdminsGraphQLQueryTest extends GraphQLTestCase
                 'loyalty_program_notification_delete',
                 'loyalty_program_notification_create',
                 'loyalty_program_notification_send',
+                'loyalty_program_subscription_view_all',
+                'loyalty_program_subscription_view',
+                'loyalty_program_subscription_edit',
+                'loyalty_program_subscription_delete',
+                'loyalty_program_subscription_create',
             ],
         ],
     ];

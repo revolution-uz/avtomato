@@ -2,9 +2,14 @@
 
 namespace App\GraphQL\LoyaltyProgram\Client;
 
+use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\TariffGraphQLType;
+use App\GraphQL\LoyaltyProgram\Client\Mutations\CancelSubscriptionGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Client\Mutations\CreateSubscriptionGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\ProfileUpdateGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Queries\ProfileMeGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
@@ -16,12 +21,17 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
             'mutation' => [
                 ProfileUpdateGraphQLMutation::class,
                 LogoutGraphQLMutation::class,
+                CreateSubscriptionGraphQLMutation::class,
+                CancelSubscriptionGraphQLMutation::class,
             ],
             'query' => [
                 ProfileMeGraphQLQuery::class,
             ],
             'types' => [
                 UserGraphQLType::class,
+                SubscriptionGraphQLType::class,
+                CardGraphQLType::class,
+                TariffGraphQLType::class,
             ],
             'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_loyalty_program_client_token', 'loyalty_program'],
         ];
