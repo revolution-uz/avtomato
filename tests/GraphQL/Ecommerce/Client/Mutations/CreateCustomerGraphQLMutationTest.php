@@ -2,10 +2,8 @@
 
 namespace Tests\GraphQL\Ecommerce\Client\Mutations;
 
-use App\Enums\GenderEnum;
 use App\Models\Company\Customer;
 use App\Models\Company\Ecommerce\User;
-use Faker\Factory as Faker;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
@@ -43,7 +41,6 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $this->faker = Faker::create();
         $this->_user = $this->createEcommerceClientUser();
     }
 
@@ -151,10 +148,10 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
 
         // Rule errors
         $variables = $this->getInputVariables(variables: [
-            'pinfl' => $this->faker->numerify(str_repeat('#', 13)),
-            'tin' => $this->faker->numerify(str_repeat('#', 8)),
-            'passport_series' => $this->faker->regexify('[A-Z]{3}'),
-            'passport_number' => $this->faker->numerify(str_repeat('#', 8)),
+            'pinfl' => '6890602306455',
+            'tin' => '98817752',
+            'passport_series' => 'BOB',
+            'passport_number' => '60650699',
             'passport_given_date' => Str::random(10),
             'passport_expiration_date' => Str::random(10),
             'passport_given_place' => Str::random(129),
@@ -238,20 +235,20 @@ class CreateCustomerGraphQLMutationTest extends GraphQLTestCase
     {
         return array_merge(
             [
-                'pinfl' => $this->faker->numerify(str_repeat('#', 14)),
-                'tin' => ! $isRequired ? $this->faker->numerify(str_repeat('#', 9)) : null,
-                'passport_series' => $this->faker->regexify('[A-Z]{2}'),
-                'passport_number' => $this->faker->numerify(str_repeat('#', 7)),
-                'birth_date' => $this->faker->date,
-                'birth_place' => Str::limit($this->faker->city, 32),
-                'gender' => $this->faker->randomElement(GenderEnum::values()),
-                'first_name' => Str::limit($this->faker->firstName, 32),
-                'last_name' => Str::limit($this->faker->lastName, 32),
-                'middle_name' => ! $isRequired ? Str::limit($this->faker->firstName, 32) : null,
-                'passport_citizenship' => Str::limit($this->faker->country, 32),
-                'passport_expiration_date' => $this->faker->date,
-                'passport_given_date' => $this->faker->date,
-                'passport_given_place' => Str::limit($this->faker->city, 128),
+                'pinfl' => '68906023064551',
+                'tin' => ! $isRequired ? '988177522' : null,
+                'passport_series' => 'BO',
+                'passport_number' => '6065069',
+                'birth_date' => '2025-03-04',
+                'birth_place' => 'West Kayla',
+                'gender' => 0,
+                'first_name' => 'Anabel',
+                'last_name' => 'Tromp',
+                'middle_name' => ! $isRequired ? 'Van' : null,
+                'passport_citizenship' => 'Bhutan',
+                'passport_expiration_date' => '2025-03-04',
+                'passport_given_date' => '2025-03-04',
+                'passport_given_place' => 'East Amaliamouth',
             ],
             $variables
         );
