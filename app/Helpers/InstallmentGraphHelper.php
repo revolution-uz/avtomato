@@ -17,18 +17,18 @@ class InstallmentGraphHelper
      */
     public static function getGraphs(Installment $installment): array
     {
-        /** @var Transaction[] $transactions */
         $transactions = $installment->transactions()->where('status', TransactionStatusEnum::SUCCESS)->orderBy('id')->select('amount', 'created_at')->get();
-        $paidAmount = $installment->paid_amount;
+        $paidAmount = max(round($transactions->sum('amount') - $installment->initial_fee, 2), 0);
         $graphs = [];
         $months = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
-        $allPaid = $installment->debt_amount <= 0;
+        $allPaid = $paidAmount >= $installment->installment_amount;
         /** @var Carbon $monthlyPaymentDate */
         foreach ($months as $index => $monthlyPaymentDate) {
             $paidForMonth = round(min($paidAmount, $installment->monthlyPayment), 2);
             $paidAmount -= $paidForMonth;
             $paidDateForMonth = Carbon::now();
             $paidSumBeforeNow = 0;
+            /** @var Transaction $transaction */
             foreach ($transactions as $transaction) {
                 $paidSumBeforeNow += $transaction->amount;
                 if (round(($index + 1) * $installment->monthlyPayment + $installment->initial_fee) <= round($paidSumBeforeNow)) {
