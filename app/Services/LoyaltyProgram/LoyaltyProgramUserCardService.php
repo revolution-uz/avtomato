@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\LoyaltyProgram;
 
 use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
@@ -9,6 +9,8 @@ use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\LoyaltyProgram\Card;
+use App\Services\AtmosService;
+use App\Services\ConfirmationService;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 

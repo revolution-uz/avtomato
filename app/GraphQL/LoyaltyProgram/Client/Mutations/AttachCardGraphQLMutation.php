@@ -4,7 +4,7 @@ namespace App\GraphQL\LoyaltyProgram\Client\Mutations;
 
 use App\GraphQL\LoyaltyProgram\Client\Types\AttachCardGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
-use App\Services\LoyaltyProgramUserCardService;
+use App\Services\LoyaltyProgram\LoyaltyProgramUserCardService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;

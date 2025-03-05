@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Controllers\PartnerApi\LoyaltyProgram;
+
+use App\DTOs\LoyaltyProgram\ItemDTO;
+use App\DTOs\LoyaltyProgram\PriceDTO;
+use App\DTOs\LoyaltyProgram\ShopDTO;
+use App\Http\Controllers\Controller;
+use App\Jobs\LoyaltyProgram\SyncItemsJob;
+use App\Jobs\LoyaltyProgram\SyncShopsJob;
+use Illuminate\Http\Request;
+
+class LoyaltProgramSyncController extends Controller
+{
+    protected $channel = 'loyalty-program';
+    protected $type = 'sync-partner';
+
+    public function postShops(Request $request)
+    {
+        $shops = collect($request->input('shops'))->map(function ($shopData) {
+            return ShopDTO::from($shopData);
+        });
+
+        foreach ($shops as $shop) {
+            SyncShopsJob::dispatch($shop);
+        }
+
+        $response = ['success' => true, 'message' => 'Shops processed successfully'];
+        $this->logging($request, $response, $this->channel, $this->type, 'postShops');
+
+        return $this->successResponse($response);
+    }
+
+    public function postItems(Request $request)
+    {
+        $items = collect($request->input('items'))->map(function ($itemData) {
+            return ItemDTO::from($itemData);
+        });
+
+        foreach ($items as $item) {
+            SyncItemsJob::dispatch($item);
+        }
+
+        $response = ['success' => true, 'message' => 'Items processed successfully'];
+        $this->logging($request, $response, $this->channel, $this->type, 'postItems');
+
+        return $this->successResponse($response);
+    }
+
+    public function postPrices(Request $request)
+    {
+        $prices = collect($request->input('prices'))->map(function ($priceData) {
+            return PriceDTO::from($priceData);
+        });
+
+        foreach ($prices as $item) {
+            SyncItemsJob::dispatch($item);
+        }
+
+        $response = ['success' => true, 'message' => 'Items processed successfully'];
+        $this->logging($request, $response, $this->channel, $this->type, 'postItems');
+
+        return $this->successResponse($response);
+    }
+
+    public function successResponse($data)
+    {
+        return response()->json(['success' => true, 'data' => $data]);
+    }
+
+    public function failedResponse($message)
+    {
+        return response()->json(['success' => true, 'message' => $message]);
+    }
+}

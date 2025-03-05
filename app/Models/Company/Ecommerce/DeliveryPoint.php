@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * @property int $id
@@ -56,7 +57,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class DeliveryPoint extends Model
 {
-    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes;
+    use HasFactory, HasTranslations, OrderBySortable, SoftDeletes, TenantConnection;
 
     protected static array $sortables = ['id', 'name_uz', 'name_ru', 'name_en', 'name_oz', 'description_uz', 'description_ru', 'description_en', 'description_oz', 'is_prepaid'];
 
