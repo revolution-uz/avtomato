@@ -256,6 +256,10 @@ class Installment extends Model
 
     public function getDebtAmountAttribute(): float
     {
+        if ($this->status !== InstallmentStatusEnum::ACTIVE) {
+            return 0;
+        }
+
         return $this->monthlyPayment * min(max(ceil($this->starts_in->diffInMonths()), 0), $this->period) - $this->paid_amount;
     }
 
