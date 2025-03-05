@@ -19,7 +19,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private function logging($request, $response, $channel, $type, $method)
+    protected function logging($request, $response, $channel, $type, $method)
     {
         Log::channel($channel)->info($type, [
             'header' => HideSensitiveDataFromLogging::handle($request->headers->all()),
