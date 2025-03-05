@@ -2,6 +2,7 @@
 
 namespace Tests\GraphQL\Installment\Queries;
 
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Models\Company\Branch;
@@ -381,6 +382,7 @@ class TransactionAttemptsGraphQLQueryTest extends GraphQLTestCase
             'period' => 10,
             'paid_amount' => 0,
             'starts_in' => Carbon::now(),
+            'status' => InstallmentStatusEnum::ACTIVE,
         ]);
 
         $transaction = Transaction::factory()->create([

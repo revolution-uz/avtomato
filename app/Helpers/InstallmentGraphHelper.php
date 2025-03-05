@@ -17,11 +17,12 @@ class InstallmentGraphHelper
      */
     public static function getGraphs(Installment $installment): array
     {
+        /** @var Transaction[] $transactions */
         $transactions = $installment->transactions()->where('status', TransactionStatusEnum::SUCCESS)->orderBy('id')->select('amount', 'created_at')->get();
-        $paidAmount = max(round($transactions->sum('amount') - $installment->initial_fee, 2), 0);
+        $paidAmount = $installment->paid_amount;
         $graphs = [];
         $months = InstallmentService::generatePeriods($installment->starts_in, $installment->period);
-        $allPaid = $paidAmount >= $installment->installment_amount;
+        $allPaid = $installment->debt_amount <= 0;
         /** @var Carbon $monthlyPaymentDate */
         foreach ($months as $index => $monthlyPaymentDate) {
             $paidForMonth = round(min($paidAmount, $installment->monthlyPayment), 2);
@@ -29,23 +30,21 @@ class InstallmentGraphHelper
             $paidDateForMonth = Carbon::now();
             $paidSumBeforeNow = 0;
             foreach ($transactions as $transaction) {
-                /** @var Transaction $transaction */
                 $paidSumBeforeNow += $transaction->amount;
                 if (round(($index + 1) * $installment->monthlyPayment + $installment->initial_fee) <= round($paidSumBeforeNow)) {
                     $paidDateForMonth = $transaction->created_at;
                     break;
                 }
             }
+            $isOverdue = $monthlyPaymentDate->diffInDays() >= 1;
             $status = $allPaid || $paidForMonth >= $installment->monthlyPayment
                 ? InstallmentGraphStatusEnum::PAID
-                : ($monthlyPaymentDate->isPast()
-                    ? InstallmentGraphStatusEnum::DELAY
-                    : InstallmentGraphStatusEnum::NOT_STARTED);
+                : ($isOverdue ? InstallmentGraphStatusEnum::DELAY : InstallmentGraphStatusEnum::NOT_STARTED);
             $graphs[] = new InstallmentGraphDTO(
                 id: $index + 1,
                 amount: $installment->monthlyPayment,
                 paid_amount: $paidForMonth,
-                overdue_days: $monthlyPaymentDate->isPast() ? max(round($monthlyPaymentDate->diffInDays($paidDateForMonth)), 0) : 0,
+                overdue_days: $isOverdue ? max(round($monthlyPaymentDate->diffInDays($paidDateForMonth)), 0) : 0,
                 starts_in: $monthlyPaymentDate,
                 status: $status
             );
