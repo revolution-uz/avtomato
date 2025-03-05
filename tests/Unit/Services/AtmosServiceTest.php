@@ -4,6 +4,7 @@ namespace Tests\Unit\Services;
 
 use App\Clients\AtmosCardClient;
 use App\Clients\AtmosPinflClient;
+use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
 use App\Enums\FeatureEnum;
@@ -67,6 +68,7 @@ class AtmosServiceTest extends TestCase
             'starts_in' => Carbon::now()->subDay(),
             'period' => 3,
             'paid_amount' => 0,
+            'status' => InstallmentStatusEnum::ACTIVE,
         ]);
     }
 
