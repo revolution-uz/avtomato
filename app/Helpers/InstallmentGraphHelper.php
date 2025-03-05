@@ -36,15 +36,22 @@ class InstallmentGraphHelper
                     break;
                 }
             }
-            $isOverdue = $monthlyPaymentDate->diffInDays() >= 1;
-            $status = $allPaid || $paidForMonth >= $installment->monthlyPayment
-                ? InstallmentGraphStatusEnum::PAID
-                : ($isOverdue ? InstallmentGraphStatusEnum::DELAY : InstallmentGraphStatusEnum::NOT_STARTED);
+
+            if ($allPaid || $paidForMonth >= $installment->monthlyPayment) {
+                $status = InstallmentGraphStatusEnum::PAID;
+            } elseif ($monthlyPaymentDate->isCurrentDay()) {
+                $status = InstallmentGraphStatusEnum::NOT_PAID;
+            } elseif ($monthlyPaymentDate->isPast()) {
+                $status = InstallmentGraphStatusEnum::DELAY;
+            } else {
+                $status = InstallmentGraphStatusEnum::NOT_STARTED;
+            }
+
             $graphs[] = new InstallmentGraphDTO(
                 id: $index + 1,
                 amount: $installment->monthlyPayment,
                 paid_amount: $paidForMonth,
-                overdue_days: $isOverdue ? max(round($monthlyPaymentDate->diffInDays($paidDateForMonth)), 0) : 0,
+                overdue_days: $status !== InstallmentGraphStatusEnum::NOT_STARTED ? max(round($monthlyPaymentDate->diffInDays($paidDateForMonth)), 0) : 0,
                 starts_in: $monthlyPaymentDate,
                 status: $status
             );
