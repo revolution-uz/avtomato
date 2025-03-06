@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\PartnerApi\LoyaltyProgram;
+namespace App\Http\Controllers\PartnerApi;
 
 use App\DTOs\LoyaltyProgram\ItemDTO;
 use App\DTOs\LoyaltyProgram\PriceDTO;

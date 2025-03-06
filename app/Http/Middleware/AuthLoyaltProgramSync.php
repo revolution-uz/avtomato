@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\FeatureEnum;
+use App\Enums\Company\CompanySettingsEnum;
 use App\Models\Company\CompanySettings;
 use Closure;
 use Illuminate\Http\Request;
@@ -26,7 +26,7 @@ class AuthLoyaltProgramSync
 
     private function generateTransmitAccessToken(): string
     {
-        $setting = CompanySettings::query()->where('name', FeatureEnum::LOYALTY_PROGRAM->name . '-sync-token')->firstOrFail();
+        $setting = CompanySettings::query()->where('name', CompanySettingsEnum::LOYALTY_PROGRAM_SYNC_TOKEN->name)->firstOrFail();
 
         return $setting->value;
     }

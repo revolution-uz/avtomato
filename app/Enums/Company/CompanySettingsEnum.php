@@ -19,6 +19,7 @@ enum CompanySettingsEnum: string
     case TELEGRAM_BOT_ENABLED = 'telegram_bot_enabled';
     case TELEGRAM_BOT_TOKEN = 'telegram_bot_token';
     case TELEGRAM_CHAT_ID = 'telegram_chat_id';
+    case LOYALTY_PROGRAM_SYNC_TOKEN = 'loyalty_program_sync_token';
 
     public static function getType(self $type): SettingsTypeEnum
     {
@@ -33,6 +34,7 @@ enum CompanySettingsEnum: string
             self::SMS_INSTALLMENT_PAYMENT,
             self::TELEGRAM_BOT_ENABLED => SettingsTypeEnum::BOOLEAN,
 
+            self::LOYALTY_PROGRAM_SYNC_TOKEN,
             self::TELEGRAM_BOT_TOKEN,
             self::TELEGRAM_CHAT_ID => SettingsTypeEnum::STRING,
         };
@@ -47,7 +49,7 @@ enum CompanySettingsEnum: string
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS => 15,
             self::SMS_INSTALLMENT_AUTO_CHARGE => true,
             self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT, self::TELEGRAM_BOT_ENABLED => false,
-            self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID => '',
+            self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID, self::LOYALTY_PROGRAM_SYNC_TOKEN => '',
         };
     }
 
@@ -86,6 +88,7 @@ enum CompanySettingsEnum: string
             self::TELEGRAM_BOT_ENABLED => __('settings.telegram_bot_enabled'),
             self::TELEGRAM_BOT_TOKEN => __('settings.telegram_bot_token'),
             self::TELEGRAM_CHAT_ID => __('settings.telegram_chat_id'),
+            self::TELEGRAM_CHAT_ID => __('settings.loyalty_program_sync_token'),
         };
     }
 }

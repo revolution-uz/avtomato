@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\PartnerApi\DocumentController;
-use App\Http\Controllers\PartnerApi\LoyaltyProgram\LoyaltProgramSyncController;
+use App\Http\Controllers\PartnerApi\LoyaltProgramSyncController;
 use App\Http\Controllers\PartnerApi\QrPayController;
 use Illuminate\Support\Facades\Route;
 
