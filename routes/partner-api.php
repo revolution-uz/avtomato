@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\PartnerApi\DocumentController;
-use App\Http\Controllers\PartnerApi\LoyaltProgramSyncController;
+use App\Http\Controllers\PartnerApi\LoyaltyProgramSyncController;
 use App\Http\Controllers\PartnerApi\QrPayController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,9 +32,9 @@ Route::group(['middleware' => ['optional_auth:sanctum']], function () {
         Route::get('state', 'check')->name('qr-pay.check');
     });
 });
-Route::group(['middleware' => ['loyalty_program_sync:sanctum']], function () {
+Route::group(['middleware' => ['auth.loyalty_program_sync']], function () {
     // Loyalty Program Sync
-    Route::prefix('sync')->controller(LoyaltProgramSyncController::class)->group(function () {
+    Route::prefix('sync')->controller(LoyaltyProgramSyncController::class)->group(function () {
         Route::post('shops', 'postShops')->name('sync.shops');
         Route::post('items', 'postItems')->name('sync.items');
         Route::post('prices', 'postPrices')->name('sync.prices');

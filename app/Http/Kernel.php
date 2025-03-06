@@ -76,7 +76,7 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'auth.loyalty_program_sync' => \App\Http\Middleware\AuthLoyaltProgramSync::class,
+        'auth.loyalty_program_sync' => \App\Http\Middleware\AuthLoyaltyProgramSync::class,
         'auth.sayqal' => \App\Http\Middleware\AuthSayqal::class,
         'auth.unired' => \App\Http\Middleware\AuthUnired::class,
         'auth.qr_pay' => \App\Http\Middleware\AuthQrPay::class,

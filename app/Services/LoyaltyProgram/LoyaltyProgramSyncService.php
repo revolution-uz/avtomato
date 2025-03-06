@@ -12,7 +12,7 @@ use App\Models\Company\LoyaltyProgram\Price;
 use App\Models\Company\LoyaltyProgram\Shop;
 use App\Models\Company\LoyaltyProgram\Stock;
 
-class LoyaltProgramSyncService
+class LoyaltyProgramSyncService
 {
     public function createOrUpdateShop(ShopDTO $shopDTO)
     {
