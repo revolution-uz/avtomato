@@ -32,6 +32,6 @@ class CurrentProfileGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return auth()->user();
+        return auth('company-admin')->user();
     }
 }

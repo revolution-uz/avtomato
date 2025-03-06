@@ -114,7 +114,7 @@ class UpdateInstallmentCommentGraphQLMutationTest extends GraphQLTestCase
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($simpleAdmin)
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($input));
         $this->assertSuccessResponse($response, $input);
     }

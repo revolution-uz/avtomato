@@ -32,7 +32,6 @@ class PermissionSeeder extends Seeder
                     foreach (PermissionGroupEnum::getPermissionsByGroup($group) as $permission) {
                         Permission::query()->firstOrCreate(['slug' => $permission], [
                             'permission_group_id' => $permissionGroup->id,
-                            'is_branch_related' => PermissionEnum::getIsBranchRelated($permission),
                             'feature_id' => Feature::findByName(PermissionEnum::getFeature($permission))->id,
                         ]);
                     }
