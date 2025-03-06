@@ -21,7 +21,7 @@ class SyncPricesJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    const JOB_ID = 'loyalty-program-sync-prices';
+    const JOB_ID = 'loyalty-program-sync';
 
     public function __construct(private readonly PriceDTO $price)
     {
@@ -47,7 +47,7 @@ class SyncPricesJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
      */
     public function uniqueId(): string
     {
-        return self::JOB_ID . '-' . tenant('id') . '-' . $this->price->item_code;
+        return self::JOB_ID . '-tenant-' . tenant('id') . '-price-item-code-' . $this->price->item_code;
     }
 
     public function tags(): array

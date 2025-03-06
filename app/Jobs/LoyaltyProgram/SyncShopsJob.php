@@ -21,7 +21,7 @@ class SyncShopsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    const JOB_ID = 'loyalty-program-sync-shops';
+    const JOB_ID = 'loyalty-program-sync';
 
     public function __construct(private readonly ShopDTO $shop)
     {
@@ -47,7 +47,7 @@ class SyncShopsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
      */
     public function uniqueId(): string
     {
-        return self::JOB_ID . '-' . tenant('id') . '-' . $this->shop->code;
+        return self::JOB_ID . '-tenant-' . tenant('id') . '-shop-code-' . $this->shop->code;
     }
 
     public function tags(): array

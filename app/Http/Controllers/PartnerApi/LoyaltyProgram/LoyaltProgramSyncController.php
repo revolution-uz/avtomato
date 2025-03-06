@@ -5,9 +5,11 @@ namespace App\Http\Controllers\PartnerApi\LoyaltyProgram;
 use App\DTOs\LoyaltyProgram\ItemDTO;
 use App\DTOs\LoyaltyProgram\PriceDTO;
 use App\DTOs\LoyaltyProgram\ShopDTO;
+use App\DTOs\LoyaltyProgram\StockDTO;
 use App\Http\Controllers\Controller;
 use App\Jobs\LoyaltyProgram\SyncItemsJob;
 use App\Jobs\LoyaltyProgram\SyncShopsJob;
+use App\Jobs\LoyaltyProgram\SyncStocksJob;
 use Illuminate\Http\Request;
 
 class LoyaltProgramSyncController extends Controller
@@ -58,7 +60,23 @@ class LoyaltProgramSyncController extends Controller
         }
 
         $response = ['success' => true, 'message' => 'Items processed successfully'];
-        $this->logging($request, $response, $this->channel, $this->type, 'postItems');
+        $this->logging($request, $response, $this->channel, $this->type, 'postPrices');
+
+        return $this->successResponse($response);
+    }
+
+    public function postStocks(Request $request)
+    {
+        $stocks = collect($request->input('stocks'))->map(function ($stockData) {
+            return StockDTO::from($stockData);
+        });
+
+        foreach ($stocks as $stock) {
+            SyncStocksJob::dispatch($stock);
+        }
+
+        $response = ['success' => true, 'message' => 'Items processed successfully'];
+        $this->logging($request, $response, $this->channel, $this->type, 'postStocks');
 
         return $this->successResponse($response);
     }
