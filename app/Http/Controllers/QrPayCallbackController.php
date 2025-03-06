@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\DTOs\QrPay\Payment\SbpPaymentDTO;
 use App\DTOs\QrPay\Payment\SbpTransferDTO;
-use App\Helpers\HideSensitiveDataFromLogging;
 use App\Http\Requests\QrPay\SbpPaymentWebhookCallbackRequest;
 use App\Models\Company;
 use App\Models\Company\SbpTransaction;
 use App\Services\CompanyQrPayService;
-use Illuminate\Support\Facades\Log;
 
 class QrPayCallbackController extends Controller
 {
@@ -32,19 +30,8 @@ class QrPayCallbackController extends Controller
                 $response = response()->json(['message' => 'Transaction was not found'], 404);
             }
         }
-        $this->logging($request, $response);
+        $this->logging($request, $response, 'qr-pay-client', 'callback', 'webHook');
 
         return $response;
-    }
-
-    private function logging($request, $response)
-    {
-        Log::channel('qr-pay-client')->info('callback', [
-            'header' => HideSensitiveDataFromLogging::handle($request->headers->all()),
-            'client' => get_called_class(),
-            'method' => 'webHook',
-            'params' => HideSensitiveDataFromLogging::handle($request),
-            'response' => $response,
-        ]);
     }
 }
