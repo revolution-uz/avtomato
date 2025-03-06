@@ -495,7 +495,12 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_NOTIFICATION_EDIT,
             self::LOYALTY_PROGRAM_NOTIFICATION_DELETE,
             self::LOYALTY_PROGRAM_NOTIFICATION_CREATE,
-            self::LOYALTY_PROGRAM_NOTIFICATION_SEND => false,
+            self::LOYALTY_PROGRAM_NOTIFICATION_SEND,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE => false,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL,
