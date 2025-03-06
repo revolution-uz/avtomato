@@ -200,6 +200,7 @@ enum PermissionEnum: string
 
     // Company Settings
     case SETTINGS_EDIT = 'settings_edit';
+
     // Ecommerce
     case PRODUCT_CATEGORY_CREATE = 'ecommerce_product_category_create';
     case PRODUCT_CATEGORY_VIEW = 'ecommerce_product_category_view';
@@ -254,18 +255,16 @@ enum PermissionEnum: string
     case ORDER_STATUS_VIEW = 'ecommerce_order_statuses_view';
     case ORDER_STATUS_VIEW_ALL = 'ecommerce_order_statuses_view_all';
     case ORDER_ITEMS_VIEW_ALL = 'ecommerce_order_items_view_all';
-
     case USERS_VIEW_ALL = 'ecommerce_users_view_all';
-
     case USERS_VIEW = 'ecommerce_users_view';
     case DELIVERY_POINT_CREATE = 'ecommerce_delivery_point_create';
     case DELIVERY_POINT_EDIT = 'ecommerce_delivery_point_edit';
     case DELIVERY_POINT_DELETE = 'ecommerce_delivery_point_delete';
     case DELIVERY_POINT_VIEW = 'ecommerce_delivery_point_view';
     case DELIVERY_POINT_VIEW_ALL = 'ecommerce_delivery_point_view_all';
-
     case ECOMMERCE_IMAGE_CREATE = 'ecommerce_images_create';
 
+    // Loyalty program
     case LOYALTY_PROGRAM_USERS_VIEW_ALL = 'loyalty_program_users_view_all';
     case LOYALTY_PROGRAM_USERS_VIEW = 'loyalty_program_users_view';
     case LOYALTY_PROGRAM_TARIFF_VIEW_ALL = 'loyalty_program_tariff_view_all';
@@ -366,7 +365,6 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE,
-            self::STATISTICS_BY_BRANCHES,
 
             self::SCORING_CREDIT_HISTORY_VIEW_ALL,
             self::SCORING_CREDIT_HISTORY_VIEW,
@@ -420,6 +418,7 @@ enum PermissionEnum: string
             self::DASHBOARD_INFO_VIEW,
 
             self::SETTINGS_EDIT,
+
             //e-commerce
             self::PRODUCT_CATEGORY_CREATE,
             self::PRODUCT_CATEGORY_EDIT,
@@ -486,6 +485,23 @@ enum PermissionEnum: string
             //loyalty program
             self::LOYALTY_PROGRAM_USERS_VIEW_ALL,
             self::LOYALTY_PROGRAM_USERS_VIEW,
+            self::LOYALTY_PROGRAM_TARIFF_VIEW_ALL,
+            self::LOYALTY_PROGRAM_TARIFF_VIEW,
+            self::LOYALTY_PROGRAM_TARIFF_EDIT,
+            self::LOYALTY_PROGRAM_TARIFF_DELETE,
+            self::LOYALTY_PROGRAM_TARIFF_CREATE,
+            self::LOYALTY_PROGRAM_NOTIFICATION_VIEW_ALL,
+            self::LOYALTY_PROGRAM_NOTIFICATION_VIEW,
+            self::LOYALTY_PROGRAM_NOTIFICATION_EDIT,
+            self::LOYALTY_PROGRAM_NOTIFICATION_DELETE,
+            self::LOYALTY_PROGRAM_NOTIFICATION_CREATE,
+            self::LOYALTY_PROGRAM_NOTIFICATION_SEND,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE => false,
+
             // branch related
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
@@ -520,9 +536,9 @@ enum PermissionEnum: string
             self::TRANSACTION_CREATE,
             self::TRANSACTION_EDIT,
             self::TRANSACTION_DELETE,
-            self::TRANSACTION_REVERSE => true,
+            self::TRANSACTION_REVERSE,
 
-            default => false,
+            self::STATISTICS_BY_BRANCHES => true,
         };
     }
 

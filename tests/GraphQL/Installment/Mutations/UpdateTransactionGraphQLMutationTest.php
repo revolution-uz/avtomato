@@ -148,7 +148,7 @@ class UpdateTransactionGraphQLMutationTest extends GraphQLTestCase
 
         $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
         $response = $this
-            ->actingAs($this->createAdminUser())
+            ->actingAs($simpleAdmin)
             ->postJson(route(self::GRAPHQL_ROUTE), $this->buildGraphQLQuery($this->_input));
         $this->assertSuccessResponse($response);
     }
