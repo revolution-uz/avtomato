@@ -21,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property-read string $name
- * @property-read Customer $customers
+ * @property Customer[] $customers
  */
 class Tag extends Model
 {
@@ -34,12 +34,6 @@ class Tag extends Model
         'name_ru',
         'name_oz',
         'name_en',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
     protected $translatedColumns = ['name'];
