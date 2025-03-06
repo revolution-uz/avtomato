@@ -26,7 +26,6 @@ class CreateTagGraphQLMutation extends Mutation
             'tag' => [
                 'name' => 'tag',
                 'type' => Type::nonNull(GraphQL::type(TagInputGraphQLType::GRAPHQL_TYPE_NAME)),
-                'required' => 'array',
             ],
         ];
     }
