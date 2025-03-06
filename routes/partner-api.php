@@ -38,7 +38,6 @@ Route::group(['middleware' => ['loyalty_program_sync:sanctum']], function () {
         Route::post('shops', 'postShops')->name('sync.shops');
         Route::post('items', 'postItems')->name('sync.items');
         Route::post('prices', 'postPrices')->name('sync.prices');
-        Route::post('shops', 'postShops')->name('sync.shops');
-        Route::post('shops', 'postShops')->name('sync.shops');
+        Route::post('stocks', 'postStocks')->name('sync.stocks');
     });
 });
