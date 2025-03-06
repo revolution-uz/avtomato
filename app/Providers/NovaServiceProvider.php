@@ -16,6 +16,10 @@ use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
 use App\Nova\Company\FeatureResource;
 use App\Nova\Company\InstallmentResource;
+use App\Nova\Company\LoyaltyProgram\ItemResource;
+use App\Nova\Company\LoyaltyProgram\PriceResource;
+use App\Nova\Company\LoyaltyProgram\ShopResource;
+use App\Nova\Company\LoyaltyProgram\StockResource;
 use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SbpTransactionResource;
@@ -69,6 +73,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(InstallmentResource::class),
                         MenuItem::resource(SbpTransactionResource::class),
                         MenuItem::resource(UniredCardResource::class),
+                    ])->collapsable(),
+                    MenuSection::make('Loyalty Program', [
+                        MenuItem::resource(ShopResource::class),
+                        MenuItem::resource(ItemResource::class),
+                        MenuItem::resource(PriceResource::class),
+                        MenuItem::resource(StockResource::class),
                     ])->collapsable(),
                 ];
             }

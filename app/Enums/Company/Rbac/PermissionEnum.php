@@ -278,6 +278,11 @@ enum PermissionEnum: string
     case LOYALTY_PROGRAM_NOTIFICATION_DELETE = 'loyalty_program_notification_delete';
     case LOYALTY_PROGRAM_NOTIFICATION_CREATE = 'loyalty_program_notification_create';
     case LOYALTY_PROGRAM_NOTIFICATION_SEND = 'loyalty_program_notification_send';
+    case LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL = 'loyalty_program_subscription_view_all';
+    case LOYALTY_PROGRAM_SUBSCRIPTION_VIEW = 'loyalty_program_subscription_view';
+    case LOYALTY_PROGRAM_SUBSCRIPTION_EDIT = 'loyalty_program_subscription_edit';
+    case LOYALTY_PROGRAM_SUBSCRIPTION_DELETE = 'loyalty_program_subscription_delete';
+    case LOYALTY_PROGRAM_SUBSCRIPTION_CREATE = 'loyalty_program_subscription_create';
 
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
@@ -803,6 +808,11 @@ enum PermissionEnum: string
                 self::LOYALTY_PROGRAM_NOTIFICATION_DELETE->value,
                 self::LOYALTY_PROGRAM_NOTIFICATION_CREATE->value,
                 self::LOYALTY_PROGRAM_NOTIFICATION_SEND->value,
+                self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL->value,
+                self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW->value,
+                self::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT->value,
+                self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE->value,
+                self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE->value,
             ],
         ];
     }
@@ -1054,7 +1064,12 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_NOTIFICATION_EDIT,
             self::LOYALTY_PROGRAM_NOTIFICATION_DELETE,
             self::LOYALTY_PROGRAM_NOTIFICATION_CREATE,
-            self::LOYALTY_PROGRAM_NOTIFICATION_SEND => FeatureEnum::LOYALTY_PROGRAM,
+            self::LOYALTY_PROGRAM_NOTIFICATION_SEND,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE => FeatureEnum::LOYALTY_PROGRAM,
         };
     }
 

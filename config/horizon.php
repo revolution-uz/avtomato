@@ -264,6 +264,16 @@ return [
             'timeout' => 600,
             'nice' => 0,
         ],
+        'supervisor-10' => [
+            'connection' => 'redis',
+            'queue' => ['loyalty-program-sync'],
+            'balance' => 'simple',
+            'maxProcesses' => 1000,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 600,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [

@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Jobs\LoyaltyProgram;
+
+use App\DTOs\LoyaltyProgram\StockDTO;
+use App\Enums\FeatureEnum;
+use App\Models\Company\Feature;
+use App\Services\LoyaltyProgram\LoyaltProgramSyncService;
+use App\Services\User\BalanceService;
+use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
+
+class SyncStocksJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    const JOB_ID = 'loyalty-program-sync';
+
+    public function __construct(private readonly StockDTO $stock)
+    {
+        $this->onQueue(self::JOB_ID);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function handle(LoyaltProgramSyncService $loyaltProgramSyncService, BalanceService $balanceService): void
+    {
+        if (
+            ! Feature::isFeatureActive(FeatureEnum::LOYALTY_PROGRAM)
+            or ! $balanceService->isAvailableCompany()
+        ) {
+            return;
+        }
+        $loyaltProgramSyncService->createOrUpdateStock($this->stock);
+    }
+
+    /**
+     * Get the unique ID for the job.
+     */
+    public function uniqueId(): string
+    {
+        return self::JOB_ID . '-tenant-' . tenant('id') . '-stock-item-code-' . $this->stock->item_code;
+    }
+
+    public function tags(): array
+    {
+        return [
+            'tenant:' . tenant('id'),
+        ];
+    }
+
+    /**
+     * Get the cache driver for the unique job lock.
+     */
+    public function uniqueVia(): Repository
+    {
+        return Cache::driver(config('cache.default', 'redis'));
+    }
+}

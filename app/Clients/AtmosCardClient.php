@@ -3,6 +3,7 @@
 namespace App\Clients;
 
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
+use App\DTOs\Atmos\Card\AtmosCardInfoResponseDTO;
 use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\DTOs\Atmos\CardPay\AtmosConfirmPaymentResponseDTO;
 use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
@@ -74,13 +75,13 @@ class AtmosCardClient extends BaseAtmosClient
     /**
      * @throws GeneralException
      */
-    public function getCardInfo(string $token): array
+    public function getCardInfo(string $token): AtmosCardInfoResponseDTO
     {
         $data = [
             'token' => $token,
         ];
 
-        return $this->makeRequest(self::CARD_CHECK, $data);
+        return AtmosCardInfoResponseDTO::from($this->makeRequest(self::CARD_CHECK, $data));
     }
 
     /**
