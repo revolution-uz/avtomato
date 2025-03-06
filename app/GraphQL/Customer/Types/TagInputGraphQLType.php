@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Customer\Types;
 
+use App\Models\Company\Tag;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\InputType;
 
 class TagInputGraphQLType extends InputType
@@ -22,7 +24,7 @@ class TagInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'string',
-                    'unique:tags,name_uz',
+                    Rule::unique(Tag::class, 'name_uz')->whereNull('deleted_at'),
                 ],
             ],
             'name_ru' => [
@@ -31,7 +33,7 @@ class TagInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'string',
-                    'unique:tags,name_ru',
+                    Rule::unique(Tag::class, 'name_ru')->whereNull('deleted_at'),
                 ],
             ],
             'name_en' => [
@@ -40,7 +42,7 @@ class TagInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'string',
-                    'unique:tags,name_en',
+                    Rule::unique(Tag::class, 'name_en')->whereNull('deleted_at'),
                 ],
             ],
             'name_oz' => [
@@ -49,7 +51,7 @@ class TagInputGraphQLType extends InputType
                 'rules' => [
                     'required',
                     'string',
-                    'unique:tags,name_oz',
+                    Rule::unique(Tag::class, 'name_oz')->whereNull('deleted_at'),
                 ],
             ],
         ];
