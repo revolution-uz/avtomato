@@ -88,7 +88,7 @@ enum CompanySettingsEnum: string
             self::TELEGRAM_BOT_ENABLED => __('settings.telegram_bot_enabled'),
             self::TELEGRAM_BOT_TOKEN => __('settings.telegram_bot_token'),
             self::TELEGRAM_CHAT_ID => __('settings.telegram_chat_id'),
-            self::TELEGRAM_CHAT_ID => __('settings.loyalty_program_sync_token'),
+            self::LOYALTY_PROGRAM_SYNC_TOKEN => __('settings.loyalty_program_sync_token'),
         };
     }
 }

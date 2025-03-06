@@ -26,7 +26,7 @@ class AuthLoyaltProgramSync
 
     private function generateTransmitAccessToken(): string
     {
-        $setting = CompanySettings::query()->where('name', CompanySettingsEnum::LOYALTY_PROGRAM_SYNC_TOKEN->name)->firstOrFail();
+        $setting = CompanySettings::query()->where('name', CompanySettingsEnum::LOYALTY_PROGRAM_SYNC_TOKEN)->firstOrFail();
 
         return $setting->value;
     }
