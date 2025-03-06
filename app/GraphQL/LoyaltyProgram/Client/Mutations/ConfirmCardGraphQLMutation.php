@@ -9,7 +9,7 @@ use App\Exceptions\GeneralException;
 use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\LoyaltyProgram\Card;
-use App\Services\LoyaltyProgramUserCardService;
+use App\Services\LoyaltyProgram\LoyaltyProgramUserCardService;
 use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
