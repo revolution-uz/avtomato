@@ -25,7 +25,7 @@ class Controller extends BaseController
             'header' => HideSensitiveDataFromLogging::handle($request->headers->all()),
             'client' => get_called_class(),
             'method' => $method,
-            'params' => HideSensitiveDataFromLogging::handle($request),
+            'params' => HideSensitiveDataFromLogging::handle($request->all()),
             'response' => $response,
         ]);
     }

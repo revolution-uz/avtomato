@@ -12,7 +12,7 @@ use App\Jobs\LoyaltyProgram\SyncShopsJob;
 use App\Jobs\LoyaltyProgram\SyncStocksJob;
 use Illuminate\Http\Request;
 
-class LoyaltProgramSyncController extends Controller
+class LoyaltyProgramSyncController extends Controller
 {
     protected $channel = 'loyalty-program';
     protected $type = 'sync-partner';
