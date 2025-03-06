@@ -3,12 +3,14 @@
 namespace App\Http\Middleware;
 
 use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\FeatureEnum;
 use App\Models\Company\CompanySettings;
+use App\Models\Company\Feature;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuthLoyaltProgramSync
+class AuthLoyaltyProgramSync
 {
     /**
      * Handle an incoming request.
@@ -17,7 +19,11 @@ class AuthLoyaltProgramSync
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->header('X-Access-Token') !== $this->generateTransmitAccessToken()) {
+        if (
+            (! tenancy()->initialized || ! tenant()->isActive()) &&
+            ! Feature::isFeatureActive(FeatureEnum::LOYALTY_PROGRAM) &&
+            $request->header('X-Access-Token') !== $this->generateTransmitAccessToken()
+        ) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

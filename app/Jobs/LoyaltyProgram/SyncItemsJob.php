@@ -5,7 +5,7 @@ namespace App\Jobs\LoyaltyProgram;
 use App\DTOs\LoyaltyProgram\ItemDTO;
 use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
-use App\Services\LoyaltyProgram\LoyaltProgramSyncService;
+use App\Services\LoyaltyProgram\LoyaltyProgramSyncService;
 use App\Services\User\BalanceService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -31,7 +31,7 @@ class SyncItemsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
     /**
      * @throws Exception
      */
-    public function handle(LoyaltProgramSyncService $loyaltProgramSyncService, BalanceService $balanceService): void
+    public function handle(LoyaltyProgramSyncService $loyaltyProgramSyncService, BalanceService $balanceService): void
     {
         if (
             ! Feature::isFeatureActive(FeatureEnum::LOYALTY_PROGRAM)
@@ -39,7 +39,7 @@ class SyncItemsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
         ) {
             return;
         }
-        $loyaltProgramSyncService->createOrUpdateItem($this->item);
+        $loyaltyProgramSyncService->createOrUpdateItem($this->item);
     }
 
     /**
