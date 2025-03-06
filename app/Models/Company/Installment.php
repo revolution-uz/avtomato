@@ -10,6 +10,7 @@ use App\Enums\Company\TransactionStatusEnum;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -115,19 +116,24 @@ class Installment extends Model
         'type' => InstallmentTypeEnum::class,
     ];
 
-    public static function getDebtAmountRaw(): \Illuminate\Contracts\Database\Query\Expression
+    public static function getDebtAmountRaw(): Expression
     {
         return DB::raw('(amount - initial_fee) * ((percent + 100) / 100) - paid_amount');
     }
 
-    public static function getInstallmentAmountRaw(): \Illuminate\Contracts\Database\Query\Expression
+    public static function getInstallmentAmountRaw(): Expression
     {
         return DB::raw('(amount - initial_fee) * (percent + 100) / 100');
     }
 
-    public static function getProfitAmountRaw(): \Illuminate\Contracts\Database\Query\Expression
+    public static function getProfitAmountRaw(): Expression
     {
         return DB::raw('(amount - initial_fee - paid_amount) * percent / 100');
+    }
+
+    public static function getNextPayDateRaw(): Expression
+    {
+        return DB::raw("starts_in + (FLOOR(paid_amount / ROUND(((amount - initial_fee) * (percent / 100 + 1) / period)::numeric, 2))::text || ' month')::interval");
     }
 
     protected static function boot()
@@ -338,7 +344,7 @@ class Installment extends Model
 
     public function scopeWhereNextPayDate($query, string $expression, Carbon $date)
     {
-        return $query->where(DB::raw("starts_in + (FLOOR(paid_amount / ROUND(((amount - initial_fee) * (percent / 100 + 1) / period)::numeric, 2))::text || ' month')::interval"), $expression, $date);
+        return $query->where(self::getNextPayDateRaw(), $expression, $date);
     }
 
     public function scopeCountId($query)
