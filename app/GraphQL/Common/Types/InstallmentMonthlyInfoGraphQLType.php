@@ -11,7 +11,6 @@ class InstallmentMonthlyInfoGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Installment Monthly Info GraphQL Type',
     ];
 
     public function fields(): array
@@ -19,38 +18,23 @@ class InstallmentMonthlyInfoGraphQLType extends GraphQLType
         return [
             'name' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'Status Name',
-                'resolve' => function (array $root) {
-                    return $root['name'];
-                },
+                'resolve' => fn (array $root) => $root['name'],
             ],
             'type' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'Type of Diagram',
-                'resolve' => function (array $root) {
-                    return $root['type'];
-                },
+                'resolve' => fn (array $root) => $root['type'],
             ],
             'stack' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'Stack',
-                'resolve' => function (array $root) {
-                    return $root['stack'];
-                },
+                'resolve' => fn (array $root) => $root['stack'],
             ],
             'count' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'Count of Current Week',
-                'resolve' => function (array $root) {
-                    return $root['count'];
-                },
+                'resolve' => fn (array $root) => $root['count'],
             ],
             'data' => [
-                'type' => Type::nonNull(Type::listOf(Type::int())),
-                'description' => 'Data by status',
-                'resolve' => function (array $root) {
-                    return $root['data'];
-                },
+                'type' => Type::nonNull(Type::listOf(Type::float())),
+                'resolve' => fn (array $root) => $root['data'],
             ],
         ];
     }

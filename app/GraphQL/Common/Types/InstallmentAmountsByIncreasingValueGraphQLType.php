@@ -24,7 +24,7 @@ class InstallmentAmountsByIncreasingValueGraphQLType extends GraphQLType
             ],
             'count_increasing_percent' => [
                 'type' => Type::float(),
-                'resolve' => fn (array $root) => $root['count_increasing_percent'] ?? null,
+                'resolve' => fn (array $root) => isset($root['count_increasing_percent']) ? round($root['count_increasing_percent'], 2) : null,
             ],
             'current_month_count' => [
                 'type' => Type::int(),
@@ -32,15 +32,15 @@ class InstallmentAmountsByIncreasingValueGraphQLType extends GraphQLType
             ],
             'amount' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (array $root) => $root['amount'] ?? null,
+                'resolve' => fn (array $root) => isset($root['amount']) ? round($root['amount'], 2) : null,
             ],
             'amount_increasing_percent' => [
                 'type' => Type::float(),
-                'resolve' => fn (array $root) => $root['amount_increasing_percent'] ?? null,
+                'resolve' => fn (array $root) => isset($root['amount_increasing_percent']) ? round($root['amount_increasing_percent'], 2) : null,
             ],
             'current_month_amount' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (array $root) => $root['current_month_amount'] ?? null,
+                'resolve' => fn (array $root) => isset($root['current_month_amount']) ? round($root['current_month_amount'], 2) : null,
             ],
         ];
     }
