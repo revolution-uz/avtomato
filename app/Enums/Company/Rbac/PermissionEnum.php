@@ -284,6 +284,11 @@ enum PermissionEnum: string
     case LOYALTY_PROGRAM_SUBSCRIPTION_DELETE = 'loyalty_program_subscription_delete';
     case LOYALTY_PROGRAM_SUBSCRIPTION_CREATE = 'loyalty_program_subscription_create';
 
+    // QR Pay
+    case QR_PAY_TRANSACTION_VIEW_ALL = 'qr_pay_transaction_view_all';
+    case QR_PAY_TRANSACTION_VIEW = 'qr_pay_transaction_view';
+    case QR_PAY_TRANSACTION_CREATE = 'qr_pay_transaction_create';
+
     public static function getIsBranchRelated(PermissionEnum $permission): bool
     {
         return match ($permission) {
@@ -500,7 +505,12 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW,
             self::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
             self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
-            self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE => false,
+            self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE,
+
+            // qr pay
+            self::QR_PAY_TRANSACTION_VIEW_ALL,
+            self::QR_PAY_TRANSACTION_VIEW,
+            self::QR_PAY_TRANSACTION_CREATE => false,
 
             // branch related
             self::INSTALLMENT_VIEW_ALL,
@@ -819,6 +829,12 @@ enum PermissionEnum: string
                 self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE->value,
                 self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE->value,
             ],
+
+            PermissionGroupEnum::QR_PAY->value => [
+                self::QR_PAY_TRANSACTION_VIEW_ALL->value,
+                self::QR_PAY_TRANSACTION_VIEW->value,
+                self::QR_PAY_TRANSACTION_CREATE->value,
+            ],
         ];
     }
 
@@ -1075,6 +1091,10 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
             self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
             self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE => FeatureEnum::LOYALTY_PROGRAM,
+
+            self::QR_PAY_TRANSACTION_VIEW_ALL,
+            self::QR_PAY_TRANSACTION_VIEW,
+            self::QR_PAY_TRANSACTION_CREATE => FeatureEnum::SBP_PAY,
         };
     }
 
