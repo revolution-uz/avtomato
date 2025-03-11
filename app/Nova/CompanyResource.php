@@ -6,6 +6,7 @@ use App\Enums\Company\CompanyStatusEnum;
 use App\Models\Company;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -42,6 +43,10 @@ class CompanyResource extends Resource
     {
         return [
             ID::make()->sortable(),
+            Image::make(__('nova.company.logo'), 'logo')
+                ->creationRules('required')
+                ->acceptedTypes('image/*')
+                ->rules('max:2048'),
             Text::make(__('nova.company.name'), 'name')
                 ->rules('required', 'max:64')
                 ->creationRules('unique:companies,name')

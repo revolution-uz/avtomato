@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\PartnerApi\DocumentController;
 use App\Http\Controllers\PartnerApi\LoyaltyProgramSyncController;
-use App\Http\Controllers\PartnerApi\QrPayController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,14 +21,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // Route::get('installment-agreement', 'downloadInstallmentAgreement')->name('document.downloadInstallmentAgreement');
         Route::get('customer-application', 'downloadCustomerApplication')->name('document.downloadCustomerApplication');
         Route::get('guarantor-application', 'downloadGuarantorApplication')->name('document.downloadGuarantorApplication');
-    });
-});
-Route::group(['middleware' => ['optional_auth:sanctum']], function () {
-    // qr pay
-    Route::prefix('qr-pay')->controller(QrPayController::class)->group(function () {
-        Route::view('/', 'partner-api.qr-pay.form');
-        Route::post('/', 'create')->name('qr-pay.create');
-        Route::get('state', 'check')->name('qr-pay.check');
     });
 });
 Route::group(['middleware' => ['auth.loyalty_program_sync']], function () {

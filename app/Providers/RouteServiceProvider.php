@@ -63,9 +63,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/website.php'));
         }
 
-        Route::middleware('web')
-            ->namespace($this->namespace)
-            ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
+        Route::namespace($this->namespace)
+            ->middleware(['web', InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
             ->group(base_path('routes/partner-panel.php'));
     }
 
