@@ -7,7 +7,6 @@ use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
-use App\Helpers\Utilities;
 use App\Models\Company\Branch;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -144,15 +143,6 @@ class InstallmentService
         $installment->status = $status;
 
         return $installment->save();
-    }
-
-    public function getDashboardInfo(): array
-    {
-        return [
-            'installment_amounts' => $this->getInstallmentAmounts(),
-            'installment_info_by_status' => $this->getInstallmentInfoByStatus(),
-            'installment_overdues' => $this->getInstallmentOverdues(),
-        ];
     }
 
     public function getStatisticsForRange(string $from, string $to, ?array $branches = null): array
@@ -314,120 +304,5 @@ class InstallmentService
         }
 
         return false;
-    }
-
-    private function getInstallmentAmounts(): array
-    {
-        $installment_amounts = [];
-        $start_of_month = Carbon::today()->startOfMonth();
-
-        $transactionQuery = Transaction::query()->onlySuccess();
-
-        $installment_amounts['transaction']['count'] = $transactionQuery->clone()->count();
-        $installment_amounts['transaction']['current_month_count'] = $transactionQuery->clone()->where('paid_at', '>=', $start_of_month)->count();
-        $installment_amounts['transaction']['amount'] = $transactionQuery->clone()->sum('amount');
-        $installment_amounts['transaction']['current_month_amount'] = $transactionQuery->clone()->where('paid_at', '>=', $start_of_month)->sum('amount');
-
-        $installmentQuery = Installment::query()->where('status', '>', InstallmentStatusEnum::INACTIVE);
-
-        $installment_amounts['installment']['amount'] = $installmentQuery->clone()->sum('amount');
-        $installment_amounts['installment']['current_month_amount'] = $installmentQuery->clone()->where('created_at', '>=', $start_of_month)->sum('amount');
-
-        $installment_amounts['installment_future_profit']['amount'] = Installment::query()->where('status', InstallmentStatusEnum::ACTIVE)->sum(Installment::getProfitAmountRaw());
-        $installment_amounts['installment_future_profit']['current_month_amount'] = Transaction::query()
-            ->leftJoin('installments', 'transactions.installment_id', '=', 'installments.id')
-            ->where('transactions.status', TransactionStatusEnum::SUCCESS)
-            ->where('transactions.paid_at', '>=', $start_of_month)
-            ->where('transactions.is_initial_fee', false)
-            ->sum(DB::raw('transactions.amount * installments.percent / 100'));
-
-        $installmentOverdueCountQuery = Installment::query()->where('status', InstallmentStatusEnum::ACTIVE)->whereNextPayDate('<', Carbon::now());
-        $installmentOverdueBeforeWeekQuery = $installmentOverdueCountQuery->clone()->where('created_at', '<', Carbon::today()->startOfWeek());
-        $installment_overdue_count = $installmentOverdueCountQuery->clone()->count();
-        $installment_overdue_amount = $installmentOverdueCountQuery->clone()->sum('amount');
-        $before_week_count = $installmentOverdueBeforeWeekQuery->clone()->where('created_at', '<', Carbon::today()->startOfWeek())->count();
-        $before_week_amount = $installmentOverdueBeforeWeekQuery->clone()->where('created_at', '<', Carbon::today()->startOfWeek())->sum('amount');
-
-        $installment_amounts['installment_overdue']['count'] = $installment_overdue_count;
-        $installment_amounts['installment_overdue']['count_increasing_percent'] = max(0, Utilities::preventDivideByZero($installment_overdue_count, $before_week_count) * 100 - 100);
-        $installment_amounts['installment_overdue']['amount'] = $installment_overdue_count;
-        $installment_amounts['installment_overdue']['amount_increasing_percent'] = max(0, Utilities::preventDivideByZero($installment_overdue_amount, $before_week_amount) * 100 - 100);
-
-        $installment_amounts['npl'] = $this->calculateNpl(60, 7);
-        $installment_amounts['enpl'] = $this->calculateNpl(30, 7);
-
-        return $installment_amounts;
-    }
-
-    private function calculateNpl(int $overdueDays, int $beforeDays): array
-    {
-        $query = Installment::query();
-        $installment_total_amount = (float) Installment::query()->sum(Installment::getInstallmentAmountRaw());
-        $nplQuery = (clone $query)->whereNextPayDate('<', Carbon::now()->subDays($overdueDays));
-        $nplBeforeWeekQuery = (clone $query)->whereNextPayDate('<', Carbon::now()->subDays($overdueDays - $beforeDays));
-        $npl = $installment_total_amount > 0 ? $nplQuery->sum(Installment::getProfitAmountRaw()) / $installment_total_amount * 100 : 0;
-        $nplBefore = $installment_total_amount > 0 ? $nplBeforeWeekQuery->sum(Installment::getProfitAmountRaw()) / $installment_total_amount * 100 : 0;
-
-        return [
-            'value' => $npl,
-            'value_of_last_week' => $nplBefore,
-            'value_increasing_percent' => max(0, Utilities::preventDivideByZero($npl, $nplBefore) * 100 - 100),
-        ];
-    }
-
-    private function getInstallmentInfoByStatus(): array
-    {
-        $timestamps = Utilities::getTimestampsOfMonthOfThisYear();
-        $result = [];
-        foreach (InstallmentStatusEnum::cases() as $status) {
-            $query = Installment::query()->where('status', $status);
-            $data = [];
-            for ($i = 0; $i < 12; $i++) {
-                $data[] = (clone $query)->whereBetween('created_at', [
-                    Carbon::createFromTimestamp($timestamps[$i]['start']),
-                    Carbon::createFromTimestamp($timestamps[$i]['end']),
-                ])->sum('amount');
-            }
-            $result[] = [
-                'name' => __('api.installment_status_' . $status->name),
-                'type' => 'line',
-                'stack' => 'Total',
-                'count' => (clone $query)->where('created_at', '>=', Carbon::today()->startOfYear())->countId(),
-                'data' => $data,
-            ];
-        }
-
-        return $result;
-    }
-
-    private function getInstallmentOverdues(): array
-    {
-        $result = [];
-        $queryHasDebt = Installment::query()->where('status', InstallmentStatusEnum::ACTIVE)->whereHasDebt();
-        $total_amount = (clone $queryHasDebt)->whereNextPayDate('<=', Carbon::now())->sumDebt();
-        $total_count = (clone $queryHasDebt)->whereNextPayDate('<=', Carbon::now())->countId();
-        for ($i = 10; $i < 70; $i += 10) {
-            $subQuery = (clone $queryHasDebt)->whereNextPayDate('>', Carbon::now()->subDays($i))->whereNextPayDate('<=', Carbon::now()->subDays($i - 10));
-            $count = (clone $subQuery)->countId();
-            $amount = (clone $subQuery)->sumDebt();
-            $total_count -= $count;
-            $total_amount -= $amount;
-            $result[] = [
-                'overdue_days' => __('api.till :days days', [
-                    'days' => $i,
-                ]),
-                'amount' => $amount,
-                'count' => $count,
-            ];
-        }
-        $result[] = [
-            'overdue_days' => __('api.above :days days', [
-                'days' => 60,
-            ]),
-            'amount' => $total_amount,
-            'count' => $total_count,
-        ];
-
-        return $result;
     }
 }

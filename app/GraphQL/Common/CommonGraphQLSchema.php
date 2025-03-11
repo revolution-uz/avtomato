@@ -9,11 +9,11 @@ use App\GraphQL\Common\Queries\DistrictsGraphQLQuery;
 use App\GraphQL\Common\Queries\MahallasGraphQLQuery;
 use App\GraphQL\Common\Queries\RegionsGraphQLQuery;
 use App\GraphQL\Common\Queries\SettingsGraphQLQuery;
+use App\GraphQL\Common\Types\ChartItemGraphQLType;
 use App\GraphQL\Common\Types\CompanySettingsGraphQLType;
 use App\GraphQL\Common\Types\DashboardGraphQLType;
 use App\GraphQL\Common\Types\DistrictGraphQLType;
 use App\GraphQL\Common\Types\InstallmentAmountsByIncreasingValueGraphQLType;
-use App\GraphQL\Common\Types\InstallmentAmountsGraphQLType;
 use App\GraphQL\Common\Types\InstallmentMonthlyInfoGraphQLType;
 use App\GraphQL\Common\Types\InstallmentNplByIncreasingValueGraphQLType;
 use App\GraphQL\Common\Types\InstallmentOverdueGraphQLType;
@@ -46,10 +46,10 @@ class CommonGraphQLSchema implements ConfigConvertible
                 MahallaGraphQLType::class,
                 InstallmentMonthlyInfoGraphQLType::class,
                 DashboardGraphQLType::class,
-                InstallmentAmountsGraphQLType::class,
                 InstallmentOverdueGraphQLType::class,
                 InstallmentAmountsByIncreasingValueGraphQLType::class,
                 InstallmentNplByIncreasingValueGraphQLType::class,
+                ChartItemGraphQLType::class,
             ],
             'middleware' => ['optional_auth:sanctum'],
         ];

@@ -268,7 +268,7 @@ return [
             'connection' => 'redis',
             'queue' => ['loyalty-program-sync'],
             'balance' => 'simple',
-            'maxProcesses' => 1000,
+            'maxProcesses' => 1,
             'memory' => 128,
             'tries' => 1,
             'timeout' => 600,

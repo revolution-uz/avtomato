@@ -13,7 +13,6 @@ class InstallmentOverdueGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Installment Overdue GraphQL Type',
     ];
 
     public function fields(): array
@@ -21,24 +20,15 @@ class InstallmentOverdueGraphQLType extends GraphQLType
         return [
             'overdue_days' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'The overdue days of installments',
-                'resolve' => function (array $root) {
-                    return $root['overdue_days'];
-                },
+                'resolve' => fn (array $root) => $root['overdue_days'],
             ],
             'amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
-                'description' => 'The sum of amount of overdue of installments',
-                'resolve' => function (array $root) {
-                    return $root['amount'];
-                },
+                'resolve' => fn (array $root) => $root['amount'],
             ],
             'count' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'The number of overdue of installments',
-                'resolve' => function (array $root) {
-                    return $root['count'];
-                },
+                'resolve' => fn (array $root) => $root['count'],
             ],
         ];
     }
