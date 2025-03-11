@@ -18,35 +18,35 @@ class SbpPaymentDebitGraphQLType extends GraphQLType
         return [
             'operation_id' => [
                 'type' => Type::int(),
-                'resolve' => fn (array $root) => $root['operation_id'],
+                'resolve' => fn (array $root) => $root['operation_id'] ?? null,
             ],
             'order_id' => [
                 'type' => Type::string(),
-                'resolve' => fn (array $root) => $root['order_id'],
+                'resolve' => fn (array $root) => $root['order_id'] ?? null,
             ],
             'state' => [
                 'type' => Type::string(),
-                'resolve' => fn (array $root) => $root['state'],
+                'resolve' => fn (array $root) => $root['state'] ?? null,
             ],
             'description' => [
                 'type' => Type::string(),
-                'resolve' => fn (array $root) => $root['description'],
+                'resolve' => fn (array $root) => $root['description'] ?? null,
             ],
             'amount' => [
                 'type' => Type::int(),
-                'resolve' => fn (array $root) => $root['amount'],
+                'resolve' => fn (array $root) => $root['amount'] ?? null,
             ],
             'commission' => [
                 'type' => Type::float(),
-                'resolve' => fn (array $root) => $root['commission'],
+                'resolve' => fn (array $root) => $root['commission'] ?? null,
             ],
             'currency' => [
                 'type' => Type::int(),
-                'resolve' => fn (array $root) => $root['currency'],
+                'resolve' => fn (array $root) => $root['currency'] ?? null,
             ],
             'url' => [
                 'type' => Type::string(),
-                'resolve' => fn (array $root) => $root['url'],
+                'resolve' => fn (array $root) => $root['url'] ?? null,
             ],
         ];
     }

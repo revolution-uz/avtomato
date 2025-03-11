@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\QrPay;
 
+use App\GraphQL\QrPay\Mutations\CreateTransactionGraphQLMutation;
 use App\GraphQL\QrPay\Queries\SingleTransactionGraphQLQuery;
 use App\GraphQL\QrPay\Queries\TransactionsGraphQLQuery;
 use App\GraphQL\QrPay\Types\SbpPaymentCreditGraphQLType;
@@ -21,7 +22,7 @@ class QrPayGraphQLSchema implements ConfigConvertible
                 SingleTransactionGraphQLQuery::class,
             ],
             'mutation' => [
-                //
+                CreateTransactionGraphQLMutation::class,
             ],
             'types' => [
                 TransactionGraphQLType::class,

@@ -18,11 +18,11 @@ class SbpPaymentReceiverGraphQLType extends GraphQLType
         return [
             'owner' => [
                 'type' => Type::string(),
-                'resolve' => fn (array $root) => $root['owner'],
+                'resolve' => fn (array $root) => $root['owner'] ?? null,
             ],
             'expire' => [
                 'type' => Type::string(),
-                'resolve' => fn (array $root) => $root['expire'],
+                'resolve' => fn (array $root) => $root['expire'] ?? null,
             ],
         ];
     }

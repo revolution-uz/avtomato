@@ -18,11 +18,11 @@ class SbpPaymentSenderGraphQLType extends GraphQLType
         return [
             'number' => [
                 'type' => Type::string(),
-                'resolve' => fn (array $root) => $root['number'],
+                'resolve' => fn (array $root) => $root['number'] ?? null,
             ],
             'expire' => [
                 'type' => Type::string(),
-                'resolve' => fn (array $root) => $root['expire'],
+                'resolve' => fn (array $root) => $root['expire'] ?? null,
             ],
         ];
     }

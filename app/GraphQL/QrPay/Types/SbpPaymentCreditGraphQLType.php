@@ -18,7 +18,7 @@ class SbpPaymentCreditGraphQLType extends GraphQLType
         return [
             'ext_id' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (array $root) => $root['ext_id'],
+                'resolve' => fn (array $root) => $root['ext_id'] ?? null,
             ],
             'state' => [
                 'type' => Type::int(),
@@ -26,11 +26,11 @@ class SbpPaymentCreditGraphQLType extends GraphQLType
             ],
             'amount' => [
                 'type' => Type::nonNull(Type::float()),
-                'resolve' => fn (array $root) => $root['amount'],
+                'resolve' => fn (array $root) => $root['amount'] ?? null,
             ],
             'currency' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (array $root) => $root['currency'],
+                'resolve' => fn (array $root) => $root['currency'] ?? null,
             ],
         ];
     }
