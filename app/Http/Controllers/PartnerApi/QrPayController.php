@@ -15,8 +15,10 @@ class QrPayController extends Controller
     {
         $request->validate(['amount' => 'required|numeric|min:1']);
 
+        $response = $this->qrPayService->createPayment($request->amount);
+
         try {
-            return redirect($this->qrPayService->createPayment($request->input('amount'))->debit->url);
+            return view('partner-api.qr-pay.payment-detail', ['response' => $response]);
         } catch (Exception $e) {
             throw new Exception('Failed to create cheque: ' . $e->getMessage());
         }

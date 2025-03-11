@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Company\CompanyStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Storage;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
@@ -22,6 +23,8 @@ use Stancl\Tenancy\Database\Models\Tenant;
  * @property string $tin
  * @property CompanyStatusEnum $status
  * @property int $payment_day
+ * @property string|null $logo
+ * @property-read string|null $logo_url
  */
 class Company extends Tenant implements TenantWithDatabase
 {
@@ -43,6 +46,7 @@ class Company extends Tenant implements TenantWithDatabase
         'tin',
         'status',
         'payment_day',
+        'logo',
     ];
 
     protected $casts = [
@@ -80,5 +84,10 @@ class Company extends Tenant implements TenantWithDatabase
     public function isActive(): bool
     {
         return $this->status === CompanyStatusEnum::ACTIVE;
+    }
+
+    public function getLogoUrlAttribute(): string
+    {
+        return Storage::url($this->logo);
     }
 }
