@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Models\Company;
+use App\Models\Company\BalanceCharge;
 use App\Models\Company\ScoringRequest;
 use Illuminate\Console\Command;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
@@ -35,11 +36,24 @@ class ProcessWaitingScoringRequests extends Command
         foreach (Company::get() as $company) {
             tenancy()->initialize($company);
 
-            ScoringRequest::query()
+            $scoringRequestIds = ScoringRequest::query()
                 ->where('status', ScoringRequestStatusEnum::WAITING)
+                ->pluck('id');
+
+            if ($scoringRequestIds->isEmpty()) {
+                continue;
+            }
+
+            ScoringRequest::query()
+                ->whereIn('id', $scoringRequestIds)
                 ->update([
                     'status' => ScoringRequestStatusEnum::FAILED,
                 ]);
+
+            BalanceCharge::query()
+                ->where('chargeable_type', ScoringRequest::class)
+                ->whereIn('chargeable_id', $scoringRequestIds)
+                ->delete();
         }
 
         return CommandAlias::SUCCESS;

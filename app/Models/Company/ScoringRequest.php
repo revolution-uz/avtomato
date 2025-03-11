@@ -96,8 +96,10 @@ class ScoringRequest extends Model
 
         static::updating(function (self $scoringRequest) {
             if ($scoringRequest->status == ScoringRequestStatusEnum::FAILED) {
-                $balance = BalanceCharge::query()->where('chargeable_id', $scoringRequest->id)->first();
-                $balance?->delete();
+                BalanceCharge::query()
+                    ->where('chargeable_type', self::class)
+                    ->where('chargeable_id', $scoringRequest->id)
+                    ->delete();
             }
         });
 
