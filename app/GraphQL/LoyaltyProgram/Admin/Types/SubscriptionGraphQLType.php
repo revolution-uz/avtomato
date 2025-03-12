@@ -3,6 +3,7 @@
 namespace App\GraphQL\LoyaltyProgram\Admin\Types;
 
 use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
+use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use App\Models\Company\LoyaltyProgram\Subscription;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -56,7 +57,7 @@ class SubscriptionGraphQLType extends GraphQLType
                 'resolve' => fn (Subscription $root) => $root->tariff,
             ],
             'user' => [
-                'type' => GraphQL::type(TariffGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => GraphQL::type(UserGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (Subscription $root) => $root->user,
             ],
         ];
