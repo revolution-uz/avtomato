@@ -12,15 +12,24 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
-    private ?string $from;
-    private ?string $to;
+    private ?string $transaction_by_type_start_date;
+    private ?string $transaction_by_type_end_date;
+    private ?string $installment_by_age_start_date;
+    private ?string $installment_by_age_end_date;
     private ?int $branch_id;
     private Carbon $startOfMonth;
 
-    public function __construct(?string $from = null, ?string $to = null, ?int $branch_id = null)
-    {
-        $this->from = $from;
-        $this->to = $to;
+    public function __construct(
+        ?string $transaction_by_type_start_date = null,
+        ?string $transaction_by_type_end_date = null,
+        ?string $installment_by_age_start_date = null,
+        ?string $installment_by_age_end_date = null,
+        ?int $branch_id = null,
+    ) {
+        $this->transaction_by_type_start_date = $transaction_by_type_start_date;
+        $this->transaction_by_type_end_date = $transaction_by_type_end_date;
+        $this->installment_by_age_start_date = $installment_by_age_start_date;
+        $this->installment_by_age_end_date = $installment_by_age_end_date;
         $this->branch_id = $branch_id;
         $this->startOfMonth = Carbon::today()->startOfMonth();
     }
@@ -145,8 +154,12 @@ class DashboardService
         return Transaction::selectRaw('transaction_types.name_uz as label, SUM(transactions.amount) as value')
             ->join('transaction_types', 'transactions.transaction_type_id', '=', 'transaction_types.id')
             ->where('transactions.status', 1)
-            ->when($this->from, fn ($query) => $query->where('transactions.paid_at', '>=', $this->from))
-            ->when($this->to, fn ($query) => $query->where('transactions.paid_at', '<=', $this->to))
+            ->when(
+                $this->transaction_by_type_start_date && $this->transaction_by_type_end_date,
+                fn ($query) => $query
+                    ->whereBetween('transactions.paid_at', [
+                        $this->transaction_by_type_start_date, $this->transaction_by_type_end_date,
+                    ]))
             ->groupBy('transactions.transaction_type_id', 'transaction_types.name_uz')
             ->orderBy('transactions.transaction_type_id')
             ->get()
@@ -196,12 +209,20 @@ class DashboardService
         ')
             ->leftJoin('installments', 'customers.id', '=', 'installments.customer_id')
             ->when(! $overdue, fn ($q) => $q
-                ->when($this->from, fn ($q) => $q->where('installments.created_at', '>=', $this->from))
-                ->when($this->to, fn ($q) => $q->where('installments.created_at', '<=', $this->to)))
+                ->when(
+                    $this->installment_by_age_start_date && $this->installment_by_age_end_date,
+                    fn ($q) => $q
+                        ->whereBetween('installments.created_at', [
+                            $this->installment_by_age_start_date, $this->installment_by_age_end_date,
+                        ])))
             ->when($overdue, fn ($q) => $q
                 ->where('installments.status', InstallmentStatusEnum::ACTIVE->value)
-                ->when($this->from, fn ($q) => $q->where(Installment::getNextPayDateRaw(), '>=', $this->from))
-                ->when($this->to, fn ($q) => $q->where(Installment::getNextPayDateRaw(), '<=', $this->to))
+                ->when(
+                    $this->installment_by_age_start_date && $this->installment_by_age_end_date,
+                    fn ($q) => $q
+                        ->whereBetween(Installment::getNextPayDateRaw(), [
+                            $this->installment_by_age_start_date, $this->installment_by_age_end_date,
+                        ]))
                 ->where(Installment::getNextPayDateRaw(), '<', Carbon::now()))
             ->when($this->branch_id, fn ($q) => $q
                 ->where('installments.branch_id', $this->branch_id))
