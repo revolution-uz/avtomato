@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\LoyaltyProgram\Admin;
 
-use App\GraphQL\Ecommerce\Admin\Queries\SingleUserGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateNotificationGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\DeleteNotificationsGraphQLMutation;
@@ -14,6 +13,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Queries\NotificationsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleNotificationGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleSubscriptionGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleTariffGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleUserGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SubscriptionsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\TariffsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\UsersGraphQLQuery;
