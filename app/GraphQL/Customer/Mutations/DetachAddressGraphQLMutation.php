@@ -4,11 +4,13 @@ namespace App\GraphQL\Customer\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Address;
 use App\Models\Company\Customer;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Mutation;
 
 class DetachAddressGraphQLMutation extends Mutation
@@ -28,15 +30,7 @@ class DetachAddressGraphQLMutation extends Mutation
             'ids' => [
                 'name' => 'ids',
                 'type' => Type::nonNull(Type::listOf(Type::nonNull(Type::int()))),
-                'rules' => ['required', 'array', 'distinct', function (string $attribute, mixed $value, Closure $fail) {
-                    $validator = Validator::make([$attribute => $value], [
-                        $attribute => 'array',
-                        $attribute . '.*' => 'integer|exists:addresses,id',
-                    ]);
-                    if ($validator->fails()) {
-                        return $fail($validator->errors());
-                    }
-                }, ],
+                'rules' => ['required', 'array', 'distinct'],
             ],
         ];
     }
@@ -53,9 +47,28 @@ class DetachAddressGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $customer = Customer::findOrFail($args['customer_id']);
+        $customer = Customer::query()->with('addresses')->findOrFail($args['customer_id']);
+
+        if ($customer->addresses->count() === 1) {
+            throw ValidationException::withMessages(['ids.0' => __('api.Cannot detach the only address associated with the customer')]);
+        }
+
         $customer->addresses()->whereIn('id', $args['ids'])->delete();
 
         return true;
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'ids.*' => [
+                'required',
+                'int',
+                Rule::exists(Address::class, 'id')
+                    ->where('addressable_type', Customer::class)
+                    ->where('addressable_id', $args['customer_id'])
+                    ->whereNull('deleted_at'),
+            ],
+        ];
     }
 }
