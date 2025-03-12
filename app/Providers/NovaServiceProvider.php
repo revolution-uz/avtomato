@@ -65,6 +65,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(UserResource::class),
                         MenuItem::resource(ModuleResource::class),
                         MenuItem::resource(FeatureResource::class),
+                        MenuItem::resource(\App\Nova\Company\SettingsResource::class),
                         MenuItem::resource(BranchResource::class),
                         MenuItem::resource(RoleResource::class),
                         MenuItem::resource(BalanceFundResource::class),
