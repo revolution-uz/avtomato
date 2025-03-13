@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PartnerApi;
 
 use App\DTOs\LoyaltyProgram\CartDTO;
+use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Company\LoyaltyProgram\Order;
 use Illuminate\Http\Request;
@@ -24,19 +25,19 @@ class LoyaltyProgramDiscountController extends Controller
         return $this->successResponse($response);
     }
 
-    public function confirmOrder(Request $request)
+    public function completeOrder(Request $request)
     {
         $transactionId = $request->input('transaction_id');
-        $transaction = Order::where('id', $transactionId)->first();
-        if (! $transaction) {
+        $order = Order::where('id', $transactionId)->first();
+        if (! $order) {
             return $this->failedResponse('Transaction not found');
         }
 
-        $transaction->status = 'confirmed';
-        $transaction->save();
+        $order->status = OrderStatusEnum::COMPLETED;
+        $order->save();
 
         $response = ['success' => true, 'message' => 'Transaction confirmed successfully'];
-        $this->logging($request, $response, $this->channel, $this->type, 'confirmOrder');
+        $this->logging($request, $response, $this->channel, $this->type, 'completeOrder');
 
         return $this->successResponse($response);
     }
@@ -44,13 +45,13 @@ class LoyaltyProgramDiscountController extends Controller
     public function cancelOrder(Request $request)
     {
         $transactionId = $request->input('transaction_id');
-        $transaction = Order::where('id', $transactionId)->first();
-        if (! $transaction) {
+        $order = Order::where('id', $transactionId)->first();
+        if (! $order) {
             return $this->failedResponse('Transaction not found');
         }
 
-        $transaction->status = 'canceled';
-        $transaction->save();
+        $order->status = OrderStatusEnum::CANCELED;
+        $order->save();
 
         $response = ['success' => true, 'message' => 'Transaction canceled successfully'];
         $this->logging($request, $response, $this->channel, $this->type, 'cancelOrder');

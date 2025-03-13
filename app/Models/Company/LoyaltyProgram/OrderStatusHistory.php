@@ -2,12 +2,14 @@
 
 namespace App\Models\Company\LoyaltyProgram;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 class OrderStatusHistory extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes, TenantConnection;
 
     protected $table = 'loyalty_program_order_status_history';
 

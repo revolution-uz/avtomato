@@ -2,12 +2,16 @@
 
 namespace App\Models\Company\LoyaltyProgram;
 
+use App\Enums\Company\LoyaltyProgramm\DiscountTypeEnum;
+use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 class Order extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes, TenantConnection;
 
     protected $table = 'loyalty_program_order';
 
@@ -22,6 +26,16 @@ class Order extends Model
         'total_amount',
         'total_discount_amount',
         'total_paid_amount',
+    ];
+
+    protected $casts = [
+        'status' => OrderStatusEnum::class,
+        'discount_type' => DiscountTypeEnum::class,
+        'discount_value' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'total_amount' => 'decimal:2',
+        'total_discount_amount' => 'decimal:2',
+        'total_paid_amount' => 'decimal:2',
     ];
 
     public function items()
