@@ -56,4 +56,14 @@ class LoyaltyProgramDiscountController extends Controller
 
         return $this->successResponse($response);
     }
+
+    public function successResponse($data)
+    {
+        return response()->json(['success' => true, 'data' => $data]);
+    }
+
+    public function failedResponse($message)
+    {
+        return response()->json(['success' => true, 'message' => $message]);
+    }
 }
