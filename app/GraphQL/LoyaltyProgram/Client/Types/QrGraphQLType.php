@@ -29,4 +29,4 @@ class QrGraphQLType extends GraphQLType
             ],
         ];
     }
-} 
+}

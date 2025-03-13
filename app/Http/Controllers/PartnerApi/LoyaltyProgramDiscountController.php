@@ -17,7 +17,6 @@ class LoyaltyProgramDiscountController extends Controller
             return CartDTO::from($cartData);
         });
 
-    
         $response = ['success' => true, 'message' => 'Shops processed successfully'];
         $this->logging($request, $response, $this->channel, $this->type, 'postShops');
 
@@ -28,7 +27,7 @@ class LoyaltyProgramDiscountController extends Controller
     {
         $transactionId = $request->input('transaction_id');
         $transaction = Order::where('id', $transactionId)->first();
-        if (!$transaction) {
+        if (! $transaction) {
             return $this->failedResponse('Transaction not found');
         }
 
@@ -45,7 +44,7 @@ class LoyaltyProgramDiscountController extends Controller
     {
         $transactionId = $request->input('transaction_id');
         $transaction = Order::where('id', $transactionId)->first();
-        if (!$transaction) {
+        if (! $transaction) {
             return $this->failedResponse('Transaction not found');
         }
 
