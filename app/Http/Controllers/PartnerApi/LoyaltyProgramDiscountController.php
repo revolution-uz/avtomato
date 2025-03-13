@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PartnerApi;
 
 use App\DTOs\LoyaltyProgram\CartDTO;
 use App\Http\Controllers\Controller;
+use App\Models\Company\LoyaltyProgram\Order;
 use Illuminate\Http\Request;
 
 class LoyaltyProgramDiscountController extends Controller
