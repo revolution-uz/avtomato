@@ -1,5 +1,8 @@
 <?php
 
+use App\Enums\Company\LoyaltyProgramm\DiscountTypeEnum;
+use App\Enums\Company\LoyaltyProgramm\OrderPaymentStatusEnum;
+use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,8 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('loyalty_program_users');
             $table->foreignId('order_id')->constrained('orders');
             $table->bigInteger('admin_id')->nullable();
-            $table->smallInteger('status')->default(LoyaltyProgramOrderStatusEnum::PENDING->value);
-            $table->smallInteger('discount_type')->default(LoyaltyProgramDiscountTypeEnum::PERCENTAGE->value);
+            $table->smallInteger('status')->default(OrderStatusEnum::PENDING->value);
+            $table->smallInteger('discount_type')->default(DiscountTypeEnum::PERCENTAGE->value);
             $table->decimal('discount_value', 10, 2);
             $table->decimal('discount_amount', 10, 2);
             $table->decimal('total_amount', 10, 2);
@@ -51,7 +54,7 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('loyalty_program_order');
             $table->bigInteger('admin_id')->nullable();
             $table->smallInteger('payment_method');
-            $table->smallInteger('status')->default(LoyaltyProgramOrderPaymentStatusEnum::PENDING->value);
+            $table->smallInteger('status')->default(OrderPaymentStatusEnum::PENDING->value);
             $table->decimal('amount', 10, 2);
             $table->timestamps();
             $table->softDeletes();

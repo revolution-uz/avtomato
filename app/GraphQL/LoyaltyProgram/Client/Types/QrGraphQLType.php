@@ -20,12 +20,12 @@ class QrGraphQLType extends GraphQLType
     {
         return [
             'id' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn ($root) => $root->id,
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn ($root) => $root['id'],
             ],
             'expires_in' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn ($root) => $root->expires_in->timestamp,
+                'resolve' => fn ($root) => $root['expires_in']->timestamp,
             ],
         ];
     }
