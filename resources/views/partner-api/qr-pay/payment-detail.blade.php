@@ -1,5 +1,8 @@
 @php
-    /** @var \App\DTOs\QrPay\Payment\SbpPaymentResponseDTO $response */
+    /**
+     * @var \App\Models\Company\SbpTransaction $transaction
+     * @var \App\Models\SbpAccount $terminal
+     */
 @endphp
 
 @extends('layouts.qrPayLayout')
@@ -22,28 +25,30 @@
         <div class="w-full bg-[#FFF] rounded-[16px] p-5 overflow-hidden">
             <div class="flex justify-between mb-3">
                 <span class="custom-text-gray">Terminal nomi:</span>
-                <span class="custom-text-black">{{ $response->receiver->owner }}</span>
+                <span class="custom-text-black">{{ $terminal->company_name }}</span>
             </div>
 
             <div class="flex justify-between mb-4">
                 <span class="custom-text-gray">To'lov summasi:</span>
-                <span class="custom-text-black">{{ $response->debit->amount }} UZS</span>
+                <span class="custom-text-black">{{ $transaction->debit->amount / 100 }} UZS</span>
             </div>
 
             <hr class="border-[#F4F4F4] mb-4">
 
             <div class="flex justify-between">
                 <span class="custom-text-gray">To'lov summasi:</span>
-                <span class="custom-text-black">{{ $response->credit->amount }} RUB</span>
+                <span class="custom-text-black">{{ $transaction->credit->amount / 100 }} RUB</span>
             </div>
         </div>
 
         <div class="flex flex-col items-center pb-3">
             <div class="mb-6 w-[70px]">
-                <img src="{{ global_asset('website/images/frontend/qr_pay/sbp-logo.png') }}" alt="SBP logo" class="w-full object-contain">
+                <img src="{{ global_asset('website/images/frontend/qr_pay/sbp-logo.png') }}" alt="SBP logo"
+                     class="w-full object-contain">
             </div>
 
-            <a href="{{ $response->debit->url }}" class="w-full bg-green-500 text-white text-lg text-center font-medium py-3 px-6 rounded-lg shadow hover:bg-green-600">
+            <a href="{{ $transaction->debit->url }}"
+               class="w-full bg-green-500 text-white text-lg text-center font-medium py-3 px-6 rounded-lg shadow hover:bg-green-600">
                 Davom etish
             </a>
         </div>
