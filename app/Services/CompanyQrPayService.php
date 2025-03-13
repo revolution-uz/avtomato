@@ -17,7 +17,7 @@ class CompanyQrPayService
 {
     public function __construct(private UniredSbpQRPayClient $qrPayClient) {}
 
-    public function createPayment(float $amount): SbpPaymentResponseDTO
+    public function createPayment(float $amount): SbpTransaction
     {
         $terminal = SbpAccount::query()->where('company_id', tenant('id'))->first();
         $transaction = new SbpTransaction;
@@ -43,7 +43,9 @@ class CompanyQrPayService
             throw new UniredException('Failed to create cheque: ' . $response->error->message);
         }
 
-        return $this->updatePaymentByCallback($transaction, SbpTransferDTO::from($response->result));
+        $this->updatePaymentByCallback($transaction, SbpTransferDTO::from($response->result));
+
+        return $transaction->refresh();
     }
 
     public function updatePaymentByCallback(SbpTransaction $transaction, SbpTransferDTO $payment)

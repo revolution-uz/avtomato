@@ -34,6 +34,7 @@ enum PermissionGroupEnum: string
     case ECOMMERCE = 'ecommerce';
     case VIEW_ALL = 'view_all';
     case LOYALTY_PROGRAM = 'loyalty_program';
+    case QR_PAY = 'qr_pay';
 
     /**
      * @return PermissionEnum[]
@@ -312,6 +313,12 @@ enum PermissionGroupEnum: string
                 PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
                 PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
                 PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE,
+            ],
+
+            self::QR_PAY => [
+                PermissionEnum::QR_PAY_TRANSACTION_VIEW_ALL,
+                PermissionEnum::QR_PAY_TRANSACTION_VIEW,
+                PermissionEnum::QR_PAY_TRANSACTION_CREATE,
             ],
         };
     }

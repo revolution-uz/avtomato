@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PartnerApi;
 
 use App\Http\Controllers\Controller;
+use App\Models\SbpAccount;
 use App\Services\CompanyQrPayService;
 use Exception;
 use Illuminate\Http\Request;
@@ -15,10 +16,14 @@ class QrPayController extends Controller
     {
         $request->validate(['amount' => 'required|numeric|min:1']);
 
-        $response = $this->qrPayService->createPayment($request->amount);
+        $transaction = $this->qrPayService->createPayment($request->amount);
+        $terminal = SbpAccount::query()->where('company_id', tenant('id'))->first();
 
         try {
-            return view('partner-api.qr-pay.payment-detail', ['response' => $response]);
+            return view('partner-api.qr-pay.payment-detail', [
+                'transaction' => $transaction,
+                'terminal' => $terminal,
+            ]);
         } catch (Exception $e) {
             throw new Exception('Failed to create cheque: ' . $e->getMessage());
         }

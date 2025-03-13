@@ -4,6 +4,8 @@ namespace App\Models\Company;
 
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use Carbon\Carbon;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +17,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property int $terminal_id
  * @property string $ext_id
+ * @property TransactionAttemptStatusEnum $status
  * @property float $amount
  * @property array|null $credit
  * @property array|null $debit
@@ -25,11 +28,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property TransactionAttemptStatusEnum $status
+ * @property-read string|null $qr_image
  */
 class SbpTransaction extends Model
 {
-    use HasFactory, SoftDeletes, TenantConnection;
+    use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
+
+    public static array $sortables = ['id', 'amount'];
 
     protected $fillable = [
         'terminal_id',
@@ -52,4 +57,16 @@ class SbpTransaction extends Model
         'status' => TransactionAttemptStatusEnum::class,
         'payment_updated_at' => 'datetime',
     ];
+
+    public function getQrImageAttribute()
+    {
+        if (empty($this->debit['url'])) {
+            return null;
+        }
+
+        $qrCode = new QrCode($this->debit['url']);
+        $result = (new PngWriter)->write($qrCode);
+
+        return base64_encode($result->getString());
+    }
 }
