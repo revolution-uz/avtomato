@@ -28,15 +28,25 @@ class DashboardGraphQLQuery extends Query
     public function args(): array
     {
         return [
-            'from' => [
-                'name' => 'from',
+            'transaction_by_type_start_date' => [
+                'name' => 'transaction_by_type_start_date',
                 'type' => Type::string(),
-                'rules' => 'nullable|date_format:Y-m-d',
+                'rules' => 'nullable|required_with:transaction_by_type_end_date|date_format:Y-m-d',
             ],
-            'to' => [
-                'name' => 'to',
+            'transaction_by_type_end_date' => [
+                'name' => 'transaction_by_type_end_date',
                 'type' => Type::string(),
-                'rules' => 'nullable|date_format:Y-m-d|after_or_equal:from',
+                'rules' => 'nullable|required_with:transaction_by_type_start_date|date_format:Y-m-d|after_or_equal:transaction_by_type_start_date',
+            ],
+            'installment_by_age_start_date' => [
+                'name' => 'installment_by_age_start_date',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:installment_by_age_end_date|date_format:Y-m-d',
+            ],
+            'installment_by_age_end_date' => [
+                'name' => 'installment_by_age_end_date',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:installment_by_age_start_date|date_format:Y-m-d|after_or_equal:installment_by_age_start_date',
             ],
             'branch_id' => [
                 'name' => 'branch_id',
@@ -56,6 +66,12 @@ class DashboardGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return new DashboardService($args['from'] ?? null, $args['to'] ?? null, $args['branch_id'] ?? null);
+        return new DashboardService(
+            $args['transaction_by_type_start_date'] ?? null,
+            $args['transaction_by_type_end_date'] ?? null,
+            $args['installment_by_age_start_date'] ?? null,
+            $args['installment_by_age_end_date'] ?? null,
+            $args['branch_id'] ?? null
+        );
     }
 }

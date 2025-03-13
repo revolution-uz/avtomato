@@ -25,4 +25,5 @@ return [
     'n_branches' => 'You can only create up to :n branches',
     'n_admins' => 'You can only create up to :n admins!',
     'You cannot activate an installment without withdrawing initial fee' => 'You cannot activate an installment without withdrawing initial fee',
+    'Cannot detach the only address associated with the customer' => 'Cannot detach the only address associated with the customer',
 ];

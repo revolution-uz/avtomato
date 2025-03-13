@@ -30,4 +30,5 @@ return [
     'n_branches' => 'Вы можете создать только до :n филиалов',
     'n_admins' => 'Вы можете создать только до :n админов!',
     'You cannot activate an installment without withdrawing initial fee' => 'Внесите первоначальный платеж за активацию',
+    'Cannot detach the only address associated with the customer' => 'Невозможно удалить единственный адрес, связанный с клиентом',
 ];

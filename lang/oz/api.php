@@ -26,4 +26,5 @@ return [
     'n_branches' => 'Сиз фақат :n та филиал яратишингиз мумкин',
     'n_admins' => 'Сиз фақат :n та админ яратишингиз мумкин!',
     'You cannot activate an installment without withdrawing initial fee' => 'Фаоллаштириш учун бошланғич тўловни амалга оширинг',
+    'Cannot detach the only address associated with the customer' => 'Мижозга тегишли ягона манзилни олиб ташлаб бўлмайди',
 ];
