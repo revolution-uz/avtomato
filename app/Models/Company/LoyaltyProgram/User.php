@@ -69,4 +69,12 @@ class User extends Authenticatable
             ->where('name', '!=', $deviceName)
             ->count('id');
     }
+
+    public function getQrAttribute(): array
+    {
+        return [
+            'id' => $this->id . '$$' . now()->addSeconds(30)->timestamp,
+            'expires_in' => now()->addSeconds(30)->timestamp,
+        ];
+    }
 }
