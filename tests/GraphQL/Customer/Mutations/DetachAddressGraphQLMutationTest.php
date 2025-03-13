@@ -79,7 +79,7 @@ class DetachAddressGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'customer id']), $response->json('errors.0.extensions.validation.customer_id.0'));
-        $ids = json_decode($response->json('errors.0.extensions.validation.ids.0'), true);
+        $ids = $response->json('errors.0.extensions.validation');
         $this->assertNotNull($ids);
         $this->assertArrayHasKey('ids.0', $ids);
         $this->assertEquals(trans('validation.exists', ['attribute' => 'ids.0']), $ids['ids.0'][0]);
