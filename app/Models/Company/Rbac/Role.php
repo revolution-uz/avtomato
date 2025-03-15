@@ -96,7 +96,16 @@ class Role extends Model
             $groupItem['slug'] = $group->slug;
             $groupItem['name'] = $group->name;
             $groupItem['permissions'] = [];
-            foreach ($group->permissions as $permission) {
+
+            $activeFeaturesPermissions = $group->permissions()
+                ->whereHas('feature', fn ($q) => $q->where('is_active', true))
+                ->get();
+
+            if ($activeFeaturesPermissions->isEmpty()) {
+                continue;
+            }
+
+            foreach ($activeFeaturesPermissions as $permission) {
                 $permissionItem['id'] = $permission->id;
                 $permissionItem['slug'] = $permission->slug;
                 $permissionItem['name'] = $permission->name;
