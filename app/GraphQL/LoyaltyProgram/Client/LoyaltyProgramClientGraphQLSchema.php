@@ -15,6 +15,7 @@ use App\GraphQL\LoyaltyProgram\Client\Mutations\ProfileUpdateGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Queries\ProfileMeGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Types\AttachCardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
+use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
@@ -43,6 +44,7 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
                 AttachCardGraphQLType::class,
                 CardGraphQLType::class,
                 AttachCardDataGraphQLType::class,
+                QrGraphQLType::class,
             ],
             'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_loyalty_program_client_token', 'loyalty_program'],
         ];

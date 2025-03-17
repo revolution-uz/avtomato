@@ -6,6 +6,7 @@ use App\Models\Company\OrderBySortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -19,9 +20,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $external_mxik
  * @property string|null $external_package_code
  * @property string|null $external_gtin
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Item extends Model
 {

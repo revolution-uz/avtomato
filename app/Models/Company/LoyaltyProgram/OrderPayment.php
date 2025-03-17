@@ -3,11 +3,29 @@
 namespace App\Models\Company\LoyaltyProgram;
 
 use App\Enums\Company\LoyaltyProgramm\OrderPaymentStatusEnum;
+use App\Models\Company\CompanyAdmin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
+/**
+ * Class OrderPayment
+ *
+ * @property int $id
+ * @property int $order_id
+ * @property int|null $admin_id
+ * @property int $payment_method
+ * @property OrderPaymentStatusEnum $status
+ * @property float $amount
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
+ * @property Order $order
+ * @property CompanyAdmin|null $admin
+ */
 class OrderPayment extends Model
 {
     use HasFactory, SoftDeletes, TenantConnection;
@@ -25,8 +43,14 @@ class OrderPayment extends Model
     protected $casts = [
         'status' => OrderPaymentStatusEnum::class,
     ];
-    public function order()
+
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(CompanyAdmin::class, 'admin_id');
     }
 }

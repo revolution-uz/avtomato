@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('loyalty_program_order', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('loyalty_program_users');
-            $table->foreignId('order_id')->constrained('orders');
-            $table->bigInteger('admin_id')->nullable();
+            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('admin_id')->index()->nullable();
             $table->smallInteger('status')->default(OrderStatusEnum::PENDING->value);
             $table->smallInteger('discount_type')->default(DiscountTypeEnum::PERCENTAGE->value);
             $table->decimal('discount_value', 10, 2);
@@ -29,8 +28,8 @@ return new class extends Migration
 
         Schema::create('loyalty_program_order_item', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('loyalty_program_order');
-            $table->foreignId('product_id')->constrained('products');
+            $table->unsignedBigInteger('order_id')->index();
+            $table->unsignedBigInteger('product_id')->index();
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
             $table->decimal('discount_amount', 10, 2);
@@ -41,8 +40,8 @@ return new class extends Migration
 
         Schema::create('loyalty_program_order_status_history', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('loyalty_program_order');
-            $table->bigInteger('admin_id')->nullable();
+            $table->unsignedBigInteger('order_id')->index();
+            $table->unsignedBigInteger('admin_id')->index()->nullable();
             $table->smallInteger('from_status');
             $table->smallInteger('to_status');
             $table->timestamps();
@@ -51,8 +50,8 @@ return new class extends Migration
 
         Schema::create('loyalty_program_order_payment', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('loyalty_program_order');
-            $table->bigInteger('admin_id')->nullable();
+            $table->unsignedBigInteger('order_id')->index();
+            $table->unsignedBigInteger('admin_id')->index()->nullable();
             $table->smallInteger('payment_method');
             $table->smallInteger('status')->default(OrderPaymentStatusEnum::PENDING->value);
             $table->decimal('amount', 10, 2);

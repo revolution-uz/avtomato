@@ -274,6 +274,8 @@ class AdminsGraphQLQueryTest extends GraphQLTestCase
                 'loyalty_program_subscription_edit',
                 'loyalty_program_subscription_delete',
                 'loyalty_program_subscription_create',
+                'loyalty_program_order_view_all',
+                'loyalty_program_order_view',
                 'qr_pay_transaction_view_all',
                 'qr_pay_transaction_view',
                 'qr_pay_transaction_create',

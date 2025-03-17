@@ -20,6 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read array $qr
  * @property Subscription[] $subscriptions
  * @property Card[] $cards
  */

@@ -25,7 +25,7 @@ class QrGraphQLType extends GraphQLType
             ],
             'expires_in' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn ($root) => $root['expires_in']->timestamp,
+                'resolve' => fn ($root) => $root['expires_in'],
             ],
         ];
     }

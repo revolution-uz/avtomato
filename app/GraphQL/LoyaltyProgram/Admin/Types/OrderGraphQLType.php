@@ -1,0 +1,96 @@
+<?php
+
+namespace App\GraphQL\LoyaltyProgram\Admin\Types;
+
+use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
+use App\Models\Company\LoyaltyProgram\Order;
+use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
+use Rebing\GraphQL\Support\Type as GraphQLType;
+
+class OrderGraphQLType extends GraphQLType
+{
+    public const string GRAPHQL_TYPE_NAME = 'OrderGraphQLType';
+
+    protected $attributes = [
+        'name' => self::GRAPHQL_TYPE_NAME,
+    ];
+
+    public function fields(): array
+    {
+        return [
+            'id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Order $root) => $root->id,
+            ],
+            'user_id' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Order $root) => $root->user_id,
+            ],
+            'admin_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (Order $root) => $root->admin_id,
+            ],
+            'status' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Order $root) => $root->status->value,
+            ],
+            'discount_type' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Order $root) => $root->discount_type->value,
+            ],
+            'discount_value' => [
+                'type' => Type::nonNull(Type::float()),
+                'resolve' => fn (Order $root) => $root->discount_value,
+            ],
+            'discount_amount' => [
+                'type' => Type::nonNull(Type::float()),
+                'resolve' => fn (Order $root) => $root->discount_amount,
+            ],
+            'total_amount' => [
+                'type' => Type::nonNull(Type::float()),
+                'resolve' => fn (Order $root) => $root->total_amount,
+            ],
+            'total_discount_amount' => [
+                'type' => Type::nonNull(Type::float()),
+                'resolve' => fn (Order $root) => $root->total_discount_amount,
+            ],
+            'total_paid_amount' => [
+                'type' => Type::nonNull(Type::float()),
+                'resolve' => fn (Order $root) => $root->total_paid_amount,
+            ],
+            'created_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Order $root) => $root->created_at->timestamp,
+            ],
+            'updated_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Order $root) => $root->updated_at->timestamp,
+            ],
+            'deleted_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (Order $root) => $root->deleted_at?->timestamp,
+            ],
+            'user' => [
+                'type' => Type::nonNull(GraphQL::type(UserGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Order $root) => $root->user,
+            ],
+            'admin' => [
+                'type' => Type::nonNull(GraphQL::type(AdminGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Order $root) => $root->admin,
+            ],
+            'items' => [
+                'type' => Type::listOf(GraphQL::type(OrderItemGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Order $root) => $root->items,
+            ],
+            'status_histories' => [
+                'type' => Type::listOf(GraphQL::type(OrderStatusHistoryGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Order $root) => $root->statusHistories,
+            ],
+            'payments' => [
+                'type' => Type::listOf(GraphQL::type(OrderPaymentGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Order $root) => $root->payments,
+            ],
+        ];
+    }
+}
