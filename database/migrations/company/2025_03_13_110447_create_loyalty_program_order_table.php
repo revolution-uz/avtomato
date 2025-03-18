@@ -11,7 +11,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('loyalty_program_order', function (Blueprint $table) {
+        Schema::create('loyalty_program_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('admin_id')->index()->nullable();
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('loyalty_program_order_item', function (Blueprint $table) {
+        Schema::create('loyalty_program_order_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id')->index();
             $table->unsignedBigInteger('product_id')->index();
@@ -38,7 +38,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('loyalty_program_order_status_history', function (Blueprint $table) {
+        Schema::create('loyalty_program_order_status_histories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id')->index();
             $table->unsignedBigInteger('admin_id')->index()->nullable();
@@ -48,7 +48,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('loyalty_program_order_payment', function (Blueprint $table) {
+        Schema::create('loyalty_program_order_payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id')->index();
             $table->unsignedBigInteger('admin_id')->index()->nullable();
@@ -62,9 +62,9 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('loyalty_program_order');
-        Schema::dropIfExists('loyalty_program_order_item');
-        Schema::dropIfExists('loyalty_program_order_status_history');
-        Schema::dropIfExists('loyalty_program_order_payment');
+        Schema::dropIfExists('loyalty_program_orders');
+        Schema::dropIfExists('loyalty_program_order_items');
+        Schema::dropIfExists('loyalty_program_order_status_histories');
+        Schema::dropIfExists('loyalty_program_order_payments');
     }
 };

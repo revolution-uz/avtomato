@@ -54,7 +54,7 @@ class Order extends Model
         'total_paid_amount',
     ];
 
-    protected $table = 'loyalty_program_order';
+    protected $table = 'loyalty_program_orders';
 
     protected $fillable = [
         'user_id',

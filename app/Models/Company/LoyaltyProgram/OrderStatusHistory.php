@@ -29,7 +29,7 @@ class OrderStatusHistory extends Model
 {
     use HasFactory, SoftDeletes, TenantConnection;
 
-    protected $table = 'loyalty_program_order_status_history';
+    protected $table = 'loyalty_program_order_status_histories';
 
     protected $casts = [
         'from_status' => OrderStatusEnum::class,

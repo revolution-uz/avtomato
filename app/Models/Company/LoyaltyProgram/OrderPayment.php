@@ -30,7 +30,7 @@ class OrderPayment extends Model
 {
     use HasFactory, SoftDeletes, TenantConnection;
 
-    protected $table = 'loyalty_program_order_payment';
+    protected $table = 'loyalty_program_order_payments';
 
     protected $fillable = [
         'order_id',
