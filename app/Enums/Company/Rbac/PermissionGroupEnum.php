@@ -313,6 +313,8 @@ enum PermissionGroupEnum: string
                 PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
                 PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
                 PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE,
+                PermissionEnum::LOYALTY_PROGRAM_ORDER_VIEW_ALL,
+                PermissionEnum::LOYALTY_PROGRAM_ORDER_VIEW,
             ],
 
             self::QR_PAY => [
