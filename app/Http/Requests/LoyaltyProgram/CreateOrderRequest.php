@@ -12,6 +12,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *     discount: float
  * }> $items
  * @property-read string $qr
+ * @property-read int $shop_id
  */
 class CreateOrderRequest extends FormRequest
 {
@@ -29,6 +30,7 @@ class CreateOrderRequest extends FormRequest
             'items.*.qty' => 'required|integer|min:1',
             'items.*.discount' => 'required|numeric',
             'qr' => 'required|string',
+            'shop_id' => 'required|integer|exists:loyalty_program_shops,external_shop_id',
         ];
     }
 }

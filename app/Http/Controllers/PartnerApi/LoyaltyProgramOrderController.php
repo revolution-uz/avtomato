@@ -18,8 +18,8 @@ class LoyaltyProgramOrderController extends Controller
     public function createOrder(CreateOrderRequest $request)
     {
         try {
-            $this->loyaltyProgramOrderService->createOrder($request->items, $request->qr);
-            $response = ['success' => true, 'message' => 'Order processed successfully'];
+            $data = $this->loyaltyProgramOrderService->createOrder($request->items, $request->shop_id, $request->qr);
+            $response = ['success' => true, 'message' => 'Order processed successfully', 'data' => $data];
 
         } catch (Exception $e) {
             $response = ['success' => false, 'message' => $e->getMessage()];

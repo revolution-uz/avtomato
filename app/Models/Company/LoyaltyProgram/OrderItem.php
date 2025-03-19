@@ -17,6 +17,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $product_id
  * @property int $quantity
  * @property float $price
+ * @property float $final_price
  * @property float $discount_amount
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -52,5 +53,10 @@ class OrderItem extends Model
     public function getTotalAmountAttribute(): float
     {
         return $this->price * $this->quantity - $this->discount_amount;
+    }
+
+    public function getFinalPriceAttribute(): float
+    {
+        return $this->price - $this->discount_amount;
     }
 }
