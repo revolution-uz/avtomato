@@ -2,8 +2,10 @@
 
 namespace App\Models\Company\LoyaltyProgram;
 
+use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,6 +22,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read array $qr
+ * @property-read int|null $active_subscription_limit
  * @property Subscription[] $subscriptions
  * @property Card[] $cards
  */
@@ -42,6 +46,16 @@ class User extends Authenticatable
         'birth_date' => 'date',
     ];
 
+    public static function findByQr($qr): ?self
+    {
+        $qrDto = explode('$$', $qr);
+        if (count($qrDto) !== 2 || $qrDto[1] < now()->timestamp) {
+            throw new Exception('Invalid QR code');
+        }
+
+        return static::query()->findOrFail($qrDto[0]);
+    }
+
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
@@ -50,6 +64,11 @@ class User extends Authenticatable
     public function cards(): HasMany
     {
         return $this->hasMany(Card::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function createTokenWithData(string $deviceName, array $data = []): string
@@ -68,5 +87,36 @@ class User extends Authenticatable
             ->where('expires_at', '>', now())
             ->where('name', '!=', $deviceName)
             ->count('id');
+    }
+
+    public function getQrAttribute(): array
+    {
+        return [
+            'id' => $this->id . '$$' . now()->addSeconds(30)->timestamp,
+            'expires_in' => now()->addSeconds(30)->timestamp,
+        ];
+    }
+
+    public function getActiveSubscription(): ?Subscription
+    {
+        return $this->subscriptions()->where('is_active', true)->first();
+    }
+
+    public function getActiveSubscriptionLimitAttribute(): ?int
+    {
+        if (! $subscription = $this->getActiveSubscription()) {
+            return null;
+        }
+
+        return $subscription->tariff->limit_amount - $this->getOrderDiscountAmount($subscription->created_at);
+    }
+
+    private function getOrderDiscountAmount(Carbon $created_at)
+    {
+        return $this->orders()
+            ->where('created_at', '>', $created_at)
+            ->where('status', OrderStatusEnum::COMPLETED)
+            ->get()
+            ->sum('total_discount_amount');
     }
 }
