@@ -27,10 +27,10 @@ class LoyaltyProgramSyncController extends Controller
             SyncShopsJob::dispatch($shop);
         }
 
-        $response = ['success' => true, 'message' => 'Shops processed successfully'];
+        $response = $this->prepareSuccessResponse(['message' => 'Shops are processed successfully']);
         $this->logging($request, $response, $this->channel, $this->type, 'postShops');
 
-        return $this->successResponse($response);
+        return $this->jsonResponse($response);
     }
 
     public function postItems(Request $request)
@@ -43,10 +43,10 @@ class LoyaltyProgramSyncController extends Controller
             SyncItemsJob::dispatch($item);
         }
 
-        $response = ['success' => true, 'message' => 'Items processed successfully'];
+        $response = $this->prepareSuccessResponse(['message' => 'Items are processed successfully']);
         $this->logging($request, $response, $this->channel, $this->type, 'postItems');
 
-        return $this->successResponse($response);
+        return $this->jsonResponse($response);
     }
 
     public function postPrices(Request $request)
@@ -59,10 +59,10 @@ class LoyaltyProgramSyncController extends Controller
             SyncItemsJob::dispatch($item);
         }
 
-        $response = ['success' => true, 'message' => 'Items processed successfully'];
+        $response = $this->prepareSuccessResponse(['message' => 'Prices are processed successfully']);
         $this->logging($request, $response, $this->channel, $this->type, 'postPrices');
 
-        return $this->successResponse($response);
+        return $this->jsonResponse($response);
     }
 
     public function postStocks(Request $request)
@@ -75,19 +75,29 @@ class LoyaltyProgramSyncController extends Controller
             SyncStocksJob::dispatch($stock);
         }
 
-        $response = ['success' => true, 'message' => 'Items processed successfully'];
+        $response = $this->prepareSuccessResponse(['message' => 'Stocks are processed successfully']);
         $this->logging($request, $response, $this->channel, $this->type, 'postStocks');
 
-        return $this->successResponse($response);
+        return $this->jsonResponse($response);
     }
 
-    public function successResponse($data)
+    public function jsonResponse($response)
     {
-        return response()->json(['success' => true, 'data' => $data]);
+        return response()->json($response);
     }
 
-    public function failedResponse($message)
+    public function prepareFailedResponse($message)
     {
-        return response()->json(['success' => true, 'message' => $message]);
+
+        return [
+            'status' => false, 'result' => null, 'error' => [
+                'message' => $message,
+            ],
+        ];
+    }
+
+    private function prepareSuccessResponse($result)
+    {
+        return ['status' => true, 'result' => $result, 'error' => null];
     }
 }

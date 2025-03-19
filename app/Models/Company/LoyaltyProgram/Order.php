@@ -85,4 +85,29 @@ class Order extends Model
     {
         return $this->items->sum('total_amount');
     }
+
+    public function apiResource()
+    {
+        return [
+            'transaction_id' => $this->id,
+            'status' => [
+                'value' => $this->status->value,
+                'label' => $this->status->label(),
+            ],
+            'total_discount_amount' => $this->total_discount_amount,
+            'total_amount' => $this->total_amount,
+            'items' => $this->items->map(function (OrderItem $item) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->product->external_name,
+                    'item_code' => $item->product->external_code,
+                    'price' => $item->price,
+                    'qty' => $item->quantity,
+                    'discount' => $item->discount_amount,
+                    'final_price' => $item->final_price,
+                    'total_price' => $item->final_price * $item->quantity,
+                ];
+            })->toArray(),
+        ];
+    }
 }
