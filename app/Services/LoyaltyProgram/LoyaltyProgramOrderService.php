@@ -3,6 +3,7 @@
 namespace App\Services\LoyaltyProgram;
 
 use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
+use App\Http\Resources\OrderResource;
 use App\Models\Company\LoyaltyProgram\Item;
 use App\Models\Company\LoyaltyProgram\Order;
 use App\Models\Company\LoyaltyProgram\OrderItem;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class LoyaltyProgramOrderService
 {
-    public function createOrder(array $items, int $shop_id, string $qr): array
+    public function createOrder(array $items, int $shop_id, string $qr): OrderResource
     {
         try {
             $user = User::findByQr($qr);
@@ -32,9 +33,7 @@ class LoyaltyProgramOrderService
             $order->saveOrFail();
 
             foreach ($items as $item) {
-                if ($this->createItem($item, $shop_id, $order)) {
-                    throw new Exception('Item cannot created');
-                }
+                $this->createItem($item, $shop_id, $order);
             }
 
             if ($order->total_discount_amount > $user->active_subscription_limit) {
@@ -43,30 +42,31 @@ class LoyaltyProgramOrderService
 
             DB::commit();
 
-            return $order->apiResource();
+            return new OrderResource($order);
+
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }
     }
 
-    public function confirmOrder(int $order_id): false|array
+    public function confirmOrder(int $order_id): false|OrderResource
     {
         $order = Order::query()->findOrFail($order_id);
         $order->status = OrderStatusEnum::COMPLETED;
         if ($order->save()) {
-            return $order->apiResource();
+            return new OrderResource($order);
         }
 
         return false;
     }
 
-    public function cancelOrder(int $order_id): false|array
+    public function cancelOrder(int $order_id): false|OrderResource
     {
         $order = Order::query()->findOrFail($order_id);
         $order->status = OrderStatusEnum::CANCELED;
         if ($order->save()) {
-            return $order->apiResource();
+            return new OrderResource($order);
         }
 
         return false;
@@ -74,7 +74,13 @@ class LoyaltyProgramOrderService
 
     private function createItem(array $item, int $shop_id, Order $order): bool
     {
-        if (($loyaltyProgramItem = Item::query()->firstWhere('external_code', $item['item_code'])) != null && ($loyaltyProgramPrice = Price::query()->where('external_item_code', $item['item_code'])->where('external_shop_id', $shop_id)->first()) != null) {
+        $loyaltyProgramItem = Item::query()->firstWhere('external_code', $item['item_code']);
+        $loyaltyProgramPrice = Price::query()
+            ->where('external_item_code', $item['item_code'])
+            ->where('external_shop_id', $shop_id)
+            ->first();
+
+        if ($loyaltyProgramItem && $loyaltyProgramPrice) {
             $orderItem = new OrderItem;
             $orderItem->order_id = $order->id;
             $orderItem->product_id = $loyaltyProgramItem->id;

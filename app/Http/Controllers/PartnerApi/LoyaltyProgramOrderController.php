@@ -65,7 +65,6 @@ class LoyaltyProgramOrderController extends Controller
 
     public function prepareFailedResponse($message)
     {
-
         return [
             'status' => false, 'result' => null, 'error' => [
                 'message' => $message,
