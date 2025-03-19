@@ -17,11 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('admin_id')->index()->nullable();
             $table->smallInteger('status')->default(OrderStatusEnum::PENDING->value);
             $table->smallInteger('discount_type')->default(DiscountTypeEnum::PERCENTAGE->value);
-            $table->decimal('discount_value', 10, 2);
-            $table->decimal('discount_amount', 10, 2);
-            $table->decimal('total_amount', 10, 2);
-            $table->decimal('total_discount_amount', 10, 2);
-            $table->decimal('total_paid_amount', 10, 2);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,7 +28,6 @@ return new class extends Migration
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
             $table->decimal('discount_amount', 10, 2);
-            $table->decimal('total_amount', 10, 2);
             $table->timestamps();
             $table->softDeletes();
         });

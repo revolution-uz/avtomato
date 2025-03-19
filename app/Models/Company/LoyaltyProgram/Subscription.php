@@ -12,6 +12,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property bool $is_active
+ * @property bool $is_active_period
  * @property int $card_id
  * @property int $tariff_id
  * @property int $user_id
@@ -53,5 +54,10 @@ class Subscription extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getIsActivePeriodAttribute(): bool
+    {
+        return $this->is_active && $this->tariff->is_active && $this->created_at->addMonths($this->tariff->subscription_months) <= Carbon::now();
     }
 }

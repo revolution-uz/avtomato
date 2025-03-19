@@ -37,7 +37,6 @@ class OrderItem extends Model
         'quantity',
         'price',
         'discount_amount',
-        'total_amount',
     ];
 
     public function order(): BelongsTo
@@ -48,5 +47,10 @@ class OrderItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Item::class, 'product_id');
+    }
+
+    public function getTotalAmountAttribute(): float
+    {
+        return $this->price * $this->quantity - $this->discount_amount;
     }
 }

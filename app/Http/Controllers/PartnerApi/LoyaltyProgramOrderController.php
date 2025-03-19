@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\PartnerApi;
 
-use App\DTOs\LoyaltyProgram\CartDTO;
-use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
 use App\Http\Controllers\Controller;
-use App\Models\Company\LoyaltyProgram\Order;
+use App\Services\LoyaltyProgram\LoyaltyProgramOrderService;
 use Illuminate\Http\Request;
 
 class LoyaltyProgramDiscountController extends Controller
@@ -13,12 +11,11 @@ class LoyaltyProgramDiscountController extends Controller
     protected $channel = 'loyalty-program';
     protected $type = 'discount-pos-system';
 
+    public function __construct(readonly LoyaltyProgramOrderService $loyaltyProgramOrderService) {}
+
     public function createOrder(Request $request)
     {
-        $cart = collect($request->input('cart'))->map(function ($cartData) {
-            return CartDTO::from($cartData);
-        });
-
+        $this->loyaltyProgramOrderService->createOrder($request->input('items'), $request->input('qr'));
         $response = ['success' => true, 'message' => 'Shops processed successfully'];
         $this->logging($request, $response, $this->channel, $this->type, 'postShops');
 
@@ -27,16 +24,8 @@ class LoyaltyProgramDiscountController extends Controller
 
     public function completeOrder(Request $request)
     {
-        $transactionId = $request->input('transaction_id');
-        $order = Order::where('id', $transactionId)->first();
-        if (! $order) {
-            return $this->failedResponse('Transaction not found');
-        }
-
-        $order->status = OrderStatusEnum::COMPLETED;
-        $order->save();
-
-        $response = ['success' => true, 'message' => 'Transaction confirmed successfully'];
+        $result = $this->loyaltyProgramOrderService->confirmOrder($request->input('transaction_id'));
+        $response = ['success' => $result, 'message' => $result ? 'Transaction confirmed successfully' : 'Transaction not found'];
         $this->logging($request, $response, $this->channel, $this->type, 'completeOrder');
 
         return $this->successResponse($response);
@@ -44,16 +33,8 @@ class LoyaltyProgramDiscountController extends Controller
 
     public function cancelOrder(Request $request)
     {
-        $transactionId = $request->input('transaction_id');
-        $order = Order::where('id', $transactionId)->first();
-        if (! $order) {
-            return $this->failedResponse('Transaction not found');
-        }
-
-        $order->status = OrderStatusEnum::CANCELED;
-        $order->save();
-
-        $response = ['success' => true, 'message' => 'Transaction canceled successfully'];
+        $result = $this->loyaltyProgramOrderService->cancelOrder($request->input('transaction_id'));
+        $response = ['success' => $result, 'message' => $result ? 'Transaction canceled successfully' : 'Transaction not found'];
         $this->logging($request, $response, $this->channel, $this->type, 'cancelOrder');
 
         return $this->successResponse($response);

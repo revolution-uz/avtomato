@@ -23,8 +23,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int|null $admin_id
  * @property OrderStatusEnum $status
  * @property DiscountTypeEnum $discount_type
- * @property float $discount_value
- * @property float $discount_amount
  * @property float $total_amount
  * @property float $total_discount_amount
  * @property float $total_paid_amount
@@ -47,11 +45,6 @@ class Order extends Model
         'admin_id',
         'status',
         'discount_type',
-        'discount_value',
-        'discount_amount',
-        'total_amount',
-        'total_discount_amount',
-        'total_paid_amount',
     ];
 
     protected $table = 'loyalty_program_orders';
@@ -61,21 +54,11 @@ class Order extends Model
         'admin_id',
         'status',
         'discount_type',
-        'discount_value',
-        'discount_amount',
-        'total_amount',
-        'total_discount_amount',
-        'total_paid_amount',
     ];
 
     protected $casts = [
         'status' => OrderStatusEnum::class,
         'discount_type' => DiscountTypeEnum::class,
-        'discount_value' => 'decimal:2',
-        'discount_amount' => 'decimal:2',
-        'total_amount' => 'decimal:2',
-        'total_discount_amount' => 'decimal:2',
-        'total_paid_amount' => 'decimal:2',
     ];
 
     public function user(): BelongsTo
@@ -101,5 +84,20 @@ class Order extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(OrderPayment::class);
+    }
+
+    public function getTotalDiscountAmountAttribute(): float
+    {
+        return $this->items->sum('discount_amount');
+    }
+
+    public function getTotalPaidAmountAttribute(): float
+    {
+        return $this->payments->sum('amount');
+    }
+
+    public function getTotalAmountAttribute(): float
+    {
+        return $this->items->sum('total_amount');
     }
 }
