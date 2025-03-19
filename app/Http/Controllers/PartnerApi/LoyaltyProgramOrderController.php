@@ -3,38 +3,58 @@
 namespace App\Http\Controllers\PartnerApi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoyaltyProgram\CompleteOrderRequest;
+use App\Http\Requests\LoyaltyProgram\CreateOrderRequest;
 use App\Services\LoyaltyProgram\LoyaltyProgramOrderService;
-use Illuminate\Http\Request;
+use Exception;
 
-class LoyaltyProgramDiscountController extends Controller
+class LoyaltyProgramOrderController extends Controller
 {
     protected $channel = 'loyalty-program';
     protected $type = 'discount-pos-system';
 
-    public function __construct(readonly LoyaltyProgramOrderService $loyaltyProgramOrderService) {}
+    public function __construct(readonly private LoyaltyProgramOrderService $loyaltyProgramOrderService) {}
 
-    public function createOrder(Request $request)
+    public function createOrder(CreateOrderRequest $request)
     {
-        $this->loyaltyProgramOrderService->createOrder($request->input('items'), $request->input('qr'));
-        $response = ['success' => true, 'message' => 'Shops processed successfully'];
-        $this->logging($request, $response, $this->channel, $this->type, 'postShops');
+        try {
+            $this->loyaltyProgramOrderService->createOrder($request->items, $request->qr);
+            $response = ['success' => true, 'message' => 'Order processed successfully'];
+
+        } catch (Exception $e) {
+            $response = ['success' => false, 'message' => $e->getMessage()];
+        }
+
+        $this->logging($request, $response, $this->channel, $this->type, 'createOrder');
 
         return $this->successResponse($response);
     }
 
-    public function completeOrder(Request $request)
+    public function completeOrder(CompleteOrderRequest $request)
     {
-        $result = $this->loyaltyProgramOrderService->confirmOrder($request->input('transaction_id'));
-        $response = ['success' => $result, 'message' => $result ? 'Transaction confirmed successfully' : 'Transaction not found'];
+        try {
+            $this->loyaltyProgramOrderService->confirmOrder($request->order_id);
+            $response = ['success' => true, 'message' => 'Order completed successfully'];
+
+        } catch (Exception $e) {
+            $response = ['success' => false, 'message' => $e->getMessage()];
+        }
+
         $this->logging($request, $response, $this->channel, $this->type, 'completeOrder');
 
         return $this->successResponse($response);
     }
 
-    public function cancelOrder(Request $request)
+    public function cancelOrder(CompleteOrderRequest $request)
     {
-        $result = $this->loyaltyProgramOrderService->cancelOrder($request->input('transaction_id'));
-        $response = ['success' => $result, 'message' => $result ? 'Transaction canceled successfully' : 'Transaction not found'];
+        try {
+            $this->loyaltyProgramOrderService->cancelOrder($request->order_id);
+            $response = ['success' => true, 'message' => 'Order canceled successfully'];
+
+        } catch (Exception $e) {
+            $response = ['success' => false, 'message' => $e->getMessage()];
+        }
+
         $this->logging($request, $response, $this->channel, $this->type, 'cancelOrder');
 
         return $this->successResponse($response);
@@ -43,10 +63,5 @@ class LoyaltyProgramDiscountController extends Controller
     public function successResponse($data)
     {
         return response()->json(['success' => true, 'data' => $data]);
-    }
-
-    public function failedResponse($message)
-    {
-        return response()->json(['success' => true, 'message' => $message]);
     }
 }

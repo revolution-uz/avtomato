@@ -17,10 +17,6 @@ class OrderItemFactory extends Factory
             'quantity' => $this->faker->numberBetween(1, 10),
             'price' => $this->faker->randomFloat(2, 1, 100),
             'discount_amount' => $this->faker->randomFloat(2, 0, 10),
-            'total_amount' => function (array $attributes) {
-                return ($attributes['price'] * $attributes['quantity']) - $attributes['discount_amount'];
-            },
-
             'order_id' => Order::factory(),
             'product_id' => Item::factory(),
         ];

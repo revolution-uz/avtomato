@@ -27,17 +27,9 @@ class OrderGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Order $root) => $root->user_id,
             ],
-            'admin_id' => [
-                'type' => Type::int(),
-                'resolve' => fn (Order $root) => $root->admin_id,
-            ],
             'status' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Order $root) => $root->status->value,
-            ],
-            'discount_type' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Order $root) => $root->discount_type->value,
             ],
             'total_amount' => [
                 'type' => Type::nonNull(Type::float()),

@@ -18,10 +18,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $quantity
  * @property float $price
  * @property float $discount_amount
- * @property float $total_amount
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read float $total_amount
  * @property Order $order
  * @property Item $product
  */

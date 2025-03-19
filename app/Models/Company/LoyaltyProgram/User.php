@@ -6,9 +6,7 @@ use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
 use App\Models\Company\OrderBySortable;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -48,7 +46,7 @@ class User extends Authenticatable
         'birth_date' => 'date',
     ];
 
-    public static function findByQr($qr): Model|Collection|User|null
+    public static function findByQr($qr): ?self
     {
         $qrDto = explode('$$', $qr);
         if (count($qrDto) !== 2 || $qrDto[1] < now()->timestamp) {
@@ -66,6 +64,11 @@ class User extends Authenticatable
     public function cards(): HasMany
     {
         return $this->hasMany(Card::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function createTokenWithData(string $deviceName, array $data = []): string
@@ -96,25 +99,24 @@ class User extends Authenticatable
 
     public function getActiveSubscription(): ?Subscription
     {
-        return Subscription::query()
-            ->where('user_id', $this->id)
-            ->where('is_active', true)
-            ->first();
+        return $this->subscriptions()->where('is_active', true)->first();
     }
 
     public function getActiveSubscriptionLimitAttribute(): ?int
     {
-        $subscription = $this->getActiveSubscription();
+        if (! $subscription = $this->getActiveSubscription()) {
+            return null;
+        }
 
         return $subscription->tariff->limit_amount - $this->getOrderDiscountAmount($subscription->created_at);
     }
 
     private function getOrderDiscountAmount(Carbon $created_at)
     {
-        return Order::query()
-            ->where('user_id', $this->id)
+        return $this->orders()
             ->where('created_at', '>', $created_at)
             ->where('status', OrderStatusEnum::COMPLETED)
+            ->get()
             ->sum('total_discount_amount');
     }
 }

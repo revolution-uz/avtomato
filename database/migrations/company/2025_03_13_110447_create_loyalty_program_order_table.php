@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\Company\LoyaltyProgramm\DiscountTypeEnum;
 use App\Enums\Company\LoyaltyProgramm\OrderPaymentStatusEnum;
 use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
 use Illuminate\Database\Migrations\Migration;
@@ -14,9 +13,7 @@ return new class extends Migration
         Schema::create('loyalty_program_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
-            $table->unsignedBigInteger('admin_id')->index()->nullable();
             $table->smallInteger('status')->default(OrderStatusEnum::PENDING->value);
-            $table->smallInteger('discount_type')->default(DiscountTypeEnum::PERCENTAGE->value);
             $table->timestamps();
             $table->softDeletes();
         });
