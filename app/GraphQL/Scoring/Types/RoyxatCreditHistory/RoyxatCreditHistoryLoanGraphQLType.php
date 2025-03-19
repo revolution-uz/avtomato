@@ -23,8 +23,8 @@ class RoyxatCreditHistoryLoanGraphQLType extends GraphQLType
                 'resolve' => fn (RoyxatCreditHistoryLoanDTO $root) => $root->id,
             ],
             'amount' => [
-                'type' => Type::int(),
-                'resolve' => fn (RoyxatCreditHistoryLoanDTO $root) => $root->amount,
+                'type' => Type::float(),
+                'resolve' => fn (RoyxatCreditHistoryLoanDTO $root) => $root->amount / 100,
             ],
             'contract_date' => [
                 'type' => Type::string(),

@@ -145,12 +145,7 @@ class SingleRoyxatCreditHistoryGraphQLQueryTest extends GraphQLTestCase
     {
         $response->assertOk();
         $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'singleRoyxatCreditHistory' => $this->_structure,
-            ],
-        ]
-        );
+        $response->assertJsonStructure(['data' => ['singleRoyxatCreditHistory' => $this->_structure]]);
 
         $this->assertEquals($this->_scoringRequest->id, $response->json('data.singleRoyxatCreditHistory.id'));
         $this->assertEquals($this->_scoringRequest->ext_id, $response->json('data.singleRoyxatCreditHistory.ext_id'));
@@ -184,7 +179,7 @@ class SingleRoyxatCreditHistoryGraphQLQueryTest extends GraphQLTestCase
         $loan = $scoringRequestResponse->result->loans[0];
         $this->assertTrue($loan instanceof RoyxatCreditHistoryLoanDTO);
         $this->assertEquals($loan->id, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.id'));
-        $this->assertEquals($loan->amount, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.amount'));
+        $this->assertEquals($loan->amount / 100, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.amount'));
         $this->assertEquals($loan->contract_date, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.contract_date'));
         $this->assertEquals($loan->max_overdue_days, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.max_overdue_days'));
         $this->assertEquals($loan->total_overdue_days, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.total_overdue_days'));
