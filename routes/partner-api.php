@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PartnerApi\DocumentController;
+use App\Http\Controllers\PartnerApi\LoyaltyProgramOrderController;
 use App\Http\Controllers\PartnerApi\LoyaltyProgramSyncController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,5 +31,10 @@ Route::group(['middleware' => ['auth.loyalty_program_sync']], function () {
         Route::post('items', 'postItems')->name('sync.items');
         Route::post('prices', 'postPrices')->name('sync.prices');
         Route::post('stocks', 'postStocks')->name('sync.stocks');
+    });
+    Route::prefix('order')->controller(LoyaltyProgramOrderController::class)->group(function () {
+        Route::post('create', 'createOrder')->name('order.create');
+        Route::post('complete', 'completeOrder')->name('order.complete');
+        Route::post('cancel', 'cancelOrder')->name('order.cancel');
     });
 });
