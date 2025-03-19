@@ -281,8 +281,13 @@ class InstallmentService
 
     private function withdrawAutoCharge(Installment $installment): bool
     {
+        /** @var Feature $feature */
+        $feature = Feature::query()->where('name', FeatureEnum::INSTALLMENT_AUTO_CHARGE)->firstOrFail();
+
+        $amount = $feature->chargeable_amount * ceil($installment->period / 3);
+
         if ($this->balanceService->isAvailableCompany()) {
-            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment);
+            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment, $amount);
 
             return true;
         }
