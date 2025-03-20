@@ -12,13 +12,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property bool $is_active
- * @property int $card_id
  * @property int $tariff_id
  * @property int $user_id
+ * @property int $remaining_limit_amount
+ * @property Carbon $expired_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read bool $is_active_period
- * @property Card $card
  * @property Tariff $tariff
  * @property User $user
  */
@@ -26,25 +26,25 @@ class Subscription extends Model
 {
     use HasFactory, OrderBySortable, TenantConnection;
 
-    public static array $sortables = ['card_id', 'tariff_id', 'is_active'];
+    public static array $sortables = ['tariff_id', 'is_active'];
 
     public $table = 'loyalty_program_subscriptions';
 
     protected $fillable = [
         'is_active',
-        'card_id',
+        'remaining_limit_amount',
+        'expired_at',
         'tariff_id',
         'user_id',
+    ];
+
+    protected $casts = [
+        'expired_at' => 'datetime',
     ];
 
     protected $attributes = [
         'is_active' => true,
     ];
-
-    public function card(): BelongsTo
-    {
-        return $this->belongsTo(Card::class);
-    }
 
     public function tariff(): BelongsTo
     {
@@ -58,8 +58,14 @@ class Subscription extends Model
 
     public function getIsActivePeriodAttribute(): bool
     {
-        return $this->is_active &&
-            $this->tariff->is_active &&
-            $this->created_at->addMonths($this->tariff->subscription_months)->isFuture();
+        return $this->is_active && $this->tariff->is_active && $this->expired_at->isFuture();
+    }
+
+    public function extendSubscription(): void
+    {
+        $this->is_active = true;
+        $this->remaining_limit_amount = $this->tariff->limit_amount;
+        $this->expired_at = Carbon::now()->addMonths($this->tariff->subscription_months);
+        $this->saveOrFail();
     }
 }
