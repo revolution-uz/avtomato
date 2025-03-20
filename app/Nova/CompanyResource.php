@@ -44,7 +44,6 @@ class CompanyResource extends Resource
         return [
             ID::make()->sortable(),
             Image::make(__('nova.company.logo'), 'logo')
-                ->creationRules('required')
                 ->acceptedTypes('image/*')
                 ->rules('max:2048'),
             Text::make(__('nova.company.name'), 'name')
