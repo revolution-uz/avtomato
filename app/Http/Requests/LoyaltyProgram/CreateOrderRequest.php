@@ -28,7 +28,7 @@ class CreateOrderRequest extends FormRequest
             'items.*.price' => 'required|numeric',
             'items.*.qty' => 'required|integer|min:1',
             'qr' => 'required|string',
-            'shop_id' => 'required|integer|exists:loyalty_program_shops,external_shop_id',
+            'shop_id' => 'required|integer|exists:loyalty_program_shops,external_code',
         ];
     }
 }

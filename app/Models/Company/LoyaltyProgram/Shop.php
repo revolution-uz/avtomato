@@ -20,7 +20,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property float|null $lng
  * @property string|null $image
  * @property ShopStatusEnum $status
- * @property int $external_shop_id
  * @property string $external_code
  * @property string $external_name
  * @property string $external_address
@@ -43,7 +42,6 @@ class Shop extends Model
         'lng',
         'image',
         'status',
-        'external_shop_id',
         'external_code',
         'external_name',
         'external_address',
