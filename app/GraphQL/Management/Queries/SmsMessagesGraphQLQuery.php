@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Management\Queries;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Management\Types\SmsMessageGraphQLType;
+use App\Helpers\RbacHelper;
 use App\Models\Company\SmsMessage;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -44,10 +46,10 @@ class SmsMessagesGraphQLQuery extends Query
         ];
     }
 
-    // public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    // {
-    //     return RbacHelper::checkPermission(PermissionEnum::ADMIN_VIEW_ALL);
-    // }
+    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::SMS_MESSAGE_VIEW_ALL);
+    }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {

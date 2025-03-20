@@ -19,6 +19,7 @@ enum PermissionGroupEnum: string
     case TRANSACTION_MANAGEMENT = 'transaction_management';
     case TRANSACTION_TYPE_MANAGEMENT = 'transaction_type_management';
     case BRANCH_MANAGEMENT = 'branch_management';
+    case SMS_MANAGEMENT = 'sms_management';
     case COMPANY_MANAGEMENT = 'company_management';
     case ROLE_MANAGEMENT = 'role_management';
     case SCORING_CREDIT_HISTORY = 'scoring_credit_history';
@@ -140,6 +141,10 @@ enum PermissionGroupEnum: string
                 PermissionEnum::BRANCH_EDIT,
                 PermissionEnum::BRANCH_DELETE,
                 PermissionEnum::BRANCH_CREATE,
+            ],
+            self::SMS_MANAGEMENT => [
+                PermissionEnum::SMS_TEMPLATE_VIEW_ALL,
+                PermissionEnum::SMS_MESSAGE_VIEW_ALL,
             ],
             self::COMPANY_MANAGEMENT => [
                 PermissionEnum::SETTINGS_EDIT,
