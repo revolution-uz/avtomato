@@ -141,6 +141,10 @@ enum PermissionEnum: string
     case BRANCH_CREATE = 'branch_create';
     case STATISTICS_BY_BRANCHES = 'statistics_by_branches';
 
+    // Manage SMS
+    case SMS_TEMPLATE_VIEW_ALL = 'sms_template_view_all';
+    case SMS_MESSAGE_VIEW_ALL = 'sms_message_view_all';
+
     // Scoring credit history
     case SCORING_CREDIT_HISTORY_VIEW_ALL = 'scoring_credit_history_view_all';
     case SCORING_CREDIT_HISTORY_VIEW = 'scoring_credit_history_view';
@@ -372,6 +376,9 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE,
+
+            self::SMS_TEMPLATE_VIEW_ALL,
+            self::SMS_MESSAGE_VIEW_ALL,
 
             self::SCORING_CREDIT_HISTORY_VIEW_ALL,
             self::SCORING_CREDIT_HISTORY_VIEW,
@@ -659,6 +666,10 @@ enum PermissionEnum: string
                 self::BRANCH_DELETE->value,
                 self::BRANCH_CREATE->value,
                 self::STATISTICS_BY_BRANCHES,
+            ],
+            PermissionGroupEnum::SMS_MANAGEMENT->value => [
+                self::SMS_TEMPLATE_VIEW_ALL->value,
+                self::SMS_MESSAGE_VIEW_ALL->value,
             ],
             PermissionGroupEnum::COMPANY_MANAGEMENT->value => [
                 self::SETTINGS_EDIT->value,
@@ -962,6 +973,9 @@ enum PermissionEnum: string
             self::BRANCH_EDIT,
             self::BRANCH_DELETE,
             self::BRANCH_CREATE => FeatureEnum::BRANCH_MANAGEMENT,
+
+            self::SMS_TEMPLATE_VIEW_ALL,
+            self::SMS_MESSAGE_VIEW_ALL => FeatureEnum::SMS,
 
             self::SETTINGS_EDIT => FeatureEnum::COMPANY_MANAGEMENT,
 

@@ -2,9 +2,11 @@
 
 namespace App\GraphQL\Marketing\Queries;
 
+use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\SmsTemplateEnum;
 use App\Enums\FeatureEnum;
 use App\GraphQL\Marketing\Types\SmsTemplateGraphQLType;
+use App\Helpers\RbacHelper;
 use App\Models\Company\Feature;
 use App\Models\Company\SmsTemplate;
 use Closure;
@@ -38,10 +40,10 @@ class SmsTemplatesGraphQLQuery extends Query
         ];
     }
 
-    // public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
-    // {
-    //      return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_VIEW_ALL);
-    // }
+    public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
+    {
+        return RbacHelper::checkPermission(PermissionEnum::SMS_TEMPLATE_VIEW_ALL);
+    }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
