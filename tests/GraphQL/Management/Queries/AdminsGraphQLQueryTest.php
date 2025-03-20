@@ -154,6 +154,8 @@ class AdminsGraphQLQueryTest extends GraphQLTestCase
                 'branch_edit',
                 'branch_delete',
                 'branch_create',
+                'sms_template_view_all',
+                'sms_message_view_all',
                 'statistics_by_branches',
                 'scoring_credit_history_view_all',
                 'scoring_credit_history_view',
