@@ -18,50 +18,62 @@ class LoyaltyProgramOrderController extends Controller
     public function createOrder(CreateOrderRequest $request)
     {
         try {
-            $this->loyaltyProgramOrderService->createOrder($request->items, $request->qr);
-            $response = ['success' => true, 'message' => 'Order processed successfully'];
-
+            $data = $this->loyaltyProgramOrderService->createOrder($request->items, $request->shop_id, $request->qr);
+            $response = $this->prepareSuccessResponse($data);
         } catch (Exception $e) {
-            $response = ['success' => false, 'message' => $e->getMessage()];
+            $response = $this->prepareFailedResponse($e->getMessage());
         }
 
         $this->logging($request, $response, $this->channel, $this->type, 'createOrder');
 
-        return $this->successResponse($response);
+        return $this->jsonResponse($response);
     }
 
     public function completeOrder(CompleteOrderRequest $request)
     {
         try {
-            $this->loyaltyProgramOrderService->confirmOrder($request->order_id);
-            $response = ['success' => true, 'message' => 'Order completed successfully'];
-
+            $data = $this->loyaltyProgramOrderService->confirmOrder($request->order_id);
+            $response = $this->prepareSuccessResponse($data);
         } catch (Exception $e) {
-            $response = ['success' => false, 'message' => $e->getMessage()];
+            $response = $this->prepareFailedResponse($e->getMessage());
         }
 
         $this->logging($request, $response, $this->channel, $this->type, 'completeOrder');
 
-        return $this->successResponse($response);
+        return $this->jsonResponse($response);
     }
 
     public function cancelOrder(CompleteOrderRequest $request)
     {
         try {
-            $this->loyaltyProgramOrderService->cancelOrder($request->order_id);
-            $response = ['success' => true, 'message' => 'Order canceled successfully'];
+            $data = $this->loyaltyProgramOrderService->cancelOrder($request->order_id);
+            $response = $this->prepareSuccessResponse($data);
 
         } catch (Exception $e) {
-            $response = ['success' => false, 'message' => $e->getMessage()];
+            $response = $this->prepareFailedResponse($e->getMessage());
         }
 
         $this->logging($request, $response, $this->channel, $this->type, 'cancelOrder');
 
-        return $this->successResponse($response);
+        return $this->jsonResponse($response);
     }
 
-    public function successResponse($data)
+    public function jsonResponse($response)
     {
-        return response()->json(['success' => true, 'data' => $data]);
+        return response()->json($response);
+    }
+
+    public function prepareFailedResponse($message)
+    {
+        return [
+            'status' => false, 'result' => null, 'error' => [
+                'message' => $message,
+            ],
+        ];
+    }
+
+    private function prepareSuccessResponse($result)
+    {
+        return ['status' => true, 'result' => $result, 'error' => null];
     }
 }
