@@ -57,9 +57,7 @@ class SubscriptionsGraphQLQuery extends Query
 
         return Subscription::query()
             ->when(isset($args['search']), fn (Builder $q) => $q
-                ->whereHas('card', fn ($q) => $q
-                    ->where('owner', 'ILIKE', "%{$args['search']}%"))
-                ->orWhereHas('tariff', fn ($q) => $q
+                ->whereHas('tariff', fn ($q) => $q
                     ->where('name_uz', 'ILIKE', "%{$args['search']}%")
                     ->orWhere('name_ru', 'ILIKE', "%{$args['search']}%")))
             ->when(

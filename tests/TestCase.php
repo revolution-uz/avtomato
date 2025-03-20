@@ -95,4 +95,10 @@ abstract class TestCase extends BaseTestCase
                 ? Company\Ecommerce\User::factory()->withCustomer()->create()
                 : Company\Ecommerce\User::factory()->create());
     }
+
+    public function createLoyaltyProgramClientUser(): Company\LoyaltyProgram\User
+    {
+        return Company\LoyaltyProgram\User::query()
+            ->firstOr(fn () => Company\LoyaltyProgram\User::factory()->create());
+    }
 }

@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\LoyaltyProgram\Admin\Types;
 
-use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use App\Models\Company\LoyaltyProgram\Subscription;
 use GraphQL\Type\Definition\Type;
@@ -26,11 +25,11 @@ class SubscriptionGraphQLType extends GraphQLType
             ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),
-                'resolve' => fn (Subscription $root) => $root->is_active,
+                'resolve' => fn (Subscription $root) => $root->is_active_period,
             ],
-            'card_id' => [
+            'remaining_limit_amount' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Subscription $root) => $root->card_id,
+                'resolve' => fn (Subscription $root) => $root->remaining_limit_amount,
             ],
             'tariff_id' => [
                 'type' => Type::nonNull(Type::int()),
@@ -40,6 +39,10 @@ class SubscriptionGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Subscription $root) => $root->user_id,
             ],
+            'expired_at' => [
+                'type' => Type::nonNull(Type::int()),
+                'resolve' => fn (Subscription $root) => $root->expired_at->timestamp,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Subscription $root) => $root->created_at->timestamp,
@@ -47,10 +50,6 @@ class SubscriptionGraphQLType extends GraphQLType
             'updated_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Subscription $root) => $root->updated_at->timestamp,
-            ],
-            'card' => [
-                'type' => GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Subscription $root) => $root->card,
             ],
             'tariff' => [
                 'type' => GraphQL::type(TariffGraphQLType::GRAPHQL_TYPE_NAME),
