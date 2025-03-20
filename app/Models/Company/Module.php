@@ -46,8 +46,17 @@ class Module extends Model
         parent::boot();
 
         self::updating(function (Module $model) {
-            if (! $model->is_active) {
-                Feature::query()->whereIn('id', $model->features->pluck('id'))->update(['is_active' => false]);
+            if ($model->isDirty('is_active')) {
+
+                if ($model->is_active) {
+                    Feature::query()->whereIn('name', $model->name->getFeatures())->update(['is_active' => true]);
+
+                } else {
+                    Feature::query()
+                        ->whereIn('name', $model->name->getFeatures())
+                        ->whereHas('modules', fn ($q) => $q->where('is_active', true), '=', 1)
+                        ->update(['is_active' => false]);
+                }
             }
         });
     }
