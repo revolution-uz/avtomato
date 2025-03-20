@@ -7,25 +7,26 @@ use App\Models\Company\OrderBySortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
  * Class Shop
  *
  * @property int $id
- * @property int $external_shop_id
  * @property string|null $name
  * @property string|null $address
  * @property float|null $lat
  * @property float|null $lng
  * @property string|null $image
  * @property ShopStatusEnum $status
+ * @property int $external_shop_id
  * @property string $external_code
  * @property string $external_name
  * @property string $external_address
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Shop extends Model
 {

@@ -3,16 +3,18 @@
 namespace App\Services\LoyaltyProgram;
 
 use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
+use App\Http\Resources\OrderResource;
 use App\Models\Company\LoyaltyProgram\Item;
 use App\Models\Company\LoyaltyProgram\Order;
 use App\Models\Company\LoyaltyProgram\OrderItem;
+use App\Models\Company\LoyaltyProgram\Price;
 use App\Models\Company\LoyaltyProgram\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class LoyaltyProgramOrderService
 {
-    public function createOrder(array $items, string $qr): void
+    public function createOrder(array $items, int $shop_id, string $qr): OrderResource
     {
         try {
             $user = User::findByQr($qr);
@@ -31,7 +33,7 @@ class LoyaltyProgramOrderService
             $order->saveOrFail();
 
             foreach ($items as $item) {
-                $this->createItem($item, $order);
+                $this->createItem($item, $shop_id, $order);
             }
 
             if ($order->total_discount_amount > $user->active_subscription_limit) {
@@ -40,39 +42,53 @@ class LoyaltyProgramOrderService
 
             DB::commit();
 
+            return new OrderResource($order);
+
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
         }
     }
 
-    public function confirmOrder(int $order_id)
+    public function confirmOrder(int $order_id): false|OrderResource
     {
         $order = Order::query()->findOrFail($order_id);
         $order->status = OrderStatusEnum::COMPLETED;
+        if ($order->save()) {
+            return new OrderResource($order);
+        }
 
-        return $order->saveOrFail();
+        return false;
     }
 
-    public function cancelOrder(int $order_id): void
+    public function cancelOrder(int $order_id): false|OrderResource
     {
         $order = Order::query()->findOrFail($order_id);
         $order->status = OrderStatusEnum::CANCELED;
+        if ($order->save()) {
+            return new OrderResource($order);
+        }
 
-        $order->saveOrFail();
+        return false;
     }
 
-    private function createItem(array $item, Order $order)
+    private function createItem(array $item, int $shop_id, Order $order): bool
     {
-        if ($loyaltyProgramItem = Item::query()->firstWhere('external_code', $item['item_code'])) {
+        $loyaltyProgramItem = Item::query()->firstWhere('external_code', $item['item_code']);
+        $loyaltyProgramPrice = Price::query()
+            ->where('external_item_code', $item['item_code'])
+            ->where('external_shop_id', $shop_id)
+            ->first();
+
+        if ($loyaltyProgramItem && $loyaltyProgramPrice) {
             $orderItem = new OrderItem;
             $orderItem->order_id = $order->id;
             $orderItem->product_id = $loyaltyProgramItem->id;
-            $orderItem->price = $item['price'];
+            $orderItem->price = $loyaltyProgramPrice->external_price;
             $orderItem->quantity = $item['qty'];
-            $orderItem->discount_amount = $item['discount'];
+            $orderItem->discount_amount = $loyaltyProgramPrice->external_price - $item['price'];
 
-            return $orderItem->saveOrFail();
+            return $orderItem->save();
         }
         throw new Exception('Item not found');
     }
