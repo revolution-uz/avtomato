@@ -109,4 +109,19 @@ enum ModuleEnum: string
             self::MULTIBRANCH_4,
         ];
     }
+
+    public function getFeatures(): array
+    {
+        $featuresForModule = [];
+
+        foreach (FeatureEnum::cases() as $feature) {
+            $modules = self::getModuleForFeature($feature);
+
+            if (in_array($this, $modules, true)) {
+                $featuresForModule[] = $feature;
+            }
+        }
+
+        return $featuresForModule;
+    }
 }

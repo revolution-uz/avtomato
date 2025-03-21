@@ -6,6 +6,7 @@ use App\Enums\ModuleEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -18,6 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int|null $amount
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property Feature[]|Collection<int, Feature> $features
  */
 class Module extends Model
 {
@@ -46,8 +48,15 @@ class Module extends Model
         parent::boot();
 
         self::updating(function (Module $model) {
-            if (! $model->is_active) {
-                Feature::query()->whereIn('id', $model->features->pluck('id'))->update(['is_active' => false]);
+            if ($model->isDirty('is_active')) {
+                if ($model->is_active) {
+                    Feature::query()->whereIn('name', $model->features->pluck('id'))->update(['is_active' => true]);
+                } else {
+                    Feature::query()
+                        ->whereIn('name', $model->features->pluck('id'))
+                        ->whereHas('modules', fn ($q) => $q->where('is_active', true), '=', 1)
+                        ->update(['is_active' => false]);
+                }
             }
         });
     }
