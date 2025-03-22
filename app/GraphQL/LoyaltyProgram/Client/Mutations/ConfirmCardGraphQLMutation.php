@@ -53,6 +53,6 @@ class ConfirmCardGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return $this->userCardService->confirmCard(auth('loyalty-program-client')->user(), $args);
+        return $this->userCardService->confirmCard(auth('loyalty-program-client')->id(), $args);
     }
 }

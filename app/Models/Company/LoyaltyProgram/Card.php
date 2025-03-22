@@ -7,6 +7,7 @@ use App\Enums\Company\CardStatusEnum;
 use App\Helpers\CardHelper;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property User $user
  *
  * @method self whereNumber(int $cardNumber)
+ * @method static Builder active()
  */
 class Card extends Model
 {
@@ -120,11 +122,8 @@ class Card extends Model
         return $query->where('hash', self::hashing($cardNumber));
     }
 
-    public function restoreCard()
+    public function scopeActive(Builder $query)
     {
-        $this->update([
-            'deleted_at' => null,
-            'status' => CardStatusEnum::INACTIVE,
-        ]);
+        return $query->whereNotNull('external_id')->where('status', CardStatusEnum::ACTIVE);
     }
 }

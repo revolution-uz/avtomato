@@ -28,17 +28,17 @@ readonly class LoyaltyProgramUserCardService
         private ConfirmationService $confirmationService
     ) {}
 
-    public function attachCard(int $userId, array $request): array
+    public function attachCard(int $userId, array $args): array
     {
         // check has already connected card
-        $cardQuery = Card::query()->whereNumber($request['number'])->where('expiry', $request['expiry'])->whereNotNull('external_id');
+        $cardQuery = Card::query()->whereNumber($args['number'])->where('expiry', $args['expiry'])->whereNotNull('external_id');
 
         // if connected card not exists create it and send request to card service
         if ($cardQuery->clone()->withTrashed()->doesntExist()) {
-            $response = $this->atmosCardService->attachCard($request['number'], $request['expiry']);
+            $response = $this->atmosCardService->attachCard($args['number'], $args['expiry']);
 
             if ($response->data instanceof AtmosCardDTO) {
-                $oldCard = $this->createOrGetCard($userId, $request);
+                $oldCard = $this->createOrGetCard($userId, $args);
                 $oldCard->fillData($response->data, CardStatusEnum::INACTIVE);
 
                 $this->confirmationService->send($oldCard->phone);
@@ -49,7 +49,7 @@ readonly class LoyaltyProgramUserCardService
                 if (! $response->result->isSuccess()) {
                     throw new BadRequestHttpException($response->result->description);
                 }
-                $newCard = $this->createOrGetCard($userId, $request);
+                $newCard = $this->createOrGetCard($userId, $args);
 
                 return [$newCard, $response];
             }
@@ -75,7 +75,7 @@ readonly class LoyaltyProgramUserCardService
         }
 
         $newCard = new Card;
-        $newCard->fill($cardQuery->first()->makeVisible(['hash', 'external_id'])->toArray());
+        $newCard->fill($cardQuery->first()->makeVisible(['external_id'])->toArray());
         $newCard->user_id = $userId;
         $newCard->computingBeforeInsert();
         $newCard->saveOrFail();
@@ -86,9 +86,9 @@ readonly class LoyaltyProgramUserCardService
         return [$newCard, $customResponse];
     }
 
-    public function confirmCard(User $user, array $args): Card
+    public function confirmCard(int $userId, array $args): Card
     {
-        $card = $user->cards()->where('id', $args['card_id'])->firstOrFail();
+        $card = Card::query()->where('user_id', $userId)->findOrFail($args['card_id']);
 
         if ($args['transaction_id'] == $card->id && ! empty($card->phone)) {
             $confirmed = $this->confirmationService->confirm($card->phone, $args['otp']);
@@ -149,18 +149,18 @@ readonly class LoyaltyProgramUserCardService
         return $success;
     }
 
-    private function createOrGetCard(int $userId, array $request)
+    private function createOrGetCard(int $userId, array $args)
     {
         if (
-            $card = Card::query()->where('user_id', $userId)->whereNumber($request['number'])->where('expiry', $request['expiry'])->first()
+            $card = Card::query()->where('user_id', $userId)->whereNumber($args['number'])->where('expiry', $args['expiry'])->first()
         ) {
             return $card;
         }
 
         $card = new Card;
         $card->user_id = $userId;
-        $card->number = $request['number'];
-        $card->expiry = $request['expiry'];
+        $card->number = $args['number'];
+        $card->expiry = $args['expiry'];
         $card->computingBeforeInsert();
         $card->saveOrFail();
 
