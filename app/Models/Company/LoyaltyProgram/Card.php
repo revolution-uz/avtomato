@@ -26,10 +26,11 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property float $balance
  * @property string $external_id
  * @property int $user_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property-read string $card_type
+ * @property-read bool $is_connected
  * @property User $user
  *
  * @method self whereNumber(int $cardNumber)
@@ -117,5 +118,13 @@ class Card extends Model
     public function scopeWhereNumber($query, $cardNumber)
     {
         return $query->where('hash', self::hashing($cardNumber));
+    }
+
+    public function restoreCard()
+    {
+        $this->update([
+            'deleted_at' => null,
+            'status' => CardStatusEnum::INACTIVE,
+        ]);
     }
 }

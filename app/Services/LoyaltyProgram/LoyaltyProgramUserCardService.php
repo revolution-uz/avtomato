@@ -2,20 +2,27 @@
 
 namespace App\Services\LoyaltyProgram;
 
+use App\Clients\AtmosCardClient;
 use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosCardDTO;
-use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\Enums\Company\CardStatusEnum;
+use App\Enums\Company\CompanySettingsEnum;
 use App\Models\Company\CardConfirmationSms;
+use App\Models\Company\CompanySettings;
 use App\Models\Company\LoyaltyProgram\Card;
+use App\Models\Company\LoyaltyProgram\User;
 use App\Services\AtmosService;
 use App\Services\ConfirmationService;
+use Exception;
+use GraphQL\Error\Error;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 readonly class LoyaltyProgramUserCardService
 {
+    const MIN_BALANCE_LIMIT = 200000;
+
     public function __construct(
         private AtmosService $atmosCardService,
         private ConfirmationService $confirmationService
@@ -27,7 +34,7 @@ readonly class LoyaltyProgramUserCardService
         $cardQuery = Card::query()->whereNumber($request['number'])->where('expiry', $request['expiry'])->whereNotNull('external_id');
 
         // if connected card not exists create it and send request to card service
-        if ($cardQuery->clone()->doesntExist()) {
+        if ($cardQuery->clone()->withTrashed()->doesntExist()) {
             $response = $this->atmosCardService->attachCard($request['number'], $request['expiry']);
 
             if ($response->data instanceof AtmosCardDTO) {
@@ -58,10 +65,17 @@ readonly class LoyaltyProgramUserCardService
             $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $inactiveCard->phone, 'transaction_id' => $inactiveCard->id]);
 
             return [$inactiveCard, $customResponse];
+        } elseif ($deletedCard = $cardQuery->clone()->withTrashed()->where('user_id', $userId)->first()) {
+            $deletedCard->restore();
+            $deletedCard->update(['status' => CardStatusEnum::INACTIVE]);
+
+            $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $deletedCard->phone, 'transaction_id' => $deletedCard->id]);
+
+            return [$deletedCard, $customResponse];
         }
 
         $newCard = new Card;
-        $newCard->fill($cardQuery->first()->toArray());
+        $newCard->fill($cardQuery->first()->makeVisible(['hash', 'external_id'])->toArray());
         $newCard->user_id = $userId;
         $newCard->computingBeforeInsert();
         $newCard->saveOrFail();
@@ -72,49 +86,84 @@ readonly class LoyaltyProgramUserCardService
         return [$newCard, $customResponse];
     }
 
-    public function confirmCard(int $userId, array $request): array
+    public function confirmCard(User $user, array $args): Card
     {
-        /** @var Card $card */
-        $card = Card::query()->where('user_id', $userId)->findOrFail($request['card_id']);
+        $card = $user->cards()->where('id', $args['card_id'])->firstOrFail();
 
-        if ($request['transaction_id'] == $card->id && ! empty($card->phone)) {
-            $confirmed = $this->confirmationService->confirm($card->phone, $request['otp']);
-            if ($confirmed) {
-                $card->update(['status' => CardStatusEnum::ACTIVE]);
+        if ($args['transaction_id'] == $card->id && ! empty($card->phone)) {
+            $confirmed = $this->confirmationService->confirm($card->phone, $args['otp']);
+
+            if (! $confirmed) {
+                throw ValidationException::withMessages(['otp' => __('api.otp_was_wrong')]);
             }
-            $customResponse = AtmosConfirmCardResponseDTO::from(['result' => new AtmosResultDTO(
-                $confirmed ? 'OK' : 'FAILED',
-                $confirmed ? __('api.success') : __('api.otp_was_wrong')
-            )]);
+        } else {
+            $responseDto = $this->atmosCardService->confirmCard($args['transaction_id'], $args['otp']);
 
-            return [$card, $customResponse];
+            if ($responseDto->result->isSuccess()) {
+                $card->fillData($responseDto->data, CardStatusEnum::INACTIVE);
+            } else {
+                throw ValidationException::withMessages(['otp' => $responseDto->result->description]);
+            }
         }
 
-        $atmosConfirmCardDto = $this->atmosCardService->confirmCard($request['transaction_id'], $request['otp']);
+        if (CompanySettings::getValue(CompanySettingsEnum::LOYALTY_PROGRAM_BALANCE_CHECK) == 0) {
+            $card->update(['status' => CardStatusEnum::ACTIVE]);
+        } else {
+            try {
+                $success = $this->checkBalance($card);
+            } catch (Exception $e) {
+                throw new Error($e->getMessage());
+            }
 
-        if ($atmosConfirmCardDto->result->isSuccess()) {
-            $card->fillData($atmosConfirmCardDto->data, CardStatusEnum::ACTIVE);
+            if ($success) {
+                $card->update(['status' => CardStatusEnum::ACTIVE]);
+            } else {
+                throw ValidationException::withMessages(['card_id' => __('api.card_balance_insufficient', ['balance' => self::MIN_BALANCE_LIMIT])]);
+            }
         }
 
-        return [$card, $atmosConfirmCardDto];
+        return $card;
+    }
+
+    public function checkBalance(Card $card): bool
+    {
+        $success = true;
+
+        try {
+            $atmosCardInfoResponse = (new AtmosCardClient)->getCardInfo($card->external_id);
+
+            if (! $atmosCardInfoResponse->result->isSuccess()) {
+                throw new Exception;
+            }
+
+        } catch (Exception $e) {
+            throw new Exception('Unable to retrieve card balance');
+        }
+
+        $card_balance = $atmosCardInfoResponse->card->balance_sum / 100;
+
+        if ($card_balance < self::MIN_BALANCE_LIMIT) {
+            $success = false;
+        }
+
+        return $success;
     }
 
     private function createOrGetCard(int $userId, array $request)
     {
-        $card = Card::query()->where('user_id', $userId)->whereNumber($request['number'])
-            ->where('expiry', $request['expiry'])->first();
-
-        if ($card) {
+        if (
+            $card = Card::query()->where('user_id', $userId)->whereNumber($request['number'])->where('expiry', $request['expiry'])->first()
+        ) {
             return $card;
         }
 
         $card = new Card;
-        $card->fill($request);
-        $card->computingBeforeInsert();
         $card->user_id = $userId;
-        $card->status = CardStatusEnum::INACTIVE;
+        $card->number = $request['number'];
+        $card->expiry = $request['expiry'];
+        $card->computingBeforeInsert();
         $card->saveOrFail();
 
-        return $card;
+        return $card->refresh();
     }
 }
