@@ -302,6 +302,6 @@ class PricesController
             abort(404);
         }
 
-        return view('pages.single_price', ['price' => $prices[$slug]]);
+        return view('website.pages.single_price', ['price' => $prices[$slug]]);
     }
 }

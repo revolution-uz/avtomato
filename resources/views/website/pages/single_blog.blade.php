@@ -1,4 +1,4 @@
-@extends('welcome')
+@extends('website.layout')
 
 @section('title', $blog['title'] . ' - Avtomato')
 
