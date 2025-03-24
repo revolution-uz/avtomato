@@ -55,8 +55,8 @@
         </style>
 
         <!-- Resources -->
-        <script src="{{ asset('js/website.js') }}"></script>
         <link rel="stylesheet" href="{{ asset('website/css/app.css') }}">
+        <script src="{{ asset('website/js/website.js') }}"></script>
     </head>
     <body>
     <!-- Global Wrapper Start -->
