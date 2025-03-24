@@ -2,6 +2,7 @@
 
 namespace GraphQL\LoyaltyProgram\Client\Mutations;
 
+use App\Enums\Company\CardStatusEnum;
 use App\Models\Company\LoyaltyProgram\Card;
 use App\Models\Company\LoyaltyProgram\Subscription;
 use App\Models\Company\LoyaltyProgram\Tariff;
@@ -58,7 +59,7 @@ class CreateSubscriptionGraphQLMutationTest extends GraphQLTestCase
         parent::setUp();
 
         $this->_activeUser = $this->createLoyaltyProgramClientUser();
-        Card::factory()->create(['user_id' => $this->_activeUser->id]);
+        Card::factory()->create(['user_id' => $this->_activeUser->id, 'status' => CardStatusEnum::ACTIVE]);
         $this->_activeTariff = Tariff::factory()->create(['is_active' => true]);
         Subscription::query()->forceDelete();
     }
