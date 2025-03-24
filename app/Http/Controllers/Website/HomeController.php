@@ -11,6 +11,6 @@ class HomeController extends Controller
 {
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('website.home');
+        return view('website.pages.home');
     }
 }

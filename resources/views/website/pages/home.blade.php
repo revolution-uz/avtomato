@@ -1,0 +1,527 @@
+@extends('website.layout')
+
+@section('title', 'Главная страница - Avtomato')
+
+@php
+    $marketsPhotoTemplate = function($marketPhotos) {
+        $html = '';
+        foreach ($marketPhotos as $photo) {
+            $html .= '
+            <div class="flex items-center px-2 w-[215px] h-[280px] lg:w-[260px] lg:h-[340px] hover:scale-105 transition-all">
+                <img class="object-contain pointer-events-none select-none" src="' . asset("/assets/images/$photo") . '" alt="Slide">
+            </div>';
+        }
+        return $html;
+    };
+
+    $marketPhotos = [
+        'slide-1_260x340.jpg',
+        'slide-2_260x340.jpg',
+        'slide-3_260x340.jpg',
+        'slide-4_260x340.jpg',
+        'slide-5_260x340.jpg',
+        'slide-6_260x340.jpg',
+        'slide-7_260x340.jpg',
+    ];
+
+    $feedbacksTemplate = function($feedbacks) {
+        $html = '';
+        foreach ($feedbacks as $feedback) {
+            $html .= '
+            <div class="w-[300px] lg:w-[500px] p-6 lg:p-8 rounded-[32px] shadow-[0_0_100px_0_#00000012]">
+                <img class="h-8 md:h-auto" src="' . asset("/assets/icons/$feedback") . '" alt="Layers">
+                <p class="mt-4 lg:mt-6 lg:text-lg text-secondary font-medium text-wrap">Mijozlarni boshqarishning ilg`or funksionalligi, hisob-kitoblarning aniqligi va ma`lumotlar auditini BILLZ dasturining afzalliklari qatoriga kiritishimiz mumkin. BILLZ bizga o`z vaqtida qaror qabul qilish va do`kon uchun sarflanayotgan vaqtni tejashga yordam beradi</p>
+                <div class="mt-4 lg:mt-6 flex items-center space-x-4">
+                    <img class="size-[42px] lg:size-[62px] object-cover" src="' . asset("/assets/images/avatar.jpg") . '" alt="Avatar">
+                    <div>
+                        <p class="text-secondary font-semibold">Asadbek Shomurodov</p>
+                        <p class="text-sm text-[#71717A]">Indesco agency egasi</p>
+                    </div>
+                </div>
+            </div>
+            ';
+        }
+        return $html;
+    };
+
+    $feedbacks = [
+        'feedback-company-1.svg',
+        'feedback-company-1.svg',
+        'feedback-company-1.svg',
+        'feedback-company-1.svg',
+        'feedback-company-1.svg',
+    ];
+@endphp
+
+@section('content')
+    <!-- Hero Section Start -->
+    <section class="py-10 md:py-[60px] relative">
+        <!-- Gradient Circles Start -->
+        <div class="gradient-circle red-gradient -translate-x-[60%] sm:translate-x-0 -top-[10%] sm:top-0 sm:-left-1/3 lg:top-[15%] lg:right-0 pointer-events-none"></div>
+        <div class="gradient-circle yellow-gradient -translate-y-[55%] translate-x-1/4 sm:translate-y-0 sm:translate-x-0 sm:-top-[25%] sm:-right-[15%] lg:-top-[15%] lg:left-0 pointer-events-none"></div>
+        <div class="gradient-circle small purple-gradient translate-y-1/3 translate-x-1/2 sm:-translate-y-0 sm:translate-x-0 sm:top-1/3 sm:-right-1/5 lg:top-[15%] lg:left-0 pointer-events-none"></div>
+        <!-- Gradient Circles End -->
+
+        <!-- Hero Content Start -->
+        <div class="container mx-auto flex items-center justify-center flex-col">
+            <div class="flex items-center space-x-2.5 py-[7px] pl-2 pr-3 border border-secondary/[8%] rounded-[72px]">
+                <img class="object-cover w-[76px] h-[30px] pointer-events-none select-none" src="{{ asset('/assets/images/people-avatars.png') }}" alt="Avatars">
+                <p class="text-sm leading-4 sm:leading-5 text-secondary font-medium"><span class="text-primary">10K+</span>
+                    <span class="sm:hidden">Mutaxasis dasturchilar<br> faoliyat yuritadi</span>
+                    <span class="hidden sm:inline">Mutaxasis dasturchilar faoliyat yuritadi</span>
+                </p>
+            </div>
+            <h1 class="mt-5 text-center text-4xl/[120%] sm:text-5xl/[120%] lg:text-[64px]/[120%] text-secondary font-bold">
+                <span class="hidden sm:block">Sizning biznesingiz uchun<br>To’lovlarni avtomatik eslatish</span>
+                <span class="sm:hidden">Biznesingizni avtomatlashtiring</span>
+            </h1>
+            <div class="mt-5 md:mt-6 w-[90%] sm:w-full md:w-[85%] lg:w-[60%] overflow-hidden flex items-center justify-center space-x-2.5 relative before:absolute before:left-0 before:h-full before:w-[45px] sm:before:w-[100px] lg:before:w-[300px] before:bg-linear-to-r before:from-[#FEFEFF] before:to-[#FDF3F3]/[10%] after:absolute after:right-0 after:h-full after:w-[45px] sm:after:w-[100px] lg:after:w-[300px] after:bg-linear-to-l after:from-[#FEFEFF] after:to-[#FDF3F3]/[10%]">
+                <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
+                    <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.25 2.75H8.75C5.43629 2.75 2.75 5.43629 2.75 8.75V15.25C2.75 18.5637 5.43629 21.25 8.75 21.25H15.25C18.5637 21.25 21.25 18.5637 21.25 15.25V8.75C21.25 5.43629 18.5637 2.75 15.25 2.75Z" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M7.67188 16.2221V11.123" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                        <path d="M12.125 16.2221V7.77734" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                        <path d="M16.3281 16.2223V9.81934" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                    <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Muddatli to'lovlarni oson undirish</p>
+                </div>
+                <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
+                    <svg class="text-primary" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.2708 3.60708V2.40625C16.2708 2.22392 16.1984 2.04904 16.0694 1.92011C15.9406 1.79118 15.7657 1.71875 15.5833 1.71875C15.401 1.71875 15.2261 1.79118 15.0972 1.92011C14.9683 2.04904 14.8958 2.22392 14.8958 2.40625V3.55208H7.10417V2.40625C7.10417 2.22392 7.03174 2.04904 6.9028 1.92011C6.77387 1.79118 6.599 1.71875 6.41667 1.71875C6.23433 1.71875 6.05946 1.79118 5.93053 1.92011C5.80159 2.04904 5.72917 2.22392 5.72917 2.40625V3.60708C4.70739 3.77234 3.77762 4.29545 3.10595 5.08298C2.43427 5.87052 2.06444 6.87119 2.0625 7.90625V15.9271C2.0625 17.0819 2.52125 18.1894 3.33781 19.0059C4.15438 19.8225 5.26187 20.2812 6.41667 20.2812H15.5833C16.7382 20.2812 17.8457 19.8225 18.6622 19.0059C19.4788 18.1894 19.9375 17.0819 19.9375 15.9271V7.90625C19.9356 6.87119 19.5657 5.87052 18.8941 5.08298C18.2224 4.29545 17.2926 3.77234 16.2708 3.60708ZM7.70001 16.4404H6.78334C6.60101 16.4404 6.42614 16.368 6.2972 16.239C6.16827 16.1101 6.09584 15.9352 6.09584 15.7529C6.09584 15.5706 6.16827 15.3957 6.2972 15.2668C6.42614 15.1378 6.60101 15.0654 6.78334 15.0654H7.70001C7.88234 15.0654 8.05721 15.1378 8.18614 15.2668C8.31507 15.3957 8.38751 15.5706 8.38751 15.7529C8.38751 15.9352 8.31507 16.1101 8.18614 16.239C8.05721 16.368 7.88234 16.4404 7.70001 16.4404ZM7.70001 13.6171H6.78334C6.60101 13.6171 6.42614 13.5447 6.2972 13.4157C6.16827 13.2868 6.09584 13.1119 6.09584 12.9296C6.09584 12.7473 6.16827 12.5724 6.2972 12.4435C6.42614 12.3145 6.60101 12.2421 6.78334 12.2421H7.70001C7.88234 12.2421 8.05721 12.3145 8.18614 12.4435C8.31507 12.5724 8.38751 12.7473 8.38751 12.9296C8.38751 13.1119 8.31507 13.2868 8.18614 13.4157C8.05721 13.5447 7.88234 13.6171 7.70001 13.6171ZM11.4675 16.4404H10.5508C10.3685 16.4404 10.1936 16.368 10.0647 16.239C9.93575 16.1101 9.86333 15.9352 9.86333 15.7529C9.86333 15.5706 9.93575 15.3957 10.0647 15.2668C10.1936 15.1378 10.3685 15.0654 10.5508 15.0654H11.4675C11.6498 15.0654 11.8247 15.1378 11.9536 15.2668C12.0826 15.3957 12.155 15.5706 12.155 15.7529C12.155 15.9352 12.0826 16.1101 11.9536 16.239C11.8247 16.368 11.6498 16.4404 11.4675 16.4404ZM11.4675 13.6171H10.5508C10.3685 13.6171 10.1936 13.5447 10.0647 13.4157C9.93575 13.2868 9.86333 13.1119 9.86333 12.9296C9.86333 12.7473 9.93575 12.5724 10.0647 12.4435C10.1936 12.3145 10.3685 12.2421 10.5508 12.2421H11.4675C11.6498 12.2421 11.8247 12.3145 11.9536 12.4435C12.0826 12.5724 12.155 12.7473 12.155 12.9296C12.155 13.1119 12.0826 13.2868 11.9536 13.4157C11.8247 13.5447 11.6498 13.6171 11.4675 13.6171ZM15.235 16.4404H14.3183C14.136 16.4404 13.9611 16.368 13.8322 16.239C13.7032 16.1101 13.6308 15.9352 13.6308 15.7529C13.6308 15.5706 13.7032 15.3957 13.8322 15.2668C13.9611 15.1378 14.136 15.0654 14.3183 15.0654H15.235C15.4173 15.0654 15.5922 15.1378 15.7211 15.2668C15.8501 15.3957 15.9225 15.5706 15.9225 15.7529C15.9225 15.9352 15.8501 16.1101 15.7211 16.239C15.5922 16.368 15.4173 16.4404 15.235 16.4404ZM15.235 13.6171H14.3183C14.136 13.6171 13.9611 13.5447 13.8322 13.4157C13.7032 13.2868 13.6308 13.1119 13.6308 12.9296C13.6308 12.7473 13.7032 12.5724 13.8322 12.4435C13.9611 12.3145 14.136 12.2421 14.3183 12.2421H15.235C15.4173 12.2421 15.5922 12.3145 15.7211 12.4435C15.8501 12.5724 15.9225 12.7473 15.9225 12.9296C15.9225 13.1119 15.8501 13.2868 15.7211 13.4157C15.5922 13.5447 15.4173 13.6171 15.235 13.6171ZM18.5625 9.03375H3.4375V7.88792C3.4384 7.21884 3.6652 6.56967 4.08114 6.04558C4.49707 5.52151 5.07777 5.15323 5.72917 5.00042V6.05458C5.72917 6.23692 5.80159 6.41179 5.93053 6.54072C6.05946 6.66965 6.23433 6.74208 6.41667 6.74208C6.599 6.74208 6.77387 6.66965 6.9028 6.54072C7.03174 6.41179 7.10417 6.23692 7.10417 6.05458V4.90875H14.8958V6.05458C14.8958 6.23692 14.9683 6.41179 15.0972 6.54072C15.2261 6.66965 15.401 6.74208 15.5833 6.74208C15.7657 6.74208 15.9406 6.66965 16.0694 6.54072C16.1984 6.41179 16.2708 6.23692 16.2708 6.05458V5.00042C16.9222 5.15323 17.5029 5.52151 17.9189 6.04558C18.3348 6.56967 18.5616 7.21884 18.5625 7.88792V9.03375Z" fill="#E21010"/>
+                    </svg>
+                    <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">To’lovlarni avtomatik eslatish</p>
+                </div>
+                <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
+                    <svg class="text-primary" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19.4534 7.90449C19.2713 7.90449 19.0967 7.83224 18.968 7.70363C18.8393 7.57503 18.767 7.40058 18.767 7.21871V5.34423C18.767 4.77834 18.5426 4.23549 18.1429 3.83449C17.7432 3.43349 17.2008 3.207 16.6344 3.20458H13.8427C13.6607 3.20458 13.4861 3.13233 13.3574 3.00372C13.2286 2.87511 13.1562 2.70068 13.1562 2.51879C13.1562 2.33691 13.2286 2.16248 13.3574 2.03387C13.4861 1.90526 13.6607 1.83301 13.8427 1.83301H16.6618C17.1229 1.83378 17.5794 1.92544 18.0051 2.10275C18.4307 2.28005 18.8171 2.53951 19.1422 2.86626C19.4705 3.18964 19.7304 3.57562 19.9065 4.00129C20.0827 4.42697 20.1713 4.88365 20.1674 5.34423V7.21871C20.1688 7.31149 20.151 7.40357 20.1152 7.48923C20.0795 7.57488 20.0265 7.65227 19.9596 7.71659C19.8926 7.78091 19.8131 7.83078 19.726 7.86311C19.639 7.89544 19.5462 7.90952 19.4534 7.90449Z" fill="currentColor"/>
+                        <path d="M2.52249 7.90449C2.34043 7.90449 2.16582 7.83224 2.03709 7.70363C1.90835 7.57503 1.83604 7.40058 1.83604 7.21871V5.34423C1.83256 4.88373 1.92148 4.42719 2.09755 4.00159C2.27362 3.57599 2.53325 3.18995 2.86114 2.86626C3.18624 2.53951 3.57267 2.28005 3.99831 2.10275C4.42394 1.92544 4.88041 1.83378 5.34157 1.83301H8.16062C8.34268 1.83301 8.51729 1.90526 8.64603 2.03387C8.77476 2.16248 8.84709 2.33691 8.84709 2.51879C8.84709 2.70068 8.77476 2.87511 8.64603 3.00372C8.51729 3.13233 8.34268 3.20458 8.16062 3.20458H5.34157C4.77502 3.20936 4.23302 3.43632 3.83239 3.83655C3.43176 4.23678 3.20457 4.77824 3.1998 5.34423V7.21871C3.20101 7.30833 3.1844 7.3973 3.1509 7.48045C3.11741 7.5636 3.06771 7.63928 3.00468 7.70309C2.94167 7.76689 2.86659 7.81756 2.78381 7.85212C2.70104 7.8867 2.61221 7.9045 2.52249 7.90449Z" fill="currentColor"/>
+                        <path d="M20.1494 14.7354V16.6647C20.1497 17.1256 20.0583 17.5819 19.8808 18.0072C19.7033 18.4326 19.443 18.8186 19.1151 19.1427C18.4588 19.7907 17.5758 20.1579 16.6531 20.1668H5.33098C4.39856 20.1482 3.5109 19.7639 2.85972 19.097C2.21778 18.4488 1.85343 17.5765 1.84375 16.6647V14.7354C1.84375 14.5535 1.91608 14.3791 2.04481 14.2505C2.17355 14.1219 2.34816 14.0496 2.53021 14.0496C2.71227 14.0496 2.88688 14.1219 3.01562 14.2505C3.14435 14.3791 3.21668 14.5535 3.21668 14.7354V16.6647C3.22219 17.1094 3.36742 17.541 3.63185 17.8987C3.89627 18.2564 4.26653 18.522 4.69028 18.6581C5.19369 15.9149 8.26904 13.9033 10.96 13.9033C13.6509 13.9033 16.7171 15.9241 17.2205 18.6581C17.566 18.5624 17.8811 18.3798 18.1358 18.1278C18.3353 17.9302 18.4938 17.6952 18.6023 17.4363C18.7106 17.1774 18.7667 16.8996 18.7673 16.619V14.7354C18.7673 14.5535 18.8397 14.3791 18.9684 14.2505C19.0972 14.1219 19.2717 14.0496 19.4538 14.0496C19.6359 14.0496 19.8104 14.1219 19.9392 14.2505C20.0679 14.3791 20.1402 14.5535 20.1402 14.7354H20.1494Z" fill="currentColor"/>
+                        <path d="M14.5532 8.94758C14.5551 9.6537 14.347 10.3444 13.9555 10.9323C13.564 11.52 13.0065 11.9785 12.3539 12.2496C11.7013 12.5207 10.9828 12.5921 10.2896 12.4548C9.59628 12.3174 8.95935 11.9776 8.45958 11.4783C7.95981 10.979 7.61965 10.3428 7.4822 9.65021C7.34477 8.95758 7.41623 8.2398 7.68754 7.58781C7.95884 6.93583 8.4178 6.37898 9.00622 5.98783C9.59462 5.59668 10.2861 5.38883 10.9928 5.39064C11.9363 5.39306 12.8405 5.76858 13.5078 6.43511C14.1749 7.10164 14.5509 8.00496 14.5532 8.94758Z" fill="currentColor"/>
+                    </svg>
+                    <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Mijozni ishonchliligini aniqlash</p>
+                </div>
+            </div>
+
+            <button class="getDemoModalShow mt-5 sm:mt-8 flex items-center justify-center px-5 sm:px-6 h-12 sm:h-[58px] bg-primary rounded-2xl cursor-pointer">
+                <span class="text-sm sm:text-base text-white leading-5 font-semibold">Bepul sinab ko’rish</span>
+            </button>
+        </div>
+        <!-- Hero Content End -->
+
+        <!-- Hero Picture Start -->
+        <div class="pt-8 md:pt-16 px-4 relative flex items-start justify-center pointer-events-none select-none z-[70]">
+            <div class="absolute -bottom-[50px] w-screen h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
+            <div class="absolute -bottom-[50px] w-screen h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
+
+            <img class="hidden lg:block object-cover object-top rounded-t-[32px] shadow-[0px_-4px_10px_#00000014] lg:shadow-[0px_-4px_60px_#00000014] max-h-[500px]" src="{{ asset('assets/images/hero-image_1240x840.jpg') }}" alt="Avtomato Dashboard" width="1240" height="840">
+            <img class="lg:hidden object-cover object-top rounded-t-xl shadow-[0px_-4px_60px_#00000014] max-h-[200px]" src="{{ asset('assets/images/hero-image_695x470.jpg') }}" alt="Avtomato Dashboard" width="695" height="470">
+        </div>
+        <!-- Hero Picture End -->
+    </section>
+    <!-- Hero Section End -->
+
+    <!-- In One System Start -->
+    <section class="py-10 md:py-[60px]">
+        <!-- Container Start -->
+        <div class="container px-4 mx-auto">
+            <h2 class="mb-10 md:mb-[60px] text-center text-[32px]/[38px] md:text-4xl lg:text-5xl text-secondary font-semibold">Hammasi<br class="sm:hidden"> bitta tizimda</h2>
+
+            <!-- Grid Columns Start -->
+            <div class="grid md:grid-cols-12 sm:grid-rows-[420px_420px_420px_420px_420px_420px_420px] md:grid-rows-[370px_370px_370px_430px] xl:grid-rows-[520px_520px_520px] gap-5">
+                <!-- Column 1 Start -->
+                <div class="md:col-span-6 lg:col-span-5 bg-secondary rounded-[32px] overflow-hidden flex flex-col justify-between">
+                    <div class="p-6 lg:p-8">
+                        <p class="text-white text-2xl lg:text-3xl lg:leading-tight font-semibold">Nasiya savdoni<br> avtomatlashtirish</p>
+                        <p class="custom-truncate mt-3 text-white/75 leading-6">To‘lovlarni rejalashtirish, kuzatish va boshqarish avtomatik tarzda amalga oshiriladi</p>
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-white" href="#" title="Batafsil ma’lumot">
+                            <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
+                            <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <img class="ml-6 lg:ml-8 rounded-ss-3xl pointer-events-none" src="{{ asset('/assets/images/dashboard-statistics_535x280.jpg') }}"
+                         alt="Dashboard" height="280">
+                </div>
+                <!-- Column 1 End -->
+
+                <!-- Column 2 Start -->
+                <div class="md:col-span-6 lg:col-span-7 bg-third rounded-[32px] relative overflow-hidden flex flex-col justify-between">
+                    <div class="p-6 lg:p-8">
+                        <p class="text-secondary text-2xl lg:text-3xl lg:leading-tight font-semibold">Qarzdorlardanpulni<br> avtomatik undira olasiz!</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Muddatli to’lovlarni o’z kunida avtomatik tarzda yechib beramiz, mabodo mijoz tomonidan sizga taqdim etilgan plastik kartasida mablag‘ bo‘lmasa PINFL orqali mijozning ixtiyoriy kartasidan avtomatik pul yechib olishingiz mumkin bo‘ladi.</p>
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                            <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
+                            <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <img class="-mt-[10%] mx-auto pointer-events-none" src="{{ asset('/assets/images/calendar-notify.png') }}" alt="Calendar">
+                </div>
+                <!-- Column 2 End -->
+
+                <!-- Column 3 Start -->
+                <div class="md:col-span-6 lg:col-span-4 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
+                    <div class="p-6 lg:p-8">
+                        <p class="text-secondary text-2xl xl:text-3xl lg:leading-tight font-semibold">Internet<br> do’kon yaratish</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">To‘lovlarni rejalashtirish, kuzatish va boshqarish avtomatik tarzda...</p>
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                            <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
+                            <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <img class="ml-6 lg:ml-8 rounded-ss-3xl pointer-events-none" src="{{ asset('/assets/images/create-market_370x260.jpg') }}" alt="Dashboard">
+                </div>
+                <!-- Column 3 End -->
+
+                <!-- Column 4 Start -->
+                <div class="md:col-span-6 lg:col-span-4 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
+                    <div class="p-6 lg:p-8">
+                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Loyality</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlaringiz ma‘lumotlari, kirim-chiqim, qarzdorliklar, to‘lovlar, kelgusida kutilayotgan foydalar va ko‘plab statistika hamda analitikalarni elektron holatda real vaqt rejimida ko‘rib borishingiz mumkin bo‘ladi.</p>
+                        <a class="group mt-4 inline-flex items-center sp ace-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                            <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
+                            <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <img class="ml-6 lg:ml-8 pointer-events-none" src="{{ asset('/assets/images/incoming-statistic_370x265.png') }}" alt="Statistic">
+                </div>
+                <!-- Column 4 End -->
+
+                <!-- Column 5 Start -->
+                <div class="md:col-span-6 lg:col-span-4 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
+                    <div class="p-6 lg:p-8">
+                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">QR pay</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Barcha ma’lumotlaringizni maksimal darajada tartiblangan elektron shaklda saqlanadi va shartnoma, ma’lumotnoma va xat kabi xujjatlar avtomatik generatsiya qilinadi.</p>
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                            <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
+                            <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <img class="-mt-4 mx-auto pointer-events-none" src="{{ asset('/assets/images/paper-list.png') }}" alt="Paper List">
+                </div>
+                <!-- Column 5 End -->
+
+                <!-- Column 6 Start -->
+                <div class="md:col-span-6 lg:col-span-7 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
+                    <div class="p-6 lg:p-8">
+                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Qo‘shimcha<br>marketing instrumentlari</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">To‘lovlarni rejalashtirish, kuzatish va boshqarish avtomatik tarzda...</p>
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                            <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
+                            <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <img class="-mt-[10%] mx-auto pointer-events-none" src="{{ asset('/assets/images/ad-charts.png') }}" alt="Ad charts">
+                </div>
+                <!-- Column 6 End -->
+
+                <!-- Column 7 Start -->
+                <div class="md:col-span-12 lg:col-span-5 bg-secondary rounded-[32px] overflow-hidden flex flex-col justify-between">
+                    <div class="p-6 lg:p-8">
+                        <p class="text-white text-2xl xl:text-3xl lg:leading-tight font-semibold">Skoring</p>
+                        <p class="custom-truncate mt-3 text-white/75 leading-6">Mijozlaringiz moliyaviy tarixini to‘laqonli analiz qilish imkoni.</p>
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-white" href="#" title="Batafsil ma’lumot">
+                            <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
+                            <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <img class="mx-auto sm:w-[60%] lg:w-auto pointer-events-none" src="{{ asset('/assets/images/skoring-person_505x320.png') }}" alt="Skoring">
+                </div>
+                <!-- Column 7 End -->
+            </div>
+            <!-- Grid Columns End -->
+        </div>
+        <!-- Container End -->
+    </section>
+    <!-- In One System End -->
+
+    <!-- Advantages Start -->
+    <section class="py-10 md:py-[60px] bg-linear-245 md:bg-linear-200 from-black via-gray-950 to-[#2d638e]">
+        <!-- Container Start -->
+        <div class="container mx-auto py-20 lg:py-[100px] px-4 2xl:px-[100px]">
+            <h2 class="text-center text-3xl md:text-5xl text-white font-semibold">Nima uchun Avtomato?</h2>
+
+            <!-- Grid Columns Start -->
+            <div class="mt-[42px] md:mt-[60px] grid sm:grid-cols-12 md:grid-rows-[255px_285px_235px] lg:grid-rows-[285px_265px] gap-5">
+                <div class="sm:col-span-6 lg:col-span-4 bg-secondary p-6 xl:p-8 rounded-[32px]">
+                    <div class="flex items-center justify-center size-12 rounded-xl bg-[#FEFEFE]/10">
+                        <svg class="text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21.9867 18.7301C21.9406 19.036 21.8242 19.3269 21.6466 19.5801C21.4699 19.8289 21.2358 20.0316 20.9642 20.1708C20.6926 20.3101 20.3914 20.3818 20.0861 20.3801H18.4356C18.3182 20.3797 18.2025 20.3515 18.0981 20.2976C17.9938 20.2437 17.9037 20.1657 17.8355 20.0701C17.7664 19.9746 17.7205 19.8644 17.7015 19.7481C17.6824 19.6318 17.6906 19.5127 17.7254 19.4001C18.0955 18.2201 18.0155 16.8901 14.6645 14.7601C14.5279 14.6706 14.4233 14.5401 14.3658 14.3873C14.3082 14.2345 14.3008 14.0674 14.3444 13.9101C14.3913 13.7552 14.4864 13.6192 14.616 13.5221C14.7455 13.4249 14.9027 13.3717 15.0646 13.3701C16.495 13.3899 17.8908 13.8123 19.0921 14.5887C20.2934 15.3652 21.2515 16.4643 21.8567 17.7601C21.9797 18.0677 22.0244 18.401 21.9867 18.7301Z" fill="currentColor"/>
+                            <path d="M19.4844 7.70028C19.4828 8.28044 19.3672 8.85465 19.1443 9.39029C18.6919 10.4696 17.8332 11.328 16.7535 11.7803C16.2174 12.0022 15.6433 12.1176 15.063 12.1202C14.9317 12.1178 14.8033 12.0815 14.6902 12.0148C14.5772 11.948 14.4833 11.8531 14.4178 11.7393C14.3524 11.6255 14.3175 11.4967 14.3166 11.3655C14.3157 11.2342 14.3489 11.1049 14.4128 10.9902C15.025 10.0112 15.3496 8.8799 15.3496 7.72531C15.3496 6.57072 15.025 5.43936 14.4128 4.46029C14.3344 4.3482 14.2881 4.21679 14.279 4.08029C14.2698 3.94378 14.2982 3.80741 14.3611 3.68588C14.4239 3.56435 14.5188 3.46232 14.6355 3.39083C14.7522 3.31935 14.8862 3.28112 15.023 3.2803C15.6037 3.27812 16.1789 3.39375 16.7135 3.62027C17.2583 3.84938 17.7489 4.19003 18.154 4.62027C18.9764 5.45104 19.4398 6.5714 19.4444 7.74026L19.4844 7.70028Z" fill="currentColor"/>
+                            <path d="M16.6754 18.6998C16.7159 19.1894 16.6195 19.6805 16.3969 20.1185C16.1743 20.5564 15.8344 20.9238 15.415 21.1798C14.997 21.4369 14.5154 21.572 14.0246 21.5698H4.65181C4.16102 21.572 3.67941 21.4369 3.2614 21.1798C2.84145 20.9251 2.50155 20.5576 2.28047 20.1191C2.05939 19.6806 1.96602 19.1888 2.01102 18.6998C2.04837 18.212 2.22163 17.7443 2.51117 17.3498C3.308 16.2887 4.33479 15.4217 5.51454 14.8138C6.6943 14.2059 7.9964 13.873 9.32322 13.8398C10.6546 13.8658 11.9626 14.1945 13.1481 14.8009C14.3335 15.4073 15.3653 16.2756 16.1653 17.3398C16.4564 17.7381 16.6328 18.2084 16.6754 18.6998Z" fill="currentColor"/>
+                            <path d="M14.2461 7.32017C14.2435 8.61984 13.7265 9.86567 12.8082 10.7856C11.8898 11.7056 10.6447 12.2249 9.34458 12.2302C8.37602 12.2282 7.42976 11.9394 6.62525 11.4002C5.82074 10.861 5.19405 10.0957 4.82431 9.20072C4.45457 8.30577 4.35836 7.32138 4.5478 6.3718C4.73725 5.42223 5.20387 4.55007 5.88875 3.86539C6.57363 3.18072 7.44606 2.7142 8.39592 2.52482C9.34578 2.33543 10.3305 2.43162 11.2257 2.80125C12.1209 3.17088 12.8865 3.79739 13.4259 4.60166C13.9652 5.40593 14.2541 6.35189 14.2561 7.32017H14.2461Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <p class="mt-4 xl:mt-6 text-white text-xl xl:text-2xl font-semibold">Mijozlar bazasini shakllantirish</p>
+                    <p class="mt-2 xl:mt-3 text-white/50">Mijozlarning barcha ma'lumotlarini xavfsiz saqlash – Kontaktlar, shartnomalar, izohlar va to‘lov tarixini yagona bazada jamlang.</p>
+                </div>
+                <div class="sm:col-span-6 lg:col-span-4 bg-secondary p-6 xl:p-8 rounded-[32px]">
+                    <div class="flex items-center justify-center size-12 rounded-xl bg-[#FEFEFE]/10">
+                        <svg class="text-white" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.2708 3.60708V2.40625C16.2708 2.22392 16.1984 2.04904 16.0694 1.92011C15.9406 1.79118 15.7657 1.71875 15.5833 1.71875C15.401 1.71875 15.2261 1.79118 15.0972 1.92011C14.9683 2.04904 14.8958 2.22392 14.8958 2.40625V3.55208H7.10417V2.40625C7.10417 2.22392 7.03174 2.04904 6.9028 1.92011C6.77387 1.79118 6.599 1.71875 6.41667 1.71875C6.23433 1.71875 6.05946 1.79118 5.93053 1.92011C5.80159 2.04904 5.72917 2.22392 5.72917 2.40625V3.60708C4.70739 3.77234 3.77762 4.29545 3.10595 5.08298C2.43427 5.87052 2.06444 6.87119 2.0625 7.90625V15.9271C2.0625 17.0819 2.52125 18.1894 3.33781 19.0059C4.15438 19.8225 5.26187 20.2812 6.41667 20.2812H15.5833C16.7382 20.2812 17.8457 19.8225 18.6622 19.0059C19.4788 18.1894 19.9375 17.0819 19.9375 15.9271V7.90625C19.9356 6.87119 19.5657 5.87052 18.8941 5.08298C18.2224 4.29545 17.2926 3.77234 16.2708 3.60708ZM7.70001 16.4404H6.78334C6.60101 16.4404 6.42614 16.368 6.2972 16.239C6.16827 16.1101 6.09584 15.9352 6.09584 15.7529C6.09584 15.5706 6.16827 15.3957 6.2972 15.2668C6.42614 15.1378 6.60101 15.0654 6.78334 15.0654H7.70001C7.88234 15.0654 8.05721 15.1378 8.18614 15.2668C8.31507 15.3957 8.38751 15.5706 8.38751 15.7529C8.38751 15.9352 8.31507 16.1101 8.18614 16.239C8.05721 16.368 7.88234 16.4404 7.70001 16.4404ZM7.70001 13.6171H6.78334C6.60101 13.6171 6.42614 13.5447 6.2972 13.4157C6.16827 13.2868 6.09584 13.1119 6.09584 12.9296C6.09584 12.7473 6.16827 12.5724 6.2972 12.4435C6.42614 12.3145 6.60101 12.2421 6.78334 12.2421H7.70001C7.88234 12.2421 8.05721 12.3145 8.18614 12.4435C8.31507 12.5724 8.38751 12.7473 8.38751 12.9296C8.38751 13.1119 8.31507 13.2868 8.18614 13.4157C8.05721 13.5447 7.88234 13.6171 7.70001 13.6171ZM11.4675 16.4404H10.5508C10.3685 16.4404 10.1936 16.368 10.0647 16.239C9.93575 16.1101 9.86333 15.9352 9.86333 15.7529C9.86333 15.5706 9.93575 15.3957 10.0647 15.2668C10.1936 15.1378 10.3685 15.0654 10.5508 15.0654H11.4675C11.6498 15.0654 11.8247 15.1378 11.9536 15.2668C12.0826 15.3957 12.155 15.5706 12.155 15.7529C12.155 15.9352 12.0826 16.1101 11.9536 16.239C11.8247 16.368 11.6498 16.4404 11.4675 16.4404ZM11.4675 13.6171H10.5508C10.3685 13.6171 10.1936 13.5447 10.0647 13.4157C9.93575 13.2868 9.86333 13.1119 9.86333 12.9296C9.86333 12.7473 9.93575 12.5724 10.0647 12.4435C10.1936 12.3145 10.3685 12.2421 10.5508 12.2421H11.4675C11.6498 12.2421 11.8247 12.3145 11.9536 12.4435C12.0826 12.5724 12.155 12.7473 12.155 12.9296C12.155 13.1119 12.0826 13.2868 11.9536 13.4157C11.8247 13.5447 11.6498 13.6171 11.4675 13.6171ZM15.235 16.4404H14.3183C14.136 16.4404 13.9611 16.368 13.8322 16.239C13.7032 16.1101 13.6308 15.9352 13.6308 15.7529C13.6308 15.5706 13.7032 15.3957 13.8322 15.2668C13.9611 15.1378 14.136 15.0654 14.3183 15.0654H15.235C15.4173 15.0654 15.5922 15.1378 15.7211 15.2668C15.8501 15.3957 15.9225 15.5706 15.9225 15.7529C15.9225 15.9352 15.8501 16.1101 15.7211 16.239C15.5922 16.368 15.4173 16.4404 15.235 16.4404ZM15.235 13.6171H14.3183C14.136 13.6171 13.9611 13.5447 13.8322 13.4157C13.7032 13.2868 13.6308 13.1119 13.6308 12.9296C13.6308 12.7473 13.7032 12.5724 13.8322 12.4435C13.9611 12.3145 14.136 12.2421 14.3183 12.2421H15.235C15.4173 12.2421 15.5922 12.3145 15.7211 12.4435C15.8501 12.5724 15.9225 12.7473 15.9225 12.9296C15.9225 13.1119 15.8501 13.2868 15.7211 13.4157C15.5922 13.5447 15.4173 13.6171 15.235 13.6171ZM18.5625 9.03375H3.4375V7.88792C3.4384 7.21884 3.6652 6.56967 4.08114 6.04558C4.49707 5.52151 5.07777 5.15323 5.72917 5.00042V6.05458C5.72917 6.23692 5.80159 6.41179 5.93053 6.54072C6.05946 6.66965 6.23433 6.74208 6.41667 6.74208C6.599 6.74208 6.77387 6.66965 6.9028 6.54072C7.03174 6.41179 7.10417 6.23692 7.10417 6.05458V4.90875H14.8958V6.05458C14.8958 6.23692 14.9683 6.41179 15.0972 6.54072C15.2261 6.66965 15.401 6.74208 15.5833 6.74208C15.7657 6.74208 15.9406 6.66965 16.0694 6.54072C16.1984 6.41179 16.2708 6.23692 16.2708 6.05458V5.00042C16.9222 5.15323 17.5029 5.52151 17.9189 6.04558C18.3348 6.56967 18.5616 7.21884 18.5625 7.88792V9.03375Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <p class="mt-4 xl:mt-6 text-white text-xl xl:text-2xl font-semibold">Muddatli to’lov summalarini vaqtida undirib olish uchun</p>
+                    <p class="mt-2 xl:mt-3 text-white/50">Avtospisaniya (avtomatik yechib olish) – Belgilangan sanada mijozning hisobidan to‘lov summasi avtomatik yechib olinadi.</p>
+                </div>
+                <div class="sm:col-span-6 lg:col-span-4 bg-secondary p-6 xl:p-8 rounded-[32px]">
+                    <div class="flex items-center justify-center size-12 rounded-xl bg-[#FEFEFE]/10">
+                        <svg class="text-white" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.4534 7.90449C19.2713 7.90449 19.0967 7.83224 18.968 7.70363C18.8393 7.57503 18.767 7.40058 18.767 7.21871V5.34423C18.767 4.77834 18.5426 4.23549 18.1429 3.83449C17.7432 3.43349 17.2008 3.207 16.6344 3.20458H13.8427C13.6607 3.20458 13.4861 3.13233 13.3574 3.00372C13.2286 2.87511 13.1562 2.70068 13.1562 2.51879C13.1562 2.33691 13.2286 2.16248 13.3574 2.03387C13.4861 1.90526 13.6607 1.83301 13.8427 1.83301H16.6618C17.1229 1.83378 17.5794 1.92544 18.0051 2.10275C18.4307 2.28005 18.8171 2.53951 19.1422 2.86626C19.4705 3.18964 19.7304 3.57562 19.9065 4.00129C20.0827 4.42697 20.1713 4.88365 20.1674 5.34423V7.21871C20.1688 7.31149 20.151 7.40357 20.1152 7.48923C20.0795 7.57488 20.0265 7.65227 19.9596 7.71659C19.8926 7.78091 19.8131 7.83078 19.726 7.86311C19.639 7.89544 19.5462 7.90952 19.4534 7.90449Z" fill="currentColor"/>
+                            <path d="M2.52249 7.90449C2.34043 7.90449 2.16582 7.83224 2.03709 7.70363C1.90835 7.57503 1.83604 7.40058 1.83604 7.21871V5.34423C1.83256 4.88373 1.92148 4.42719 2.09755 4.00159C2.27362 3.57599 2.53325 3.18995 2.86114 2.86626C3.18624 2.53951 3.57267 2.28005 3.99831 2.10275C4.42394 1.92544 4.88041 1.83378 5.34157 1.83301H8.16062C8.34268 1.83301 8.51729 1.90526 8.64603 2.03387C8.77476 2.16248 8.84709 2.33691 8.84709 2.51879C8.84709 2.70068 8.77476 2.87511 8.64603 3.00372C8.51729 3.13233 8.34268 3.20458 8.16062 3.20458H5.34157C4.77502 3.20936 4.23302 3.43632 3.83239 3.83655C3.43176 4.23678 3.20457 4.77824 3.1998 5.34423V7.21871C3.20101 7.30833 3.1844 7.3973 3.1509 7.48045C3.11741 7.5636 3.06771 7.63928 3.00468 7.70309C2.94167 7.76689 2.86659 7.81756 2.78381 7.85212C2.70104 7.8867 2.61221 7.9045 2.52249 7.90449Z" fill="currentColor"/>
+                            <path d="M20.1494 14.7354V16.6647C20.1497 17.1256 20.0583 17.5819 19.8808 18.0072C19.7033 18.4326 19.443 18.8186 19.1151 19.1427C18.4588 19.7907 17.5758 20.1579 16.6531 20.1668H5.33098C4.39856 20.1482 3.5109 19.7639 2.85972 19.097C2.21778 18.4488 1.85343 17.5765 1.84375 16.6647V14.7354C1.84375 14.5535 1.91608 14.3791 2.04481 14.2505C2.17355 14.1219 2.34816 14.0496 2.53021 14.0496C2.71227 14.0496 2.88688 14.1219 3.01562 14.2505C3.14435 14.3791 3.21668 14.5535 3.21668 14.7354V16.6647C3.22219 17.1094 3.36742 17.541 3.63185 17.8987C3.89627 18.2564 4.26653 18.522 4.69028 18.6581C5.19369 15.9149 8.26904 13.9033 10.96 13.9033C13.6509 13.9033 16.7171 15.9241 17.2205 18.6581C17.566 18.5624 17.8811 18.3798 18.1358 18.1278C18.3353 17.9302 18.4938 17.6952 18.6023 17.4363C18.7106 17.1774 18.7667 16.8996 18.7673 16.619V14.7354C18.7673 14.5535 18.8397 14.3791 18.9684 14.2505C19.0972 14.1219 19.2717 14.0496 19.4538 14.0496C19.6359 14.0496 19.8104 14.1219 19.9392 14.2505C20.0679 14.3791 20.1402 14.5535 20.1402 14.7354H20.1494Z" fill="currentColor"/>
+                            <path d="M14.5532 8.94758C14.5551 9.6537 14.347 10.3444 13.9555 10.9323C13.564 11.52 13.0065 11.9785 12.3539 12.2496C11.7013 12.5207 10.9828 12.5921 10.2896 12.4548C9.59628 12.3174 8.95935 11.9776 8.45958 11.4783C7.95981 10.979 7.61965 10.3428 7.4822 9.65021C7.34477 8.95758 7.41623 8.2398 7.68754 7.58781C7.95884 6.93583 8.4178 6.37898 9.00622 5.98783C9.59462 5.59668 10.2861 5.38883 10.9928 5.39064C11.9363 5.39306 12.8405 5.76858 13.5078 6.43511C14.1749 7.10164 14.5509 8.00496 14.5532 8.94758Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <p class="mt-4 xl:mt-6 text-white text-xl xl:text-2xl font-semibold">Mijozlarning ishonchlilik darajasini aniqlashtirish</p>
+                    <p class="mt-2 xl:mt-3 text-white/50">Tizim mijozlarning oldingi to‘lov tarixi, kredit reytingi va boshqa omillar asosida ularning ishonchlilik darajasini hisoblab chiqadi.</p>
+                </div>
+                <div class="sm:col-span-6 lg:col-span-6 bg-secondary p-6 xl:p-8 rounded-[32px]">
+                    <div class="flex items-center justify-center size-12 rounded-xl bg-[#FEFEFE]/10">
+                        <svg class="text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21.9115 9.72956L21.4316 8.06959L20.3216 4.89957C20.1373 4.35355 19.7878 3.87828 19.3216 3.53956C18.8504 3.19871 18.2831 3.01661 17.7016 3.01957H6.23166C5.64929 3.01843 5.08102 3.19893 4.60604 3.5359C4.13106 3.87286 3.77297 4.34954 3.58162 4.89957L2.45162 8.10957L1.99167 9.72956C1.98194 9.79922 1.98194 9.86992 1.99167 9.93958C1.99504 10.6384 2.18858 11.3231 2.55148 11.9203C2.91438 12.5175 3.43289 13.0047 4.05159 13.3296V18.1596C4.04893 18.5307 4.12006 18.8986 4.26083 19.2419C4.4016 19.5853 4.60928 19.8972 4.87167 20.1596C5.40419 20.6859 6.12297 20.9806 6.87167 20.9796H17.1515C17.5209 20.9809 17.8869 20.9092 18.2284 20.7684C18.57 20.6277 18.8803 20.4207 19.1415 20.1595C19.4027 19.8983 19.6097 19.588 19.7504 19.2465C19.8912 18.905 19.9629 18.539 19.9616 18.1696V13.3396C20.5006 13.0616 20.9639 12.6566 21.3116 12.1596C21.77 11.5142 22.0149 10.7413 22.0116 9.94956C21.9843 9.87364 21.9508 9.80007 21.9115 9.72956ZM15.0216 18.1296H8.85164C8.58643 18.1296 8.33203 18.0243 8.1445 17.8367C7.95695 17.6492 7.85164 17.3948 7.85164 17.1296C7.85164 16.8644 7.95695 16.61 8.1445 16.4225C8.33203 16.235 8.58643 16.1296 8.85164 16.1296H15.0216C15.2869 16.1296 15.5411 16.235 15.7287 16.4225C15.9162 16.61 16.0216 16.8644 16.0216 17.1296C16.0216 17.3948 15.9162 17.6492 15.7287 17.8367C15.5411 18.0243 15.2869 18.1296 15.0216 18.1296ZM20.0216 11.2796C19.7405 11.6781 19.342 11.9787 18.8816 12.1396C18.6421 12.2151 18.3928 12.2556 18.1416 12.2596C17.661 12.2598 17.1923 12.1094 16.8016 11.8296C16.4031 11.5485 16.1025 11.1499 15.9416 10.6896C15.858 10.4587 15.814 10.2152 15.8116 9.96958C15.8116 9.77067 15.7326 9.5799 15.592 9.43925C15.4513 9.2986 15.2605 9.21958 15.0616 9.21958C14.8626 9.21958 14.6719 9.2986 14.5313 9.43925C14.3906 9.5799 14.3116 9.77067 14.3116 9.96958V10.0196C14.3038 10.2721 14.2565 10.5218 14.1715 10.7596C14.0048 11.2113 13.7049 11.6019 13.3116 11.8796C12.9245 12.1593 12.4591 12.3097 11.9816 12.3096C11.4968 12.3106 11.0239 12.1597 10.6293 11.8781C10.2347 11.5965 9.93829 11.1983 9.78158 10.7396C9.68971 10.5072 9.64232 10.2595 9.64168 10.0096C9.64168 9.81065 9.56261 9.61991 9.42196 9.47926C9.28131 9.3386 9.09059 9.25956 8.89168 9.25956C8.69277 9.25956 8.50194 9.3386 8.36129 9.47926C8.22063 9.61991 8.14168 9.81065 8.14168 10.0096C8.13885 10.2658 8.09146 10.5196 8.00167 10.7596C7.83871 11.2106 7.54213 11.6013 7.15158 11.8796C6.75711 12.1596 6.28532 12.3099 5.80159 12.3096C5.53925 12.3029 5.27952 12.2556 5.03158 12.1696C4.57436 12.0132 4.17864 11.7156 3.90157 11.3196C3.64594 10.9549 3.50026 10.5246 3.48165 10.0796L3.89169 8.59959L5.00168 5.43958C5.09114 5.18214 5.25866 4.95898 5.48092 4.80125C5.70319 4.64351 5.96911 4.55904 6.24166 4.55958H17.7116C17.9829 4.56368 18.2471 4.6471 18.4716 4.79957C18.6907 4.95914 18.8549 5.18276 18.9416 5.43958L20.0415 8.55958L20.4716 10.0796C20.4298 10.5156 20.2671 10.9312 20.0016 11.2796H20.0216Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <p class="mt-4 xl:mt-6 text-white text-xl xl:text-2xl font-semibold">Fililallar va xodimlarustida nazorat</p>
+                    <p class="mt-2 xl:mt-3 text-white/50">Har bir filialning moliyaviy ko‘rsatkichlari, mijozlar bilan ishlash jarayonlari va umumiy samaradorligini kuzatib boring.</p>
+                </div>
+                <div class="sm:col-span-12 lg:col-span-6 bg-secondary p-6 xl:p-8 rounded-[32px]">
+                    <div class="flex items-center justify-center size-12 rounded-xl bg-[#FEFEFE]/10">
+                        <svg class="text-white" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.21 6.66649e-05H6.75C4.9606 0.00270666 3.24525 0.714747 1.97995 1.98005C0.71465 3.24534 0.00265 4.96067 0 6.75007V13.2501C0.00265 15.0395 0.71465 16.7549 1.97995 18.0202C3.24525 19.2855 4.9606 19.9975 6.75 20.0001H13.25C15.0394 19.9975 16.7548 19.2855 18.0201 18.0202C19.2853 16.7549 19.9974 15.0395 20 13.2501V6.75007C19.9987 5.86064 19.8219 4.98021 19.4797 4.15925C19.1375 3.33828 18.6367 2.59294 18.0059 1.96589C17.3751 1.33883 16.6268 0.842396 15.8038 0.505067C14.9809 0.167737 14.0994 -0.00388334 13.21 6.66649e-05ZM6.42999 14.2301C6.42999 14.4423 6.34571 14.6458 6.19568 14.7958C6.04565 14.9459 5.84218 15.0301 5.63 15.0301C5.41783 15.0301 5.21434 14.9459 5.06432 14.7958C4.91429 14.6458 4.83 14.4423 4.83 14.2301V9.13006C4.83 8.91786 4.91429 8.71446 5.06432 8.56436C5.21434 8.41436 5.41783 8.33006 5.63 8.33006C5.84218 8.33006 6.04565 8.41436 6.19568 8.56436C6.34571 8.71446 6.42999 8.91786 6.42999 9.13006V14.2301ZM10.88 14.2301C10.88 14.4423 10.7957 14.6458 10.6457 14.7958C10.4957 14.9459 10.2922 15.0301 10.08 15.0301C9.8678 15.0301 9.6643 14.9459 9.5143 14.7958C9.3643 14.6458 9.28 14.4423 9.28 14.2301V5.7801C9.28 5.56792 9.3643 5.36445 9.5143 5.21442C9.6643 5.06439 9.8678 4.98011 10.08 4.98011C10.2922 4.98011 10.4957 5.06439 10.6457 5.21442C10.7957 5.36445 10.88 5.56792 10.88 5.7801V14.2301ZM15.09 14.2301C15.09 14.4423 15.0057 14.6458 14.8557 14.7958C14.7057 14.9459 14.5022 15.0301 14.29 15.0301C14.0778 15.0301 13.8743 14.9459 13.7243 14.7958C13.5743 14.6458 13.49 14.4423 13.49 14.2301V7.82007C13.49 7.6079 13.5743 7.40443 13.7243 7.2544C13.8743 7.10437 14.0778 7.02009 14.29 7.02009C14.5022 7.02009 14.7057 7.10437 14.8557 7.2544C15.0057 7.40443 15.09 7.6079 15.09 7.82007V14.2301Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <p class="mt-4 xl:mt-6 text-white text-xl xl:text-2xl font-semibold">Savdoni tizimlashtirish hisobiga foydani 40%gacha oshirish</p>
+                    <p class="mt-2 xl:mt-3 text-white/50">Xodimlarning ish jarayonlarini tezlashtirish va mijozlarga sifatli xizmat ko‘rsatish orqali savdo hajmini oshiring.</p>
+                </div>
+            </div>
+            <!-- Grid Columns End -->
+        </div>
+        <!-- Container End -->
+    </section>
+    <!-- Advantages End -->
+
+    <!-- Services Start -->
+    <section class="py-10 md:py-[60px]">
+        <!-- Container Start -->
+        <div class="container mx-auto px-4">
+            <div class="bg-third rounded-[42px] lg:rounded-[60px] pb-5 py-[42px] lg:py-[100px] px-5">
+                <h2 class="text-center text-3xl lg:text-5xl text-secondary font-semibold">Xizmatlar ro‘yxati</h2>
+
+                <!-- Grid Columns Start -->
+                <div class="sm:px-7 md:px-0 my-8 lg:my-[60px] grid md:grid-cols-2 lg:grid-cols-[400px_400px] md:grid-rows-6 md:justify-center gap-y-6 md:gap-y-4 gap-x-10 lg:gap-x-[60px]">
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Muddatli to‘lovlar ustida nazorat</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Qarzdorlar uchun SMS-xabarnoma</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">To‘lovlarni avtomatik tarzda undirish</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Mijozlarni turli xil skoring qilish usullari</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Filiallar va xodimlar ustidan nazorat</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Mijozlar bazasini shakllantirish va marketing</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Mobil ilova yordamida boshqaruv</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Mijozlarga soliq cheklarini berish</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Har xil turdagi hisobotlar</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Mijozlardan mobil ilova orqali to‘lovlarni qabul qilish</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Har xil turdagi hisobotlar</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <svg class="text-[#259E49]" width="33" height="24" viewBox="0 0 33 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.7503 24C15.7503 24 18.5324 10.4522 26.8747 3.41839C28.6547 1.91796 30.687 0.712867 33 0C33 0 21.2325 1.44949 11.0782 12.4109C11.0782 12.4109 8.54147 8.30667 5.07719 8.83624C5.07719 8.83624 1.26852 9.07725 0 7.19323C0 7.19323 4.38441 12.2173 4.38441 14.3898C4.38441 14.3898 4.50164 19.363 15.7503 24Z" fill="currentColor"/>
+                        </svg>
+                        <span class="w-[90%] lg:w-auto text-lg text-secondary font-medium">Avtomatik ogohlantirish xatlari</span>
+                    </div>
+                </div>
+                <!-- Grid Columns End -->
+
+                <!-- Free Trial Start -->
+                <div class="max-w-5xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-10 bg-white py-6 sm:py-8 px-6 sm:px-7 md:px-[62px] rounded-[42px]">
+                    <p class="lg:basis-1/2 text-2xl md:text-[32px]/[40px] text-secondary font-semibold"><span class="text-primary">Avtomato</span>’ni hoziroq bepul sinab ko‘ring</p>
+
+                    <div class="lg:basis-1/2">
+                        <p class="text-sm md:text-base text-secondary/[75%] font-medium">Hech qanday to‘lovsiz ro‘yxatdan o‘ting va barcha funksiyalarni cheklovlarsiz sinab ko‘ring.</p>
+                        <button class="getDemoModalShow w-full sm:w-auto mt-4 sm:mt-5 h-12 sm:h-[52px] px-5 flex sm:inline-flex items-center justify-center bg-secondary hover:bg-secondary/[90%] transition-all rounded-2xl cursor-pointer" type="button">
+                            <span class="text-sm sm:text-base text-white font-semibold">Sinovni boshlash</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Free Trial End -->
+            </div>
+        </div>
+        <!-- Container End -->
+    </section>
+    <!-- Services End -->
+
+    <!-- Different Markets Start -->
+    <section class="py-10 md:py-[60px]">
+        <div class="max-w-[1440px] mx-auto">
+            <h2 class="text-center text-3xl lg:text-5xl text-secondary font-semibold">Turli xil yo’nalishdagi<br> <span class="text-primary">do’konlarga</span> mos keladi</h2>
+
+            <!-- Scroll Overview Start -->
+            <div class="marque-wrap group mt-[42px] lg:mt-[60px] mx-auto relative flex overflow-hidden" style="--speed: 30s;">
+                <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0 pointer-events-none"></div>
+                <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180 pointer-events-none"></div>
+
+                <div class="marque flex group-hover:[animation-play-state:paused]">
+                    {!! $marketsPhotoTemplate($marketPhotos) !!}
+                </div>
+                <div class="marque flex group-hover:[animation-play-state:paused]">
+                    {!! $marketsPhotoTemplate($marketPhotos) !!}
+                </div>
+                <div class="marque flex group-hover:[animation-play-state:paused]">
+                    {!! $marketsPhotoTemplate($marketPhotos) !!}
+                </div>
+            </div>
+            <!-- Scroll Overview End -->
+        </div>
+    </section>
+    <!-- Different Markets End -->
+
+    <!-- Feedback Start -->
+    <!--
+    <section class="pt-10 md:pt-[60px]">
+        <h2 class="text-center text-3xl lg:text-5xl text-secondary font-semibold">Mijozlarimiz fikri</h2>
+
+        <div class="marque-wrap pt-8 lg:pt-[60px] px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 60s;">
+            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>
+            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>
+
+            <div class="marque flex gap-6">
+                {!! $feedbacksTemplate($feedbacks) !!}
+            </div>
+            <div class="marque flex gap-6">
+                {!! $feedbacksTemplate($feedbacks) !!}
+            </div>
+            <div class="marque flex gap-6">
+                {!! $feedbacksTemplate($feedbacks) !!}
+            </div>
+        </div>
+        <div class="pb-10 md:pb-[60px] marque-wrap pt-8 lg:pt-6 px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 40s;">
+            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>
+            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>
+
+            <div class="marque flex gap-6">
+                {!! $feedbacksTemplate($feedbacks) !!}
+            </div>
+            <div class="marque flex gap-6">
+                {!! $feedbacksTemplate($feedbacks) !!}
+            </div>
+            <div class="marque flex gap-6">
+                {!! $feedbacksTemplate($feedbacks) !!}
+            </div>
+        </div>
+    </section>
+    -->
+    <!-- Feedback End -->
+
+    <!-- Beginning Deadline Start -->
+    <section class="my-10 lg:my-[60px] bg-linear-245 md:bg-linear-200 from-black via-gray-950 to-[#2d638e]">
+        <div class="container mx-auto px-4 2xl:px-[100px] pt-[60px] md:pt-[100px]">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-10 sm:px-5 xl:px-0">
+                <p class="lg:basis-1/2 text-4xl md:text-5xl text-white font-semibold"><span class="text-primary">1 kun</span> ichida<br> ishga tushirib bermiz!</p>
+
+                <div class="lg:basis-[40%]">
+                    <p class="text-white/[75%]">Hech qanday to‘lovsiz ro‘yxatdan o‘ting va barcha funksiyalarni cheklovlarsiz sinab ko‘ring.</p>
+                    <button class="getDemoModalShow mt-4 lg:mt-6 h-12 sm:h-[52px] px-5 flex sm:inline-flex items-center justify-center bg-primary hover:bg-primary/[90%] transition-all rounded-2xl cursor-pointer" type="button">
+                        <span class="text-sm sm:text-base text-white font-semibold">Sinovni boshlash</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-14 md:mt-[80px] border-8 md:border-x-[15px] md:border-t-[15px] border-white/[20%] border-b-0 rounded-t-xl md:rounded-t-[60px] overflow-hidden">
+                <img class="hidden md:block object-contain" src="{{ asset('/assets/images/welcome-dashboard_1240x560.png') }}"
+                     alt="Welcome Dashboard Page">
+                <img class="md:hidden object-contain" src="{{ asset('/assets/images/welcome-dashboard_335x200.jpg') }}" alt="Welcome Dashboard Page">
+            </div>
+        </div>
+    </section>
+    <!-- Beginning Deadline End -->
+
+    <!-- Blog Start -->
+    <section class="py-10 lg:py-[60px]">
+        <div class="container mx-auto px-4 overflow-hidden">
+            <h2 class="text-center text-3xl lg:text-5xl text-secondary font-semibold">Blog</h2>
+
+            <!-- Blog Grid Columns Start -->
+            <div class="mt-[42px] lg:mt-[60px]">
+                @include('website.components.blogs_carousel')
+            </div>
+            <!-- Blog Grid Columns End -->
+
+            <div class="mt-[32px] lg:mt-[60px] flex justify-center">
+                <a class="h-[58px] px-6 inline-flex items-center bg-secondary hover:bg-secondary/90 transition-all text-white rounded-2xl" href="{{ route('blogs') }}" role="button" title="Barcha yangiliklar">Barcha yangiliklar</a>
+            </div>
+        </div>
+    </section>
+    <!-- Blog End -->
+@endsection
