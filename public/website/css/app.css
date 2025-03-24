@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 /* Dropdown Shadow */
 .dropdown {
     box-shadow: 0 -20px 32px 4px #A7AEBA1F, 0 15px 104px 0 #0000000D;

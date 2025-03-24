@@ -1,5 +1,5 @@
-<footer class="mt-10 lg:mt-[60px] bg-linear-245 md:bg-linear-200 from-black via-gray-950 to-[#2d638e] relative">
-    <p class="absolute bottom-0 lg:bottom-0 lg:left-1/2 text-[135px] sm:text-[10em] lg:text-[13em] text-white/[3%] sm:text-white/5 leading-[0.7] lg:leading-none font-[Poppins] font-bold lg:-translate-x-1/2 translate-y-1/5 lg:translate-y-2/5 z-[1]">Avto<br class="sm:hidden">mato</p>
+<footer class="mt-10 lg:mt-[60px] bg-linear-245 md:bg-linear-200 from-black via-gray-950 to-[#2d638e] relative overflow-hidden">
+    <p class="absolute bottom-0 lg:bottom-0 lg:left-1/2 text-[135px] sm:text-[10em] lg:text-[13em] text-white/[3%] sm:text-white/5 leading-[0.7] lg:leading-none font-[Poppins] font-bold lg:-translate-x-1/2 translate-y-1/5 lg:translate-y-2/5 z-[1] pointer-events-none">Avto<br class="sm:hidden">mato</p>
 
     <div class="container mx-auto px-4 2xl:px-[100px] mb-14 sm:mb-12 pt-14 lg:pt-[100px] z-10">
         <div class="pt-10 lg:pb-[60px] md:w-3/5 lg:w-[55%] mx-auto flex flex-col items-center">
@@ -18,10 +18,10 @@
                 <div>
                     <h3 class="text-lg text-white font-semibold">Sahifalar</h3>
                     <ul class="mt-5">
-                        <li><a class="text-white/75" href="{{ route('home') }}" title="Bosh sahifa">Bosh sahifa</a></li>
+                        <li><a class="text-white/75" href="/" title="Bosh sahifa">Bosh sahifa</a></li>
                         <li class="mt-3"><a class="text-white/75" href="/prices/nasiya" title="Yechimlar">Yechimlar</a></li>
-                        <li class="mt-3"><a class="text-white/75" href="{{ route('prices') }}" title="Narxlar">Narxlar</a></li>
-                        <li class="mt-3"><a class="text-white/75" href="{{ route('blogs') }}" title="Blog">Blog</a></li>
+                        <li class="mt-3"><a class="text-white/75" href="/prices" title="Narxlar">Narxlar</a></li>
+                        <li class="mt-3"><a class="text-white/75" href="/blogs" title="Blog">Blog</a></li>
                     </ul>
                 </div>
                 <div class="order-1 md:order-0 col-span-2 md:col-span-1">

@@ -255,7 +255,7 @@
     <!-- In One System End -->
 
     <!-- Advantages Start -->
-    <section class="py-10 md:py-[60px] bg-linear-245 md:bg-linear-200 from-black via-gray-950 to-[#2d638e]">
+    <section id="whyavtomato" class="py-10 md:py-[60px] bg-linear-245 md:bg-linear-200 from-black via-gray-950 to-[#2d638e]">
         <!-- Container Start -->
         <div class="container mx-auto py-20 lg:py-[100px] px-4 2xl:px-[100px]">
             <h2 class="text-center text-3xl md:text-5xl text-white font-semibold">Nima uchun Avtomato?</h2>
@@ -519,7 +519,7 @@
             <!-- Blog Grid Columns End -->
 
             <div class="mt-[32px] lg:mt-[60px] flex justify-center">
-                <a class="h-[58px] px-6 inline-flex items-center bg-secondary hover:bg-secondary/90 transition-all text-white rounded-2xl" href="{{ route('blogs') }}" role="button" title="Barcha yangiliklar">Barcha yangiliklar</a>
+                <a class="h-[58px] px-6 inline-flex items-center bg-secondary hover:bg-secondary/90 transition-all text-white rounded-2xl" href="/blogs" role="button" title="Barcha yangiliklar">Barcha yangiliklar</a>
             </div>
         </div>
     </section>

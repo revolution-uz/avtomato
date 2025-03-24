@@ -1,5 +1,5 @@
 <header class="flex items-center justify-between py-5 container mx-auto px-5 md:px-4 xl:px-0 z-[101] bg-white">
-    <a href="{{ route('home') }}" title="Avtomato">
+    <a href="/" title="Avtomato">
         <img class="pointer-events-none" src="{{ asset('/assets/images/logo-1.svg') }}" alt="Avtomato"/>
     </a>
 
@@ -91,7 +91,7 @@
                         </div>
                         <span class="font-medium">Qo`shimcha xizmatlar</span>
                     </a>
-                    <a class="flex items-center space-x-3 text-[#95989D] pointer-events-none" href="/prices" title="Internet do’kon yaratish (soon)">
+                    <a class="flex items-center space-x-3 text-[#95989D] pointer-events-none" href="/prices/ecommerce" title="Internet do’kon yaratish (soon)">
                         <div class="bg-third size-[42px] flex items-center justify-center rounded-2xl opacity-50">
                             <svg class="text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M18.25 3.33008H5.75C4.95435 3.33008 4.19129 3.64615 3.62868 4.20876C3.06607 4.77137 2.75 5.53443 2.75 6.33008V14.2001C2.75 14.9958 3.06607 15.7588 3.62868 16.3214C4.19129 16.884 4.95435 17.2001 5.75 17.2001H18.25C19.0456 17.2001 19.8087 16.884 20.3713 16.3214C20.9339 15.7588 21.25 14.9958 21.25 14.2001V6.33008C21.25 5.53443 20.9339 4.77137 20.3713 4.20876C19.8087 3.64615 19.0456 3.33008 18.25 3.33008Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -106,9 +106,9 @@
             </div>
             <!-- Navigation SubList End -->
         </li>
-        <li><a class="text-secondary/[75%] hover:text-primary" href="#" title="Nima uchun Avtomato?">Nima uchun Avtomato?</a></li>
-        <li><a class="text-secondary/[75%] hover:text-primary" href="{{ route('prices') }}" title="Narxlar">Narxlar</a></li>
-        <li><a class="text-secondary/[75%] hover:text-primary" href="{{ route('blogs') }}" title="Blog">Blog</a></li>
+        <li><a class="text-secondary/[75%] hover:text-primary" href="/#whyavtomato" title="Nima uchun Avtomato?">Nima uchun Avtomato?</a></li>
+        <li><a class="text-secondary/[75%] hover:text-primary" href="/prices" title="Narxlar">Narxlar</a></li>
+        <li><a class="text-secondary/[75%] hover:text-primary" href="/blogs" title="Blog">Blog</a></li>
     </ul>
     <!-- Navigation List End -->
 
