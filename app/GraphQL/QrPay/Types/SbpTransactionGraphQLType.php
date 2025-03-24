@@ -7,9 +7,9 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class TransactionGraphQLType extends GraphQLType
+class SbpTransactionGraphQLType extends GraphQLType
 {
-    public const string GRAPHQL_TYPE_NAME = 'TransactionGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'SbpTransactionGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
