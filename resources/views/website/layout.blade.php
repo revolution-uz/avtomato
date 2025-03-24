@@ -19,6 +19,41 @@
         <!-- Tailwind CDN -->
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
+        <style type="text/tailwindcss">
+            @theme {
+                --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+                'Segoe UI Symbol', 'Noto Color Emoji';
+                --color-primary: #E21010;
+                --color-secondary: #1A202C;
+                --color-third: #F5F7F9;
+            }
+
+            @layer utilities {
+                .gradient-circle {
+                    @apply absolute rounded-full z-50;
+                    width: 530px;
+                    height: 530px;
+                }
+
+                .small {
+                    width: 400px;
+                    height: 400px;
+                }
+
+                .red-gradient {
+                    background: radial-gradient(50% 50% at 50% 50%, rgba(226, 16, 16, 0.08) 0%, rgba(226, 16, 16, 0) 92%);
+                }
+
+                .yellow-gradient {
+                    background: radial-gradient(50% 50% at 50% 50%, rgba(255, 213, 63, 0.08) 0%, rgba(255, 244, 205, 0) 92%);
+                }
+
+                .purple-gradient {
+                    background: radial-gradient(50% 50% at 50% 50%, rgba(180, 161, 255, 0.12) 22.78%, rgba(180, 161, 255, 0) 92%);
+                }
+            }
+        </style>
+
         <!-- Resources -->
         <script src="{{ asset('js/website.js') }}"></script>
         <link rel="stylesheet" href="{{ asset('website/css/app.css') }}">
