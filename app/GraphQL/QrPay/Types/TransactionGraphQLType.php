@@ -62,9 +62,9 @@ class TransactionGraphQLType extends GraphQLType
                 'type' => Type::float(),
                 'resolve' => fn (SbpTransaction $root) => $root->currency,
             ],
-            'qr_image' => [
+            'qr_link' => [
                 'type' => Type::string(),
-                'resolve' => fn (SbpTransaction $root) => $root->qr_image,
+                'resolve' => fn (SbpTransaction $root) => $root->qr_link,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
