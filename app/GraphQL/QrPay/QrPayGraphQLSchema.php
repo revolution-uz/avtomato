@@ -9,7 +9,7 @@ use App\GraphQL\QrPay\Types\SbpPaymentCreditGraphQLType;
 use App\GraphQL\QrPay\Types\SbpPaymentDebitGraphQLType;
 use App\GraphQL\QrPay\Types\SbpPaymentReceiverGraphQLType;
 use App\GraphQL\QrPay\Types\SbpPaymentSenderGraphQLType;
-use App\GraphQL\QrPay\Types\TransactionGraphQLType;
+use App\GraphQL\QrPay\Types\SbpTransactionGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class QrPayGraphQLSchema implements ConfigConvertible
@@ -25,7 +25,7 @@ class QrPayGraphQLSchema implements ConfigConvertible
                 CreateTransactionGraphQLMutation::class,
             ],
             'types' => [
-                TransactionGraphQLType::class,
+                SbpTransactionGraphQLType::class,
                 SbpPaymentCreditGraphQLType::class,
                 SbpPaymentDebitGraphQLType::class,
                 SbpPaymentSenderGraphQLType::class,

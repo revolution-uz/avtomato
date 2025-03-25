@@ -7,9 +7,9 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class TransactionGraphQLType extends GraphQLType
+class SbpTransactionGraphQLType extends GraphQLType
 {
-    public const string GRAPHQL_TYPE_NAME = 'TransactionGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'SbpTransactionGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -62,9 +62,9 @@ class TransactionGraphQLType extends GraphQLType
                 'type' => Type::float(),
                 'resolve' => fn (SbpTransaction $root) => $root->currency,
             ],
-            'qr_image' => [
+            'qr_link' => [
                 'type' => Type::string(),
-                'resolve' => fn (SbpTransaction $root) => $root->qr_image,
+                'resolve' => fn (SbpTransaction $root) => $root->qr_link,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
