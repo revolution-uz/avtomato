@@ -20,7 +20,7 @@ enum CompanySettingsEnum: string
     case TELEGRAM_BOT_TOKEN = 'telegram_bot_token';
     case TELEGRAM_CHAT_ID = 'telegram_chat_id';
     case LOYALTY_PROGRAM_SYNC_TOKEN = 'loyalty_program_sync_token';
-    case LOYALTY_PROGRAM_BALANCE_CHECK = 'loyalty_program_balance_check';
+    case LOYALTY_PROGRAM_BALANCE_LIMIT = 'loyalty_program_balance_limit';
 
     public static function getType(self $type): SettingsTypeEnum
     {
@@ -28,13 +28,13 @@ enum CompanySettingsEnum: string
             self::CARD_AFTER_DUE_DAYS,
             self::PINFL_AFTER_DUE_DAYS,
             self::GUARANTOR_AFTER_DUE_DAYS,
-            self::GUARANTOR_PINFL_AFTER_DUE_DAYS => SettingsTypeEnum::INT,
+            self::GUARANTOR_PINFL_AFTER_DUE_DAYS,
+            self::LOYALTY_PROGRAM_BALANCE_LIMIT => SettingsTypeEnum::INT,
 
             self::SMS_INSTALLMENT_AUTO_CHARGE,
             self::SMS_INSTALLMENT_NOTIFICATION,
             self::SMS_INSTALLMENT_PAYMENT,
-            self::TELEGRAM_BOT_ENABLED,
-            self::LOYALTY_PROGRAM_BALANCE_CHECK => SettingsTypeEnum::BOOLEAN,
+            self::TELEGRAM_BOT_ENABLED => SettingsTypeEnum::BOOLEAN,
 
             self::LOYALTY_PROGRAM_SYNC_TOKEN,
             self::TELEGRAM_BOT_TOKEN,
@@ -49,10 +49,9 @@ enum CompanySettingsEnum: string
             self::PINFL_AFTER_DUE_DAYS => 5,
             self::GUARANTOR_AFTER_DUE_DAYS => 10,
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS => 15,
-            self::SMS_INSTALLMENT_AUTO_CHARGE,
-            self::LOYALTY_PROGRAM_BALANCE_CHECK => true,
+            self::SMS_INSTALLMENT_AUTO_CHARGE => true,
             self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT, self::TELEGRAM_BOT_ENABLED => false,
-            self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID, self::LOYALTY_PROGRAM_SYNC_TOKEN => '',
+            self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID, self::LOYALTY_PROGRAM_SYNC_TOKEN, self::LOYALTY_PROGRAM_BALANCE_LIMIT => '',
         };
     }
 
@@ -92,7 +91,7 @@ enum CompanySettingsEnum: string
             self::TELEGRAM_BOT_TOKEN => __('settings.telegram_bot_token'),
             self::TELEGRAM_CHAT_ID => __('settings.telegram_chat_id'),
             self::LOYALTY_PROGRAM_SYNC_TOKEN => __('settings.loyalty_program_sync_token'),
-            self::LOYALTY_PROGRAM_BALANCE_CHECK => __('settings.loyalty_program_card_balance_check'),
+            self::LOYALTY_PROGRAM_BALANCE_LIMIT => __('settings.loyalty_program_card_balance_check'),
         };
     }
 }

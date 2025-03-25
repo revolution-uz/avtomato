@@ -21,8 +21,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 readonly class LoyaltyProgramUserCardService
 {
-    const MIN_BALANCE_LIMIT = 200000;
-
     public function __construct(
         private AtmosService $atmosCardService,
         private ConfirmationService $confirmationService
@@ -106,11 +104,13 @@ readonly class LoyaltyProgramUserCardService
             }
         }
 
-        if (CompanySettings::getValue(CompanySettingsEnum::LOYALTY_PROGRAM_BALANCE_CHECK) == 0) {
+        $min_balance_limit = (int) CompanySettings::getValue(CompanySettingsEnum::LOYALTY_PROGRAM_BALANCE_LIMIT);
+
+        if ($min_balance_limit == 0) {
             $card->update(['status' => CardStatusEnum::ACTIVE]);
         } else {
             try {
-                $success = $this->checkBalance($card);
+                $success = $this->checkBalance($card, $min_balance_limit);
             } catch (Exception $e) {
                 throw new Error($e->getMessage());
             }
@@ -118,14 +118,14 @@ readonly class LoyaltyProgramUserCardService
             if ($success) {
                 $card->update(['status' => CardStatusEnum::ACTIVE]);
             } else {
-                throw ValidationException::withMessages(['card_id' => __('api.card_balance_insufficient', ['balance' => self::MIN_BALANCE_LIMIT])]);
+                throw ValidationException::withMessages(['card_id' => __('api.card_balance_insufficient', ['balance' => $min_balance_limit])]);
             }
         }
 
         return $card;
     }
 
-    public function checkBalance(Card $card): bool
+    public function checkBalance(Card $card, $min_balance_limit): bool
     {
         $success = true;
 
@@ -142,7 +142,7 @@ readonly class LoyaltyProgramUserCardService
 
         $card_balance = $atmosCardInfoResponse->card->balance_sum / 100;
 
-        if ($card_balance < self::MIN_BALANCE_LIMIT) {
+        if ($card_balance < $min_balance_limit) {
             $success = false;
         }
 

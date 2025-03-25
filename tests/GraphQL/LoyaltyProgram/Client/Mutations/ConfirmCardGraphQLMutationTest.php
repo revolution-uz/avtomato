@@ -75,7 +75,6 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     public function successConfirmCard()
     {
         AtmosFaker::confirmCard();
-        $this->inactivateLoyaltyProgramBalanceCheck();
 
         $variables = [
             'card_id' => $this->_card->id,
@@ -94,6 +93,7 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     public function emptyResponseFromAtmos(): void
     {
         AtmosFaker::emptyResponse();
+        $this->activateLoyaltyProgramBalanceCheck();
 
         $variables = [
             'card_id' => $this->_card->id,
@@ -113,6 +113,7 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     public function nullResponseFromAtmos(): void
     {
         AtmosFaker::nullResponse();
+        $this->activateLoyaltyProgramBalanceCheck();
 
         $variables = [
             'card_id' => $this->_card->id,
@@ -131,8 +132,6 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successConfirmAlreadyAttachedCard()
     {
-        $this->inactivateLoyaltyProgramBalanceCheck();
-
         $authAttempt = CardConfirmationSms::factory()->create(['phone' => $this->_card->phone]);
 
         $variables = [
@@ -180,8 +179,6 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function failConfirmAlreadyAttachedCard()
     {
-        $this->inactivateLoyaltyProgramBalanceCheck();
-
         // Wrong otp
         $authAttempt = CardConfirmationSms::factory()->create(['phone' => $this->_card->phone]);
         $variables = [
@@ -222,6 +219,7 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     {
         AtmosFaker::confirmCard();
         AtmosFaker::getCardInfo();
+        $this->activateLoyaltyProgramBalanceCheck();
 
         $variables = [
             'card_id' => $this->_card->id,
@@ -241,6 +239,7 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     {
         AtmosFaker::confirmCard();
         AtmosFaker::getCardInfo(199999);
+        $this->activateLoyaltyProgramBalanceCheck();
 
         $variables = [
             'card_id' => $this->_card->id,
@@ -265,6 +264,7 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
     {
         AtmosFaker::confirmCard();
         AtmosFaker::getCardInfo(isFailed: true);
+        $this->activateLoyaltyProgramBalanceCheck();
 
         $variables = [
             'card_id' => $this->_card->id,
@@ -319,10 +319,10 @@ class ConfirmCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($this->_card->updated_at->timestamp, $response->json('data.confirmCard.updated_at'));
     }
 
-    private function inactivateLoyaltyProgramBalanceCheck()
+    private function activateLoyaltyProgramBalanceCheck()
     {
         CompanySettings::query()
-            ->where('name', CompanySettingsEnum::LOYALTY_PROGRAM_BALANCE_CHECK)
-            ->update(['value' => false]);
+            ->where('name', CompanySettingsEnum::LOYALTY_PROGRAM_BALANCE_LIMIT)
+            ->update(['value' => '200000']);
     }
 }
