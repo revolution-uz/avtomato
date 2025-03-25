@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Website;
 
+use App\Models\BaseFeature;
 use App\Models\BaseModule;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -9,6 +10,15 @@ use Illuminate\Contracts\View\View;
 
 class PricesController
 {
+    private function getPrice($operator): string
+    {
+        if (!empty(BaseFeature::query()->where('name', $operator)->first()->original_amount)) {
+            return number_format(BaseFeature::query()->where('name', $operator)->first()->original_amount, 0, '.', ' ') . ' so‘m';
+        } else {
+            return 'Bepul';
+        }
+    }
+
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $baseModules = BaseModule::all();
@@ -113,9 +123,9 @@ class PricesController
             ],
             'prices' => [
                 [
-                    'title' => '34 SMS yuborish xizmati',
+                    'title' => 'SMS yuborish xizmati',
                     'desc' => 'Har bir mijozning oldingi to‘lov tarixi asosida uning moliyaviy ishonchliligini baholang.',
-                    'price' => '100 so‘m',
+                    'price' => $this->getPrice('sms'),
                     'note' => 'Har bir yuborilgan sms uchun',
                     'icon' => '',
                 ]
@@ -150,65 +160,65 @@ class PricesController
             ],
             'prices' => [
                 [
-                    'title' => '38 Ruyxat.uz bazasidan tekshirish',
+                    'title' => 'Ruyxat.uz bazasidan tekshirish',
                     'desc' => 'Ro‘yxat — mas‘uliyatsiz mijozlarning savdo sotiq tashkilotlaridagi kechikkan yoki kechikayotgan to‘lovlari haqidagi elektron ma‘lumotlar bazasi',
-                    'price' => 'Bepul',
+                    'price' => $this->getPrice('scoring_royxat_credit_history'),
                     'note' => '',
                     'icon' => ''
                 ],
                 [
-                    'title' => '26 Majburiy ijro ma’lumotlari',
+                    'title' => 'Majburiy ijro ma’lumotlari',
                     'desc' => 'MIB (Majburiy Ijro Byurosi) qarzdor shaxs yoki tashkilotning to‘lov qobiliyatini baholash va scoring tizimi qarzdorlarning to‘lov imkoniyatlarini aniq baholashga yordam berib, moliyaviy xavflarni kamaytirishga xizmat qiladi.',
-                    'price' => 'Bepul',
+                    'price' => $this->getPrice('scoring_mib_info'),
                     'note' => '',
                     'icon' => ''
                 ],
                 [
-                    'title' => '27 Soliq qarzini tekshirish',
+                    'title' => 'Soliq qarzini tekshirish',
                     'desc' => 'Soliq qarzini tekshirish – bu soliq to‘lovchilar (jismoniy va yuridik shaxslar) uchun ularning soliq majburiyatlarini bajarish intizomini baholovchi tizim',
-                    'price' => 'Bepul',
+                    'price' => $this->getPrice('scoring_tax_info'),
                     'note' => '',
                     'icon' => ''
                 ],
                 [
-                    'title' => '39 Uzum nasiya orqali limit tekshirish',
+                    'title' => 'Uzum nasiya orqali limit tekshirish',
                     'desc' => 'Uzum nasiya limiti – bu foydalanuvchining nasiya (bo‘lib to‘lash) orqali xarid qilish imkoniyatini aniqlash uchun amalga oshiriladigan baholash jarayoni. Uzum Market yoki Uzum Bank foydalanuvchining moliyaviy holatini tahlil qilib, unga ajratilgan limit miqdorini tekshirish.',
-                    'price' => 'Bepul',
+                    'price' => $this->getPrice('scoring_uzum_nasiya_limit'),
                     'note' => '',
                     'icon' => ''
                 ],
                 [
-                    'title' => '24 Mijozning oylik ish haqi ma’lumotlari',
+                    'title' => 'Mijozning oylik ish haqi ma’lumotlari',
                     'desc' => 'Yillik oylik ish haqqi haqida ma’lumotni qo‘lga kiriting va ehtimoliy risklarni qisqartiring.',
-                    'price' => '8 000 so‘m',
+                    'price' => $this->getPrice('scoring_inps_history'),
                     'note' => '',
                     'icon' => ''
                 ],
                 [
-                    'title' => '33 Pensiya ma‘lumotlari',
+                    'title' => 'Pensiya ma‘lumotlari',
                     'desc' => 'Pensiya oluvchi mijozlarga muddatli to‘lov berish vaqtida o‘z vaqtida to‘lov qila olish darajasini tekshirish. 12 oylik hisoblangan pensiya summalari ma’lumoti.',
-                    'price' => '10 000 so‘m',
+                    'price' => $this->getPrice('scoring_pension_info'),
                     'note' => '',
                     'icon' => ''
                 ],
                 [
-                    'title' => '23 KATM, kredit tarixi ma’lumotlari',
+                    'title' => 'KATM, kredit tarixi ma’lumotlari',
                     'desc' => 'KATM – bu mijozlarning kredit tarixi ma’lumotlari asosida, tahlil qilib ishonchlilik darajasini baholab beradi. Kechiktirilgan to‘lovlar va vaqti bo‘yicha skoring.',
-                    'price' => '18 000 so‘m',
+                    'price' => $this->getPrice('scoring-credit_history'),
                     'note' => '',
                     'icon' => ''
                 ],
                 [
-                    'title' => '28 Karta bir yillik aylanmasi ma’lumotlari (HUMO)',
+                    'title' => 'Karta bir yillik aylanmasi ma’lumotlari (HUMO)',
                     'desc' => 'Karta aylanmasi – bu foydalanuvchining Humo yoki Uzcard plastik kartasi orqali amalga oshirgan barcha moliyaviy operatsiyalarining umumiy miqdori. 1 yillik kirim chiqimlari haqida ma’lumot.',
-                    'price' => '6 000 so‘m',
+                    'price' => $this->getPrice('scoring_humo'),
                     'note' => '',
                     'icon' => ''
                 ],
                 [
-                    'title' => '29 Karta bir yillik aylanmasi ma’lumotlari (UZCARD)',
+                    'title' => 'Karta bir yillik aylanmasi ma’lumotlari (UZCARD)',
                     'desc' => 'Karta aylanmasi – bu foydalanuvchining Humo yoki Uzcard plastik kartasi orqali amalga oshirgan barcha moliyaviy operatsiyalarining umumiy miqdori. 1 yillik kirim chiqimlari haqida ma’lumot.',
-                    'price' => '6 000 so‘m',
+                    'price' => $this->getPrice('scoring_uzcard'),
                     'note' => '',
                     'icon' => ''
                 ],
