@@ -1,4 +1,4 @@
-@extends('website.pages.single_price')
+@extends('website.layouts.single_price')
 
 @section('title', $data['title'] . ' - Avtomato')
 

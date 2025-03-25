@@ -1,4 +1,4 @@
-@extends('website.layout')
+@extends('website.layouts.layout')
 
 @section('title', $data['title'] . ' - Avtomato')
 
@@ -16,7 +16,8 @@
                 <p class="text-xl text-primary font-medium">Yechimlar va narxlar</p>
                 <h1 class="mt-5 md:mt-8 text-center text-3xl md:text-5xl text-secondary font-semibold">{!! $data['heading'] !!}</h1>
                 <p class="mt-2 lg:mt-3 text-center text-lg text-secondary/75">{!! $data['description'] !!}</p>
-                <button class="getDemoModalShow mt-8 h-[58px] flex items-center justify-center px-8 bg-primary hover:bg-primary/90 rounded-2xl transition-all cursor-pointer" type="button">
+                <button class="getDemoModalShow mt-8 h-[58px] flex items-center justify-center px-8 bg-primary hover:bg-primary/90 rounded-2xl transition-all cursor-pointer"
+                        type="button">
                     <span class="text-lg text-white font-medium">Sinab ko’rish</span>
                 </button>
             </div>
@@ -53,11 +54,14 @@
 
                 <!-- Free Trial Start -->
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-10 bg-third py-6 sm:py-8 px-6 sm:px-7 md:px-[62px] rounded-[42px]">
-                    <p class="lg:basis-1/3 text-2xl md:text-[32px]/[40px] text-secondary font-semibold"><span class="text-primary">Avtomato</span>’ni hoziroq bepul sinab ko‘ring</p>
+                    <p class="lg:basis-1/3 text-2xl md:text-[32px]/[40px] text-secondary font-semibold"><span
+                                class="text-primary">Avtomato</span>’ni hoziroq bepul sinab ko‘ring</p>
 
                     <div class="lg:basis-1/3">
-                        <p class="text-sm md:text-base text-secondary/[75%] font-medium">Hech qanday to‘lovsiz ro‘yxatdan o‘ting va barcha funksiyalarni cheklovlarsiz sinab ko‘ring.</p>
-                        <button class="getDemoModalShow w-full sm:w-auto mt-4 sm:mt-5 h-12 sm:h-[52px] px-5 flex sm:inline-flex items-center justify-center bg-secondary hover:bg-secondary/[90%] transition-all rounded-2xl cursor-pointer" type="button">
+                        <p class="text-sm md:text-base text-secondary/[75%] font-medium">Hech qanday to‘lovsiz
+                            ro‘yxatdan o‘ting va barcha funksiyalarni cheklovlarsiz sinab ko‘ring.</p>
+                        <button class="getDemoModalShow w-full sm:w-auto mt-4 sm:mt-5 h-12 sm:h-[52px] px-5 flex sm:inline-flex items-center justify-center bg-secondary hover:bg-secondary/[90%] transition-all rounded-2xl cursor-pointer"
+                                type="button">
                             <span class="text-sm sm:text-base text-white font-semibold">Sinovni boshlash</span>
                         </button>
                     </div>
