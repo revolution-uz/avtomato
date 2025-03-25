@@ -36,7 +36,7 @@ class PricesController
             }
         }
 
-        return view('website.pages.prices', compact('baseModules', 'moduleNames', 'filteredModules', 'multibranchModule', 'hasMultibranch'));
+        return view('website.pages.prices', ['baseModules' => $baseModules, 'moduleNames' => $moduleNames, 'filteredModules' => $filteredModules, 'multibranchModule' => $multibranchModule, 'hasMultibranch' => $hasMultibranch]);
     }
 
     public function navigateToInstallment(): View|\Illuminate\Foundation\Application|Factory|Application
@@ -87,7 +87,7 @@ class PricesController
             ],
         ];
 
-        return view('website.pages.module_installment', compact('data'));
+        return view('website.pages.module_installment', ['data' => $data]);
     }
 
     public function navigateToMarketing(): View|\Illuminate\Foundation\Application|Factory|Application
@@ -124,7 +124,7 @@ class PricesController
             ],
         ];
 
-        return view('website.pages.module_marketing', compact('data'));
+        return view('website.pages.module_marketing', ['data' => $data]);
     }
 
     public function navigateToScoring(): View|\Illuminate\Foundation\Application|Factory|Application
@@ -217,7 +217,7 @@ class PricesController
             ],
         ];
 
-        return view('website.pages.module_scoring', compact('data'));
+        return view('website.pages.module_scoring', ['data' => $data]);
     }
 
     public function navigateToQR(): View|\Illuminate\Foundation\Application|Factory|Application
@@ -246,7 +246,7 @@ class PricesController
             'prices' => [],
         ];
 
-        return view('website.pages.module_qr', compact('data'));
+        return view('website.pages.module_qr', ['data' => $data]);
     }
 
     public function navigateToEcommerce(): View|\Illuminate\Foundation\Application|Factory|Application
@@ -275,7 +275,7 @@ class PricesController
             'prices' => [],
         ];
 
-        return view('website.pages.module_ecommerce', compact('data'));
+        return view('website.pages.module_ecommerce', ['data' => $data]);
     }
 
     public function navigateToLoyalty(): View|\Illuminate\Foundation\Application|Factory|Application
@@ -304,7 +304,7 @@ class PricesController
             'prices' => [],
         ];
 
-        return view('website.pages.module_loyalty', compact('data'));
+        return view('website.pages.module_loyalty', ['data' => $data]);
     }
 
     public function navigateToOthers(): View|\Illuminate\Foundation\Application|Factory|Application
@@ -333,7 +333,7 @@ class PricesController
             'prices' => [],
         ];
 
-        return view('website.pages.module_others', compact('data'));
+        return view('website.pages.module_others', ['data' => $data]);
     }
 
     private function getPrice($operator): string

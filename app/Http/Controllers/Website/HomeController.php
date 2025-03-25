@@ -62,6 +62,6 @@ class HomeController extends Controller
             'feedback-company-1.svg',
         ];
 
-        return view('website.pages.home', compact('marketPhotos', 'feedbacks', 'feedbacksTemplate', 'marketsPhotoTemplate'));
+        return view('website.pages.home', ['marketPhotos' => $marketPhotos, 'feedbacks' => $feedbacks, 'feedbacksTemplate' => $feedbacksTemplate, 'marketsPhotoTemplate' => $marketsPhotoTemplate]);
     }
 }
