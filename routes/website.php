@@ -23,7 +23,7 @@ Route::get('/prices', [PricesController::class, 'index'])->name('prices');
 Route::get('/prices/installment', [PricesController::class, 'navigateToInstallment'])->name('installment');
 Route::get('/prices/marketing', [PricesController::class, 'navigateToMarketing'])->name('marketing');
 Route::get('/prices/scoring', [PricesController::class, 'navigateToScoring'])->name('scoring');
-Route::get('/prices/qr-pay', [PricesController::class, ''])->name('sbp_pay');
+Route::get('/prices/qr-pay', [PricesController::class, 'navigateToQR'])->name('sbp_pay');
 Route::get('/prices/ecommerce', [PricesController::class, ''])->name('ecommerce');
 Route::get('/prices/loyalty', [PricesController::class, ''])->name('loyalty_program');
 Route::get('/prices/others', [PricesController::class, ''])->name('others');

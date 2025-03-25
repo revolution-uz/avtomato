@@ -218,6 +218,35 @@ class PricesController
         return view('website.pages.module_scoring', compact('data'));
     }
 
+    public function navigateToQR(): View|\Illuminate\Foundation\Application|Factory|Application
+    {
+        $data = [
+            'title' => 'QR pay',
+            'heading' => 'QR pay',
+            'description' => 'Rossiya MIR kartasi bilan O‘zbekistonda to‘lov',
+            'services' => [
+                [
+                    'title' => 'SBP orqali tezkor to‘lov xizmati',
+                    'desc' => 'O‘zbekistonda MIR kartasi orqali to‘lov qilish oson! QR Pay SBP orqali so‘mda to‘lovni amalga oshirish uchun QR kod generatsiya qilib beradi.',
+                    'img' => '/assets/images/empty-frame.png',
+                ],
+                [
+                    'title' => 'Har qanday sharoitda oson to‘lov',
+                    'desc' => 'Mehmonxonalar, restoranlar va kafelarda Rossiya MIR kartasidan so‘mda to‘lov qilish imkoniyati. QR kod orqali tezkor o‘tkazma amalga oshirish va cheklovlarsiz xizmatlardan foydalanish mumkin.',
+                    'img' => '/assets/images/empty-frame.png',
+                ],
+                [
+                    'title' => 'Ishonchli va xavfsiz to‘lov yechimi',
+                    'desc' => 'To‘lov summasini kiriting va Rossiya MIR kartasidan O‘zbek so‘mida tezkor hamda xavfsiz to‘lovni qabul qiling. SBP orqali qulay tranzaksiya amalga oshiring!',
+                    'img' => '/assets/images/empty-frame.png',
+                ],
+            ],
+            'prices' => [],
+        ];
+
+        return view('website.pages.module_qr', compact('data'));
+    }
+
     public function navigateToPrice($slug): View|\Illuminate\Foundation\Application|Factory|Application
     {
 
