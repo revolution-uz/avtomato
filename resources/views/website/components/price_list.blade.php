@@ -2,7 +2,7 @@
     <p class="text-3xl md:text-4xl text-secondary font-semibold">Narxlar</p>
 
     <div class="mt-5 md:mt-8 flex flex-col space-y-5">
-        @foreach($list as $coast)
+        @foreach ($list as $coast)
             <div class="bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">
                 <div class="size-14 flex items-center justify-center rounded-2xl bg-primary/5">
                     <svg class="text-primary" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

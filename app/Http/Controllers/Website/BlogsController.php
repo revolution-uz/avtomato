@@ -38,7 +38,7 @@ class BlogsController
         ];
 
         // Проверяем, существует ли пост
-        if (!array_key_exists($slug, $blogs)) {
+        if (! array_key_exists($slug, $blogs)) {
             abort(404);
         }
 

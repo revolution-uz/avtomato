@@ -10,15 +10,6 @@ use Illuminate\Contracts\View\View;
 
 class PricesController
 {
-    private function getPrice($operator): string
-    {
-        if (!empty(BaseFeature::query()->where('name', $operator)->first()->original_amount)) {
-            return number_format(BaseFeature::query()->where('name', $operator)->first()->original_amount, 0, '.', ' ') . ' so‘m';
-        } else {
-            return 'Bepul';
-        }
-    }
-
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $baseModules = BaseModule::all();
@@ -68,7 +59,7 @@ class PricesController
                 [
                     'title' => 'Moliyaviy oqimni doimiy nazorat qilish',
                     'desc' => 'Barcha kirim-chiqim operatsiyalarini kuzatib boring va to‘lovlarni rejalashtirish orqali biznesingizni barqaror boshqaring.',
-                    'img' => '/assets/images/price_3.png'
+                    'img' => '/assets/images/price_3.png',
                 ],
             ],
             'prices' => [
@@ -98,6 +89,7 @@ class PricesController
 
         return view('website.pages.module_installment', compact('data'));
     }
+
     public function navigateToMarketing(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
@@ -128,7 +120,7 @@ class PricesController
                     'price' => $this->getPrice('sms'),
                     'note' => 'Har bir yuborilgan sms uchun',
                     'icon' => '',
-                ]
+                ],
             ],
         ];
 
@@ -164,63 +156,63 @@ class PricesController
                     'desc' => 'Ro‘yxat — mas‘uliyatsiz mijozlarning savdo sotiq tashkilotlaridagi kechikkan yoki kechikayotgan to‘lovlari haqidagi elektron ma‘lumotlar bazasi',
                     'price' => $this->getPrice('scoring_royxat_credit_history'),
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '',
                 ],
                 [
                     'title' => 'Majburiy ijro ma’lumotlari',
                     'desc' => 'MIB (Majburiy Ijro Byurosi) qarzdor shaxs yoki tashkilotning to‘lov qobiliyatini baholash va scoring tizimi qarzdorlarning to‘lov imkoniyatlarini aniq baholashga yordam berib, moliyaviy xavflarni kamaytirishga xizmat qiladi.',
                     'price' => $this->getPrice('scoring_mib_info'),
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '',
                 ],
                 [
                     'title' => 'Soliq qarzini tekshirish',
                     'desc' => 'Soliq qarzini tekshirish – bu soliq to‘lovchilar (jismoniy va yuridik shaxslar) uchun ularning soliq majburiyatlarini bajarish intizomini baholovchi tizim',
                     'price' => $this->getPrice('scoring_tax_info'),
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '',
                 ],
                 [
                     'title' => 'Uzum nasiya orqali limit tekshirish',
                     'desc' => 'Uzum nasiya limiti – bu foydalanuvchining nasiya (bo‘lib to‘lash) orqali xarid qilish imkoniyatini aniqlash uchun amalga oshiriladigan baholash jarayoni. Uzum Market yoki Uzum Bank foydalanuvchining moliyaviy holatini tahlil qilib, unga ajratilgan limit miqdorini tekshirish.',
                     'price' => $this->getPrice('scoring_uzum_nasiya_limit'),
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '',
                 ],
                 [
                     'title' => 'Mijozning oylik ish haqi ma’lumotlari',
                     'desc' => 'Yillik oylik ish haqqi haqida ma’lumotni qo‘lga kiriting va ehtimoliy risklarni qisqartiring.',
                     'price' => $this->getPrice('scoring_inps_history'),
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '',
                 ],
                 [
                     'title' => 'Pensiya ma‘lumotlari',
                     'desc' => 'Pensiya oluvchi mijozlarga muddatli to‘lov berish vaqtida o‘z vaqtida to‘lov qila olish darajasini tekshirish. 12 oylik hisoblangan pensiya summalari ma’lumoti.',
                     'price' => $this->getPrice('scoring_pension_info'),
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '',
                 ],
                 [
                     'title' => 'KATM, kredit tarixi ma’lumotlari',
                     'desc' => 'KATM – bu mijozlarning kredit tarixi ma’lumotlari asosida, tahlil qilib ishonchlilik darajasini baholab beradi. Kechiktirilgan to‘lovlar va vaqti bo‘yicha skoring.',
                     'price' => $this->getPrice('scoring-credit_history'),
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '',
                 ],
                 [
                     'title' => 'Karta bir yillik aylanmasi ma’lumotlari (HUMO)',
                     'desc' => 'Karta aylanmasi – bu foydalanuvchining Humo yoki Uzcard plastik kartasi orqali amalga oshirgan barcha moliyaviy operatsiyalarining umumiy miqdori. 1 yillik kirim chiqimlari haqida ma’lumot.',
                     'price' => $this->getPrice('scoring_humo'),
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '',
                 ],
                 [
                     'title' => 'Karta bir yillik aylanmasi ma’lumotlari (UZCARD)',
                     'desc' => 'Karta aylanmasi – bu foydalanuvchining Humo yoki Uzcard plastik kartasi orqali amalga oshirgan barcha moliyaviy operatsiyalarining umumiy miqdori. 1 yillik kirim chiqimlari haqida ma’lumot.',
                     'price' => $this->getPrice('scoring_uzcard'),
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '',
                 ],
             ],
         ];
@@ -342,5 +334,14 @@ class PricesController
         ];
 
         return view('website.pages.module_others', compact('data'));
+    }
+
+    private function getPrice($operator): string
+    {
+        if (! empty(BaseFeature::query()->where('name', $operator)->first()->original_amount)) {
+            return number_format(BaseFeature::query()->where('name', $operator)->first()->original_amount, 0, '.', ' ') . ' so‘m';
+        } else {
+            return 'Bepul';
+        }
     }
 }

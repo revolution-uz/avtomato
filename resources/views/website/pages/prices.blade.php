@@ -44,7 +44,7 @@
                     <!-- Price List Start -->
                     <div class="mt-5 md:mt-8 flex flex-col space-y-5">
 
-                        @foreach($filteredModules as $module)
+                        @foreach ($filteredModules as $module)
                             <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 lg:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">
                                 <p class="text-2xl text-secondary font-semibold">{{ $moduleNames[$module['name']->value] ?? $module['name'] }}</p>
                                 <div class="lg:basis-[57%] flex flex-col lg:flex-row lg:items-center justify-between space-y-5 lg:space-y-0">
@@ -54,7 +54,7 @@
                                     </div>
                                     <div>
                                         <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all"
-                                           href="{{'/prices/' . $module['name']->value}}" title="Narxlarni ko‘rish">
+                                           href="{{ '/prices/' . $module['name']->value }}" title="Narxlarni ko‘rish">
                                             <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>
                                         </a>
                                     </div>
@@ -62,12 +62,12 @@
                             </div>
                         @endforeach
 
-                        @if($hasMultibranch && $multibranchModule)
+                        @if ($hasMultibranch && $multibranchModule)
                             <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 lg:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">
                                 <p class="text-2xl text-secondary font-semibold">Qo’shimcha xizmatlar</p>
                                 <div class="lg:basis-[57%] sm:flex lg:items-center lg:justify-end">
                                     <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all"
-                                       href="{{'/prices/multibranch'}}" title="Narxlarni ko‘rish">
+                                       href="{{ '/prices/multibranch' }}" title="Narxlarni ko‘rish">
                                         <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>
                                     </a>
                                 </div>

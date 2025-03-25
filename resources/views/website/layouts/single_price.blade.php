@@ -31,7 +31,7 @@
             <div>
                 <!-- Advantages Start -->
                 <div class="bg-third p-5 sm:p-8 lg:p-[60px] rounded-[42px] sm:rounded-[60px] space-y-[42px] lg:space-y-[60px]">
-                    @foreach($data['services'] as $service)
+                    @foreach ($data['services'] as $service)
                         <div class="flex flex-col md:{{ $loop->index % 2 == 0 ? 'flex-row' : 'flex-row-reverse' }} items-center justify-between gap-4 sm:gap-8">
                             <div class="basis-1/2">
                                 <p class="text-2xl sm:text-3xl lg:text-5xl text-secondary font-semibold">{!! $service['title'] !!}</p>
