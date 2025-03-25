@@ -16,9 +16,8 @@ class PricesController
         return view('website.pages.prices', compact('baseModules'));
     }
 
-    public function navigateToPrice($slug)
+    public function navigateToPrice($slug): ?\Illuminate\Foundation\Application
     {
-        $baseModules = BaseModule::all();
 
         $prices = [
             'installment' => [
@@ -89,56 +88,63 @@ class PricesController
                 ],
                 'prices' => [
                     [
-                        'title' => 'Ruyxat.uz bazasidan tekshirish',
+                        'title' => '38 Ruyxat.uz bazasidan tekshirish',
                         'desc' => 'Ro‘yxat — mas‘uliyatsiz mijozlarning savdo sotiq tashkilotlaridagi kechikkan yoki kechikayotgan to‘lovlari haqidagi elektron ma‘lumotlar bazasi',
                         'price' => 'Bepul',
                         'note' => '',
                         'icon' => ''
                     ],
                     [
-                        'title' => 'Majburiy ijro ma’lumotlari',
+                        'title' => '26 Majburiy ijro ma’lumotlari',
                         'desc' => 'MIB (Majburiy Ijro Byurosi) qarzdor shaxs yoki tashkilotning to‘lov qobiliyatini baholash va scoring tizimi qarzdorlarning to‘lov imkoniyatlarini aniq baholashga yordam berib, moliyaviy xavflarni kamaytirishga xizmat qiladi.',
                         'price' => 'Bepul',
                         'note' => '',
                         'icon' => ''
                     ],
                     [
-                        'title' => 'Soliq qarzini tekshirish',
+                        'title' => '27 Soliq qarzini tekshirish',
                         'desc' => 'Soliq qarzini tekshirish – bu soliq to‘lovchilar (jismoniy va yuridik shaxslar) uchun ularning soliq majburiyatlarini bajarish intizomini baholovchi tizim',
                         'price' => 'Bepul',
                         'note' => '',
                         'icon' => ''
                     ],
                     [
-                        'title' => 'Uzum nasiya orqali limit tekshirish',
+                        'title' => '39 Uzum nasiya orqali limit tekshirish',
                         'desc' => 'Uzum nasiya limiti – bu foydalanuvchining nasiya (bo‘lib to‘lash) orqali xarid qilish imkoniyatini aniqlash uchun amalga oshiriladigan baholash jarayoni. Uzum Market yoki Uzum Bank foydalanuvchining moliyaviy holatini tahlil qilib, unga ajratilgan limit miqdorini tekshirish.',
                         'price' => 'Bepul',
                         'note' => '',
                         'icon' => ''
                     ],
                     [
-                        'title' => 'Mijozning oylik ish haqi ma’lumotlari',
+                        'title' => '24 Mijozning oylik ish haqi ma’lumotlari',
                         'desc' => 'Yillik oylik ish haqqi haqida ma’lumotni qo‘lga kiriting va ehtimoliy risklarni qisqartiring.',
                         'price' => '8 000 so‘m',
                         'note' => '',
                         'icon' => ''
                     ],
                     [
-                        'title' => 'Pensiya ma‘lumotlari',
+                        'title' => '33 Pensiya ma‘lumotlari',
                         'desc' => 'Pensiya oluvchi mijozlarga muddatli to‘lov berish vaqtida o‘z vaqtida to‘lov qila olish darajasini tekshirish. 12 oylik hisoblangan pensiya summalari ma’lumoti.',
                         'price' => '10 000 so‘m',
                         'note' => '',
                         'icon' => ''
                     ],
                     [
-                        'title' => 'KATM, kredit tarixi ma’lumotlari',
+                        'title' => '23 KATM, kredit tarixi ma’lumotlari',
                         'desc' => 'KATM – bu mijozlarning kredit tarixi ma’lumotlari asosida, tahlil qilib ishonchlilik darajasini baholab beradi. Kechiktirilgan to‘lovlar va vaqti bo‘yicha skoring.',
                         'price' => '18 000 so‘m',
                         'note' => '',
                         'icon' => ''
                     ],
                     [
-                        'title' => 'Karta bir yillik aylanmasi ma’lumotlari',
+                        'title' => '28 Karta bir yillik aylanmasi ma’lumotlari (HUMO)',
+                        'desc' => 'Karta aylanmasi – bu foydalanuvchining Humo yoki Uzcard plastik kartasi orqali amalga oshirgan barcha moliyaviy operatsiyalarining umumiy miqdori. 1 yillik kirim chiqimlari haqida ma’lumot.',
+                        'price' => '6 000 so‘m',
+                        'note' => '',
+                        'icon' => ''
+                    ],
+                    [
+                        'title' => '29 Karta bir yillik aylanmasi ma’lumotlari (UZCARD)',
                         'desc' => 'Karta aylanmasi – bu foydalanuvchining Humo yoki Uzcard plastik kartasi orqali amalga oshirgan barcha moliyaviy operatsiyalarining umumiy miqdori. 1 yillik kirim chiqimlari haqida ma’lumot.',
                         'price' => '6 000 so‘m',
                         'note' => '',
@@ -169,7 +175,7 @@ class PricesController
                 ],
                 'prices' => [
                     [
-                        'title' => 'SMS yuborish xizmati',
+                        'title' => '34 SMS yuborish xizmati',
                         'desc' => 'Har bir mijozning oldingi to‘lov tarixi asosida uning moliyaviy ishonchliligini baholang.',
                         'price' => '100 so‘m',
                         'note' => 'Har bir yuborilgan sms uchun',
@@ -198,15 +204,7 @@ class PricesController
                         'img' => '/assets/images/empty-frame.png',
                     ],
                 ],
-                'prices' => [
-                    [
-                        'title' => 'Title',
-                        'desc' => 'Description',
-                        'price' => 'Price',
-                        'note' => 'Note',
-                        'icon' => '',
-                    ]
-                ],
+                'prices' => [],
             ],
             'loyalty_program' => [
                 'title' => 'Loyalty',
@@ -229,15 +227,7 @@ class PricesController
                         'img' => '/assets/images/empty-frame.png',
                     ],
                 ],
-                'prices' => [
-                    [
-                        'title' => 'Title',
-                        'desc' => 'Description',
-                        'price' => 'Price',
-                        'note' => 'Note',
-                        'icon' => '',
-                    ]
-                ],
+                'prices' => [],
             ],
             'ecommerce' => [
                 'title' => 'Internet do‘kon',

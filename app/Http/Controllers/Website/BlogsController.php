@@ -13,7 +13,8 @@ class BlogsController
         return view('website.pages.blogs');
     }
 
-    public function navigateToBlog($slug) {
+    public function navigateToBlog($slug): ?\Illuminate\Foundation\Application
+    {
         // Тестовые данные
         $blogs = [
             'first-blog' => [
