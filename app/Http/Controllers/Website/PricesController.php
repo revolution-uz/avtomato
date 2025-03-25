@@ -247,33 +247,39 @@ class PricesController
         return view('website.pages.module_qr', compact('data'));
     }
 
+    public function navigateToEcommerce(): View|\Illuminate\Foundation\Application|Factory|Application
+    {
+        $data = [
+            'title' => 'Internet do‘kon',
+            'heading' => 'Internet do‘kon yaratish',
+            'description' => 'Bir necha bosqichda o‘z internet-do‘koningizni yaratib, onlayn savdoni boshlang. Hech qanday texnik bilim talab etilmaydi!',
+            'services' => [
+                [
+                    'title' => 'Savdoni avtomatlashtiring va foydani oshiring!',
+                    'desc' => 'Online savdoga o‘ting, mijozlar sonini ko‘paytiring va buyurtmalarni yetkazib bering. Buyurtmalar, to‘lovlar va yetkazib berish jarayonlarini avtomatik boshqaring. Mijozlaringiz bilan doimiy aloqada bo‘lish uchun xabarnomalar tizimidan foydalaning.',
+                    'img' => '/assets/images/price_7.png',
+                ],
+                [
+                    'title' => 'Onlayn do‘kon bilan biznesingizni yangi bosqichga olib chiqing!',
+                    'desc' => 'Internet do‘kon yaratib, raqobatda oldinda bo‘ling. Mijozlarga qulay xarid qilish imkonini bering, savdo hajmini oshiring va zamonaviy tendensiyalarga moslashing!',
+                    'img' => '/assets/images/price_8.png',
+                ],
+                [
+                    'title' => 'Cheklovlarsiz biznes va yuqori daromad',
+                    'desc' => 'Hozir hamma internet orqali xarid qiladi! Onlayn do‘kon oching, mijozlarni jalb qiling, buyurtmalarni yetkazib bering va biznesingizni kengaytiring.',
+                    'img' => '/assets/images/price_9.png',
+                ],
+            ],
+            'prices' => [],
+        ];
+
+        return view('website.pages.module_ecommerce', compact('data'));
+    }
+
     public function navigateToPrice($slug): View|\Illuminate\Foundation\Application|Factory|Application
     {
 
         $prices = [
-            'sbp_pay' => [
-                'title' => 'QR pay',
-                'heading' => 'QR pay',
-                'description' => 'Rossiya MIR kartasi bilan O‘zbekistonda to‘lov',
-                'services' => [
-                    [
-                        'title' => 'SBP orqali tezkor to‘lov xizmati',
-                        'desc' => 'O‘zbekistonda MIR kartasi orqali to‘lov qilish oson! QR Pay SBP orqali so‘mda to‘lovni amalga oshirish uchun QR kod generatsiya qilib beradi.',
-                        'img' => '/assets/images/empty-frame.png',
-                    ],
-                    [
-                        'title' => 'Har qanday sharoitda oson to‘lov',
-                        'desc' => 'Mehmonxonalar, restoranlar va kafelarda Rossiya MIR kartasidan so‘mda to‘lov qilish imkoniyati. QR kod orqali tezkor o‘tkazma amalga oshirish va cheklovlarsiz xizmatlardan foydalanish mumkin.',
-                        'img' => '/assets/images/empty-frame.png',
-                    ],
-                    [
-                        'title' => 'Ishonchli va xavfsiz to‘lov yechimi',
-                        'desc' => 'To‘lov summasini kiriting va Rossiya MIR kartasidan O‘zbek so‘mida tezkor hamda xavfsiz to‘lovni qabul qiling. SBP orqali qulay tranzaksiya amalga oshiring!',
-                        'img' => '/assets/images/empty-frame.png',
-                    ],
-                ],
-                'prices' => [],
-            ],
             'loyalty_program' => [
                 'title' => 'Loyalty',
                 'heading' => 'Loyalty program (Sodiqlik dasturi)',
@@ -298,35 +304,6 @@ class PricesController
                 'prices' => [],
             ],
             'ecommerce' => [
-                'title' => 'Internet do‘kon',
-                'heading' => 'Internet do‘kon yaratish',
-                'description' => 'Bir necha bosqichda o‘z internet-do‘koningizni yaratib, onlayn savdoni boshlang. Hech qanday texnik bilim talab etilmaydi!',
-                'services' => [
-                    [
-                        'title' => 'Savdoni avtomatlashtiring va foydani oshiring!',
-                        'desc' => 'Online savdoga o‘ting, mijozlar sonini ko‘paytiring va buyurtmalarni yetkazib bering. Buyurtmalar, to‘lovlar va yetkazib berish jarayonlarini avtomatik boshqaring. Mijozlaringiz bilan doimiy aloqada bo‘lish uchun xabarnomalar tizimidan foydalaning.',
-                        'img' => '/assets/images/price_7.png',
-                    ],
-                    [
-                        'title' => 'Onlayn do‘kon bilan biznesingizni yangi bosqichga olib chiqing!',
-                        'desc' => 'Internet do‘kon yaratib, raqobatda oldinda bo‘ling. Mijozlarga qulay xarid qilish imkonini bering, savdo hajmini oshiring va zamonaviy tendensiyalarga moslashing!',
-                        'img' => '/assets/images/price_8.png',
-                    ],
-                    [
-                        'title' => 'Cheklovlarsiz biznes va yuqori daromad',
-                        'desc' => 'Hozir hamma internet orqali xarid qiladi! Onlayn do‘kon oching, mijozlarni jalb qiling, buyurtmalarni yetkazib bering va biznesingizni kengaytiring.',
-                        'img' => '/assets/images/price_9.png',
-                    ],
-                ],
-                'prices' => [
-                    [
-                        'title' => 'Title',
-                        'desc' => 'Description',
-                        'price' => 'Price',
-                        'note' => 'Note',
-                        'icon' => '',
-                    ]
-                ],
             ],
             'others' => [
                 'title' => 'Qo’shimcha xizmatlar',
