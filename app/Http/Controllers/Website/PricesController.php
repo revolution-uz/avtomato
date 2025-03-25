@@ -276,32 +276,41 @@ class PricesController
         return view('website.pages.module_ecommerce', compact('data'));
     }
 
+    public function navigateToLoyalty(): View|\Illuminate\Foundation\Application|Factory|Application
+    {
+        $data = [
+            'title' => 'Loyalty',
+            'heading' => 'Loyalty program (Sodiqlik dasturi)',
+            'description' => 'Mijozlarni bonus va chegirmalar bilan ushlab qoling, obuna tizimi orqali ularning sonini oshiring!',
+            'services' => [
+                [
+                    'title' => 'Savdoni oshiring, mijozlarni ushlab qoling!',
+                    'desc' => 'Bonus va chegirmalar bilan mijozlarni qayta xarid qilishga undang. Sodiqlik dasturi orqali ishonchni oshiring, o‘rtacha chekni ko‘tarib, savdoni rivojlantiring!',
+                    'img' => '/assets/images/empty-frame.png',
+                ],
+                [
+                    'title' => 'Bonus va chegirmalar bilan savdo hajmini oshiring!',
+                    'desc' => 'Mijozlaringizni qayta kelishga undang! Har bir xaridda ularga bonus yoki chegirma taqdim eting, o‘rtacha chek miqdorini oshiring va doimiy mijozlar sonini ko‘paytiring.',
+                    'img' => '/assets/images/empty-frame.png',
+                ],
+                [
+                    'title' => 'Mijozlaringizni jalb qilish yo‘li',
+                    'desc' => 'Bonus va chegirmalar orqali mijozlarni ushlab qoling! Sodiqlik dasturi nafaqat ularning ishonchini oshiradi, balki o‘rtacha chekni va qayta tashrif sonini ham ko‘paytiradi.',
+                    'img' => '/assets/images/empty-frame.png',
+                ],
+            ],
+            'prices' => [],
+        ];
+
+        return view('website.pages.module_loyalty', compact('data'));
+    }
+
     public function navigateToPrice($slug): View|\Illuminate\Foundation\Application|Factory|Application
     {
 
         $prices = [
             'loyalty_program' => [
-                'title' => 'Loyalty',
-                'heading' => 'Loyalty program (Sodiqlik dasturi)',
-                'description' => 'Mijozlarni bonus va chegirmalar bilan ushlab qoling, obuna tizimi orqali ularning sonini oshiring!',
-                'services' => [
-                    [
-                        'title' => 'Savdoni oshiring, mijozlarni ushlab qoling!',
-                        'desc' => 'Bonus va chegirmalar bilan mijozlarni qayta xarid qilishga undang. Sodiqlik dasturi orqali ishonchni oshiring, o‘rtacha chekni ko‘tarib, savdoni rivojlantiring!',
-                        'img' => '/assets/images/empty-frame.png',
-                    ],
-                    [
-                        'title' => 'Bonus va chegirmalar bilan savdo hajmini oshiring!',
-                        'desc' => 'Mijozlaringizni qayta kelishga undang! Har bir xaridda ularga bonus yoki chegirma taqdim eting, o‘rtacha chek miqdorini oshiring va doimiy mijozlar sonini ko‘paytiring.',
-                        'img' => '/assets/images/empty-frame.png',
-                    ],
-                    [
-                        'title' => 'Mijozlaringizni jalb qilish yo‘li',
-                        'desc' => 'Bonus va chegirmalar orqali mijozlarni ushlab qoling! Sodiqlik dasturi nafaqat ularning ishonchini oshiradi, balki o‘rtacha chekni va qayta tashrif sonini ham ko‘paytiradi.',
-                        'img' => '/assets/images/empty-frame.png',
-                    ],
-                ],
-                'prices' => [],
+
             ],
             'ecommerce' => [
             ],
