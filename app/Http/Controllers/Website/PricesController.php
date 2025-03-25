@@ -305,52 +305,32 @@ class PricesController
         return view('website.pages.module_loyalty', compact('data'));
     }
 
-    public function navigateToPrice($slug): View|\Illuminate\Foundation\Application|Factory|Application
+    public function navigateToOthers(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-
-        $prices = [
-            'loyalty_program' => [
-
-            ],
-            'ecommerce' => [
-            ],
-            'others' => [
-                'title' => 'Qo’shimcha xizmatlar',
-                'heading' => 'Qo’shimcha xizmatlar',
-                'description' => 'Filiallar va Xodimlar ustida nazorat qiling va ish jarayonlarini biz bilan birga soddalashtiring!',
-                'services' => [
-                    [
-                        'title' => 'Filiallar sonini oshirish va qo‘shimcha xodimlarga ruxsat berish',
-                        'desc' => 'Biznesingizni kengaytiring! Filiallar sonini ko‘paytirib, yangi xodimlarni tizimga qo‘shing. Ish jarayonlarini avtomatlashtirish orqali samaradorlikni oshiring va boshqaruvni qulaylashtiring.',
-                        'img' => '/assets/images/empty-frame.png',
-                    ],
-                    [
-                        'title' => 'Muddatli to‘lovlar orqali kelajakdagi daromadlarni ko‘rish',
-                        'desc' => 'Moliya oqimini oldindan rejalashtiring! Muddatli to‘lovlar tizimi orqali kelajakdagi daromadlaringizni kuzatib boring va biznesingiz rivojlanishini aniq prognoz qiling.',
-                        'img' => '/assets/images/empty-frame.png',
-                    ],
-                    [
-                        'title' => 'Kechikkan to‘lovlarni nazorat qilib vaqtida undirish',
-                        'desc' => 'Kechikkan to‘lovlarni tizimli nazorat qiling va mijozlardan to‘lovlarni o‘z vaqtida undirib, moliyaviy barqarorlikni ta’minlang.',
-                        'img' => '/assets/images/empty-frame.png',
-                    ],
+        $data = [
+            'title' => 'Qo’shimcha xizmatlar',
+            'heading' => 'Qo’shimcha xizmatlar',
+            'description' => 'Filiallar va Xodimlar ustida nazorat qiling va ish jarayonlarini biz bilan birga soddalashtiring!',
+            'services' => [
+                [
+                    'title' => 'Filiallar sonini oshirish va qo‘shimcha xodimlarga ruxsat berish',
+                    'desc' => 'Biznesingizni kengaytiring! Filiallar sonini ko‘paytirib, yangi xodimlarni tizimga qo‘shing. Ish jarayonlarini avtomatlashtirish orqali samaradorlikni oshiring va boshqaruvni qulaylashtiring.',
+                    'img' => '/assets/images/empty-frame.png',
                 ],
-                'prices' => [
-                    [
-                        'title' => 'Title',
-                        'desc' => 'Description',
-                        'price' => 'Price',
-                        'note' => 'Note',
-                        'icon' => '',
-                    ]
+                [
+                    'title' => 'Muddatli to‘lovlar orqali kelajakdagi daromadlarni ko‘rish',
+                    'desc' => 'Moliya oqimini oldindan rejalashtiring! Muddatli to‘lovlar tizimi orqali kelajakdagi daromadlaringizni kuzatib boring va biznesingiz rivojlanishini aniq prognoz qiling.',
+                    'img' => '/assets/images/empty-frame.png',
+                ],
+                [
+                    'title' => 'Kechikkan to‘lovlarni nazorat qilib vaqtida undirish',
+                    'desc' => 'Kechikkan to‘lovlarni tizimli nazorat qiling va mijozlardan to‘lovlarni o‘z vaqtida undirib, moliyaviy barqarorlikni ta’minlang.',
+                    'img' => '/assets/images/empty-frame.png',
                 ],
             ],
+            'prices' => [],
         ];
 
-        if (!array_key_exists($slug, $prices)) {
-            abort(404);
-        }
-
-        return view('website.pages.single_price', ['data' => $prices[$slug]]);
+        return view('website.pages.module_others', compact('data'));
     }
 }

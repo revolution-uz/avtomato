@@ -26,4 +26,4 @@ Route::get('/prices/scoring', [PricesController::class, 'navigateToScoring'])->n
 Route::get('/prices/qr-pay', [PricesController::class, 'navigateToQR'])->name('sbp_pay');
 Route::get('/prices/ecommerce', [PricesController::class, 'navigateToEcommerce'])->name('ecommerce');
 Route::get('/prices/loyalty', [PricesController::class, 'navigateToLoyalty'])->name('loyalty_program');
-Route::get('/prices/others', [PricesController::class, ''])->name('others');
+Route::get('/prices/others', [PricesController::class, 'navigateToOthers'])->name('others');
