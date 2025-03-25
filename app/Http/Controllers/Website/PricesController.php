@@ -21,7 +21,7 @@ class PricesController
         $baseModules = BaseModule::all();
 
         $prices = [
-            'nasiya' => [
+            'installment' => [
                 'title' => 'Nasiya savdoni avtomatlashtirish',
                 'heading' => 'Nasiya savdoni<br> avtomatlashtirish',
                 'description' => 'Nasiya savdolarini boshqarish endi yanada qulay!<br class="hidden md:block"> Mijozlaringiz uchun mos to‘lov muddatlarini belgilang va to‘lov monitoringini avtomatik tarzda olib boring.',
@@ -29,17 +29,17 @@ class PricesController
                     [
                         'title' => 'Avtospisaniya orqali to‘lovlarni undirish',
                         'desc' => 'To‘lovlar avtomatik tarzda mijoz hisobidan yechiladi. Siz esa kechikkan to‘lovlarni qo‘lda talab qilish',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_1.png',
                     ],
                     [
                         'title' => 'Mijoz to‘lov grafigini<br> nazorat qilish',
                         'desc' => 'Har bir mijoz uchun individual to‘lov rejalari yarating va ularning to‘lovlarini real vaqt rejimida kuzatib boring. Barcha jarayonlar tizimda avtomatik ravishda qayd etiladi.',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_2.png',
                     ],
                     [
                         'title' => 'Moliyaviy oqimni doimiy nazorat qilish',
                         'desc' => 'Barcha kirim-chiqim operatsiyalarini kuzatib boring va to‘lovlarni rejalashtirish orqali biznesingizni barqaror boshqaring.',
-                        'img' => '/assets/images/empty-frame.png'
+                        'img' => '/assets/images/price_3.png'
                     ],
                 ],
                 'prices' => [
@@ -66,7 +66,7 @@ class PricesController
                     ],
                 ],
             ],
-            'skoring' => [
+            'scoring' => [
                 'title' => 'Skoring',
                 'heading' => 'Skoring – mijoz moliyaviy<Br> tarixini tahlil qilish',
                 'description' => 'Skoring tizimi mijozlarning oldingi to‘lov tarixini tahlil qilib, qaror qabul qilish jarayonini ancha osonlashtiradi.<br> Bu esa biznesingiz xavf-xatarlardan himoyalangan holda rivojlanishiga yordam beradi.',
@@ -74,17 +74,17 @@ class PricesController
                     [
                         'title' => 'Mijozlarning to‘lov qobiliyatini baholash',
                         'desc' => 'Har bir mijozning oldingi to‘lov tarixi asosida uning moliyaviy ishonchliligini baholang.',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_4.png',
                     ],
                     [
                         'title' => 'Qaror qabul qilishni soddalashtirish',
                         'desc' => 'Avtomatik tahlil tizimi mijozning qarzlarni o‘z vaqtida to‘lash imkoniyatini baholab, xavf-xatarlarni kamaytirishga yordam beradi.',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_5.png',
                     ],
                     [
                         'title' => 'Xavfsiz nasiya savdosi',
                         'desc' => 'Skoring tizimi asosida faqat ishonchli mijozlarga nasiya berish orqali biznesingizni moliyaviy yo‘qotishlardan himoya qiling.',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_6.png',
                     ],
                 ],
                 'prices' => [
@@ -154,17 +154,17 @@ class PricesController
                     [
                         'title' => 'Kechikkan to‘lovlar haqida xabarnomalar',
                         'desc' => 'Mijozlaringizga kechikkan to‘lovlar haqida SMS orqali avtomatik eslatmalar yuboring.',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_10.png',
                     ],
                     [
                         'title' => 'Qarzdorlikni kamaytirish strategiyasi',
                         'desc' => 'To‘lov muddatlari o‘tishidan oldin mijozlarga eslatmalar jo‘natish orqali qarzdorlik darajasini kamaytiring.',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_11.png',
                     ],
                     [
                         'title' => 'Avtospisaniya orqali moliyaviy nazorat',
                         'desc' => 'Avtospisaniya orqali yechilgan pullar haqida SMS xabar to’lovlar bo’yicha mijozlarni ogohlantirish.',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_12.png',
                     ],
                 ],
                 'prices' => [
@@ -177,7 +177,7 @@ class PricesController
                     ]
                 ],
             ],
-            'qr-pay' => [
+            'sbp_pay' => [
                 'title' => 'QR pay',
                 'heading' => 'QR pay',
                 'description' => 'Rossiya MIR kartasi bilan O‘zbekistonda to‘lov',
@@ -208,7 +208,7 @@ class PricesController
                     ]
                 ],
             ],
-            'loyalty' => [
+            'loyalty_program' => [
                 'title' => 'Loyalty',
                 'heading' => 'Loyalty program (Sodiqlik dasturi)',
                 'description' => 'Mijozlarni bonus va chegirmalar bilan ushlab qoling, obuna tizimi orqali ularning sonini oshiring!',
@@ -247,17 +247,17 @@ class PricesController
                     [
                         'title' => 'Savdoni avtomatlashtiring va foydani oshiring!',
                         'desc' => 'Online savdoga o‘ting, mijozlar sonini ko‘paytiring va buyurtmalarni yetkazib bering. Buyurtmalar, to‘lovlar va yetkazib berish jarayonlarini avtomatik boshqaring. Mijozlaringiz bilan doimiy aloqada bo‘lish uchun xabarnomalar tizimidan foydalaning.',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_7.png',
                     ],
                     [
                         'title' => 'Onlayn do‘kon bilan biznesingizni yangi bosqichga olib chiqing!',
                         'desc' => 'Internet do‘kon yaratib, raqobatda oldinda bo‘ling. Mijozlarga qulay xarid qilish imkonini bering, savdo hajmini oshiring va zamonaviy tendensiyalarga moslashing!',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_8.png',
                     ],
                     [
                         'title' => 'Cheklovlarsiz biznes va yuqori daromad',
                         'desc' => 'Hozir hamma internet orqali xarid qiladi! Onlayn do‘kon oching, mijozlarni jalb qiling, buyurtmalarni yetkazib bering va biznesingizni kengaytiring.',
-                        'img' => '/assets/images/empty-frame.png',
+                        'img' => '/assets/images/price_9.png',
                     ],
                 ],
                 'prices' => [

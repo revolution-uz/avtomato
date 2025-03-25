@@ -56,14 +56,14 @@
 
                         @foreach($baseModules as $module)
                             <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">
-                                <p class="text-2xl text-secondary font-semibold">{{ $moduleNames[$module['name']->value ?? 'Noma’lum modul'] ?? $module['name'] }}</p>
+                                <p class="text-2xl text-secondary font-semibold">{{ $moduleNames[$module['name']->value] ?? $module['name'] }}</p>
                                 <div class="lg:basis-[57%] flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0">
                                     <div>
                                         <p class="text-secondary/55 font-light">Oylik to‘lov</p>
                                         <p class="mt-1 text-xl md:text-2xl text-primary font-semibold">{{ $module['original_amount'] == 0 ? 'Bepul' : number_format($module['original_amount'], 0, '.', ' ') . ' so‘m' }}</p>
                                     </div>
                                     <div>
-                                        <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all" href="/prices/skoring" title="Narxlarni ko‘rish">
+                                        <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all" href="{{'/prices/' . $module['name']->value}}" title="Narxlarni ko‘rish">
                                             <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>
                                         </a>
                                     </div>
@@ -71,102 +71,6 @@
                             </div>
                         @endforeach
 
-{{--                        <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">--}}
-{{--                            <p class="text-2xl text-secondary font-semibold">Skoring moduli</p>--}}
-{{--                            <div class="lg:basis-[57%] flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0">--}}
-{{--                                <div>--}}
-{{--                                    <p class="text-secondary/55 font-light">Oylik to‘lov</p>--}}
-{{--                                    <p class="mt-1 text-xl md:text-2xl text-primary font-semibold">100 000 so‘m</p>--}}
-{{--                                </div>--}}
-{{--                                <div>--}}
-{{--                                    <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all" href="/prices/skoring" title="Narxlarni ko‘rish">--}}
-{{--                                        <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">--}}
-{{--                            <p class="text-2xl text-secondary font-semibold">Marketing</p>--}}
-{{--                            <div class="lg:basis-[57%] flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0">--}}
-{{--                                <div>--}}
-{{--                                    <p class="text-secondary/55 font-light">Oylik to‘lov</p>--}}
-{{--                                    <p class="mt-1 text-xl md:text-2xl text-primary font-semibold">100 000 so‘m</p>--}}
-{{--                                </div>--}}
-{{--                                <div>--}}
-{{--                                    <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all" href="/prices/marketing" title="Narxlarni ko‘rish">--}}
-{{--                                        <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">--}}
-{{--                            <p class="text-2xl text-secondary font-semibold">Nasiya savdo moduli</p>--}}
-{{--                            <div class="lg:basis-[57%] flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0">--}}
-{{--                                <div>--}}
-{{--                                    <p class="text-secondary/55 font-light">Oylik to‘lov</p>--}}
-{{--                                    <p class="mt-1 text-xl md:text-2xl text-primary font-semibold">100 000 so‘m</p>--}}
-{{--                                </div>--}}
-{{--                                <div>--}}
-{{--                                    <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all" href="/prices/nasiya" title="Narxlarni ko‘rish">--}}
-{{--                                        <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">--}}
-{{--                            <p class="text-2xl text-secondary font-semibold">Internet do’kon moduli</p>--}}
-{{--                            <div class="lg:basis-[57%] flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0">--}}
-{{--                                <div>--}}
-{{--                                    <p class="text-secondary/55 font-light">Oylik to‘lov</p>--}}
-{{--                                    <p class="mt-1 text-xl md:text-2xl text-primary font-semibold">200 000 so‘m</p>--}}
-{{--                                </div>--}}
-{{--                                <div>--}}
-{{--                                    <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all" href="#" title="Narxlarni ko‘rish">--}}
-{{--                                        <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">--}}
-{{--                            <p class="text-2xl text-secondary font-semibold">QR pay</p>--}}
-{{--                            <div class="lg:basis-[57%] flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0">--}}
-{{--                                <div>--}}
-{{--                                    <p class="text-secondary/55 font-light">Oylik to‘lov</p>--}}
-{{--                                    <p class="mt-1 text-xl md:text-2xl text-primary font-semibold">100 000 so‘m</p>--}}
-{{--                                </div>--}}
-{{--                                <div>--}}
-{{--                                    <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all" href="/prices/qr-pay" title="Narxlarni ko‘rish">--}}
-{{--                                        <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">--}}
-{{--                            <p class="text-2xl text-secondary font-semibold">Loyalty</p>--}}
-{{--                            <div class="lg:basis-[57%] flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0">--}}
-{{--                                <div>--}}
-{{--                                    <p class="text-secondary/55 font-light">Oylik to‘lov</p>--}}
-{{--                                    <p class="mt-1 text-xl md:text-2xl text-primary font-semibold">100 000 so‘m</p>--}}
-{{--                                </div>--}}
-{{--                                <div>--}}
-{{--                                    <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all" href="/prices/loyalty" title="Narxlarni ko‘rish">--}}
-{{--                                        <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0 bg-white p-5 md:p-8 rounded-[32px] md:rounded-[42px]">--}}
-{{--                            <p class="text-2xl text-secondary font-semibold">Qo’shimcha xizmatlar</p>--}}
-{{--                            <div class="lg:basis-[57%] flex flex-col lg:flex-row lg:items-center justify-between space-y-5 md:space-y-0">--}}
-{{--                                <div>--}}
-{{--                                </div>--}}
-{{--                                <div>--}}
-{{--                                    <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all" href="/prices/others" title="Narxlarni ko‘rish">--}}
-{{--                                        <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
                     </div>
                     <!-- Price List End -->
                 </div>
