@@ -13,11 +13,14 @@ use App\GraphQL\LoyaltyProgram\Client\Mutations\CreateSubscriptionGraphQLMutatio
 use App\GraphQL\LoyaltyProgram\Client\Mutations\DetachCardGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\ProfileUpdateGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Client\Queries\NotificationsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\OrdersGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\ProfileMeGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Client\Queries\SingleNotificationGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\SingleOrderGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Types\AttachCardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
+use App\GraphQL\LoyaltyProgram\Client\Types\NotificationGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\OrderGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\OrderItemGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
@@ -41,7 +44,9 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
             'query' => [
                 ProfileMeGraphQLQuery::class,
                 OrdersGraphQLQuery::class,
+                NotificationsGraphQLQuery::class,
                 SingleOrderGraphQLQuery::class,
+                SingleNotificationGraphQLQuery::class,
             ],
             'types' => [
                 UserGraphQLType::class,
@@ -55,6 +60,7 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
                 OrderGraphQLType::class,
                 OrderItemGraphQLType::class,
                 ProductGraphQLType::class,
+                NotificationGraphQLType::class,
             ],
             'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_loyalty_program_client_token', 'loyalty_program'],
         ];
