@@ -149,7 +149,7 @@
                 <!-- Column 2 Start -->
                 <div class="md:col-span-6 lg:col-span-7 bg-third rounded-[32px] relative overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
-                        <p class="text-secondary text-2xl lg:text-3xl lg:leading-tight font-semibold">Qarzdorlardanpulni<br> avtomatik undira olasiz!</p>
+                        <p class="text-secondary text-2xl lg:text-3xl lg:leading-tight font-semibold">Qo’shimcha xizmatlar</p>
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Muddatli to’lovlarni o’z kunida avtomatik tarzda yechib beramiz, mabodo mijoz tomonidan sizga taqdim etilgan plastik kartasida mablag‘ bo‘lmasa PINFL orqali mijozning ixtiyoriy kartasidan avtomatik pul yechib olishingiz mumkin bo‘ladi.</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="/prices/others" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
@@ -183,8 +183,8 @@
                 <!-- Column 4 Start -->
                 <div class="md:col-span-6 lg:col-span-4 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
-                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Loyality</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlaringiz ma‘lumotlari, kirim-chiqim, qarzdorliklar, to‘lovlar, kelgusida kutilayotgan foydalar va ko‘plab statistika hamda analitikalarni elektron holatda real vaqt rejimida ko‘rib borishingiz mumkin bo‘ladi.</p>
+                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">QR pay</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Rossiya MIR kartasi bilan O‘zbekistonda to‘lov<br> amalga oshirish imkoniyati</p>
                         <a class="group mt-4 inline-flex items-center sp ace-x-1 text-primary" href="/prices/loyalty" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -193,15 +193,15 @@
                         </a>
                     </div>
 
-                    <img class="ml-6 lg:ml-8 pointer-events-none" src="{{ asset('/assets/images/incoming-statistic_370x265.png') }}" alt="Statistic">
+                    <img class=" pointer-events-none" src="{{ asset('/assets/images/qr-pay.png') }}" alt="Statistic">
                 </div>
                 <!-- Column 4 End -->
 
                 <!-- Column 5 Start -->
                 <div class="md:col-span-6 lg:col-span-4 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
-                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">QR pay</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Barcha ma’lumotlaringizni maksimal darajada tartiblangan elektron shaklda saqlanadi va shartnoma, ma’lumotnoma va xat kabi xujjatlar avtomatik generatsiya qilinadi.</p>
+                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Loyalty</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlaringiz ma‘lumotlari, kirim-chiqim, qarzdorliklar, to‘lovlar, kelgusida kutilayotgan foydalar va ko‘plab statistika hamda analitikalarni elektron holatda real vaqt rejimida ko‘rib borishingiz mumkin bo‘ladi.</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="/prices/qr-pay" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -217,7 +217,7 @@
                 <!-- Column 6 Start -->
                 <div class="md:col-span-6 lg:col-span-7 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
-                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Qo‘shimcha<br>marketing instrumentlari</p>
+                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Marketing</p>
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">To‘lovlarni rejalashtirish, kuzatish va boshqarish avtomatik tarzda...</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="/prices/marketing" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
