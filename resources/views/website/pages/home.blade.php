@@ -133,7 +133,7 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-white text-2xl lg:text-3xl lg:leading-tight font-semibold">Nasiya savdoni<br> avtomatlashtirish</p>
                         <p class="custom-truncate mt-3 text-white/75 leading-6">To‘lovlarni rejalashtirish, kuzatish va boshqarish avtomatik tarzda amalga oshiriladi</p>
-                        <a class="group mt-4 inline-flex items-center space-x-1 text-white" href="#" title="Batafsil ma’lumot">
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-white" href="/prices/nasiya" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -151,7 +151,7 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl lg:text-3xl lg:leading-tight font-semibold">Qarzdorlardanpulni<br> avtomatik undira olasiz!</p>
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Muddatli to’lovlarni o’z kunida avtomatik tarzda yechib beramiz, mabodo mijoz tomonidan sizga taqdim etilgan plastik kartasida mablag‘ bo‘lmasa PINFL orqali mijozning ixtiyoriy kartasidan avtomatik pul yechib olishingiz mumkin bo‘ladi.</p>
-                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="/prices/others" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -168,7 +168,7 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl xl:text-3xl lg:leading-tight font-semibold">Internet<br> do’kon yaratish</p>
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">To‘lovlarni rejalashtirish, kuzatish va boshqarish avtomatik tarzda...</p>
-                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="/prices/ecommerce" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -185,7 +185,7 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Loyality</p>
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlaringiz ma‘lumotlari, kirim-chiqim, qarzdorliklar, to‘lovlar, kelgusida kutilayotgan foydalar va ko‘plab statistika hamda analitikalarni elektron holatda real vaqt rejimida ko‘rib borishingiz mumkin bo‘ladi.</p>
-                        <a class="group mt-4 inline-flex items-center sp ace-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                        <a class="group mt-4 inline-flex items-center sp ace-x-1 text-primary" href="/prices/loyalty" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -202,7 +202,7 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">QR pay</p>
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Barcha ma’lumotlaringizni maksimal darajada tartiblangan elektron shaklda saqlanadi va shartnoma, ma’lumotnoma va xat kabi xujjatlar avtomatik generatsiya qilinadi.</p>
-                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="/prices/qr-pay" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -219,7 +219,7 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Qo‘shimcha<br>marketing instrumentlari</p>
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">To‘lovlarni rejalashtirish, kuzatish va boshqarish avtomatik tarzda...</p>
-                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="#" title="Batafsil ma’lumot">
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-primary" href="/prices/marketing" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -236,7 +236,7 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-white text-2xl xl:text-3xl lg:leading-tight font-semibold">Skoring</p>
                         <p class="custom-truncate mt-3 text-white/75 leading-6">Mijozlaringiz moliyaviy tarixini to‘laqonli analiz qilish imkoni.</p>
-                        <a class="group mt-4 inline-flex items-center space-x-1 text-white" href="#" title="Batafsil ma’lumot">
+                        <a class="group mt-4 inline-flex items-center space-x-1 text-white" href="/prices/skoring" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.3125 15.5L11.2525 10.56C11.531 10.2775 11.6871 9.89675 11.6871 9.5C11.6871 9.10325 11.531 8.72247 11.2525 8.43995L6.3125 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
