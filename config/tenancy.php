@@ -16,11 +16,11 @@ return [
     'central_domains' => [
         '127.0.0.1',
         'localhost',
-//        'avtomato.test',
-//        'avtomato.uz',
-//        'automato.uz',
-//        'avtomato.testpay.uz',
-//        'automato.testpay.uz',
+        'avtomato.test',
+        'avtomato.uz',
+        'automato.uz',
+        'avtomato.testpay.uz',
+        'automato.testpay.uz',
     ],
 
     /**
