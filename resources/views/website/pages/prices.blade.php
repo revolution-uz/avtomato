@@ -2,33 +2,6 @@
 
 @section('title', 'Narxlar - Avtomato')
 
-@php
-    use App\Models\BaseModule;
-
-    $moduleNames = [
-        'installment' => 'Nasiya savdo moduli',
-        'scoring' => 'Skoring moduli',
-        'marketing' => 'Marketing moduli',
-        'ecommerce' => 'Internet do’kon moduli',
-        'sbp_pay' => 'QR pay moduli',
-        'loyalty_program' => 'Loyalty moduli',
-    ];
-
-    $filteredModules = [];
-    $multibranchModule = null;
-    $hasMultibranch = false; // Флаг наличия multibranch_*
-    $baseModules = BaseModule::all();
-
-    foreach ($baseModules as $module) {
-        if (str_starts_with($module['name']->value, 'multibranch_')) {
-            $multibranchModule = $module; // Сохраняем multibranch-модуль
-            $hasMultibranch = true;
-        } else {
-            $filteredModules[] = $module;
-        }
-    }
-@endphp
-
 @section('content')
     <!-- Prices Top Content Start -->
     <section class="pt-10 relative">
