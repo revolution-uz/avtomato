@@ -38,7 +38,7 @@ class PricesController
         return view('website.pages.prices', compact('baseModules', 'moduleNames', 'filteredModules', 'multibranchModule', 'hasMultibranch'));
     }
 
-    public function navigateToPrice($slug): ?\Illuminate\Foundation\Application
+    public function navigateToPrice($slug): View|\Illuminate\Foundation\Application|Factory|Application
     {
 
         $prices = [
