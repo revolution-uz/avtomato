@@ -11,7 +11,7 @@
                     </button>
 
                     <div data-sublist-inner="solutions" class="burgerSublistInner show_burger-sublist transition-all duration-100 ease-in-out px-4 flex flex-col space-y-4">
-                        <a class="flex items-center space-x-3 text-secondary" href="/prices/nasiya" title="Nasiya savdoni avtomatlashtirish">
+                        <a class="flex items-center space-x-3 text-secondary" href="{{ route('installment') }}" title="Nasiya savdoni avtomatlashtirish">
                             <div class="bg-third size-[42px] flex items-center justify-center rounded-2xl">
                                 <svg class="text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M15.8525 2.75H9.68577C6.84764 2.75 4.54688 5.05076 4.54688 7.88889V16.1111C4.54688 18.9492 6.84764 21.25 9.68577 21.25H15.8525C18.6906 21.25 20.9913 18.9492 20.9913 16.1111V7.88889C20.9913 5.05076 18.6906 2.75 15.8525 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -23,7 +23,7 @@
                             </div>
                             <span class="font-medium">Nasiya savdoni avtomatlashtirish</span>
                         </a>
-                        <a class="flex items-center space-x-3 text-secondary" href="/prices/marketing" title="Marketing">
+                        <a class="flex items-center space-x-3 text-secondary" href="{{ route('marketing') }}" title="Marketing">
                             <div class="bg-third size-[42px] flex items-center justify-center rounded-2xl">
                                 <svg class="text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M10.6621 10.6602C10.3053 11.0149 10.1037 11.4966 10.1016 11.9997C10.1016 12.5036 10.3018 12.9869 10.6581 13.3432C11.0144 13.6995 11.4977 13.8997 12.0016 13.8997C12.5047 13.8976 12.9864 13.696 13.3411 13.3392" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

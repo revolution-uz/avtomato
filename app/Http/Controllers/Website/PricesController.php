@@ -38,7 +38,7 @@ class PricesController
         return view('website.pages.prices', compact('baseModules', 'moduleNames', 'filteredModules', 'multibranchModule', 'hasMultibranch'));
     }
 
-    public function navigateToInstallment()
+    public function navigateToInstallment(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Nasiya savdoni avtomatlashtirish',
@@ -88,56 +88,47 @@ class PricesController
 
         return view('website.pages.module_installment', compact('data'));
     }
+    public function navigateToMarketing(): View|\Illuminate\Foundation\Application|Factory|Application
+    {
+        $data = [
+            'title' => 'Marketing',
+            'heading' => 'Marketing',
+            'description' => 'Mijozlarga moliyaviy majburiyatlarini o‘z vaqtida bajarishda yordam beruvchi<br> avtomatlashtirilgan eslatmalar va ogohlantirish tizimi orqali xavflarni minimallashtiring.',
+            'services' => [
+                [
+                    'title' => 'Kechikkan to‘lovlar haqida xabarnomalar',
+                    'desc' => 'Mijozlaringizga kechikkan to‘lovlar haqida SMS orqali avtomatik eslatmalar yuboring.',
+                    'img' => '/assets/images/price_10.png',
+                ],
+                [
+                    'title' => 'Qarzdorlikni kamaytirish strategiyasi',
+                    'desc' => 'To‘lov muddatlari o‘tishidan oldin mijozlarga eslatmalar jo‘natish orqali qarzdorlik darajasini kamaytiring.',
+                    'img' => '/assets/images/price_11.png',
+                ],
+                [
+                    'title' => 'Avtospisaniya orqali moliyaviy nazorat',
+                    'desc' => 'Avtospisaniya orqali yechilgan pullar haqida SMS xabar to’lovlar bo’yicha mijozlarni ogohlantirish.',
+                    'img' => '/assets/images/price_12.png',
+                ],
+            ],
+            'prices' => [
+                [
+                    'title' => '34 SMS yuborish xizmati',
+                    'desc' => 'Har bir mijozning oldingi to‘lov tarixi asosida uning moliyaviy ishonchliligini baholang.',
+                    'price' => '100 so‘m',
+                    'note' => 'Har bir yuborilgan sms uchun',
+                    'icon' => '',
+                ]
+            ],
+        ];
+
+        return view('website.pages.module_marketing', compact('data'));
+    }
 
     public function navigateToPrice($slug): View|\Illuminate\Foundation\Application|Factory|Application
     {
 
         $prices = [
-            'installment' => [
-                'title' => 'Nasiya savdoni avtomatlashtirish',
-                'heading' => 'Nasiya savdoni<br> avtomatlashtirish',
-                'description' => 'Nasiya savdolarini boshqarish endi yanada qulay!<br class="hidden md:block"> Mijozlaringiz uchun mos to‘lov muddatlarini belgilang va to‘lov monitoringini avtomatik tarzda olib boring.',
-                'services' => [
-                    [
-                        'title' => 'Avtospisaniya orqali to‘lovlarni undirish',
-                        'desc' => 'To‘lovlar avtomatik tarzda mijoz hisobidan yechiladi. Siz esa kechikkan to‘lovlarni qo‘lda talab qilish',
-                        'img' => '/assets/images/price_1.png',
-                    ],
-                    [
-                        'title' => 'Mijoz to‘lov grafigini<br> nazorat qilish',
-                        'desc' => 'Har bir mijoz uchun individual to‘lov rejalari yarating va ularning to‘lovlarini real vaqt rejimida kuzatib boring. Barcha jarayonlar tizimda avtomatik ravishda qayd etiladi.',
-                        'img' => '/assets/images/price_2.png',
-                    ],
-                    [
-                        'title' => 'Moliyaviy oqimni doimiy nazorat qilish',
-                        'desc' => 'Barcha kirim-chiqim operatsiyalarini kuzatib boring va to‘lovlarni rejalashtirish orqali biznesingizni barqaror boshqaring.',
-                        'img' => '/assets/images/price_3.png'
-                    ],
-                ],
-                'prices' => [
-                    [
-                        'title' => 'Har bir yaratilgan shartnoma uchun',
-                        'desc' => 'Tizimga muddatli to’lov yaratish va mijozni ma’lumotlarini qo’shish.',
-                        'price' => 'Bepul',
-                        'note' => '',
-                        'icon' => '',
-                    ],
-                    [
-                        'title' => 'Har bir yaratilgan shartnoma uchun (oldindan karta qo’shilgan holatida)',
-                        'desc' => 'Yaratilgan muddatli to’lov uchun qo’shilgan kartadan pul yechish xizmati.',
-                        'price' => '5 000 so‘m',
-                        'note' => 'Ushbu narx muddatli to’lov<br> davomiyligining har 3 oyi uchun ko’rsatilgan',
-                        'icon' => '',
-                    ],
-                    [
-                        'title' => 'Har bir yaratilgan shartnoma uchun (PINFL orqali pul yechish yoqilganda)',
-                        'desc' => 'Yaratilgan muddatli to’lov uchun PINFL orqali pul yechish xizmati yoqilganda. Bu xizmat ichiga har 3 oyda PINFL orqali yangi ochilgan kartalar ro’yxatini olish va shu kartalardan pul yechish uchun.',
-                        'price' => '8 000 so‘m',
-                        'note' => 'Ushbu nar muddatli to’lov<br> davomiyligining har 3 oyi uchun ko’rsatilgan',
-                        'icon' => '',
-                    ],
-                ],
-            ],
             'scoring' => [
                 'title' => 'Skoring',
                 'heading' => 'Skoring – mijoz moliyaviy<Br> tarixini tahlil qilish',
@@ -223,37 +214,6 @@ class PricesController
                         'note' => '',
                         'icon' => ''
                     ],
-                ],
-            ],
-            'marketing' => [
-                'title' => 'Marketing',
-                'heading' => 'Marketing',
-                'description' => 'Mijozlarga moliyaviy majburiyatlarini o‘z vaqtida bajarishda yordam beruvchi<br> avtomatlashtirilgan eslatmalar va ogohlantirish tizimi orqali xavflarni minimallashtiring.',
-                'services' => [
-                    [
-                        'title' => 'Kechikkan to‘lovlar haqida xabarnomalar',
-                        'desc' => 'Mijozlaringizga kechikkan to‘lovlar haqida SMS orqali avtomatik eslatmalar yuboring.',
-                        'img' => '/assets/images/price_10.png',
-                    ],
-                    [
-                        'title' => 'Qarzdorlikni kamaytirish strategiyasi',
-                        'desc' => 'To‘lov muddatlari o‘tishidan oldin mijozlarga eslatmalar jo‘natish orqali qarzdorlik darajasini kamaytiring.',
-                        'img' => '/assets/images/price_11.png',
-                    ],
-                    [
-                        'title' => 'Avtospisaniya orqali moliyaviy nazorat',
-                        'desc' => 'Avtospisaniya orqali yechilgan pullar haqida SMS xabar to’lovlar bo’yicha mijozlarni ogohlantirish.',
-                        'img' => '/assets/images/price_12.png',
-                    ],
-                ],
-                'prices' => [
-                    [
-                        'title' => '34 SMS yuborish xizmati',
-                        'desc' => 'Har bir mijozning oldingi to‘lov tarixi asosida uning moliyaviy ishonchliligini baholang.',
-                        'price' => '100 so‘m',
-                        'note' => 'Har bir yuborilgan sms uchun',
-                        'icon' => '',
-                    ]
                 ],
             ],
             'sbp_pay' => [

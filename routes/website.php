@@ -20,5 +20,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('blogs', [BlogsController::class, 'index'])->name('blogs');
 Route::get('blogs/{slug}', [BlogsController::class, 'navigateToBlog']);
 Route::get('prices', [PricesController::class, 'index'])->name('prices');
-Route::get('prices/{slug}', [PricesController::class, 'navigateToPrice']);
+//Route::get('prices/{slug}', [PricesController::class, 'navigateToPrice']);
 Route::get('prices/installment', [PricesController::class, 'navigateToInstallment'])->name('installment');
+Route::get('prices/marketing', [PricesController::class, 'navigateToMarketing'])->name('marketing');

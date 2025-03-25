@@ -29,7 +29,7 @@
                         </div>
                         <span class="group-hover/child:text-primary text-secondary font-medium transition-all">Nasiya savdoni avtomatlashtirish</span>
                     </a>
-                    <a class="group/child flex items-center space-x-3" href="/prices/marketing" title="Marketing">
+                    <a class="group/child flex items-center space-x-3" href="{{ route('marketing') }}" title="Marketing">
                         <div class="group-hover/child:bg-primary/5 bg-third size-[42px] flex items-center justify-center rounded-2xl">
                             <svg class="group-hover/child:text-primary text-secondary transition-all" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10.6621 10.6602C10.3053 11.0149 10.1037 11.4966 10.1016 11.9997C10.1016 12.5036 10.3018 12.9869 10.6581 13.3432C11.0144 13.6995 11.4977 13.8997 12.0016 13.8997C12.5047 13.8976 12.9864 13.696 13.3411 13.3392" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
