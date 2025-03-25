@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Website;
 
-use App\Models\BaseModule;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -11,9 +10,7 @@ class PricesController
 {
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        $baseModules = BaseModule::all();
-
-        return view('website.pages.prices', compact('baseModules'));
+        return view('website.pages.prices');
     }
 
     public function navigateToPrice($slug): ?\Illuminate\Foundation\Application
