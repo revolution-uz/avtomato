@@ -35,7 +35,7 @@
                             </div>
                             <span class="font-medium">Marketing</span>
                         </a>
-                        <a class="flex items-center space-x-3 text-secondary" href="/prices/skoring" title="Skoring">
+                        <a class="flex items-center space-x-3 text-secondary" href="{{ route('scoring') }}" title="Skoring">
                             <div class="bg-third size-[42px] flex items-center justify-center rounded-2xl">
                                 <svg class="text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M21.2526 8.81368V6.75813C21.2526 5.94038 20.9277 5.15612 20.3495 4.57789C19.7713 3.99965 18.987 3.6748 18.1692 3.6748H15.0859" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -48,7 +48,7 @@
                             </div>
                             <span class="font-medium">Skoring</span>
                         </a>
-                        <a class="flex items-center space-x-3 text-secondary" href="/prices/qr-pay" title="QR pay">
+                        <a class="flex items-center space-x-3 text-secondary" href="{{ route('sbp_pay') }}" title="QR pay">
                             <div class="bg-third size-[42px] flex items-center justify-center rounded-2xl">
                                 <svg class="text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M9.43203 5.83301H6.73203C6.23498 5.83301 5.83203 6.23596 5.83203 6.73301V9.43301C5.83203 9.93007 6.23498 10.333 6.73203 10.333H9.43203C9.92909 10.333 10.3321 9.93007 10.3321 9.43301V6.73301C10.3321 6.23596 9.92909 5.83301 9.43203 5.83301Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -63,7 +63,7 @@
                             </div>
                             <span class="font-medium">QR pay</span>
                         </a>
-                        <a class="flex items-center space-x-3 text-secondary" href="/prices/loyalty" title="Loyalty">
+                        <a class="flex items-center space-x-3 text-secondary" href="{{ route('loyalty_program') }}" title="Loyalty">
                             <div class="bg-third size-[42px] flex items-center justify-center rounded-2xl">
                                 <svg class="text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.9254 19.6341H20.063C20.2512 19.6373 20.4374 19.5949 20.6056 19.5104C20.7739 19.4259 20.9191 19.3019 21.0289 19.1489C21.1386 18.996 21.2097 18.8187 21.2359 18.6323C21.2622 18.4459 21.2428 18.2559 21.1795 18.0786C20.6343 16.9117 19.7712 15.9221 18.6893 15.2234C17.6074 14.5246 16.3504 14.1449 15.0625 14.1279" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -74,7 +74,7 @@
                             </div>
                             <span class="font-medium">Loyalty</span>
                         </a>
-                        <a class="flex items-center space-x-3 text-secondary" href="/prices/others" title="Qo`shimcha xizmatlar">
+                        <a class="flex items-center space-x-3 text-secondary" href="{{ route('others') }}" title="Qo`shimcha xizmatlar">
                             <div class="bg-third size-[42px] flex items-center justify-center rounded-2xl">
                                 <svg class="text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M15.25 2.75H8.75C5.43629 2.75 2.75 5.43629 2.75 8.75V15.25C2.75 18.5637 5.43629 21.25 8.75 21.25H15.25C18.5637 21.25 21.25 18.5637 21.25 15.25V8.75C21.25 5.43629 18.5637 2.75 15.25 2.75Z" stroke="currentColor" stroke-width="1.5"/>
@@ -85,7 +85,7 @@
                             </div>
                             <span class="font-medium">Qo`shimcha xizmatlar</span>
                         </a>
-                        <a class="flex items-center space-x-3 text-[#95989D] pointer-events-none" href="/prices/ecommerce" title="Internet do’kon yaratish (soon)">
+                        <a class="flex items-center space-x-3 text-[#95989D] pointer-events-none" href="{{ route('ecommerce') }}" title="Internet do’kon yaratish (soon)">
                             <div class="bg-third size-[42px] flex items-center justify-center rounded-2xl opacity-50">
                                 <svg class="text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18.25 3.33008H5.75C4.95435 3.33008 4.19129 3.64615 3.62868 4.20876C3.06607 4.77137 2.75 5.53443 2.75 6.33008V14.2001C2.75 14.9958 3.06607 15.7588 3.62868 16.3214C4.19129 16.884 4.95435 17.2001 5.75 17.2001H18.25C19.0456 17.2001 19.8087 16.884 20.3713 16.3214C20.9339 15.7588 21.25 14.9958 21.25 14.2001V6.33008C21.25 5.53443 20.9339 4.77137 20.3713 4.20876C19.8087 3.64615 19.0456 3.33008 18.25 3.33008Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -104,12 +104,12 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center justify-between w-full h-[52px] py-4 px-5 rounded-2xl" href="/prices" title="Narxlar">
+                    <a class="flex items-center justify-between w-full h-[52px] py-4 px-5 rounded-2xl" href="{{ route('prices') }}" title="Narxlar">
                         <span class="text-secondary font-medium">Narxlar</span>
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center justify-between w-full h-[52px] py-4 px-5 rounded-2xl" href="/blogs" title="Blog">
+                    <a class="flex items-center justify-between w-full h-[52px] py-4 px-5 rounded-2xl" href="{{ route('blogs') }}" title="Blog">
                         <span class="text-secondary font-medium">Blog</span>
                     </a>
                 </li>

@@ -18,10 +18,10 @@
                 <div>
                     <h3 class="text-lg text-white font-semibold">Sahifalar</h3>
                     <ul class="mt-5">
-                        <li><a class="text-white/75" href="/" title="Bosh sahifa">Bosh sahifa</a></li>
-                        <li class="mt-3"><a class="text-white/75" href="/prices/nasiya" title="Yechimlar">Yechimlar</a></li>
-                        <li class="mt-3"><a class="text-white/75" href="/prices" title="Narxlar">Narxlar</a></li>
-                        <li class="mt-3"><a class="text-white/75" href="/blogs" title="Blog">Blog</a></li>
+                        <li><a class="text-white/75" href="{{ route('home') }}" title="Bosh sahifa">Bosh sahifa</a></li>
+                        <li class="mt-3"><a class="text-white/75" href="{{ route('installment') }}" title="Yechimlar">Yechimlar</a></li>
+                        <li class="mt-3"><a class="text-white/75" href="{{ route('prices') }}" title="Narxlar">Narxlar</a></li>
+                        <li class="mt-3"><a class="text-white/75" href="{{ route('blogs') }}" title="Blog">Blog</a></li>
                     </ul>
                 </div>
                 <div class="order-1 md:order-0 col-span-2 md:col-span-1">
