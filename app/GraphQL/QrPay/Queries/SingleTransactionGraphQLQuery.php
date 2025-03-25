@@ -3,7 +3,7 @@
 namespace App\GraphQL\QrPay\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\QrPay\Types\TransactionGraphQLType;
+use App\GraphQL\QrPay\Types\SbpTransactionGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\SbpTransaction;
 use Closure;
@@ -21,7 +21,7 @@ class SingleTransactionGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(TransactionGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(SbpTransactionGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array

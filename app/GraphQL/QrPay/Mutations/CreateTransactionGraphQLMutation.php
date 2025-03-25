@@ -3,7 +3,7 @@
 namespace App\GraphQL\QrPay\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\QrPay\Types\TransactionGraphQLType;
+use App\GraphQL\QrPay\Types\SbpTransactionGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\CompanyQrPayService;
 use Closure;
@@ -33,7 +33,7 @@ class CreateTransactionGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(TransactionGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(SbpTransactionGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
