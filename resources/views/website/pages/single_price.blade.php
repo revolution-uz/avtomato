@@ -1,6 +1,6 @@
 @extends('website.layout')
 
-@section('title', $price['title'] . ' - Avtomato')
+@section('title', $data['title'] . ' - Avtomato')
 
 @section('content')
     <!-- Single Price Top Content Start -->
@@ -14,8 +14,8 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col items-center">
                 <p class="text-xl text-primary font-medium">Yechimlar va narxlar</p>
-                <h1 class="mt-5 md:mt-8 text-center text-3xl md:text-5xl text-secondary font-semibold">{!! $price['heading'] !!}</h1>
-                <p class="mt-2 lg:mt-3 text-center text-lg text-secondary/75">{!! $price['description'] !!}</p>
+                <h1 class="mt-5 md:mt-8 text-center text-3xl md:text-5xl text-secondary font-semibold">{!! $data['heading'] !!}</h1>
+                <p class="mt-2 lg:mt-3 text-center text-lg text-secondary/75">{!! $data['description'] !!}</p>
                 <button class="getDemoModalShow mt-8 h-[58px] flex items-center justify-center px-8 bg-primary hover:bg-primary/90 rounded-2xl transition-all cursor-pointer" type="button">
                     <span class="text-lg text-white font-medium">Sinab ko’rish</span>
                 </button>
@@ -30,7 +30,7 @@
             <div>
                 <!-- Advantages Start -->
                 <div class="bg-third p-5 sm:p-8 lg:p-[60px] rounded-[42px] sm:rounded-[60px] space-y-[42px] lg:space-y-[60px]">
-                    @foreach($price['services'] as $service)
+                    @foreach($data['services'] as $service)
                         <div class="flex flex-col md:{{ $loop->index % 2 == 0 ? 'flex-row' : 'flex-row-reverse' }} items-center justify-between gap-4 sm:gap-8">
                             <div class="basis-1/2">
                                 <p class="text-2xl sm:text-3xl lg:text-5xl text-secondary font-semibold">{!! $service['title'] !!}</p>
@@ -47,11 +47,9 @@
 
             <div class="pt-[60px] lg:pt-[120px] flex flex-col space-y-8">
 
-                @if (!empty($price['prices']))
-                    <!-- Prices Start -->
-                    @include('website.components.price_list', ['list' => $price['prices']])
-                    <!-- Price List End -->
-                @endif
+                <!-- Prices Start -->
+                @yield('price_list')
+                <!-- Price List End -->
 
                 <!-- Free Trial Start -->
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-10 bg-third py-6 sm:py-8 px-6 sm:px-7 md:px-[62px] rounded-[42px]">

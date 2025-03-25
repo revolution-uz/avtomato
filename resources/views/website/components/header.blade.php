@@ -17,7 +17,7 @@
             <div id="solutionsDropdown"
                  class="dropdown hide_dropdown absolute -left-[150%] w-[700px] bg-white rounded-2xl p-6 transition-all ease-linear before:absolute before:-top-2 before:left-1/4 before:rotate-45 before:size-5 before:bg-white before:rounded-[4px]">
                 <div class="grid grid-cols-2 gap-y-4 gap-x-10">
-                    <a class="group/child flex items-center space-x-3" href="/prices/nasiya" title="Nasiya savdoni avtomatlashtirish">
+                    <a class="group/child flex items-center space-x-3" href="{{ route('installment') }}" title="Nasiya savdoni avtomatlashtirish">
                         <div class="group-hover/child:bg-primary/5 bg-third size-[42px] flex items-center justify-center rounded-2xl transition-all">
                             <svg class="group-hover/child:text-primary text-secondary transition-all" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M15.8525 2.75H9.68577C6.84764 2.75 4.54688 5.05076 4.54688 7.88889V16.1111C4.54688 18.9492 6.84764 21.25 9.68577 21.25H15.8525C18.6906 21.25 20.9913 18.9492 20.9913 16.1111V7.88889C20.9913 5.05076 18.6906 2.75 15.8525 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
