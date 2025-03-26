@@ -245,9 +245,9 @@ class PricesController
             ],
             'prices' => [
                 [
-                    'title' => 'Oylik to’lovi',
+                    'title' => 'Oylik to’lov',
                     'desc' => 'Rossiya MIR kartasi bilan O‘zbekistonda to‘lov',
-                    'price' => '50 000 so’mdan',
+                    'price' => '50 000 so’m',
                     'note' => '',
                     'icon' => ''
                 ]
@@ -280,7 +280,22 @@ class PricesController
                     'img' => '/assets/images/price_9.png',
                 ],
             ],
-            'prices' => [],
+            'prices' => [
+                [
+                    'title' => 'Bir martalik to’lov',
+                    'desc' => 'Sizning brendinggiz bilan birga har qanday turdaki online savdo dasturini ishga tushurib beramiz',
+                    'price' => '400 000 so’m',
+                    'note' => '',
+                    'icon' => '',
+                ],
+                [
+                    'title' => 'Oylik to’lov',
+                    'desc' => 'Sizning brendinggiz bilan birga har qanday turdaki online savdo dasturini ishga tushurib beramiz',
+                    'price' => '50 000 so’m',
+                    'note' => '',
+                    'icon' => '',
+                ]
+            ],
         ];
 
         return view('website.pages.module_ecommerce', ['data' => $data]);
@@ -309,7 +324,15 @@ class PricesController
                     'img' => '/assets/images/empty-frame.png',
                 ],
             ],
-            'prices' => [],
+            'prices' => [
+                [
+                    'title' => 'Oylik to’lov',
+                    'desc' => 'Mijozlarni bonus va chegirmalar bilan ushlab qoling, obuna tizimi orqali ularning sonini oshiring!',
+                    'price' => '50 000 so’m',
+                    'note' => '',
+                    'icon' => '',
+                ]
+            ],
         ];
 
         return view('website.pages.module_loyalty', ['data' => $data]);
