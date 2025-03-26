@@ -320,6 +320,9 @@ enum PermissionGroupEnum: string
                 PermissionEnum::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE,
                 PermissionEnum::LOYALTY_PROGRAM_ORDER_VIEW_ALL,
                 PermissionEnum::LOYALTY_PROGRAM_ORDER_VIEW,
+                PermissionEnum::LOYALTY_PROGRAM_SHOP_VIEW_ALL,
+                PermissionEnum::LOYALTY_PROGRAM_SHOP_VIEW,
+                PermissionEnum::LOYALTY_PROGRAM_SHOP_EDIT,
             ],
 
             self::QR_PAY => [
