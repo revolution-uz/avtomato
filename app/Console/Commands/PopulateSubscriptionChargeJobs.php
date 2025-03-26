@@ -42,16 +42,16 @@ class PopulateSubscriptionChargeJobs extends Command
                 continue;
             }
 
-            $subscriptionsIds = Subscription::query()
+            $subscriptionIds = Subscription::query()
                 ->where('is_active', true)
                 ->whereDate('expired_at', '<=', Carbon::today())
                 ->pluck('id');
 
-            if (! count($subscriptionsIds)) {
+            if (! count($subscriptionIds)) {
                 continue;
             }
 
-            foreach ($subscriptionsIds as $subscriptionId) {
+            foreach ($subscriptionIds as $subscriptionId) {
                 SubscriptionChargeJob::dispatch($subscriptionId)->delay(now()->addSeconds($i));
                 $i++;
             }

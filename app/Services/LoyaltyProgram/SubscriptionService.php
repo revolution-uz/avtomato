@@ -20,7 +20,7 @@ class SubscriptionService
     {
         $tariff = Tariff::query()->findOrFail($args['tariff_id']);
 
-        if ($user->subscriptions()->count() == 0 || $tariff->is_free_for_previous_subscribers) {
+        if ($tariff->free_months !== 0 && ($user->subscriptions()->count() == 0 || $tariff->is_free_for_previous_subscribers)) {
             $expired_at = Carbon::now()->addMonths($tariff->free_months);
 
         } else {
