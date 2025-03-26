@@ -29,6 +29,7 @@ return [
     'guarantor_application' => 'Договор с гарантором',
     'n_branches' => 'Вы можете создать только до :n филиалов',
     'n_admins' => 'Вы можете создать только до :n админов!',
+    'card_balance_insufficient' => 'Баланс карты должен быть больше :balance UZS',
     'You cannot activate an installment without withdrawing initial fee' => 'Внесите первоначальный платеж за активацию',
     'Cannot detach the only address associated with the customer' => 'Невозможно удалить единственный адрес, связанный с клиентом',
 ];

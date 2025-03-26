@@ -56,9 +56,23 @@ class AtmosFaker
         }
     }
 
-    public static function getCardInfo(): void
+    public static function getCardInfo(?int $balance = null, bool $isFailed = false): void
     {
-        self::fakeResponse(AtmosCardClient::CARD_CHECK, '../JSON-for-testing/atmos/card/get-card-info.json');
+        $url = self::PARTNER_URL . AtmosCardClient::CARD_CHECK;
+
+        if ($isFailed) {
+            Http::fake([$url => Http::response([], 403)]);
+
+            return;
+        }
+
+        $response = json_decode(file_get_contents(storage_path('../JSON-for-testing/atmos/card/get-card-info.json')), true);
+
+        if ($balance !== null) {
+            $response['card']['balance_sum'] = $balance;
+        }
+
+        Http::fake([$url => Http::response($response)]);
     }
 
     public static function fakeResponse(string $path, string $jsonPath, $status = 200): void

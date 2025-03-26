@@ -29,6 +29,7 @@ return [
     'n_admins' => 'Siz faqat :n ta admin yaratishingiz mumkin!',
     'customer_application' => 'Mijoz bilan shartnoma',
     'guarantor_application' => 'Kafil bilan shartnoma',
+    'card_balance_insufficient' => 'Karta balansi :balance UZS dan katta bo\'lishi kerak',
     'You cannot activate an installment without withdrawing initial fee' => 'Faollashtirish uchun boshlang\'ich to\'lovni amalga oshiring',
     'Cannot detach the only address associated with the customer' => 'Mijozga tegishli yagona manzilni olib tashlab bo‘lmaydi',
 ];

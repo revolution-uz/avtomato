@@ -39,6 +39,10 @@ class CardGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Card $root) => $root->card_type,
             ],
+            'is_connected' => [
+                'type' => Type::nonNull(Type::boolean()),
+                'resolve' => fn (Card $root) => $root->is_connected,
+            ],
             'owner' => [
                 'type' => Type::string(),
                 'resolve' => fn (Card $root) => $root->owner,
