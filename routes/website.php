@@ -15,3 +15,4 @@ use App\Http\Controllers\Website\HomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::multilingual('/', [HomeController::class, 'index'])->name('website-home');
+Route::post('new-customer', [HomeController::class, 'newCustomer'])->name('new-customer');

@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\Main\SettingsEnum;
 use App\Events\TelegramEvents\BaseTelegramEvent;
-use App\Models\Company\CompanySettings;
+use App\Models\Settings;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -48,7 +48,7 @@ class SendMessageToTelegramJob implements ShouldBeUnique, ShouldQueue
      */
     public function handle(): void
     {
-        $botToken = CompanySettings::getConfig(CompanySettingsEnum::TELEGRAM_BOT_TOKEN);
+        $botToken = Settings::getConfig(SettingsEnum::TELEGRAM_BOT_TOKEN);
 
         $response = Http::post('https://api.telegram.org/bot' . $botToken . '/sendMessage', $this->data);
 
@@ -68,13 +68,6 @@ class SendMessageToTelegramJob implements ShouldBeUnique, ShouldQueue
      */
     public function uniqueId(): string
     {
-        return 'transaction-telegram-message-' . tenant('id') . '-' . md5(serialize($this->data));
-    }
-
-    public function tags(): array
-    {
-        return [
-            'tenant:' . tenant('id'),
-        ];
+        return 'central-telegram-message-' . md5(serialize($this->data));
     }
 }

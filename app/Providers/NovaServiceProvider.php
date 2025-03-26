@@ -28,6 +28,7 @@ use App\Nova\Company\UniredCardResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
+use App\Nova\NewCustomerResource;
 use App\Nova\SbpAccountResource;
 use App\Nova\SettingsResource;
 use Avtomato\TransactionByCompanies\TransactionByCompanies;
@@ -99,6 +100,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(BaseFeatureResource::class),
                     MenuItem::resource(BaseSmsTemplateResource::class),
                     (new TransactionByCompanies)->menu($request),
+                    MenuItem::resource(NewCustomerResource::class),
                 ])->collapsable(),
             ];
         });
