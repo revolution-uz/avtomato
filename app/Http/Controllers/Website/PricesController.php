@@ -361,7 +361,29 @@ class PricesController
                     'img' => '/assets/images/empty-frame.png',
                 ],
             ],
-            'prices' => [],
+            'prices' => [
+                [
+                    'Foydalanuvchilar',
+                    '1',
+                    '2-5',
+                    '5-10',
+                    '10-20',
+                ],
+                [
+                    'Filiallar',
+                    '1',
+                    '2',
+                    '3',
+                    '5',
+                ],
+                [
+                    'Oylik to‘lov',
+                    'Bepul',
+                    '200 000 so‘m',
+                    '350 000 so‘m',
+                    '500 000 so‘m',
+                ],
+            ],
         ];
 
         return view('website.pages.module_others', ['data' => $data]);

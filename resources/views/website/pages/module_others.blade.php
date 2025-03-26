@@ -4,6 +4,6 @@
 
 @section('price_list')
     @if (!empty($data['prices']))
-        @include('website.components.price_list', ['list' => $data['prices']])
+        @include('website.components.price_table', ['list' => $data['prices']])
     @endif
 @endsection
