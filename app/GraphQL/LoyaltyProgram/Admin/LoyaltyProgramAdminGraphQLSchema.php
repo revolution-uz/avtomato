@@ -8,11 +8,15 @@ use App\GraphQL\LoyaltyProgram\Admin\Mutations\DeleteNotificationsGraphQLMutatio
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\DeleteTariffGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\SendNotificationsGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateNotificationGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateShopGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateTariffGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadShopImageGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\NotificationsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\OrdersGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Admin\Queries\ShopsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleNotificationGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleOrderGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleShopGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleSubscriptionGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleTariffGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleUserGraphQLQuery;
@@ -27,6 +31,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Types\OrderPaymentGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\OrderStatusHistoryGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ProductGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\RoleGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\ShopGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\TariffGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\TariffInputGraphQLType;
@@ -46,21 +51,25 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 CreateNotificationGraphQLMutation::class,
                 UpdateTariffGraphQLMutation::class,
                 UpdateNotificationGraphQLMutation::class,
+                UpdateShopGraphQLMutation::class,
                 DeleteTariffGraphQLMutation::class,
                 DeleteNotificationsGraphQLMutation::class,
                 SendNotificationsGraphQLMutation::class,
+                UploadShopImageGraphQLMutation::class,
             ],
             'query' => [
-                SingleUserGraphQLQuery::class,
                 UsersGraphQLQuery::class,
                 TariffsGraphQLQuery::class,
                 NotificationsGraphQLQuery::class,
                 OrdersGraphQLQuery::class,
+                SubscriptionsGraphQLQuery::class,
+                ShopsGraphQLQuery::class,
+                SingleUserGraphQLQuery::class,
                 SingleTariffGraphQLQuery::class,
                 SingleNotificationGraphQLQuery::class,
-                SubscriptionsGraphQLQuery::class,
                 SingleSubscriptionGraphQLQuery::class,
                 SingleOrderGraphQLQuery::class,
+                SingleShopGraphQLQuery::class,
             ],
             'types' => [
                 UserGraphQLType::class,
@@ -78,6 +87,8 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 ProductGraphQLType::class,
                 OrderStatusHistoryGraphQLType::class,
                 OrderPaymentGraphQLType::class,
+                ShopGraphQLType::class,
+                AttachmentGraphQLType::class,
             ],
             'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'loyalty_program', 'tenant_logging'],
         ];

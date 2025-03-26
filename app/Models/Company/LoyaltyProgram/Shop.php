@@ -3,9 +3,11 @@
 namespace App\Models\Company\LoyaltyProgram;
 
 use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
+use App\Models\Company\Attachment;
 use App\Models\Company\OrderBySortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -18,7 +20,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $address
  * @property float|null $lat
  * @property float|null $lng
- * @property string|null $image
  * @property ShopStatusEnum $status
  * @property string $external_code
  * @property string $external_name
@@ -26,6 +27,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property Attachment|null $image
  */
 class Shop extends Model
 {
@@ -40,7 +42,6 @@ class Shop extends Model
         'address',
         'lat',
         'lng',
-        'image',
         'status',
         'external_code',
         'external_name',
@@ -50,4 +51,9 @@ class Shop extends Model
     protected $casts = [
         'status' => ShopStatusEnum::class,
     ];
+
+    public function image(): MorphOne
+    {
+        return $this->morphOne(Attachment::class, 'attachmentable')->latestOfMany();
+    }
 }
