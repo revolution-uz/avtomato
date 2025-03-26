@@ -7,6 +7,7 @@ use App\Enums\Company\CardStatusEnum;
 use App\Helpers\CardHelper;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,13 +27,15 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property float $balance
  * @property string $external_id
  * @property int $user_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property-read string $card_type
+ * @property-read bool $is_connected
  * @property User $user
  *
  * @method self whereNumber(int $cardNumber)
+ * @method static Builder active()
  */
 class Card extends Model
 {
@@ -117,5 +120,10 @@ class Card extends Model
     public function scopeWhereNumber($query, $cardNumber)
     {
         return $query->where('hash', self::hashing($cardNumber));
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        return $query->whereNotNull('external_id')->where('status', CardStatusEnum::ACTIVE);
     }
 }
