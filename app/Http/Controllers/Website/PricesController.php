@@ -249,8 +249,8 @@ class PricesController
                     'desc' => 'Rossiya MIR kartasi bilan O‘zbekistonda to‘lov',
                     'price' => '50 000 so’m',
                     'note' => '',
-                    'icon' => '/assets/icons/credit-card.svg'
-                ]
+                    'icon' => '/assets/icons/credit-card.svg',
+                ],
             ],
         ];
 
@@ -294,7 +294,7 @@ class PricesController
                     'price' => '50 000 so’m',
                     'note' => '',
                     'icon' => '/assets/icons/credit-card.svg',
-                ]
+                ],
             ],
         ];
 
@@ -331,7 +331,7 @@ class PricesController
                     'price' => '50 000 so’m',
                     'note' => '',
                     'icon' => '/assets/icons/credit-card.svg',
-                ]
+                ],
             ],
         ];
 
