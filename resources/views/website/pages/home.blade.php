@@ -523,40 +523,38 @@
     <!-- Different Markets End -->
 
     <!-- Feedback Start -->
-    <!--
-    <section class="pt-10 md:pt-[60px]">
-        <h2 class="text-center text-3xl lg:text-5xl text-secondary font-semibold">Mijozlarimiz fikri</h2>
+{{--    <section class="pt-10 md:pt-[60px]">--}}
+{{--        <h2 class="text-center text-3xl lg:text-5xl text-secondary font-semibold">Mijozlarimiz fikri</h2>--}}
 
-        <div class="marque-wrap pt-8 lg:pt-[60px] px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 60s;">
-            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>
-            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>
+{{--        <div class="marque-wrap pt-8 lg:pt-[60px] px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 60s;">--}}
+{{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>--}}
+{{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>--}}
 
-            <div class="marque flex gap-6">
-                {!! $feedbacksTemplate($feedbacks) !!}
-    </div>
-    <div class="marque flex gap-6">
-{!! $feedbacksTemplate($feedbacks) !!}
-    </div>
-    <div class="marque flex gap-6">
-{!! $feedbacksTemplate($feedbacks) !!}
-    </div>
-</div>
-<div class="pb-10 md:pb-[60px] marque-wrap pt-8 lg:pt-6 px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 40s;">
-            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>
-            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>
+{{--            <div class="marque flex gap-6">--}}
+{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+{{--            </div>--}}
+{{--            <div class="marque flex gap-6">--}}
+{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+{{--            </div>--}}
+{{--            <div class="marque flex gap-6">--}}
+{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="pb-10 md:pb-[60px] marque-wrap pt-8 lg:pt-6 px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 40s;">--}}
+{{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>--}}
+{{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>--}}
 
-            <div class="marque flex gap-6">
-                {!! $feedbacksTemplate($feedbacks) !!}
-    </div>
-    <div class="marque flex gap-6">
-{!! $feedbacksTemplate($feedbacks) !!}
-    </div>
-    <div class="marque flex gap-6">
-{!! $feedbacksTemplate($feedbacks) !!}
-    </div>
-</div>
-</section>
--->
+{{--            <div class="marque flex gap-6">--}}
+{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+{{--            </div>--}}
+{{--            <div class="marque flex gap-6">--}}
+{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+{{--            </div>--}}
+{{--            <div class="marque flex gap-6">--}}
+{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </section>--}}
     <!-- Feedback End -->
 
     <!-- Beginning Deadline Start -->
