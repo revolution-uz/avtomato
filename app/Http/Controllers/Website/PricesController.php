@@ -243,7 +243,15 @@ class PricesController
                     'img' => '/assets/images/empty-frame.png',
                 ],
             ],
-            'prices' => [],
+            'prices' => [
+                [
+                    'title' => 'Oylik to’lovi',
+                    'desc' => 'Rossiya MIR kartasi bilan O‘zbekistonda to‘lov',
+                    'price' => '50 000 so’mdan',
+                    'note' => '',
+                    'icon' => ''
+                ]
+            ],
         ];
 
         return view('website.pages.module_qr', ['data' => $data]);
