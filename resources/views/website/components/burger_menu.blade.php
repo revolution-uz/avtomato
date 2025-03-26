@@ -3,14 +3,14 @@
         <div class="overflow-y-auto flex-1">
             <ul class="flex flex-col space-y-1.5">
                 <li>
-                    <button data-sublist-title="solutions" class="burgerSublistBtn active_burger-sublist--btn flex items-center justify-between w-full h-[52px] py-4 px-5 rounded-2xl">
+                    <button id="burgerSublistBtn" data-sublist-title="solutions" class="active_burger-sublist--btn flex items-center justify-between w-full h-[52px] py-4 px-5 rounded-2xl">
                         <span class="text-secondary font-medium">Yechimlar</span>
                         <svg class="transition-all" width="16" height="8" viewBox="0 0 14 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.2787 0.966797L7.93208 5.31346C7.41875 5.8268 6.57875 5.8268 6.06542 5.31346L1.71875 0.966797" stroke="currentColor" stroke-opacity="0.75" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
 
-                    <div data-sublist-inner="solutions" class="burgerSublistInner show_burger-sublist transition-all duration-100 ease-in-out px-4 flex flex-col space-y-4">
+                    <div id="burgerSublistInner" data-sublist-inner="solutions" class="show_burger-sublist transition-all duration-100 ease-in-out px-4 flex flex-col space-y-4">
                         <a class="flex items-center space-x-3 text-secondary" href="{{ route('installment') }}" title="Nasiya savdoni avtomatlashtirish">
                             <div class="bg-third size-[42px] flex items-center justify-center rounded-2xl">
                                 <svg class="text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
