@@ -37,6 +37,16 @@ class OrdersGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
             ],
+            'from' => [
+                'name' => 'from',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:to|date_format:Y-m-d',
+            ],
+            'to' => [
+                'name' => 'to',
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:from|date_format:Y-m-d|after_or_equal:from',
+            ],
         ];
     }
 
@@ -48,6 +58,12 @@ class OrdersGraphQLQuery extends Query
                 isset($args['sort']),
                 fn (Builder|Order $q) => $q->orderBySortable($args['sort']),
                 fn (Builder|Order $q) => $q->orderByDesc('id')
+            )
+            ->when(
+                isset($args['from'], $args['to']),
+                fn (Builder|Order $q) => $q
+                    ->whereDate('created_at', '>=', $args['from'])
+                    ->whereDate('created_at', '<=', $args['to'])
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
