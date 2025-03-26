@@ -13,7 +13,6 @@ class ShopFactory extends Factory
     public function definition(): array
     {
         return [
-            'external_shop_id' => $this->faker->unique()->numberBetween(1, 1000),
             'name' => $this->faker->company,
             'address' => $this->faker->address,
             'lat' => $this->faker->latitude,

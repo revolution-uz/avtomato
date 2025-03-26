@@ -6,6 +6,7 @@ use App\Enums\Company\CardStatusEnum;
 use App\Models\Company\LoyaltyProgram\Card;
 use App\Models\Company\LoyaltyProgram\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 class CardFactory extends Factory
 {
@@ -13,18 +14,27 @@ class CardFactory extends Factory
 
     public function definition(): array
     {
+        $cardNumber = $this->faker->regexify('[1-9]{16}');
+
         return [
-            'pan' => $this->faker->creditCardNumber,
-            'number' => $this->faker->creditCardNumber,
-            'hash' => $this->faker->randomNumber,
-            'expiry' => $this->faker->creditCardExpirationDateString,
-            'owner' => $this->faker->name,
+            'pan' => substr_replace($cardNumber, '******', 6, 6),
+            'number' => $cardNumber,
+            'hash' => $cardNumber,
+            'expiry' => $this->faker->date('ym'),
             'phone' => $this->faker->e164PhoneNumber(),
             'status' => CardStatusEnum::randomValue(),
-            'balance' => $this->faker->randomFloat(2, 0, 10000),
-            'external_id' => $this->faker->uuid,
+            'balance' => $this->faker->randomFloat(2),
+            'external_id' => $this->faker->uuid(),
+            'owner' => $this->faker->name(),
 
             'user_id' => User::factory(),
         ];
+    }
+
+    public function deleted(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'deleted_at' => Carbon::now(),
+        ]);
     }
 }

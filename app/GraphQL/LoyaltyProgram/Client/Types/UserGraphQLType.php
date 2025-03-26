@@ -64,7 +64,7 @@ class UserGraphQLType extends GraphQLType
             ],
             'cards' => [
                 'type' => Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (User $root) => $root->cards,
+                'resolve' => fn (User $root) => $root->cards()->active()->get(),
             ],
         ];
     }

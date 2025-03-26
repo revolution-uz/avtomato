@@ -11,6 +11,7 @@ enum LogType: string
     case CREATE = 'created';
     case UPDATE = 'updated';
     case DELETE = 'deleted';
+    case RESTORE = 'restored';
 
     public function getLabel(): string
     {
@@ -18,6 +19,7 @@ enum LogType: string
             self::CREATE => __('Created'),
             self::UPDATE => __('Updated'),
             self::DELETE => __('Deleted'),
+            self::RESTORE => __('Restored'),
         };
     }
 }

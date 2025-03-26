@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\LoyaltyProgram\Client\Mutations;
+namespace Tests\GraphQL\LoyaltyProgram\Client\Mutations;
 
 use App\Enums\Company\CardStatusEnum;
 use App\Models\Company\LoyaltyProgram\Card;
