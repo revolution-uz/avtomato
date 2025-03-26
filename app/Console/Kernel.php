@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('populate:debt-sms-jobs')->dailyAt('00:00');
         $schedule->command('money:withdraw-balance')->dailyAt('00:00');
         $schedule->command('process:waiting-scoring-requests')->dailyAt('01:00');
+        $schedule->command('populate:subscription-charge-jobs')->dailyAt('02:00');
         // $schedule->command('inspire')->hourly();
     }
 
