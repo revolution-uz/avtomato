@@ -68,21 +68,21 @@ class PricesController
                     'desc' => 'Tizimga muddatli to’lov yaratish va mijozni ma’lumotlarini qo’shish.',
                     'price' => 'Bepul',
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/document-plus.svg',
                 ],
                 [
                     'title' => 'Har bir yaratilgan shartnoma uchun (oldindan karta qo’shilgan holatida)',
                     'desc' => 'Yaratilgan muddatli to’lov uchun qo’shilgan kartadan pul yechish xizmati.',
                     'price' => '5 000 so‘m',
                     'note' => 'Ushbu narx muddatli to’lov<br> davomiyligining har 3 oyi uchun ko’rsatilgan',
-                    'icon' => '',
+                    'icon' => '/assets/icons/credit-card.svg',
                 ],
                 [
                     'title' => 'Har bir yaratilgan shartnoma uchun (PINFL orqali pul yechish yoqilganda)',
                     'desc' => 'Yaratilgan muddatli to’lov uchun PINFL orqali pul yechish xizmati yoqilganda. Bu xizmat ichiga har 3 oyda PINFL orqali yangi ochilgan kartalar ro’yxatini olish va shu kartalardan pul yechish uchun.',
                     'price' => '8 000 so‘m',
                     'note' => 'Ushbu nar muddatli to’lov<br> davomiyligining har 3 oyi uchun ko’rsatilgan',
-                    'icon' => '',
+                    'icon' => '/assets/icons/id-card.svg',
                 ],
             ],
         ];
@@ -119,7 +119,7 @@ class PricesController
                     'desc' => 'Har bir mijozning oldingi to‘lov tarixi asosida uning moliyaviy ishonchliligini baholang.',
                     'price' => $this->getPrice('sms'),
                     'note' => 'Har bir yuborilgan sms uchun',
-                    'icon' => '',
+                    'icon' => '/assets/icons/sms-plus.svg',
                 ],
             ],
         ];
@@ -156,63 +156,63 @@ class PricesController
                     'desc' => 'Ro‘yxat — mas‘uliyatsiz mijozlarning savdo sotiq tashkilotlaridagi kechikkan yoki kechikayotgan to‘lovlari haqidagi elektron ma‘lumotlar bazasi',
                     'price' => $this->getPrice('scoring_royxat_credit_history'),
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/globe-filled.svg',
                 ],
                 [
                     'title' => 'Majburiy ijro ma’lumotlari',
                     'desc' => 'MIB (Majburiy Ijro Byurosi) qarzdor shaxs yoki tashkilotning to‘lov qobiliyatini baholash va scoring tizimi qarzdorlarning to‘lov imkoniyatlarini aniq baholashga yordam berib, moliyaviy xavflarni kamaytirishga xizmat qiladi.',
                     'price' => $this->getPrice('scoring_mib_info'),
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/document-filled.svg',
                 ],
                 [
                     'title' => 'Soliq qarzini tekshirish',
                     'desc' => 'Soliq qarzini tekshirish – bu soliq to‘lovchilar (jismoniy va yuridik shaxslar) uchun ularning soliq majburiyatlarini bajarish intizomini baholovchi tizim',
                     'price' => $this->getPrice('scoring_tax_info'),
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/search-filled.svg',
                 ],
                 [
                     'title' => 'Uzum nasiya orqali limit tekshirish',
                     'desc' => 'Uzum nasiya limiti – bu foydalanuvchining nasiya (bo‘lib to‘lash) orqali xarid qilish imkoniyatini aniqlash uchun amalga oshiriladigan baholash jarayoni. Uzum Market yoki Uzum Bank foydalanuvchining moliyaviy holatini tahlil qilib, unga ajratilgan limit miqdorini tekshirish.',
                     'price' => $this->getPrice('scoring_uzum_nasiya_limit'),
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/circle-statistic-filled.svg',
                 ],
                 [
                     'title' => 'Mijozning oylik ish haqi ma’lumotlari',
                     'desc' => 'Yillik oylik ish haqqi haqida ma’lumotni qo‘lga kiriting va ehtimoliy risklarni qisqartiring.',
                     'price' => $this->getPrice('scoring_inps_history'),
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/info-doc-filled.svg',
                 ],
                 [
                     'title' => 'Pensiya ma‘lumotlari',
                     'desc' => 'Pensiya oluvchi mijozlarga muddatli to‘lov berish vaqtida o‘z vaqtida to‘lov qila olish darajasini tekshirish. 12 oylik hisoblangan pensiya summalari ma’lumoti.',
                     'price' => $this->getPrice('scoring_pension_info'),
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/doc-bag-filled.svg',
                 ],
                 [
                     'title' => 'KATM, kredit tarixi ma’lumotlari',
                     'desc' => 'KATM – bu mijozlarning kredit tarixi ma’lumotlari asosida, tahlil qilib ishonchlilik darajasini baholab beradi. Kechiktirilgan to‘lovlar va vaqti bo‘yicha skoring.',
                     'price' => $this->getPrice('scoring-credit_history'),
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/id-card.svg',
                 ],
                 [
                     'title' => 'Karta bir yillik aylanmasi ma’lumotlari (HUMO)',
                     'desc' => 'Karta aylanmasi – bu foydalanuvchining Humo yoki Uzcard plastik kartasi orqali amalga oshirgan barcha moliyaviy operatsiyalarining umumiy miqdori. 1 yillik kirim chiqimlari haqida ma’lumot.',
                     'price' => $this->getPrice('scoring_humo'),
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/credit-card.svg',
                 ],
                 [
                     'title' => 'Karta bir yillik aylanmasi ma’lumotlari (UZCARD)',
                     'desc' => 'Karta aylanmasi – bu foydalanuvchining Humo yoki Uzcard plastik kartasi orqali amalga oshirgan barcha moliyaviy operatsiyalarining umumiy miqdori. 1 yillik kirim chiqimlari haqida ma’lumot.',
                     'price' => $this->getPrice('scoring_uzcard'),
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/credit-card.svg',
                 ],
             ],
         ];
@@ -230,17 +230,17 @@ class PricesController
                 [
                     'title' => 'SBP orqali tezkor to‘lov xizmati',
                     'desc' => 'O‘zbekistonda MIR kartasi orqali to‘lov qilish oson! QR Pay SBP orqali so‘mda to‘lovni amalga oshirish uchun QR kod generatsiya qilib beradi.',
-                    'img' => '/assets/images/empty-frame.png',
+                    'img' => '/assets/images/price_9.png',
                 ],
                 [
                     'title' => 'Har qanday sharoitda oson to‘lov',
                     'desc' => 'Mehmonxonalar, restoranlar va kafelarda Rossiya MIR kartasidan so‘mda to‘lov qilish imkoniyati. QR kod orqali tezkor o‘tkazma amalga oshirish va cheklovlarsiz xizmatlardan foydalanish mumkin.',
-                    'img' => '/assets/images/empty-frame.png',
+                    'img' => '/assets/images/price_3.png',
                 ],
                 [
                     'title' => 'Ishonchli va xavfsiz to‘lov yechimi',
                     'desc' => 'To‘lov summasini kiriting va Rossiya MIR kartasidan O‘zbek so‘mida tezkor hamda xavfsiz to‘lovni qabul qiling. SBP orqali qulay tranzaksiya amalga oshiring!',
-                    'img' => '/assets/images/empty-frame.png',
+                    'img' => '/assets/images/price_11.png',
                 ],
             ],
             'prices' => [
@@ -249,7 +249,7 @@ class PricesController
                     'desc' => 'Rossiya MIR kartasi bilan O‘zbekistonda to‘lov',
                     'price' => '50 000 so’m',
                     'note' => '',
-                    'icon' => ''
+                    'icon' => '/assets/icons/credit-card.svg'
                 ]
             ],
         ];
@@ -286,14 +286,14 @@ class PricesController
                     'desc' => 'Sizning brendinggiz bilan birga har qanday turdaki online savdo dasturini ishga tushurib beramiz',
                     'price' => '400 000 so’m',
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/info-doc-filled.svg',
                 ],
                 [
                     'title' => 'Oylik to’lov',
                     'desc' => 'Sizning brendinggiz bilan birga har qanday turdaki online savdo dasturini ishga tushurib beramiz',
                     'price' => '50 000 so’m',
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/credit-card.svg',
                 ]
             ],
         ];
@@ -311,17 +311,17 @@ class PricesController
                 [
                     'title' => 'Savdoni oshiring, mijozlarni ushlab qoling!',
                     'desc' => 'Bonus va chegirmalar bilan mijozlarni qayta xarid qilishga undang. Sodiqlik dasturi orqali ishonchni oshiring, o‘rtacha chekni ko‘tarib, savdoni rivojlantiring!',
-                    'img' => '/assets/images/empty-frame.png',
+                    'img' => '/assets/images/price_8.png',
                 ],
                 [
                     'title' => 'Bonus va chegirmalar bilan savdo hajmini oshiring!',
                     'desc' => 'Mijozlaringizni qayta kelishga undang! Har bir xaridda ularga bonus yoki chegirma taqdim eting, o‘rtacha chek miqdorini oshiring va doimiy mijozlar sonini ko‘paytiring.',
-                    'img' => '/assets/images/empty-frame.png',
+                    'img' => '/assets/images/price_5.png',
                 ],
                 [
                     'title' => 'Mijozlaringizni jalb qilish yo‘li',
                     'desc' => 'Bonus va chegirmalar orqali mijozlarni ushlab qoling! Sodiqlik dasturi nafaqat ularning ishonchini oshiradi, balki o‘rtacha chekni va qayta tashrif sonini ham ko‘paytiradi.',
-                    'img' => '/assets/images/empty-frame.png',
+                    'img' => '/assets/images/price_6.png',
                 ],
             ],
             'prices' => [
@@ -330,7 +330,7 @@ class PricesController
                     'desc' => 'Mijozlarni bonus va chegirmalar bilan ushlab qoling, obuna tizimi orqali ularning sonini oshiring!',
                     'price' => '50 000 so’m',
                     'note' => '',
-                    'icon' => '',
+                    'icon' => '/assets/icons/credit-card.svg',
                 ]
             ],
         ];
@@ -348,17 +348,17 @@ class PricesController
                 [
                     'title' => 'Filiallar sonini oshirish va qo‘shimcha xodimlarga ruxsat berish',
                     'desc' => 'Biznesingizni kengaytiring! Filiallar sonini ko‘paytirib, yangi xodimlarni tizimga qo‘shing. Ish jarayonlarini avtomatlashtirish orqali samaradorlikni oshiring va boshqaruvni qulaylashtiring.',
-                    'img' => '/assets/images/empty-frame.png',
+                    'img' => '/assets/images/price_11.png',
                 ],
                 [
                     'title' => 'Muddatli to‘lovlar orqali kelajakdagi daromadlarni ko‘rish',
                     'desc' => 'Moliya oqimini oldindan rejalashtiring! Muddatli to‘lovlar tizimi orqali kelajakdagi daromadlaringizni kuzatib boring va biznesingiz rivojlanishini aniq prognoz qiling.',
-                    'img' => '/assets/images/empty-frame.png',
+                    'img' => '/assets/images/price_5.png',
                 ],
                 [
                     'title' => 'Kechikkan to‘lovlarni nazorat qilib vaqtida undirish',
                     'desc' => 'Kechikkan to‘lovlarni tizimli nazorat qiling va mijozlardan to‘lovlarni o‘z vaqtida undirib, moliyaviy barqarorlikni ta’minlang.',
-                    'img' => '/assets/images/empty-frame.png',
+                    'img' => '/assets/images/price_2.png',
                 ],
             ],
             'prices' => [
