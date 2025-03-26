@@ -12,10 +12,6 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;900&display=swap" rel="stylesheet">
 
-        <!-- JQuery CDN -->
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
         <!-- Tailwind CDN -->
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
@@ -54,9 +50,8 @@
             }
         </style>
 
-        <!-- Resources -->
-        <link rel="stylesheet" href="{{ asset('website/css/app.css') }}">
-        <script src="{{ asset('website/js/website.js') }}"></script>
+        <!-- Styles -->
+        <link rel="stylesheet" href="{{ URL::asset('website/css/app.css') }}">
     </head>
     <body>
     <!-- Global Wrapper Start -->
@@ -88,5 +83,7 @@
         <!-- Footer End -->
     </div>
     <!-- Global Wrapper End -->
+
+    <script type="text/javascript" src="{{ URL::asset('website/js/website.js') }}"></script>
     </body>
 </html>
