@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Website;
 
-use App\Models\BaseFeature;
 use App\Models\BaseModule;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;

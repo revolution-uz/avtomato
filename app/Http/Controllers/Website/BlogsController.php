@@ -68,7 +68,7 @@ class BlogsController
         $blog = $blogs->firstWhere('slug', $slug);
 
         // Проверяем, существует ли пост
-        if (!$blog) {
+        if (! $blog) {
             abort(404); // Если блог не найден, выдаем 404
         }
 

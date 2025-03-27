@@ -1,6 +1,6 @@
 <div id="blogs-carousel" class="carousel-wrapper w-full relative overflow-hidden">
     <div id="carousel-track" class="flex transition-transform duration-300">
-        @foreach($blogs as $blog)
+        @foreach ($blogs as $blog)
             <div class="carousel-item">
                 @include('website.components.blog_card', ['blog' => $blog])
             </div>

@@ -39,7 +39,7 @@
 
             <!-- Blogs Grid Columns Start -->
             <div class="my-[60px] grid sm:grid-cols-2 lg:grid-cols-3 gap-y-11 gap-x-5">
-                @foreach($blogs as $blog)
+                @foreach ($blogs as $blog)
                     @include('website.components.blog_card', ['blog' => $blog])
                 @endforeach
             </div>
