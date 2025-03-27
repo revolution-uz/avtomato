@@ -27,7 +27,7 @@ Route::get('pricing', [PricingController::class, 'index'])->name('pricing');
 Route::get('modules/installment', [ModulesController::class, 'installment'])->name('modules/installment');
 Route::get('modules/marketing', [ModulesController::class, 'marketing'])->name('modules/marketing');
 Route::get('modules/scoring', [ModulesController::class, 'scoring'])->name('modules/scoring');
-Route::get('modules/qr-pay', [ModulesController::class, 'sbp_pay'])->name('modules/sbp_pay');
+Route::get('modules/qr-pay', [ModulesController::class, 'sbpPay'])->name('modules/sbp_pay');
 Route::get('modules/ecommerce', [ModulesController::class, 'ecommerce'])->name('modules/ecommerce');
 Route::get('modules/loyalty', [ModulesController::class, 'loyalty'])->name('modules/loyalty_program');
 Route::get('modules/others', [ModulesController::class, 'others'])->name('modules/others');

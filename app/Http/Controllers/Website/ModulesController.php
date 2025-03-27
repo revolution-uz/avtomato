@@ -190,7 +190,7 @@ class ModulesController
         return view('website.pages.module_scoring', ['data' => $data]);
     }
 
-    public function sbp_pay(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function sbpPay(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'QR pay',
