@@ -74,12 +74,12 @@ class HomeController extends Controller
     {
         $request->validate([
             'full_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:16',
+            'phone' => 'required|digits:9',
         ]);
 
         $newCustomer = new NewCustomer;
         $newCustomer->full_name = $request->full_name;
-        $newCustomer->phone = $request->phone;
+        $newCustomer->phone = "+998$request->phone";
         $newCustomer->saveOrFail();
 
         return redirect()->back()->with('success', true);

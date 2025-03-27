@@ -30,6 +30,10 @@ class NewCustomer extends Model
         'updated_at',
     ];
 
+    protected $attributes = [
+        'is_checked' => false,
+    ];
+
     protected static function boot()
     {
         parent::boot();

@@ -9,16 +9,31 @@
 
         <!-- Modal Content Start -->
         <h2 class="text-center text-xl sm:text-3xl text-secondary font-semibold">So‘rov qoldiring,<br> menejerlarimiz bog‘lanadi!</h2>
-        <form class="mt-6 md:mt-8 flex flex-col gap-y-3 w-full">
-            <input class="h-12 sm:h-16 px-4 sm:px-5 bg-third outline-1 -outline-offset-1 outline-[#D9D9D9]/40 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-blue-600 rounded-2xl placeholder-secondary/55" type="text" placeholder="Ism familiya">
+        <form method="POST" action="{{ route('new_customer') }}" class="mt-6 md:mt-8 flex flex-col gap-y-3 w-full">
+            @csrf
+            <input
+                    class="h-12 sm:h-16 px-4 sm:px-5 bg-third outline-1 -outline-offset-1 outline-[#D9D9D9]/40 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-blue-600 rounded-2xl placeholder-secondary/55"
+                    type="text"
+                    placeholder="Ism familiya"
+                    required
+                    name="full_name"
+            />
             <div class="group flex items-center space-x-1 h-12 sm:h-16 px-4 sm:px-5 bg-third rounded-2xl outline-1 -outline-offset-1 outline-[#D9D9D9]/40 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-blue-600">
                 <div class="flex items-center space-x-3 shrink-0">
                     <img src="{{ asset('/assets/icons/flag-uzbekistan.svg') }}" alt="Flag Uzbeksitan">
                     <p>+998</p>
                 </div>
-                <input maxlength="13" class="grow placeholder-secondary/55 focus:outline-none" type="text" placeholder="(00) 000 0000">
+                <input
+                        maxlength="13"
+                        class="grow placeholder-secondary/55 focus:outline-none"
+                        type="text"
+                        placeholder="(00) 000 0000"
+                        required
+                        name="phone"
+                />
             </div>
-            <button class="messageSentModalShow mt-3 md:mt-5 h-[58px] bg-secondary rounded-2xl cursor-pointer" type="button">
+            <button class="messageSentModalShow mt-3 md:mt-5 h-[58px] bg-secondary rounded-2xl cursor-pointer"
+                    type="submit">
                 <span class="text-sm md:text-base text-white font-medium">So’rov yuborish</span>
             </button>
         </form>
@@ -26,3 +41,17 @@
     </div>
     <!-- Modal Inner End -->
 </div>
+
+<script>
+    @if (session()->has('success'))
+    window.addEventListener('load', function () {
+      const messageSentModalInner = document.querySelector('#messageSentModalInner');
+      const messageSentModalWrap = document.querySelector('#messageSentModalWrap');
+
+      messageSentModalWrap.classList.add('show_modal--wrap');
+      messageSentModalWrap.classList.remove('hide_modal--wrap');
+      messageSentModalInner.classList.remove('hide_modal');
+      messageSentModalInner.classList.add('show_modal');
+    })
+    @endif
+</script>

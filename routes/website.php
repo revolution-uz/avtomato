@@ -27,5 +27,4 @@ Route::get('modules/qr-pay', [PricesController::class, 'navigateToQR'])->name('s
 Route::get('modules/ecommerce', [PricesController::class, 'navigateToEcommerce'])->name('ecommerce');
 Route::get('modules/loyalty', [PricesController::class, 'navigateToLoyalty'])->name('loyalty_program');
 Route::get('modules/others', [PricesController::class, 'navigateToOthers'])->name('others');
-Route::multilingual('/', [HomeController::class, 'index'])->name('website-home');
-Route::post('new-customer', [HomeController::class, 'newCustomer'])->name('new-customer');
+Route::post('new-customer', [HomeController::class, 'newCustomer'])->name('new_customer');
