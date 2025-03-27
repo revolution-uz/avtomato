@@ -24,9 +24,10 @@
                     <p>+998</p>
                 </div>
                 <input
+                        id="phoneInput"
                         maxlength="13"
                         class="grow placeholder-secondary/55 focus:outline-none"
-                        type="text"
+                        type="tel"
                         placeholder="(00) 000 0000"
                         required
                         name="phone"
@@ -43,6 +44,38 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const phoneInput = document.getElementById("phoneInput");
+
+        phoneInput.addEventListener("input", (e) => {
+            let value = e.target.value.replace(/\D/g, ""); // Убираем все, кроме цифр
+
+            // Ограничиваем ввод до 9 цифр
+            if (value.length > 9) {
+                value = value.substring(0, 9);
+            }
+
+            // Форматируем номер
+            let formattedValue = "";
+            if (value.length > 0) formattedValue += `(${value.substring(0, 2)}`;
+            if (value.length > 2) formattedValue += `) ${value.substring(2, 5)}`;
+            if (value.length > 5) formattedValue += ` ${value.substring(5, 9)}`;
+
+            e.target.value = formattedValue;
+        });
+
+        phoneInput.addEventListener("keydown", (e) => {
+            const cursorPos = phoneInput.selectionStart;
+
+            // Запрещаем удаление скобок и пробелов
+            if (e.key === "Backspace") {
+                if (cursorPos === 1 || cursorPos === 4 || cursorPos === 5 || cursorPos === 9) {
+                    e.preventDefault();
+                }
+            }
+        });
+    });
+
     @if (session()->has('success'))
     window.addEventListener('load', function () {
       const messageSentModalInner = document.querySelector('#messageSentModalInner');

@@ -16,11 +16,11 @@ return [
     'central_domains' => [
         '127.0.0.1',
         'localhost',
+        'avtomato.test',
         'avtomato.testpay.uz',
         'automato.testpay.uz',
         'automato.uz',
         'avtomato.uz',
-        'avtomato.test',
     ],
 
     /**
@@ -41,7 +41,7 @@ return [
      * Database tenancy config. Used by DatabaseTenancyBootstrapper.
      */
     'database' => [
-        'central_connection' => 'central',
+        'central_connection' => env('DB_CENTRAL_CONNECTION', 'sqlite'),
 
         /**
          * Connection used as a "template" for the dynamically created tenant database connection.
