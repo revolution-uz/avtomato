@@ -16,15 +16,19 @@ use App\GraphQL\LoyaltyProgram\Client\Mutations\ProfileUpdateGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Queries\NotificationsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\OrdersGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\ProfileMeGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Client\Queries\ShopsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\SingleNotificationGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\SingleOrderGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Client\Queries\SingleShopGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Types\AttachCardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\NotificationGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\OrderGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\OrderItemGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
+use App\GraphQL\LoyaltyProgram\Client\Types\ShopGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
+use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
@@ -45,8 +49,10 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
                 ProfileMeGraphQLQuery::class,
                 OrdersGraphQLQuery::class,
                 NotificationsGraphQLQuery::class,
+                ShopsGraphQLQuery::class,
                 SingleOrderGraphQLQuery::class,
                 SingleNotificationGraphQLQuery::class,
+                SingleShopGraphQLQuery::class,
             ],
             'types' => [
                 UserGraphQLType::class,
@@ -61,6 +67,8 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
                 OrderItemGraphQLType::class,
                 ProductGraphQLType::class,
                 NotificationGraphQLType::class,
+                ShopGraphQLType::class,
+                AttachmentGraphQLType::class,
             ],
             'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_loyalty_program_client_token', 'loyalty_program'],
         ];
