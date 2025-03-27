@@ -17,9 +17,12 @@ use App\Http\Controllers\Website\PricesController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
 Route::get('blog', [BlogsController::class, 'index'])->name('blog.index');
-Route::get('blog/{slug}', [BlogsController::class, 'navigateToBlog'])->name('blog.show');
+Route::get('blog/{slug}', [BlogsController::class, 'show'])->name('blog.show');
+
 Route::get('pricing', [PricesController::class, 'index'])->name('pricing');
+
 Route::get('modules/installment', [PricesController::class, 'navigateToInstallment'])->name('modules/installment');
 Route::get('modules/marketing', [PricesController::class, 'navigateToMarketing'])->name('modules/marketing');
 Route::get('modules/scoring', [PricesController::class, 'navigateToScoring'])->name('modules/scoring');

@@ -56,7 +56,7 @@
 
                 <!-- Blog Grid Columns Start -->
                 <div class="mt-[42px] lg:mt-[60px]">
-                    @include('website.components.blogs_carousel')
+                    @include('website.components.blogs_carousel', ['blogs' => $recommendations])
                 </div>
                 <!-- Blog Grid Columns End -->
             </div>
