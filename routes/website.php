@@ -11,7 +11,19 @@
 |
 */
 
+use App\Http\Controllers\Website\BlogsController;
 use App\Http\Controllers\Website\HomeController;
+use App\Http\Controllers\Website\PricesController;
 use Illuminate\Support\Facades\Route;
 
-Route::multilingual('/', [HomeController::class, 'index'])->name('website-home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('blogs', [BlogsController::class, 'index'])->name('blogs');
+Route::get('blogs/{slug}', [BlogsController::class, 'navigateToBlog']);
+Route::get('prices', [PricesController::class, 'index'])->name('prices');
+Route::get('prices/installment', [PricesController::class, 'navigateToInstallment'])->name('installment');
+Route::get('prices/marketing', [PricesController::class, 'navigateToMarketing'])->name('marketing');
+Route::get('prices/scoring', [PricesController::class, 'navigateToScoring'])->name('scoring');
+Route::get('prices/qr-pay', [PricesController::class, 'navigateToQR'])->name('sbp_pay');
+Route::get('prices/ecommerce', [PricesController::class, 'navigateToEcommerce'])->name('ecommerce');
+Route::get('prices/loyalty', [PricesController::class, 'navigateToLoyalty'])->name('loyalty_program');
+Route::get('prices/others', [PricesController::class, 'navigateToOthers'])->name('others');
