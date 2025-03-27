@@ -17,7 +17,7 @@
             <div id="solutionsDropdown"
                  class="dropdown hide_dropdown absolute -left-[150%] w-[700px] bg-white rounded-2xl p-6 transition-all ease-linear before:absolute before:-top-2 before:left-1/4 before:rotate-45 before:size-5 before:bg-white before:rounded-[4px]">
                 <div class="grid grid-cols-2 gap-y-4 gap-x-10">
-                    <a class="group/child flex items-center space-x-3" href="{{ route('installment') }}" title="Nasiya savdoni avtomatlashtirish">
+                    <a class="group/child flex items-center space-x-3" href="{{ route('modules/installment') }}" title="Nasiya savdoni avtomatlashtirish">
                         <div class="group-hover/child:bg-primary/5 bg-third size-[42px] flex items-center justify-center rounded-2xl transition-all">
                             <svg class="group-hover/child:text-primary text-secondary transition-all" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M15.8525 2.75H9.68577C6.84764 2.75 4.54688 5.05076 4.54688 7.88889V16.1111C4.54688 18.9492 6.84764 21.25 9.68577 21.25H15.8525C18.6906 21.25 20.9913 18.9492 20.9913 16.1111V7.88889C20.9913 5.05076 18.6906 2.75 15.8525 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -29,7 +29,7 @@
                         </div>
                         <span class="group-hover/child:text-primary text-secondary font-medium transition-all">Nasiya savdoni avtomatlashtirish</span>
                     </a>
-                    <a class="group/child flex items-center space-x-3" href="{{ route('marketing') }}" title="Marketing">
+                    <a class="group/child flex items-center space-x-3" href="{{ route('modules/marketing') }}" title="Marketing">
                         <div class="group-hover/child:bg-primary/5 bg-third size-[42px] flex items-center justify-center rounded-2xl">
                             <svg class="group-hover/child:text-primary text-secondary transition-all" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10.6621 10.6602C10.3053 11.0149 10.1037 11.4966 10.1016 11.9997C10.1016 12.5036 10.3018 12.9869 10.6581 13.3432C11.0144 13.6995 11.4977 13.8997 12.0016 13.8997C12.5047 13.8976 12.9864 13.696 13.3411 13.3392" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -41,7 +41,7 @@
                         </div>
                         <span class="group-hover/child:text-primary text-secondary transition-all font-medium">Marketing</span>
                     </a>
-                    <a class="group/child flex items-center space-x-3 text-secondary" href="{{ route('scoring') }}" title="Skoring">
+                    <a class="group/child flex items-center space-x-3 text-secondary" href="{{ route('modules/scoring') }}" title="Skoring">
                         <div class="group-hover/child:bg-primary/5 bg-third size-[42px] flex items-center justify-center rounded-2xl">
                             <svg class="group-hover/child:text-primary text-secondary transition-all text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21.2526 8.81368V6.75813C21.2526 5.94038 20.9277 5.15612 20.3495 4.57789C19.7713 3.99965 18.987 3.6748 18.1692 3.6748H15.0859" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -54,7 +54,7 @@
                         </div>
                         <span class="group-hover/child:text-primary text-secondary transition-all font-medium">Skoring</span>
                     </a>
-                    <a class="group/child flex items-center space-x-3 text-secondary" href="{{ route('sbp_pay') }}" title="QR Pay">
+                    <a class="group/child flex items-center space-x-3 text-secondary" href="{{ route('modules/sbp_pay') }}" title="QR Pay">
                         <div class="group-hover/child:bg-primary/5 bg-third size-[42px] flex items-center justify-center rounded-2xl">
                             <svg class="group-hover/child:text-primary text-secondary transition-all text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9.43203 5.83301H6.73203C6.23498 5.83301 5.83203 6.23596 5.83203 6.73301V9.43301C5.83203 9.93007 6.23498 10.333 6.73203 10.333H9.43203C9.92909 10.333 10.3321 9.93007 10.3321 9.43301V6.73301C10.3321 6.23596 9.92909 5.83301 9.43203 5.83301Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -69,7 +69,7 @@
                         </div>
                         <span class="group-hover/child:text-primary text-secondary transition-all font-medium">QR pay</span>
                     </a>
-                    <a class="group/child flex items-center space-x-3 text-secondary" href="{{ route('loyalty_program') }}" title="Loyalty">
+                    <a class="group/child flex items-center space-x-3 text-secondary" href="{{ route('modules/loyalty_program') }}" title="Loyalty">
                         <div class="group-hover/child:bg-primary/5 bg-third size-[42px] flex items-center justify-center rounded-2xl">
                             <svg class="group-hover/child:text-primary text-secondary transition-all text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M17.9254 19.6341H20.063C20.2512 19.6373 20.4374 19.5949 20.6056 19.5104C20.7739 19.4259 20.9191 19.3019 21.0289 19.1489C21.1386 18.996 21.2097 18.8187 21.2359 18.6323C21.2622 18.4459 21.2428 18.2559 21.1795 18.0786C20.6343 16.9117 19.7712 15.9221 18.6893 15.2234C17.6074 14.5246 16.3504 14.1449 15.0625 14.1279" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -80,7 +80,7 @@
                         </div>
                         <span class="group-hover/child:text-primary text-secondary transition-all font-medium">Loyalty</span>
                     </a>
-                    <a class="group/child flex items-center space-x-3 text-secondary" href="{{ route('others') }}" title="Qo`shimcha xizmatlar">
+                    <a class="group/child flex items-center space-x-3 text-secondary" href="{{ route('modules/others') }}" title="Qo`shimcha xizmatlar">
                         <div class="group-hover/child:bg-primary/5 bg-third size-[42px] flex items-center justify-center rounded-2xl">
                             <svg class="group-hover/child:text-primary text-secondary transition-all text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M15.25 2.75H8.75C5.43629 2.75 2.75 5.43629 2.75 8.75V15.25C2.75 18.5637 5.43629 21.25 8.75 21.25H15.25C18.5637 21.25 21.25 18.5637 21.25 15.25V8.75C21.25 5.43629 18.5637 2.75 15.25 2.75Z" stroke="currentColor" stroke-width="1.5"/>
@@ -91,7 +91,7 @@
                         </div>
                         <span class="group-hover/child:text-primary text-secondary transition-all font-medium">Qo`shimcha xizmatlar</span>
                     </a>
-                    <a class="group/child flex items-center space-x-3 text-[#95989D] pointer-events-none" href="{{ route('ecommerce') }}" title="Internet do’kon yaratish (soon)">
+                    <a class="group/child flex items-center space-x-3 text-[#95989D] pointer-events-none" href="{{ route('modules/ecommerce') }}" title="Internet do’kon yaratish (soon)">
                         <div class="group-hover/child:bg-primary/5 bg-third size-[42px] flex items-center justify-center rounded-2xl opacity-50">
                             <svg class="group-hover/child:text-primary text-secondary transition-all text-secondary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M18.25 3.33008H5.75C4.95435 3.33008 4.19129 3.64615 3.62868 4.20876C3.06607 4.77137 2.75 5.53443 2.75 6.33008V14.2001C2.75 14.9958 3.06607 15.7588 3.62868 16.3214C4.19129 16.884 4.95435 17.2001 5.75 17.2001H18.25C19.0456 17.2001 19.8087 16.884 20.3713 16.3214C20.9339 15.7588 21.25 14.9958 21.25 14.2001V6.33008C21.25 5.53443 20.9339 4.77137 20.3713 4.20876C19.8087 3.64615 19.0456 3.33008 18.25 3.33008Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -107,8 +107,8 @@
             <!-- Navigation SubList End -->
         </li>
         <li><a class="text-secondary/[75%] hover:text-primary" href="/#whyavtomato" title="Nima uchun Avtomato?">Nima uchun Avtomato?</a></li>
-        <li><a class="text-secondary/[75%] hover:text-primary" href="{{ route('prices') }}" title="Narxlar">Narxlar</a></li>
-        <li><a class="text-secondary/[75%] hover:text-primary" href="{{ route('blogs') }}" title="Blog">Blog</a></li>
+        <li><a class="text-secondary/[75%] hover:text-primary" href="{{ route('pricing') }}" title="Narxlar">Narxlar</a></li>
+        <li><a class="text-secondary/[75%] hover:text-primary" href="{{ route('blog.index') }}" title="Blog">Blog</a></li>
     </ul>
     <!-- Navigation List End -->
 

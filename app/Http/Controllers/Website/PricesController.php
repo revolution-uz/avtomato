@@ -36,7 +36,7 @@ class PricesController
             }
         }
 
-        return view('website.pages.prices', ['baseModules' => $baseModules, 'moduleNames' => $moduleNames, 'filteredModules' => $filteredModules, 'multibranchModule' => $multibranchModule, 'hasMultibranch' => $hasMultibranch]);
+        return view('website.pages.pricing', ['baseModules' => $baseModules, 'moduleNames' => $moduleNames, 'filteredModules' => $filteredModules, 'multibranchModule' => $multibranchModule, 'hasMultibranch' => $hasMultibranch]);
     }
 
     public function navigateToInstallment(): View|\Illuminate\Foundation\Application|Factory|Application

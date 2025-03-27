@@ -42,6 +42,6 @@ class BlogsController
             abort(404);
         }
 
-        return view('website.pages.single_blog', ['blog' => $blogs[$slug]]);
+        return view('website.pages.blog', ['blog' => $blogs[$slug]]);
     }
 }
