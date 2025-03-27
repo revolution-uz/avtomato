@@ -9,7 +9,7 @@ use Illuminate\Contracts\View\View;
 
 class ModulesController
 {
-    public function navigateToInstallment(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function installment(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Nasiya savdoni avtomatlashtirish',
@@ -60,7 +60,7 @@ class ModulesController
         return view('website.pages.module_installment', ['data' => $data]);
     }
 
-    public function navigateToMarketing(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function marketing(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Marketing',
@@ -97,7 +97,7 @@ class ModulesController
         return view('website.pages.module_marketing', ['data' => $data]);
     }
 
-    public function navigateToScoring(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function scoring(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Skoring',
@@ -190,7 +190,7 @@ class ModulesController
         return view('website.pages.module_scoring', ['data' => $data]);
     }
 
-    public function navigateToQR(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function sbp_pay(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'QR pay',
@@ -227,7 +227,7 @@ class ModulesController
         return view('website.pages.module_qr', ['data' => $data]);
     }
 
-    public function navigateToEcommerce(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function ecommerce(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Internet do‘kon',
@@ -271,7 +271,7 @@ class ModulesController
         return view('website.pages.module_ecommerce', ['data' => $data]);
     }
 
-    public function navigateToLoyalty(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function loyalty(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Loyalty',
@@ -308,7 +308,7 @@ class ModulesController
         return view('website.pages.module_loyalty', ['data' => $data]);
     }
 
-    public function navigateToOthers(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function others(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Qo’shimcha xizmatlar',

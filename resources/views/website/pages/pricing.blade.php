@@ -54,7 +54,7 @@
                                     </div>
                                     <div>
                                         <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all"
-                                           href="{{ route($module['name']) }}" title="Narxlarni ko‘rish">
+                                           href="{{ route('modules/'.$module['name']->value) }}" title="Narxlarni ko‘rish">
                                             <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>
                                         </a>
                                     </div>
