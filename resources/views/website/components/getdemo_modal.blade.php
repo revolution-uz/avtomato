@@ -24,15 +24,13 @@
                     <p>+998</p>
                 </div>
                 <input
-                        id="phoneInput"
-                        maxlength="13"
+                        id="phoneDisplay"
                         class="grow placeholder-secondary/55 focus:outline-none"
                         type="tel"
                         placeholder="(00) 000 0000"
-                        required
-                        name="phone"
                 />
             </div>
+            <input type="hidden" id="phoneValue" name="phone"/>
             <button class="messageSentModalShow mt-3 md:mt-5 h-[58px] bg-secondary rounded-2xl cursor-pointer"
                     type="submit">
                 <span class="text-sm md:text-base text-white font-medium">So’rov yuborish</span>
@@ -44,47 +42,37 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const phoneInput = document.getElementById("phoneInput");
+  document.addEventListener("DOMContentLoaded", () => {
+    const phoneDisplay = document.getElementById("phoneDisplay");
+    const phoneValue = document.getElementById("phoneValue");
 
-        phoneInput.addEventListener("input", (e) => {
-            let value = e.target.value.replace(/\D/g, ""); // Убираем все, кроме цифр
+    phoneDisplay.addEventListener("input", (e) => {
+      let value = e.target.value.replace(/\D/g, "");
 
-            // Ограничиваем ввод до 9 цифр
-            if (value.length > 9) {
-                value = value.substring(0, 9);
-            }
+      if (value.length > 9) {
+        value = value.substring(0, 9);
+      }
 
-            // Форматируем номер
-            let formattedValue = "";
-            if (value.length > 0) formattedValue += `(${value.substring(0, 2)}`;
-            if (value.length > 2) formattedValue += `) ${value.substring(2, 5)}`;
-            if (value.length > 5) formattedValue += ` ${value.substring(5, 9)}`;
+      let formattedValue = "";
+      if (value.length > 0) formattedValue += `(${value.substring(0, 2)}`;
+      if (value.length > 2) formattedValue += `) ${value.substring(2, 5)}`;
+      if (value.length > 5) formattedValue += ` ${value.substring(5, 9)}`;
 
-            e.target.value = formattedValue;
-        });
+      e.target.value = formattedValue;
 
-        phoneInput.addEventListener("keydown", (e) => {
-            const cursorPos = phoneInput.selectionStart;
-
-            // Запрещаем удаление скобок и пробелов
-            if (e.key === "Backspace") {
-                if (cursorPos === 1 || cursorPos === 4 || cursorPos === 5 || cursorPos === 9) {
-                    e.preventDefault();
-                }
-            }
-        });
+      phoneValue.value = value;
     });
+  });
 
-    @if (session()->has('success'))
-    window.addEventListener('load', function () {
-      const messageSentModalInner = document.querySelector('#messageSentModalInner');
-      const messageSentModalWrap = document.querySelector('#messageSentModalWrap');
+  @if (session()->has('success'))
+  window.addEventListener('load', function () {
+    const messageSentModalInner = document.querySelector('#messageSentModalInner');
+    const messageSentModalWrap = document.querySelector('#messageSentModalWrap');
 
-      messageSentModalWrap.classList.add('show_modal--wrap');
-      messageSentModalWrap.classList.remove('hide_modal--wrap');
-      messageSentModalInner.classList.remove('hide_modal');
-      messageSentModalInner.classList.add('show_modal');
-    })
-    @endif
+    messageSentModalWrap.classList.add('show_modal--wrap');
+    messageSentModalWrap.classList.remove('hide_modal--wrap');
+    messageSentModalInner.classList.remove('hide_modal');
+    messageSentModalInner.classList.add('show_modal');
+  })
+  @endif
 </script>
