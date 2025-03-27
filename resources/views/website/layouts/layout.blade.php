@@ -11,7 +11,7 @@
     </head>
     <body>
     <!-- Global Wrapper Start -->
-    <div class="min-h-screen flex flex-col overflow-hidden">
+    <div class="min-h-screen flex flex-col overflow-hidden pt-20">
         <!-- Get Demo Modal Start -->
         @include('website.components.getdemo_modal')
         <!-- Get Demo Modal End -->

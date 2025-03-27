@@ -1,4 +1,4 @@
-<header class="flex items-center justify-between py-5 container mx-auto px-5 md:px-4 xl:px-0 z-[101] bg-white">
+<header class="fixed top-0 right-0 left-0 flex items-center justify-between py-5 container mx-auto px-5 md:px-4 xl:px-0 z-[101] bg-white/75 backdrop-blur-[10px]">
     <a href="{{ route('home') }}" title="Avtomato">
         <img class="pointer-events-none" src="{{ asset('/assets/images/logo-1.svg') }}" alt="Avtomato"/>
     </a>
