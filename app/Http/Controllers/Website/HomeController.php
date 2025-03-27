@@ -79,7 +79,7 @@ class HomeController extends Controller
 
         $newCustomer = new NewCustomer;
         $newCustomer->full_name = $request->full_name;
-        $newCustomer->phone = "+998$request->phone";
+        $newCustomer->phone = "+998{$request->phone}";
         $newCustomer->saveOrFail();
 
         return redirect()->back()->with('success', true);
