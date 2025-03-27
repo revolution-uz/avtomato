@@ -8,7 +8,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 
-class PricesController
+class PricingController
 {
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
