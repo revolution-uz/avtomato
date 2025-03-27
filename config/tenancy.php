@@ -17,10 +17,10 @@ return [
         '127.0.0.1',
         'localhost',
         'avtomato.test',
-        'avtomato.uz',
-        'automato.uz',
         'avtomato.testpay.uz',
         'automato.testpay.uz',
+        'automato.uz',
+        'avtomato.uz',
     ],
 
     /**
