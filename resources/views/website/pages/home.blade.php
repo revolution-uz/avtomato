@@ -68,7 +68,7 @@
                 </div>
             </div>
 
-            <button class="getDemoModalShow mt-5 sm:mt-8 flex items-center justify-center px-5 sm:px-6 h-12 sm:h-[58px] bg-primary rounded-2xl cursor-pointer">
+            <button class="getDemoModalShow mt-5 sm:mt-8 flex items-center justify-center px-5 sm:px-6 h-12 sm:h-[58px] bg-primary hover:bg-primary/90 rounded-2xl cursor-pointer">
                 <span class="text-sm sm:text-base text-white leading-5 font-semibold">Bepul sinab ko’rish</span>
             </button>
         </div>

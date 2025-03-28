@@ -1,4 +1,4 @@
-<div id="messageSentModalWrap" class="hide_modal--wrap w-screen h-screen fixed left-0 bg-secondary/50 z-[1001] transition-all">
+<div id="messageSentModalWrap" class="hide_modal--wrap w-screen h-screen fixed left-0 top-0 right-0 bottom-0 bg-secondary/50 z-[1001] transition-all">
     <!-- Modal Inner Start -->
     <div id="messageSentModalInner" class="hide_modal w-[90%] sm:w-full max-w-[580px] max-h-[520px] bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[32px] md:rounded-[60px] p-6 sm:p-8 md:p-[42px] transition-all">
         <!-- Modal Close Button Start -->
@@ -25,7 +25,7 @@
         </div>
         <h2 class="mt-5 text-center text-2xl sm:text-3xl text-secondary font-semibold">So’rovingiz yuborildi!</h2>
         <p class="mt-2.5 md:mt-4 text-center text-secondary/75">Rahmat! Menejerlarimiz siz bilan tez orada bog‘lanib, barcha savollaringizga javob berishadi.</p>
-        <button class="messageSentModalClose mt-6 md:mt-8 w-full h-[58px] bg-secondary rounded-2xl cursor-pointer" type="button">
+        <button class="messageSentModalClose mt-6 md:mt-8 w-full h-[58px] bg-secondary hover:bg-secondary/90 rounded-2xl cursor-pointer" type="button">
             <span class="text-sm md:text-base text-white font-semibold">Tushunarli</span>
         </button>
         <!-- Modal Content End -->
