@@ -5,7 +5,6 @@ namespace App\GraphQL\LoyaltyProgram\Admin\Mutations;
 use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ShopGraphQLType;
-use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\Shop;
 use Closure;
