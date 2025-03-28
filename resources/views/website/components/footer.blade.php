@@ -53,6 +53,6 @@
             </div>
         </div>
 
-        <p class="mt-[42px] md:mt-[100px] text-sm md:text-base text-white/75">&copy; 2025 «AUTOMOTO» AJ Barcha huquqlar himoyalangan.</p>
+        <p class="mt-[42px] md:mt-[100px] text-sm md:text-base text-white/75">&copy; 2025 «Revolution Global» MChJ. Barcha huquqlar himoyalangan.</p>
     </div>
 </footer>
