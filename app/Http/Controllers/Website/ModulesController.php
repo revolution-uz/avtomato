@@ -3,43 +3,13 @@
 namespace App\Http\Controllers\Website;
 
 use App\Models\BaseFeature;
-use App\Models\BaseModule;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 
-class PricesController
+class ModulesController
 {
-    public function index(): View|\Illuminate\Foundation\Application|Factory|Application
-    {
-        $baseModules = BaseModule::all();
-
-        $moduleNames = [
-            'installment' => 'Nasiya savdo moduli',
-            'scoring' => 'Skoring moduli',
-            'marketing' => 'Marketing moduli',
-            'ecommerce' => 'Internet do’kon moduli',
-            'sbp_pay' => 'QR pay moduli',
-            'loyalty_program' => 'Loyalty moduli',
-        ];
-
-        $filteredModules = [];
-        $multibranchModule = null;
-        $hasMultibranch = false; // Флаг наличия multibranch_*
-
-        foreach ($baseModules as $module) {
-            if (str_starts_with($module['name']->value, 'multibranch_')) {
-                $multibranchModule = $module; // Сохраняем multibranch-модуль
-                $hasMultibranch = true;
-            } else {
-                $filteredModules[] = $module;
-            }
-        }
-
-        return view('website.pages.prices', ['baseModules' => $baseModules, 'moduleNames' => $moduleNames, 'filteredModules' => $filteredModules, 'multibranchModule' => $multibranchModule, 'hasMultibranch' => $hasMultibranch]);
-    }
-
-    public function navigateToInstallment(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function installment(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Nasiya savdoni avtomatlashtirish',
@@ -90,7 +60,7 @@ class PricesController
         return view('website.pages.module_installment', ['data' => $data]);
     }
 
-    public function navigateToMarketing(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function marketing(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Marketing',
@@ -127,7 +97,7 @@ class PricesController
         return view('website.pages.module_marketing', ['data' => $data]);
     }
 
-    public function navigateToScoring(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function scoring(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Skoring',
@@ -220,7 +190,7 @@ class PricesController
         return view('website.pages.module_scoring', ['data' => $data]);
     }
 
-    public function navigateToQR(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function sbpPay(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'QR pay',
@@ -257,7 +227,7 @@ class PricesController
         return view('website.pages.module_qr', ['data' => $data]);
     }
 
-    public function navigateToEcommerce(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function ecommerce(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Internet do‘kon',
@@ -301,7 +271,7 @@ class PricesController
         return view('website.pages.module_ecommerce', ['data' => $data]);
     }
 
-    public function navigateToLoyalty(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function loyalty(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Loyalty',
@@ -338,7 +308,7 @@ class PricesController
         return view('website.pages.module_loyalty', ['data' => $data]);
     }
 
-    public function navigateToOthers(): View|\Illuminate\Foundation\Application|Factory|Application
+    public function others(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $data = [
             'title' => 'Qo’shimcha xizmatlar',

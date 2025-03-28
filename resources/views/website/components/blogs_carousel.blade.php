@@ -1,53 +1,10 @@
 <div id="blogs-carousel" class="carousel-wrapper w-full relative overflow-hidden">
     <div id="carousel-track" class="flex transition-transform duration-300">
-        <div class="carousel-item">
-            @include('website.components.blog_card', [
-                    'blogLink' => 'blogs/first-blog',
-                    'blogImgSrc' => '/assets/images/blog-1_385x300.png',
-                    'blogTitle' => 'Qanday qilib yangi mijoz portaliga muvaffaqiyatli o`tish mumkin',
-                    'blogCaption' => 'Yangi mijoz portaliga o`tmoqchimisiz? Ushbu post sizga ma`lumotlar migratsiyasi, integratsiya va foydalanuvchini qabul qilishni o`z ichiga olgan silliq o`tish uchun asosiy qadamlar bo`yicha yo`l ko`rsatadi.....'
-                ])
-        </div>
-        <div class="carousel-item">
-            @include('website.components.blog_card', [
-                    'blogLink' => 'blogs/second-blog',
-                    'blogImgSrc' => '/assets/images/blog-2_385x300.png',
-                    'blogTitle' => 'Yangi pudratchi portaliga qanday o`tish mumkin',
-                    'blogCaption' => 'Qanday qilib yangi pudratchi portaliga muammosiz o`tish va pudratchi boshqaruv tizimini yaxshiroq integratsiya, yaxshilangan ish oqimlari va yanada samarali aloqa bilan yaxshilash mumkin...'
-                ])
-        </div>
-        <div class="carousel-item">
-            @include('website.components.blog_card', [
-                    'blogLink' => 'blogs/third-blog',
-                    'blogImgSrc' => '/assets/images/blog-3_385x300.png',
-                    'blogTitle' => 'Buxgalterlar uchun mijoz portalida nimani izlash kerak',
-                    'blogCaption' => 'Yangi mijoz portaliga o`tmoqchimisiz? Ushbu post sizga ma`lumotlar migratsiyasi, integratsiya va foydalanuvchini qabul qilishni o`z ichiga olgan silliq o`tish uchun asosiy qadamlar bo`yicha...'
-                ])
-        </div>
-        <div class="carousel-item">
-            @include('website.components.blog_card', [
-                    'blogLink' => 'blogs/first-blog',
-                    'blogImgSrc' => '/assets/images/blog-1_385x300.png',
-                    'blogTitle' => 'Qanday qilib yangi mijoz portaliga muvaffaqiyatli o`tish mumkin',
-                    'blogCaption' => 'Yangi mijoz portaliga o`tmoqchimisiz? Ushbu post sizga ma`lumotlar migratsiyasi, integratsiya va foydalanuvchini qabul qilishni o`z ichiga olgan silliq o`tish uchun asosiy qadamlar bo`yicha yo`l ko`rsatadi.....'
-                ])
-        </div>
-        <div class="carousel-item">
-            @include('website.components.blog_card', [
-                    'blogLink' => 'blogs/second-blog',
-                    'blogImgSrc' => '/assets/images/blog-2_385x300.png',
-                    'blogTitle' => 'Yangi pudratchi portaliga qanday o`tish mumkin',
-                    'blogCaption' => 'Qanday qilib yangi pudratchi portaliga muammosiz o`tish va pudratchi boshqaruv tizimini yaxshiroq integratsiya, yaxshilangan ish oqimlari va yanada samarali aloqa bilan yaxshilash mumkin...'
-                ])
-        </div>
-        <div class="carousel-item">
-            @include('website.components.blog_card', [
-                    'blogLink' => 'blogs/third-blog',
-                    'blogImgSrc' => '/assets/images/blog-3_385x300.png',
-                    'blogTitle' => 'Buxgalterlar uchun mijoz portalida nimani izlash kerak',
-                    'blogCaption' => 'Yangi mijoz portaliga o`tmoqchimisiz? Ushbu post sizga ma`lumotlar migratsiyasi, integratsiya va foydalanuvchini qabul qilishni o`z ichiga olgan silliq o`tish uchun asosiy qadamlar bo`yicha...'
-                ])
-        </div>
+        @foreach ($blogs as $blog)
+            <div class="carousel-item">
+                @include('website.components.blog_card', ['blog' => $blog])
+            </div>
+        @endforeach
     </div>
 
     <button id="carousel-prev" class="size-11 flex items-center justify-center absolute left-0 top-1/3 transform bg-secondary/5 rounded-full backdrop-blur-md cursor-pointer">

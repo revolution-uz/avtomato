@@ -54,7 +54,7 @@
                                     </div>
                                     <div>
                                         <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all"
-                                           href="{{ route($module['name']->value) }}" title="Narxlarni ko‘rish">
+                                           href="{{ route('modules/'.$module['name']->value) }}" title="Narxlarni ko‘rish">
                                             <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>
                                         </a>
                                     </div>
@@ -67,7 +67,7 @@
                                 <p class="text-2xl text-secondary font-semibold">Qo’shimcha xizmatlar</p>
                                 <div class="lg:basis-[57%] sm:flex lg:items-center lg:justify-end">
                                     <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all"
-                                       href="{{ route('others') }}" title="Narxlarni ko‘rish">
+                                       href="{{ route('modules/others') }}" title="Narxlarni ko‘rish">
                                         <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>
                                     </a>
                                 </div>

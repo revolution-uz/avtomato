@@ -107,7 +107,7 @@
                         <p class="custom-truncate mt-3 text-white/75 leading-6">To‘lovlarni rejalashtirish, kuzatish va
                             boshqarish avtomatik tarzda amalga oshiriladi</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-white"
-                           href="{{ route('installment') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/installment') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -134,7 +134,7 @@
                             kartasida mablag‘ bo‘lmasa PINFL orqali mijozning ixtiyoriy kartasidan avtomatik pul yechib
                             olishingiz mumkin bo‘ladi.</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
-                           href="{{ route('others') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/others') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -158,7 +158,7 @@
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">To‘lovlarni rejalashtirish, kuzatish va
                             boshqarish avtomatik tarzda...</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
-                           href="{{ route('ecommerce') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/ecommerce') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -181,7 +181,7 @@
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Rossiya MIR kartasi bilan O‘zbekistonda
                             to‘lov<br> amalga oshirish imkoniyati</p>
                         <a class="group mt-4 inline-flex items-center sp ace-x-1 text-primary"
-                           href="{{ route('loyalty_program') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/loyalty_program') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -205,7 +205,7 @@
                             statistika hamda analitikalarni elektron holatda real vaqt rejimida ko‘rib borishingiz
                             mumkin bo‘ladi.</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
-                           href="{{ route('sbp_pay') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/sbp_pay') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -228,7 +228,7 @@
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">To‘lovlarni rejalashtirish, kuzatish va
                             boshqarish avtomatik tarzda...</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
-                           href="{{ route('marketing') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/marketing') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -251,7 +251,7 @@
                         <p class="custom-truncate mt-3 text-white/75 leading-6">Mijozlaringiz moliyaviy tarixini
                             to‘laqonli analiz qilish imkoni.</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-white"
-                           href="{{ route('scoring') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/scoring') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -592,13 +592,13 @@
 
             <!-- Blog Grid Columns Start -->
             <div class="mt-[42px] lg:mt-[60px]">
-                @include('website.components.blogs_carousel')
+                @include('website.components.blogs_carousel', ['blogs' => $blogs])
             </div>
             <!-- Blog Grid Columns End -->
 
             <div class="mt-[32px] lg:mt-[60px] flex justify-center">
                 <a class="h-[58px] px-6 inline-flex items-center bg-secondary hover:bg-secondary/90 transition-all text-white rounded-2xl"
-                   href="{{ route('blogs') }}" role="button" title="Barcha yangiliklar">Barcha yangiliklar</a>
+                   href="{{ route('blog.index') }}" role="button" title="Barcha yangiliklar">Barcha yangiliklar</a>
             </div>
         </div>
     </section>
