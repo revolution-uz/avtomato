@@ -1,5 +1,5 @@
-<header class="fixed top-0 right-0 left-0 flex items-center justify-between py-5 container mx-auto px-5 md:px-4 xl:px-0 z-[101] bg-white/75 backdrop-blur-[10px]">
-    <a href="{{ route('home') }}" title="Avtomato">
+<header class="fixed top-0 right-0 left-0 flex items-center justify-between py-5 container mx-auto px-5 md:px-4 z-[101] bg-white/75 backdrop-blur-[10px]">
+    <a class="z-[102]" href="{{ route('home') }}" title="Avtomato">
         <svg class="pointer-events-none" width="154" height="42" viewBox="0 0 154 42" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M39.1684 23.4609C39.3645 31.0235 31.0698 39.2392 21.65 39.2424C12.1887 39.2456 3.85737 30.9626 4.13158 23.4609C4.26288 19.8736 6.4051 15.2195 9.86361 14.3163C14.1929 13.1868 16.7639 18.9334 22.4577 18.3688C27.5383 17.865 28.7531 12.967 32.4692 13.4596C36.0673 13.936 39.0554 19.0795 39.1684 23.4609Z" fill="#ED312D"/>
             <path d="M21.8094 15.4915C21.8094 15.4915 23.1129 9.07906 27.0216 5.74983C27.8556 5.03964 28.8078 4.46925 29.8915 4.13184C29.8915 4.13184 24.378 4.81791 19.6203 10.0061C19.6203 10.0061 18.4317 8.06355 16.8086 8.3142C16.8086 8.3142 15.024 8.42828 14.4297 7.53654C14.4297 7.53654 16.484 9.91452 16.484 10.9428C16.484 10.9428 16.5389 13.2967 21.8094 15.4915Z" fill="#259E49"/>
@@ -9,7 +9,7 @@
     </a>
 
     <!-- Navigation List Start -->
-    <ul class="hidden lg:flex items-center gap-8">
+    <ul class="hidden lg:flex items-center gap-8 z-[102]">
         <li class="group/parent group-parent relative">
             <p id="solutionsLink" class="flex items-center gap-2 text-secondary/[75%] group-hover/parent:text-primary cursor-pointer">
                 <span>Yechimlar</span>
@@ -117,7 +117,7 @@
     </ul>
     <!-- Navigation List End -->
 
-    <div class="hidden lg:flex items-center gap-x-5">
+    <div class="hidden lg:flex items-center gap-x-5 z-[102]">
         <!-- Language Dropdown Start -->
         <!-- @include('website.components.lang_dropdown') -->
         <!-- Language Dropdown End -->
@@ -135,7 +135,7 @@
     </div>
 
     <!-- Burger Menu Button Start -->
-    <button class="bg-third size-12 flex items-center justify-center lg:hidden rounded-2xl text-secondary pointer-events-none">
+    <button class="bg-third size-12 flex items-center justify-center lg:hidden rounded-2xl text-secondary pointer-events-none z-[102]">
         <span class="size-6 relative overflow-hidden flex items-center justify-center flex-col pointer-events-none">
             <svg id="burgerMenuShow" class="show_burger-btn absolute transition-all" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M4.5 12H19.5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>

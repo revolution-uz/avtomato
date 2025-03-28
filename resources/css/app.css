@@ -14,7 +14,7 @@
 
 @layer utilities {
     .gradient-circle {
-        @apply absolute rounded-full z-50;
+        @apply absolute rounded-full z-[101];
         width: 530px;
         height: 530px;
     }
