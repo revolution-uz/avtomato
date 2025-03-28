@@ -17,6 +17,15 @@ su - www-data -s /bin/bash -c 'cd /var/www/automato && php artisan tenants:seed 
 echo "🧹 Clear cache"
 su - www-data -s /bin/bash -c 'cd /var/www/automato && php artisan optimize:clear'
 
+echo "🌐 Installing packages"
+su - www-data -s /bin/bash -c 'cd /var/www/revolution && npm ci --include=dev'
+
+echo "🌐 Installing packages"
+su - www-data -s /bin/bash -c 'cd /var/www/revolution && npm run build'
+
+echo "🌐 Installing packages (without development)"
+su - www-data -s /bin/bash -c 'cd /var/www/revolution && npm ci --omit=dev'
+
 echo "🔄 Restarting Supervisor"
 sudo supervisorctl restart all
 
