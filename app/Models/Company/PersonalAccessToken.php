@@ -5,6 +5,8 @@ namespace App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -36,4 +38,13 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
         'device_type',
         'device_os',
     ];
+
+    public function revokeAccessToken()
+    {
+        $newTokenString = Str::random(64);
+        $newHashedToken = Hash::make($newTokenString);
+        $this->forceFill(['token' => $newHashedToken])->save();
+
+        return $newTokenString;
+    }
 }
