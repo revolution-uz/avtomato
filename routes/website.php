@@ -13,17 +13,21 @@
 
 use App\Http\Controllers\Website\BlogsController;
 use App\Http\Controllers\Website\HomeController;
-use App\Http\Controllers\Website\PricesController;
+use App\Http\Controllers\Website\ModulesController;
+use App\Http\Controllers\Website\PricingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('blogs', [BlogsController::class, 'index'])->name('blogs');
-Route::get('blogs/{slug}', [BlogsController::class, 'navigateToBlog']);
-Route::get('pricing', [PricesController::class, 'index'])->name('prices');
-Route::get('modules/installment', [PricesController::class, 'navigateToInstallment'])->name('installment');
-Route::get('modules/marketing', [PricesController::class, 'navigateToMarketing'])->name('marketing');
-Route::get('modules/scoring', [PricesController::class, 'navigateToScoring'])->name('scoring');
-Route::get('modules/qr-pay', [PricesController::class, 'navigateToQR'])->name('sbp_pay');
-Route::get('modules/ecommerce', [PricesController::class, 'navigateToEcommerce'])->name('ecommerce');
-Route::get('modules/loyalty', [PricesController::class, 'navigateToLoyalty'])->name('loyalty_program');
-Route::get('modules/others', [PricesController::class, 'navigateToOthers'])->name('others');
+
+Route::get('blog', [BlogsController::class, 'index'])->name('blog.index');
+Route::get('blog/{slug}', [BlogsController::class, 'show'])->name('blog.show');
+
+Route::get('pricing', [PricingController::class, 'index'])->name('pricing');
+
+Route::get('modules/installment', [ModulesController::class, 'installment'])->name('modules/installment');
+Route::get('modules/marketing', [ModulesController::class, 'marketing'])->name('modules/marketing');
+Route::get('modules/scoring', [ModulesController::class, 'scoring'])->name('modules/scoring');
+Route::get('modules/qr-pay', [ModulesController::class, 'sbpPay'])->name('modules/sbp_pay');
+Route::get('modules/ecommerce', [ModulesController::class, 'ecommerce'])->name('modules/ecommerce');
+Route::get('modules/loyalty', [ModulesController::class, 'loyalty'])->name('modules/loyalty_program');
+Route::get('modules/others', [ModulesController::class, 'others'])->name('modules/others');

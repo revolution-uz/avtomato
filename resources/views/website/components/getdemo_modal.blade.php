@@ -1,4 +1,4 @@
-<div id="getDemoModalWrap" class="hide_modal--wrap w-screen h-screen fixed left-0 bg-secondary/50 z-[1001] transition-all">
+<div id="getDemoModalWrap" class="hide_modal--wrap w-screen h-screen fixed top-0 right-0 bottom-0 left-0 bg-secondary/50 z-[103] transition-all">
     <!-- Modal Inner Start -->
     <div id="getDemoModalInner" class="hide_modal w-[90%] sm:w-full max-w-[580px] max-h-[520px] bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[32px] md:rounded-[60px] p-6 sm:p-8 md:p-[42px] transition-all">
         <!-- Modal Close Button Start -->
