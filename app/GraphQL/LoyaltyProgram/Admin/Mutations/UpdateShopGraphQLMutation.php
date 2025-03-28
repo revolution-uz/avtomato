@@ -48,10 +48,6 @@ class UpdateShopGraphQLMutation extends Mutation
                 'type' => Type::float(),
                 'rules' => 'nullable|numeric',
             ],
-            'image' => [
-                'type' => GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Shop $root) => $root->image,
-            ],
             'status' => [
                 'type' => Type::nonNull(Type::int()),
                 'rules' => ['required', Rule::in(ShopStatusEnum::cases())],
