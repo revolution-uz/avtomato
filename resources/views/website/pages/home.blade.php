@@ -17,7 +17,7 @@
                 <img class="object-cover w-[76px] h-[30px] pointer-events-none select-none"
                      src="{{ asset('/assets/images/people-avatars.png') }}" alt="Avatars">
                 <p class="text-sm leading-4 sm:leading-5 text-secondary font-medium"><span
-                            class="text-primary">10K+</span>
+                            class="text-primary">10+</span>
                     <span class="sm:hidden">Mutaxasis dasturchilar<br> faoliyat yuritadi</span>
                     <span class="hidden sm:inline">Mutaxasis dasturchilar faoliyat yuritadi</span>
                 </p>
