@@ -1,5 +1,5 @@
-<div id="burgerMenu" class="hide_burger-menu fixed w-screen h-screen bg-white transition-all duration-300 ease-in-out z-[100]">
-    <div class="pt-[88px] p-5 h-full flex flex-col justify-between">
+<div id="burgerMenu" class="hide_burger-menu fixed left-0 top-0 right-0 bottom-0 w-screen h-screen bg-white transition-all duration-300 ease-in-out z-[100]">
+    <div class="pt-22 p-5 h-full flex flex-col justify-between">
         <div class="overflow-y-auto flex-1">
             <ul class="flex flex-col space-y-1.5">
                 <li>
