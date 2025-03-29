@@ -60,8 +60,7 @@ class UpdateRoleGraphQLMutation extends Mutation
             'id' => [
                 'required',
                 'integer',
-                Rule::exists('roles', 'id')
-                    ->where('id', $args['id']),
+                Rule::exists(Role::class, 'id')->withoutTrashed(),
                 function ($attribute, $value, $fail) {
                     if (Role::getAdmin()->id === $value) {
                         $fail('You can\'t update admin role');
@@ -72,9 +71,7 @@ class UpdateRoleGraphQLMutation extends Mutation
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('roles', 'name')
-                    ->withoutTrashed()
-                    ->ignore($args['id']),
+                Rule::unique(Role::class, 'name')->withoutTrashed()->ignore($args['id']),
             ],
         ];
     }
