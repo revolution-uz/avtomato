@@ -18,7 +18,7 @@
                 </div>
                 <input maxlength="13" class="grow placeholder-secondary/55 focus:outline-none" type="text" placeholder="(00) 000 0000">
             </div>
-            <button class="messageSentModalShow mt-3 md:mt-5 h-[58px] bg-secondary rounded-2xl cursor-pointer" type="button">
+            <button class="messageSentModalShow mt-3 md:mt-5 h-[58px] bg-secondary hover:bg-secondary/90 rounded-2xl cursor-pointer" type="button">
                 <span class="text-sm md:text-base text-white font-medium">So’rov yuborish</span>
             </button>
         </form>
