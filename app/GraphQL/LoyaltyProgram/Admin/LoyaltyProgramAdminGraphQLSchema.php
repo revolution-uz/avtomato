@@ -82,7 +82,6 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 OrderGraphQLType::class,
                 OrderItemGraphQLType::class,
                 AdminGraphQLType::class,
-                AttachmentGraphQLType::class,
                 RoleGraphQLType::class,
                 ProductGraphQLType::class,
                 OrderStatusHistoryGraphQLType::class,

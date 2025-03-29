@@ -216,8 +216,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // BLOGS TAGS FUNCTIONAL
     const blogsTagsItems = document.querySelectorAll('#blogsTags button');
-    const blogTagActive = ['bg-secondary', 'border-secondary', 'text-white'];
-    const blogTagInactive = ['bg-white', 'border-secondary', 'text-secondary'];
+    const blogTagActive = ['bg-secondary', 'text-white', 'hover:bg-secondary/90', 'hover:border-secondary/90'];
+    const blogTagInactive = ['bg-white', 'text-secondary', 'hover:border-secondary/80', 'hover:text-secondary/80'];
 
     blogsTagsItems.forEach(item => {
         item.addEventListener('click', function (e) {

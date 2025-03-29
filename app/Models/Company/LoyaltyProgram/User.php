@@ -52,8 +52,11 @@ class User extends Authenticatable
         if (count($qrDto) !== 2 || $qrDto[1] < now()->timestamp) {
             throw new Exception('Invalid QR code');
         }
+        $qrId = $qrDto[0];
+        $timestamp = $qrDto[1];
+        $userId = $qrId ^ $timestamp ^ tenant('id');
 
-        return static::query()->findOrFail($qrDto[0]);
+        return static::query()->findOrFail($userId);
     }
 
     public function subscriptions(): HasMany
@@ -91,9 +94,12 @@ class User extends Authenticatable
 
     public function getQrAttribute(): array
     {
+        $timestamp = now()->addSeconds(30)->timestamp;
+        $qrId = $this->id ^ $timestamp ^ tenant('id');
+
         return [
-            'id' => $this->id . '$$' . now()->addSeconds(30)->timestamp,
-            'expires_in' => now()->addSeconds(30)->timestamp,
+            'id' => $qrId . '$$' . $timestamp,
+            'expires_in' => $timestamp,
         ];
     }
 

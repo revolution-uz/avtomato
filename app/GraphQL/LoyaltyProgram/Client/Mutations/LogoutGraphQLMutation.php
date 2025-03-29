@@ -32,7 +32,8 @@ class LogoutGraphQLMutation extends Mutation
     {
         /** @var PersonalAccessToken $personalAccessToken */
         $personalAccessToken = auth()->user()->currentAccessToken();
+        $personalAccessToken->revokeAccessToken();
 
-        return boolval(auth()->user()->tokens()->where('id', $personalAccessToken->id)->delete());
+        return true;
     }
 }
