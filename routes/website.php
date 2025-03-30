@@ -31,3 +31,5 @@ Route::get('modules/qr-pay', [ModulesController::class, 'sbpPay'])->name('module
 Route::get('modules/ecommerce', [ModulesController::class, 'ecommerce'])->name('modules/ecommerce');
 Route::get('modules/loyalty', [ModulesController::class, 'loyalty'])->name('modules/loyalty_program');
 Route::get('modules/others', [ModulesController::class, 'others'])->name('modules/others');
+
+Route::post('new-customer', [HomeController::class, 'newCustomer'])->name('new_customer');

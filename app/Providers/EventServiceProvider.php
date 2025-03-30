@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\TelegramEvents\NewCustomerTelegramMessageEvent;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
+use App\Listeners\CompanyTelegramEventListener;
 use App\Listeners\TelegramEventListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -21,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         TransactionTelegramMessageEvent::class => [
+            CompanyTelegramEventListener::class,
+        ],
+        NewCustomerTelegramMessageEvent::class => [
             TelegramEventListener::class,
         ],
     ];
