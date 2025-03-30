@@ -135,7 +135,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // MESSAGE SENT MODAL FUNCTIONAL START
     const messageSentModalWrap = document.querySelector('#messageSentModalWrap');
-    const messageSentModalShow = document.querySelectorAll('.messageSentModalShow');
     const messageSentModalClose = document.querySelectorAll('.messageSentModalClose');
     const messageSentModalInner = document.querySelector('#messageSentModalInner');
 
@@ -143,7 +142,6 @@ document.addEventListener("DOMContentLoaded", function () {
         closeGetDemoModal();
         messageSentModalWrap.classList.add('show_modal--wrap');
         messageSentModalWrap.classList.remove('hide_modal--wrap');
-        messageSentModalInner.classList.add('show_modal');
         messageSentModalInner.classList.remove('hide_modal');
         stickyBody();
     }
@@ -159,7 +157,6 @@ document.addEventListener("DOMContentLoaded", function () {
     messageSentModalWrap.addEventListener("click", (e) => {
         if (e.target.id === 'messageSentModalWrap') closeMessageSentModal();
     });
-    messageSentModalShow.forEach(el => el.addEventListener("click", showMessageSentModal));
     messageSentModalClose.forEach(el => el.addEventListener("click", closeMessageSentModal));
 
     // BLOGS CAROUSEL

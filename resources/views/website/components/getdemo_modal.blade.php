@@ -9,16 +9,30 @@
 
         <!-- Modal Content Start -->
         <h2 class="text-center text-xl sm:text-3xl text-secondary font-semibold">So‘rov qoldiring,<br> menejerlarimiz bog‘lanadi!</h2>
-        <form class="mt-6 md:mt-8 flex flex-col gap-y-3 w-full">
-            <input class="h-12 sm:h-16 px-4 sm:px-5 bg-third outline-1 -outline-offset-1 outline-[#D9D9D9]/40 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-blue-600 rounded-2xl placeholder-secondary/55" type="text" placeholder="Ism familiya">
+        <form method="POST" action="{{ route('new_customer') }}" class="mt-6 md:mt-8 flex flex-col gap-y-3 w-full">
+            @csrf
+            <input
+                    class="h-12 sm:h-16 px-4 sm:px-5 bg-third outline-1 -outline-offset-1 outline-[#D9D9D9]/40 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-blue-600 rounded-2xl placeholder-secondary/55"
+                    type="text"
+                    placeholder="Ism familiya"
+                    required
+                    name="full_name"
+            />
             <div class="group flex items-center space-x-1 h-12 sm:h-16 px-4 sm:px-5 bg-third rounded-2xl outline-1 -outline-offset-1 outline-[#D9D9D9]/40 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-blue-600">
                 <div class="flex items-center space-x-3 shrink-0">
                     <img src="{{ asset('/assets/icons/flag-uzbekistan.svg') }}" alt="Flag Uzbeksitan">
                     <p>+998</p>
                 </div>
-                <input maxlength="13" class="grow placeholder-secondary/55 focus:outline-none" type="text" placeholder="(00) 000 0000">
+                <input
+                        id="phoneDisplay"
+                        class="grow placeholder-secondary/55 focus:outline-none"
+                        type="tel"
+                        placeholder="(00) 000 0000"
+                />
             </div>
-            <button class="messageSentModalShow mt-3 md:mt-5 h-[58px] bg-secondary hover:bg-secondary/90 rounded-2xl cursor-pointer" type="button">
+            <input type="hidden" id="phoneValue" name="phone"/>
+            <button class="messageSentModalShow mt-3 md:mt-5 h-[58px] bg-secondary hover:bg-secondary/90 rounded-2xl cursor-pointer"
+                    type="submit">
                 <span class="text-sm md:text-base text-white font-medium">So’rov yuborish</span>
             </button>
         </form>
@@ -26,3 +40,39 @@
     </div>
     <!-- Modal Inner End -->
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const phoneDisplay = document.getElementById("phoneDisplay");
+    const phoneValue = document.getElementById("phoneValue");
+
+    phoneDisplay.addEventListener("input", (e) => {
+      let value = e.target.value.replace(/\D/g, "");
+
+      if (value.length > 9) {
+        value = value.substring(0, 9);
+      }
+
+      let formattedValue = "";
+      if (value.length > 0) formattedValue += `(${value.substring(0, 2)}`;
+      if (value.length > 2) formattedValue += `) ${value.substring(2, 5)}`;
+      if (value.length > 5) formattedValue += ` ${value.substring(5, 9)}`;
+
+      e.target.value = formattedValue;
+
+      phoneValue.value = value;
+    });
+  });
+
+  @if (session()->has('success'))
+  window.addEventListener('load', function () {
+    const messageSentModalInner = document.querySelector('#messageSentModalInner');
+    const messageSentModalWrap = document.querySelector('#messageSentModalWrap');
+
+    messageSentModalWrap.classList.add('show_modal--wrap');
+    messageSentModalWrap.classList.remove('hide_modal--wrap');
+    messageSentModalInner.classList.remove('hide_modal');
+    messageSentModalInner.classList.add('show_modal');
+  })
+  @endif
+</script>
