@@ -2,6 +2,15 @@
 
 @section('title', 'Blog - Avtomato')
 
+@section("meta")
+    <meta name="keywords" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta name="description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:url" content="{{ current_route() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:description" content=""> <!-- ~~~~~~~~~~~ -->
+@endsection
+
 @section('content')
     <!-- All Blogs Start -->
     <section class="pt-10 pb-10 md:pb-[60x]">

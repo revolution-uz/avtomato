@@ -6,7 +6,6 @@
         <meta name="theme-color" content="#E21010" />
 
         <title>@yield('title', 'Avtomato')</title>
-
         @yield('meta')
 
         <!-- Styles -->

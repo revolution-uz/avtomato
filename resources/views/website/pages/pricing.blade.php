@@ -2,6 +2,15 @@
 
 @section('title', 'Narxlar - Avtomato')
 
+@section("meta")
+    <meta name="keywords" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta name="description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:url" content="{{ current_route() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:description" content=""> <!-- ~~~~~~~~~~~ -->
+@endsection
+
 @section('content')
     <!-- Prices Top Content Start -->
     <section class="pt-10 relative">

@@ -2,6 +2,58 @@
 
 @section('title', 'Главная страница - Avtomato')
 
+@section('meta')
+    <meta name="keywords" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta name="description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:url" content="{{ current_route() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:description" content=""> <!-- ~~~~~~~~~~~ -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "REVO Global", <!-- ~~~~~~~~~~~ -->
+          "legalName": "Revolution Global MChJ", <!-- ~~~~~~~~~~~ -->
+          "url": "https://avtomato.uz/",
+          "logo": "https://avtomato.uz/favicon.svg",
+          "description": "{{ trans('website.company.description') }}", <!-- ~~~~~~~~~~~ -->
+          "email": "info@automato.uz", <!-- ~~~~~~~~~~~ -->
+          "duns": "933904388",
+          "foundingDate": "2023-05-16", <!-- ~~~~~~~~~~~ -->
+          "taxID": "310473729",
+          "numberOfEmployees": {
+            "@type": "QuantitativeValue",
+            "minValue": 10,
+            "maxValue": 20
+          },
+          "sameAs": [
+            "https://www.facebook.com/RevolutionGlobalLLC/", <!-- ~~~~~~~~~~~ -->
+            "https://www.linkedin.com/company/revolutiongloballlc/", <!-- ~~~~~~~~~~~ -->
+            "https://www.youtube.com/@RevolutionGlobalLLC", <!-- ~~~~~~~~~~~ -->
+            "https://www.instagram.com/RevolutionGlobalLLC/", <!-- ~~~~~~~~~~~ -->
+            "https://t.me/RevolutionGlobalLLC" <!-- ~~~~~~~~~~~ -->
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+998 77 232 66 66", <!-- ~~~~~~~~~~~ -->
+            "email": "info@revolution.uz", <!-- ~~~~~~~~~~~ -->
+            "contactType": "customer support",
+            "areaServed": "UZ",
+            "availableLanguage": ["Russian", "Uzbek", "English"]
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ trans('website.company.address') }}", <!-- ~~~~~~~~~~~ -->
+            "addressLocality": "{{ trans('website.company.city') }}", <!-- ~~~~~~~~~~~ -->
+            "addressRegion": "{{ trans('website.company.region') }}", <!-- ~~~~~~~~~~~ -->
+            "postalCode": "220100",
+            "addressCountry": "UZ"
+          },
+        }
+    </script>
+@endsection
+
 @section('content')
     <!-- Hero Section Start -->
     <section class="py-10 md:py-[60px] relative">

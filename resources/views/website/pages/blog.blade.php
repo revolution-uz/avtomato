@@ -3,6 +3,12 @@
 @section('title', $blog['title'] . ' - Avtomato')
 
 @section('meta')
+    <meta name="keywords" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta name="description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:image" content=""> <!-- ~~~~~~~~~~~ -->
     <style>
         .blog-content {
             font-size: 18px;
