@@ -2,6 +2,77 @@
 
 @section('title', $blog['title'] . ' - Avtomato')
 
+@section('meta')
+    <style>
+        .blog-content {
+            font-size: 18px;
+        }
+
+        .blog-content h1,
+        .blog-content h2,
+        .blog-content h3,
+        .blog-content p,
+        .blog-content ul,
+        .blog-content ol,
+        .blog-content li,
+        .blog-content b,
+        .blog-content a {
+            line-height: 1.6;
+            color: #1A202C;
+        }
+
+        .blog-content h1 {
+            font-size: 2em;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+            margin-top: 0.5em;
+        }
+
+        .blog-content h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .blog-content h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .blog-content p {
+            font-size: 1em;
+        }
+
+        .blog-content ul,
+        .blog-content ol {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            padding-left: 1.2rem;
+            list-style: disc;
+        }
+
+        .blog-content li {
+            margin-bottom: 0.5em;
+        }
+
+        .blog-content a {
+            text-decoration: underline;
+            transition: all 0.3s ease;
+        }
+
+        .blog-content a:hover {
+            color: #E21010;
+        }
+
+        .blog-content hr {
+            color: #ebe7e7;
+        }
+    </style>
+@endsection
+
 @section('content')
     <!-- Single Blog Start -->
     <section class="pt-3 md:pt-6 lg:pt-10 pb-10 md:pb-[60x]">
@@ -25,7 +96,7 @@
         <div class="pt-8 lg:pt-[60px] pb-[60px]">
             <div class="max-w-[820px] mx-auto px-4">
                 <h2 class="text-2xl sm:text-3xl text-secondary font-semibold">{{ $blog['title'] }}</h2>
-                <p class="mt-3 sm:mt-4 text-secondary/55 font-light">{{ $blog['created_at'] }}</p>
+                <time class="block mt-3 sm:mt-4 text-secondary/55 font-light">{{ $blog['created_at'] }}</time>
                 <a class="mt-5 h-12 inline-flex items-center justify-center space-x-2 px-4 bg-third rounded-2xl text-secondary"
                    href="https://t.me/share/url?url={{ urlencode(url()->current()) }}" target="_blank" title="Ulashish">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,9 +113,11 @@
                     </svg>
                     <span class="text-sm ms:text-base">Ulashish</span>
                 </a>
-                <img class="my-8 border border-third w-full h-[200px] sm:h-[420px] object-cover rounded-[32px]"
-                     src="{{ asset($blog['image']) }}" alt="{{ $blog['title'] }}">
-                <p class="sm:text-lg text-secondary/75 sm:text-secondary/55">{!! $blog['content'] !!}</p>
+                <div class="rounded-[32px] overflow-hidden aspect-[129/100] my-8 border border-third">
+                    <img class="w-full h-full object-cover"
+                         src="{{ asset($blog['image']) }}" alt="{{ $blog['title'] }}">
+                </div>
+                <div class="blog-content">{!! $blog['content'] !!}</div>
             </div>
         </div>
         <!-- Blog Content End -->

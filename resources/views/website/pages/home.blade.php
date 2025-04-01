@@ -178,7 +178,7 @@
             <div class="absolute -bottom-[50px] w-screen h-[120px] md:h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
             <div class="absolute -bottom-[50px] w-screen h-[120px] md:h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
 
-            <img class="max-w-[1240px] w-full mx-auto aspect-[2482/986] object-cover rounded-t-2xl lg:rounded-t-[32px] shadow-[0px_-4px_60px_#00000014]"
+            <img class="max-w-[1240px] w-full mx-auto aspect-[73/29] object-cover rounded-t-2xl lg:rounded-t-[32px] shadow-[0px_-4px_60px_#00000014]"
                  src="{{ asset('assets/images/hero-dashboard_1240x840.webp') }}" alt="Avtomato Dashboard">
         </div>
         <!-- Hero Picture End -->
@@ -215,7 +215,7 @@
 
                     <img class="ml-6 lg:ml-8 rounded-ss-3xl pointer-events-none rounded-ss-lg md:rounded-ss-2xl aspect-[946/560]"
                          src="{{ asset('/assets/images/dashboard-installments_535x380.webp') }}"
-                         alt="Dashboard Installment" height="380">
+                         alt="Dashboard Installment">
                 </div>
                 <!-- Column 1 End -->
 
@@ -236,7 +236,7 @@
                         </a>
                     </div>
 
-                    <img class="max-w-[715px] w-full mx-auto -mt-[20px] aspect-[1422/670] mx-auto pointer-events-none" src="{{ asset('/assets/images/system-marketing_715x395.webp') }}"
+                    <img class="max-w-[715px] w-full mx-auto -mt-[20px] aspect-[711/335] mx-auto pointer-events-none" src="{{ asset('/assets/images/system-marketing_715x395.webp') }}"
                          alt="Marketing">
                 </div>
                 <!-- Column 2 End -->
@@ -282,7 +282,7 @@
                         </a>
                     </div>
 
-                    <img class="mx-6 aspect-[674/502] pointer-events-none" src="{{ asset('/assets/images/qr-code_335x325.webp') }}" alt="QR pay">
+                    <img class="mx-6 aspect-[337/251] pointer-events-none" src="{{ asset('/assets/images/qr-code_335x325.webp') }}" alt="QR pay">
                 </div>
                 <!-- Column 4 End -->
 
@@ -303,7 +303,7 @@
                         </a>
                     </div>
 
-                    <img class="aspect-[770/490] pointer-events-none" src="{{ asset('/assets/images/loyalty_375x170.webp') }}"
+                    <img class="aspect-[11/7] pointer-events-none" src="{{ asset('/assets/images/loyalty_375x170.webp') }}"
                          alt="Loyalty">
                 </div>
                 <!-- Column 5 End -->
@@ -327,7 +327,7 @@
                         </a>
                     </div>
 
-                    <img class="ml-4 lg:ml-8 lg:-mt-[5%] mx-auto aspect-[1365/672] pointer-events-none"
+                    <img class="ml-4 lg:ml-8 lg:-mt-[5%] mx-auto aspect-[65/32] pointer-events-none"
                          src="{{ asset('/assets/images/others_730x415.webp') }}" alt="Qo`shimcha xizmatlar">
                 </div>
                 <!-- Column 6 End -->

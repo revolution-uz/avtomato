@@ -7,6 +7,8 @@
 
         <title>@yield('title', 'Avtomato')</title>
 
+        @yield('meta')
+
         <!-- Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
