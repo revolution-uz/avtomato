@@ -183,7 +183,7 @@ class SingleRoyxatCreditHistoryGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($loan->contract_date, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.contract_date'));
         $this->assertEquals($loan->max_overdue_days, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.max_overdue_days'));
         $this->assertEquals($loan->total_overdue_days, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.total_overdue_days'));
-        $this->assertEquals($loan->total_overdue_amount, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.total_overdue_amount'));
+        $this->assertEquals($loan->total_overdue_amount / 100, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.total_overdue_amount'));
         $this->assertEquals($loan->status, $response->json('data.singleRoyxatCreditHistory.response.result.loans.0.status'));
     }
 }
