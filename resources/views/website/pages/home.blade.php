@@ -236,7 +236,7 @@
                         </a>
                     </div>
 
-                    <img class="max-w-[715px] mx-auto -mt-[20px] aspect-[1422/670] mx-auto pointer-events-none" src="{{ asset('/assets/images/system-marketing_715x395.webp') }}"
+                    <img class="max-w-[715px] w-full mx-auto -mt-[20px] aspect-[1422/670] mx-auto pointer-events-none" src="{{ asset('/assets/images/system-marketing_715x395.webp') }}"
                          alt="Marketing">
                 </div>
                 <!-- Column 2 End -->
