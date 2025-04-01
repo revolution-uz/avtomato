@@ -2,8 +2,10 @@
 
 namespace App\GraphQL\LoyaltyProgram\Client\Types;
 
+use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use App\Models\Company\LoyaltyProgram\Notification;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class NotificationGraphQLType extends GraphQLType
@@ -44,6 +46,10 @@ class NotificationGraphQLType extends GraphQLType
             'updated_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Notification $root) => $root->updated_at->timestamp,
+            ],
+            'image' => [
+                'type' => GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Notification $root) => $root->image,
             ],
         ];
     }
