@@ -15,14 +15,6 @@
     <body>
     <!-- Global Wrapper Start -->
     <div class="min-h-screen flex flex-col overflow-hidden pt-20">
-        <!-- Get Demo Modal Start -->
-        @include('website.components.getdemo_modal')
-        <!-- Get Demo Modal End -->
-
-        <!-- Message Sent Modal Start -->
-        @include('website.components.message-sent_modal')
-        <!-- Message Sent Modal End -->
-
         <!-- Header Start -->
         @include('website.components.header')
         <!-- Header End -->
@@ -40,6 +32,14 @@
         <!-- Footer Start -->
         @include('website.components.footer')
         <!-- Footer End -->
+
+        <!-- Get Demo Modal Start -->
+        @include('website.components.getdemo_modal')
+        <!-- Get Demo Modal End -->
+
+        <!-- Message Sent Modal Start -->
+        @include('website.components.message-sent_modal')
+        <!-- Message Sent Modal End -->
     </div>
     <!-- Global Wrapper End -->
     </body>
