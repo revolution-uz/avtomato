@@ -17,12 +17,12 @@
                 <img class="object-cover w-[76px] h-[30px] pointer-events-none select-none"
                      src="{{ asset('/assets/images/people-avatars.png') }}" alt="Avatars">
                 <p class="text-sm leading-4 sm:leading-5 text-secondary font-medium"><span
-                            class="text-primary">10+</span>
+                            class="text-primary font-bold">10+</span>
                     <span class="sm:hidden">Mutaxasis dasturchilar<br> faoliyat yuritadi</span>
                     <span class="hidden sm:inline">Mutaxasis dasturchilar faoliyat yuritadi</span>
                 </p>
             </div>
-            <h1 class="mt-5 text-center text-4xl/[120%] sm:text-5xl/[120%] lg:text-[64px]/[120%] text-secondary font-bold">
+            <h1 class="mt-5 text-center text-4xl/[120%] sm:text-5xl/[120%] lg:text-[64px]/[120%] text-secondary font-bold tracking-tight">
                 <span class="hidden sm:block">Sizning biznesingiz uchun<br>To’lovlarni avtomatik eslatish</span>
                 <span class="sm:hidden">Biznesingizni avtomatlashtiring</span>
             </h1>
