@@ -2,12 +2,14 @@
 
 namespace App\GraphQL\LoyaltyProgram\Client\Queries;
 
+use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
 use App\GraphQL\LoyaltyProgram\Client\Types\ShopGraphQLType;
 use App\Models\Company\LoyaltyProgram\Shop;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -33,6 +35,10 @@ class ShopsGraphQLQuery extends Query
                 'type' => Type::string(),
                 'rules' => 'nullable|string|max:255',
             ],
+            'status' => [
+                'type' => Type::int(),
+                'rules' => ['nullable', 'int', Rule::enum(ShopStatusEnum::class)],
+            ],
             'page' => [
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:1',
@@ -51,6 +57,8 @@ class ShopsGraphQLQuery extends Query
                 ->where('name', 'ILIKE', "%{$args['search']}%")
                 ->orWhere('external_code', 'ILIKE', "%{$args['search']}%")
                 ->orWhere('external_name', 'ILIKE', "%{$args['search']}%"))
+            ->when(isset($args['status']), fn (Builder $q) => $q
+                ->where('status', $args['status']))
             ->when(
                 isset($args['sort']),
                 fn (Builder|Shop $q) => $q->orderBySortable($args['sort']),
