@@ -195,7 +195,7 @@ class DashboardService
 
     private function ageBasedInstallments(bool $overdue = false): array
     {
-        return Customer::selectRaw('
+        $results = Customer::selectRaw('
             CASE
                 WHEN birth_date IS NULL THEN \'unknown\'
                 WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 18 AND 25 THEN \'18-25\'
@@ -227,7 +227,23 @@ class DashboardService
             ->when($this->branch_id, fn ($q) => $q
                 ->where('installments.branch_id', $this->branch_id))
             ->groupBy('label')
-            ->get()
+            ->get();
+
+        $ageRanges = collect([
+            ['label' => 'unknown'],
+            ['label' => '18-25'],
+            ['label' => '26-33'],
+            ['label' => '34-40'],
+            ['label' => '41-49'],
+            ['label' => '50-59'],
+            ['label' => '60-others'],
+        ]);
+
+        return $ageRanges->map(fn ($range) => [
+            'label' => $range['label'],
+            'value' => $results->firstWhere('label', $range['label'])->value ?? 0,
+        ])
+            ->filter(fn ($item) => $item['label'] !== 'unknown' || $item['value'] !== 0)
             ->toArray();
     }
 }
