@@ -15,7 +15,7 @@
         <div class="container mx-auto flex items-center justify-center flex-col">
             <div class="flex items-center space-x-2.5 py-[7px] pl-2 pr-3 border border-secondary/[8%] rounded-[72px] bg-white">
                 <img class="object-cover w-[76px] h-[30px] pointer-events-none select-none"
-                     src="{{ asset('/assets/images/people-avatars.png') }}" alt="Avatars">
+                     src="{{ asset('/assets/images/people-avatars.webp') }}" alt="Avatars">
                 <p class="text-sm leading-4 sm:leading-5 text-secondary font-medium"><span
                             class="text-primary font-bold">10+</span>
                     <span class="sm:hidden">Mutaxasis dasturchilar<br> faoliyat yuritadi</span>
@@ -350,7 +350,7 @@
                     </div>
 
                     <img class="mx-auto sm:w-[60%] lg:w-auto pointer-events-none"
-                         src="{{ asset('/assets/images/skoring-person_505x320.png') }}" alt="Skoring">
+                         src="{{ asset('/assets/images/skoring-person_505x320.webp') }}" alt="Skoring">
                 </div>
                 <!-- Column 7 End -->
             </div>

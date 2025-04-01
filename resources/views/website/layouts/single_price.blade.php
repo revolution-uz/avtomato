@@ -34,11 +34,11 @@
                     @foreach ($data['services'] as $service)
                         <div class="flex flex-col {{ $loop->index % 2 == 0 ? 'md:flex-row' : 'md:flex-row-reverse' }} items-center justify-between gap-4 sm:gap-8">
                             <div class="basis-1/2">
-                                <p class="text-2xl sm:text-3xl lg:text-5xl text-secondary font-semibold">{!! $service['title'] !!}</p>
+                                <p class="text-2xl sm:text-4xl xl:text-5xl text-secondary font-semibold">{!! $service['title'] !!}</p>
                                 <p class="mt-3 sm:mt-5 text-sm sm:text-lg lg:text-xl text-secondary/75">{{ $service['desc'] }}</p>
                             </div>
-                            <div class="basis-1/2 overflow-hidden rounded-[42px]">
-                                <img src="{{ asset($service['img']) }}" alt="Soddalashtirilgan nasiya jarayoni">
+                            <div class="basis-1/2 overflow-hidden rounded-[42px] max-h-[550px]">
+                                <img src="{{ asset($service['img']) }}" alt="{{ $service['title'] }}">
                             </div>
                         </div>
                     @endforeach
