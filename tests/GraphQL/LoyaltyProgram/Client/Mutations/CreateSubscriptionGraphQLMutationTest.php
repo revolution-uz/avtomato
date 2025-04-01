@@ -60,7 +60,7 @@ class CreateSubscriptionGraphQLMutationTest extends GraphQLTestCase
 
         $this->_activeUser = $this->createLoyaltyProgramClientUser();
         Card::factory()->create(['user_id' => $this->_activeUser->id, 'status' => CardStatusEnum::ACTIVE]);
-        $this->_activeTariff = Tariff::factory()->create(['is_active' => true]);
+        $this->_activeTariff = Tariff::factory()->create(['is_active' => true, 'free_months' => 1]);
         Subscription::query()->forceDelete();
     }
 

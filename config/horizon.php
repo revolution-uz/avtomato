@@ -274,6 +274,16 @@ return [
             'timeout' => 600,
             'nice' => 0,
         ],
+        'supervisor-11' => [
+            'connection' => 'redis',
+            'queue' => ['subscription-charge'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 600,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [

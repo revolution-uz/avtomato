@@ -51,6 +51,20 @@ class Order extends Model
         'status' => OrderStatusEnum::class,
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (self $model) {
+            $subscription = $model->user->getActiveSubscription();
+
+            if ($subscription && $subscription->is_active_period) {
+                $subscription->remaining_limit_amount -= (int) $model->total_discount_amount;
+                $subscription->saveOrFail();
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
