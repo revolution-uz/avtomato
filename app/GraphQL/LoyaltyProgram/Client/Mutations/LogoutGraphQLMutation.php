@@ -31,7 +31,7 @@ class LogoutGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         /** @var PersonalAccessToken $personalAccessToken */
-        $personalAccessToken = auth()->user()->currentAccessToken();
+        $personalAccessToken = auth('loyalty-program-client')->user()->currentAccessToken();
         $personalAccessToken->revokeAccessToken();
 
         return true;
