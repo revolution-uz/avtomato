@@ -13,7 +13,7 @@
 
         <!-- Hero Content Start -->
         <div class="container mx-auto flex items-center justify-center flex-col">
-            <div class="flex items-center space-x-2.5 py-[7px] pl-2 pr-3 border border-secondary/[8%] rounded-[72px]">
+            <div class="flex items-center space-x-2.5 py-[7px] pl-2 pr-3 border border-secondary/[8%] rounded-[72px] bg-white">
                 <img class="object-cover w-[76px] h-[30px] pointer-events-none select-none"
                      src="{{ asset('/assets/images/people-avatars.png') }}" alt="Avatars">
                 <p class="text-sm leading-4 sm:leading-5 text-secondary font-medium"><span
@@ -175,15 +175,11 @@
 
         <!-- Hero Picture Start -->
         <div class="pt-8 md:pt-16 px-4 relative flex items-start justify-center pointer-events-none select-none z-[70]">
-            <div class="absolute -bottom-[50px] w-screen h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
-            <div class="absolute -bottom-[50px] w-screen h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
+            <div class="absolute -bottom-[50px] w-screen h-[120px] md:h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
+            <div class="absolute -bottom-[50px] w-screen h-[120px] md:h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
 
-            <img class="hidden lg:block object-cover object-top rounded-t-[32px] shadow-[0px_-4px_10px_#00000014] lg:shadow-[0px_-4px_60px_#00000014] max-h-[500px]"
-                 src="{{ asset('assets/images/hero-image_1240x840.jpg') }}" alt="Avtomato Dashboard" width="1240"
-                 height="840">
-            <img class="lg:hidden object-cover object-top rounded-t-xl shadow-[0px_-4px_60px_#00000014] max-h-[200px]"
-                 src="{{ asset('assets/images/hero-image_695x470.jpg') }}" alt="Avtomato Dashboard" width="695"
-                 height="470">
+            <img class="max-w-[1240px] w-full mx-auto aspect-[2482/986] object-cover rounded-t-2xl lg:rounded-t-[32px] shadow-[0px_-4px_60px_#00000014]"
+                 src="{{ asset('assets/images/hero-dashboard_1240x840.webp') }}" alt="Avtomato Dashboard">
         </div>
         <!-- Hero Picture End -->
     </section>
