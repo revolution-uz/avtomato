@@ -10,6 +10,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Mutations\SendNotificationsGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateNotificationGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateShopGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateTariffGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadNotificationImageGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadShopImageGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\NotificationsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\OrdersGraphQLQuery;
@@ -56,6 +57,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 DeleteNotificationsGraphQLMutation::class,
                 SendNotificationsGraphQLMutation::class,
                 UploadShopImageGraphQLMutation::class,
+                UploadNotificationImageGraphQLMutation::class,
             ],
             'query' => [
                 UsersGraphQLQuery::class,
