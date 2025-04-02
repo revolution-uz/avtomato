@@ -3,12 +3,23 @@
 @section('title', 'Narxlar - Avtomato')
 
 @section("meta")
-    <meta name="keywords" content=""> <!-- ~~~~~~~~~~~ -->
-    <meta name="description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta name="keywords"
+          content="Nasiya savdoni avtomatlashtirish, skoring xizmatlari, internet-do‘kon yaratish, mijozlar bazasi, SBP QR-pay, SBP to‘lovlari, avtomatik pul yechish, PINFL orqali pul yechish, savdoni tizimlashtirish, biznesda marketing, ishonchlilik darajasi">
+    <meta name="description"
+          content="Avtomato xizmatlari - Nasiya savdoni avtomatlashtirish, skoring, SBP to‘lovlari, internet-do‘kon yaratish va biznesni rivojlantirish uchun zamonaviy echimlar.">
     <meta property="og:url" content="{{ current_route() }}">
     <meta property="og:type" content="website">
-    <meta property="og:title" content=""> <!-- ~~~~~~~~~~~ -->
-    <meta property="og:description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:title" content="Avtomato xizmatlari – Biznesingiz uchun raqamli echimlar">
+    <meta property="og:description"
+          content="Biznesingizni rivojlantirish uchun nasiya savdoni avtomatlashtirish, skoring, SBP to‘lovlari va boshqa xizmatlar.">
+    <meta property="og:image" content="{{ asset('/cover.webp') }}">
+    <meta property="og:image:type" content="image/webp">
+    <meta name="twitter:card" content="{{ asset('/cover.webp') }}">
+    <meta name="twitter:title" content="Avtomato xizmatlari – Biznesingiz uchun raqamli echimlar">
+    <meta name="twitter:description"
+          content="Biznesingizni rivojlantirish uchun nasiya savdoni avtomatlashtirish, skoring, SBP to‘lovlari va boshqa xizmatlar.">
+    <meta name="twitter:image" content="{{ asset('/cover.webp') }}">
+    <meta name="twitter:image:type" content="image/webp">
 @endsection
 
 @section('content')
@@ -63,7 +74,8 @@
                                     </div>
                                     <div>
                                         <a class="group h-[52px] md:h-[58px] flex sm:inline-flex items-center justify-center px-6 bg-white hover:bg-secondary border border-secondary rounded-[20px] transition-all"
-                                           href="{{ route('modules/'.$module['name']->value) }}" title="Narxlarni ko‘rish">
+                                           href="{{ route('modules/'.$module['name']->value) }}"
+                                           title="Narxlarni ko‘rish">
                                             <span class="text-secondary group-hover:text-white">Narxlarni ko‘rish</span>
                                         </a>
                                     </div>

@@ -1,52 +1,64 @@
 @extends('website.layouts.layout')
 
-@section('title', 'Главная страница - Avtomato')
+@section('title', 'Bosh sahifa - Avtomato')
 
 @section('meta')
-    <meta name="keywords" content=""> <!-- ~~~~~~~~~~~ -->
-    <meta name="description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta name="keywords"
+          content="Nasiya savdoni avtomatlashtirish, biznesda marketing, internet do'kon yaratish, SBP QR-pay, SBP to'lovlari, skoring xizmatlari, ishonchlilik darajasini tekshirish, muddatli to'lov, avtomatik pul yechish, PINFL orqali pul yechish, savdoni tizimlashtirish, mijozlar bazasini shakillantirish">
+    <meta name="description"
+          content="Avtomato — biznesingizni avtomatlashtirish va rivojlantirish uchun innovatsion yechim! Nasiya savdoni avtomatlashtirish, SBP QR-to‘lovlari, skoring, mijozlar bazasini shakllantirish, internet do‘kon yaratish va boshqa xizmatlar. Biz bilan biznesingiz ishonchli va samarali bo‘ladi!">
     <meta property="og:url" content="{{ current_route() }}">
     <meta property="og:type" content="website">
-    <meta property="og:title" content=""> <!-- ~~~~~~~~~~~ -->
-    <meta property="og:description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:title" content="Avtomato — biznesingizni avtomatlashtiring">
+    <meta property="og:description"
+          content="Avtomato — nasiya savdoni avtomatlashtirish, skoring, internet-do‘kon yaratish va mijozlar bazasini shakllantirish uchun qulay yechim.">
+    <meta property="og:image" content="{{ asset('/cover.webp') }}">
+    <meta property="og:image:type" content="image/webp">
+    <meta name="twitter:card" content="{{ asset('/cover.webp') }}">
+    <meta name="twitter:title" content="Avtomato — biznesingizni avtomatlashtiring">
+    <meta name="twitter:description"
+          content="Avtomato — nasiya savdoni avtomatlashtirish, skoring, internet-do‘kon yaratish va mijozlar bazasini shakllantirish uchun qulay yechim.">
+    <meta name="twitter:image" content="{{ asset('/cover.webp') }}">
+    <meta name="twitter:image:type" content="image/webp">
+
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "REVO Global", <!-- ~~~~~~~~~~~ -->
-          "legalName": "Revolution Global MChJ", <!-- ~~~~~~~~~~~ -->
+          "@type": "Product",
+          "name": "Avtomato",
+          "legalName": "Avtomato",
           "url": "https://avtomato.uz/",
           "logo": "https://avtomato.uz/favicon.svg",
-          "description": "{{ trans('website.company.description') }}", <!-- ~~~~~~~~~~~ -->
-          "email": "info@automato.uz", <!-- ~~~~~~~~~~~ -->
-          "duns": "933904388",
-          "foundingDate": "2023-05-16", <!-- ~~~~~~~~~~~ -->
+          "description": "Avtomato — nasiya savdoni avtomatlashtirish, skoring, internet-do‘kon yaratish va mijozlar bazasini shakllantirish uchun qulay yechim.",
+          "email": "info@automato.uz",
+          "foundingDate": "2024-01-01",
           "taxID": "310473729",
+          "brand": {
+            "@type": "Brand",
+            "name": "Avtomato"
+          },
           "numberOfEmployees": {
             "@type": "QuantitativeValue",
             "minValue": 10,
             "maxValue": 20
           },
           "sameAs": [
-            "https://www.facebook.com/RevolutionGlobalLLC/", <!-- ~~~~~~~~~~~ -->
-            "https://www.linkedin.com/company/revolutiongloballlc/", <!-- ~~~~~~~~~~~ -->
-            "https://www.youtube.com/@RevolutionGlobalLLC", <!-- ~~~~~~~~~~~ -->
-            "https://www.instagram.com/RevolutionGlobalLLC/", <!-- ~~~~~~~~~~~ -->
-            "https://t.me/RevolutionGlobalLLC" <!-- ~~~~~~~~~~~ -->
+            "https://www.instagram.com/avtomatouz",
+            "https://t.me/uzavtomato"
           ],
           "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+998 77 232 66 66", <!-- ~~~~~~~~~~~ -->
-            "email": "info@revolution.uz", <!-- ~~~~~~~~~~~ -->
+            "telephone": "+998 77 232 66 66",
+            "email": "info@automato.uz",
             "contactType": "customer support",
             "areaServed": "UZ",
             "availableLanguage": ["Russian", "Uzbek", "English"]
           },
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "{{ trans('website.company.address') }}", <!-- ~~~~~~~~~~~ -->
-            "addressLocality": "{{ trans('website.company.city') }}", <!-- ~~~~~~~~~~~ -->
-            "addressRegion": "{{ trans('website.company.region') }}", <!-- ~~~~~~~~~~~ -->
+            "streetAddress": "Ma'rifat MFY, Hamid Olimjon ko'chasi, 6-uy",
+            "addressLocality": "Urganch shahri",
+            "addressRegion": "Xorazm viloyati",
             "postalCode": "220100",
             "addressCountry": "UZ"
           },
@@ -79,30 +91,46 @@
                 <span class="sm:hidden">Biznesingizni avtomatlashtiring</span>
             </h1>
 
-            <div style="--speed: 50s; --gap: 10px;" class="marque-wrap mt-5 md:mt-6 w-[90%] sm:w-full md:w-[85%] lg:w-[60%] flex items-center gap-x-2.5 overflow-hidden relative">
+            <div style="--speed: 50s; --gap: 10px;"
+                 class="marque-wrap mt-5 md:mt-6 w-[90%] sm:w-full md:w-[85%] lg:w-[60%] flex items-center gap-x-2.5 overflow-hidden relative">
                 <div class="absolute left-0 h-full w-[45px] sm:w-[100px] lg:w-[300px] bg-gradient-to-r from-[#FEFEFF] to-[#FDF3F3]/[10%] z-20"></div>
                 <div class="absolute right-0 h-full w-[45px] sm:w-[100px] lg:w-[300px] bg-gradient-to-l from-[#FEFEFF] to-[#FDF3F3]/[10%] z-20"></div>
 
                 <div class="marque z-10">
                     <div class="flex items-center justify-center space-x-2.5">
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15.8525 2.75H9.68577C6.84764 2.75 4.54688 5.05076 4.54688 7.88889V16.1111C4.54688 18.9492 6.84764 21.25 9.68577 21.25H15.8525C18.6906 21.25 20.9913 18.9492 20.9913 16.1111V7.88889C20.9913 5.05076 18.6906 2.75 15.8525 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M3.00781 8.40234H6.09115" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M3.00781 15.5977H6.09115" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M16.6698 16.7448C16.6698 15.0921 14.8274 13.749 13.1747 13.749C11.522 13.749 9.67969 15.0921 9.67969 16.7448" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M13.1762 11.368C14.473 11.368 15.5243 10.3167 15.5243 9.01997C15.5243 7.72315 14.473 6.67188 13.1762 6.67188C11.8793 6.67188 10.8281 7.72315 10.8281 9.01997C10.8281 10.3167 11.8793 11.368 13.1762 11.368Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.8525 2.75H9.68577C6.84764 2.75 4.54688 5.05076 4.54688 7.88889V16.1111C4.54688 18.9492 6.84764 21.25 9.68577 21.25H15.8525C18.6906 21.25 20.9913 18.9492 20.9913 16.1111V7.88889C20.9913 5.05076 18.6906 2.75 15.8525 2.75Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M3.00781 8.40234H6.09115" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3.00781 15.5977H6.09115" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16.6698 16.7448C16.6698 15.0921 14.8274 13.749 13.1747 13.749C11.522 13.749 9.67969 15.0921 9.67969 16.7448"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M13.1762 11.368C14.473 11.368 15.5243 10.3167 15.5243 9.01997C15.5243 7.72315 14.473 6.67188 13.1762 6.67188C11.8793 6.67188 10.8281 7.72315 10.8281 9.01997C10.8281 10.3167 11.8793 11.368 13.1762 11.368Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
                             </svg>
                             <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Muddatli
                                 to'lovlarni oson undirish</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18.25 3.33008H5.75C4.95435 3.33008 4.19129 3.64615 3.62868 4.20876C3.06607 4.77137 2.75 5.53443 2.75 6.33008V14.2001C2.75 14.9958 3.06607 15.7588 3.62868 16.3214C4.19129 16.884 4.95435 17.2001 5.75 17.2001H18.25C19.0456 17.2001 19.8087 16.884 20.3713 16.3214C20.9339 15.7588 21.25 14.9958 21.25 14.2001V6.33008C21.25 5.53443 20.9339 4.77137 20.3713 4.20876C19.8087 3.64615 19.0456 3.33008 18.25 3.33008Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 17.2002V20.6702" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M8.53125 20.6699H15.4712" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.25 3.33008H5.75C4.95435 3.33008 4.19129 3.64615 3.62868 4.20876C3.06607 4.77137 2.75 5.53443 2.75 6.33008V14.2001C2.75 14.9958 3.06607 15.7588 3.62868 16.3214C4.19129 16.884 4.95435 17.2001 5.75 17.2001H18.25C19.0456 17.2001 19.8087 16.884 20.3713 16.3214C20.9339 15.7588 21.25 14.9958 21.25 14.2001V6.33008C21.25 5.53443 20.9339 4.77137 20.3713 4.20876C19.8087 3.64615 19.0456 3.33008 18.25 3.33008Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M12 17.2002V20.6702" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8.53125 20.6699H15.4712" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Internet do’kon yaratish</p>
+                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Internet
+                                do’kon yaratish</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
                             <svg class="text-primary" width="22" height="22" viewBox="0 0 22 22" fill="none"
@@ -120,31 +148,61 @@
                                 ishonchliligini aniqlash</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M16.2708 3.60708V2.40625C16.2708 2.22392 16.1984 2.04904 16.0694 1.92011C15.9406 1.79118 15.7657 1.71875 15.5833 1.71875C15.401 1.71875 15.2261 1.79118 15.0972 1.92011C14.9683 2.04904 14.8958 2.22392 14.8958 2.40625V3.55208H7.10417V2.40625C7.10417 2.22392 7.03174 2.04904 6.9028 1.92011C6.77387 1.79118 6.599 1.71875 6.41667 1.71875C6.23433 1.71875 6.05946 1.79118 5.93053 1.92011C5.80159 2.04904 5.72917 2.22392 5.72917 2.40625V3.60708C4.70739 3.77234 3.77762 4.29545 3.10595 5.08298C2.43427 5.87052 2.06444 6.87119 2.0625 7.90625V15.9271C2.0625 17.0819 2.52125 18.1894 3.33781 19.0059C4.15438 19.8225 5.26187 20.2812 6.41667 20.2812H15.5833C16.7382 20.2812 17.8457 19.8225 18.6622 19.0059C19.4788 18.1894 19.9375 17.0819 19.9375 15.9271V7.90625C19.9356 6.87119 19.5657 5.87052 18.8941 5.08298C18.2224 4.29545 17.2926 3.77234 16.2708 3.60708ZM7.70001 16.4404H6.78334C6.60101 16.4404 6.42614 16.368 6.2972 16.239C6.16827 16.1101 6.09584 15.9352 6.09584 15.7529C6.09584 15.5706 6.16827 15.3957 6.2972 15.2668C6.42614 15.1378 6.60101 15.0654 6.78334 15.0654H7.70001C7.88234 15.0654 8.05721 15.1378 8.18614 15.2668C8.31507 15.3957 8.38751 15.5706 8.38751 15.7529C8.38751 15.9352 8.31507 16.1101 8.18614 16.239C8.05721 16.368 7.88234 16.4404 7.70001 16.4404ZM7.70001 13.6171H6.78334C6.60101 13.6171 6.42614 13.5447 6.2972 13.4157C6.16827 13.2868 6.09584 13.1119 6.09584 12.9296C6.09584 12.7473 6.16827 12.5724 6.2972 12.4435C6.42614 12.3145 6.60101 12.2421 6.78334 12.2421H7.70001C7.88234 12.2421 8.05721 12.3145 8.18614 12.4435C8.31507 12.5724 8.38751 12.7473 8.38751 12.9296C8.38751 13.1119 8.31507 13.2868 8.18614 13.4157C8.05721 13.5447 7.88234 13.6171 7.70001 13.6171ZM11.4675 16.4404H10.5508C10.3685 16.4404 10.1936 16.368 10.0647 16.239C9.93575 16.1101 9.86333 15.9352 9.86333 15.7529C9.86333 15.5706 9.93575 15.3957 10.0647 15.2668C10.1936 15.1378 10.3685 15.0654 10.5508 15.0654H11.4675C11.6498 15.0654 11.8247 15.1378 11.9536 15.2668C12.0826 15.3957 12.155 15.5706 12.155 15.7529C12.155 15.9352 12.0826 16.1101 11.9536 16.239C11.8247 16.368 11.6498 16.4404 11.4675 16.4404ZM11.4675 13.6171H10.5508C10.3685 13.6171 10.1936 13.5447 10.0647 13.4157C9.93575 13.2868 9.86333 13.1119 9.86333 12.9296C9.86333 12.7473 9.93575 12.5724 10.0647 12.4435C10.1936 12.3145 10.3685 12.2421 10.5508 12.2421H11.4675C11.6498 12.2421 11.8247 12.3145 11.9536 12.4435C12.0826 12.5724 12.155 12.7473 12.155 12.9296C12.155 13.1119 12.0826 13.2868 11.9536 13.4157C11.8247 13.5447 11.6498 13.6171 11.4675 13.6171ZM15.235 16.4404H14.3183C14.136 16.4404 13.9611 16.368 13.8322 16.239C13.7032 16.1101 13.6308 15.9352 13.6308 15.7529C13.6308 15.5706 13.7032 15.3957 13.8322 15.2668C13.9611 15.1378 14.136 15.0654 14.3183 15.0654H15.235C15.4173 15.0654 15.5922 15.1378 15.7211 15.2668C15.8501 15.3957 15.9225 15.5706 15.9225 15.7529C15.9225 15.9352 15.8501 16.1101 15.7211 16.239C15.5922 16.368 15.4173 16.4404 15.235 16.4404ZM15.235 13.6171H14.3183C14.136 13.6171 13.9611 13.5447 13.8322 13.4157C13.7032 13.2868 13.6308 13.1119 13.6308 12.9296C13.6308 12.7473 13.7032 12.5724 13.8322 12.4435C13.9611 12.3145 14.136 12.2421 14.3183 12.2421H15.235C15.4173 12.2421 15.5922 12.3145 15.7211 12.4435C15.8501 12.5724 15.9225 12.7473 15.9225 12.9296C15.9225 13.1119 15.8501 13.2868 15.7211 13.4157C15.5922 13.5447 15.4173 13.6171 15.235 13.6171ZM18.5625 9.03375H3.4375V7.88792C3.4384 7.21884 3.6652 6.56967 4.08114 6.04558C4.49707 5.52151 5.07777 5.15323 5.72917 5.00042V6.05458C5.72917 6.23692 5.80159 6.41179 5.93053 6.54072C6.05946 6.66965 6.23433 6.74208 6.41667 6.74208C6.599 6.74208 6.77387 6.66965 6.9028 6.54072C7.03174 6.41179 7.10417 6.23692 7.10417 6.05458V4.90875H14.8958V6.05458C14.8958 6.23692 14.9683 6.41179 15.0972 6.54072C15.2261 6.66965 15.401 6.74208 15.5833 6.74208C15.7657 6.74208 15.9406 6.66965 16.0694 6.54072C16.1984 6.41179 16.2708 6.23692 16.2708 6.05458V5.00042C16.9222 5.15323 17.5029 5.52151 17.9189 6.04558C18.3348 6.56967 18.5616 7.21884 18.5625 7.88792V9.03375Z" fill="currentColor"/>
+                            <svg class="text-primary" width="22" height="22" viewBox="0 0 22 22" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.2708 3.60708V2.40625C16.2708 2.22392 16.1984 2.04904 16.0694 1.92011C15.9406 1.79118 15.7657 1.71875 15.5833 1.71875C15.401 1.71875 15.2261 1.79118 15.0972 1.92011C14.9683 2.04904 14.8958 2.22392 14.8958 2.40625V3.55208H7.10417V2.40625C7.10417 2.22392 7.03174 2.04904 6.9028 1.92011C6.77387 1.79118 6.599 1.71875 6.41667 1.71875C6.23433 1.71875 6.05946 1.79118 5.93053 1.92011C5.80159 2.04904 5.72917 2.22392 5.72917 2.40625V3.60708C4.70739 3.77234 3.77762 4.29545 3.10595 5.08298C2.43427 5.87052 2.06444 6.87119 2.0625 7.90625V15.9271C2.0625 17.0819 2.52125 18.1894 3.33781 19.0059C4.15438 19.8225 5.26187 20.2812 6.41667 20.2812H15.5833C16.7382 20.2812 17.8457 19.8225 18.6622 19.0059C19.4788 18.1894 19.9375 17.0819 19.9375 15.9271V7.90625C19.9356 6.87119 19.5657 5.87052 18.8941 5.08298C18.2224 4.29545 17.2926 3.77234 16.2708 3.60708ZM7.70001 16.4404H6.78334C6.60101 16.4404 6.42614 16.368 6.2972 16.239C6.16827 16.1101 6.09584 15.9352 6.09584 15.7529C6.09584 15.5706 6.16827 15.3957 6.2972 15.2668C6.42614 15.1378 6.60101 15.0654 6.78334 15.0654H7.70001C7.88234 15.0654 8.05721 15.1378 8.18614 15.2668C8.31507 15.3957 8.38751 15.5706 8.38751 15.7529C8.38751 15.9352 8.31507 16.1101 8.18614 16.239C8.05721 16.368 7.88234 16.4404 7.70001 16.4404ZM7.70001 13.6171H6.78334C6.60101 13.6171 6.42614 13.5447 6.2972 13.4157C6.16827 13.2868 6.09584 13.1119 6.09584 12.9296C6.09584 12.7473 6.16827 12.5724 6.2972 12.4435C6.42614 12.3145 6.60101 12.2421 6.78334 12.2421H7.70001C7.88234 12.2421 8.05721 12.3145 8.18614 12.4435C8.31507 12.5724 8.38751 12.7473 8.38751 12.9296C8.38751 13.1119 8.31507 13.2868 8.18614 13.4157C8.05721 13.5447 7.88234 13.6171 7.70001 13.6171ZM11.4675 16.4404H10.5508C10.3685 16.4404 10.1936 16.368 10.0647 16.239C9.93575 16.1101 9.86333 15.9352 9.86333 15.7529C9.86333 15.5706 9.93575 15.3957 10.0647 15.2668C10.1936 15.1378 10.3685 15.0654 10.5508 15.0654H11.4675C11.6498 15.0654 11.8247 15.1378 11.9536 15.2668C12.0826 15.3957 12.155 15.5706 12.155 15.7529C12.155 15.9352 12.0826 16.1101 11.9536 16.239C11.8247 16.368 11.6498 16.4404 11.4675 16.4404ZM11.4675 13.6171H10.5508C10.3685 13.6171 10.1936 13.5447 10.0647 13.4157C9.93575 13.2868 9.86333 13.1119 9.86333 12.9296C9.86333 12.7473 9.93575 12.5724 10.0647 12.4435C10.1936 12.3145 10.3685 12.2421 10.5508 12.2421H11.4675C11.6498 12.2421 11.8247 12.3145 11.9536 12.4435C12.0826 12.5724 12.155 12.7473 12.155 12.9296C12.155 13.1119 12.0826 13.2868 11.9536 13.4157C11.8247 13.5447 11.6498 13.6171 11.4675 13.6171ZM15.235 16.4404H14.3183C14.136 16.4404 13.9611 16.368 13.8322 16.239C13.7032 16.1101 13.6308 15.9352 13.6308 15.7529C13.6308 15.5706 13.7032 15.3957 13.8322 15.2668C13.9611 15.1378 14.136 15.0654 14.3183 15.0654H15.235C15.4173 15.0654 15.5922 15.1378 15.7211 15.2668C15.8501 15.3957 15.9225 15.5706 15.9225 15.7529C15.9225 15.9352 15.8501 16.1101 15.7211 16.239C15.5922 16.368 15.4173 16.4404 15.235 16.4404ZM15.235 13.6171H14.3183C14.136 13.6171 13.9611 13.5447 13.8322 13.4157C13.7032 13.2868 13.6308 13.1119 13.6308 12.9296C13.6308 12.7473 13.7032 12.5724 13.8322 12.4435C13.9611 12.3145 14.136 12.2421 14.3183 12.2421H15.235C15.4173 12.2421 15.5922 12.3145 15.7211 12.4435C15.8501 12.5724 15.9225 12.7473 15.9225 12.9296C15.9225 13.1119 15.8501 13.2868 15.7211 13.4157C15.5922 13.5447 15.4173 13.6171 15.235 13.6171ZM18.5625 9.03375H3.4375V7.88792C3.4384 7.21884 3.6652 6.56967 4.08114 6.04558C4.49707 5.52151 5.07777 5.15323 5.72917 5.00042V6.05458C5.72917 6.23692 5.80159 6.41179 5.93053 6.54072C6.05946 6.66965 6.23433 6.74208 6.41667 6.74208C6.599 6.74208 6.77387 6.66965 6.9028 6.54072C7.03174 6.41179 7.10417 6.23692 7.10417 6.05458V4.90875H14.8958V6.05458C14.8958 6.23692 14.9683 6.41179 15.0972 6.54072C15.2261 6.66965 15.401 6.74208 15.5833 6.74208C15.7657 6.74208 15.9406 6.66965 16.0694 6.54072C16.1984 6.41179 16.2708 6.23692 16.2708 6.05458V5.00042C16.9222 5.15323 17.5029 5.52151 17.9189 6.04558C18.3348 6.56967 18.5616 7.21884 18.5625 7.88792V9.03375Z"
+                                      fill="currentColor"/>
                             </svg>
-                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">To’lovlarni
+                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">
+                                To’lovlarni
                                 avtomatik eslatish</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17.9254 19.6341H20.063C20.2512 19.6373 20.4374 19.5949 20.6056 19.5104C20.7739 19.4259 20.9191 19.3019 21.0289 19.1489C21.1386 18.996 21.2097 18.8187 21.2359 18.6323C21.2622 18.4459 21.2428 18.2559 21.1795 18.0786C20.6343 16.9117 19.7712 15.9221 18.6893 15.2234C17.6074 14.5246 16.3504 14.1449 15.0625 14.1279" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M15.0625 11.3697C15.5438 11.3697 16.0203 11.275 16.4649 11.0908C16.9095 10.9066 17.3134 10.6367 17.6537 10.2964C17.994 9.95614 18.2639 9.55217 18.4481 9.10758C18.6322 8.66298 18.727 8.18648 18.727 7.70525C18.7283 7.22323 18.6344 6.74569 18.4508 6.29999C18.2672 5.8543 17.9975 5.44921 17.6571 5.10792C17.3167 4.76663 16.9123 4.49585 16.4671 4.3111C16.0219 4.12635 15.5446 4.03125 15.0625 4.03125" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M14.0251 20.8272C14.3771 20.8264 14.7221 20.7282 15.0218 20.5435C15.3215 20.3588 15.5643 20.0948 15.7233 19.7808C15.8823 19.4667 15.9513 19.1147 15.9228 18.7639C15.8942 18.413 15.7692 18.0768 15.5615 17.7926C14.8329 16.8247 13.8947 16.0343 12.8171 15.4806C11.7396 14.927 10.5507 14.6244 9.33953 14.5957C8.1284 14.6244 6.93948 14.927 5.86193 15.4806C4.78437 16.0343 3.84614 16.8247 3.11758 17.7926C2.90988 18.0768 2.78484 18.413 2.75629 18.7639C2.72774 19.1147 2.79678 19.4667 2.95579 19.7808C3.11481 20.0948 3.35759 20.3588 3.6573 20.5435C3.957 20.7282 4.30195 20.8264 4.65398 20.8272H14.0251Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M9.33865 11.4847C10.4405 11.4822 11.4963 11.0427 12.2745 10.2627C13.0527 9.48267 13.4898 8.42583 13.4898 7.324C13.4898 6.22305 13.0525 5.16718 12.274 4.38869C11.4955 3.6102 10.4397 3.17285 9.33865 3.17285C8.2377 3.17285 7.18184 3.6102 6.40335 4.38869C5.62486 5.16718 5.1875 6.22305 5.1875 7.324C5.1875 8.42583 5.62455 9.48267 6.40277 10.2627C7.18099 11.0427 8.23683 11.4822 9.33865 11.4847Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.9254 19.6341H20.063C20.2512 19.6373 20.4374 19.5949 20.6056 19.5104C20.7739 19.4259 20.9191 19.3019 21.0289 19.1489C21.1386 18.996 21.2097 18.8187 21.2359 18.6323C21.2622 18.4459 21.2428 18.2559 21.1795 18.0786C20.6343 16.9117 19.7712 15.9221 18.6893 15.2234C17.6074 14.5246 16.3504 14.1449 15.0625 14.1279"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M15.0625 11.3697C15.5438 11.3697 16.0203 11.275 16.4649 11.0908C16.9095 10.9066 17.3134 10.6367 17.6537 10.2964C17.994 9.95614 18.2639 9.55217 18.4481 9.10758C18.6322 8.66298 18.727 8.18648 18.727 7.70525C18.7283 7.22323 18.6344 6.74569 18.4508 6.29999C18.2672 5.8543 17.9975 5.44921 17.6571 5.10792C17.3167 4.76663 16.9123 4.49585 16.4671 4.3111C16.0219 4.12635 15.5446 4.03125 15.0625 4.03125"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M14.0251 20.8272C14.3771 20.8264 14.7221 20.7282 15.0218 20.5435C15.3215 20.3588 15.5643 20.0948 15.7233 19.7808C15.8823 19.4667 15.9513 19.1147 15.9228 18.7639C15.8942 18.413 15.7692 18.0768 15.5615 17.7926C14.8329 16.8247 13.8947 16.0343 12.8171 15.4806C11.7396 14.927 10.5507 14.6244 9.33953 14.5957C8.1284 14.6244 6.93948 14.927 5.86193 15.4806C4.78437 16.0343 3.84614 16.8247 3.11758 17.7926C2.90988 18.0768 2.78484 18.413 2.75629 18.7639C2.72774 19.1147 2.79678 19.4667 2.95579 19.7808C3.11481 20.0948 3.35759 20.3588 3.6573 20.5435C3.957 20.7282 4.30195 20.8264 4.65398 20.8272H14.0251Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M9.33865 11.4847C10.4405 11.4822 11.4963 11.0427 12.2745 10.2627C13.0527 9.48267 13.4898 8.42583 13.4898 7.324C13.4898 6.22305 13.0525 5.16718 12.274 4.38869C11.4955 3.6102 10.4397 3.17285 9.33865 3.17285C8.2377 3.17285 7.18184 3.6102 6.40335 4.38869C5.62486 5.16718 5.1875 6.22305 5.1875 7.324C5.1875 8.42583 5.62455 9.48267 6.40277 10.2627C7.18099 11.0427 8.23683 11.4822 9.33865 11.4847Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
                             </svg>
-                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Loyalty program</p>
+                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Loyalty
+                                program</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.43203 5.83301H6.73203C6.23498 5.83301 5.83203 6.23596 5.83203 6.73301V9.43301C5.83203 9.93007 6.23498 10.333 6.73203 10.333H9.43203C9.92909 10.333 10.3321 9.93007 10.3321 9.43301V6.73301C10.3321 6.23596 9.92909 5.83301 9.43203 5.83301Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M9.43203 13.6475H6.73203C6.23498 13.6475 5.83203 14.0505 5.83203 14.5475V17.2475C5.83203 17.7446 6.23498 18.1475 6.73203 18.1475H9.43203C9.92909 18.1475 10.3321 17.7446 10.3321 17.2475V14.5475C10.3321 14.0505 9.92909 13.6475 9.43203 13.6475Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M17.268 5.83301H14.568C14.071 5.83301 13.668 6.23596 13.668 6.73301V9.43301C13.668 9.93007 14.071 10.333 14.568 10.333H17.268C17.7651 10.333 18.168 9.93007 18.168 9.43301V6.73301C18.168 6.23596 17.7651 5.83301 17.268 5.83301Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M17.268 13.667H14.568C14.071 13.667 13.668 14.07 13.668 14.567V17.267C13.668 17.7641 14.071 18.167 14.568 18.167H17.268C17.7651 18.167 18.168 17.7641 18.168 17.267V14.567C18.168 14.07 17.7651 13.667 17.268 13.667Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M21.2487 8.91667V5.83333C21.2487 5.01558 20.9238 4.23132 20.3456 3.65309C19.7674 3.07485 18.9831 2.75 18.1653 2.75H15.082" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M15.082 21.2497H18.1653C18.9831 21.2497 19.7674 20.9248 20.3456 20.3466C20.9238 19.7684 21.2487 18.9841 21.2487 18.1663V15.083" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M2.75 15.083V18.1663C2.75 18.9841 3.07485 19.7684 3.65309 20.3466C4.23132 20.9248 5.01558 21.2497 5.83333 21.2497H8.91667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M8.91667 2.75H5.83333C5.01558 2.75 4.23132 3.07485 3.65309 3.65309C3.07485 4.23132 2.75 5.01558 2.75 5.83333V8.91667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.43203 5.83301H6.73203C6.23498 5.83301 5.83203 6.23596 5.83203 6.73301V9.43301C5.83203 9.93007 6.23498 10.333 6.73203 10.333H9.43203C9.92909 10.333 10.3321 9.93007 10.3321 9.43301V6.73301C10.3321 6.23596 9.92909 5.83301 9.43203 5.83301Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M9.43203 13.6475H6.73203C6.23498 13.6475 5.83203 14.0505 5.83203 14.5475V17.2475C5.83203 17.7446 6.23498 18.1475 6.73203 18.1475H9.43203C9.92909 18.1475 10.3321 17.7446 10.3321 17.2475V14.5475C10.3321 14.0505 9.92909 13.6475 9.43203 13.6475Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M17.268 5.83301H14.568C14.071 5.83301 13.668 6.23596 13.668 6.73301V9.43301C13.668 9.93007 14.071 10.333 14.568 10.333H17.268C17.7651 10.333 18.168 9.93007 18.168 9.43301V6.73301C18.168 6.23596 17.7651 5.83301 17.268 5.83301Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M17.268 13.667H14.568C14.071 13.667 13.668 14.07 13.668 14.567V17.267C13.668 17.7641 14.071 18.167 14.568 18.167H17.268C17.7651 18.167 18.168 17.7641 18.168 17.267V14.567C18.168 14.07 17.7651 13.667 17.268 13.667Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M21.2487 8.91667V5.83333C21.2487 5.01558 20.9238 4.23132 20.3456 3.65309C19.7674 3.07485 18.9831 2.75 18.1653 2.75H15.082"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M15.082 21.2497H18.1653C18.9831 21.2497 19.7674 20.9248 20.3456 20.3466C20.9238 19.7684 21.2487 18.9841 21.2487 18.1663V15.083"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M2.75 15.083V18.1663C2.75 18.9841 3.07485 19.7684 3.65309 20.3466C4.23132 20.9248 5.01558 21.2497 5.83333 21.2497H8.91667"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M8.91667 2.75H5.83333C5.01558 2.75 4.23132 3.07485 3.65309 3.65309C3.07485 4.23132 2.75 5.01558 2.75 5.83333V8.91667"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
                             </svg>
                             <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">QR pay</p>
                         </div>
@@ -153,23 +211,38 @@
                 <div class="marque z-10">
                     <div class="flex items-center justify-center space-x-2.5">
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15.8525 2.75H9.68577C6.84764 2.75 4.54688 5.05076 4.54688 7.88889V16.1111C4.54688 18.9492 6.84764 21.25 9.68577 21.25H15.8525C18.6906 21.25 20.9913 18.9492 20.9913 16.1111V7.88889C20.9913 5.05076 18.6906 2.75 15.8525 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M3.00781 8.40234H6.09115" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M3.00781 15.5977H6.09115" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M16.6698 16.7448C16.6698 15.0921 14.8274 13.749 13.1747 13.749C11.522 13.749 9.67969 15.0921 9.67969 16.7448" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M13.1762 11.368C14.473 11.368 15.5243 10.3167 15.5243 9.01997C15.5243 7.72315 14.473 6.67188 13.1762 6.67188C11.8793 6.67188 10.8281 7.72315 10.8281 9.01997C10.8281 10.3167 11.8793 11.368 13.1762 11.368Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.8525 2.75H9.68577C6.84764 2.75 4.54688 5.05076 4.54688 7.88889V16.1111C4.54688 18.9492 6.84764 21.25 9.68577 21.25H15.8525C18.6906 21.25 20.9913 18.9492 20.9913 16.1111V7.88889C20.9913 5.05076 18.6906 2.75 15.8525 2.75Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M3.00781 8.40234H6.09115" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3.00781 15.5977H6.09115" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16.6698 16.7448C16.6698 15.0921 14.8274 13.749 13.1747 13.749C11.522 13.749 9.67969 15.0921 9.67969 16.7448"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M13.1762 11.368C14.473 11.368 15.5243 10.3167 15.5243 9.01997C15.5243 7.72315 14.473 6.67188 13.1762 6.67188C11.8793 6.67188 10.8281 7.72315 10.8281 9.01997C10.8281 10.3167 11.8793 11.368 13.1762 11.368Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
                             </svg>
                             <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Muddatli
                                 to'lovlarni oson undirish</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18.25 3.33008H5.75C4.95435 3.33008 4.19129 3.64615 3.62868 4.20876C3.06607 4.77137 2.75 5.53443 2.75 6.33008V14.2001C2.75 14.9958 3.06607 15.7588 3.62868 16.3214C4.19129 16.884 4.95435 17.2001 5.75 17.2001H18.25C19.0456 17.2001 19.8087 16.884 20.3713 16.3214C20.9339 15.7588 21.25 14.9958 21.25 14.2001V6.33008C21.25 5.53443 20.9339 4.77137 20.3713 4.20876C19.8087 3.64615 19.0456 3.33008 18.25 3.33008Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 17.2002V20.6702" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M8.53125 20.6699H15.4712" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.25 3.33008H5.75C4.95435 3.33008 4.19129 3.64615 3.62868 4.20876C3.06607 4.77137 2.75 5.53443 2.75 6.33008V14.2001C2.75 14.9958 3.06607 15.7588 3.62868 16.3214C4.19129 16.884 4.95435 17.2001 5.75 17.2001H18.25C19.0456 17.2001 19.8087 16.884 20.3713 16.3214C20.9339 15.7588 21.25 14.9958 21.25 14.2001V6.33008C21.25 5.53443 20.9339 4.77137 20.3713 4.20876C19.8087 3.64615 19.0456 3.33008 18.25 3.33008Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M12 17.2002V20.6702" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8.53125 20.6699H15.4712" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Internet do’kon yaratish</p>
+                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Internet
+                                do’kon yaratish</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
                             <svg class="text-primary" width="22" height="22" viewBox="0 0 22 22" fill="none"
@@ -187,31 +260,61 @@
                                 ishonchliligini aniqlash</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M16.2708 3.60708V2.40625C16.2708 2.22392 16.1984 2.04904 16.0694 1.92011C15.9406 1.79118 15.7657 1.71875 15.5833 1.71875C15.401 1.71875 15.2261 1.79118 15.0972 1.92011C14.9683 2.04904 14.8958 2.22392 14.8958 2.40625V3.55208H7.10417V2.40625C7.10417 2.22392 7.03174 2.04904 6.9028 1.92011C6.77387 1.79118 6.599 1.71875 6.41667 1.71875C6.23433 1.71875 6.05946 1.79118 5.93053 1.92011C5.80159 2.04904 5.72917 2.22392 5.72917 2.40625V3.60708C4.70739 3.77234 3.77762 4.29545 3.10595 5.08298C2.43427 5.87052 2.06444 6.87119 2.0625 7.90625V15.9271C2.0625 17.0819 2.52125 18.1894 3.33781 19.0059C4.15438 19.8225 5.26187 20.2812 6.41667 20.2812H15.5833C16.7382 20.2812 17.8457 19.8225 18.6622 19.0059C19.4788 18.1894 19.9375 17.0819 19.9375 15.9271V7.90625C19.9356 6.87119 19.5657 5.87052 18.8941 5.08298C18.2224 4.29545 17.2926 3.77234 16.2708 3.60708ZM7.70001 16.4404H6.78334C6.60101 16.4404 6.42614 16.368 6.2972 16.239C6.16827 16.1101 6.09584 15.9352 6.09584 15.7529C6.09584 15.5706 6.16827 15.3957 6.2972 15.2668C6.42614 15.1378 6.60101 15.0654 6.78334 15.0654H7.70001C7.88234 15.0654 8.05721 15.1378 8.18614 15.2668C8.31507 15.3957 8.38751 15.5706 8.38751 15.7529C8.38751 15.9352 8.31507 16.1101 8.18614 16.239C8.05721 16.368 7.88234 16.4404 7.70001 16.4404ZM7.70001 13.6171H6.78334C6.60101 13.6171 6.42614 13.5447 6.2972 13.4157C6.16827 13.2868 6.09584 13.1119 6.09584 12.9296C6.09584 12.7473 6.16827 12.5724 6.2972 12.4435C6.42614 12.3145 6.60101 12.2421 6.78334 12.2421H7.70001C7.88234 12.2421 8.05721 12.3145 8.18614 12.4435C8.31507 12.5724 8.38751 12.7473 8.38751 12.9296C8.38751 13.1119 8.31507 13.2868 8.18614 13.4157C8.05721 13.5447 7.88234 13.6171 7.70001 13.6171ZM11.4675 16.4404H10.5508C10.3685 16.4404 10.1936 16.368 10.0647 16.239C9.93575 16.1101 9.86333 15.9352 9.86333 15.7529C9.86333 15.5706 9.93575 15.3957 10.0647 15.2668C10.1936 15.1378 10.3685 15.0654 10.5508 15.0654H11.4675C11.6498 15.0654 11.8247 15.1378 11.9536 15.2668C12.0826 15.3957 12.155 15.5706 12.155 15.7529C12.155 15.9352 12.0826 16.1101 11.9536 16.239C11.8247 16.368 11.6498 16.4404 11.4675 16.4404ZM11.4675 13.6171H10.5508C10.3685 13.6171 10.1936 13.5447 10.0647 13.4157C9.93575 13.2868 9.86333 13.1119 9.86333 12.9296C9.86333 12.7473 9.93575 12.5724 10.0647 12.4435C10.1936 12.3145 10.3685 12.2421 10.5508 12.2421H11.4675C11.6498 12.2421 11.8247 12.3145 11.9536 12.4435C12.0826 12.5724 12.155 12.7473 12.155 12.9296C12.155 13.1119 12.0826 13.2868 11.9536 13.4157C11.8247 13.5447 11.6498 13.6171 11.4675 13.6171ZM15.235 16.4404H14.3183C14.136 16.4404 13.9611 16.368 13.8322 16.239C13.7032 16.1101 13.6308 15.9352 13.6308 15.7529C13.6308 15.5706 13.7032 15.3957 13.8322 15.2668C13.9611 15.1378 14.136 15.0654 14.3183 15.0654H15.235C15.4173 15.0654 15.5922 15.1378 15.7211 15.2668C15.8501 15.3957 15.9225 15.5706 15.9225 15.7529C15.9225 15.9352 15.8501 16.1101 15.7211 16.239C15.5922 16.368 15.4173 16.4404 15.235 16.4404ZM15.235 13.6171H14.3183C14.136 13.6171 13.9611 13.5447 13.8322 13.4157C13.7032 13.2868 13.6308 13.1119 13.6308 12.9296C13.6308 12.7473 13.7032 12.5724 13.8322 12.4435C13.9611 12.3145 14.136 12.2421 14.3183 12.2421H15.235C15.4173 12.2421 15.5922 12.3145 15.7211 12.4435C15.8501 12.5724 15.9225 12.7473 15.9225 12.9296C15.9225 13.1119 15.8501 13.2868 15.7211 13.4157C15.5922 13.5447 15.4173 13.6171 15.235 13.6171ZM18.5625 9.03375H3.4375V7.88792C3.4384 7.21884 3.6652 6.56967 4.08114 6.04558C4.49707 5.52151 5.07777 5.15323 5.72917 5.00042V6.05458C5.72917 6.23692 5.80159 6.41179 5.93053 6.54072C6.05946 6.66965 6.23433 6.74208 6.41667 6.74208C6.599 6.74208 6.77387 6.66965 6.9028 6.54072C7.03174 6.41179 7.10417 6.23692 7.10417 6.05458V4.90875H14.8958V6.05458C14.8958 6.23692 14.9683 6.41179 15.0972 6.54072C15.2261 6.66965 15.401 6.74208 15.5833 6.74208C15.7657 6.74208 15.9406 6.66965 16.0694 6.54072C16.1984 6.41179 16.2708 6.23692 16.2708 6.05458V5.00042C16.9222 5.15323 17.5029 5.52151 17.9189 6.04558C18.3348 6.56967 18.5616 7.21884 18.5625 7.88792V9.03375Z" fill="currentColor"/>
+                            <svg class="text-primary" width="22" height="22" viewBox="0 0 22 22" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.2708 3.60708V2.40625C16.2708 2.22392 16.1984 2.04904 16.0694 1.92011C15.9406 1.79118 15.7657 1.71875 15.5833 1.71875C15.401 1.71875 15.2261 1.79118 15.0972 1.92011C14.9683 2.04904 14.8958 2.22392 14.8958 2.40625V3.55208H7.10417V2.40625C7.10417 2.22392 7.03174 2.04904 6.9028 1.92011C6.77387 1.79118 6.599 1.71875 6.41667 1.71875C6.23433 1.71875 6.05946 1.79118 5.93053 1.92011C5.80159 2.04904 5.72917 2.22392 5.72917 2.40625V3.60708C4.70739 3.77234 3.77762 4.29545 3.10595 5.08298C2.43427 5.87052 2.06444 6.87119 2.0625 7.90625V15.9271C2.0625 17.0819 2.52125 18.1894 3.33781 19.0059C4.15438 19.8225 5.26187 20.2812 6.41667 20.2812H15.5833C16.7382 20.2812 17.8457 19.8225 18.6622 19.0059C19.4788 18.1894 19.9375 17.0819 19.9375 15.9271V7.90625C19.9356 6.87119 19.5657 5.87052 18.8941 5.08298C18.2224 4.29545 17.2926 3.77234 16.2708 3.60708ZM7.70001 16.4404H6.78334C6.60101 16.4404 6.42614 16.368 6.2972 16.239C6.16827 16.1101 6.09584 15.9352 6.09584 15.7529C6.09584 15.5706 6.16827 15.3957 6.2972 15.2668C6.42614 15.1378 6.60101 15.0654 6.78334 15.0654H7.70001C7.88234 15.0654 8.05721 15.1378 8.18614 15.2668C8.31507 15.3957 8.38751 15.5706 8.38751 15.7529C8.38751 15.9352 8.31507 16.1101 8.18614 16.239C8.05721 16.368 7.88234 16.4404 7.70001 16.4404ZM7.70001 13.6171H6.78334C6.60101 13.6171 6.42614 13.5447 6.2972 13.4157C6.16827 13.2868 6.09584 13.1119 6.09584 12.9296C6.09584 12.7473 6.16827 12.5724 6.2972 12.4435C6.42614 12.3145 6.60101 12.2421 6.78334 12.2421H7.70001C7.88234 12.2421 8.05721 12.3145 8.18614 12.4435C8.31507 12.5724 8.38751 12.7473 8.38751 12.9296C8.38751 13.1119 8.31507 13.2868 8.18614 13.4157C8.05721 13.5447 7.88234 13.6171 7.70001 13.6171ZM11.4675 16.4404H10.5508C10.3685 16.4404 10.1936 16.368 10.0647 16.239C9.93575 16.1101 9.86333 15.9352 9.86333 15.7529C9.86333 15.5706 9.93575 15.3957 10.0647 15.2668C10.1936 15.1378 10.3685 15.0654 10.5508 15.0654H11.4675C11.6498 15.0654 11.8247 15.1378 11.9536 15.2668C12.0826 15.3957 12.155 15.5706 12.155 15.7529C12.155 15.9352 12.0826 16.1101 11.9536 16.239C11.8247 16.368 11.6498 16.4404 11.4675 16.4404ZM11.4675 13.6171H10.5508C10.3685 13.6171 10.1936 13.5447 10.0647 13.4157C9.93575 13.2868 9.86333 13.1119 9.86333 12.9296C9.86333 12.7473 9.93575 12.5724 10.0647 12.4435C10.1936 12.3145 10.3685 12.2421 10.5508 12.2421H11.4675C11.6498 12.2421 11.8247 12.3145 11.9536 12.4435C12.0826 12.5724 12.155 12.7473 12.155 12.9296C12.155 13.1119 12.0826 13.2868 11.9536 13.4157C11.8247 13.5447 11.6498 13.6171 11.4675 13.6171ZM15.235 16.4404H14.3183C14.136 16.4404 13.9611 16.368 13.8322 16.239C13.7032 16.1101 13.6308 15.9352 13.6308 15.7529C13.6308 15.5706 13.7032 15.3957 13.8322 15.2668C13.9611 15.1378 14.136 15.0654 14.3183 15.0654H15.235C15.4173 15.0654 15.5922 15.1378 15.7211 15.2668C15.8501 15.3957 15.9225 15.5706 15.9225 15.7529C15.9225 15.9352 15.8501 16.1101 15.7211 16.239C15.5922 16.368 15.4173 16.4404 15.235 16.4404ZM15.235 13.6171H14.3183C14.136 13.6171 13.9611 13.5447 13.8322 13.4157C13.7032 13.2868 13.6308 13.1119 13.6308 12.9296C13.6308 12.7473 13.7032 12.5724 13.8322 12.4435C13.9611 12.3145 14.136 12.2421 14.3183 12.2421H15.235C15.4173 12.2421 15.5922 12.3145 15.7211 12.4435C15.8501 12.5724 15.9225 12.7473 15.9225 12.9296C15.9225 13.1119 15.8501 13.2868 15.7211 13.4157C15.5922 13.5447 15.4173 13.6171 15.235 13.6171ZM18.5625 9.03375H3.4375V7.88792C3.4384 7.21884 3.6652 6.56967 4.08114 6.04558C4.49707 5.52151 5.07777 5.15323 5.72917 5.00042V6.05458C5.72917 6.23692 5.80159 6.41179 5.93053 6.54072C6.05946 6.66965 6.23433 6.74208 6.41667 6.74208C6.599 6.74208 6.77387 6.66965 6.9028 6.54072C7.03174 6.41179 7.10417 6.23692 7.10417 6.05458V4.90875H14.8958V6.05458C14.8958 6.23692 14.9683 6.41179 15.0972 6.54072C15.2261 6.66965 15.401 6.74208 15.5833 6.74208C15.7657 6.74208 15.9406 6.66965 16.0694 6.54072C16.1984 6.41179 16.2708 6.23692 16.2708 6.05458V5.00042C16.9222 5.15323 17.5029 5.52151 17.9189 6.04558C18.3348 6.56967 18.5616 7.21884 18.5625 7.88792V9.03375Z"
+                                      fill="currentColor"/>
                             </svg>
-                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">To’lovlarni
+                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">
+                                To’lovlarni
                                 avtomatik eslatish</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17.9254 19.6341H20.063C20.2512 19.6373 20.4374 19.5949 20.6056 19.5104C20.7739 19.4259 20.9191 19.3019 21.0289 19.1489C21.1386 18.996 21.2097 18.8187 21.2359 18.6323C21.2622 18.4459 21.2428 18.2559 21.1795 18.0786C20.6343 16.9117 19.7712 15.9221 18.6893 15.2234C17.6074 14.5246 16.3504 14.1449 15.0625 14.1279" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M15.0625 11.3697C15.5438 11.3697 16.0203 11.275 16.4649 11.0908C16.9095 10.9066 17.3134 10.6367 17.6537 10.2964C17.994 9.95614 18.2639 9.55217 18.4481 9.10758C18.6322 8.66298 18.727 8.18648 18.727 7.70525C18.7283 7.22323 18.6344 6.74569 18.4508 6.29999C18.2672 5.8543 17.9975 5.44921 17.6571 5.10792C17.3167 4.76663 16.9123 4.49585 16.4671 4.3111C16.0219 4.12635 15.5446 4.03125 15.0625 4.03125" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M14.0251 20.8272C14.3771 20.8264 14.7221 20.7282 15.0218 20.5435C15.3215 20.3588 15.5643 20.0948 15.7233 19.7808C15.8823 19.4667 15.9513 19.1147 15.9228 18.7639C15.8942 18.413 15.7692 18.0768 15.5615 17.7926C14.8329 16.8247 13.8947 16.0343 12.8171 15.4806C11.7396 14.927 10.5507 14.6244 9.33953 14.5957C8.1284 14.6244 6.93948 14.927 5.86193 15.4806C4.78437 16.0343 3.84614 16.8247 3.11758 17.7926C2.90988 18.0768 2.78484 18.413 2.75629 18.7639C2.72774 19.1147 2.79678 19.4667 2.95579 19.7808C3.11481 20.0948 3.35759 20.3588 3.6573 20.5435C3.957 20.7282 4.30195 20.8264 4.65398 20.8272H14.0251Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M9.33865 11.4847C10.4405 11.4822 11.4963 11.0427 12.2745 10.2627C13.0527 9.48267 13.4898 8.42583 13.4898 7.324C13.4898 6.22305 13.0525 5.16718 12.274 4.38869C11.4955 3.6102 10.4397 3.17285 9.33865 3.17285C8.2377 3.17285 7.18184 3.6102 6.40335 4.38869C5.62486 5.16718 5.1875 6.22305 5.1875 7.324C5.1875 8.42583 5.62455 9.48267 6.40277 10.2627C7.18099 11.0427 8.23683 11.4822 9.33865 11.4847Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.9254 19.6341H20.063C20.2512 19.6373 20.4374 19.5949 20.6056 19.5104C20.7739 19.4259 20.9191 19.3019 21.0289 19.1489C21.1386 18.996 21.2097 18.8187 21.2359 18.6323C21.2622 18.4459 21.2428 18.2559 21.1795 18.0786C20.6343 16.9117 19.7712 15.9221 18.6893 15.2234C17.6074 14.5246 16.3504 14.1449 15.0625 14.1279"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M15.0625 11.3697C15.5438 11.3697 16.0203 11.275 16.4649 11.0908C16.9095 10.9066 17.3134 10.6367 17.6537 10.2964C17.994 9.95614 18.2639 9.55217 18.4481 9.10758C18.6322 8.66298 18.727 8.18648 18.727 7.70525C18.7283 7.22323 18.6344 6.74569 18.4508 6.29999C18.2672 5.8543 17.9975 5.44921 17.6571 5.10792C17.3167 4.76663 16.9123 4.49585 16.4671 4.3111C16.0219 4.12635 15.5446 4.03125 15.0625 4.03125"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M14.0251 20.8272C14.3771 20.8264 14.7221 20.7282 15.0218 20.5435C15.3215 20.3588 15.5643 20.0948 15.7233 19.7808C15.8823 19.4667 15.9513 19.1147 15.9228 18.7639C15.8942 18.413 15.7692 18.0768 15.5615 17.7926C14.8329 16.8247 13.8947 16.0343 12.8171 15.4806C11.7396 14.927 10.5507 14.6244 9.33953 14.5957C8.1284 14.6244 6.93948 14.927 5.86193 15.4806C4.78437 16.0343 3.84614 16.8247 3.11758 17.7926C2.90988 18.0768 2.78484 18.413 2.75629 18.7639C2.72774 19.1147 2.79678 19.4667 2.95579 19.7808C3.11481 20.0948 3.35759 20.3588 3.6573 20.5435C3.957 20.7282 4.30195 20.8264 4.65398 20.8272H14.0251Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M9.33865 11.4847C10.4405 11.4822 11.4963 11.0427 12.2745 10.2627C13.0527 9.48267 13.4898 8.42583 13.4898 7.324C13.4898 6.22305 13.0525 5.16718 12.274 4.38869C11.4955 3.6102 10.4397 3.17285 9.33865 3.17285C8.2377 3.17285 7.18184 3.6102 6.40335 4.38869C5.62486 5.16718 5.1875 6.22305 5.1875 7.324C5.1875 8.42583 5.62455 9.48267 6.40277 10.2627C7.18099 11.0427 8.23683 11.4822 9.33865 11.4847Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
                             </svg>
-                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Loyalty program</p>
+                            <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">Loyalty
+                                program</p>
                         </div>
                         <div class="h-[40px] sm:h-[54px] flex items-center space-x-1.5 py-2.5 px-3 sm:p-4 border border-secondary/15 rounded-[100px]">
-                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.43203 5.83301H6.73203C6.23498 5.83301 5.83203 6.23596 5.83203 6.73301V9.43301C5.83203 9.93007 6.23498 10.333 6.73203 10.333H9.43203C9.92909 10.333 10.3321 9.93007 10.3321 9.43301V6.73301C10.3321 6.23596 9.92909 5.83301 9.43203 5.83301Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M9.43203 13.6475H6.73203C6.23498 13.6475 5.83203 14.0505 5.83203 14.5475V17.2475C5.83203 17.7446 6.23498 18.1475 6.73203 18.1475H9.43203C9.92909 18.1475 10.3321 17.7446 10.3321 17.2475V14.5475C10.3321 14.0505 9.92909 13.6475 9.43203 13.6475Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M17.268 5.83301H14.568C14.071 5.83301 13.668 6.23596 13.668 6.73301V9.43301C13.668 9.93007 14.071 10.333 14.568 10.333H17.268C17.7651 10.333 18.168 9.93007 18.168 9.43301V6.73301C18.168 6.23596 17.7651 5.83301 17.268 5.83301Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M17.268 13.667H14.568C14.071 13.667 13.668 14.07 13.668 14.567V17.267C13.668 17.7641 14.071 18.167 14.568 18.167H17.268C17.7651 18.167 18.168 17.7641 18.168 17.267V14.567C18.168 14.07 17.7651 13.667 17.268 13.667Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M21.2487 8.91667V5.83333C21.2487 5.01558 20.9238 4.23132 20.3456 3.65309C19.7674 3.07485 18.9831 2.75 18.1653 2.75H15.082" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M15.082 21.2497H18.1653C18.9831 21.2497 19.7674 20.9248 20.3456 20.3466C20.9238 19.7684 21.2487 18.9841 21.2487 18.1663V15.083" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M2.75 15.083V18.1663C2.75 18.9841 3.07485 19.7684 3.65309 20.3466C4.23132 20.9248 5.01558 21.2497 5.83333 21.2497H8.91667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M8.91667 2.75H5.83333C5.01558 2.75 4.23132 3.07485 3.65309 3.65309C3.07485 4.23132 2.75 5.01558 2.75 5.83333V8.91667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.43203 5.83301H6.73203C6.23498 5.83301 5.83203 6.23596 5.83203 6.73301V9.43301C5.83203 9.93007 6.23498 10.333 6.73203 10.333H9.43203C9.92909 10.333 10.3321 9.93007 10.3321 9.43301V6.73301C10.3321 6.23596 9.92909 5.83301 9.43203 5.83301Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M9.43203 13.6475H6.73203C6.23498 13.6475 5.83203 14.0505 5.83203 14.5475V17.2475C5.83203 17.7446 6.23498 18.1475 6.73203 18.1475H9.43203C9.92909 18.1475 10.3321 17.7446 10.3321 17.2475V14.5475C10.3321 14.0505 9.92909 13.6475 9.43203 13.6475Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M17.268 5.83301H14.568C14.071 5.83301 13.668 6.23596 13.668 6.73301V9.43301C13.668 9.93007 14.071 10.333 14.568 10.333H17.268C17.7651 10.333 18.168 9.93007 18.168 9.43301V6.73301C18.168 6.23596 17.7651 5.83301 17.268 5.83301Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M17.268 13.667H14.568C14.071 13.667 13.668 14.07 13.668 14.567V17.267C13.668 17.7641 14.071 18.167 14.568 18.167H17.268C17.7651 18.167 18.168 17.7641 18.168 17.267V14.567C18.168 14.07 17.7651 13.667 17.268 13.667Z"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M21.2487 8.91667V5.83333C21.2487 5.01558 20.9238 4.23132 20.3456 3.65309C19.7674 3.07485 18.9831 2.75 18.1653 2.75H15.082"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M15.082 21.2497H18.1653C18.9831 21.2497 19.7674 20.9248 20.3456 20.3466C20.9238 19.7684 21.2487 18.9841 21.2487 18.1663V15.083"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M2.75 15.083V18.1663C2.75 18.9841 3.07485 19.7684 3.65309 20.3466C4.23132 20.9248 5.01558 21.2497 5.83333 21.2497H8.91667"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M8.91667 2.75H5.83333C5.01558 2.75 4.23132 3.07485 3.65309 3.65309C3.07485 4.23132 2.75 5.01558 2.75 5.83333V8.91667"
+                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
                             </svg>
                             <p class="text-[13px]/[20px] sm:text-base text-secondary font-medium text-nowrap">QR pay</p>
                         </div>
@@ -275,7 +378,9 @@
                 <div class="md:col-span-6 lg:col-span-7 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Marketing</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlarga moliyaviy majburiyatlarini o‘z vaqtida bajarishda yordam beruvchi avtomatlashtirilgan eslatmalar va ogohlantirish tizimi orqali xavflarni minimallashtiring.</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlarga moliyaviy majburiyatlarini
+                            o‘z vaqtida bajarishda yordam beruvchi avtomatlashtirilgan eslatmalar va ogohlantirish
+                            tizimi orqali xavflarni minimallashtiring.</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
                            href="{{ route('modules/marketing') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
@@ -288,7 +393,8 @@
                         </a>
                     </div>
 
-                    <img class="max-w-[715px] w-full mx-auto -mt-[20px] aspect-[711/335] mx-auto pointer-events-none" src="{{ asset('/assets/images/system-marketing_715x395.webp') }}"
+                    <img class="max-w-[715px] w-full mx-auto -mt-[20px] aspect-[711/335] mx-auto pointer-events-none"
+                         src="{{ asset('/assets/images/system-marketing_715x395.webp') }}"
                          alt="Marketing">
                 </div>
                 <!-- Column 2 End -->
@@ -298,7 +404,9 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl xl:text-3xl lg:leading-tight font-semibold">Internet<br>
                             do’kon yaratish</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Bir necha bosqichda o‘z internet-do‘koningizni yaratib, onlayn savdoni boshlang. Hech qanday texnik bilim talab etilmaydi!</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Bir necha bosqichda o‘z
+                            internet-do‘koningizni yaratib, onlayn savdoni boshlang. Hech qanday texnik bilim talab
+                            etilmaydi!</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
                            href="{{ route('modules/ecommerce') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
@@ -334,7 +442,8 @@
                         </a>
                     </div>
 
-                    <img class="mx-6 aspect-[337/251] pointer-events-none" src="{{ asset('/assets/images/qr-code_335x325.webp') }}" alt="QR pay">
+                    <img class="mx-6 aspect-[337/251] pointer-events-none"
+                         src="{{ asset('/assets/images/qr-code_335x325.webp') }}" alt="QR pay">
                 </div>
                 <!-- Column 4 End -->
 
@@ -342,7 +451,8 @@
                 <div class="md:col-span-6 lg:col-span-4 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Loyalty</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlarni bonus va chegirmalar bilan ushlab qoling, obuna tizimi orqali ularning sonini oshiring!</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlarni bonus va chegirmalar bilan
+                            ushlab qoling, obuna tizimi orqali ularning sonini oshiring!</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
                            href="{{ route('modules/sbp_pay') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
@@ -355,7 +465,8 @@
                         </a>
                     </div>
 
-                    <img class="aspect-[11/7] pointer-events-none" src="{{ asset('/assets/images/loyalty_375x170.webp') }}"
+                    <img class="aspect-[11/7] pointer-events-none"
+                         src="{{ asset('/assets/images/loyalty_375x170.webp') }}"
                          alt="Loyalty">
                 </div>
                 <!-- Column 5 End -->
@@ -365,7 +476,8 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl lg:text-3xl lg:leading-tight font-semibold">Qo’shimcha
                             xizmatlar</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Filiallar va Xodimlar ustida nazorat qiling va ish jarayonlarini biz bilan birga
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Filiallar va Xodimlar ustida nazorat
+                            qiling va ish jarayonlarini biz bilan birga
                             soddalashtiring!</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
                            href="{{ route('modules/others') }}" title="Batafsil ma’lumot">
@@ -388,7 +500,8 @@
                 <div class="md:col-span-12 lg:col-span-5 bg-secondary rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
                         <p class="text-white text-2xl xl:text-3xl lg:leading-tight font-semibold">Skoring</p>
-                        <p class="custom-truncate mt-3 text-white/75 leading-6">Mijozlaringiz moliyaviy tarixini to‘laqonli analiz qilish imkoni.</p>
+                        <p class="custom-truncate mt-3 text-white/75 leading-6">Mijozlaringiz moliyaviy tarixini
+                            to‘laqonli analiz qilish imkoni.</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-white"
                            href="{{ route('modules/scoring') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
@@ -662,38 +775,38 @@
     <!-- Different Markets End -->
 
     <!-- Feedback Start -->
-{{--    <section class="pt-10 md:pt-[60px]">--}}
-{{--        <h2 class="text-center text-3xl lg:text-5xl text-secondary font-semibold">Mijozlarimiz fikri</h2>--}}
+    {{--    <section class="pt-10 md:pt-[60px]">--}}
+    {{--        <h2 class="text-center text-3xl lg:text-5xl text-secondary font-semibold">Mijozlarimiz fikri</h2>--}}
 
-{{--        <div class="marque-wrap w-full pt-8 lg:pt-[60px] px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 60s;">--}}
-{{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>--}}
-{{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>--}}
+    {{--        <div class="marque-wrap w-full pt-8 lg:pt-[60px] px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 60s;">--}}
+    {{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>--}}
+    {{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>--}}
 
-{{--            <div class="marque flex gap-6">--}}
-{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
-{{--            </div>--}}
-{{--            <div class="marque flex gap-6">--}}
-{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
-{{--            </div>--}}
-{{--            <div class="marque flex gap-6">--}}
-{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--        <div class="pb-10 md:pb-[60px] marque-wrap w-full pt-8 lg:pt-6 px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 40s;">--}}
-{{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>--}}
-{{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>--}}
+    {{--            <div class="marque flex gap-6">--}}
+    {{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+    {{--            </div>--}}
+    {{--            <div class="marque flex gap-6">--}}
+    {{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+    {{--            </div>--}}
+    {{--            <div class="marque flex gap-6">--}}
+    {{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--        <div class="pb-10 md:pb-[60px] marque-wrap w-full pt-8 lg:pt-6 px-4 flex gap-x-6 relative overflow-hidden" style="--speed: 40s;">--}}
+    {{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0"></div>--}}
+    {{--            <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180"></div>--}}
 
-{{--            <div class="marque flex gap-6">--}}
-{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
-{{--            </div>--}}
-{{--            <div class="marque flex gap-6">--}}
-{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
-{{--            </div>--}}
-{{--            <div class="marque flex gap-6">--}}
-{{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </section>--}}
+    {{--            <div class="marque flex gap-6">--}}
+    {{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+    {{--            </div>--}}
+    {{--            <div class="marque flex gap-6">--}}
+    {{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+    {{--            </div>--}}
+    {{--            <div class="marque flex gap-6">--}}
+    {{--                {!! $feedbacksTemplate($feedbacks) !!}--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    </section>--}}
     <!-- Feedback End -->
 
     <!-- Beginning Deadline Start -->
