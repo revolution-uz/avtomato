@@ -37,12 +37,9 @@ class Role extends Model
         'name',
     ];
 
-    public static function getAdmin(): Role
+    public static function getAdmin(): self
     {
-        /** @var self $adminRole */
-        $adminRole = self::query()->where('name', UserRoleEnum::ADMIN)->first();
-
-        return $adminRole;
+        return self::query()->where('name', UserRoleEnum::ADMIN)->firstOrFail();
     }
 
     public function rolePermissions(): HasMany

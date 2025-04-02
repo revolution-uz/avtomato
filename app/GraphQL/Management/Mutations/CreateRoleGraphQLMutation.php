@@ -30,6 +30,12 @@ class CreateRoleGraphQLMutation extends Mutation
             'name' => [
                 'name' => 'name',
                 'type' => Type::nonNull(Type::string()),
+                'rules' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique(Role::class, 'name')->withoutTrashed(),
+                ],
             ],
         ];
     }
@@ -46,18 +52,5 @@ class CreateRoleGraphQLMutation extends Mutation
         $model->saveOrFail();
 
         return $model;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('roles', 'name')
-                    ->withoutTrashed(),
-            ],
-        ];
     }
 }

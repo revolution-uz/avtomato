@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -25,7 +26,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read array $qr
  * @property-read int|null $active_subscription_limit
  * @property Subscription[] $subscriptions
- * @property Card[] $cards
+ * @property Card[]|Collection<int, Card> $cards
  */
 class User extends Authenticatable
 {

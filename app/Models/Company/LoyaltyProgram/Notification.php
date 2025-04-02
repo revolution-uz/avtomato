@@ -2,9 +2,11 @@
 
 namespace App\Models\Company\LoyaltyProgram;
 
+use App\Models\Company\Attachment;
 use App\Models\Company\OrderBySortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
@@ -17,6 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $is_sent
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property Attachment|null $image
  */
 class Notification extends Model
 {
@@ -33,4 +36,9 @@ class Notification extends Model
         'body_ru',
         'is_sent',
     ];
+
+    public function image(): MorphOne
+    {
+        return $this->morphOne(Attachment::class, 'attachmentable')->latestOfMany();
+    }
 }

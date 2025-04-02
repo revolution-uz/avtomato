@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // });
 
     // BURGER MENU FUNCTIONAL START
+    const burgerMenuBtn = document.querySelector('#burgerMenuBtn');
     const burgerMenuShow = document.querySelector('#burgerMenuShow');
     const burgerMenuClose = document.querySelector('#burgerMenuClose');
     const burgerMenuInner = document.querySelector('#burgerMenu');
@@ -68,11 +69,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const isMenuOpen = burgerMenuInner.classList.toggle('show_burger-menu');
         burgerMenuInner.classList.toggle('hide_burger-menu', !isMenuOpen);
 
-        burgerMenuShow.classList.toggle('show_burger-btn', !isMenuOpen);
-        burgerMenuShow.classList.toggle('hide_burger-btn', isMenuOpen);
-
-        burgerMenuClose.classList.toggle('show_burger-btn', isMenuOpen);
-        burgerMenuClose.classList.toggle('hide_burger-btn', !isMenuOpen);
+        burgerButtons.forEach(button => {
+            if (button.classList.contains('show_burger-btn')) {
+                button.classList.remove('show_burger-btn');
+                button.classList.add('hide_burger-btn');
+            } else {
+                button.classList.remove('hide_burger-btn');
+                button.classList.add('show_burger-btn');
+            }
+        });
 
         isMenuOpen ? stickyBody() : scrollBody();
 
@@ -81,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    burgerButtons.forEach(button => button.addEventListener('click', toggleBurgerMenu));
+    burgerMenuBtn.addEventListener('click', toggleBurgerMenu);
 
     // BURGER SUBLIST FUNCTIONAL
     const burgerSublistBtn = document.getElementById("burgerSublistBtn");

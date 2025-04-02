@@ -19,17 +19,17 @@ class ModulesController
                 [
                     'title' => 'Avtospisaniya orqali to‘lovlarni undirish',
                     'desc' => 'To‘lovlar avtomatik tarzda mijoz hisobidan yechiladi. Siz esa kechikkan to‘lovlarni qo‘lda talab qilish',
-                    'img' => '/assets/images/price_1.png',
+                    'img' => '/assets/images/price-1_550x550.webp',
                 ],
                 [
                     'title' => 'Mijoz to‘lov grafigini<br> nazorat qilish',
                     'desc' => 'Har bir mijoz uchun individual to‘lov rejalari yarating va ularning to‘lovlarini real vaqt rejimida kuzatib boring. Barcha jarayonlar tizimda avtomatik ravishda qayd etiladi.',
-                    'img' => '/assets/images/price_2.png',
+                    'img' => '/assets/images/price-2_550x550.webp',
                 ],
                 [
                     'title' => 'Moliyaviy oqimni doimiy nazorat qilish',
                     'desc' => 'Barcha kirim-chiqim operatsiyalarini kuzatib boring va to‘lovlarni rejalashtirish orqali biznesingizni barqaror boshqaring.',
-                    'img' => '/assets/images/price_3.png',
+                    'img' => '/assets/images/price-3_550x550.webp',
                 ],
             ],
             'prices' => [
@@ -70,17 +70,17 @@ class ModulesController
                 [
                     'title' => 'Kechikkan to‘lovlar haqida xabarnomalar',
                     'desc' => 'Mijozlaringizga kechikkan to‘lovlar haqida SMS orqali avtomatik eslatmalar yuboring.',
-                    'img' => '/assets/images/price_10.png',
+                    'img' => '/assets/images/price-10_550x550.webp',
                 ],
                 [
                     'title' => 'Qarzdorlikni kamaytirish strategiyasi',
                     'desc' => 'To‘lov muddatlari o‘tishidan oldin mijozlarga eslatmalar jo‘natish orqali qarzdorlik darajasini kamaytiring.',
-                    'img' => '/assets/images/price_11.png',
+                    'img' => '/assets/images/price-11_550x550.webp',
                 ],
                 [
                     'title' => 'Avtospisaniya orqali moliyaviy nazorat',
                     'desc' => 'Avtospisaniya orqali yechilgan pullar haqida SMS xabar to’lovlar bo’yicha mijozlarni ogohlantirish.',
-                    'img' => '/assets/images/price_12.png',
+                    'img' => '/assets/images/price-12_550x550.webp',
                 ],
             ],
             'prices' => [
@@ -107,17 +107,17 @@ class ModulesController
                 [
                     'title' => 'Mijozlarning to‘lov qobiliyatini baholash',
                     'desc' => 'Har bir mijozning oldingi to‘lov tarixi asosida uning moliyaviy ishonchliligini baholang.',
-                    'img' => '/assets/images/price_4.png',
+                    'img' => '/assets/images/price-4_550x550.webp',
                 ],
                 [
                     'title' => 'Qaror qabul qilishni soddalashtirish',
                     'desc' => 'Avtomatik tahlil tizimi mijozning qarzlarni o‘z vaqtida to‘lash imkoniyatini baholab, xavf-xatarlarni kamaytirishga yordam beradi.',
-                    'img' => '/assets/images/price_5.png',
+                    'img' => '/assets/images/price-5_550x550.webp',
                 ],
                 [
                     'title' => 'Xavfsiz nasiya savdosi',
                     'desc' => 'Skoring tizimi asosida faqat ishonchli mijozlarga nasiya berish orqali biznesingizni moliyaviy yo‘qotishlardan himoya qiling.',
-                    'img' => '/assets/images/price_6.png',
+                    'img' => '/assets/images/price-6_550x550.webp',
                 ],
             ],
             'prices' => [
@@ -200,17 +200,17 @@ class ModulesController
                 [
                     'title' => 'SBP orqali tezkor to‘lov xizmati',
                     'desc' => 'O‘zbekistonda MIR kartasi orqali to‘lov qilish oson! QR Pay SBP orqali so‘mda to‘lovni amalga oshirish uchun QR kod generatsiya qilib beradi.',
-                    'img' => '/assets/images/price_9.png',
+                    'img' => '/assets/images/price-13_550x550.webp',
                 ],
                 [
                     'title' => 'Har qanday sharoitda oson to‘lov',
                     'desc' => 'Mehmonxonalar, restoranlar va kafelarda Rossiya MIR kartasidan so‘mda to‘lov qilish imkoniyati. QR kod orqali tezkor o‘tkazma amalga oshirish va cheklovlarsiz xizmatlardan foydalanish mumkin.',
-                    'img' => '/assets/images/price_3.png',
+                    'img' => '/assets/images/price-14_550x550.webp',
                 ],
                 [
                     'title' => 'Ishonchli va xavfsiz to‘lov yechimi',
                     'desc' => 'To‘lov summasini kiriting va Rossiya MIR kartasidan O‘zbek so‘mida tezkor hamda xavfsiz to‘lovni qabul qiling. SBP orqali qulay tranzaksiya amalga oshiring!',
-                    'img' => '/assets/images/price_11.png',
+                    'img' => '/assets/images/price-15_550x550.webp',
                 ],
             ],
             'prices' => [
@@ -237,17 +237,17 @@ class ModulesController
                 [
                     'title' => 'Savdoni avtomatlashtiring va foydani oshiring!',
                     'desc' => 'Online savdoga o‘ting, mijozlar sonini ko‘paytiring va buyurtmalarni yetkazib bering. Buyurtmalar, to‘lovlar va yetkazib berish jarayonlarini avtomatik boshqaring. Mijozlaringiz bilan doimiy aloqada bo‘lish uchun xabarnomalar tizimidan foydalaning.',
-                    'img' => '/assets/images/price_7.png',
+                    'img' => '/assets/images/price-7_550x550.webp',
                 ],
                 [
                     'title' => 'Onlayn do‘kon bilan biznesingizni yangi bosqichga olib chiqing!',
                     'desc' => 'Internet do‘kon yaratib, raqobatda oldinda bo‘ling. Mijozlarga qulay xarid qilish imkonini bering, savdo hajmini oshiring va zamonaviy tendensiyalarga moslashing!',
-                    'img' => '/assets/images/price_8.png',
+                    'img' => '/assets/images/price-8_550x550.webp',
                 ],
                 [
                     'title' => 'Cheklovlarsiz biznes va yuqori daromad',
                     'desc' => 'Hozir hamma internet orqali xarid qiladi! Onlayn do‘kon oching, mijozlarni jalb qiling, buyurtmalarni yetkazib bering va biznesingizni kengaytiring.',
-                    'img' => '/assets/images/price_9.png',
+                    'img' => '/assets/images/price-9_550x550.webp',
                 ],
             ],
             'prices' => [
@@ -281,17 +281,17 @@ class ModulesController
                 [
                     'title' => 'Savdoni oshiring, mijozlarni ushlab qoling!',
                     'desc' => 'Bonus va chegirmalar bilan mijozlarni qayta xarid qilishga undang. Sodiqlik dasturi orqali ishonchni oshiring, o‘rtacha chekni ko‘tarib, savdoni rivojlantiring!',
-                    'img' => '/assets/images/price_8.png',
+                    'img' => '/assets/images/price-16_550x550.webp',
                 ],
                 [
                     'title' => 'Bonus va chegirmalar bilan savdo hajmini oshiring!',
                     'desc' => 'Mijozlaringizni qayta kelishga undang! Har bir xaridda ularga bonus yoki chegirma taqdim eting, o‘rtacha chek miqdorini oshiring va doimiy mijozlar sonini ko‘paytiring.',
-                    'img' => '/assets/images/price_5.png',
+                    'img' => '/assets/images/price-17_550x550.webp',
                 ],
                 [
                     'title' => 'Mijozlaringizni jalb qilish yo‘li',
                     'desc' => 'Bonus va chegirmalar orqali mijozlarni ushlab qoling! Sodiqlik dasturi nafaqat ularning ishonchini oshiradi, balki o‘rtacha chekni va qayta tashrif sonini ham ko‘paytiradi.',
-                    'img' => '/assets/images/price_6.png',
+                    'img' => '/assets/images/price-18_550x550.webp',
                 ],
             ],
             'prices' => [
@@ -318,17 +318,17 @@ class ModulesController
                 [
                     'title' => 'Filiallar sonini oshirish va qo‘shimcha xodimlarga ruxsat berish',
                     'desc' => 'Biznesingizni kengaytiring! Filiallar sonini ko‘paytirib, yangi xodimlarni tizimga qo‘shing. Ish jarayonlarini avtomatlashtirish orqali samaradorlikni oshiring va boshqaruvni qulaylashtiring.',
-                    'img' => '/assets/images/price_11.png',
+                    'img' => '/assets/images/price-19_550x550.webp',
                 ],
                 [
                     'title' => 'Muddatli to‘lovlar orqali kelajakdagi daromadlarni ko‘rish',
                     'desc' => 'Moliya oqimini oldindan rejalashtiring! Muddatli to‘lovlar tizimi orqali kelajakdagi daromadlaringizni kuzatib boring va biznesingiz rivojlanishini aniq prognoz qiling.',
-                    'img' => '/assets/images/price_5.png',
+                    'img' => '/assets/images/price-20_550x550.webp',
                 ],
                 [
                     'title' => 'Kechikkan to‘lovlarni nazorat qilib vaqtida undirish',
                     'desc' => 'Kechikkan to‘lovlarni tizimli nazorat qiling va mijozlardan to‘lovlarni o‘z vaqtida undirib, moliyaviy barqarorlikni ta’minlang.',
-                    'img' => '/assets/images/price_2.png',
+                    'img' => '/assets/images/price-21_550x550.webp',
                 ],
             ],
             'prices' => [

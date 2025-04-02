@@ -13,16 +13,16 @@
 
         <!-- Hero Content Start -->
         <div class="container mx-auto flex items-center justify-center flex-col">
-            <div class="flex items-center space-x-2.5 py-[7px] pl-2 pr-3 border border-secondary/[8%] rounded-[72px]">
+            <div class="flex items-center space-x-2.5 py-[7px] pl-2 pr-3 border border-secondary/[8%] rounded-[72px] bg-white">
                 <img class="object-cover w-[76px] h-[30px] pointer-events-none select-none"
-                     src="{{ asset('/assets/images/people-avatars.png') }}" alt="Avatars">
+                     src="{{ asset('/assets/images/people-avatars.webp') }}" alt="Avatars">
                 <p class="text-sm leading-4 sm:leading-5 text-secondary font-medium"><span
-                            class="text-primary">10+</span>
+                            class="text-primary font-bold">10+</span>
                     <span class="sm:hidden">Mutaxasis dasturchilar<br> faoliyat yuritadi</span>
                     <span class="hidden sm:inline">Mutaxasis dasturchilar faoliyat yuritadi</span>
                 </p>
             </div>
-            <h1 class="mt-5 text-center text-4xl/[120%] sm:text-5xl/[120%] lg:text-[64px]/[120%] text-secondary font-bold">
+            <h1 class="mt-5 text-center text-4xl/[120%] sm:text-5xl/[120%] lg:text-[64px]/[120%] text-secondary font-bold tracking-tight">
                 <span class="hidden sm:block">Sizning biznesingiz uchun<br>To’lovlarni avtomatik eslatish</span>
                 <span class="sm:hidden">Biznesingizni avtomatlashtiring</span>
             </h1>
@@ -175,15 +175,11 @@
 
         <!-- Hero Picture Start -->
         <div class="pt-8 md:pt-16 px-4 relative flex items-start justify-center pointer-events-none select-none z-[70]">
-            <div class="absolute -bottom-[50px] w-screen h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
-            <div class="absolute -bottom-[50px] w-screen h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
+            <div class="absolute -bottom-[50px] w-screen h-[120px] md:h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
+            <div class="absolute -bottom-[50px] w-screen h-[120px] md:h-[175px] bg-gradient-to-b from-[#FBFBFB]/10 to-white z-20"></div>
 
-            <img class="hidden lg:block object-cover object-top rounded-t-[32px] shadow-[0px_-4px_10px_#00000014] lg:shadow-[0px_-4px_60px_#00000014] max-h-[500px]"
-                 src="{{ asset('assets/images/hero-image_1240x840.jpg') }}" alt="Avtomato Dashboard" width="1240"
-                 height="840">
-            <img class="lg:hidden object-cover object-top rounded-t-xl shadow-[0px_-4px_60px_#00000014] max-h-[200px]"
-                 src="{{ asset('assets/images/hero-image_695x470.jpg') }}" alt="Avtomato Dashboard" width="695"
-                 height="470">
+            <img class="max-w-[1240px] w-full mx-auto aspect-[73/29] object-cover rounded-t-2xl lg:rounded-t-[32px] shadow-[0px_-4px_60px_#00000014]"
+                 src="{{ asset('assets/images/hero-dashboard_1240x840.webp') }}" alt="Avtomato Dashboard">
         </div>
         <!-- Hero Picture End -->
     </section>
@@ -197,7 +193,7 @@
                 Hammasi<br class="sm:hidden"> bitta tizimda</h2>
 
             <!-- Grid Columns Start -->
-            <div class="grid md:grid-cols-12 sm:grid-rows-[420px_420px_420px_420px_420px_420px_420px] md:grid-rows-[370px_370px_370px_430px] xl:grid-rows-[520px_520px_520px] gap-5">
+            <div class="grid md:grid-cols-12 sm:grid-rows-[420px_420px_420px_420px_420px_420px_420px] md:grid-rows-[370px_370px_370px_430px] xl:grid-rows-[520px_470px_520px] gap-5">
                 <!-- Column 1 Start -->
                 <div class="md:col-span-6 lg:col-span-5 bg-secondary rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
@@ -217,23 +213,19 @@
                         </a>
                     </div>
 
-                    <img class="ml-6 lg:ml-8 rounded-ss-3xl pointer-events-none"
-                         src="{{ asset('/assets/images/dashboard-statistics_535x280.jpg') }}"
-                         alt="Dashboard" height="280">
+                    <img class="ml-6 lg:ml-8 rounded-ss-3xl pointer-events-none rounded-ss-lg md:rounded-ss-2xl aspect-[946/560]"
+                         src="{{ asset('/assets/images/dashboard-installments_535x380.webp') }}"
+                         alt="Dashboard Installment">
                 </div>
                 <!-- Column 1 End -->
 
                 <!-- Column 2 Start -->
-                <div class="md:col-span-6 lg:col-span-7 bg-third rounded-[32px] relative overflow-hidden flex flex-col justify-between">
+                <div class="md:col-span-6 lg:col-span-7 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
-                        <p class="text-secondary text-2xl lg:text-3xl lg:leading-tight font-semibold">Qo’shimcha
-                            xizmatlar</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Muddatli to’lovlarni o’z kunida
-                            avtomatik tarzda yechib beramiz, mabodo mijoz tomonidan sizga taqdim etilgan plastik
-                            kartasida mablag‘ bo‘lmasa PINFL orqali mijozning ixtiyoriy kartasidan avtomatik pul yechib
-                            olishingiz mumkin bo‘ladi.</p>
+                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Marketing</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlarga moliyaviy majburiyatlarini o‘z vaqtida bajarishda yordam beruvchi avtomatlashtirilgan eslatmalar va ogohlantirish tizimi orqali xavflarni minimallashtiring.</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
-                           href="{{ route('modules/others') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/marketing') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -244,8 +236,8 @@
                         </a>
                     </div>
 
-                    <img class="-mt-[10%] mx-auto pointer-events-none"
-                         src="{{ asset('/assets/images/calendar-notify.png') }}" alt="Calendar">
+                    <img class="max-w-[715px] w-full mx-auto -mt-[20px] aspect-[711/335] mx-auto pointer-events-none" src="{{ asset('/assets/images/system-marketing_715x395.webp') }}"
+                         alt="Marketing">
                 </div>
                 <!-- Column 2 End -->
 
@@ -254,8 +246,7 @@
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl xl:text-3xl lg:leading-tight font-semibold">Internet<br>
                             do’kon yaratish</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">To‘lovlarni rejalashtirish, kuzatish va
-                            boshqarish avtomatik tarzda...</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Bir necha bosqichda o‘z internet-do‘koningizni yaratib, onlayn savdoni boshlang. Hech qanday texnik bilim talab etilmaydi!</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
                            href="{{ route('modules/ecommerce') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
@@ -269,7 +260,7 @@
                     </div>
 
                     <img class="ml-6 lg:ml-8 rounded-ss-3xl pointer-events-none"
-                         src="{{ asset('/assets/images/create-market_370x260.jpg') }}" alt="Dashboard">
+                         src="{{ asset('/assets/images/create-market_370x260.webp') }}" alt="Create Market">
                 </div>
                 <!-- Column 3 End -->
 
@@ -291,7 +282,7 @@
                         </a>
                     </div>
 
-                    <img class=" pointer-events-none" src="{{ asset('/assets/images/qr-pay.png') }}" alt="Statistic">
+                    <img class="mx-6 aspect-[337/251] pointer-events-none" src="{{ asset('/assets/images/qr-code_335x325.webp') }}" alt="QR pay">
                 </div>
                 <!-- Column 4 End -->
 
@@ -299,10 +290,7 @@
                 <div class="md:col-span-6 lg:col-span-4 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
                         <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Loyalty</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlaringiz ma‘lumotlari,
-                            kirim-chiqim, qarzdorliklar, to‘lovlar, kelgusida kutilayotgan foydalar va ko‘plab
-                            statistika hamda analitikalarni elektron holatda real vaqt rejimida ko‘rib borishingiz
-                            mumkin bo‘ladi.</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlarni bonus va chegirmalar bilan ushlab qoling, obuna tizimi orqali ularning sonini oshiring!</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
                            href="{{ route('modules/sbp_pay') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
@@ -315,19 +303,20 @@
                         </a>
                     </div>
 
-                    <img class="-mt-4 mx-auto pointer-events-none" src="{{ asset('/assets/images/paper-list.png') }}"
-                         alt="Paper List">
+                    <img class="aspect-[11/7] pointer-events-none" src="{{ asset('/assets/images/loyalty_375x170.webp') }}"
+                         alt="Loyalty">
                 </div>
                 <!-- Column 5 End -->
 
                 <!-- Column 6 Start -->
-                <div class="md:col-span-6 lg:col-span-7 bg-third rounded-[32px] overflow-hidden flex flex-col justify-between">
+                <div class="md:col-span-6 lg:col-span-7 bg-third rounded-[32px] relative overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
-                        <p class="text-secondary text-2xl xl:text-[32px] lg:leading-tight font-semibold">Marketing</p>
-                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">To‘lovlarni rejalashtirish, kuzatish va
-                            boshqarish avtomatik tarzda...</p>
+                        <p class="text-secondary text-2xl lg:text-3xl lg:leading-tight font-semibold">Qo’shimcha
+                            xizmatlar</p>
+                        <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Filiallar va Xodimlar ustida nazorat qiling va ish jarayonlarini biz bilan birga
+                            soddalashtiring!</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
-                           href="{{ route('modules/marketing') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/others') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -338,8 +327,8 @@
                         </a>
                     </div>
 
-                    <img class="-mt-[10%] mx-auto pointer-events-none" src="{{ asset('/assets/images/ad-charts.png') }}"
-                         alt="Ad charts">
+                    <img class="ml-4 lg:ml-8 lg:-mt-[5%] mx-auto aspect-[65/32] pointer-events-none"
+                         src="{{ asset('/assets/images/others_730x415.webp') }}" alt="Qo`shimcha xizmatlar">
                 </div>
                 <!-- Column 6 End -->
 
@@ -347,8 +336,7 @@
                 <div class="md:col-span-12 lg:col-span-5 bg-secondary rounded-[32px] overflow-hidden flex flex-col justify-between">
                     <div class="p-6 lg:p-8">
                         <p class="text-white text-2xl xl:text-3xl lg:leading-tight font-semibold">Skoring</p>
-                        <p class="custom-truncate mt-3 text-white/75 leading-6">Mijozlaringiz moliyaviy tarixini
-                            to‘laqonli analiz qilish imkoni.</p>
+                        <p class="custom-truncate mt-3 text-white/75 leading-6">Mijozlaringiz moliyaviy tarixini to‘laqonli analiz qilish imkoni.</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-white"
                            href="{{ route('modules/scoring') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
@@ -362,7 +350,7 @@
                     </div>
 
                     <img class="mx-auto sm:w-[60%] lg:w-auto pointer-events-none"
-                         src="{{ asset('/assets/images/skoring-person_505x320.png') }}" alt="Skoring">
+                         src="{{ asset('/assets/images/skoring-person_505x320.webp') }}" alt="Skoring">
                 </div>
                 <!-- Column 7 End -->
             </div>

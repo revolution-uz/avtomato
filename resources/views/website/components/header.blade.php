@@ -136,7 +136,7 @@
         </div>
 
         <!-- Burger Menu Button Start -->
-        <button class="bg-third size-12 flex items-center justify-center lg:hidden rounded-2xl text-secondary pointer-events-none z-[102]">
+        <button id="burgerMenuBtn" class="bg-third size-12 flex items-center justify-center lg:hidden rounded-2xl text-secondary z-[102]">
             <span class="size-6 relative overflow-hidden flex items-center justify-center flex-col pointer-events-none">
                 <svg id="burgerMenuShow" class="show_burger-btn absolute transition-all" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4.5 12H19.5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>

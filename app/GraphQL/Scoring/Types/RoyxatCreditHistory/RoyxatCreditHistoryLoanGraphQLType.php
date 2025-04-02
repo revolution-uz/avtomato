@@ -39,8 +39,8 @@ class RoyxatCreditHistoryLoanGraphQLType extends GraphQLType
                 'resolve' => fn (RoyxatCreditHistoryLoanDTO $root) => $root->total_overdue_days,
             ],
             'total_overdue_amount' => [
-                'type' => Type::int(),
-                'resolve' => fn (RoyxatCreditHistoryLoanDTO $root) => $root->total_overdue_amount,
+                'type' => Type::float(),
+                'resolve' => fn (RoyxatCreditHistoryLoanDTO $root) => $root->total_overdue_amount / 100,
             ],
             'status' => [
                 'type' => Type::string(),
