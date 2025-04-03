@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Connect to ssh and run deploy script
         run: |
-          ssh root@10.20.30.100 -p 7111"
+          ssh root@10.20.30.100 -p 7111 "
             sudo -S su - www-data -s /bin/bash -c 'cd /var/www/automato/ && git reset --hard && git pull'
             cd /var/www/automato/ && sudo -S sh deploy.sh
             "
