@@ -11,6 +11,7 @@ enum SettingsTypeEnum: int
     case TEXT = 5;
     case DATETIME = 6;
     case DATE = 7;
+    case FILE = 8;
 
     public static function getAllTypesForDropdown(): array
     {
@@ -20,6 +21,7 @@ enum SettingsTypeEnum: int
             self::INT->value => 'integer',
             self::FLOAT->value => 'decimal',
             self::BOOLEAN->value => 'boolean',
+            self::FILE->value => 'file',
         ];
     }
 }
