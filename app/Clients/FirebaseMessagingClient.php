@@ -18,6 +18,8 @@ use Kreait\Firebase\Messaging\CloudMessage;
 
 class FirebaseMessagingClient
 {
+    private ?Messaging $firebaseMessaging = null;
+
     public function sendToClientByTopic(FirebaseDataDTO $dto, string $topic): bool
     {
         self::makeRequest(new FirebaseDTO(
@@ -42,8 +44,39 @@ class FirebaseMessagingClient
         return true;
     }
 
-    public function getMessaging(): Messaging
+    private function makeRequest(FirebaseDTO $fields, array $tokens = []): void
     {
+        $message = CloudMessage::fromArray($fields->toArray());
+        $firebaseMessaging = $this->getFirebaseMessaging();
+
+        try {
+            if (empty($tokens)) {
+                $response = $firebaseMessaging->send($message);
+            } else {
+                $response = $firebaseMessaging->sendMulticast($message, $tokens);
+            }
+            Log::channel('firebase')->info('messaging', [
+                'request_fields' => $fields,
+                'response' => $response,
+                'tokens' => $tokens,
+            ]);
+        } catch (MessagingException|FirebaseException $e) {
+            Log::channel('firebase')->error('messaging', [
+                'request_fields' => $fields,
+                'error' => $e,
+                'tokens' => $tokens,
+            ]);
+        }
+    }
+
+    private function getFirebaseMessaging(): Messaging
+    {
+        if ($this->firebaseMessaging !== null) {
+            return $this->firebaseMessaging;
+        }
+
+        Log::channel('daily')->info('here: 47');
+
         $path = CompanySettings::getConfig(CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH);
 
         if (! $path || ! Storage::disk('local')->exists($path)) {
@@ -60,32 +93,8 @@ class FirebaseMessagingClient
         }
 
         $factory = (new Factory)->withServiceAccount($firebase_credentials);
+        $this->firebaseMessaging = $factory->createMessaging();
 
-        return $factory->createMessaging();
-    }
-
-    private function makeRequest(FirebaseDTO $fields, array $tokens = []): void
-    {
-        $message = CloudMessage::fromArray($fields->toArray());
-        $messaging = $this->getMessaging();
-
-        try {
-            if (empty($tokens)) {
-                $response = $messaging->send($message);
-            } else {
-                $response = $messaging->sendMulticast($message, $tokens);
-            }
-            Log::channel('firebase')->info('messaging', [
-                'request_fields' => $fields,
-                'response' => $response,
-                'tokens' => $tokens,
-            ]);
-        } catch (MessagingException|FirebaseException $e) {
-            Log::channel('firebase')->error('messaging', [
-                'request_fields' => $fields,
-                'error' => $e,
-                'tokens' => $tokens,
-            ]);
-        }
+        return $this->firebaseMessaging;
     }
 }

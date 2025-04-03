@@ -2,12 +2,10 @@
 
 namespace App\GraphQL\LoyaltyProgram\Admin\Mutations;
 
-use App\Clients\FirebaseMessagingClient;
-use App\DTOs\Firebase\FirebaseDataDTO;
-use App\Enums\ApplicationEnvironmentEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\Notification;
+use App\Services\FirebaseService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -20,7 +18,7 @@ class SendNotificationsGraphQLMutation extends Mutation
         'name' => 'sendNotifications',
     ];
 
-    public function __construct(private readonly FirebaseMessagingClient $client) {}
+    public function __construct(private readonly FirebaseService $_firebaseService) {}
 
     public function type(): Type
     {
@@ -46,23 +44,7 @@ class SendNotificationsGraphQLMutation extends Mutation
     {
         $notifications = Notification::query()->whereIn('id', $args['ids'])->get();
 
-        foreach ($notifications as $notification) {
-            $notification->update(['is_sent' => true]);
-
-            foreach (['uz', 'ru'] as $lang) {
-                $this->client->sendToClientByTopic(
-                    new FirebaseDataDTO(
-                        $notification->id,
-                        $notification->{'title_' . $lang} ?? $notification->title_ru,
-                        $notification->{'body_' . $lang} ?? $notification->body_ru,
-                        'notification'
-                    ),
-                    ApplicationEnvironmentEnum::getFirebaseTopicPrefix() . $lang,
-                );
-            }
-        }
-
-        return true;
+        return $this->_firebaseService->sendNotification($notifications);
     }
 
     protected function rules(array $args = []): array
