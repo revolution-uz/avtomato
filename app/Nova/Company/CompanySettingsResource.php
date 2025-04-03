@@ -5,20 +5,23 @@ namespace App\Nova\Company;
 use App\Enums\Main\SettingsTypeEnum;
 use App\Models\Company\CompanySettings;
 use App\Nova\Resource;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * @mixin CompanySettings
  */
-class SettingsResource extends Resource
+class CompanySettingsResource extends Resource
 {
     /**
      * The model the resource corresponds to.
@@ -53,7 +56,7 @@ class SettingsResource extends Resource
      *
      * @return array<int, Field>
      */
-    public function fields(Request $request): array
+    public function fields(NovaRequest $request): array
     {
         $response = [
             ID::make('Id')->sortable(),
@@ -69,6 +72,9 @@ class SettingsResource extends Resource
             SettingsTypeEnum::TEXT => Textarea::make('Value')->rules(['required', 'max:2014']),
             SettingsTypeEnum::DATETIME => DateTime::make('Value')->rules(['required', 'datetime']),
             SettingsTypeEnum::DATE => DateTime::make('Value')->rules(['required', 'date']),
+            SettingsTypeEnum::FILE => $request->isResourceIndexRequest() ?
+                Boolean::make('Value') :
+                File::make('Value')->rules(['mimes:json', 'max:100'])->disk('local')->path('credentials'),
             SettingsTypeEnum::STRING, null => Text::make('Value')->rules(['required', 'max:255']),
         };
 

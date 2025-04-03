@@ -6,14 +6,12 @@ use App\Clients\FirebaseMessagingClient;
 use App\DTOs\Firebase\FirebaseDataDTO;
 use App\Enums\ApplicationEnvironmentEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\Notification;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
-use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
 class SendNotificationsGraphQLMutation extends Mutation
@@ -26,7 +24,7 @@ class SendNotificationsGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(Type::listOf(GraphQL::type(NotificationGraphQLType::GRAPHQL_TYPE_NAME)));
+        return Type::nonNull(Type::boolean());
     }
 
     public function args(): array
@@ -44,9 +42,8 @@ class SendNotificationsGraphQLMutation extends Mutation
         return RbacHelper::checkPermission(PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_SEND);
     }
 
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): true
     {
-        /** @var Notification[] $notifications */
         $notifications = Notification::query()->whereIn('id', $args['ids'])->get();
 
         foreach ($notifications as $notification) {
@@ -65,21 +62,14 @@ class SendNotificationsGraphQLMutation extends Mutation
             }
         }
 
-        return $notifications;
+        return true;
     }
 
     protected function rules(array $args = []): array
     {
         return [
-            'ids' => [
-                'required',
-                'array',
-            ],
-            'ids.*' => [
-                'required',
-                'int',
-                Rule::exists(Notification::class, 'id'),
-            ],
+            'ids' => ['required', 'array'],
+            'ids.*' => ['required', 'int', Rule::exists(Notification::class, 'id')],
         ];
     }
 }

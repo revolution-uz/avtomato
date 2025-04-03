@@ -239,6 +239,13 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 3,
         ],
+
+        'firebase' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/firebase.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 3,
+        ],
     ],
 
 ];

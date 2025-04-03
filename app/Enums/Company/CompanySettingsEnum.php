@@ -21,6 +21,7 @@ enum CompanySettingsEnum: string
     case TELEGRAM_CHAT_ID = 'telegram_chat_id';
     case LOYALTY_PROGRAM_SYNC_TOKEN = 'loyalty_program_sync_token';
     case LOYALTY_PROGRAM_BALANCE_LIMIT = 'loyalty_program_balance_limit';
+    case LOYALTY_PROGRAM_FIREBASE_PATH = 'loyalty_program_firebase_path';
 
     public static function getType(self $type): SettingsTypeEnum
     {
@@ -39,6 +40,8 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_SYNC_TOKEN,
             self::TELEGRAM_BOT_TOKEN,
             self::TELEGRAM_CHAT_ID => SettingsTypeEnum::STRING,
+
+            self::LOYALTY_PROGRAM_FIREBASE_PATH => SettingsTypeEnum::FILE,
         };
     }
 
@@ -51,7 +54,7 @@ enum CompanySettingsEnum: string
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS => 15,
             self::SMS_INSTALLMENT_AUTO_CHARGE => true,
             self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT, self::TELEGRAM_BOT_ENABLED => false,
-            self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID, self::LOYALTY_PROGRAM_SYNC_TOKEN, self::LOYALTY_PROGRAM_BALANCE_LIMIT => '',
+            self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID, self::LOYALTY_PROGRAM_SYNC_TOKEN, self::LOYALTY_PROGRAM_BALANCE_LIMIT, self::LOYALTY_PROGRAM_FIREBASE_PATH => '',
         };
     }
 
@@ -92,6 +95,7 @@ enum CompanySettingsEnum: string
             self::TELEGRAM_CHAT_ID => __('settings.telegram_chat_id'),
             self::LOYALTY_PROGRAM_SYNC_TOKEN => __('settings.loyalty_program_sync_token'),
             self::LOYALTY_PROGRAM_BALANCE_LIMIT => __('settings.loyalty_program_card_balance_check'),
+            self::LOYALTY_PROGRAM_FIREBASE_PATH => __('settings.loyalty_program_firebase_path'),
         };
     }
 }

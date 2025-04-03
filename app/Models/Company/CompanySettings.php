@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Main\SettingsTypeEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
@@ -52,5 +53,21 @@ class CompanySettings extends Model
     public static function getValue(CompanySettingsEnum $name)
     {
         return CompanySettings::query()->where('name', $name)->firstOrFail()->value;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::updating(function (self $model) {
+            if ($model->isDirty('value') && $model->type === SettingsTypeEnum::FILE) {
+                $originalValue = $model->getOriginal('value');
+                if ($model->getAttributeValue('value') === null) {
+                    $model->setAttribute('value', '');
+                } elseif ($originalValue && Storage::disk('local')->exists($originalValue)) {
+                    Storage::disk('local')->delete($originalValue);
+                }
+            }
+        });
     }
 }
