@@ -2,6 +2,15 @@
 
 @section('title', $data['title'] . ' - Avtomato')
 
+@section('meta')
+    <meta name="keywords" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta name="description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:url" content="{{ current_route() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:description" content=""> <!-- ~~~~~~~~~~~ -->
+@endsection
+
 @section('content')
     <!-- Single Price Top Content Start -->
     <section class="mt-3 md:mt-6 lg:mt-10 relative">
