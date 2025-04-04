@@ -1,3 +1,9 @@
+@php
+/**
+ * @var \App\Models\Blog[] $blogs
+ */
+@endphp
+
 @extends('website.layouts.layout')
 
 @section('title', 'Blog - Avtomato')
@@ -46,7 +52,7 @@
             <!-- Blogs Grid Columns End -->
 
             <!-- Blogs Pagination Start -->
-            @include('website.components.pagination')
+            {{ $blogs->links('website.components.pagination') }}
             <!-- Blogs Pagination End -->
         </div>
     </section>

@@ -83,7 +83,9 @@ return [
     |
     */
 
-    'locale' => 'ru',
+    'locale' => env('APP_LOCALE', 'ru'),
+
+    'locales' => ['uz', 'ru', 'en'],
 
     'supported_locales' => ['ru', 'en', 'uz', 'oz'],
 
@@ -98,7 +100,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'ru',
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'ru'),
 
     /*
     |--------------------------------------------------------------------------
@@ -111,7 +113,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*
     |--------------------------------------------------------------------------

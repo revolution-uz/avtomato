@@ -1,6 +1,14 @@
+@php
+/**
+ * @var \App\Models\Blog $blog
+ * @var \App\Models\Blog[] $recommendations
+ */
+@endphp
+
+
 @extends('website.layouts.layout')
 
-@section('title', $blog['title'] . ' - Avtomato')
+@section('title', $blog->title . ' - Avtomato')
 
 @section('meta')
     <style>
@@ -95,8 +103,8 @@
         <!-- Blog Content Start -->
         <div class="pt-8 lg:pt-[60px] pb-[60px]">
             <div class="max-w-[820px] mx-auto px-4">
-                <h2 class="text-2xl sm:text-3xl text-secondary font-semibold">{{ $blog['title'] }}</h2>
-                <time class="block mt-3 sm:mt-4 text-secondary/55 font-light">{{ $blog['created_at'] }}</time>
+                <h2 class="text-2xl sm:text-3xl text-secondary font-semibold">{{ $blog->title }}</h2>
+                <time class="block mt-3 sm:mt-4 text-secondary/55 font-light">{{ $blog->created_at }}</time>
                 <a class="mt-5 h-12 inline-flex items-center justify-center space-x-2 px-4 bg-third rounded-2xl text-secondary"
                    href="https://t.me/share/url?url={{ urlencode(url()->current()) }}" target="_blank" title="Ulashish">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -115,9 +123,9 @@
                 </a>
                 <div class="rounded-[32px] overflow-hidden aspect-[129/100] my-8 border border-third">
                     <img class="w-full h-full object-cover"
-                         src="{{ asset($blog['image']) }}" alt="{{ $blog['title'] }}">
+                         src="{{ $blog->image_url }}" alt="{{ $blog->title }}">
                 </div>
-                <div class="blog-content">{!! $blog['content'] !!}</div>
+                <div class="blog-content">{!! $blog->body !!}</div>
             </div>
         </div>
         <!-- Blog Content End -->
