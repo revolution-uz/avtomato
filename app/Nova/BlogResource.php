@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
@@ -94,6 +95,8 @@ class BlogResource extends Resource
                 ->showOnIndex(false),
 
             DateTime::make('created_at')->showOnIndex(false)->exceptOnForms()->sortable(),
+
+            BelongsTo::make('Category', 'category', BlogCategoryResource::class),
         ];
 
         foreach (config('app.locales') as $locale) {

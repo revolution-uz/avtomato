@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\MessageField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -24,15 +25,17 @@ use Illuminate\Support\Str;
  * @property string|null $image_uz
  * @property MessageField $meta_description
  * @property MessageField $meta_keywords
+ * @property int $category_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property BlogCategory $category
  * @property-read string $title
  * @property-read string $body
  * @property-read string $short_body
  * @property-read string $image_url
- * @property-read string $seoDescription
- * @property-read string $seoKeywords
+ * @property-read string $seo_description
+ * @property-read string $seo_keywords
  */
 class Blog extends Model
 {
@@ -51,6 +54,7 @@ class Blog extends Model
         'image_ru',
         'meta_description',
         'meta_keywords',
+        'category_id',
     ];
 
     protected $casts = [
@@ -86,5 +90,10 @@ class Blog extends Model
     public function getImageUrlAttribute(): string
     {
         return Storage::url($this->{'image_' . app()->getLocale()} ?? $this->image_en);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(BlogCategory::class, 'category_id');
     }
 }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('image_ru')->nullable();
             $table->json('meta_description');
             $table->json('meta_keywords');
+            $table->unsignedBigInteger('category_id')->index();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\MessageField;
 use App\Models\Blog;
+use App\Models\BlogCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BlogFactory extends Factory
@@ -33,6 +34,16 @@ class BlogFactory extends Factory
                 'message_ru' => $this->faker->text(255),
                 'message_uz' => $this->faker->text(255),
             ]),
+            'category_id' => BlogCategory::factory(),
         ];
+    }
+
+    public function withExistCategory(): static
+    {
+        $category = BlogCategory::query()->inRandomOrder()->first();
+
+        return $this->state(fn (array $attributes) => [
+            'category_id' => $category?->id ?: BlogCategory::factory(),
+        ]);
     }
 }
