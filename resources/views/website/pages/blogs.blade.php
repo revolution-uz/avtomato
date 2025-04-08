@@ -26,6 +26,26 @@
           content="{{ \App\Helpers\BlogsSEOHelper::getSeoDescription(request()->input('page', 1), $categoryOrTagName ?? null) }}">
 @endsection
 
+@section("meta")
+    <meta name="keywords"
+          content="Avtomato blog, biznes blog, fintech blog, nasiya savdo, internet-do‘kon yaratish, mijozlar bazasi, skoring, avtomatlashtirish, SBP to‘lovlari, marketing biznesda, kredit savdo, onlayn biznes">
+    <meta name="description"
+          content="Avtomato blogi - Biznes, marketing, nasiya savdoni avtomatlashtirish va fintech haqida foydali maqolalar.">
+    <meta property="og:url" content="{{ current_route() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Avtomato blog – Biznes va fintech haqida maqolalar">
+    <meta property="og:description"
+          content="Biznesni rivojlantirish, nasiya savdo, internet-do‘konlar, SBP to‘lovlari va skoring haqida foydali maqolalar.">
+    <meta property="og:image" content="{{ asset('/cover.webp') }}">
+    <meta property="og:image:type" content="image/webp">
+    <meta name="twitter:card" content="{{ asset('/cover.webp') }}">
+    <meta name="twitter:title" content="Avtomato blog – Biznes va fintech haqida maqolalar">
+    <meta name="twitter:description"
+          content="Biznesni rivojlantirish, nasiya savdo, internet-do‘konlar, SBP to‘lovlari va skoring haqida foydali maqolalar.">
+    <meta name="twitter:image" content="{{ asset('/cover.webp') }}">
+    <meta name="twitter:image:type" content="image/webp">
+@endsection
+
 @section('content')
     <!-- All Blogs Start -->
     <section class="pt-10 pb-10 md:pb-[60x]">
