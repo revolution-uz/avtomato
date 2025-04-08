@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -16,6 +17,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $slug
  * @property string $meta_description
  * @property string $meta_keywords
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
  * @property-read string $name
  * @property-read string $seo_description
  * @property-read string $seo_keywords

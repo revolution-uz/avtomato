@@ -10,6 +10,7 @@ use App\Nova\AdminResource;
 use App\Nova\BaseFeatureResource;
 use App\Nova\BaseModuleResource;
 use App\Nova\BaseSmsTemplateResource;
+use App\Nova\BlogCategoryResource;
 use App\Nova\BlogResource;
 use App\Nova\CentralCustomerResource;
 use App\Nova\Company\BalanceChargeResource;
@@ -103,6 +104,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     (new TransactionByCompanies)->menu($request),
                     MenuItem::resource(NewCustomerResource::class),
                     MenuItem::resource(BlogResource::class),
+                    MenuItem::resource(BlogCategoryResource::class),
                 ])->collapsable(),
             ];
         });

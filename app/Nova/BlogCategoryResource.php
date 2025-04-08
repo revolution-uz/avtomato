@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Models\BlogCategory;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Slug;
 use Laravel\Nova\Fields\Text;
@@ -47,17 +48,19 @@ class BlogCategoryResource extends Resource
     {
         $data = [
             ID::make()->sortable(),
-            Text::make('name_en')->rules(['required', 'string'])->showOnIndex(false),
-            Text::make('name_ru')->rules(['required', 'string'])->showOnIndex(false),
-            Text::make('name_uz')->rules(['required', 'string'])->showOnIndex(false),
-            Slug::make('slug')->from('name_en')->rules('regex:/^[a-z0-9-]+$/')->showOnIndex(false),
+            Text::make('name_en')->rules(['required', 'string']),
+            Text::make('name_ru')->rules(['required', 'string']),
+            Text::make('name_uz')->rules(['required', 'string']),
+            Slug::make('slug')->from('name_en')->rules('regex:/^[a-z0-9-]+$/'),
+            DateTime::make('created_at')->exceptOnForms()->sortable(),
+            DateTime::make('updated_at')->exceptOnForms()->sortable(),
         ];
 
         foreach (config('app.locales') as $locale) {
-            $data[] = Textarea::make("meta_description->message_{$locale}")->rules(['required', 'string']);
+            $data[] = Textarea::make("meta_description->message_{$locale}")->rules(['required', 'string'])->hideFromIndex();
         }
         foreach (config('app.locales') as $locale) {
-            $data[] = Text::make("meta_keywords->message_{$locale}")->rules(['required', 'string']);
+            $data[] = Text::make("meta_keywords->message_{$locale}")->rules(['required', 'string'])->hideFromIndex();
         }
 
         return $data;
