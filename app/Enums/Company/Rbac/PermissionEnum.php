@@ -272,7 +272,7 @@ enum PermissionEnum: string
     case LOYALTY_PROGRAM_USERS_VIEW_ALL = 'loyalty_program_users_view_all';
     case LOYALTY_PROGRAM_USERS_VIEW = 'loyalty_program_users_view';
     case LOYALTY_PROGRAM_USERS_CREATE = 'loyalty_program_users_create';
-    case LOYALTY_PROGRAM_USERS_EDIT = 'loyalty_program_user_edit';
+    case LOYALTY_PROGRAM_USERS_EDIT = 'loyalty_program_users_edit';
     case LOYALTY_PROGRAM_TARIFF_VIEW_ALL = 'loyalty_program_tariff_view_all';
     case LOYALTY_PROGRAM_TARIFF_VIEW = 'loyalty_program_tariff_view';
     case LOYALTY_PROGRAM_TARIFF_EDIT = 'loyalty_program_tariff_edit';
