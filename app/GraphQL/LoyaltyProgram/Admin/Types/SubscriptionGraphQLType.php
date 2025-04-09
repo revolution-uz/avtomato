@@ -59,9 +59,9 @@ class SubscriptionGraphQLType extends GraphQLType
                 'type' => GraphQL::type(UserGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (Subscription $root) => $root->user,
             ],
-            'is_active_period' => [
+            'is_available' => [
                 'type' => Type::nonNull(Type::boolean()),
-                'resolve' => fn (Subscription $root) => $root->is_active_period,
+                'resolve' => fn (Subscription $root) => $root->is_available,
             ],
         ];
     }

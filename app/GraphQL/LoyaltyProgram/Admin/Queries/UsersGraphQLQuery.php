@@ -3,7 +3,7 @@
 namespace App\GraphQL\LoyaltyProgram\Admin\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\UserGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\User;
 use Closure;
@@ -44,6 +44,10 @@ class UsersGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
             ],
+            'has_available_subscription' => [
+                'type' => Type::boolean(),
+                'rules' => 'nullable|bool',
+            ],
         ];
     }
 
@@ -66,6 +70,8 @@ class UsersGraphQLQuery extends Query
                         ->orWhere('last_name', 'ILIKE', $search);
                 });
             })
+            ->when(isset($args['has_available_subscription']), fn (Builder $q) => $q
+                ->whereHas('subscriptions', fn (Builder $q) => $q->whereIsAvailable()))
             ->when(
                 isset($args['sort']),
                 fn (Builder|User $q) => $q->orderBySortable($args['sort']),

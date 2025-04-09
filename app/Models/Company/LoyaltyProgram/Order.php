@@ -56,9 +56,9 @@ class Order extends Model
         parent::boot();
 
         static::created(function (self $model) {
-            $subscription = $model->user->getActiveSubscription();
+            $subscription = $model->user->getAvailableSubscription();
 
-            if ($subscription && $subscription->is_active_period) {
+            if ($subscription) {
                 $subscription->remaining_limit_amount -= (int) $model->total_discount_amount;
                 $subscription->saveOrFail();
             }

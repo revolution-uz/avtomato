@@ -52,6 +52,7 @@ class CreateSubscriptionGraphQLMutationTest extends GraphQLTestCase
             'updated_at',
             'deleted_at',
         ],
+        'is_available',
     ];
 
     protected function setUp(): void
@@ -143,13 +144,14 @@ class CreateSubscriptionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($subscription->remaining_limit_amount, $this->_activeTariff->limit_amount);
 
         $this->assertEquals($subscription->id, $response->json('data.createSubscription.id'));
-        $this->assertEquals($subscription->is_active_period, $response->json('data.createSubscription.is_active'));
+        $this->assertEquals($subscription->is_active, $response->json('data.createSubscription.is_active'));
         $this->assertEquals($subscription->remaining_limit_amount, $response->json('data.createSubscription.remaining_limit_amount'));
         $this->assertEquals($subscription->tariff_id, $response->json('data.createSubscription.tariff_id'));
         $this->assertEquals($subscription->user_id, $response->json('data.createSubscription.user_id'));
         $this->assertEquals($subscription->expired_at->timestamp, $response->json('data.createSubscription.expired_at'));
         $this->assertEquals($subscription->created_at->timestamp, $response->json('data.createSubscription.created_at'));
         $this->assertEquals($subscription->updated_at->timestamp, $response->json('data.createSubscription.updated_at'));
+        $this->assertEquals($subscription->is_available, $response->json('data.createSubscription.is_available'));
 
         // Tariff
         $this->assertEquals($subscription->tariff->id, $response->json('data.createSubscription.tariff.id'));
