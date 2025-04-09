@@ -62,7 +62,7 @@ class UsersGraphQLQuery extends Query
                 $search = '%' . $args['search'] . '%';
                 $q->where(function (Builder $query) use ($search) {
                     $query->where('phone', 'ILIKE', $search)
-                        ->where('first_name', 'ILIKE', $search)
+                        ->orWhere('first_name', 'ILIKE', $search)
                         ->orWhere('last_name', 'ILIKE', $search);
                 });
             })

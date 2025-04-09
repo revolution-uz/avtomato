@@ -3,7 +3,6 @@
 namespace App\Models\Company\LoyaltyProgram;
 
 use App\Enums\Company\PaymentStatusEnum;
-use App\Models\Company\Ecommerce\User;
 use App\Models\Company\OrderBySortable;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +18,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $paid_at
  * @property int $card_id
  * @property string|null $external_id
- * @property string $subscription_id
+ * @property int $subscription_id
  * @property int $user_id
  * @property Carbon $created_at
  * @property Carbon $updated_at

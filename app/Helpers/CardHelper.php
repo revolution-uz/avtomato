@@ -23,6 +23,6 @@ class CardHelper
             return true;
         }
 
-        return in_array(substr($cardNumber, 0, 4), CardTypeEnum::binUzkard());
+        return in_array(substr($cardNumber, 0, 4), CardTypeEnum::binUzcard());
     }
 }

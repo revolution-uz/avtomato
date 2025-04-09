@@ -2,7 +2,6 @@
 
 namespace Database\Factories\Company\LoyaltyProgram;
 
-use App\Models\Company\LoyaltyProgram\Card;
 use App\Models\Company\LoyaltyProgram\Subscription;
 use App\Models\Company\LoyaltyProgram\Tariff;
 use App\Models\Company\LoyaltyProgram\User;
@@ -16,7 +15,9 @@ class SubscriptionFactory extends Factory
     {
         return [
             'is_active' => $this->faker->boolean,
-            'card_id' => Card::factory(),
+            'remaining_limit_amount' => $this->faker->numberBetween(1000, pow(10, 8)),
+            'expired_at' => $this->faker->dateTime(),
+
             'tariff_id' => Tariff::factory(),
             'user_id' => User::factory(),
         ];

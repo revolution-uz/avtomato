@@ -27,6 +27,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read int|null $active_subscription_limit
  * @property Subscription[] $subscriptions
  * @property Card[]|Collection<int, Card> $cards
+ * @property-read string|null $full_name
  */
 class User extends Authenticatable
 {
@@ -116,6 +117,15 @@ class User extends Authenticatable
         }
 
         return $subscription->tariff->limit_amount - $this->getOrderDiscountAmount($subscription->created_at);
+    }
+
+    public function getFullNameAttribute(): ?string
+    {
+        if (! $this->first_name && ! $this->last_name) {
+            return null;
+        }
+
+        return $this->last_name . ' ' . $this->first_name;
     }
 
     private function getOrderDiscountAmount(Carbon $created_at)

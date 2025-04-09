@@ -271,6 +271,8 @@ enum PermissionEnum: string
     // Loyalty program
     case LOYALTY_PROGRAM_USERS_VIEW_ALL = 'loyalty_program_users_view_all';
     case LOYALTY_PROGRAM_USERS_VIEW = 'loyalty_program_users_view';
+    case LOYALTY_PROGRAM_USERS_CREATE = 'loyalty_program_users_create';
+    case LOYALTY_PROGRAM_USERS_EDIT = 'loyalty_program_user_edit';
     case LOYALTY_PROGRAM_TARIFF_VIEW_ALL = 'loyalty_program_tariff_view_all';
     case LOYALTY_PROGRAM_TARIFF_VIEW = 'loyalty_program_tariff_view';
     case LOYALTY_PROGRAM_TARIFF_EDIT = 'loyalty_program_tariff_edit';
@@ -292,6 +294,11 @@ enum PermissionEnum: string
     case LOYALTY_PROGRAM_SHOP_VIEW_ALL = 'loyalty_program_shop_view_all';
     case LOYALTY_PROGRAM_SHOP_VIEW = 'loyalty_program_shop_view';
     case LOYALTY_PROGRAM_SHOP_EDIT = 'loyalty_program_shop_edit';
+    case LOYALTY_PROGRAM_CARD_VIEW_ALL = 'loyalty_program_card_view_all';
+    case LOYALTY_PROGRAM_CARD_VIEW = 'loyalty_program_card_view';
+    case LOYALTY_PROGRAM_CARD_EDIT = 'loyalty_program_card_edit';
+    case LOYALTY_PROGRAM_PAYMENT_VIEW_ALL = 'loyalty_program_payment_view_all';
+    case LOYALTY_PROGRAM_PAYMENT_VIEW = 'loyalty_program_payment_view';
 
     // QR Pay
     case QR_PAY_TRANSACTION_VIEW_ALL = 'qr_pay_transaction_view_all';
@@ -502,6 +509,8 @@ enum PermissionEnum: string
             //loyalty program
             self::LOYALTY_PROGRAM_USERS_VIEW_ALL,
             self::LOYALTY_PROGRAM_USERS_VIEW,
+            self::LOYALTY_PROGRAM_USERS_CREATE,
+            self::LOYALTY_PROGRAM_USERS_EDIT,
             self::LOYALTY_PROGRAM_TARIFF_VIEW_ALL,
             self::LOYALTY_PROGRAM_TARIFF_VIEW,
             self::LOYALTY_PROGRAM_TARIFF_EDIT,
@@ -523,6 +532,11 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_SHOP_VIEW_ALL,
             self::LOYALTY_PROGRAM_SHOP_VIEW,
             self::LOYALTY_PROGRAM_SHOP_EDIT,
+            self::LOYALTY_PROGRAM_CARD_VIEW_ALL,
+            self::LOYALTY_PROGRAM_CARD_VIEW,
+            self::LOYALTY_PROGRAM_CARD_EDIT,
+            self::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL,
+            self::LOYALTY_PROGRAM_PAYMENT_VIEW,
 
             // qr pay
             self::QR_PAY_TRANSACTION_VIEW_ALL,
@@ -833,6 +847,8 @@ enum PermissionEnum: string
             PermissionGroupEnum::LOYALTY_PROGRAM->value => [
                 self::LOYALTY_PROGRAM_USERS_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_USERS_VIEW->value,
+                self::LOYALTY_PROGRAM_USERS_CREATE->value,
+                self::LOYALTY_PROGRAM_USERS_EDIT->value,
                 self::LOYALTY_PROGRAM_TARIFF_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_TARIFF_VIEW->value,
                 self::LOYALTY_PROGRAM_TARIFF_EDIT->value,
@@ -854,6 +870,11 @@ enum PermissionEnum: string
                 self::LOYALTY_PROGRAM_SHOP_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_SHOP_VIEW->value,
                 self::LOYALTY_PROGRAM_SHOP_EDIT->value,
+                self::LOYALTY_PROGRAM_CARD_VIEW_ALL->value,
+                self::LOYALTY_PROGRAM_CARD_VIEW->value,
+                self::LOYALTY_PROGRAM_CARD_EDIT->value,
+                self::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL->value,
+                self::LOYALTY_PROGRAM_PAYMENT_VIEW->value,
             ],
 
             PermissionGroupEnum::QR_PAY->value => [
@@ -1104,6 +1125,8 @@ enum PermissionEnum: string
 
             self::LOYALTY_PROGRAM_USERS_VIEW_ALL,
             self::LOYALTY_PROGRAM_USERS_VIEW,
+            self::LOYALTY_PROGRAM_USERS_CREATE,
+            self::LOYALTY_PROGRAM_USERS_EDIT,
             self::LOYALTY_PROGRAM_TARIFF_VIEW_ALL,
             self::LOYALTY_PROGRAM_TARIFF_VIEW,
             self::LOYALTY_PROGRAM_TARIFF_EDIT,
@@ -1124,7 +1147,12 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_ORDER_VIEW,
             self::LOYALTY_PROGRAM_SHOP_VIEW_ALL,
             self::LOYALTY_PROGRAM_SHOP_VIEW,
-            self::LOYALTY_PROGRAM_SHOP_EDIT => FeatureEnum::LOYALTY_PROGRAM,
+            self::LOYALTY_PROGRAM_SHOP_EDIT,
+            self::LOYALTY_PROGRAM_CARD_VIEW_ALL,
+            self::LOYALTY_PROGRAM_CARD_VIEW,
+            self::LOYALTY_PROGRAM_CARD_EDIT,
+            self::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL,
+            self::LOYALTY_PROGRAM_PAYMENT_VIEW => FeatureEnum::LOYALTY_PROGRAM,
 
             self::QR_PAY_TRANSACTION_VIEW_ALL,
             self::QR_PAY_TRANSACTION_VIEW,
