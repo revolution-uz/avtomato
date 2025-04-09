@@ -1,6 +1,30 @@
+@php
+/**
+ * @var \App\Models\Blog[] $blogs
+ * @var \App\Models\BlogCategory[] $categories
+ * @var string|null $categoryOrTagName
+ * @var string|null $meta_description
+ * @var string|null $meta_keywords
+ */
+@endphp
+
 @extends('website.layouts.layout')
 
-@section('title', 'Blog - Avtomato')
+@section('title')
+    {{ \App\Helpers\BlogsSEOHelper::getSeoTitle(request()->input('page', 1), $categoryOrTagName ?? null) }}
+@endsection
+
+@section("meta")
+    <meta name="keywords" content="{{ $meta_description }}">
+    <meta name="description"
+          content="{{ \App\Helpers\BlogsSEOHelper::getSeoDescription(request()->input('page', 1), $categoryOrTagName ?? null) }}">
+    <meta property="og:url" content="{{ current_route() }}">
+    <meta property="og:type" content="article">
+    <meta property="og:title"
+          content="{{ \App\Helpers\BlogsSEOHelper::getSeoTitle(request()->input('page', 1), $categoryOrTagName ?? null) }}">
+    <meta property="og:description"
+          content="{{ \App\Helpers\BlogsSEOHelper::getSeoDescription(request()->input('page', 1), $categoryOrTagName ?? null) }}">
+@endsection
 
 @section("meta")
     <meta name="keywords"
@@ -41,18 +65,20 @@
                 <h1 class="mt-4 text-3xl lg:text-5xl text-secondary font-semibold">Blog</h1>
 
                 <div id="blogsTags" class="mt-8 px-4 flex flex-wrap justify-center gap-3">
-                    <button class="h-[42px] flex items-center px-5 border rounded-2xl text-sm cursor-pointer bg-secondary border-secondary text-white hover:bg-secondary/90 hover:border-secondary/90"
-                            type="button">Barchasi
-                    </button>
-                    <button class="h-[42px] flex items-center px-5 border rounded-2xl cursor-pointer bg-white border-secondary text-secondary hover:border-secondary/80 hover:text-secondary/80"
-                            type="button">Avtomato imkoniyatlari
-                    </button>
-                    <button class="h-[42px] flex items-center px-5 border rounded-2xl cursor-pointer bg-white border-secondary text-secondary hover:border-secondary/80 hover:text-secondary/80"
-                            type="button">Tashkilot yangiliklari
-                    </button>
-                    <button class="h-[42px] flex items-center px-5 border rounded-2xl cursor-pointer bg-white border-secondary text-secondary hover:border-secondary/80 hover:text-secondary/80"
-                            type="button">Foydali
-                    </button>
+                    <a href="{{ route("blog.index") }}" title="Blogs">
+                        <div class="h-[42px] flex items-center px-5 border rounded-2xl text-sm cursor-pointer {{ Request::routeIs('blog.index') ? "active-blog" : "bg-white" }} text-secondary hover:bg-secondary/80 hover:border-secondary/80 hover:text-white">
+                            Barchasi
+                        </div>
+                    </a>
+                    @if ($categories->isNotEmpty())
+                        @foreach ($categories as $category)
+                            <a href="{{ route("blog.by_category", $category->slug) }}" title="{{ $category->name }}">
+                                <div class="h-[42px] flex items-center px-5 border rounded-2xl cursor-pointer {{ Request::routeIs("blog.by_category") && Request::route('category') === $category->slug ? "active-blog" : "bg-white" }} text-secondary hover:bg-secondary/80 hover:border-secondary/80 hover:text-white">
+                                    {{ $category->name }}
+                                </div>
+                            </a>
+                        @endforeach
+                    @endif
                 </div>
             </div>
             <!-- Blogs Top Content End -->
@@ -66,7 +92,7 @@
             <!-- Blogs Grid Columns End -->
 
             <!-- Blogs Pagination Start -->
-            @include('website.components.pagination')
+            {{ $blogs->links('website.components.pagination') }}
             <!-- Blogs Pagination End -->
         </div>
     </section>
