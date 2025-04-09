@@ -205,3 +205,9 @@ body {
     flex-shrink: 0;
     margin: 10px;
 }
+
+/* Blog */
+
+.active-blog {
+    @apply bg-secondary border-secondary text-white
+}

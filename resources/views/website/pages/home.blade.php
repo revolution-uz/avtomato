@@ -759,15 +759,15 @@
                 <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent left-0 top-0 pointer-events-none"></div>
                 <div class="h-full absolute w-[15%] z-10 bg-gradient-to-r from-white to-transparent right-0 top-0 rotate-180 pointer-events-none"></div>
 
-                <div class="marque flex group-hover:[animation-play-state:paused]">
-                    {!! $marketsPhotoTemplate($marketPhotos) !!}
-                </div>
-                <div class="marque flex group-hover:[animation-play-state:paused]">
-                    {!! $marketsPhotoTemplate($marketPhotos) !!}
-                </div>
-                <div class="marque flex group-hover:[animation-play-state:paused]">
-                    {!! $marketsPhotoTemplate($marketPhotos) !!}
-                </div>
+                @for ($i = 1; $i <= 5; $i++)
+                    <div class="marque flex group-hover:[animation-play-state:paused]">
+                        @foreach ($marketPhotos as $photo)
+                            <div class="flex items-center px-2 w-[215px] h-[280px] lg:w-[260px] lg:h-[340px] hover:scale-105 transition-all">
+                                <img class="object-contain pointer-events-none select-none" src="{{ asset("/assets/images/{$photo}") }}" alt="Slide">
+                            </div>
+                        @endforeach
+                    </div>
+                @endfor
             </div>
             <!-- Scroll Overview End -->
         </div>

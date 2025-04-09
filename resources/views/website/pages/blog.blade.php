@@ -1,14 +1,23 @@
+@php
+/**
+ * @var \App\Models\Blog $blog
+ * @var \App\Models\Blog[] $recommendations
+ */
+@endphp
+
 @extends('website.layouts.layout')
 
-@section('title', $blog['title'] . ' - Avtomato')
+@section('title', $blog->title . ' - Avtomato')
 
 @section('meta')
-    <meta name="keywords" content=""> <!-- ~~~~~~~~~~~ -->
-    <meta name="description" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta name="keywords" content="{{ $blog->seo_keywords }}">
+    <meta name="description" content="{{ $blog->seo_description }}">
     <meta property="og:type" content="article">
-    <meta property="og:title" content=""> <!-- ~~~~~~~~~~~ -->
-    <meta property="og:description" content=""> <!-- ~~~~~~~~~~~ -->
-    <meta property="og:image" content=""> <!-- ~~~~~~~~~~~ -->
+    <meta property="og:title" content=" {{ $blog->title }}  {{ __('website.meta_single_blog_title') }}">
+    <meta property="og:description" content="{{ $blog->seo_description }}">
+    <meta property="og:image" content="{{ $blog->image_url }}">
+    <link rel="canonical" href="{{ url('/blog/' . $blog->slug) }}"/>
+
     <style>
         .blog-content {
             font-size: 18px;
