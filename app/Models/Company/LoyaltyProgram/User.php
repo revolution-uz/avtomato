@@ -4,12 +4,12 @@ namespace App\Models\Company\LoyaltyProgram;
 
 use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
 use App\Models\Company\OrderBySortable;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -27,6 +27,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read int|null $active_subscription_limit
  * @property Subscription[] $subscriptions
  * @property Card[]|Collection<int, Card> $cards
+ * @property-read string|null $full_name
+ * @property-read bool $has_available_subscription
  */
 class User extends Authenticatable
 {
@@ -104,18 +106,32 @@ class User extends Authenticatable
         ];
     }
 
-    public function getActiveSubscription(): ?Subscription
+    public function getHasAvailableSubscriptionAttribute(): bool
     {
-        return $this->subscriptions()->where('is_active', true)->first();
+        return $this->subscriptions()->whereIsAvailable()->exists();
+    }
+
+    public function getAvailableSubscription(): ?Subscription
+    {
+        return $this->subscriptions()->whereIsAvailable()->first();
     }
 
     public function getActiveSubscriptionLimitAttribute(): ?int
     {
-        if (! $subscription = $this->getActiveSubscription()) {
+        if (! $subscription = $this->getAvailableSubscription()) {
             return null;
         }
 
         return $subscription->tariff->limit_amount - $this->getOrderDiscountAmount($subscription->created_at);
+    }
+
+    public function getFullNameAttribute(): ?string
+    {
+        if (! $this->first_name && ! $this->last_name) {
+            return null;
+        }
+
+        return $this->last_name . ' ' . $this->first_name;
     }
 
     private function getOrderDiscountAmount(Carbon $created_at)

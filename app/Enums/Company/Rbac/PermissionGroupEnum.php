@@ -302,6 +302,8 @@ enum PermissionGroupEnum: string
             self::LOYALTY_PROGRAM => [
                 PermissionEnum::LOYALTY_PROGRAM_USERS_VIEW_ALL,
                 PermissionEnum::LOYALTY_PROGRAM_USERS_VIEW,
+                PermissionEnum::LOYALTY_PROGRAM_USERS_CREATE,
+                PermissionEnum::LOYALTY_PROGRAM_USERS_EDIT,
                 PermissionEnum::LOYALTY_PROGRAM_TARIFF_VIEW_ALL,
                 PermissionEnum::LOYALTY_PROGRAM_TARIFF_VIEW,
                 PermissionEnum::LOYALTY_PROGRAM_TARIFF_EDIT,
@@ -323,6 +325,11 @@ enum PermissionGroupEnum: string
                 PermissionEnum::LOYALTY_PROGRAM_SHOP_VIEW_ALL,
                 PermissionEnum::LOYALTY_PROGRAM_SHOP_VIEW,
                 PermissionEnum::LOYALTY_PROGRAM_SHOP_EDIT,
+                PermissionEnum::LOYALTY_PROGRAM_CARD_VIEW_ALL,
+                PermissionEnum::LOYALTY_PROGRAM_CARD_VIEW,
+                PermissionEnum::LOYALTY_PROGRAM_CARD_EDIT,
+                PermissionEnum::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL,
+                PermissionEnum::LOYALTY_PROGRAM_PAYMENT_VIEW,
             ],
 
             self::QR_PAY => [

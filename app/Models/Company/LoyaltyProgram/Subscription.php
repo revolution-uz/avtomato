@@ -18,9 +18,11 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $expired_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read bool $is_active_period
+ * @property-read bool $is_available
  * @property Tariff $tariff
  * @property User $user
+ *
+ * @method self whereIsAvailable()
  */
 class Subscription extends Model
 {
@@ -56,9 +58,17 @@ class Subscription extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getIsActivePeriodAttribute(): bool
+    public function getIsAvailableAttribute(): bool
     {
         return $this->is_active && $this->tariff->is_active && $this->expired_at->isFuture();
+    }
+
+    public function scopeWhereIsAvailable($query)
+    {
+        return $query
+            ->where('is_active', true)
+            ->whereHas('tariff', fn ($q) => $q->where('is_active', true))
+            ->where('expired_at', '>', Carbon::now());
     }
 
     public function extendSubscription(): void

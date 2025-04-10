@@ -43,6 +43,10 @@ class TariffsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
             ],
+            'status' => [
+                'type' => Type::boolean(),
+                'rules' => 'nullable|bool',
+            ],
         ];
     }
 
@@ -62,6 +66,8 @@ class TariffsGraphQLQuery extends Query
                 fn (Builder|Tariff $q) => $q->orderBySortable($args['sort']),
                 fn (Builder|Tariff $q) => $q->orderByDesc('id')
             )
+            ->when(isset($args['status']), fn (Builder $q) => $q
+                ->where('is_active', $args['status']))
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 }

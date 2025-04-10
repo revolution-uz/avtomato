@@ -19,9 +19,7 @@ class LoyaltyProgramOrderService
         try {
             $user = User::findByQr($qr);
 
-            $subscription = $user->getActiveSubscription();
-
-            if (! $subscription || ! $subscription->is_active_period) {
+            if (! $user->has_available_subscription) {
                 throw new Exception('User has no active subscription');
             }
 
