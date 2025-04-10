@@ -7,6 +7,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateUserGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\DeleteNotificationsGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\DeleteTariffGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\LoyaltyProgramImageGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\SendNotificationsGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateCardGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateNotificationGraphQLMutation;
@@ -14,8 +15,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateShopGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateSubscriptionGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateTariffGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateUserGraphQLMutation;
-use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadNotificationImageGraphQLMutation;
-use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadShopImageGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadLoyaltyProgramImageGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\CardsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\NotificationsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\OrdersGraphQLQuery;
@@ -72,8 +72,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 DeleteTariffGraphQLMutation::class,
                 DeleteNotificationsGraphQLMutation::class,
                 SendNotificationsGraphQLMutation::class,
-                UploadShopImageGraphQLMutation::class,
-                UploadNotificationImageGraphQLMutation::class,
+                UploadLoyaltyProgramImageGraphQLMutation::class,
             ],
             'query' => [
                 UsersGraphQLQuery::class,
@@ -110,6 +109,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 ShopGraphQLType::class,
                 AttachmentGraphQLType::class,
                 PaymentGraphQLType::class,
+                LoyaltyProgramImageGraphQLType::class,
                 TariffInputGraphQLType::class,
                 CardInputGraphQLType::class,
                 SubscriptionInputGraphQLType::class,
