@@ -4,12 +4,12 @@ namespace App\GraphQL\LoyaltyProgram\Admin\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\Notification;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
@@ -25,26 +25,10 @@ class UpdateNotificationGraphQLMutation extends Mutation
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => [
-                    'required',
-                    Rule::exists(Notification::class, 'id'),
-                ],
+                'rules' => ['required', 'int', 'exists:loyalty_program_notifications,id'],
             ],
-            'title_uz' => [
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|min:3|max:255',
-            ],
-            'title_ru' => [
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|min:3|max:255',
-            ],
-            'body_uz' => [
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|min:3|max:1000',
-            ],
-            'body_ru' => [
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|min:3|max:1000',
+            'notification' => [
+                'type' => Type::nonNull(GraphQL::type(NotificationInputGraphQLType::GRAPHQL_TYPE_NAME)),
             ],
         ];
     }
@@ -62,9 +46,9 @@ class UpdateNotificationGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $notification = Notification::findOrFail($args['id']);
-        $notification->fill($args);
+        $notification->fill($args['notification']);
         $notification->saveOrFail();
 
-        return $notification->refresh();
+        return $notification;
     }
 }

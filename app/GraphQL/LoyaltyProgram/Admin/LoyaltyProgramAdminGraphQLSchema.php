@@ -36,6 +36,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Types\AdminGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\CardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\CardInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\OrderGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\OrderItemGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\OrderPaymentGraphQLType;
@@ -116,6 +117,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 SubscriptionInputGraphQLType::class,
                 UserInputGraphQLType::class,
                 ShopInputGraphQLType::class,
+                NotificationInputGraphQLType::class,
             ],
             'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'loyalty_program', 'tenant_logging'],
         ];

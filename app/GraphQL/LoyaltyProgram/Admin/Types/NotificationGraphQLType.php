@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Admin\Types;
 
-use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\LoyaltyProgramImageGraphQLType;
 use App\Models\Company\LoyaltyProgram\Notification;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -43,6 +43,14 @@ class NotificationGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (Notification $root) => $root->is_sent,
             ],
+            'image_uz_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (Notification $root) => $root->image_uz_id,
+            ],
+            'image_ru_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (Notification $root) => $root->image_ru_id,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Notification $root) => $root->created_at->timestamp,
@@ -52,8 +60,16 @@ class NotificationGraphQLType extends GraphQLType
                 'resolve' => fn (Notification $root) => $root->updated_at->timestamp,
             ],
             'image' => [
-                'type' => GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME),
+                'type' => GraphQL::type(LoyaltyProgramImageGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (Notification $root) => $root->image,
+            ],
+            'image_uz' => [
+                'type' => GraphQL::type(LoyaltyProgramImageGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Notification $root) => $root->imageUz,
+            ],
+            'image_ru' => [
+                'type' => GraphQL::type(LoyaltyProgramImageGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Notification $root) => $root->imageRu,
             ],
         ];
     }
