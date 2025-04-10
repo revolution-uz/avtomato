@@ -21,7 +21,7 @@ enum CardTypeEnum: int
 
     }
 
-    public static function binUzkard(): array
+    public static function binUzcard(): array
     {
         return ['8600', '6262', '5440', '5614', '4357'];
     }

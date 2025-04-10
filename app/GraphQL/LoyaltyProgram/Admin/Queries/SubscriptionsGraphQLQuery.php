@@ -43,6 +43,18 @@ class SubscriptionsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
             ],
+            'is_active' => [
+                'type' => Type::boolean(),
+                'rules' => ['nullable', 'bool'],
+            ],
+            'from' => [
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:to|date_format:Y-m-d',
+            ],
+            'to' => [
+                'type' => Type::string(),
+                'rules' => 'nullable|required_with:from|date_format:Y-m-d|after_or_equal:from',
+            ],
         ];
     }
 
@@ -53,13 +65,19 @@ class SubscriptionsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        Subscription::factory()->count(29)->create();
-
         return Subscription::query()
             ->when(isset($args['search']), fn (Builder $q) => $q
                 ->whereHas('tariff', fn ($q) => $q
                     ->where('name_uz', 'ILIKE', "%{$args['search']}%")
-                    ->orWhere('name_ru', 'ILIKE', "%{$args['search']}%")))
+                    ->orWhere('name_ru', 'ILIKE', "%{$args['search']}%"))
+                ->orWhereHas('user', fn ($q) => $q
+                    ->where('first_name', 'ILIKE', "%{$args['search']}%")
+                    ->orWhere('last_name', 'ILIKE', "%{$args['search']}%")))
+            ->when(isset($args['is_active']), fn (Builder $q) => $q
+                ->where('is_active', $args['is_active']))
+            ->when(isset($args['from'], $args['to']), fn (Builder $q) => $q
+                ->whereDate('created_at', '>=', $args['from'])
+                ->whereDate('created_at', '<=', $args['to']))
             ->when(
                 isset($args['sort']),
                 fn (Builder|Subscription $q) => $q->orderBySortable($args['sort']),

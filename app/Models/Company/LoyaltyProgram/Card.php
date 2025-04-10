@@ -5,6 +5,7 @@ namespace App\Models\Company\LoyaltyProgram;
 use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Helpers\CardHelper;
+use App\Models\Company\OrderBySortable;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -39,7 +40,9 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  */
 class Card extends Model
 {
-    use HasFactory, LogsActivityDirtyOnlyTrait, SoftDeletes, TenantConnection;
+    use HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes, TenantConnection;
+
+    public static array $sortables = ['id', 'pan', 'owner', 'phone', 'status', 'user_id', 'created_at', 'updated_at'];
 
     protected $table = 'loyalty_program_cards';
 
