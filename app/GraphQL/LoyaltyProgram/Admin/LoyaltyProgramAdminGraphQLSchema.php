@@ -32,7 +32,6 @@ use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleUserGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SubscriptionsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\TariffsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\UsersGraphQLQuery;
-use App\GraphQL\LoyaltyProgram\Admin\Types\AdminGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\CardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\CardInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationGraphQLType;
@@ -53,7 +52,9 @@ use App\GraphQL\LoyaltyProgram\Admin\Types\TariffInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\UserGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\UserInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
+use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
@@ -118,6 +119,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 UserInputGraphQLType::class,
                 ShopInputGraphQLType::class,
                 NotificationInputGraphQLType::class,
+                TemplateThemeGraphQLType::class,
             ],
             'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'loyalty_program', 'tenant_logging'],
         ];

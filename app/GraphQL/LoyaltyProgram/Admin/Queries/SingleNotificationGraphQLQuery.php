@@ -9,7 +9,7 @@ use App\Models\Company\LoyaltyProgram\Notification;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-    use Rebing\GraphQL\Support\Facades\GraphQL;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
 class SingleNotificationGraphQLQuery extends Query
