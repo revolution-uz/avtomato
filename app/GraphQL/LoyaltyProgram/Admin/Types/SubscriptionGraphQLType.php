@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\LoyaltyProgram\Admin\Types;
 
-use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use App\Models\Company\LoyaltyProgram\Subscription;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;

@@ -2,15 +2,14 @@
 
 namespace App\GraphQL\LoyaltyProgram\Admin\Mutations;
 
-use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ShopGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\ShopInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\Shop;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
@@ -24,32 +23,11 @@ class UpdateShopGraphQLMutation extends Mutation
     {
         return [
             'id' => [
-                'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => [
-                    'required',
-                    Rule::exists(Shop::class, 'id')->whereNull('deleted_at'),
-                ],
+                'rules' => ['required', 'int', 'exists:loyalty_program_shops,id,deleted_at,NULL'],
             ],
-            'name' => [
-                'type' => Type::string(),
-                'rules' => 'nullable|string|max:255',
-            ],
-            'address' => [
-                'type' => Type::string(),
-                'rules' => 'nullable|string|max:255',
-            ],
-            'lat' => [
-                'type' => Type::float(),
-                'rules' => 'nullable|numeric',
-            ],
-            'lng' => [
-                'type' => Type::float(),
-                'rules' => 'nullable|numeric',
-            ],
-            'status' => [
-                'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', Rule::in(ShopStatusEnum::cases())],
+            'shop' => [
+                'type' => Type::nonNull(GraphQL::type(ShopInputGraphQLType::GRAPHQL_TYPE_NAME)),
             ],
         ];
     }
@@ -67,7 +45,7 @@ class UpdateShopGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $shop = Shop::findOrFail($args['id']);
-        $shop->fill($args);
+        $shop->fill($args['shop']);
         $shop->saveOrFail();
 
         return $shop->refresh();

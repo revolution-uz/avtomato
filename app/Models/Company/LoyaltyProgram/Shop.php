@@ -3,11 +3,10 @@
 namespace App\Models\Company\LoyaltyProgram;
 
 use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
-use App\Models\Company\Attachment;
 use App\Models\Company\OrderBySortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -21,13 +20,14 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property float|null $lat
  * @property float|null $lng
  * @property ShopStatusEnum $status
+ * @property int|null $image_id
  * @property string $external_code
  * @property string $external_name
  * @property string $external_address
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property Attachment|null $image
+ * @property LoyaltyProgramImage|null $image
  */
 class Shop extends Model
 {
@@ -43,6 +43,7 @@ class Shop extends Model
         'lat',
         'lng',
         'status',
+        'image_id',
         'external_code',
         'external_name',
         'external_address',
@@ -52,8 +53,8 @@ class Shop extends Model
         'status' => ShopStatusEnum::class,
     ];
 
-    public function image(): MorphOne
+    public function image(): BelongsTo
     {
-        return $this->morphOne(Attachment::class, 'attachmentable')->latestOfMany();
+        return $this->belongsTo(LoyaltyProgramImage::class, 'image_id');
     }
 }
