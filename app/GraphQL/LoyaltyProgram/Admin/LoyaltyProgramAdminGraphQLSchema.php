@@ -8,7 +8,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateUserGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\DeleteNotificationsGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\DeleteTariffGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\LoyaltyProgramImageGraphQLType;
-use App\GraphQL\LoyaltyProgram\Admin\Mutations\SendNotificationsGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\SendNotificationGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateCardGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateNotificationGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateShopGraphQLMutation;
@@ -74,7 +74,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 UpdateSubscriptionGraphQLMutation::class,
                 DeleteTariffGraphQLMutation::class,
                 DeleteNotificationsGraphQLMutation::class,
-                SendNotificationsGraphQLMutation::class,
+                SendNotificationGraphQLMutation::class,
                 UploadLoyaltyProgramImageGraphQLMutation::class,
             ],
             'query' => [
