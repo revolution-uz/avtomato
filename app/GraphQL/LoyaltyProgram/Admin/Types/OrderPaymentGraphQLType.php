@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Admin\Types;
 
+use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\Models\Company\LoyaltyProgram\OrderPayment;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
