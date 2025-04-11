@@ -57,7 +57,7 @@ class SmsTemplate extends Model
             $message = str_replace(":{$placeholder}", $value, $message);
         }
 
-        return $message;
+        return rtrim($message);
     }
 
     public function getExampleMessage(): string

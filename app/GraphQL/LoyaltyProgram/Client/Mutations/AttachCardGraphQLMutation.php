@@ -6,6 +6,7 @@ use App\GraphQL\LoyaltyProgram\Client\Types\AttachCardGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Services\LoyaltyProgram\LoyaltyProgramUserCardService;
 use Closure;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -42,6 +43,10 @@ class AttachCardGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
+        if (! request()->hasHeader('signature')) {
+            throw new Error('Missing required header: signature');
+        }
+
         [$card, $cardServiceResponse] = $this->userCardService->attachCard(auth('loyalty-program-client')->id(), $args);
 
         return [$card, $cardServiceResponse];

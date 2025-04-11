@@ -93,7 +93,11 @@ class SmsService
             SmsProviderEnum::SMS_FLY => new SmsFlyClient($data->secret),
         };
 
-        $client->sendMessage(id: $confirmationSms->id, phone: $confirmationSms->phone, text: $template->getMessage(['code' => $confirmationSms->code]));
+        $client->sendMessage(
+            id: $confirmationSms->id,
+            phone: $confirmationSms->phone,
+            text: $template->getMessage(['code' => $confirmationSms->code, 'signature' => request()->header('signature', '')])
+        );
     }
 
     public function callbackSayqalSms(SayqalSmsCallbackRequest $request): bool
