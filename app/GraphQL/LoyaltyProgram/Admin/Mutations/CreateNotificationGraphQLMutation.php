@@ -4,6 +4,7 @@ namespace App\GraphQL\LoyaltyProgram\Admin\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationInputGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\Notification;
 use Closure;
@@ -21,21 +22,8 @@ class CreateNotificationGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
-            'title_uz' => [
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|max:255',
-            ],
-            'title_ru' => [
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|max:255',
-            ],
-            'body_uz' => [
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|max:1000',
-            ],
-            'body_ru' => [
-                'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|max:1000',
+            'notification' => [
+                'type' => Type::nonNull(GraphQL::type(NotificationInputGraphQLType::GRAPHQL_TYPE_NAME)),
             ],
         ];
     }
@@ -47,15 +35,15 @@ class CreateNotificationGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_SEND);
+        return RbacHelper::checkPermission(PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_CREATE);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $notification = new Notification;
-        $notification->fill($args);
+        $notification->fill($args['notification']);
         $notification->saveOrFail();
 
-        return $notification->refresh();
+        return $notification;
     }
 }

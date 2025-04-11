@@ -7,6 +7,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateUserGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\DeleteNotificationsGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\DeleteTariffGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\LoyaltyProgramImageGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\SendNotificationsGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateCardGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateNotificationGraphQLMutation;
@@ -14,8 +15,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateShopGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateSubscriptionGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateTariffGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateUserGraphQLMutation;
-use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadNotificationImageGraphQLMutation;
-use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadShopImageGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadLoyaltyProgramImageGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\CardsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\NotificationsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\OrdersGraphQLQuery;
@@ -34,10 +34,10 @@ use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleUserGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SubscriptionsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\TariffsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\UsersGraphQLQuery;
-use App\GraphQL\LoyaltyProgram\Admin\Types\AdminGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\CardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\CardInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\OrderGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\OrderItemGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\OrderPaymentGraphQLType;
@@ -46,6 +46,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Types\PaymentGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ProductGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\RoleGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ShopGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\ShopInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\TariffGraphQLType;
@@ -53,7 +54,9 @@ use App\GraphQL\LoyaltyProgram\Admin\Types\TariffInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\UserGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\UserInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
+use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
@@ -74,8 +77,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 DeleteTariffGraphQLMutation::class,
                 DeleteNotificationsGraphQLMutation::class,
                 SendNotificationsGraphQLMutation::class,
-                UploadShopImageGraphQLMutation::class,
-                UploadNotificationImageGraphQLMutation::class,
+                UploadLoyaltyProgramImageGraphQLMutation::class,
             ],
             'query' => [
                 UsersGraphQLQuery::class,
@@ -114,10 +116,14 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 ShopGraphQLType::class,
                 AttachmentGraphQLType::class,
                 PaymentGraphQLType::class,
+                LoyaltyProgramImageGraphQLType::class,
                 TariffInputGraphQLType::class,
                 CardInputGraphQLType::class,
                 SubscriptionInputGraphQLType::class,
                 UserInputGraphQLType::class,
+                ShopInputGraphQLType::class,
+                NotificationInputGraphQLType::class,
+                TemplateThemeGraphQLType::class,
             ],
             'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'loyalty_program', 'tenant_logging'],
         ];
