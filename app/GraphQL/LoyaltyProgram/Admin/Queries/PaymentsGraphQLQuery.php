@@ -33,6 +33,10 @@ class PaymentsGraphQLQuery extends Query
                 'type' => Type::string(),
                 'rules' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
             ],
+            'search' => [
+                'type' => Type::string(),
+                'rules' => 'nullable|string|max:255',
+            ],
             'page' => [
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:1',
@@ -68,6 +72,11 @@ class PaymentsGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return LoyaltyProgramPayment::query()
+            ->when(isset($args['search']), fn (Builder $q) => $q
+                ->whereHas('user', fn (Builder $q) => $q
+                    ->where('first_name', 'ILIKE', "%{$args['search']}%")
+                    ->orWhere('last_name', 'ILIKE', "%{$args['search']}%")
+                    ->orWhere('phone', 'ILIKE', "%{$args['search']}%")))
             ->when(isset($args['status']), fn (Builder $q) => $q->where('status', $args['status']))
             ->when(isset($args['card_id']), fn (Builder $q) => $q->where('card_id', $args['card_id']))
             ->when(isset($args['subscription_id']), fn (Builder $q) => $q->where('subscription_id', $args['subscription_id']))
