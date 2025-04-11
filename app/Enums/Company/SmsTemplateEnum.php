@@ -11,6 +11,7 @@ enum SmsTemplateEnum: int
     case ECOMMERCE_OTP = 5;
     case DEBT_10 = 6;
     case DEBT_20 = 7;
+    case LOYALTY_PROGRAM_OTP = 8;
 
     public static function getExampleData(): array
     {
@@ -73,6 +74,11 @@ enum SmsTemplateEnum: int
                     'overdue_days' => 20,
                 ],
                 'description' => 'Qarzdorlik bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+            self::LOYALTY_PROGRAM_OTP => [
+                'status' => SmsTemplateStatusEnum::ACTIVE,
+                'original_template' => 'Loyalty-program tizimidan ro\'yxatdan o\'tish uchun kod: :code',
+                'description' => 'Sodiqlik dasturidan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
         };
     }

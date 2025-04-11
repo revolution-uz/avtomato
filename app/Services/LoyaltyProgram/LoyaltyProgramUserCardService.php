@@ -8,6 +8,7 @@ use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\Company\SmsTemplateEnum;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\LoyaltyProgram\Card;
@@ -39,7 +40,7 @@ readonly class LoyaltyProgramUserCardService
                 $oldCard = $this->createOrGetCard($userId, $args);
                 $oldCard->fillData($response->data, CardStatusEnum::INACTIVE);
 
-                $this->confirmationService->send($oldCard->phone);
+                $this->confirmationService->send($oldCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
                 $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $oldCard->phone, 'transaction_id' => $oldCard->id]);
 
                 return [$oldCard, $customResponse];
@@ -58,7 +59,7 @@ readonly class LoyaltyProgramUserCardService
             throw ValidationException::withMessages(['number' => __('api.already_attached_card')]);
         } elseif ($inactiveCard = $cardQuery->clone()->where('user_id', $userId)->where('status', CardStatusEnum::INACTIVE)->first()) {
             if (CardConfirmationSms::query()->where('phone', $inactiveCard->phone)->where('created_at', '>', now()->subMinutes(2))->doesntExist()) {
-                $this->confirmationService->send($inactiveCard->phone);
+                $this->confirmationService->send($inactiveCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
             }
             $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $inactiveCard->phone, 'transaction_id' => $inactiveCard->id]);
 
@@ -78,7 +79,7 @@ readonly class LoyaltyProgramUserCardService
         $newCard->computingBeforeInsert();
         $newCard->saveOrFail();
 
-        $this->confirmationService->send($newCard->phone);
+        $this->confirmationService->send($newCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
         $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $newCard->phone, 'transaction_id' => $newCard->id]);
 
         return [$newCard, $customResponse];

@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Ecommerce\Common\Mutations;
 
+use App\Enums\Company\SmsTemplateEnum;
 use App\Exceptions\GeneralException;
 use App\Rules\PhoneRule;
 use App\Services\ConfirmationService;
@@ -39,7 +40,7 @@ class SendOtpGraphQLMutation extends Mutation
     public function resolve($root, $args): bool
     {
         try {
-            return $this->confirmationService->send($args['phone'], isEcommerceOtp: true);
+            return $this->confirmationService->send($args['phone'], SmsTemplateEnum::ECOMMERCE_OTP);
 
         } catch (Throwable $e) {
             throw new GeneralException($e->getMessage());
