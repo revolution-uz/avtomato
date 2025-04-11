@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Admin;
 
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\CancelPaymentGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateNotificationGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateTariffGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\CreateUserGraphQLMutation;
@@ -76,6 +77,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 DeleteNotificationsGraphQLMutation::class,
                 SendNotificationsGraphQLMutation::class,
                 UploadLoyaltyProgramImageGraphQLMutation::class,
+                CancelPaymentGraphQLMutation::class,
             ],
             'query' => [
                 UsersGraphQLQuery::class,

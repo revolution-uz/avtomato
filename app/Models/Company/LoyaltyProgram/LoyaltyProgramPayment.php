@@ -64,4 +64,12 @@ class LoyaltyProgramPayment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function cancel(): true
+    {
+        $this->subscription->updateOrFail(['remaining_limit_amount' => 0, 'expired_at' => Carbon::now()]);
+        $this->updateOrFail(['status' => PaymentStatusEnum::CANCELED]);
+
+        return true;
+    }
 }
