@@ -4,7 +4,6 @@ namespace Database\Factories\Company\LoyaltyProgram;
 
 use App\Models\Company\LoyaltyProgram\Item;
 use App\Models\Company\LoyaltyProgram\Price;
-use App\Models\Company\LoyaltyProgram\Shop;
 use App\Models\Company\LoyaltyProgram\Stock;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,7 +15,7 @@ class ItemFactory extends Factory
     {
         return [
             'external_code' => $this->faker->unique()->uuid(),
-            'external_shop_code' => Shop::factory()->createOne()->external_code,
+            'external_shop_code' => $this->faker->uuid(),
             'external_art' => $this->faker->optional()->uuid(),
             'external_name' => $this->faker->optional()->word,
             'external_mxik' => $this->faker->optional()->uuid(),

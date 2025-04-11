@@ -56,8 +56,8 @@ class LoyaltyProgramSyncController extends Controller
             return PriceDTO::from($priceData);
         });
 
-        foreach ($prices as $item) {
-            SyncPricesJob::dispatch($item);
+        foreach ($prices as $price) {
+            SyncPricesJob::dispatch($price);
         }
 
         $response = $this->prepareSuccessResponse(['message' => 'Prices are processed successfully']);
