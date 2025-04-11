@@ -5,6 +5,7 @@ namespace App\GraphQL\LoyaltyProgram\Admin\Mutations;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\LoyaltyProgramPayment;
+use App\Services\LoyaltyProgram\SubscriptionService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -15,6 +16,8 @@ class CancelPaymentGraphQLMutation extends Mutation
     protected $attributes = [
         'name' => 'cancelPayment',
     ];
+
+    public function __construct(private readonly SubscriptionService $_subscriptionService) {}
 
     public function type(): Type
     {
@@ -39,7 +42,7 @@ class CancelPaymentGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): true
     {
         $payment = LoyaltyProgramPayment::query()->findOrFail($args['id']);
-        $payment->cancel();
+        $this->_subscriptionService->cancelSubscriptionPayment($payment);
 
         return true;
     }
