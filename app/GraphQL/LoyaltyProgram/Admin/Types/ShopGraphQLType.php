@@ -67,9 +67,13 @@ class ShopGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Shop $root) => $root->updated_at->timestamp,
             ],
-            'deleted_at' => [
-                'type' => Type::int(),
-                'resolve' => fn (Shop $root) => $root->deleted_at?->timestamp,
+            'display_name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Shop $root) => $root->display_name,
+            ],
+            'display_address' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Shop $root) => $root->display_address,
             ],
         ];
     }

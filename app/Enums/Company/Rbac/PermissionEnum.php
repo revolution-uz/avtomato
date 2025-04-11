@@ -299,6 +299,8 @@ enum PermissionEnum: string
     case LOYALTY_PROGRAM_CARD_EDIT = 'loyalty_program_card_edit';
     case LOYALTY_PROGRAM_PAYMENT_VIEW_ALL = 'loyalty_program_payment_view_all';
     case LOYALTY_PROGRAM_PAYMENT_VIEW = 'loyalty_program_payment_view';
+    case LOYALTY_PROGRAM_PRODUCT_VIEW_ALL = 'loyalty_program_product_view_all';
+    case LOYALTY_PROGRAM_PRODUCT_VIEW = 'loyalty_program_product_view';
 
     // QR Pay
     case QR_PAY_TRANSACTION_VIEW_ALL = 'qr_pay_transaction_view_all';
@@ -537,6 +539,8 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_CARD_EDIT,
             self::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL,
             self::LOYALTY_PROGRAM_PAYMENT_VIEW,
+            self::LOYALTY_PROGRAM_PRODUCT_VIEW_ALL,
+            self::LOYALTY_PROGRAM_PRODUCT_VIEW,
 
             // qr pay
             self::QR_PAY_TRANSACTION_VIEW_ALL,
@@ -875,6 +879,8 @@ enum PermissionEnum: string
                 self::LOYALTY_PROGRAM_CARD_EDIT->value,
                 self::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_PAYMENT_VIEW->value,
+                self::LOYALTY_PROGRAM_PRODUCT_VIEW_ALL->value,
+                self::LOYALTY_PROGRAM_PRODUCT_VIEW->value,
             ],
 
             PermissionGroupEnum::QR_PAY->value => [
@@ -1152,7 +1158,9 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_CARD_VIEW,
             self::LOYALTY_PROGRAM_CARD_EDIT,
             self::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL,
-            self::LOYALTY_PROGRAM_PAYMENT_VIEW => FeatureEnum::LOYALTY_PROGRAM,
+            self::LOYALTY_PROGRAM_PAYMENT_VIEW,
+            self::LOYALTY_PROGRAM_PRODUCT_VIEW_ALL,
+            self::LOYALTY_PROGRAM_PRODUCT_VIEW => FeatureEnum::LOYALTY_PROGRAM,
 
             self::QR_PAY_TRANSACTION_VIEW_ALL,
             self::QR_PAY_TRANSACTION_VIEW,

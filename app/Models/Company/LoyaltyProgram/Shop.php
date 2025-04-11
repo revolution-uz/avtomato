@@ -27,6 +27,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read string $display_name
+ * @property-read string $display_address
  * @property Attachment|null $image
  */
 class Shop extends Model
@@ -51,6 +53,16 @@ class Shop extends Model
     protected $casts = [
         'status' => ShopStatusEnum::class,
     ];
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->name ?? $this->external_name;
+    }
+
+    public function getDisplayAddressAttribute(): string
+    {
+        return $this->address ?? $this->external_address;
+    }
 
     public function image(): MorphOne
     {

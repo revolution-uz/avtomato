@@ -16,7 +16,7 @@ class PriceResource extends Resource
     public static $title = 'external_item_code';
 
     public static $search = [
-        'id', 'external_item_code', 'external_shop_id', 'external_price',
+        'id', 'external_item_code', 'external_shop_code', 'external_price',
     ];
 
     public function fields(Request $request)
@@ -24,7 +24,7 @@ class PriceResource extends Resource
         return [
             ID::make()->sortable(),
             Text::make('External Item Code', 'external_item_code')->sortable()->rules('required', 'max:255'),
-            Number::make('External Shop ID', 'external_shop_id')->sortable()->rules('required', 'integer'),
+            Number::make('External Shop ID', 'external_shop_code')->sortable()->rules('required', 'integer'),
             Number::make('External Price', 'external_price')->sortable()->rules('required', 'numeric'),
         ];
     }

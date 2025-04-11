@@ -20,11 +20,13 @@ use App\GraphQL\LoyaltyProgram\Admin\Queries\CardsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\NotificationsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\OrdersGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\PaymentsGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Admin\Queries\ProductsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\ShopsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleCardGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleNotificationGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleOrderGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SinglePaymentGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleProductGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleShopGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleSubscriptionGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\SingleTariffGraphQLQuery;
@@ -84,6 +86,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 ShopsGraphQLQuery::class,
                 CardsGraphQLQuery::class,
                 PaymentsGraphQLQuery::class,
+                ProductsGraphQLQuery::class,
                 SingleUserGraphQLQuery::class,
                 SingleTariffGraphQLQuery::class,
                 SingleNotificationGraphQLQuery::class,
@@ -92,6 +95,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 SingleShopGraphQLQuery::class,
                 SingleCardGraphQLQuery::class,
                 SinglePaymentGraphQLQuery::class,
+                SingleProductGraphQLQuery::class,
             ],
             'types' => [
                 UserGraphQLType::class,
