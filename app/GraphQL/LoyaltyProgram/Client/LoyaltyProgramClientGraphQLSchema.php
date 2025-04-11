@@ -3,6 +3,7 @@
 namespace App\GraphQL\LoyaltyProgram\Client;
 
 use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\LoyaltyProgramImageGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ProductGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\TariffGraphQLType;
@@ -28,7 +29,6 @@ use App\GraphQL\LoyaltyProgram\Client\Types\OrderItemGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\ShopGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
-use App\GraphQL\Management\Types\AttachmentGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
 class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
@@ -68,7 +68,7 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
                 ProductGraphQLType::class,
                 NotificationGraphQLType::class,
                 ShopGraphQLType::class,
-                AttachmentGraphQLType::class,
+                LoyaltyProgramImageGraphQLType::class,
             ],
             'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_loyalty_program_client_token', 'loyalty_program'],
         ];
