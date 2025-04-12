@@ -11,6 +11,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AttachCardGraphQLMutation extends Mutation
 {
@@ -43,12 +44,11 @@ class AttachCardGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        if (! request()->hasHeader('signature')) {
-            throw new Error('Missing required header: signature');
+        try {
+            return $this->userCardService->attachCard(auth('loyalty-program-client')->id(), $args);
+
+        } catch (BadRequestHttpException $e) {
+            throw new Error($e->getMessage());
         }
-
-        [$card, $cardServiceResponse] = $this->userCardService->attachCard(auth('loyalty-program-client')->id(), $args);
-
-        return [$card, $cardServiceResponse];
     }
 }

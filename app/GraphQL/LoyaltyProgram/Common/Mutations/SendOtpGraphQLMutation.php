@@ -37,12 +37,7 @@ class SendOtpGraphQLMutation extends Mutation
     public function resolve($root, $args): bool
     {
         try {
-            if (
-                ! request()->hasHeader('signature') ||
-                ! $this->confirmationService
-                    ->canLoginIntoLoyaltyProgramm($args['phone'], request()->header('Device-Name'))
-                    ->isValid()
-            ) {
+            if (! $this->confirmationService->canLoginIntoLoyaltyProgram($args['phone'], request()->header('Device-Name'))->isValid()) {
                 throw new Error('You cannot login');
             }
 

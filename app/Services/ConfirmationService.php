@@ -7,11 +7,13 @@ use App\Enums\Company\SmsTemplateEnum;
 use App\Helpers\Utilities;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\LoyaltyProgram\User;
-use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Carbon;
 
 class ConfirmationService
 {
+    private const SMS_RESEND_INTERVAL = 2;
+
     public function __construct(private readonly SmsService $smsService) {}
 
     /**
@@ -19,17 +21,8 @@ class ConfirmationService
      */
     public function send(string $phone, SmsTemplateEnum $smsTemplateEnum): true
     {
-        if (
-            CardConfirmationSms::query()
-                ->where('phone', $phone)
-                ->where('created_at', '>', Carbon::now()->subMinutes(2))
-                ->doesntExist()
-        ) {
-            $code = $this->generateCode();
-            $confirmationSms = CardConfirmationSms::query()->create([
-                'phone' => $phone,
-                'code' => $code,
-            ]);
+        if ($this->canSendSms($phone)) {
+            $confirmationSms = CardConfirmationSms::query()->create(['phone' => $phone, 'code' => $this->generateCode()]);
             $this->smsService->sendConfirmationSms($confirmationSms, $smsTemplateEnum);
         }
 
@@ -40,7 +33,7 @@ class ConfirmationService
     {
         if (
             $authAttempt = CardConfirmationSms::query()
-                ->where('created_at', '>=', Carbon::now()->subMinutes(2))
+                ->where('created_at', '>=', Carbon::now()->subMinutes(self::SMS_RESEND_INTERVAL))
                 ->where('phone', $phone)
                 ->where('code', $otp)
                 ->first()
@@ -60,13 +53,21 @@ class ConfirmationService
         return CanLoginTypeEnum::CAN_LOGIN;
     }
 
-    public function canLoginIntoLoyaltyProgramm(string $phone, string $deviceName): CanLoginTypeEnum
+    public function canLoginIntoLoyaltyProgram(string $phone, string $deviceName): CanLoginTypeEnum
     {
         if ($user = User::query()->where('phone', $phone)->first()) {
             return $this->canLogin($user, $deviceName, Utilities::LOYALTY_USER_MAX_SESSIONS);
         }
 
         return CanLoginTypeEnum::CAN_LOGIN;
+    }
+
+    private function canSendSms(string $phone): bool
+    {
+        return CardConfirmationSms::query()
+            ->where('phone', $phone)
+            ->where('created_at', '>', Carbon::now()->subMinutes(self::SMS_RESEND_INTERVAL))
+            ->doesntExist();
     }
 
     /**

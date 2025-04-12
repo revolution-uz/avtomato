@@ -32,4 +32,5 @@ return [
     'card_balance_insufficient' => 'Karta balansi :balance UZS dan katta bo\'lishi kerak',
     'You cannot activate an installment without withdrawing initial fee' => 'Faollashtirish uchun boshlang\'ich to\'lovni amalga oshiring',
     'Cannot detach the only address associated with the customer' => 'Mijozga tegishli yagona manzilni olib tashlab bo‘lmaydi',
+    'card_in_use_by_another_user' => 'Bu karta allaqachon boshqa foydalanuvchiga bog\'langan, Iltimos boshqa kartadan foydalaning',
 ];

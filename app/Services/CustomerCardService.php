@@ -9,7 +9,6 @@ use App\DTOs\Atmos\Card\AtmosConfirmCardResponseDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\SmsTemplateEnum;
 use App\Models\Company\Card;
-use App\Models\Company\CardConfirmationSms;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -50,9 +49,7 @@ readonly class CustomerCardService
         if ((clone $cardQuery)->where('customer_id', $customerId)->where('status', CardStatusEnum::ACTIVE)->exists()) {
             throw ValidationException::withMessages(['number' => __('api.already_attached_card')]);
         } elseif ($inactiveCard = (clone $cardQuery)->where('customer_id', $customerId)->where('status', CardStatusEnum::INACTIVE)->first()) {
-            if (CardConfirmationSms::query()->where('phone', $inactiveCard->phone)->where('created_at', '>', now()->subMinutes(2))->doesntExist()) {
-                $this->confirmationService->send($inactiveCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
-            }
+            $this->confirmationService->send($inactiveCard->phone);
             $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $inactiveCard->phone, 'transaction_id' => $inactiveCard->id]);
 
             return [$inactiveCard, $customResponse];
