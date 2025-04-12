@@ -49,7 +49,7 @@ readonly class CustomerCardService
         if ((clone $cardQuery)->where('customer_id', $customerId)->where('status', CardStatusEnum::ACTIVE)->exists()) {
             throw ValidationException::withMessages(['number' => __('api.already_attached_card')]);
         } elseif ($inactiveCard = (clone $cardQuery)->where('customer_id', $customerId)->where('status', CardStatusEnum::INACTIVE)->first()) {
-            $this->confirmationService->send($inactiveCard->phone);
+            $this->confirmationService->send($inactiveCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
             $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $inactiveCard->phone, 'transaction_id' => $inactiveCard->id]);
 
             return [$inactiveCard, $customResponse];

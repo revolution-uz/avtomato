@@ -9,7 +9,6 @@ use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\SmsTemplateEnum;
-use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\LoyaltyProgram\Card;
 use App\Services\AtmosService;
