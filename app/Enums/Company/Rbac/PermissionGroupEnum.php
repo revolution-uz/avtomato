@@ -333,6 +333,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::LOYALTY_PROGRAM_IMAGE_CREATE,
                 PermissionEnum::LOYALTY_PROGRAM_PRODUCT_VIEW_ALL,
                 PermissionEnum::LOYALTY_PROGRAM_PRODUCT_VIEW,
+                PermissionEnum::LOYALTY_PROGRAM_PAYMENT_CANCEL,
             ],
 
             self::QR_PAY => [

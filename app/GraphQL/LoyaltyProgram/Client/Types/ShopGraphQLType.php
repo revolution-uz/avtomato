@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Client\Types;
 
-use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Mutations\LoyaltyProgramImageGraphQLType;
 use App\Models\Company\LoyaltyProgram\Shop;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -39,13 +39,17 @@ class ShopGraphQLType extends GraphQLType
                 'type' => Type::float(),
                 'resolve' => fn (Shop $root) => $root->lng,
             ],
-            'image' => [
-                'type' => GraphQL::type(AttachmentGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Shop $root) => $root->image,
-            ],
             'status' => [
                 'type' => Type::int(),
                 'resolve' => fn (Shop $root) => $root->status->value,
+            ],
+            'image_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (Shop $root) => $root->image_id,
+            ],
+            'external_code' => [
+                'type' => Type::string(),
+                'resolve' => fn (Shop $root) => $root->external_code,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
@@ -54,6 +58,10 @@ class ShopGraphQLType extends GraphQLType
             'updated_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Shop $root) => $root->updated_at->timestamp,
+            ],
+            'image' => [
+                'type' => GraphQL::type(LoyaltyProgramImageGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Shop $root) => $root->image,
             ],
         ];
     }

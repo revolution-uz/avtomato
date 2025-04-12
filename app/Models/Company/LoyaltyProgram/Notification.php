@@ -15,20 +15,21 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $title_ru
  * @property string $body_uz
  * @property string $body_ru
- * @property bool $is_sent
  * @property int|null $image_uz_id
  * @property int|null $image_ru_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property LoyaltyProgramImage|null $image
+ * @property Carbon|null $sent_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property LoyaltyProgramImage|null $imageUz
  * @property LoyaltyProgramImage|null $imageRu
+ * @property-read LoyaltyProgramImage|null $image
+ * @property-read bool $is_sent
  */
 class Notification extends Model
 {
     use HasFactory, OrderBySortable, TenantConnection;
 
-    public static array $sortables = ['id', 'title_uz', 'title_ru', 'body_uz', 'body_ru', 'is_sent', 'created_at', 'updated_at'];
+    public static array $sortables = ['id', 'title_uz', 'title_ru', 'body_uz', 'body_ru', 'sent_at', 'created_at', 'updated_at'];
 
     protected $table = 'loyalty_program_notifications';
 
@@ -37,9 +38,11 @@ class Notification extends Model
         'title_ru',
         'body_uz',
         'body_ru',
-        'is_sent',
-        'image_uz_id',
-        'image_ru_id',
+        'sent_at',
+    ];
+
+    protected $casts = [
+        'sent_at' => 'datetime',
     ];
 
     public function getImageAttribute()
@@ -55,5 +58,10 @@ class Notification extends Model
     public function imageRu(): BelongsTo
     {
         return $this->belongsTo(LoyaltyProgramImage::class, 'image_ru_id');
+    }
+
+    public function getIsSentAttribute()
+    {
+        return $this->sent_at !== null;
     }
 }
