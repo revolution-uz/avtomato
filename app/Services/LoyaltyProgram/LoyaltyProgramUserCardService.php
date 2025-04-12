@@ -8,10 +8,8 @@ use App\DTOs\Atmos\Card\AtmosAttachCardResponseDTO;
 use App\DTOs\Atmos\Card\AtmosCardDTO;
 use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\CompanySettingsEnum;
-use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\LoyaltyProgram\Card;
-use App\Models\Company\LoyaltyProgram\User;
 use App\Services\AtmosService;
 use App\Services\ConfirmationService;
 use Exception;
@@ -57,9 +55,7 @@ readonly class LoyaltyProgramUserCardService
         if ($cardQuery->clone()->where('user_id', $userId)->where('status', CardStatusEnum::ACTIVE)->exists()) {
             throw ValidationException::withMessages(['number' => __('api.already_attached_card')]);
         } elseif ($inactiveCard = $cardQuery->clone()->where('user_id', $userId)->where('status', CardStatusEnum::INACTIVE)->first()) {
-            if (CardConfirmationSms::query()->where('phone', $inactiveCard->phone)->where('created_at', '>', now()->subMinutes(2))->doesntExist()) {
-                $this->confirmationService->send($inactiveCard->phone);
-            }
+            $this->confirmationService->send($inactiveCard->phone);
             $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $inactiveCard->phone, 'transaction_id' => $inactiveCard->id]);
 
             return [$inactiveCard, $customResponse];

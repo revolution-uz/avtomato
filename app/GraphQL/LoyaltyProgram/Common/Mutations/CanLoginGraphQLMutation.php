@@ -39,7 +39,7 @@ class CanLoginGraphQLMutation extends Mutation
     public function resolve($root, $args): int
     {
         try {
-            return $this->confirmationService->canLoginIntoLoyaltyProgramm($args['phone'], request()->header('Device-Name'))->value;
+            return $this->confirmationService->canLoginIntoLoyaltyProgram($args['phone'], request()->header('Device-Name'))->value;
         } catch (Throwable $e) {
             throw new GeneralException($e->getMessage());
         }

@@ -79,11 +79,6 @@ class Card extends Model
         return $hashValue;
     }
 
-    public function setPan(): void
-    {
-        $this->pan = substr_replace($this->number, '******', 6, 6);
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -93,7 +88,7 @@ class Card extends Model
     {
         $this->status = CardStatusEnum::INACTIVE;
         $this->hash = (int) $this->number;
-        $this->setPan();
+        $this->pan = $this->number;
     }
 
     public function cardType(): Attribute
@@ -104,6 +99,11 @@ class Card extends Model
     public function hash(): Attribute
     {
         return Attribute::make(set: fn ($value) => self::hashing($value));
+    }
+
+    public function pan(): Attribute
+    {
+        return Attribute::make(set: fn ($value) => substr_replace($value, '******', 6, 6));
     }
 
     public function isConnected(): Attribute
