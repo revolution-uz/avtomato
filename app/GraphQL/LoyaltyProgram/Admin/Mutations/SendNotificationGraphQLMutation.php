@@ -9,13 +9,12 @@ use App\Services\FirebaseService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 
-class SendNotificationsGraphQLMutation extends Mutation
+class SendNotificationGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'sendNotifications',
+        'name' => 'sendNotification',
     ];
 
     public function __construct(private readonly FirebaseService $_firebaseService) {}
@@ -28,9 +27,9 @@ class SendNotificationsGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
-            'ids' => [
-                'name' => 'ids',
-                'type' => Type::nonNull(Type::listOf(Type::int())),
+            'id' => [
+                'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', 'int', 'exists:loyalty_program_notifications,id'],
             ],
         ];
     }
@@ -42,16 +41,8 @@ class SendNotificationsGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): true
     {
-        $notifications = Notification::query()->whereIn('id', $args['ids'])->get();
+        $notification = Notification::query()->findOrFail($args['id']);
 
-        return $this->_firebaseService->sendNotification($notifications);
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'ids' => ['required', 'array'],
-            'ids.*' => ['required', 'int', Rule::exists(Notification::class, 'id')],
-        ];
+        return $this->_firebaseService->sendNotification($notification);
     }
 }

@@ -57,7 +57,7 @@ class NotificationsGraphQLQuery extends Query
             ->when(isset($args['search']), fn (Builder $q) => $q
                 ->where('title_uz', 'ILIKE', "%{$args['search']}%")
                 ->orWhere('title_ru', 'ILIKE', "%{$args['search']}%")
-                ->orWhere('body_ru', 'ILIKE', "%{$args['search']}%")
+                ->orWhere('body_uz', 'ILIKE', "%{$args['search']}%")
                 ->orWhere('body_ru', 'ILIKE', "%{$args['search']}%"))
             ->when(
                 isset($args['sort']),
