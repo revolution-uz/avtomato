@@ -1168,7 +1168,6 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_IMAGE_CREATE,
             self::LOYALTY_PROGRAM_PRODUCT_VIEW_ALL,
             self::LOYALTY_PROGRAM_PRODUCT_VIEW,
-            self::LOYALTY_PROGRAM_IMAGE_CREATE,
             self::LOYALTY_PROGRAM_PAYMENT_CANCEL => FeatureEnum::LOYALTY_PROGRAM,
 
             self::QR_PAY_TRANSACTION_VIEW_ALL,
