@@ -18,14 +18,14 @@ class ShopResource extends Resource
     public static $title = 'name';
 
     public static $search = [
-        'id', 'external_shop_id', 'name', 'address', 'external_code', 'external_name', 'external_address',
+        'id', 'external_shop_code', 'name', 'address', 'external_code', 'external_name', 'external_address',
     ];
 
     public function fields(Request $request)
     {
         return [
             ID::make()->sortable(),
-            Number::make('External Shop ID', 'external_shop_id')->sortable()->rules('required', 'integer'),
+            Number::make('External Shop ID', 'external_shop_code')->sortable()->rules('required', 'integer'),
             Text::make('Name', 'name')->sortable()->rules('nullable', 'max:255'),
             Text::make('Address', 'address')->sortable()->rules('nullable', 'max:255'),
             Number::make('Latitude', 'lat')->sortable()->rules('nullable', 'numeric'),

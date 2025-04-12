@@ -8,6 +8,7 @@ use App\DTOs\LoyaltyProgram\ShopDTO;
 use App\DTOs\LoyaltyProgram\StockDTO;
 use App\Http\Controllers\Controller;
 use App\Jobs\LoyaltyProgram\SyncItemsJob;
+use App\Jobs\LoyaltyProgram\SyncPricesJob;
 use App\Jobs\LoyaltyProgram\SyncShopsJob;
 use App\Jobs\LoyaltyProgram\SyncStocksJob;
 use Illuminate\Http\Request;
@@ -55,8 +56,8 @@ class LoyaltyProgramSyncController extends Controller
             return PriceDTO::from($priceData);
         });
 
-        foreach ($prices as $item) {
-            SyncItemsJob::dispatch($item);
+        foreach ($prices as $price) {
+            SyncPricesJob::dispatch($price);
         }
 
         $response = $this->prepareSuccessResponse(['message' => 'Prices are processed successfully']);

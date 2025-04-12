@@ -28,6 +28,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property LoyaltyProgramImage|null $image
+ * @property-read string $display_name
+ * @property-read string $display_address
  */
 class Shop extends Model
 {
@@ -56,5 +58,15 @@ class Shop extends Model
     public function image(): BelongsTo
     {
         return $this->belongsTo(LoyaltyProgramImage::class, 'image_id');
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->name ?? $this->external_name;
+    }
+
+    public function getDisplayAddressAttribute(): string
+    {
+        return $this->address ?? $this->external_address;
     }
 }

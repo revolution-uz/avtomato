@@ -16,7 +16,7 @@ class ItemResource extends Resource
     public static $title = 'external_code';
 
     public static $search = [
-        'id', 'external_code', 'external_shop_id', 'external_art', 'external_name', 'external_mxik', 'external_package_code', 'external_gtin',
+        'id', 'external_code', 'external_shop_code', 'external_art', 'external_name', 'external_mxik', 'external_package_code', 'external_gtin',
     ];
 
     public function fields(Request $request)
@@ -24,7 +24,7 @@ class ItemResource extends Resource
         return [
             ID::make()->sortable(),
             Text::make('External Code', 'external_code')->sortable()->rules('required', 'max:255'),
-            Number::make('External Shop ID', 'external_shop_id')->sortable()->rules('nullable', 'integer'),
+            Number::make('External Shop ID', 'external_shop_code')->sortable()->rules('nullable', 'integer'),
             Text::make('External Art', 'external_art')->sortable()->rules('nullable', 'max:255'),
             Text::make('External Name', 'external_name')->sortable()->rules('nullable', 'max:255'),
             Text::make('External MXIK', 'external_mxik')->sortable()->rules('nullable', 'max:255'),

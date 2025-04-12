@@ -47,7 +47,7 @@ class LoyaltyProgramSyncService
             $priceModel = new Price;
             $priceModel->external_item_code = $itemDTO->item_code;
         }
-        $priceModel->external_shop_id = $itemDTO->shop_id;
+        $priceModel->external_shop_code = $itemDTO->shop_id;
         $priceModel->external_price = $itemDTO->price;
         $priceModel->save();
     }
@@ -58,7 +58,7 @@ class LoyaltyProgramSyncService
             $priceModel = new Stock;
             $priceModel->external_item_code = $stockDTO->item_code;
         }
-        $priceModel->external_shop_id = $stockDTO->shop_id;
+        $priceModel->external_shop_code = $stockDTO->shop_id;
         $priceModel->external_quantity = $stockDTO->qty;
         $priceModel->save();
     }

@@ -4,6 +4,7 @@ namespace App\GraphQL\LoyaltyProgram\Admin\Types;
 
 use App\Models\Company\LoyaltyProgram\Item;
 use GraphQL\Type\Definition\Type;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
 class ProductGraphQLType extends GraphQLType
@@ -25,9 +26,9 @@ class ProductGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Item $root) => $root->external_code,
             ],
-            'external_shop_id' => [
-                'type' => Type::int(),
-                'resolve' => fn (Item $root) => $root->external_shop_id,
+            'external_shop_code' => [
+                'type' => Type::string(),
+                'resolve' => fn (Item $root) => $root->external_shop_code,
             ],
             'external_art' => [
                 'type' => Type::string(),
@@ -57,9 +58,17 @@ class ProductGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Item $root) => $root->updated_at->timestamp,
             ],
-            'deleted_at' => [
-                'type' => Type::int(),
-                'resolve' => fn (Item $root) => $root->deleted_at?->timestamp,
+            'shop' => [
+                'type' => GraphQL::type(ShopGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (Item $root) => $root->shop,
+            ],
+            'price' => [
+                'type' => Type::float(),
+                'resolve' => fn (Item $root) => $root->price,
+            ],
+            'quantity' => [
+                'type' => Type::float(),
+                'resolve' => fn (Item $root) => $root->quantity,
             ],
         ];
     }
