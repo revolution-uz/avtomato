@@ -12,9 +12,9 @@ class PriceFactory extends Factory
     public function definition()
     {
         return [
-            'external_item_code' => $this->faker->unique()->word,
-            'external_shop_id' => $this->faker->numberBetween(1, 100),
-            'external_price' => $this->faker->randomFloat(2, 1, 1000),
+            'external_item_code' => $this->faker->unique()->uuid(),
+            'external_shop_code' => $this->faker->unique()->uuid(),
+            'external_price' => $this->faker->randomFloat(2, 1, pow(10, 8)),
         ];
     }
 }

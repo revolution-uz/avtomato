@@ -75,7 +75,7 @@ class LoyaltyProgramOrderService
         $loyaltyProgramItem = Item::query()->firstWhere('external_code', $item['item_code']);
         $loyaltyProgramPrice = Price::query()
             ->where('external_item_code', $item['item_code'])
-            ->where('external_shop_id', $shop_id)
+            ->where('external_shop_code', $shop_id)
             ->first();
 
         if ($loyaltyProgramItem && $loyaltyProgramPrice) {

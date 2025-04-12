@@ -18,7 +18,7 @@ class ShopFactory extends Factory
             'lat' => $this->faker->latitude,
             'lng' => $this->faker->longitude,
             'status' => $this->faker->randomElement(ShopStatusEnum::cases()),
-            'external_code' => $this->faker->unique()->word,
+            'external_code' => $this->faker->unique()->uuid(),
             'external_name' => $this->faker->company,
             'external_address' => $this->faker->address,
         ];

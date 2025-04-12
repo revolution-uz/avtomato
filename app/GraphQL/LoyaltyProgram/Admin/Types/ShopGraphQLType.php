@@ -71,6 +71,14 @@ class ShopGraphQLType extends GraphQLType
                 'type' => GraphQL::type(LoyaltyProgramImageGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (Shop $root) => $root->image,
             ],
+            'display_name' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Shop $root) => $root->display_name,
+            ],
+            'display_address' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Shop $root) => $root->display_address,
+            ],
         ];
     }
 }
