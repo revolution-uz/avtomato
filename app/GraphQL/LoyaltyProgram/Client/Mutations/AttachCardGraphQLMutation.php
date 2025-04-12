@@ -6,10 +6,12 @@ use App\GraphQL\LoyaltyProgram\Client\Types\AttachCardGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
 use App\Services\LoyaltyProgram\LoyaltyProgramUserCardService;
 use Closure;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AttachCardGraphQLMutation extends Mutation
 {
@@ -42,8 +44,11 @@ class AttachCardGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        [$card, $cardServiceResponse] = $this->userCardService->attachCard(auth('loyalty-program-client')->id(), $args);
+        try {
+            return $this->userCardService->attachCard(auth('loyalty-program-client')->id(), $args);
 
-        return [$card, $cardServiceResponse];
+        } catch (BadRequestHttpException $e) {
+            throw new Error($e->getMessage());
+        }
     }
 }

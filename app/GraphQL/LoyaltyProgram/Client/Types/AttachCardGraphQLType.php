@@ -20,11 +20,11 @@ class AttachCardGraphQLType extends GraphQLType
         return [
             'card' => [
                 'type' => Type::nonNull(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (array $root) => $root[0],
+                'resolve' => fn (array $root) => $root['card'],
             ],
             'attachData' => [
                 'type' => Type::nonNull(GraphQL::type(AttachCardDataGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (array $root) => $root[1],
+                'resolve' => fn (array $root) => $root['attachData'],
             ],
         ];
     }

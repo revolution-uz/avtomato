@@ -27,4 +27,5 @@ return [
     'card_balance_insufficient' => 'The card balance must be greater than :balance UZS',
     'You cannot activate an installment without withdrawing initial fee' => 'You cannot activate an installment without withdrawing initial fee',
     'Cannot detach the only address associated with the customer' => 'Cannot detach the only address associated with the customer',
+    'card_in_use_by_another_user' => 'This card is already linked to another user, Please use a different card',
 ];
