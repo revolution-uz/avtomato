@@ -51,6 +51,10 @@ class NotificationGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (Notification $root) => $root->image_ru_id,
             ],
+            'sent_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (Notification $root) => $root->sent_at?->timestamp,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Notification $root) => $root->created_at->timestamp,
