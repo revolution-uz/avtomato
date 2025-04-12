@@ -14,6 +14,7 @@ use App\Services\AtmosService;
 use App\Services\ConfirmationService;
 use Exception;
 use GraphQL\Error\Error;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -24,60 +25,43 @@ readonly class LoyaltyProgramUserCardService
         private ConfirmationService $confirmationService
     ) {}
 
+    /**
+     * @param  array{number: string, expiry: string}  $args
+     * @return array{card: Card, attachData: AtmosAttachCardResponseDTO}
+     *
+     * @throws ValidationException|BadRequestHttpException
+     */
     public function attachCard(int $userId, array $args): array
     {
-        // check has already connected card
         $cardQuery = Card::query()->whereNumber($args['number'])->where('expiry', $args['expiry'])->whereNotNull('external_id');
 
-        // if connected card not exists create it and send request to card service
+        // Handle cases where the card does not exist
         if ($cardQuery->clone()->withTrashed()->doesntExist()) {
             $response = $this->atmosCardService->attachCard($args['number'], $args['expiry']);
 
+            // If the card exists in Atmos
             if ($response->data instanceof AtmosCardDTO) {
-                $oldCard = $this->createOrGetCard($userId, $args);
+                $oldCard = $this->createCard($userId, $args);
                 $oldCard->fillData($response->data, CardStatusEnum::INACTIVE);
 
                 $this->confirmationService->send($oldCard->phone);
-                $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $oldCard->phone, 'transaction_id' => $oldCard->id]);
 
-                return [$oldCard, $customResponse];
-            } else {
-                if (! $response->result->isSuccess()) {
-                    throw new BadRequestHttpException($response->result->description);
-                }
-                $newCard = $this->createOrGetCard($userId, $args);
-
-                return [$newCard, $response];
+                return $this->buildResponse($oldCard);
             }
+
+            // If the card is new but the service request failed
+            if (! $response->result->isSuccess()) {
+                throw new BadRequestHttpException($response->result->description);
+            }
+
+            // Create and return a new card
+            $newCard = $this->createCard($userId, $args);
+
+            return ['card' => $newCard, 'attachData' => $response];
         }
 
-        // check that the card is connected to this user
-        if ($cardQuery->clone()->where('user_id', $userId)->where('status', CardStatusEnum::ACTIVE)->exists()) {
-            throw ValidationException::withMessages(['number' => __('api.already_attached_card')]);
-        } elseif ($inactiveCard = $cardQuery->clone()->where('user_id', $userId)->where('status', CardStatusEnum::INACTIVE)->first()) {
-            $this->confirmationService->send($inactiveCard->phone);
-            $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $inactiveCard->phone, 'transaction_id' => $inactiveCard->id]);
-
-            return [$inactiveCard, $customResponse];
-        } elseif ($deletedCard = $cardQuery->clone()->withTrashed()->where('user_id', $userId)->first()) {
-            $deletedCard->restore();
-            $deletedCard->update(['status' => CardStatusEnum::INACTIVE]);
-
-            $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $deletedCard->phone, 'transaction_id' => $deletedCard->id]);
-
-            return [$deletedCard, $customResponse];
-        }
-
-        $newCard = new Card;
-        $newCard->fill($cardQuery->first()->makeVisible(['external_id'])->toArray());
-        $newCard->user_id = $userId;
-        $newCard->computingBeforeInsert();
-        $newCard->saveOrFail();
-
-        $this->confirmationService->send($newCard->phone);
-        $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $newCard->phone, 'transaction_id' => $newCard->id]);
-
-        return [$newCard, $customResponse];
+        // Handle cases for existing cards
+        return $this->handleExistingCard($userId, $cardQuery);
     }
 
     public function confirmCard(int $userId, array $args): Card
@@ -145,14 +129,54 @@ readonly class LoyaltyProgramUserCardService
         return $success;
     }
 
-    private function createOrGetCard(int $userId, array $args)
+    /**
+     * @param  Builder|Card  $cardQuery
+     * @return array{card: Card, attachData: AtmosAttachCardResponseDTO}
+     *
+     * @throws ValidationException
+     */
+    private function handleExistingCard(int $userId, $cardQuery): array
     {
-        if (
-            $card = Card::query()->where('user_id', $userId)->whereNumber($args['number'])->where('expiry', $args['expiry'])->first()
-        ) {
-            return $card;
+        // Check if the card is already active for this user
+        if ($cardQuery->clone()->where('user_id', $userId)->where('status', CardStatusEnum::ACTIVE)->exists()) {
+            throw ValidationException::withMessages(['number' => __('api.already_attached_card')]);
         }
 
+        // Handle an inactive card for the user
+        if ($inactiveCard = $cardQuery->clone()->where('user_id', $userId)->where('status', CardStatusEnum::INACTIVE)->first()) {
+            $this->confirmationService->send($inactiveCard->phone);
+
+            return $this->buildResponse($inactiveCard);
+        }
+
+        // Handle a deleted card for the user
+        if ($deletedCard = $cardQuery->clone()->withTrashed()->where('user_id', $userId)->first()) {
+            $deletedCard->restore();
+            $deletedCard->update(['status' => CardStatusEnum::INACTIVE]);
+
+            return $this->buildResponse($deletedCard);
+        }
+
+        // Card is attached to another user
+        throw ValidationException::withMessages(['number' => __('api.card_in_use_by_another_user')]);
+    }
+
+    /**
+     * @return array{card: Card, attachData: AtmosAttachCardResponseDTO}
+     */
+    private function buildResponse(Card $card): array
+    {
+        $response = AtmosAttachCardResponseDTO::from([
+            'result' => AtmosResultDTO::from(['code' => 'OK']),
+            'phone' => $card->phone,
+            'transaction_id' => $card->id,
+        ]);
+
+        return ['card' => $card, 'attachData' => $response];
+    }
+
+    private function createCard(int $userId, array $args)
+    {
         $card = new Card;
         $card->user_id = $userId;
         $card->number = $args['number'];

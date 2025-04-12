@@ -133,11 +133,8 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
     }
 
     #[Test]
-    public function successAttachAlreadyAttachedCardToAnotherUser()
+    public function cannotAttachAlreadyAttachedCardToAnotherUser()
     {
-        SmsFaker::fly();
-        SmsFaker::sayqal();
-
         $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE]);
         $variables = ['number' => $card->number, 'expiry' => $card->expiry];
 
@@ -145,25 +142,10 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
             ->actingAs($this->_user, 'loyalty-program-client')
             ->postJson(route('graphql.loyalty-program-client'), $this->buildGraphQLQuery($variables));
 
-        $this->assertSuccessAttachCardResponse($response, $variables);
-
-        $newCard = $this->_user->cards()->first();
-        $this->assertNotEquals($newCard->id, $card->id);
-        $this->assertEquals($newCard->pan, $card->pan);
-        $this->assertEquals($newCard->number, $card->number);
-        $this->assertEquals($newCard->hash, $card->hash);
-        $this->assertEquals($newCard->expiry, $card->expiry);
-        $this->assertEquals($newCard->owner, $card->owner);
-        $this->assertEquals($newCard->phone, $card->phone);
-        $this->assertEquals(CardStatusEnum::INACTIVE, $newCard->status);
-        $this->assertEquals($newCard->balance, $card->balance);
-        $this->assertEquals($newCard->external_id, $card->external_id);
-        $this->assertNotEquals($newCard->user_id, $card->user_id);
-
-        $this->assertEquals($response->json('data.attachCard.card.id'), $response->json('data.attachCard.attachData.transaction_id'));
-        $this->assertEquals($card->phone, $response->json('data.attachCard.attachData.phone'));
-        $this->assertEquals('OK', $response->json('data.attachCard.attachData.result_code'));
-        $this->assertNull($response->json('data.attachCard.attachData.result_description'));
+        $response->assertOk();
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals(trans('api.card_in_use_by_another_user'), $response->json('errors.0.extensions.validation.number.0'));
     }
 
     #[Test]
