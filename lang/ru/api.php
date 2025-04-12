@@ -32,4 +32,5 @@ return [
     'card_balance_insufficient' => 'Баланс карты должен быть больше :balance UZS',
     'You cannot activate an installment without withdrawing initial fee' => 'Внесите первоначальный платеж за активацию',
     'Cannot detach the only address associated with the customer' => 'Невозможно удалить единственный адрес, связанный с клиентом',
+    'card_in_use_by_another_user' => 'Эта карта уже связана с другим пользователем, Пожалуйста используйте другую карту',
 ];
