@@ -20,7 +20,7 @@ class ConfirmationService
      */
     public function send(string $phone, bool $isEcommerceOtp = false): true
     {
-        if (! $this->canSendSms($phone)) {
+        if ($this->canSendSms($phone)) {
             $confirmationSms = CardConfirmationSms::query()->create(['phone' => $phone, 'code' => $this->generateCode()]);
             $this->smsService->sendConfirmationSms($confirmationSms, $isEcommerceOtp);
         }
