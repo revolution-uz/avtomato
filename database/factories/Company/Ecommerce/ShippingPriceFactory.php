@@ -12,7 +12,7 @@ class ShippingPriceFactory extends Factory
     public function definition(): array
     {
         return [
-            'price' => $this->faker->randomFloat(2),
+            'price' => $this->faker->randomFloat(2, 1, pow(10, 8)),
 
             'region_id' => Region::factory(),
             'district_id' => District::factory(),

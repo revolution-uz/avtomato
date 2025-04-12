@@ -112,4 +112,18 @@ class SubscriptionService
 
         return true;
     }
+
+    public function cancelSubscriptionPayment(LoyaltyProgramPayment $payment): true
+    {
+        $reversePaymentDto = $this->_atmosCardClient->reversePayment($payment->external_id);
+
+        if (! $reversePaymentDto->result->isSuccess()) {
+            throw new Error($reversePaymentDto->result->description);
+        }
+
+        $payment->subscription->updateOrFail(['remaining_limit_amount' => 0, 'expired_at' => Carbon::now()]);
+        $payment->updateOrFail(['status' => PaymentStatusEnum::CANCELED]);
+
+        return true;
+    }
 }
