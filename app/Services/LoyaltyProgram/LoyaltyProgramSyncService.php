@@ -22,7 +22,6 @@ class LoyaltyProgramSyncService
             $shopModel->external_code = $shopDTO->code;
         }
         $shopModel->external_name = $shopDTO->name;
-        $shopModel->external_address = $shopDTO->address;
         $shopModel->save();
     }
 
