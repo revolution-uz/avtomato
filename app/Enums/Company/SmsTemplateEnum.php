@@ -36,7 +36,7 @@ enum SmsTemplateEnum: int
             ],
             self::CARD_CONFIRMATION => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
-                'original_template' => 'Avtomato tizimida kartangizni muddatli to\'lovga biriktirish tasdiqlash kodi-:code :signature',
+                'original_template' => ':company tizimida kartangizni muddatli to\'lovga biriktirish tasdiqlash kodi-:code :signature',
                 'description' => 'Karta ma\'lumotlarini tasdiqlovchi SMS xabarlar uchun ishlatiladigan shablonni ifodalaydi.',
             ],
             self::CHARGE => [
@@ -55,7 +55,7 @@ enum SmsTemplateEnum: int
             ],
             self::ECOMMERCE_OTP => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
-                'original_template' => 'Ecommerce tizimidan ro\'yxatdan o\'tish uchun kod: :code',
+                'original_template' => ':company tizimidan ro\'yxatdan o\'tish uchun kod: :code',
                 'description' => 'Onlayn do\'kondan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
             self::DEBT_10 => [
@@ -78,8 +78,8 @@ enum SmsTemplateEnum: int
             ],
             self::LOYALTY_PROGRAM_OTP => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
-                'original_template' => 'Loyalty-program tizimidan ro\'yxatdan o\'tish uchun kod: :code :signature',
-                'description' => 'Sodiqlik dasturidan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
+                'original_template' => ':company tizimidan ro\'yxatdan o\'tish uchun kod: :code :signature',
+                'description' => 'Mijozlar bonus dasturidan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
         };
     }
