@@ -20,6 +20,7 @@ enum ModuleEnum: string
     case ECOMMERCE = 'ecommerce';
     case SBP_PAY = 'sbp_pay';
     case LOYALTY_PROGRAM = 'loyalty_program';
+    case ICAN = 'ican';
 
     /**
      * @return ModuleEnum[]
@@ -36,6 +37,7 @@ enum ModuleEnum: string
             FeatureEnum::ECOMMERCE => [self::ECOMMERCE],
             FeatureEnum::SBP_PAY => [self::SBP_PAY],
             FeatureEnum::LOYALTY_PROGRAM => [self::LOYALTY_PROGRAM],
+            FeatureEnum::ICAN => [self::ICAN],
             FeatureEnum::CUSTOMER_CARDS_MANAGEMENT,
             FeatureEnum::CALCULATOR_INSTALLMENT,
             FeatureEnum::INSTALLMENT_AUTO_CHARGE,
