@@ -12,6 +12,9 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
+/**
+ * @mixin CentralBalanceFund
+ */
 class CentralBalanceFundResource extends Resource
 {
     public static string $model = CentralBalanceFund::class;

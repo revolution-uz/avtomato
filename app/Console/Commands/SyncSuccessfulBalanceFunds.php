@@ -6,7 +6,6 @@ use App\Models\CentralBalanceFund;
 use App\Models\Company;
 use App\Models\Company\BalanceFund;
 use Illuminate\Console\Command;
-use Log;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
@@ -33,8 +32,7 @@ class SyncSuccessfulBalanceFunds extends Command
      */
     public function handle(): int
     {
-        Log::channel('daily')->info('here: ' . Company::query()->count());
-
+        /** @var Company $company */
         foreach (Company::all() as $company) {
             tenancy()->initialize($company);
 
