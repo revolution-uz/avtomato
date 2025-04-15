@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Enums\Company\CompanyStatusEnum;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
@@ -25,6 +27,7 @@ use Stancl\Tenancy\Database\Models\Tenant;
  * @property int $payment_day
  * @property string|null $logo
  * @property-read string|null $logo_url
+ * @property CentralBalanceFund[]|Collection<int, CentralBalanceFund> $balanceFunds
  */
 class Company extends Tenant implements TenantWithDatabase
 {
@@ -89,5 +92,10 @@ class Company extends Tenant implements TenantWithDatabase
     public function getLogoUrlAttribute(): string
     {
         return Storage::url($this->logo);
+    }
+
+    public function balanceFunds(): HasMany
+    {
+        return $this->hasMany(CentralBalanceFund::class);
     }
 }
