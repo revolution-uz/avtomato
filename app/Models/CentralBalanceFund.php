@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Traits\LogsActivityDirtyOnlyTrait;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,16 +36,12 @@ class CentralBalanceFund extends Model
         'card_pan',
         'company_id',
         'balance_fund_id',
+        'created_at',
     ];
 
     protected $casts = [
         'amount' => 'integer',
     ];
-
-    public function cardPan(): Attribute
-    {
-        return Attribute::make(set: fn ($value): ?string => $value ? substr_replace($value, '******', 6, 6) : $value);
-    }
 
     public function company(): BelongsTo
     {

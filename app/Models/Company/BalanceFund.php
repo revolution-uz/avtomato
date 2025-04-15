@@ -5,6 +5,7 @@ namespace App\Models\Company;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Services\User\BalanceService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int|null $admin_id
  * @property Carbon $created_at
  * @property CompanyAdmin $admin
+ *
+ * @method static Builder whereSuccess()
  */
 class BalanceFund extends Model
 {
@@ -66,5 +69,10 @@ class BalanceFund extends Model
     public function cardPan(): Attribute
     {
         return Attribute::make(get: fn () => substr_replace($this->card_number, '******', 6, 6));
+    }
+
+    public function scopeWhereSuccess($query)
+    {
+        return $query->whereNotNull('external_transaction_id');
     }
 }

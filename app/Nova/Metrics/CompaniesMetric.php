@@ -25,7 +25,7 @@ class CompaniesMetric extends Table
         $data = [];
 
         /** @var Company $company */
-        foreach (Company::all() as $company) {
+        foreach (Company::query()->orderBy('id')->get() as $company) {
             $data[] = MetricTableRow::make()
                 ->icon('banknotes')
                 ->iconClass('text-green-500')
@@ -40,8 +40,6 @@ class CompaniesMetric extends Table
      */
     public function cacheFor(): ?DateTimeInterface
     {
-        // return now()->addMinutes(5);
-
-        return null;
+        return now()->addMinutes(5);
     }
 }
