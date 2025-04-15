@@ -51,6 +51,9 @@ class SmsTemplate extends Model
 
     public function getMessage(array $placeholders = []): string
     {
+        $placeholders['company'] = tenant('name');
+        $placeholders['phone'] = tenant('owner_phone');
+
         $message = $this->template ?? $this->original_template;
 
         foreach ($placeholders as $placeholder => $value) {
