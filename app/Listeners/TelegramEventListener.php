@@ -21,14 +21,14 @@ class TelegramEventListener
     public function handle(BaseTelegramEvent $event): void
     {
         if (
-            ! Settings::getConfig(SettingsEnum::TELEGRAM_BOT_TOKEN)
-            || ! Settings::getConfig(SettingsEnum::TELEGRAM_CHAT_ID)
+            ! Settings::getValue(SettingsEnum::TELEGRAM_BOT_TOKEN)
+            || ! Settings::getValue(SettingsEnum::TELEGRAM_CHAT_ID)
         ) {
             return;
         }
 
         $data = [
-            'chat_id' => Settings::getConfig(SettingsEnum::TELEGRAM_CHAT_ID),
+            'chat_id' => Settings::getValue(SettingsEnum::TELEGRAM_CHAT_ID),
             'text' => view($event->view, $event->data)->render(),
             'parse_mode' => 'html',
         ];

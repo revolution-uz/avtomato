@@ -46,4 +46,9 @@ class Settings extends Model
 
         return self::$_cache[$settings->value] ?? null;
     }
+
+    public static function getValue(SettingsEnum $name)
+    {
+        return self::query()->where('name', $name)->firstOrFail()->value;
+    }
 }
