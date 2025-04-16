@@ -96,27 +96,21 @@ class SmsService
         $client->sendMessage(id: $confirmationSms->id, phone: $confirmationSms->phone, text: $template->getMessage(['code' => $confirmationSms->code]));
     }
 
-    public function callbackSayqalSms(SayqalSmsCallbackRequest $request): bool
+    public function callbackSayqalSms(SayqalSmsCallbackRequest $request): void
     {
-        $message = SmsMessage::query()->find($request->getSmsId());
+        $message = SmsMessage::query()->findOrFail($request->getSmsId());
 
-        if (! $message) {
-            return false;
-        }
-
-        $message->update([
+        $message->updateOrFail([
             'status' => $request->status,
             'updated_at' => $request->statusdate,
         ]);
 
         if ($request->status == SmsMessageStatusEnum::DELIVERED->value) {
             $feature = Feature::findByName(FeatureEnum::SMS);
-            $message->charge->update(['amount' => $feature->chargeable_amount * $request->smsCount()]);
+            $message->charge?->updateOrFail(['amount' => $feature->chargeable_amount * $request->smsCount()]);
         } else {
-            $message->charge->delete();
+            $message->charge?->deleteOrFail();
         }
-
-        return true;
     }
 
     public function callbackSayqalVoice(SayqalVoiceCallbackRequest $request)
