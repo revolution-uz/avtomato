@@ -11,6 +11,7 @@ enum SmsTemplateEnum: int
     case ECOMMERCE_OTP = 5;
     case DEBT_10 = 6;
     case DEBT_20 = 7;
+    case LOYALTY_PROGRAM_OTP = 8;
 
     public static function getExampleData(): array
     {
@@ -21,6 +22,7 @@ enum SmsTemplateEnum: int
             'company' => tenant('name'),
             'phone' => tenant('owner_phone'),
             'code' => 232432,
+            'signature' => '113AzSJeOIn',
         ];
     }
 
@@ -34,7 +36,7 @@ enum SmsTemplateEnum: int
             ],
             self::CARD_CONFIRMATION => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
-                'original_template' => 'Avtomato tizimida kartangizni muddatli to\'lovga biriktirish tasdiqlash kodi-:code',
+                'original_template' => ':company tizimida kartangizni muddatli to\'lovga biriktirish tasdiqlash kodi-:code :signature',
                 'description' => 'Karta ma\'lumotlarini tasdiqlovchi SMS xabarlar uchun ishlatiladigan shablonni ifodalaydi.',
             ],
             self::CHARGE => [
@@ -53,7 +55,7 @@ enum SmsTemplateEnum: int
             ],
             self::ECOMMERCE_OTP => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
-                'original_template' => 'Ecommerce tizimidan ro\'yxatdan o\'tish uchun kod: :code',
+                'original_template' => ':company tizimidan ro\'yxatdan o\'tish uchun kod: :code',
                 'description' => 'Onlayn do\'kondan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
             self::DEBT_10 => [
@@ -73,6 +75,11 @@ enum SmsTemplateEnum: int
                     'overdue_days' => 20,
                 ],
                 'description' => 'Qarzdorlik bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+            self::LOYALTY_PROGRAM_OTP => [
+                'status' => SmsTemplateStatusEnum::ACTIVE,
+                'original_template' => ':company tizimidan ro\'yxatdan o\'tish uchun kod: :code :signature',
+                'description' => 'Mijozlar bonus dasturidan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
         };
     }

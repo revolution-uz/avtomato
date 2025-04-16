@@ -82,6 +82,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
 
         $response = $this
             ->actingAs($this->_user, 'loyalty-program-client')
+            ->withHeader('signature', 'test')
             ->postJson(route('graphql.loyalty-program-client'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessAttachCardResponse($response, $variables);

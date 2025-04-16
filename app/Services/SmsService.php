@@ -81,10 +81,10 @@ class SmsService
         return $message;
     }
 
-    public function sendConfirmationSms(CardConfirmationSms $confirmationSms, bool $isEcommerceOtp = false): void
+    public function sendConfirmationSms(CardConfirmationSms $confirmationSms, SmsTemplateEnum $smsTemplateEnum): void
     {
         $feature = BaseFeature::where('name', FeatureEnum::SMS)->firstOrFail();
-        $template = SmsTemplate::query()->findOrFail($isEcommerceOtp ? SmsTemplateEnum::ECOMMERCE_OTP->value : SmsTemplateEnum::CARD_CONFIRMATION->value);
+        $template = SmsTemplate::query()->findOrFail($smsTemplateEnum->value);
 
         $data = FeatureSmsData::from($feature->original_data);
 
@@ -93,7 +93,11 @@ class SmsService
             SmsProviderEnum::SMS_FLY => new SmsFlyClient($data->secret),
         };
 
-        $client->sendMessage(id: $confirmationSms->id, phone: $confirmationSms->phone, text: $template->getMessage(['code' => $confirmationSms->code]));
+        $client->sendMessage(
+            id: $confirmationSms->id,
+            phone: $confirmationSms->phone,
+            text: $template->getMessage(['code' => $confirmationSms->code, 'signature' => request()->header('signature', '')])
+        );
     }
 
     public function callbackSayqalSms(SayqalSmsCallbackRequest $request): bool

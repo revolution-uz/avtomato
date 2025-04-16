@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Common\Mutations;
 
+use App\Enums\Company\SmsTemplateEnum;
 use App\Rules\PhoneRule;
 use App\Services\ConfirmationService;
 use GraphQL\Error\Error;
@@ -40,7 +41,7 @@ class SendOtpGraphQLMutation extends Mutation
                 throw new Error('You cannot login');
             }
 
-            return $this->confirmationService->send($args['phone'], isEcommerceOtp: true);
+            return $this->confirmationService->send($args['phone'], SmsTemplateEnum::LOYALTY_PROGRAM_OTP);
 
         } catch (Throwable $e) {
             throw new Error($e->getMessage());
