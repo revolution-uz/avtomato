@@ -52,7 +52,7 @@ class CompanySettings extends Model
 
     public static function getValue(CompanySettingsEnum $name)
     {
-        return CompanySettings::query()->where('name', $name)->firstOrFail()->value;
+        return self::query()->where('name', $name)->firstOrFail()->value;
     }
 
     protected static function boot()

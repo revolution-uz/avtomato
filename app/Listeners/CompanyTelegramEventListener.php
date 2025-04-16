@@ -24,9 +24,9 @@ class CompanyTelegramEventListener
     {
         if (
             ! Feature::isFeatureActive(FeatureEnum::TELEGRAM_BOT_FEATURE)
-            or CompanySettings::getConfig(CompanySettingsEnum::TELEGRAM_BOT_ENABLED) !== '1'
-            or empty($chatId = CompanySettings::getConfig(CompanySettingsEnum::TELEGRAM_CHAT_ID))
-            or empty(CompanySettings::getConfig(CompanySettingsEnum::TELEGRAM_BOT_TOKEN))
+            or CompanySettings::getValue(CompanySettingsEnum::TELEGRAM_BOT_ENABLED) !== '1'
+            or empty($chatId = CompanySettings::getValue(CompanySettingsEnum::TELEGRAM_CHAT_ID))
+            or empty(CompanySettings::getValue(CompanySettingsEnum::TELEGRAM_BOT_TOKEN))
         ) {
             return;
         }
