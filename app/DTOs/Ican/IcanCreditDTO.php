@@ -48,8 +48,7 @@ class IcanCreditDTO extends Data
         public ?bool $is_aloqa_bank_auto_payment_turned_on,
         public ?int $total_debt,
         public ?bool $is_deleted,
-        public ?IcanEmployeeDTO $employee,
-        public ?IcanCompanyDTO $company,
         public ?IcanPersonMainDTO $person_main,
+        public ?IcanTariffDTO $tariff,
     ) {}
 }

@@ -21,9 +21,5 @@ class IcanTransactionDTO extends Data
         public ?string $created_at,
         public ?int $wasyt_payment_id,
         public ?string $money_transfer_status,
-        public ?IcanCreditDTO $credit,
-        public ?IcanEmployeeDTO $employee,
-        public ?IcanCompanyDTO $company,
-        // payments
     ) {}
 }

@@ -30,10 +30,10 @@ class IcanClient extends BaseIcanClient
             'page' => $page,
             'page-size' => $pageSize,
             'with' => [
-                'credit',
-                'employee.profile',
-                'company.director.profile',
+                'tariff',
+                'person_main',
                 'person_main.user_document',
+                'person_main.district.region',
             ],
         ];
 
@@ -45,14 +45,6 @@ class IcanClient extends BaseIcanClient
         $data = [
             'page' => $page,
             'page-size' => $pageSize,
-            'with' => [
-                'credit',
-                'employee.profile',
-                'company',
-                'company.director.profile',
-                'credit.person_main.user_document',
-                'payments',
-            ],
         ];
 
         return IcanTransactionsResponseDTO::from($this->makeRequest(self::TRANSACTIONS, $data, 'get'));

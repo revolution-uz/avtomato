@@ -52,6 +52,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property UniredCard[]|Collection<int,UniredCard> $uniredCards
  * @property ScoringRequest[]|Collection<int,ScoringRequest> $scoringRequests
  * @property CustomerTypeEnum $type
+ * @property int|null $ican_id
  * @property-read string $full_name
  * @property-read string $passport
  *
@@ -84,6 +85,7 @@ class Customer extends Model
         'birth_place',
         'gender',
         'type',
+        'ican_id',
     ];
 
     protected $casts = [
