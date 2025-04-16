@@ -44,6 +44,8 @@ class CompanyAdmin extends Authenticatable
 
     public static array $sortables = ['id', 'username', 'first_name', 'last_name', 'created_at', 'updated_at'];
 
+    const ICAN_INTEGRATOR = 'ican_integrator';
+
     protected $table = 'admins';
 
     protected $fillable = [
@@ -61,6 +63,11 @@ class CompanyAdmin extends Authenticatable
         'status' => UserStatusEnum::class,
         'template_theme' => UserTemplateThemeDto::class,
     ];
+
+    public static function getIcanIntegrator(): self
+    {
+        return self::query()->where('username', self::ICAN_INTEGRATOR)->firstOrFail();
+    }
 
     public function tokens(): MorphMany
     {

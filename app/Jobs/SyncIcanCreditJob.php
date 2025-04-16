@@ -4,7 +4,12 @@ namespace App\Jobs;
 
 use App\Clients\IcanClient;
 use App\DTOs\Ican\IcanCreditDTO;
+use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\CustomerTypeEnum;
+use App\Enums\Company\InstallmentStatusEnum;
+use App\Enums\Company\InstallmentTypeEnum;
+use App\Models\Company\CompanyAdmin;
+use App\Models\Company\CompanySettings;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Tariff;
@@ -40,20 +45,19 @@ class SyncIcanCreditJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
                 'ican_id' => $credit->id,
             ])->update([
                 'customer_id' => $this->createOrGetCustomer($credit->client_id, $credit),
-                // 'branch_id' => $credit->, // todo: branch for ican
+                'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
                 'tariff_id' => $this->createOrGetTariff($credit->tariff_id, $credit),
-                // 'admin_id' => $credit->id, // todo: admin for ican
-                // 'type' => $credit->id, // ?
+                'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
+                'type' => InstallmentTypeEnum::WITHOUT_CARD,
                 'amount' => $credit->amount / 100,
                 'initial_fee' => $credit->initial_payment / 100,
                 'percent' => $credit->percent,
                 'description' => $credit->comment,
-                // 'sms_notify' => $credit->id, // ?
-                // 'any_card_charge' => $credit->id, // ?
-                // 'is_blacklist' => $credit->id, // ?
-                // 'status' => $credit->id, // ?
+                'sms_notify' => false,
+                'any_card_charge' => false,
+                'is_blacklist' => false,
+                'status' => InstallmentStatusEnum::ACTIVE,
                 'period' => $credit->period,
-                // 'plum_id' => $credit->id, // ?
                 'canceled_at' => $credit->canceled_at,
                 'cancellation_details' => $credit->cancel_reason,
                 'starts_in' => $credit->activated_at,
@@ -100,8 +104,8 @@ class SyncIcanCreditJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
             'max_period' => $credit->tariff->max_period,
             'min_amount' => $credit->tariff->min_amount,
             'max_amount' => $credit->tariff->max_amount,
-            // 'min_initial_fee' => $credit->tariff->min_initial_fee,
-            // 'max_initial_fee' => $credit->tariff->max_initial_fee,
+            'min_initial_fee' => 0,
+            'max_initial_fee' => 100_000_000_000,
         ]);
     }
 
@@ -116,13 +120,10 @@ class SyncIcanCreditJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
             'passport_number' => $credit->person_main?->user_document->data->passport_number,
             'passport_given_date' => $credit->person_main?->user_document->data->passport_issue_date,
             'passport_expiration_date' => $credit->person_main?->user_document->data->passport_expiry_date,
-            // 'passport_given_place' => $credit->person_main?->user_document->data->passport_given_place,
-            // 'passport_citizenship' => $credit->person_main?->user_document->data->passport_citizenship,
             'first_name' => $credit->person_main?->user_document->data->first_name,
             'last_name' => $credit->person_main?->user_document->data->last_name,
             'middle_name' => $credit->person_main?->user_document->data->middle_name,
             'birth_date' => $credit->person_main?->user_document->data->birth_date,
-            // 'birth_place' => $credit->person_main?->user_document->data->birth_place,
             'gender' => $credit->person_main?->user_document->data->gender,
             'type' => CustomerTypeEnum::INSTALLMENT,
         ]);
