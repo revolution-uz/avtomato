@@ -19,6 +19,10 @@ return new class extends Migration
         Schema::table('tariffs', function (Blueprint $table) {
             $table->unsignedBigInteger('ican_id')->nullable()->index();
         });
+
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->unsignedBigInteger('ican_id')->nullable()->index();
+        });
     }
 
     public function down()
@@ -34,6 +38,11 @@ return new class extends Migration
         });
 
         Schema::table('tariffs', function (Blueprint $table) {
+            $table->dropIndex(['ican_id']);
+            $table->dropColumn('ican_id');
+        });
+
+        Schema::table('transactions', function (Blueprint $table) {
             $table->dropIndex(['ican_id']);
             $table->dropColumn('ican_id');
         });

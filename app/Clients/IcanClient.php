@@ -45,6 +45,14 @@ class IcanClient extends BaseIcanClient
         $data = [
             'page' => $page,
             'page-size' => $pageSize,
+            'with' => [
+                'credit',
+                'credit.person_main.user_document',
+                'payments',
+            ],
+            'filter' => [
+                'status' => 'completed',
+            ],
         ];
 
         return IcanTransactionsResponseDTO::from($this->makeRequest(self::TRANSACTIONS, $data, 'get'));

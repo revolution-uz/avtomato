@@ -37,6 +37,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read  CompanyAdmin $admin
  * @property Carbon|null $paid_at
  * @property TransactionStatusEnum $status
+ * @property int|null $ican_id
  *
  * @method static Builder onlySuccess()
  */
@@ -59,6 +60,7 @@ class Transaction extends Model
         'card_pan',
         'is_initial_fee',
         'status',
+        'ican_id',
     ];
 
     protected $casts = [

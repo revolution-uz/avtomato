@@ -286,7 +286,7 @@ return [
         ],
         'supervisor-12' => [
             'connection' => 'redis',
-            'queue' => ['sync-ican-credit'],
+            'queue' => ['sync-ican'],
             'balance' => 'simple',
             'maxProcesses' => 1,
             'memory' => 128,

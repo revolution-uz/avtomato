@@ -61,6 +61,10 @@ abstract class BaseIcanClient extends BaseClient
                 ->connectTimeout(150)
                 ->$method($url);
 
+            //            dd(
+            //                $response->json()
+            //            );
+
             parent::logRequest(new HttpRequestLogDTO(
                 method: $method,
                 url: $this->baseUrl . $path,
