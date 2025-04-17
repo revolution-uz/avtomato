@@ -12,10 +12,12 @@ use App\Nova\BaseModuleResource;
 use App\Nova\BaseSmsTemplateResource;
 use App\Nova\BlogCategoryResource;
 use App\Nova\BlogResource;
+use App\Nova\CentralBalanceFundResource;
 use App\Nova\CentralCustomerResource;
 use App\Nova\Company\BalanceChargeResource;
 use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
+use App\Nova\Company\CompanySettingsResource;
 use App\Nova\Company\FeatureResource;
 use App\Nova\Company\InstallmentResource;
 use App\Nova\Company\LoyaltyProgram\ItemResource;
@@ -68,7 +70,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(UserResource::class),
                         MenuItem::resource(ModuleResource::class),
                         MenuItem::resource(FeatureResource::class),
-                        MenuItem::resource(\App\Nova\Company\CompanySettingsResource::class),
+                        MenuItem::resource(CompanySettingsResource::class),
                         MenuItem::resource(BranchResource::class),
                         MenuItem::resource(RoleResource::class),
                         MenuItem::resource(BalanceFundResource::class),
@@ -101,10 +103,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(BaseModuleResource::class),
                     MenuItem::resource(BaseFeatureResource::class),
                     MenuItem::resource(BaseSmsTemplateResource::class),
-                    (new TransactionByCompanies)->menu($request),
                     MenuItem::resource(NewCustomerResource::class),
                     MenuItem::resource(BlogResource::class),
                     MenuItem::resource(BlogCategoryResource::class),
+                    MenuItem::resource(CentralBalanceFundResource::class),
+                    (new TransactionByCompanies)->menu($request),
                 ])->collapsable(),
             ];
         });

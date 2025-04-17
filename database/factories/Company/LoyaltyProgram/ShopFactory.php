@@ -20,7 +20,6 @@ class ShopFactory extends Factory
             'status' => $this->faker->randomElement(ShopStatusEnum::cases()),
             'external_code' => $this->faker->unique()->uuid(),
             'external_name' => $this->faker->company,
-            'external_address' => $this->faker->address,
         ];
     }
 }

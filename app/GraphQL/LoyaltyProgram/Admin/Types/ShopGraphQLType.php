@@ -55,10 +55,6 @@ class ShopGraphQLType extends GraphQLType
                 'type' => Type::string(),
                 'resolve' => fn (Shop $root) => $root->external_name,
             ],
-            'external_address' => [
-                'type' => Type::string(),
-                'resolve' => fn (Shop $root) => $root->external_address,
-            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Shop $root) => $root->created_at->timestamp,
@@ -74,10 +70,6 @@ class ShopGraphQLType extends GraphQLType
             'display_name' => [
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Shop $root) => $root->display_name,
-            ],
-            'display_address' => [
-                'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (Shop $root) => $root->display_address,
             ],
         ];
     }
