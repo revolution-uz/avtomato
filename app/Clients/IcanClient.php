@@ -33,7 +33,6 @@ class IcanClient extends BaseIcanClient
                 'tariff',
                 'person_main',
                 'person_main.user_document',
-                'person_main.district.region',
             ],
         ];
 
@@ -49,9 +48,6 @@ class IcanClient extends BaseIcanClient
                 'credit',
                 'credit.person_main.user_document',
                 'payments',
-            ],
-            'filter' => [
-                'status' => 'completed',
             ],
         ];
 

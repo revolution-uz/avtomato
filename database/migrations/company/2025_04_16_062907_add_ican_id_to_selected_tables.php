@@ -8,10 +8,6 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->unsignedBigInteger('ican_id')->nullable()->index();
-        });
-
         Schema::table('installments', function (Blueprint $table) {
             $table->unsignedBigInteger('ican_id')->nullable()->index();
         });
@@ -27,11 +23,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->dropIndex(['ican_id']);
-            $table->dropColumn('ican_id');
-        });
-
         Schema::table('installments', function (Blueprint $table) {
             $table->dropIndex(['ican_id']);
             $table->dropColumn('ican_id');

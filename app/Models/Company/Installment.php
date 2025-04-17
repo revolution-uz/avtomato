@@ -109,6 +109,7 @@ class Installment extends Model
         'guarantor_pinfl_after_due_days',
         'paid_amount',
         'ican_id',
+        'updated_at',
     ];
 
     protected $casts = [

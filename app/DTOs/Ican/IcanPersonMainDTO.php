@@ -23,6 +23,5 @@ class IcanPersonMainDTO extends Data
         public ?string $updated_at,
         public ?bool $is_deleted,
         public ?IcanUserDocumentDTO $user_document,
-        public ?IcanDistrictDTO $district,
     ) {}
 }
