@@ -15,15 +15,18 @@ class AuthUnired
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (str_replace('Bearer ', '', $request->header('Authorization')) !== $this->getStaticToken()) {
+        $token = $request->header('Authorization', '');
+        $uniaccess_token = $this->getStaticToken();
+        $berear_uniaccess_token = 'Bearer ' . $uniaccess_token;
+        if ($token != $this->getStaticToken() && $token != $berear_uniaccess_token) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         return $next($request);
     }
 
-    private function getStaticToken()
+    private function getStaticToken(): string
     {
-        return config('clients.unired.callback-token', '');
+        return strval(config('clients.unired.callback-token', ''));
     }
 }
