@@ -40,7 +40,7 @@ class SendOtpGraphQLMutationTest extends GraphQLTestCase
         $confirmationSms = CardConfirmationSms::query()->where('phone', $phone)->firstOrFail();
         Http::assertSent(fn ($request) => $request->url() === 'https://routee.sayqal.uz/sms/TransmitSMS'
             && $request['message']['phone'] === $phone
-            && $request['message']['text'] === "Ecommerce tizimidan ro'yxatdan o'tish uchun kod: {$confirmationSms->code}"
+            && $request['message']['text'] === tenant('name') . " tizimidan ro'yxatdan o'tish uchun kod: {$confirmationSms->code}"
         );
     }
 

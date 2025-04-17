@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware('auth.sayqal')->prefix('sayqal-callback')->controller(SayqalController::class)->group(function () {
+Route::middleware(['log.sayqal', 'auth.sayqal'])->prefix('sayqal-callback')->controller(SayqalController::class)->group(function () {
     Route::post('sms', 'sms')->name('sayqalCallback.sms');
     Route::post('voice', 'voice')->name('sayqalCallback.voice');
 });

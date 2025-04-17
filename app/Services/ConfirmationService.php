@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\Company\LoyaltyProgramm\CanLoginTypeEnum;
+use App\Enums\Company\SmsTemplateEnum;
 use App\Helpers\Utilities;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\LoyaltyProgram\User;
@@ -18,11 +19,11 @@ class ConfirmationService
     /**
      * @throws Exception
      */
-    public function send(string $phone, bool $isEcommerceOtp = false): true
+    public function send(string $phone, SmsTemplateEnum $smsTemplateEnum): true
     {
         if ($this->canSendSms($phone)) {
             $confirmationSms = CardConfirmationSms::query()->create(['phone' => $phone, 'code' => $this->generateCode()]);
-            $this->smsService->sendConfirmationSms($confirmationSms, $isEcommerceOtp);
+            $this->smsService->sendConfirmationSms($confirmationSms, $smsTemplateEnum);
         }
 
         return true;
