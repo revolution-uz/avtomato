@@ -17,7 +17,6 @@ class IcanPersonMainDTO extends Data
         public ?string $workplace,
         public ?string $position,
         public ?array $phones,
-        public ?string $image,
         public ?bool $is_guarantor,
         public ?string $created_at,
         public ?string $updated_at,
