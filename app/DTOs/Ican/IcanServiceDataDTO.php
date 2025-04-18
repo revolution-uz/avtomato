@@ -9,6 +9,5 @@ class IcanServiceDataDTO extends Data
     public function __construct(
         public ?string $pan,
         public ?IcanErrorDTO $error,
-        public ?string $result,
     ) {}
 }
