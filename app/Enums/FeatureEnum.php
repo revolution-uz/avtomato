@@ -44,6 +44,7 @@ enum FeatureEnum: string
     case GENERAL_FEATURE = 'general_feature';
 
     case LOYALTY_PROGRAM = 'loyalty_program';
+    case ICAN = 'ican';
 
     public function getDefaultDescription(): ?string
     {
@@ -87,6 +88,7 @@ enum FeatureEnum: string
             self::TELEGRAM_BOT_FEATURE => 'Telegram bot orqali xabar yuborish',
             self::GENERAL_FEATURE => 'Umumiy ko\'rishlar uchun',
             self::LOYALTY_PROGRAM => 'Mijozlarga bonuslar berish tizimi',
+            self::ICAN => 'ICAN.uz tizimi bilan integratsiya',
         };
     }
 
@@ -105,6 +107,7 @@ enum FeatureEnum: string
             self::SCORING_TAX_INFO,
             self::SCORING_MIB_INFO => '{"provider": "asaxiy", "username": "username", "password": "password"}',
             self::SMS => '{"provider": "sms_fly", "username": "username", "secret": "secret"}',
+            self::ICAN => '{"username": "", "password": "", "expires_in": 0, "access_token": ""}',
             default => null,
         };
     }

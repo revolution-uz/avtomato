@@ -161,6 +161,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'ican-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/ican-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
         'document-generator-client' => [
             'driver' => 'daily',
             'path' => storage_path('logs/document-generator-client.log'),

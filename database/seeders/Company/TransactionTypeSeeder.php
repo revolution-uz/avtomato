@@ -40,5 +40,15 @@ class TransactionTypeSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
+        TransactionType::query()->updateOrCreate([
+            'id' => TransactionType::ICAN_INTEGRATION,
+        ], [
+            'name_uz' => 'ICAN integratsiyasi',
+            'name_ru' => 'Интеграция ICAN',
+            'name_en' => 'ICAN Integration',
+            'is_system' => true,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
     }
 }

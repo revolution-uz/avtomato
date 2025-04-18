@@ -22,6 +22,7 @@ enum CompanySettingsEnum: string
     case LOYALTY_PROGRAM_SYNC_TOKEN = 'loyalty_program_sync_token';
     case LOYALTY_PROGRAM_BALANCE_LIMIT = 'loyalty_program_balance_limit';
     case LOYALTY_PROGRAM_FIREBASE_PATH = 'loyalty_program_firebase_path';
+    case ICAN_BRANCH_ID = 'ican_branch_id';
 
     public static function getType(self $type): SettingsTypeEnum
     {
@@ -30,7 +31,8 @@ enum CompanySettingsEnum: string
             self::PINFL_AFTER_DUE_DAYS,
             self::GUARANTOR_AFTER_DUE_DAYS,
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS,
-            self::LOYALTY_PROGRAM_BALANCE_LIMIT => SettingsTypeEnum::INT,
+            self::LOYALTY_PROGRAM_BALANCE_LIMIT,
+            self::ICAN_BRANCH_ID => SettingsTypeEnum::INT,
 
             self::SMS_INSTALLMENT_AUTO_CHARGE,
             self::SMS_INSTALLMENT_NOTIFICATION,
@@ -49,6 +51,7 @@ enum CompanySettingsEnum: string
     {
         return match ($type) {
             self::CARD_AFTER_DUE_DAYS => 1,
+            self::ICAN_BRANCH_ID => 1,
             self::PINFL_AFTER_DUE_DAYS => 5,
             self::GUARANTOR_AFTER_DUE_DAYS => 10,
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS => 15,
@@ -96,6 +99,7 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_SYNC_TOKEN => __('settings.loyalty_program_sync_token'),
             self::LOYALTY_PROGRAM_BALANCE_LIMIT => __('settings.loyalty_program_card_balance_check'),
             self::LOYALTY_PROGRAM_FIREBASE_PATH => __('settings.loyalty_program_firebase_path'),
+            self::ICAN_BRANCH_ID => __('settings.ican_branch_id'),
         };
     }
 }
