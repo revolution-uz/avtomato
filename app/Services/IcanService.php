@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Clients\IcanClient;
 use App\DTOs\Ican\IcanCreditDTO;
-use App\DTOs\Ican\IcanMetaDTO;
 use App\DTOs\Ican\IcanTransactionDTO;
 use App\DTOs\Ican\IcanUserDocumentDataDTO;
 use App\Enums\Company\CompanySettingsEnum;
@@ -13,6 +12,7 @@ use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Enums\External\IcanTransactionStatusEnum;
+use App\Enums\GenderEnum;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Customer;
@@ -20,82 +20,102 @@ use App\Models\Company\Installment;
 use App\Models\Company\Tariff;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class IcanService
 {
+    private string $logChannel = 'ican-service';
+
     public function __construct(private readonly IcanClient $icanClient) {}
 
-    public function syncCredits(int $page): IcanMetaDTO
+    public function syncCredits(int $page): bool
     {
-        $credits = $this->icanClient->getCredits($page);
+        $icanCreditsResponseDTO = $this->icanClient->getCredits($page);
+
+        if (! $icanCreditsResponseDTO->isSuccess()) {
+            return false;
+        }
 
         /** @var IcanCreditDTO $credit */
-        foreach ($credits->data as $credit) {
-            $installment = Installment::query()->where('ican_id', $credit->id)->first();
+        foreach ($icanCreditsResponseDTO->data as $credit) {
+            try {
+                $installment = Installment::query()->where('ican_id', $credit->id)->first();
 
-            if (! $installment) {
-                $this->createOrUpdateInstallment($credit);
+                if (! $installment) {
+                    $this->createOrUpdateInstallment($credit);
 
-                continue;
-            }
+                    continue;
+                }
 
-            if ($installment->updated_at->equalTo($credit->updated_at)) {
-                $this->createOrUpdateInstallment($credit, $installment);
+                if ($installment->updated_at->equalTo($credit->updated_at)) {
+                    $this->createOrUpdateInstallment($credit, $installment);
+                }
+            } catch (Throwable $e) {
+                Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
             }
         }
 
-        return $credits->meta;
+        return $icanCreditsResponseDTO->meta->last_page > $page;
     }
 
-    public function syncTransactions(int $page): IcanMetaDTO
+    public function syncTransactions(int $page): bool
     {
-        $transactions = $this->icanClient->getTransactions($page);
+        $icanTransactionsResponseDTO = $this->icanClient->getTransactions($page);
+
+        if (! $icanTransactionsResponseDTO->isSuccess()) {
+            return false;
+        }
 
         /** @var IcanTransactionDTO $transactionDto */
-        foreach ($transactions->data as $transactionDto) {
-            // Skip if transaction status is not SUCCESS or CANCELED
-            if (! in_array($transactionDto->status, IcanTransactionStatusEnum::values())) {
-                continue;
-            }
+        foreach ($icanTransactionsResponseDTO->data as $transactionDto) {
+            try {
+                // Skip if the transaction status is not SUCCESS or CANCELED
+                if (! in_array($transactionDto->status, IcanTransactionStatusEnum::values())) {
+                    continue;
+                }
 
-            $transaction = Transaction::query()->where('ican_id', $transactionDto->id)->first();
+                $transaction = Transaction::query()->where('ican_id', $transactionDto->id)->first();
 
-            if (! $transaction) {
-                $this->createOrUpdateTransaction($transactionDto);
+                if (! $transaction) {
+                    $this->createOrUpdateTransaction($transactionDto);
 
-                continue;
-            }
+                    continue;
+                }
 
-            // Check if the transaction status has changed
-            if (IcanTransactionStatusEnum::from($transactionDto->status)->name !== $transaction->status->name) {
-                $this->createOrUpdateTransaction($transactionDto, $transaction);
+                // Check if the transaction status has changed
+                if (IcanTransactionStatusEnum::from($transactionDto->status)->name !== $transaction->status->name) {
+                    $this->createOrUpdateTransaction($transactionDto, $transaction);
+                }
+            } catch (Throwable $e) {
+                Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
             }
         }
 
-        return $transactions->meta;
+        return $icanTransactionsResponseDTO->meta->last_page > $page;
     }
 
-    private function createOrGetTariff(IcanCreditDTO $credit)
+    private function createOrGetTariff(IcanCreditDTO $credit): Tariff
     {
-        Tariff::query()->firstOrCreate([
+        return Tariff::query()->firstOrCreate([
             'ican_id' => $credit->tariff_id,
-        ])->update([
-            'name' => $credit->tariff->name,
-            'percent' => $credit->tariff->percent,
-            'min_period' => $credit->tariff->min_period,
-            'max_period' => $credit->tariff->max_period,
-            'min_amount' => $credit->tariff->min_amount,
-            'max_amount' => $credit->tariff->max_amount,
+        ], [
+            'name' => $credit->tariff?->name,
+            'percent' => $credit->tariff?->percent,
+            'min_period' => $credit->tariff?->min_period,
+            'max_period' => $credit->tariff?->max_period,
+            'min_amount' => $credit->tariff?->min_amount,
+            'max_amount' => $credit->tariff?->max_amount,
             'min_initial_fee' => 0,
-            'max_initial_fee' => 100_000_000_000,
+            'max_initial_fee' => 2_000_000_000,
         ]);
     }
 
-    private function createOrGetCustomer(IcanUserDocumentDataDTO $icanUserDocumentData)
+    private function createOrGetCustomer(IcanUserDocumentDataDTO $icanUserDocumentData): Customer
     {
-        Customer::query()->firstOrCreate([
+        return Customer::query()->firstOrCreate([
             'pinfl' => $icanUserDocumentData->pinfl,
-        ])->update([
+        ], [
             'tin' => $icanUserDocumentData->inn,
             'passport_series' => $icanUserDocumentData->passport_series,
             'passport_number' => $icanUserDocumentData->passport_number,
@@ -105,44 +125,18 @@ class IcanService
             'last_name' => $icanUserDocumentData->last_name,
             'middle_name' => $icanUserDocumentData->middle_name,
             'birth_date' => $icanUserDocumentData->birth_date,
-            'gender' => $icanUserDocumentData->gender,
+            'gender' => $icanUserDocumentData->gender === 'male' ? GenderEnum::MALE : GenderEnum::FEMALE,
             'type' => CustomerTypeEnum::INSTALLMENT,
         ]);
     }
 
-    private function createOrGetInstallment(IcanCreditDTO $credit)
-    {
-        Installment::query()->firstOrCreate([
-            'ican_id' => $credit->id,
-        ])->update([
-            'customer_id' => $this->createOrGetCustomer($credit->person_main->user_document->data),
-            'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
-            'tariff_id' => $this->createOrGetTariff($credit),
-            'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
-            'type' => InstallmentTypeEnum::WITHOUT_CARD,
-            'amount' => $credit->amount / 100,
-            'initial_fee' => $credit->initial_payment / 100,
-            'percent' => $credit->percent,
-            'description' => $credit->comment,
-            'sms_notify' => false,
-            'any_card_charge' => false,
-            'is_blacklist' => false,
-            'status' => InstallmentStatusEnum::ACTIVE,
-            'period' => $credit->period,
-            'canceled_at' => $credit->canceled_at,
-            'cancellation_details' => $credit->cancel_reason,
-            'starts_in' => $credit->activated_at,
-            'paid_amount' => ($credit->amount - $credit->main_debt) / 100,
-        ]);
-    }
-
-    private function createOrUpdateInstallment(IcanCreditDTO $credit, ?Installment $installment = null): void
+    private function createOrUpdateInstallment(IcanCreditDTO $credit, ?Installment $installment = null): Installment
     {
         $data = [
             'ican_id' => $credit->id,
-            'customer_id' => $this->createOrGetCustomer($credit->person_main->user_document->data),
+            'customer_id' => $this->createOrGetCustomer($credit->person_main->user_document->data)->id,
             'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
-            'tariff_id' => $this->createOrGetTariff($credit),
+            'tariff_id' => $this->createOrGetTariff($credit)->id,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
             'type' => InstallmentTypeEnum::WITHOUT_CARD,
             'amount' => $credit->amount / 100,
@@ -156,7 +150,7 @@ class IcanService
             'period' => $credit->period,
             'canceled_at' => $credit->canceled_at,
             'cancellation_details' => $credit->cancel_reason,
-            'starts_in' => $credit->activated_at,
+            'starts_in' => $credit->activated_at ?: $credit->created_at,
             'paid_amount' => ($credit->amount - $credit->main_debt) / 100,
             'updated_at' => $credit->updated_at,
         ];
@@ -164,16 +158,18 @@ class IcanService
         if ($installment) {
             $installment->update($data);
         } else {
-            Installment::create($data);
+            $installment = Installment::create($data);
         }
+
+        return $installment;
     }
 
-    private function createOrUpdateTransaction(IcanTransactionDTO $transactionDto, ?Transaction $transaction = null): void
+    private function createOrUpdateTransaction(IcanTransactionDTO $transactionDto, ?Transaction $transaction = null): Transaction
     {
         $data = [
-            'installment_id' => $this->createOrGetInstallment($transactionDto->credit),
+            'installment_id' => $this->createOrUpdateInstallment($transactionDto->credit)->id,
             'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
-            'customer_id' => $this->createOrGetCustomer($transactionDto->credit->person_main->user_document->data),
+            'customer_id' => $this->createOrGetCustomer($transactionDto->credit->person_main->user_document->data)->id,
             'transaction_type_id' => TransactionType::ICAN_INTEGRATION,
             'amount' => $transactionDto->amount,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
@@ -186,7 +182,9 @@ class IcanService
         if ($transaction) {
             $transaction->update($data);
         } else {
-            Transaction::create($data);
+            $transaction = Transaction::create($data);
         }
+
+        return $transaction;
     }
 }

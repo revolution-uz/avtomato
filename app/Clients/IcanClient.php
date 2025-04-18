@@ -6,6 +6,7 @@ use App\DTOs\Ican\IcanCreditsResponseDTO;
 use App\DTOs\Ican\IcanTransactionsResponseDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\FeatureEnum;
+use Exception;
 
 class IcanClient extends BaseIcanClient
 {
@@ -36,7 +37,12 @@ class IcanClient extends BaseIcanClient
             ],
         ];
 
-        return IcanCreditsResponseDTO::from($this->makeRequest(self::CREDITS, $data, 'get'));
+        try {
+            return IcanCreditsResponseDTO::from($this->makeRequest(self::CREDITS, $data, 'get'));
+
+        } catch (Exception $e) {
+            return IcanCreditsResponseDTO::from(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     public function getTransactions(int $page = 0, int $pageSize = 100): IcanTransactionsResponseDTO
@@ -51,6 +57,11 @@ class IcanClient extends BaseIcanClient
             ],
         ];
 
-        return IcanTransactionsResponseDTO::from($this->makeRequest(self::TRANSACTIONS, $data, 'get'));
+        try {
+            return IcanTransactionsResponseDTO::from($this->makeRequest(self::TRANSACTIONS, $data, 'get'));
+
+        } catch (Exception $e) {
+            return IcanTransactionsResponseDTO::from(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 }
