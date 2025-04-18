@@ -5,7 +5,6 @@ namespace App\Clients;
 use App\DTOs\HttpRequestLogDTO;
 use App\DTOs\Ican\IcanAuthTokenDTO;
 use App\DTOs\Ican\IcanCredentialsDTO;
-use App\DTOs\Ican\IcanResultDTO;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Models\Company\Feature;
@@ -44,10 +43,10 @@ abstract class BaseIcanClient extends BaseClient
     /**
      * @throws GeneralException
      */
-    protected function makeRequest(string $path, array $data, string $method = 'post', $is_responsible = true): array
+    protected function makeRequest(string $path, array $data, string $method = 'post'): array
     {
         if (! $token = $this->getActiveToken()) {
-            return ['result' => new IcanResultDTO('ERROR', ['password' => 'Cannot activate the token'])];
+            throw new GeneralException('Cannot activate the token');
         }
 
         $url = $this->baseUrl . $path . '?' . http_build_query($data);
@@ -70,11 +69,19 @@ abstract class BaseIcanClient extends BaseClient
                 body: $data,
             ));
 
-            if (! in_array($response->status(), [200, 201]) || $is_responsible && empty($response->json())) {
-                throw new GeneralException($response->json('description', 'Unexpected response'), $response->json('code', 0));
+            if (! in_array($response->status(), [200, 201]) && empty($response->json())) {
+                if ($response->status() === 429) {
+                    $retryAfter = $response->json('seconds_left', 60);
+                    sleep($retryAfter);
+
+                    return $this->makeRequest($path, $data, $method);
+                }
+
+                throw new GeneralException($response->json('message', 'Unexpected response'));
             }
 
-            return $is_responsible ? $response->json() : ['code' => $response->status()];
+            return $response->json();
+
         } catch (Throwable $exception) {
             parent::logRequest(new HttpRequestLogDTO(
                 method: $method,
@@ -85,7 +92,8 @@ abstract class BaseIcanClient extends BaseClient
                 headers: ['Authorization' => $token],
                 body: $data,
             ), 'error');
-            throw new GeneralException($exception->getMessage(), $exception->getCode());
+
+            throw new GeneralException($exception->getMessage());
         }
     }
 

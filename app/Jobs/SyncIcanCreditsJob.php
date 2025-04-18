@@ -27,9 +27,9 @@ class SyncIcanCreditsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
      */
     public function handle(IcanService $icanService): void
     {
-        $meta = $icanService->syncCredits($this->page);
+        $hasMorePages = $icanService->syncCredits($this->page);
 
-        if ($meta->total > $this->page) {
+        if ($hasMorePages) {
             self::dispatch($this->page + 1);
         }
     }

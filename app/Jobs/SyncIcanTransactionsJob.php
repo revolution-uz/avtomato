@@ -27,9 +27,9 @@ class SyncIcanTransactionsJob implements ShouldBeUniqueUntilProcessing, ShouldQu
      */
     public function handle(IcanService $icanService): void
     {
-        $meta = $icanService->syncTransactions($this->page);
+        $hasMorePages = $icanService->syncTransactions($this->page);
 
-        if ($meta->total > $this->page) {
+        if ($hasMorePages) {
             self::dispatch($this->page + 1);
         }
     }

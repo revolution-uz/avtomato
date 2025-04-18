@@ -14,5 +14,12 @@ class IcanCreditsResponseDTO extends BaseScoringRequest
         // links,
         public ?IcanMetaDTO $meta,
         // total,
+        public bool $success = true,
+        public ?string $message = null,
     ) {}
+
+    public function isSuccess(): bool
+    {
+        return $this->success;
+    }
 }
