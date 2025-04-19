@@ -40,17 +40,8 @@ class IcanService
         /** @var IcanCreditDTO $credit */
         foreach ($icanCreditsResponseDTO->data as $credit) {
             try {
-                $installment = Installment::query()->where('ican_id', $credit->id)->first();
+                $this->createOrUpdateInstallment($credit);
 
-                if (! $installment) {
-                    $this->createOrUpdateInstallment($credit);
-
-                    continue;
-                }
-
-                if ($installment->updated_at->equalTo($credit->updated_at)) {
-                    $this->createOrUpdateInstallment($credit, $installment);
-                }
             } catch (Throwable $e) {
                 Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
             }
@@ -75,18 +66,8 @@ class IcanService
                     continue;
                 }
 
-                $transaction = Transaction::query()->where('ican_id', $transactionDto->id)->first();
+                $this->createOrUpdateTransaction($transactionDto);
 
-                if (! $transaction) {
-                    $this->createOrUpdateTransaction($transactionDto);
-
-                    continue;
-                }
-
-                // Check if the transaction status has changed
-                if (IcanTransactionStatusEnum::from($transactionDto->status)->name !== $transaction->status->name) {
-                    $this->createOrUpdateTransaction($transactionDto, $transaction);
-                }
             } catch (Throwable $e) {
                 Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
             }
@@ -130,9 +111,11 @@ class IcanService
         ]);
     }
 
-    private function createOrUpdateInstallment(IcanCreditDTO $credit, ?Installment $installment = null): Installment
+    private function createOrUpdateInstallment(IcanCreditDTO $credit): Installment
     {
-        $data = [
+        $installment = Installment::query()->firstOrNew(['ican_id' => $credit->id]);
+
+        $installment->fill([
             'ican_id' => $credit->id,
             'customer_id' => $this->createOrGetCustomer($credit->person_main->user_document->data)->id,
             'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
@@ -153,36 +136,35 @@ class IcanService
             'starts_in' => $credit->activated_at ?: $credit->created_at,
             'paid_amount' => ($credit->amount - $credit->main_debt) / 100,
             'updated_at' => $credit->updated_at,
-        ];
+        ]);
 
-        if ($installment) {
-            $installment->update($data);
-        } else {
-            $installment = Installment::create($data);
+        if (! $installment->exists || $installment->isDirty()) {
+            $installment->saveQuietly();
         }
 
         return $installment;
     }
 
-    private function createOrUpdateTransaction(IcanTransactionDTO $transactionDto, ?Transaction $transaction = null): Transaction
+    private function createOrUpdateTransaction(IcanTransactionDTO $transactionDto): Transaction
     {
-        $data = [
+        $transaction = Transaction::query()->firstOrNew(['ican_id' => $transactionDto->id]);
+
+        $transaction->fill([
+            'ican_id' => $transactionDto->id,
             'installment_id' => $this->createOrUpdateInstallment($transactionDto->credit)->id,
             'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
             'customer_id' => $this->createOrGetCustomer($transactionDto->credit->person_main->user_document->data)->id,
             'transaction_type_id' => TransactionType::ICAN_INTEGRATION,
             'amount' => $transactionDto->amount,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
-            'paid_at' => $transactionDto->payments->first()->created_at,
-            'card_pan' => $transactionDto->service_data->pan,
-            'is_initial_fee' => $transactionDto->payments->first()->is_initial_payment,
+            'paid_at' => $transactionDto->payments->first()?->created_at,
+            'card_pan' => $transactionDto->service_data?->pan,
+            'is_initial_fee' => $transactionDto->payments->first()?->is_initial_payment,
             'status' => TransactionStatusEnum::SUCCESS,
-        ];
+        ]);
 
-        if ($transaction) {
-            $transaction->update($data);
-        } else {
-            $transaction = Transaction::create($data);
+        if (! $transaction->exists || $transaction->isDirty('status')) {
+            $transaction->saveQuietly();
         }
 
         return $transaction;
