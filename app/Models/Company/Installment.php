@@ -77,6 +77,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int|null $ican_id
  *
  * @method static Builder whereNextPayDate(string $operator, Carbon $date)
+ * @method static Builder excludeIcanInstallments()
  */
 class Installment extends Model
 {
@@ -368,6 +369,11 @@ class Installment extends Model
     public function scopeSumProfit($query)
     {
         return $query->sumCustomRaw(self::getProfitAmountRaw());
+    }
+
+    public function scopeExcludeIcanInstallments($query)
+    {
+        return $query->whereNull('ican_id');
     }
 
     public function fixPaidAmount(): void
