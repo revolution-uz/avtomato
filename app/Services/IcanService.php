@@ -13,6 +13,7 @@ use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Enums\External\IcanTransactionStatusEnum;
 use App\Enums\GenderEnum;
+use App\Exceptions\GeneralException;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Customer;
@@ -122,8 +123,8 @@ class IcanService
             'tariff_id' => $this->createOrGetTariff($credit)->id,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
             'type' => InstallmentTypeEnum::WITHOUT_CARD,
-            'amount' => $credit->amount / 100,
-            'initial_fee' => $credit->initial_payment / 100,
+            'amount' => $credit->amount,
+            'initial_fee' => $credit->initial_payment,
             'percent' => $credit->percent,
             'description' => $credit->comment,
             'sms_notify' => false,
@@ -134,7 +135,7 @@ class IcanService
             'canceled_at' => $credit->canceled_at,
             'cancellation_details' => $credit->cancel_reason,
             'starts_in' => $credit->activated_at ?: $credit->created_at,
-            'paid_amount' => ($credit->amount - $credit->main_debt) / 100,
+            'paid_amount' => $credit->amount - $credit->main_debt,
             'updated_at' => $credit->updated_at,
         ]);
 
@@ -160,7 +161,11 @@ class IcanService
             'paid_at' => $transactionDto->payments->first()?->created_at,
             'card_pan' => $transactionDto->service_data?->pan,
             'is_initial_fee' => $transactionDto->payments->first()?->is_initial_payment,
-            'status' => TransactionStatusEnum::SUCCESS,
+            'status' => match ($transactionDto->status) {
+                IcanTransactionStatusEnum::SUCCESS->value => TransactionStatusEnum::SUCCESS,
+                IcanTransactionStatusEnum::CANCELED->value => TransactionStatusEnum::CANCELED,
+                default => new GeneralException('Invalid transaction status'),
+            },
         ]);
 
         if (! $transaction->exists || $transaction->isDirty('status')) {

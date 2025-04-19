@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Enums\FeatureEnum;
-use App\Jobs\SyncIcanCreditsJob;
 use App\Jobs\SyncIcanTransactionsJob;
 use App\Models\Company;
 use App\Models\Company\Feature;
@@ -11,21 +10,21 @@ use App\Services\User\BalanceService;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
-class PopulateSyncIcanJobs extends Command
+class PopulateSyncIcanTransactionJobs extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'populate:sync-ican-jobs';
+    protected $signature = 'populate:sync-ican-transaction-jobs';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Populate ICAN jobs to sync ICAN credits and transactions for all active companies with the ICAN feature enabled';
+    protected $description = 'Populate jobs to sync ICAN transactions for all active companies with the ICAN feature enabled';
 
     /**
      * Execute the console command.
@@ -41,7 +40,6 @@ class PopulateSyncIcanJobs extends Command
                 continue;
             }
 
-            SyncIcanCreditsJob::dispatch();
             SyncIcanTransactionsJob::dispatch();
         }
 

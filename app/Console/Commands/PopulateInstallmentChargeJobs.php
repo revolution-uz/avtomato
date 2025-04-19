@@ -53,6 +53,7 @@ class PopulateInstallmentChargeJobs extends Command
             $installments = Installment::query()->select('id')
                 ->where('status', InstallmentStatusEnum::ACTIVE)
                 ->whereNextPayDate('<=', Carbon::now())
+                ->excludeIcanInstallments()
                 ->get();
 
             if (! count($installments)) {

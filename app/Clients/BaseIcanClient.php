@@ -69,7 +69,7 @@ abstract class BaseIcanClient extends BaseClient
                 body: $data,
             ));
 
-            if (! in_array($response->status(), [200, 201]) && empty($response->json())) {
+            if (! $response->successful() || empty($response->json())) {
                 if ($response->status() === 429) {
                     $retryAfter = $response->json('seconds_left', 60);
                     sleep($retryAfter);
