@@ -45,7 +45,6 @@ use App\GraphQL\LoyaltyProgram\Admin\Types\OrderPaymentGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\OrderStatusHistoryGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\PaymentGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ProductGraphQLType;
-use App\GraphQL\LoyaltyProgram\Admin\Types\RoleGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ShopGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ShopInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionGraphQLType;
@@ -111,7 +110,6 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 OrderGraphQLType::class,
                 OrderItemGraphQLType::class,
                 AdminGraphQLType::class,
-                RoleGraphQLType::class,
                 ProductGraphQLType::class,
                 OrderStatusHistoryGraphQLType::class,
                 OrderPaymentGraphQLType::class,
