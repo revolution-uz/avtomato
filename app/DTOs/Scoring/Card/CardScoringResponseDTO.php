@@ -3,6 +3,9 @@
 namespace App\DTOs\Scoring\Card;
 
 use App\DTOs\Scoring\Base\BaseScoringResponse;
+use App\DTOs\Unired\Client\UniredMonitoringCardResponseDTO;
+use App\DTOs\Unired\Client\UniredMonitoringCardRowDTO;
+use App\Enums\Company\Scoring\CardScoringTypeCodeEnum;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\DataCollection;
 
@@ -13,7 +16,7 @@ class CardScoringResponseDTO extends BaseScoringResponse
         public ?DataCollection $report,
     ) {}
 
-    public static function parseFromUnired($response): CardScoringResponseDTO
+    public static function parseFromAsaxiy($response): CardScoringResponseDTO
     {
         $report = [];
         foreach ($response as $month => $data) {
@@ -38,6 +41,47 @@ class CardScoringResponseDTO extends BaseScoringResponse
                 ];
             }
         }
+
+        return self::from(['report' => $report]);
+    }
+
+    public static function parseFromUnired(UniredMonitoringCardResponseDTO $dto): self
+    {
+        $report = [];
+        /** @var UniredMonitoringCardRowDTO $transaction */
+        foreach ($dto->rows as $transaction) {
+            $month = date('Y-m', strtotime($transaction->TRAN_DATE_TIME));
+            $amount = $transaction->TRAN_AMT;
+            $tranType = $transaction->TRAN_TYPE;
+
+            if (! isset($report[$month])) {
+                $report[$month] = [
+                    'month' => $month,
+                    'full_amount' => 0,
+                    'details' => [],
+                ];
+            }
+
+            $report[$month]['full_amount'] += $amount;
+
+            if (! isset($report[$month]['details'][$tranType])) {
+                $report[$month]['details'][$tranType] = 0;
+            }
+
+            $report[$month]['details'][$tranType] += $amount;
+        }
+
+        $report = array_map(function ($stat) {
+            $stat['details'] = array_map(function ($tranType, $sum) {
+                return [
+                    'description' => CardScoringTypeCodeEnum::getDescription($tranType),
+                    'type_code' => $tranType,
+                    'amount' => $sum,
+                ];
+            }, array_keys($stat['details']), $stat['details']);
+
+            return $stat;
+        }, $report);
 
         return self::from(['report' => $report]);
     }
