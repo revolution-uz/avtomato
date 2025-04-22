@@ -56,6 +56,11 @@ use App\GraphQL\LoyaltyProgram\Admin\Types\UserInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\GraphQL\Management\Types\AttachmentGraphQLType;
+use App\GraphQL\Management\Types\PermissionBranchItemGraphQLType;
+use App\GraphQL\Management\Types\PermissionEditableItemGraphQLType;
+use App\GraphQL\Management\Types\PermissionGraphQLType;
+use App\GraphQL\Management\Types\PermissionGroupGraphQLType;
+use App\GraphQL\Management\Types\RoleGraphQLType;
 use App\GraphQL\Management\Types\TemplateThemeGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
@@ -124,6 +129,11 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 ShopInputGraphQLType::class,
                 NotificationInputGraphQLType::class,
                 TemplateThemeGraphQLType::class,
+                RoleGraphQLType::class,
+                PermissionGroupGraphQLType::class,
+                PermissionEditableItemGraphQLType::class,
+                PermissionBranchItemGraphQLType::class,
+                PermissionGraphQLType::class,
             ],
             'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'loyalty_program', 'tenant_logging'],
         ];
