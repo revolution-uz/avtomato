@@ -12,6 +12,7 @@ use App\Enums\Company\CustomerTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
+use App\Enums\External\IcanCreditStatusEnum;
 use App\Enums\External\IcanTransactionStatusEnum;
 use App\Enums\GenderEnum;
 use App\Exceptions\GeneralException;
@@ -54,7 +55,7 @@ class IcanService
 
     public function syncTransactions(int $page): bool
     {
-        $icanTransactionsResponseDTO = $this->icanClient->getTransactions($page);
+        $icanTransactionsResponseDTO = $this->icanClient->getTransactions(IcanTransactionStatusEnum::SUCCESS, $page);
 
         if (! $icanTransactionsResponseDTO->isSuccess()) {
             return false;
@@ -63,11 +64,31 @@ class IcanService
         /** @var IcanTransactionDTO $transactionDto */
         foreach ($icanTransactionsResponseDTO->data as $transactionDto) {
             try {
-                // Skip if the transaction status is not SUCCESS or CANCELED
-                if (! in_array($transactionDto->status, IcanTransactionStatusEnum::values())) {
-                    continue;
+                $transaction = $this->createOrUpdateTransaction($transactionDto);
+
+                if (! $transaction->wasRecentlyCreated) {
+                    return false;
                 }
 
+            } catch (Throwable $e) {
+                Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
+            }
+        }
+
+        return $icanTransactionsResponseDTO->meta->last_page > $page;
+    }
+
+    public function syncCanceledTransactions(int $page): bool
+    {
+        $icanTransactionsResponseDTO = $this->icanClient->getTransactions(IcanTransactionStatusEnum::CANCELED, $page);
+
+        if (! $icanTransactionsResponseDTO->isSuccess()) {
+            return false;
+        }
+
+        /** @var IcanTransactionDTO $transactionDto */
+        foreach ($icanTransactionsResponseDTO->data as $transactionDto) {
+            try {
                 $this->createOrUpdateTransaction($transactionDto);
 
             } catch (Throwable $e) {
@@ -151,7 +172,14 @@ class IcanService
             'sms_notify' => false,
             'any_card_charge' => false,
             'is_blacklist' => false,
-            'status' => InstallmentStatusEnum::ACTIVE,
+            'status' => match ($credit->status) {
+                IcanCreditStatusEnum::CANCELED->value => InstallmentStatusEnum::CANCELED,
+                IcanCreditStatusEnum::ACTIVE->value => InstallmentStatusEnum::ACTIVE,
+                IcanCreditStatusEnum::WAITING_FOR_CONFIRMATION->value => InstallmentStatusEnum::INACTIVE,
+                IcanCreditStatusEnum::WAITING_FOR_INITIAL_PAYMENT->value => InstallmentStatusEnum::INACTIVE,
+                IcanCreditStatusEnum::COMPLETED->value => InstallmentStatusEnum::CLOSED,
+                default => new GeneralException('Invalid credit status'),
+            },
             'period' => $credit->period,
             'canceled_at' => $credit->canceled_at,
             'cancellation_details' => $credit->cancel_reason,
@@ -189,7 +217,7 @@ class IcanService
             },
         ]);
 
-        if (! $transaction->exists || $transaction->isDirty('status')) {
+        if (! $transaction->exists || $transaction->isDirty()) {
             $transaction->saveQuietly();
         }
 

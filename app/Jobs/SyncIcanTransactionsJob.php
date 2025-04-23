@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\External\IcanTransactionStatusEnum;
 use App\Services\IcanService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -17,7 +18,7 @@ class SyncIcanTransactionsJob implements ShouldBeUniqueUntilProcessing, ShouldQu
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(private readonly int $page = 0)
+    public function __construct(private readonly IcanTransactionStatusEnum $status, private readonly int $page = 0)
     {
         $this->onQueue('sync-ican');
     }
@@ -27,10 +28,15 @@ class SyncIcanTransactionsJob implements ShouldBeUniqueUntilProcessing, ShouldQu
      */
     public function handle(IcanService $icanService): void
     {
-        $hasMorePages = $icanService->syncTransactions($this->page);
+        if ($this->status === IcanTransactionStatusEnum::SUCCESS) {
+            $hasMorePages = $icanService->syncTransactions($this->page);
+
+        } else {
+            $hasMorePages = $icanService->syncCanceledTransactions($this->page);
+        }
 
         if ($hasMorePages) {
-            self::dispatch($this->page + 1);
+            self::dispatch($this->status, $this->page + 1);
         }
     }
 

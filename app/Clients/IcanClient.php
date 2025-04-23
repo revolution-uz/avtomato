@@ -8,6 +8,7 @@ use App\DTOs\Ican\IcanSingleCreditResponseDTO;
 use App\DTOs\Ican\IcanTransactionInputDTO;
 use App\DTOs\Ican\IcanTransactionsResponseDTO;
 use App\Enums\ClientCodeEnum;
+use App\Enums\External\IcanTransactionStatusEnum;
 use Exception;
 
 class IcanClient extends BaseIcanClient
@@ -44,7 +45,7 @@ class IcanClient extends BaseIcanClient
         }
     }
 
-    public function getTransactions(int $page = 0, int $pageSize = 100): IcanTransactionsResponseDTO
+    public function getTransactions(IcanTransactionStatusEnum $status, int $page = 0, int $pageSize = 100): IcanTransactionsResponseDTO
     {
         $data = [
             'page' => $page,
@@ -53,6 +54,9 @@ class IcanClient extends BaseIcanClient
                 'credit',
                 'credit.person_main.user_document',
                 'payments',
+            ],
+            'filter' => [
+                'status' => $status->value,
             ],
         ];
 
