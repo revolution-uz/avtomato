@@ -18,12 +18,12 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon|null $paid_at
  * @property int $card_id
  * @property string|null $external_id
- * @property int $subscription_id
+ * @property int|null $subscription_id
  * @property int $user_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property User $user
- * @property Subscription $subscription
+ * @property Subscription|null $subscription
  */
 class LoyaltyProgramPayment extends Model
 {
