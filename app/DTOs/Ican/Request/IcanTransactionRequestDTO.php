@@ -1,10 +1,10 @@
 <?php
 
-namespace App\DTOs\Ican;
+namespace App\DTOs\Ican\Request;
 
 use Spatie\LaravelData\Data;
 
-class IcanTransactionInputDTO extends Data
+class IcanTransactionRequestDTO extends Data
 {
     public function __construct(
         public int $credit_id,

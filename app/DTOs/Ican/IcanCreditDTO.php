@@ -2,8 +2,6 @@
 
 namespace App\DTOs\Ican;
 
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
 
 class IcanCreditDTO extends Data
@@ -38,7 +36,6 @@ class IcanCreditDTO extends Data
         public ?array $phones_for_sms,
         public ?bool $is_my_uzcard_auto_payment_turned_on,
         public ?string $created_at,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i:s')]
         public ?string $updated_at,
         public ?int $katm_registration_claim_id,
         public ?string $activated_at,

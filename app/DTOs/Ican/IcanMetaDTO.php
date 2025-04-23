@@ -10,7 +10,7 @@ class IcanMetaDTO extends Data
         public ?int $current_page,
         public ?int $from,
         public ?int $last_page,
-        //links
+        // links
         public ?string $path,
         public ?int $per_page,
         public ?int $to,

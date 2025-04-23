@@ -2,11 +2,11 @@
 
 namespace App\Clients;
 
-use App\DTOs\Ican\IcanCreditsResponseDTO;
-use App\DTOs\Ican\IcanProfileResponseDTO;
-use App\DTOs\Ican\IcanSingleCreditResponseDTO;
-use App\DTOs\Ican\IcanTransactionInputDTO;
-use App\DTOs\Ican\IcanTransactionsResponseDTO;
+use App\DTOs\Ican\IcanCreditDTO;
+use App\DTOs\Ican\IcanMetaDTO;
+use App\DTOs\Ican\IcanProfileDTO;
+use App\DTOs\Ican\IcanTransactionDTO;
+use App\DTOs\Ican\Request\IcanTransactionRequestDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\External\IcanTransactionStatusEnum;
 use Exception;
@@ -25,27 +25,28 @@ class IcanClient extends BaseIcanClient
         return ClientCodeEnum::ICAN;
     }
 
-    public function getCredits(int $page = 0, int $pageSize = 100): IcanCreditsResponseDTO
+    public function getCredits(int $page = 0, int $pageSize = 100): array
     {
         $data = [
             'page' => $page,
             'page-size' => $pageSize,
-            'with' => [
-                'tariff',
-                'person_main',
-                'person_main.user_document',
-            ],
+            'with' => ['tariff', 'person_main', 'person_main.user_document'],
         ];
 
         try {
-            return IcanCreditsResponseDTO::from($this->makeRequest(self::CREDITS, $data, 'get'));
+            $response = $this->makeRequest(self::CREDITS, $data, 'get');
+
+            return [
+                'credits' => collect($response['data'])->map([IcanCreditDTO::class, 'from']),
+                'meta' => IcanMetaDTO::from($response['meta']),
+            ];
 
         } catch (Exception $e) {
-            return IcanCreditsResponseDTO::from(['success' => false, 'message' => $e->getMessage()]);
+            return ['credits' => null, 'meta' => null];
         }
     }
 
-    public function getTransactions(IcanTransactionStatusEnum $status, int $page = 0, int $pageSize = 100): IcanTransactionsResponseDTO
+    public function getTransactions(IcanTransactionStatusEnum $status, int $page = 0, int $pageSize = 100): array
     {
         $data = [
             'page' => $page,
@@ -61,44 +62,47 @@ class IcanClient extends BaseIcanClient
         ];
 
         try {
-            return IcanTransactionsResponseDTO::from($this->makeRequest(self::TRANSACTIONS, $data, 'get'));
+            $response = $this->makeRequest(self::TRANSACTIONS, $data, 'get');
+
+            return [
+                'transactions' => collect($response['data'])->map([IcanTransactionDTO::class, 'from']),
+                'meta' => IcanMetaDTO::from($response['meta']),
+            ];
 
         } catch (Exception $e) {
-            return IcanTransactionsResponseDTO::from(['success' => false, 'message' => $e->getMessage()]);
+            return ['transactions' => null, 'meta' => null];
         }
     }
 
-    public function createTransaction(IcanTransactionInputDTO $dto): IcanTransactionsResponseDTO
+    public function createTransaction(IcanTransactionRequestDTO $dto): ?IcanTransactionDTO
     {
         try {
-            return IcanTransactionsResponseDTO::from($this->makeRequest(self::TRANSACTIONS_CREATE, $dto->toArray(), 'post'));
+            return IcanTransactionDTO::from($this->makeRequest(self::TRANSACTIONS_CREATE, $dto->toArray()));
 
         } catch (Exception $e) {
-            return IcanTransactionsResponseDTO::from(['success' => false, 'message' => $e->getMessage()]);
+            return null;
         }
     }
 
-    public function getSingleCredit(int $ican_id)
+    public function getSingleCredit(int $ican_id): ?IcanCreditDTO
     {
+        $path = str_replace('{ican_id}', $ican_id, self::CREDITS_SINGLE);
+
         try {
-            return IcanSingleCreditResponseDTO::from([
-                'data' => $this->makeRequest(str_replace('{ican_id}', $ican_id, self::CREDITS_SINGLE), [], 'get'),
-            ]);
+            return IcanCreditDTO::from($this->makeRequest($path, [], 'get'));
 
         } catch (Exception $e) {
-            return IcanSingleCreditResponseDTO::from(['success' => false, 'message' => $e->getMessage()]);
+            return null;
         }
     }
 
-    public function getProfile()
+    public function getProfile(): ?IcanProfileDTO
     {
         try {
-            return IcanProfileResponseDTO::from([
-                'data' => $this->makeAuthRequest(self::PROFILE, [], 'get'),
-            ]);
+            return IcanProfileDTO::from($this->makeAuthRequest(self::PROFILE, [], 'get'));
 
         } catch (Exception $e) {
-            return IcanProfileResponseDTO::from(['success' => false, 'message' => $e->getMessage()]);
+            return null;
         }
     }
 }
