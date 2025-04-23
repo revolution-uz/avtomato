@@ -13,10 +13,20 @@ use Throwable;
 
 abstract class BaseIcanClient extends BaseClient
 {
-    const GET_TOKEN_URI = 'https://api.base.icangroup.uz/common/auth/login';
+    const LOGIN = '/common/auth/login';
 
-    protected ?FeatureEnum $featureName = null;
+    protected ?FeatureEnum $featureName;
     protected ?string $baseUrl;
+
+    private ?string $authBaseUrl;
+
+    public function __construct()
+    {
+        $this->authBaseUrl = config('clients.ican.auth_base_url');
+        $this->baseUrl = config('clients.ican.base_url');
+        $this->channel = 'ican-client';
+        $this->featureName = FeatureEnum::ICAN;
+    }
 
     protected function getNewToken(string $username, string $password): IcanAuthTokenDTO
     {
@@ -26,11 +36,11 @@ abstract class BaseIcanClient extends BaseClient
         ])
             ->timeout(150)
             ->connectTimeout(150)
-            ->post(self::GET_TOKEN_URI, ['username' => $username, 'password' => $password]);
+            ->post($this->authBaseUrl . self::LOGIN, ['username' => $username, 'password' => $password]);
 
         $this->logRequest(new HttpRequestLogDTO(
             method: 'POST',
-            url: self::GET_TOKEN_URI,
+            url: $this->authBaseUrl . self::LOGIN,
             status: $response->status(),
             response: $response->body(),
             duration: $response->transferStats?->getTransferTime(),
@@ -45,11 +55,27 @@ abstract class BaseIcanClient extends BaseClient
      */
     protected function makeRequest(string $path, array $data, string $method = 'post'): array
     {
+        return $this->sendHttpRequest($this->baseUrl . $path, $data, $method);
+    }
+
+    /**
+     * @throws GeneralException
+     */
+    protected function makeAuthRequest(string $path, array $data, string $method = 'post'): array
+    {
+        return $this->sendHttpRequest($this->authBaseUrl . $path, $data, $method);
+    }
+
+    /**
+     * @throws GeneralException
+     */
+    private function sendHttpRequest(string $url, array $data, string $method): array
+    {
         if (! $token = $this->getActiveToken()) {
             throw new GeneralException('Cannot activate the token');
         }
 
-        $url = $this->baseUrl . $path . '?' . http_build_query($data);
+        $url .= count($data) > 0 ? '?' . http_build_query($data) : '';
 
         try {
             $response = Http::withHeaders([
@@ -60,21 +86,20 @@ abstract class BaseIcanClient extends BaseClient
                 ->connectTimeout(150)
                 ->$method($url);
 
-            parent::logRequest(new HttpRequestLogDTO(
-                method: $method,
-                url: $this->baseUrl . $path,
-                status: $response->status(),
-                response: $response->body(),
-                duration: $response->transferStats?->getTransferTime(),
-                body: $data,
-            ));
-
             if (! $response->successful() || empty($response->json())) {
                 if ($response->status() === 429) {
+                    parent::logRequest(new HttpRequestLogDTO(
+                        method: $method,
+                        url: $url,
+                        status: $response->status(),
+                        response: $response->body(),
+                        duration: $response->transferStats?->getTransferTime(),
+                        body: $data,
+                    ));
                     $retryAfter = $response->json('seconds_left', 60);
                     sleep($retryAfter);
 
-                    return $this->makeRequest($path, $data, $method);
+                    return $this->makeRequest($url, $data, $method);
                 }
 
                 throw new GeneralException($response->json('message', 'Unexpected response'));
@@ -97,7 +122,7 @@ abstract class BaseIcanClient extends BaseClient
         }
     }
 
-    protected function getActiveToken(): ?string
+    private function getActiveToken(): ?string
     {
         if (! tenancy()->initialized) {
             return null;
@@ -111,7 +136,7 @@ abstract class BaseIcanClient extends BaseClient
 
         $credentials = IcanCredentialsDTO::from($feature->data);
 
-        if (! $credentials->username) {
+        if (! $credentials->username || ! $credentials->password) {
             return null;
         }
 

@@ -22,7 +22,7 @@ class IcanCreditDTO extends Data
         public ?int $main_debt,
         public ?int $percent_debt,
         public ?int $initial_payment_debt,
-        public ?int $overdue_debt,
+        public ?float $overdue_debt,
         public ?int $percent,
         public ?int $grace_period,
         public ?int $period,

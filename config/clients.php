@@ -106,5 +106,6 @@ return [
     */
     'ican' => [
         'base_url' => 'https://api.credit.icangroup.uz',
+        'auth_base_url' => 'https://api.base.icangroup.uz',
     ],
 ];

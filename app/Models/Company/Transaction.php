@@ -5,8 +5,12 @@ namespace App\Models\Company;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
+use App\Jobs\CreateIcanTransactionJob;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
+use App\Services\AtmosService;
+use App\Services\IcanService;
+use App\Services\UniredService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -75,11 +79,22 @@ class Transaction extends Model
         parent::boot();
 
         static::creating(function (self $transaction) {
-            if ($transaction->paid_at === null) {
-                $transaction->paid_at = Carbon::now();
-            }
+            $transaction->paid_at ??= Carbon::now();
+
             if (auth('company-admin')->check()) {
-                $transaction->admin_id = auth('company-admin')->user()->id;
+                $transaction->admin_id = auth('company-admin')->id();
+            }
+
+            if ($transaction->installment->ican_id) {
+                $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($transaction->installment->ican_id);
+
+                if ($debtAmount > $transaction->amount) {
+                    $transaction->reverse();
+
+                    return false;
+                }
+
+                CreateIcanTransactionJob::dispatch($transaction->id);
             }
         });
 
@@ -156,5 +171,23 @@ class Transaction extends Model
     public function scopeOnlySuccess($query)
     {
         return $query->where('status', TransactionStatusEnum::SUCCESS);
+    }
+
+    public function reverse()
+    {
+        $atmosService = app(AtmosService::class);
+        $uniredService = app(UniredService::class);
+
+        if ($this->transaction_type_id == TransactionType::ATMOS_WITH_CARD) {
+            return $atmosService->reverseCardPayment($this);
+        } elseif ($this->transaction_type_id == TransactionType::ATMOS_WITH_PINFL) {
+            return $atmosService->reversePinflPayment($this);
+        } elseif ($this->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
+            return $uniredService->reversePayment($this);
+        } else {
+            $this->status = TransactionStatusEnum::CANCELED;
+
+            return $this->saveOrFail();
+        }
     }
 }

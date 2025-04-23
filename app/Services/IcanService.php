@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Clients\IcanClient;
 use App\DTOs\Ican\IcanCreditDTO;
 use App\DTOs\Ican\IcanTransactionDTO;
+use App\DTOs\Ican\IcanTransactionInputDTO;
 use App\DTOs\Ican\IcanUserDocumentDataDTO;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\CustomerTypeEnum;
@@ -75,6 +76,26 @@ class IcanService
         }
 
         return $icanTransactionsResponseDTO->meta->last_page > $page;
+    }
+
+    public function getInstallmentDebtAmount(int $ican_id): ?float
+    {
+        $icanSingleCreditResponseDTO = $this->icanClient->getSingleCredit($ican_id);
+
+        return $icanSingleCreditResponseDTO->data->overdue_debt;
+    }
+
+    public function createTransaction(Transaction $transaction): bool
+    {
+        $dto = IcanTransactionInputDTO::from([
+            'credit_id' => $transaction->installment->ican_id,
+            'amount' => $transaction->amount,
+            'employee_id' => $this->getEmployeeId(),
+        ]);
+
+        $response = $this->icanClient->createTransaction($dto);
+
+        return $response->isSuccess();
     }
 
     private function createOrGetTariff(IcanCreditDTO $credit): Tariff
@@ -173,5 +194,26 @@ class IcanService
         }
 
         return $transaction;
+    }
+
+    private function getEmployeeId()
+    {
+        $employeeId = CompanySettings::getConfig(CompanySettingsEnum::ICAN_EMPLOYEE_ID);
+
+        if (empty($employeeId)) {
+            $icanProfileResponseDto = $this->icanClient->getProfile();
+
+            if (! $icanProfileResponseDto->isSuccess()) {
+                throw new GeneralException('Could not get Ican profile');
+            }
+
+            $employeeId = $icanProfileResponseDto->data->id;
+
+            CompanySettings::query()
+                ->where('name', CompanySettingsEnum::ICAN_EMPLOYEE_ID)
+                ->update(['value' => $employeeId]);
+        }
+
+        return $employeeId;
     }
 }

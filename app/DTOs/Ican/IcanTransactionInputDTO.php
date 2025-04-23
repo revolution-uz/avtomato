@@ -1,0 +1,15 @@
+<?php
+
+namespace App\DTOs\Ican;
+
+use Spatie\LaravelData\Data;
+
+class IcanTransactionInputDTO extends Data
+{
+    public function __construct(
+        public int $credit_id,
+        public int $amount,
+        public int $employee_id,
+        public string $payment_type = 'cash', // blacklist, card, card_click, cash, discount, mib, terminal
+    ) {}
+}

@@ -6,9 +6,6 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
-use App\Models\Company\TransactionType;
-use App\Services\AtmosService;
-use App\Services\UniredService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -20,11 +17,6 @@ class ReverseTransactionGraphQLMutation extends Mutation
     protected $attributes = [
         'name' => 'reverseTransaction',
     ];
-
-    public function __construct(
-        private readonly AtmosService $atmosService,
-        private readonly UniredService $uniredService,
-    ) {}
 
     public function type(): Type
     {
@@ -72,16 +64,6 @@ class ReverseTransactionGraphQLMutation extends Mutation
     {
         $transaction = Transaction::findOrFail($args['id']);
 
-        if ($transaction->transaction_type_id == TransactionType::ATMOS_WITH_CARD) {
-            return $this->atmosService->reverseCardPayment($transaction);
-        } elseif ($transaction->transaction_type_id == TransactionType::ATMOS_WITH_PINFL) {
-            return $this->atmosService->reversePinflPayment($transaction);
-        } elseif ($transaction->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
-            return $this->uniredService->reversePayment($transaction);
-        } else {
-            $transaction->status = TransactionStatusEnum::CANCELED;
-
-            return $transaction->saveOrFail();
-        }
+        return $transaction->reverse();
     }
 }
