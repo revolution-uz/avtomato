@@ -20,8 +20,14 @@ class SubscriptionService
     {
         $tariff = Tariff::query()->findOrFail($args['tariff_id']);
 
-        if ($tariff->free_months !== 0 && ($user->subscriptions()->count() == 0 || $tariff->is_free_for_previous_subscribers)) {
-            $expired_at = Carbon::now()->addMonths($tariff->free_months);
+        $subscription = new Subscription;
+        $subscription->user_id = $user->id;
+        $subscription->tariff_id = $tariff->id;
+        $subscription->remaining_limit_amount = $tariff->limit_amount;
+
+        if ($tariff->free_months !== 0 && ($user->subscriptions()->count() == 0 && $tariff->is_free_for_previous_subscribers)) {
+            $subscription->expired_at = Carbon::now()->addMonths($tariff->free_months);
+            $subscription->saveOrFail();
 
         } else {
             try {
@@ -32,15 +38,13 @@ class SubscriptionService
                 throw new Error($e->getMessage());
             }
 
-            $expired_at = Carbon::now()->addMonths($tariff->subscription_months);
-        }
+            $subscription->expired_at = Carbon::now()->addMonths($tariff->subscription_months);
+            $subscription->saveOrFail();
 
-        $subscription = Subscription::query()->create([
-            'user_id' => $user->id,
-            'tariff_id' => $tariff->id,
-            'remaining_limit_amount' => $tariff->limit_amount,
-            'expired_at' => $expired_at,
-        ]);
+            $payment->subscription_id = $subscription->id;
+            $payment->saveOrFail();
+
+        }
 
         return $subscription->refresh();
     }
@@ -50,17 +54,36 @@ class SubscriptionService
         try {
             $payment = $this->payForSubscription($subscription->user, $subscription->tariff);
             $this->payForSubscriptionConfirm($payment);
+
         } catch (GeneralException $e) {
+            throw new Error($e->getMessage());
         }
 
         $subscription->remaining_limit_amount = $subscription->tariff->limit_amount;
         $subscription->expired_at = Carbon::now()->addMonths($subscription->tariff->subscription_months);
         $subscription->saveOrFail();
 
+        $payment->subscription_id = $subscription->id;
+        $payment->saveOrFail();
+
         return $subscription;
     }
 
-    public function payForSubscription(User $user, Tariff $tariff): LoyaltyProgramPayment
+    public function cancelSubscriptionPayment(LoyaltyProgramPayment $payment): true
+    {
+        $reversePaymentDto = $this->_atmosCardClient->reversePayment($payment->external_id);
+
+        if (! $reversePaymentDto->result->isSuccess()) {
+            throw new Error($reversePaymentDto->result->description);
+        }
+
+        $payment->subscription->updateOrFail(['remaining_limit_amount' => 0, 'expired_at' => Carbon::now()]);
+        $payment->updateOrFail(['status' => PaymentStatusEnum::CANCELED]);
+
+        return true;
+    }
+
+    private function payForSubscription(User $user, Tariff $tariff): LoyaltyProgramPayment
     {
         $createPayResponseDTO = $this->_atmosCardClient->createPayment(
             $tariff->id,
@@ -95,7 +118,7 @@ class SubscriptionService
         ]);
     }
 
-    public function payForSubscriptionConfirm(LoyaltyProgramPayment $payment): true
+    private function payForSubscriptionConfirm(LoyaltyProgramPayment $payment): true
     {
         $confirmPayResponseDTO = $this->_atmosCardClient->confirmPayment($payment->external_id);
 
@@ -109,20 +132,6 @@ class SubscriptionService
         if (! $payment->save()) {
             $this->_atmosCardClient->reversePayment($payment->external_id);
         }
-
-        return true;
-    }
-
-    public function cancelSubscriptionPayment(LoyaltyProgramPayment $payment): true
-    {
-        $reversePaymentDto = $this->_atmosCardClient->reversePayment($payment->external_id);
-
-        if (! $reversePaymentDto->result->isSuccess()) {
-            throw new Error($reversePaymentDto->result->description);
-        }
-
-        $payment->subscription->updateOrFail(['remaining_limit_amount' => 0, 'expired_at' => Carbon::now()]);
-        $payment->updateOrFail(['status' => PaymentStatusEnum::CANCELED]);
 
         return true;
     }

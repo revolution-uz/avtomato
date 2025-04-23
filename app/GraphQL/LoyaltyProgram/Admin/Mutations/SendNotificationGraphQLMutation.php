@@ -7,8 +7,10 @@ use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\Notification;
 use App\Services\FirebaseService;
 use Closure;
+use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Mutation;
 
 class SendNotificationGraphQLMutation extends Mutation
@@ -43,6 +45,11 @@ class SendNotificationGraphQLMutation extends Mutation
     {
         $notification = Notification::query()->findOrFail($args['id']);
 
-        return $this->_firebaseService->sendNotification($notification);
+        try {
+            return $this->_firebaseService->sendNotification($notification);
+
+        } catch (Exception $exception) {
+            throw $exception->getCode() !== 422 ? $exception : ValidationException::withMessages(['id' => $exception->getMessage()]);
+        }
     }
 }
