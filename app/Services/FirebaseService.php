@@ -14,7 +14,7 @@ class FirebaseService
 
     public function __construct(private readonly FirebaseMessagingClient $_firebaseClient) {}
 
-    public function sendNotification(Notification $notification): true
+    public function sendNotification(Notification $notification): Notification
     {
         $prefix = ApplicationEnvironmentEnum::getFirebaseTopicPrefix();
 
@@ -33,6 +33,6 @@ class FirebaseService
 
         $notification->update(['sent_at' => Carbon::now()]);
 
-        return true;
+        return $notification;
     }
 }

@@ -7,7 +7,6 @@ use App\Models\Company\LoyaltyProgram\Shop;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -28,11 +27,7 @@ class SingleShopGraphQLQuery extends Query
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => [
-                    'required',
-                    'int',
-                    Rule::exists(Shop::class, 'id')->whereNull('deleted_at'),
-                ],
+                'rules' => ['required', 'int', 'exists:loyalty_program_shops,id,deleted_at,NULL'],
             ],
         ];
     }
