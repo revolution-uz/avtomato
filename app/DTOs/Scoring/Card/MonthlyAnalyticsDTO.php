@@ -12,7 +12,7 @@ use Spatie\LaravelData\DataCollection;
 class MonthlyAnalyticsDTO extends BaseScoringResponse
 {
     public function __construct(
-        #[WithCast(DateTimeInterfaceCast::class)]
+        #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d\TH:i:sP', 'Y-m'])]
         public Carbon $month,
         public int $full_amount,
         #[DataCollectionOf(DetailedAnalyticsInMonthDTO::class)]
