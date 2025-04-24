@@ -3,6 +3,7 @@
 namespace App\Services\LoyaltyProgram;
 
 use App\Clients\AtmosCardClient;
+use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
 use App\Enums\Company\PaymentStatusEnum;
 use App\Exceptions\GeneralException;
 use App\Models\Company\LoyaltyProgram\LoyaltyProgramPayment;
@@ -31,8 +32,8 @@ class SubscriptionService
 
         } else {
             try {
-                $payment = $this->payForSubscription($user, $tariff);
-                $this->payForSubscriptionConfirm($payment);
+                $createPayResponseDTO = $this->createPayment($tariff);
+                $payment = $this->payForSubscription($user, $createPayResponseDTO);
 
             } catch (GeneralException $e) {
                 throw new Error($e->getMessage());
@@ -43,7 +44,6 @@ class SubscriptionService
 
             $payment->subscription_id = $subscription->id;
             $payment->saveOrFail();
-
         }
 
         return $subscription->refresh();
@@ -52,8 +52,8 @@ class SubscriptionService
     public function chargeSubscription(Subscription $subscription)
     {
         try {
-            $payment = $this->payForSubscription($subscription->user, $subscription->tariff);
-            $this->payForSubscriptionConfirm($payment);
+            $createPayResponseDTO = $this->createPayment($subscription->tariff);
+            $payment = $this->payForSubscription($subscription->user, $createPayResponseDTO);
 
         } catch (GeneralException $e) {
             throw new Error($e->getMessage());
@@ -74,7 +74,7 @@ class SubscriptionService
         $reversePaymentDto = $this->_atmosCardClient->reversePayment($payment->external_id);
 
         if (! $reversePaymentDto->result->isSuccess()) {
-            throw new Error($reversePaymentDto->result->description);
+            throw new Error($reversePaymentDto->result->getDescription());
         }
 
         $payment->subscription->updateOrFail(['remaining_limit_amount' => 0, 'expired_at' => Carbon::now()]);
@@ -83,7 +83,7 @@ class SubscriptionService
         return true;
     }
 
-    private function payForSubscription(User $user, Tariff $tariff): LoyaltyProgramPayment
+    private function createPayment(Tariff $tariff): AtmosCreatePaymentResponseDTO
     {
         $createPayResponseDTO = $this->_atmosCardClient->createPayment(
             $tariff->id,
@@ -92,47 +92,48 @@ class SubscriptionService
         );
 
         if (! $createPayResponseDTO->result->isSuccess()) {
-            throw new GeneralException($createPayResponseDTO->result->description);
+            throw new GeneralException($createPayResponseDTO->result->getDescription());
         }
 
+        return $createPayResponseDTO;
+    }
+
+    private function payForSubscription(User $user, AtmosCreatePaymentResponseDTO $createPayResponseDTO): LoyaltyProgramPayment
+    {
         $card = null;
+        $confirmPayResponseDTO = null;
         foreach ($user->cards as $index => $card) {
             $preConfirmPayResponseDTO = $this->_atmosCardClient->preConfirmPayment($card->external_id, $createPayResponseDTO->transaction_id);
 
             if ($preConfirmPayResponseDTO->result->isSuccess()) {
-                break;
+                $confirmPayResponseDTO = $this->_atmosCardClient->confirmPayment($createPayResponseDTO->transaction_id);
+
+                if ($confirmPayResponseDTO->result->isSuccess()) {
+                    break;
+                }
             }
 
             if ($index === $user->cards->count() - 1) {
-                throw new GeneralException($preConfirmPayResponseDTO->result->description);
+                throw new GeneralException(
+                    $preConfirmPayResponseDTO->result->isSuccess()
+                        ? $confirmPayResponseDTO->result->getDescription()
+                        : $preConfirmPayResponseDTO->result->getDescription()
+                );
             }
         }
 
-        return LoyaltyProgramPayment::query()->create([
-            'amount' => $createPayResponseDTO->store_transaction->amount / 100,
-            'card_id' => $card->id,
-            'status' => PaymentStatusEnum::WAITING_FOR_CONFIRMATION,
-            'external_id' => $createPayResponseDTO->transaction_id,
-            'order_id' => $tariff->id,
-            'user_id' => $user->id,
-        ]);
-    }
-
-    private function payForSubscriptionConfirm(LoyaltyProgramPayment $payment): true
-    {
-        $confirmPayResponseDTO = $this->_atmosCardClient->confirmPayment($payment->external_id);
-
-        if (! $confirmPayResponseDTO->result->isSuccess()) {
-            throw new GeneralException($confirmPayResponseDTO->result->description);
-        }
-
+        $payment = new LoyaltyProgramPayment;
+        $payment->amount = $createPayResponseDTO->store_transaction->amount / 100;
         $payment->status = PaymentStatusEnum::SUCCESS;
         $payment->paid_at = Carbon::createFromTimestampMs($confirmPayResponseDTO->store_transaction->confirm_time);
+        $payment->card_id = $card->id;
+        $payment->user_id = $user->id;
+        $payment->external_id = (string) $createPayResponseDTO->transaction_id;
 
         if (! $payment->save()) {
             $this->_atmosCardClient->reversePayment($payment->external_id);
         }
 
-        return true;
+        return $payment;
     }
 }
