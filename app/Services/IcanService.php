@@ -4,13 +4,16 @@ namespace App\Services;
 
 use App\Clients\IcanClient;
 use App\DTOs\Ican\IcanCreditDTO;
+use App\DTOs\Ican\IcanMetaDTO;
 use App\DTOs\Ican\IcanTransactionDTO;
 use App\DTOs\Ican\IcanUserDocumentDataDTO;
+use App\DTOs\Ican\Request\IcanTransactionRequestDTO;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\CustomerTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
+use App\Enums\External\IcanCreditStatusEnum;
 use App\Enums\External\IcanTransactionStatusEnum;
 use App\Enums\GenderEnum;
 use App\Exceptions\GeneralException;
@@ -21,6 +24,7 @@ use App\Models\Company\Installment;
 use App\Models\Company\Tariff;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -32,14 +36,17 @@ class IcanService
 
     public function syncCredits(int $page): bool
     {
-        $icanCreditsResponseDTO = $this->icanClient->getCredits($page);
+        /**
+         * @var Collection<IcanCreditDTO>|null $credits
+         * @var IcanMetaDTO|null $meta
+         */
+        [$credits, $meta] = $this->icanClient->getCredits($page);
 
-        if (! $icanCreditsResponseDTO->isSuccess()) {
+        if (! $credits || ! $meta) {
             return false;
         }
 
-        /** @var IcanCreditDTO $credit */
-        foreach ($icanCreditsResponseDTO->data as $credit) {
+        foreach ($credits as $credit) {
             try {
                 $this->createOrUpdateInstallment($credit);
 
@@ -48,25 +55,51 @@ class IcanService
             }
         }
 
-        return $icanCreditsResponseDTO->meta->last_page > $page;
+        return $meta->last_page > $page;
     }
 
     public function syncTransactions(int $page): bool
     {
-        $icanTransactionsResponseDTO = $this->icanClient->getTransactions($page);
+        /**
+         * @var Collection<IcanTransactionDTO>|null $transactions
+         * @var IcanMetaDTO|null $meta
+         */
+        [$transactions, $meta] = $this->icanClient->getTransactions(IcanTransactionStatusEnum::SUCCESS, $page);
 
-        if (! $icanTransactionsResponseDTO->isSuccess()) {
+        if (! $transactions || ! $meta) {
             return false;
         }
 
-        /** @var IcanTransactionDTO $transactionDto */
-        foreach ($icanTransactionsResponseDTO->data as $transactionDto) {
+        foreach ($transactions as $transactionDto) {
             try {
-                // Skip if the transaction status is not SUCCESS or CANCELED
-                if (! in_array($transactionDto->status, IcanTransactionStatusEnum::values())) {
-                    continue;
+                $transaction = $this->createOrUpdateTransaction($transactionDto);
+
+                if (! $transaction->wasRecentlyCreated) {
+                    return false;
                 }
 
+            } catch (Throwable $e) {
+                Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
+            }
+        }
+
+        return $meta->last_page > $page;
+    }
+
+    public function syncCanceledTransactions(int $page): bool
+    {
+        /**
+         * @var Collection<IcanTransactionDTO>|null $transactions
+         * @var IcanMetaDTO|null $meta
+         */
+        [$transactions, $meta] = $this->icanClient->getTransactions(IcanTransactionStatusEnum::CANCELED, $page);
+
+        if (! $transactions || ! $meta) {
+            return false;
+        }
+
+        foreach ($transactions as $transactionDto) {
+            try {
                 $this->createOrUpdateTransaction($transactionDto);
 
             } catch (Throwable $e) {
@@ -74,7 +107,25 @@ class IcanService
             }
         }
 
-        return $icanTransactionsResponseDTO->meta->last_page > $page;
+        return $meta->last_page > $page;
+    }
+
+    public function getInstallmentDebtAmount(int $ican_id): ?float
+    {
+        $icanCreditDto = $this->icanClient->getSingleCredit($ican_id);
+
+        return $icanCreditDto->overdue_debt;
+    }
+
+    public function createTransaction(Transaction $transaction): ?IcanTransactionDTO
+    {
+        $dto = IcanTransactionRequestDTO::from([
+            'credit_id' => $transaction->installment->ican_id,
+            'amount' => $transaction->amount,
+            'employee_id' => $this->getEmployeeId(),
+        ]);
+
+        return $this->icanClient->createTransaction($dto);
     }
 
     private function createOrGetTariff(IcanCreditDTO $credit): Tariff
@@ -130,7 +181,14 @@ class IcanService
             'sms_notify' => false,
             'any_card_charge' => false,
             'is_blacklist' => false,
-            'status' => InstallmentStatusEnum::ACTIVE,
+            'status' => match ($credit->status) {
+                IcanCreditStatusEnum::CANCELED->value => InstallmentStatusEnum::CANCELED,
+                IcanCreditStatusEnum::ACTIVE->value => InstallmentStatusEnum::ACTIVE,
+                IcanCreditStatusEnum::WAITING_FOR_CONFIRMATION->value => InstallmentStatusEnum::INACTIVE,
+                IcanCreditStatusEnum::WAITING_FOR_INITIAL_PAYMENT->value => InstallmentStatusEnum::INACTIVE,
+                IcanCreditStatusEnum::COMPLETED->value => InstallmentStatusEnum::CLOSED,
+                default => new GeneralException('Invalid credit status'),
+            },
             'period' => $credit->period,
             'canceled_at' => $credit->canceled_at,
             'cancellation_details' => $credit->cancel_reason,
@@ -168,10 +226,31 @@ class IcanService
             },
         ]);
 
-        if (! $transaction->exists || $transaction->isDirty('status')) {
+        if (! $transaction->exists || $transaction->isDirty()) {
             $transaction->saveQuietly();
         }
 
         return $transaction;
+    }
+
+    private function getEmployeeId()
+    {
+        $employeeId = CompanySettings::getConfig(CompanySettingsEnum::ICAN_EMPLOYEE_ID);
+
+        if (empty($employeeId)) {
+            $icanProfileDto = $this->icanClient->getProfile();
+
+            if (! $icanProfileDto) {
+                throw new GeneralException('Could not get Ican profile');
+            }
+
+            $employeeId = $icanProfileDto->id;
+
+            CompanySettings::query()
+                ->where('name', CompanySettingsEnum::ICAN_EMPLOYEE_ID)
+                ->update(['value' => $employeeId]);
+        }
+
+        return $employeeId;
     }
 }

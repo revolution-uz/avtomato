@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\External\IcanTransactionStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Jobs\SyncIcanTransactionsJob;
 use App\Models\Company;
@@ -40,7 +41,7 @@ class PopulateSyncIcanTransactionJobs extends Command
                 continue;
             }
 
-            SyncIcanTransactionsJob::dispatch();
+            SyncIcanTransactionsJob::dispatch(IcanTransactionStatusEnum::SUCCESS);
         }
 
         return CommandAlias::SUCCESS;
