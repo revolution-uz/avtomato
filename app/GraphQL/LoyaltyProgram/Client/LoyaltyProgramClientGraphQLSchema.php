@@ -5,6 +5,7 @@ namespace App\GraphQL\LoyaltyProgram\Client;
 use App\GraphQL\Customer\Types\AttachCardDataGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\LoyaltyProgramImageGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ProductGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\ShopGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\TariffGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\AttachCardGraphQLMutation;
@@ -27,7 +28,6 @@ use App\GraphQL\LoyaltyProgram\Client\Types\NotificationGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\OrderGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\OrderItemGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
-use App\GraphQL\LoyaltyProgram\Client\Types\ShopGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
