@@ -17,7 +17,7 @@ class CompleteOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_id' => 'required|integer|exists:loyalty_program_orders,id',
+            'order_id' => ['required', 'integer', 'exists:loyalty_program_orders,id,deleted_at,NULL'],
         ];
     }
 }

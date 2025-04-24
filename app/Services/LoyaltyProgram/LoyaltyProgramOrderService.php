@@ -40,7 +40,7 @@ class LoyaltyProgramOrderService
 
             DB::commit();
 
-            return new OrderResource($order);
+            return new OrderResource($order->refresh());
 
         } catch (Exception $e) {
             DB::rollBack();
