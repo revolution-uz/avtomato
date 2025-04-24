@@ -26,7 +26,7 @@ class SubscriptionService
         $subscription->tariff_id = $tariff->id;
         $subscription->remaining_limit_amount = $tariff->limit_amount;
 
-        if ($tariff->free_months !== 0 && ($user->subscriptions()->count() == 0 && $tariff->is_free_for_previous_subscribers)) {
+        if ($tariff->free_months !== 0 && ($user->subscriptions()->count() == 0 || $tariff->is_free_for_previous_subscribers)) {
             $subscription->expired_at = Carbon::now()->addMonths($tariff->free_months);
             $subscription->saveOrFail();
 
