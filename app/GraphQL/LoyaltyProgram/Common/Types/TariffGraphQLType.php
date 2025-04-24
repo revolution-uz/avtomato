@@ -35,13 +35,13 @@ class TariffGraphQLType extends GraphQLType
                 'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Tariff $root) => $root->amount,
             ],
-            'free_months' => [
+            'free_days' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Tariff $root) => $root->free_months,
+                'resolve' => fn (Tariff $root) => $root->free_days,
             ],
-            'subscription_months' => [
+            'subscription_days' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Tariff $root) => $root->subscription_months,
+                'resolve' => fn (Tariff $root) => $root->subscription_days,
             ],
             'is_free_for_previous_subscribers' => [
                 'type' => Type::nonNull(Type::boolean()),
