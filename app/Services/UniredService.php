@@ -244,7 +244,7 @@ class UniredService
         $transaction->card_pan = $request->card['pan'] ?? '****';
         $transaction->paid_at = Carbon::parse($request->created_at);
 
-        return $transaction->save();
+        return $transaction->saveOrFail();
     }
 
     public function updatePinflCardsList(Customer $customer): bool
