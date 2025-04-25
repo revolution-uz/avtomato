@@ -2,12 +2,12 @@
 
 namespace App\GraphQL\LoyaltyProgram\Common\Mutations;
 
+use App\Enums\Company\LoyaltyProgramm\CanLoginTypeEnum;
 use App\Exceptions\GeneralException;
 use App\Rules\PhoneRule;
 use App\Services\ConfirmationService;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Mutation;
-use Throwable;
 
 class CanLoginGraphQLMutation extends Mutation
 {
@@ -38,10 +38,11 @@ class CanLoginGraphQLMutation extends Mutation
      */
     public function resolve($root, $args): int
     {
-        try {
-            return $this->confirmationService->canLoginIntoLoyaltyProgram($args['phone'], request()->header('Device-Name'))->value;
-        } catch (Throwable $e) {
-            throw new GeneralException($e->getMessage());
+        $deviceName = request()->header('Device-Name');
+        if (empty($deviceName)) {
+            return CanLoginTypeEnum::CANNOT_LOGIN->value;
         }
+
+        return $this->confirmationService->canLoginIntoLoyaltyProgram($args['phone'], $deviceName)->value;
     }
 }

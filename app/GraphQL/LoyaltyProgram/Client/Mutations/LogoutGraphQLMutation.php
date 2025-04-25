@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\LoyaltyProgram\Client\Mutations;
 
-use App\Models\Company\PersonalAccessToken;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -28,12 +27,8 @@ class LogoutGraphQLMutation extends Mutation
     /**
      * @throws AuthorizationError
      */
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): bool
     {
-        /** @var PersonalAccessToken $personalAccessToken */
-        $personalAccessToken = auth('loyalty-program-client')->user()->currentAccessToken();
-        $personalAccessToken->revokeAccessToken();
-
-        return true;
+        return auth('loyalty-program-client')->user()->currentAccessToken()->delete();
     }
 }
