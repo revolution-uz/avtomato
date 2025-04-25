@@ -47,6 +47,7 @@ class TariffsGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return Tariff::query()
+            ->where('is_active', true)
             ->when(isset($args['search']), fn (Builder $q) => $q
                 ->where('name_uz', 'ILIKE', "%{$args['search']}%")
                 ->orWhere('name_ru', 'ILIKE', "%{$args['search']}%"))

@@ -4,9 +4,11 @@ namespace App\Models\Company\LoyaltyProgram;
 
 use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
 use App\Models\Company\OrderBySortable;
+use App\Models\Company\PersonalAccessToken;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
@@ -77,6 +79,11 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function tokens(): MorphMany
+    {
+        return $this->morphMany(PersonalAccessToken::class, 'tokenable');
+    }
+
     public function createTokenWithData(string $deviceName, array $data = []): string
     {
         $this->tokens()->delete();
@@ -89,10 +96,11 @@ class User extends Authenticatable
     public function getSuccessLoginAttempts(string $deviceName, int $last_time): int
     {
         return $this->tokens()
+            ->withTrashed()
             ->where('created_at', '>', now()->subSeconds($last_time))
             ->where('expires_at', '>', now())
-            ->where('name', '!=', $deviceName)
-            ->count('id');
+            ->whereNot('name', $deviceName)
+            ->count();
     }
 
     public function getQrAttribute(): array

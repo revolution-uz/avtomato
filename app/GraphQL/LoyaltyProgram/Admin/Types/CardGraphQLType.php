@@ -3,6 +3,7 @@
 namespace App\GraphQL\LoyaltyProgram\Admin\Types;
 
 use App\GraphQL\GraphQLTypeHelper;
+use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\LoyaltyProgram\Card;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -25,9 +26,13 @@ class CardGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Card $root) => $root->id,
             ],
-            'pan' => [
-                'type' => Type::nonNull(Type::string()),
+            'number' => [
+                'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (Card $root) => $root->pan,
+            ],
+            'expiry' => [
+                'type' => Type::nonNull(Type::string()),
+                'resolve' => fn (Card $root) => $root->expiry,
             ],
             'owner' => [
                 'type' => Type::string(),
@@ -40,6 +45,10 @@ class CardGraphQLType extends GraphQLType
             'status' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Card $root) => $root->status->value,
+            ],
+            'balance' => [
+                'type' => Type::float(),
+                'resolve' => fn (Card $root) => $root->balance,
             ],
             'user_id' => [
                 'type' => Type::nonNull(Type::int()),
