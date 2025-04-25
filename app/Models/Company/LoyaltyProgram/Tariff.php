@@ -14,8 +14,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_uz
  * @property string $name_ru
  * @property int $amount
- * @property int $free_months
- * @property int $subscription_months
+ * @property int $free_days
+ * @property int $subscription_days
  * @property bool $is_free_for_previous_subscribers
  * @property int $limit_amount
  * @property bool $is_active
@@ -35,8 +35,8 @@ class Tariff extends Model
         'name_uz',
         'name_ru',
         'amount',
-        'free_months',
-        'subscription_months',
+        'free_days',
+        'subscription_days',
         'is_free_for_previous_subscribers',
         'limit_amount',
         'is_active',

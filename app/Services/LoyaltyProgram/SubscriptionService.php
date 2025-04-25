@@ -26,8 +26,8 @@ class SubscriptionService
         $subscription->tariff_id = $tariff->id;
         $subscription->remaining_limit_amount = $tariff->limit_amount;
 
-        if ($tariff->free_months !== 0 && ($user->subscriptions()->count() == 0 || $tariff->is_free_for_previous_subscribers)) {
-            $subscription->expired_at = Carbon::now()->addMonths($tariff->free_months);
+        if ($tariff->free_days !== 0 && ($user->subscriptions()->count() == 0 || $tariff->is_free_for_previous_subscribers)) {
+            $subscription->expired_at = Carbon::now()->addDays($tariff->free_days);
             $subscription->saveOrFail();
 
         } else {
@@ -39,7 +39,7 @@ class SubscriptionService
                 throw new Error($e->getMessage());
             }
 
-            $subscription->expired_at = Carbon::now()->addMonths($tariff->subscription_months);
+            $subscription->expired_at = Carbon::now()->addDays($tariff->subscription_days);
             $subscription->saveOrFail();
 
             $payment->subscription_id = $subscription->id;
@@ -60,7 +60,7 @@ class SubscriptionService
         }
 
         $subscription->remaining_limit_amount = $subscription->tariff->limit_amount;
-        $subscription->expired_at = Carbon::now()->addMonths($subscription->tariff->subscription_months);
+        $subscription->expired_at = Carbon::now()->addDays($subscription->tariff->subscription_days);
         $subscription->saveOrFail();
 
         $payment->subscription_id = $subscription->id;

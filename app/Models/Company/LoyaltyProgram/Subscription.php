@@ -75,7 +75,7 @@ class Subscription extends Model
     {
         $this->is_active = true;
         $this->remaining_limit_amount = $this->tariff->limit_amount;
-        $this->expired_at = Carbon::now()->addMonths($this->tariff->subscription_months);
+        $this->expired_at = Carbon::now()->addDays($this->tariff->subscription_days);
         $this->saveOrFail();
     }
 }

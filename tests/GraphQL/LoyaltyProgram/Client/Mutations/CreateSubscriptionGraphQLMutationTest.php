@@ -33,8 +33,8 @@ class CreateSubscriptionGraphQLMutationTest extends GraphQLTestCase
             'name_uz',
             'name_ru',
             'amount',
-            'free_months',
-            'subscription_months',
+            'free_days',
+            'subscription_days',
             'is_free_for_previous_subscribers',
             'limit_amount',
             'is_active',
@@ -61,7 +61,7 @@ class CreateSubscriptionGraphQLMutationTest extends GraphQLTestCase
 
         $this->_activeUser = $this->createLoyaltyProgramClientUser();
         Card::factory()->create(['user_id' => $this->_activeUser->id, 'status' => CardStatusEnum::ACTIVE]);
-        $this->_activeTariff = Tariff::factory()->create(['is_active' => true, 'free_months' => 1]);
+        $this->_activeTariff = Tariff::factory()->create(['is_active' => true, 'free_days' => 1]);
         Subscription::query()->forceDelete();
     }
 
@@ -158,8 +158,8 @@ class CreateSubscriptionGraphQLMutationTest extends GraphQLTestCase
         $this->assertEquals($subscription->tariff->name_uz, $response->json('data.createSubscription.tariff.name_uz'));
         $this->assertEquals($subscription->tariff->name_ru, $response->json('data.createSubscription.tariff.name_ru'));
         $this->assertEquals($subscription->tariff->amount, $response->json('data.createSubscription.tariff.amount'));
-        $this->assertEquals($subscription->tariff->free_months, $response->json('data.createSubscription.tariff.free_months'));
-        $this->assertEquals($subscription->tariff->subscription_months, $response->json('data.createSubscription.tariff.subscription_months'));
+        $this->assertEquals($subscription->tariff->free_days, $response->json('data.createSubscription.tariff.free_days'));
+        $this->assertEquals($subscription->tariff->subscription_days, $response->json('data.createSubscription.tariff.subscription_days'));
         $this->assertEquals($subscription->tariff->is_free_for_previous_subscribers, $response->json('data.createSubscription.tariff.is_free_for_previous_subscribers'));
         $this->assertEquals($subscription->tariff->limit_amount, $response->json('data.createSubscription.tariff.limit_amount'));
         $this->assertEquals($subscription->tariff->is_active, $response->json('data.createSubscription.tariff.is_active'));

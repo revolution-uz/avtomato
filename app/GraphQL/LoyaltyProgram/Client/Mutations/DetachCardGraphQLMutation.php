@@ -19,7 +19,6 @@ class DetachCardGraphQLMutation extends Mutation
     {
         return [
             'ids' => [
-                'name' => 'ids',
                 'type' => Type::nonNull(Type::listOf(Type::nonNull(Type::int()))),
                 'rules' => [
                     'required',
