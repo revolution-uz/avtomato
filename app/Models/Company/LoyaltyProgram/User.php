@@ -55,8 +55,8 @@ class User extends Authenticatable
         if (count($qrDto) !== 2 || $qrDto[1] < now()->timestamp) {
             throw new Exception('Invalid QR code');
         }
-        $qrId = $qrDto[0];
-        $timestamp = $qrDto[1];
+        $qrId = (int) $qrDto[0];
+        $timestamp = (int) $qrDto[1];
         $userId = $qrId ^ $timestamp ^ tenant('id');
 
         return static::query()->findOrFail($userId);
