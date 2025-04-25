@@ -99,7 +99,7 @@ class User extends Authenticatable
             ->withTrashed()
             ->where('created_at', '>', now()->subSeconds($last_time))
             ->where('expires_at', '>', now())
-            ->whereNone('name', $deviceName)
+            ->whereNot('name', $deviceName)
             ->count();
     }
 
