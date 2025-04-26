@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Enums\Company\LoyaltyProgramm;
+namespace App\Enums\Company\LoyaltyProgram;
 
-enum OrderPaymentStatusEnum: int
+enum OrderStatusEnum: int
 {
     case PENDING = 0;
     case COMPLETED = 1;
-    case FAILED = 2;
+    case CANCELED = 2;
     case REFUNDED = 3;
 
     public function label(): string
@@ -14,7 +14,7 @@ enum OrderPaymentStatusEnum: int
         return match ($this) {
             self::PENDING => 'Pending',
             self::COMPLETED => 'Completed',
-            self::FAILED => 'Failed',
+            self::CANCELED => 'Canceled',
             self::REFUNDED => 'Refunded',
         };
     }

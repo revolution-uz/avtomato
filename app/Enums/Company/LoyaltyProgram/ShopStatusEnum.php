@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums\Company\LoyaltyProgramm;
+namespace App\Enums\Company\LoyaltyProgram;
 
 use App\Enums\EnumMethods;
 

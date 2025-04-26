@@ -2,7 +2,7 @@
 
 namespace App\Services\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
+use App\Enums\Company\LoyaltyProgram\OrderStatusEnum;
 use App\Http\Resources\OrderResource;
 use App\Models\Company\LoyaltyProgram\Item;
 use App\Models\Company\LoyaltyProgram\Order;

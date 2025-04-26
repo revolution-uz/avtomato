@@ -2,7 +2,7 @@
 
 namespace Database\Factories\Company\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgramm\OrderPaymentStatusEnum;
+use App\Enums\Company\LoyaltyProgram\OrderPaymentStatusEnum;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\LoyaltyProgram\Order;
 use App\Models\Company\LoyaltyProgram\OrderPayment;

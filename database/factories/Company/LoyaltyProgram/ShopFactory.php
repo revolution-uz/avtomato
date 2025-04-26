@@ -2,7 +2,7 @@
 
 namespace Database\Factories\Company\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
+use App\Enums\Company\LoyaltyProgram\ShopStatusEnum;
 use App\Models\Company\LoyaltyProgram\Shop;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

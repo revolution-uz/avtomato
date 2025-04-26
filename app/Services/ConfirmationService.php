@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\Company\LoyaltyProgramm\CanLoginTypeEnum;
+use App\Enums\Company\LoyaltyProgram\CanLoginTypeEnum;
 use App\Enums\Company\SmsTemplateEnum;
 use App\Helpers\Utilities;
 use App\Models\Company\CardConfirmationSms;

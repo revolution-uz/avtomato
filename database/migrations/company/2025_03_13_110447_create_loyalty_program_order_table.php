@@ -1,7 +1,7 @@
 <?php
 
-use App\Enums\Company\LoyaltyProgramm\OrderPaymentStatusEnum;
-use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
+use App\Enums\Company\LoyaltyProgram\OrderPaymentStatusEnum;
+use App\Enums\Company\LoyaltyProgram\OrderStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
