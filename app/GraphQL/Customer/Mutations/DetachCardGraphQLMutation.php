@@ -52,7 +52,7 @@ class DetachCardGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARD_EDIT);
+        return RbacHelper::checkPermission(PermissionEnum::CUSTOMER_CARD_DETACH);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
