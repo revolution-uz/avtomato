@@ -15,10 +15,7 @@ class AuthUnired
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->header('Authorization', '');
-        $uniaccess_token = $this->getStaticToken();
-        $berear_uniaccess_token = 'Bearer ' . $uniaccess_token;
-        if ($token != $this->getStaticToken() && $token != $berear_uniaccess_token) {
+        if ($request->bearerToken() !== $this->getStaticToken()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
