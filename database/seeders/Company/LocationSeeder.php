@@ -9,6 +9,7 @@ use App\Models\Company\Mahalla;
 use App\Models\Company\Region;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class LocationSeeder extends Seeder
@@ -20,15 +21,21 @@ class LocationSeeder extends Seeder
 
     public function run(): void
     {
-        if (! File::exists(database_path('seeders/data/regions.csv'))
-            || ! File::exists(database_path('seeders/data/districts.csv'))
-            || ! File::exists(database_path('seeders/data/mahallas.csv'))) {
-            $this->regenerateCsvFiles();
-        }
+        try {
+            if (! File::exists(database_path('seeders/data/regions.csv'))
+                || ! File::exists(database_path('seeders/data/districts.csv'))
+                || ! File::exists(database_path('seeders/data/mahallas.csv'))) {
+                $this->regenerateCsvFiles();
+            }
 
-        $this->createOrUpdateRegions();
-        $this->createOrUpdateDistricts();
-        $this->createOrUpdateMahallas();
+            $this->createOrUpdateRegions();
+            $this->createOrUpdateDistricts();
+            $this->createOrUpdateMahallas();
+
+        } catch (Throwable $e) {
+            $this->command->error('Error: ' . $e->getMessage());
+            Log::error($e->getMessage());
+        }
     }
 
     private function createOrUpdateRegions(): void
