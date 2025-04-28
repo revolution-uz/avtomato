@@ -38,6 +38,10 @@ class RoleGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Role $root) => $root->updated_at->timestamp,
             ],
+            'deleted_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (Role $root) => $root->deleted_at?->timestamp,
+            ],
             'permission_groups' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(PermissionGroupGraphQLType::GRAPHQL_TYPE_NAME))),
                 'resolve' => fn (Role $root) => $root->mapAllPermissionByBranch(),
