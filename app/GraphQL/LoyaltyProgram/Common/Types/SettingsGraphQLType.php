@@ -41,7 +41,7 @@ class SettingsGraphQLType extends GraphQLType
                     ?->value ?: null,
             ],
             'app_min_version' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (Collection $root) => $root
                     ->first(fn (CompanySettings $settings) => $settings->name === CompanySettingsEnum::LOYALTY_PROGRAM_APP_MIN_VERSION)
                     ?->value ?: 1,

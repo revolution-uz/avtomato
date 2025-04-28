@@ -46,7 +46,6 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_BALANCE_LIMIT,
             self::ICAN_BRANCH_ID,
             self::ICAN_EMPLOYEE_ID,
-            self::LOYALTY_PROGRAM_APP_MIN_VERSION,
             self::LOYALTY_PROGRAM_UPDATE_TYPE => SettingsTypeEnum::INT,
 
             self::SMS_INSTALLMENT_AUTO_CHARGE,
@@ -59,7 +58,8 @@ enum CompanySettingsEnum: string
             self::TELEGRAM_BOT_TOKEN,
             self::TELEGRAM_CHAT_ID,
             self::LOYALTY_PROGRAM_SUPPORT_BOT_USERNAME,
-            self::LOYALTY_PROGRAM_SUPPORT_PHONE => SettingsTypeEnum::STRING,
+            self::LOYALTY_PROGRAM_SUPPORT_PHONE,
+            self::LOYALTY_PROGRAM_APP_MIN_VERSION => SettingsTypeEnum::STRING,
 
             self::LOYALTY_PROGRAM_FIREBASE_PATH => SettingsTypeEnum::FILE,
         };
