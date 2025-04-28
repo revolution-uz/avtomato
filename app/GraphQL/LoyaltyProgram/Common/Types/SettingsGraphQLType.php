@@ -52,6 +52,14 @@ class SettingsGraphQLType extends GraphQLType
                     ->first(fn (CompanySettings $settings) => $settings->name === CompanySettingsEnum::LOYALTY_PROGRAM_UPDATE_TYPE)
                     ?->value ?: 1,
             ],
+            'instruction_video_path' => [
+                'type' => Type::string(),
+                'resolve' => function (Collection $root) {
+                    $path = $root->first(fn (CompanySettings $settings) => $settings->name === CompanySettingsEnum::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH);
+
+                    return ! empty($path->value) ? asset($path->value) : null;
+                },
+            ],
         ];
     }
 }

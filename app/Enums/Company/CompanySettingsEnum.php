@@ -31,6 +31,7 @@ enum CompanySettingsEnum: string
     case LOYALTY_PROGRAM_SUPPORT_PHONE = 'lp_support_phone';
     case LOYALTY_PROGRAM_APP_MIN_VERSION = 'lp_app_min_version';
     case LOYALTY_PROGRAM_UPDATE_TYPE = 'lp_update_type';
+    case LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH = 'lp_instruction_video_path';
 
     // ICAN settings
     case ICAN_BRANCH_ID = 'ican_branch_id';
@@ -61,7 +62,8 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_SUPPORT_PHONE,
             self::LOYALTY_PROGRAM_APP_MIN_VERSION => SettingsTypeEnum::STRING,
 
-            self::LOYALTY_PROGRAM_FIREBASE_PATH => SettingsTypeEnum::FILE,
+            self::LOYALTY_PROGRAM_FIREBASE_PATH,
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => SettingsTypeEnum::FILE,
         };
     }
 
@@ -81,7 +83,8 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_FIREBASE_PATH,
             self::ICAN_EMPLOYEE_ID,
             self::LOYALTY_PROGRAM_SUPPORT_BOT_USERNAME,
-            self::LOYALTY_PROGRAM_SUPPORT_PHONE => '',
+            self::LOYALTY_PROGRAM_SUPPORT_PHONE,
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => '',
         };
     }
 
@@ -130,6 +133,7 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_SUPPORT_PHONE => __('settings.loyalty_program_support_phone'),
             self::LOYALTY_PROGRAM_APP_MIN_VERSION => __('settings.loyalty_program_app_min_version'),
             self::LOYALTY_PROGRAM_UPDATE_TYPE => __('settings.loyalty_program_update_type'),
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => __('settings.loyalty_program_instruction_video_path'),
         };
     }
 }
