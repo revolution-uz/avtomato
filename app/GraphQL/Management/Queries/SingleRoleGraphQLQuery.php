@@ -27,9 +27,8 @@ class SingleRoleGraphQLQuery extends Query
     {
         return [
             'id' => [
-                'name' => 'id',
-                'type' => Type::int(),
-                'rules' => ['required', 'exists:roles,id'],
+                'type' => Type::nonNull(Type::int()),
+                'rules' => ['required', 'int', 'exists:roles,id,deleted_at,NULL'],
             ],
         ];
     }

@@ -50,10 +50,10 @@ class Module extends Model
         self::updating(function (Module $model) {
             if ($model->isDirty('is_active')) {
                 if ($model->is_active) {
-                    Feature::query()->whereIn('name', $model->features->pluck('id'))->update(['is_active' => true]);
+                    Feature::query()->whereIn('id', $model->features->pluck('id'))->update(['is_active' => true]);
                 } else {
                     Feature::query()
-                        ->whereIn('name', $model->features->pluck('id'))
+                        ->whereIn('id', $model->features->pluck('id'))
                         ->whereHas('modules', fn ($q) => $q->where('is_active', true), '=', 1)
                         ->update(['is_active' => false]);
                 }
