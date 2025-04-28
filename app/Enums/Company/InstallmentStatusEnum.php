@@ -2,7 +2,6 @@
 
 namespace App\Enums\Company;
 
-use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\EnumMethods;
 
 enum InstallmentStatusEnum: int
@@ -27,21 +26,6 @@ enum InstallmentStatusEnum: int
             self::CANCELED,
             self::CLOSED => [],
             default => [self::CANCELED],
-        };
-    }
-
-    public static function getPermissions(self|int|null $status): ?PermissionEnum
-    {
-        if (! $status instanceof self) {
-            $status = self::tryFrom($status);
-        }
-
-        return match ($status) {
-            self::ACTIVE => PermissionEnum::INSTALLMENT_START,
-            self::CANCELED => PermissionEnum::INSTALLMENT_CANCEL,
-            self::FROZEN => PermissionEnum::INSTALLMENT_FREEZE,
-            self::CLOSED => PermissionEnum::INSTALLMENT_FINISH,
-            default => null,
         };
     }
 
