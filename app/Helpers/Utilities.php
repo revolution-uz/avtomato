@@ -14,7 +14,7 @@ class Utilities
 
     const PINFL_CARD_UPDATE_MONTHS = 3; //3 month to update cards
     const PINFL_CARD_UPDATE_REFRESH_DAYS = 5; //5 days to refresh cards
-    const LOYALTY_USER_MAX_SESSIONS = 2;
+    const LOYALTY_USER_MAX_SESSIONS = 1;
     const A_MONTH = 2592000;
 
     public static function getTimestampsOfMonthOfThisYear()

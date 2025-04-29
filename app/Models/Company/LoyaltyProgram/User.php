@@ -22,6 +22,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $first_name
  * @property string|null $last_name
  * @property Carbon|null $birth_date
+ * @property string|null $main_device
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -45,6 +46,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'birth_date',
+        'main_device',
     ];
 
     protected $casts = [
@@ -93,13 +95,13 @@ class User extends Authenticatable
         return $token->plainTextToken;
     }
 
-    public function getSuccessLoginAttempts(string $deviceName, int $last_time): int
+    public function getSuccessLoginAttempts(int $last_time): int
     {
         return $this->tokens()
             ->withTrashed()
             ->where('created_at', '>', now()->subSeconds($last_time))
             ->where('expires_at', '>', now())
-            ->whereNot('name', $deviceName)
+            ->whereNot('name', $this->main_device)
             ->count();
     }
 
