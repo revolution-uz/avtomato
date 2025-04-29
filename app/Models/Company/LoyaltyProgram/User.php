@@ -2,7 +2,7 @@
 
 namespace App\Models\Company\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
+use App\Enums\Company\LoyaltyProgram\OrderStatusEnum;
 use App\Models\Company\OrderBySortable;
 use App\Models\Company\PersonalAccessToken;
 use Exception;

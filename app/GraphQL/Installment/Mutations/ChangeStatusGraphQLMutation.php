@@ -28,7 +28,7 @@ class ChangeStatusGraphQLMutation extends Mutation
 
     public function args(): array
     {
-        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_ATTACH_CARD);
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_EDIT);
 
         return [
             'installment_id' => [

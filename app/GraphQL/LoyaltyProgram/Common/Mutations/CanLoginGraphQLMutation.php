@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Common\Mutations;
 
-use App\Enums\Company\LoyaltyProgramm\CanLoginTypeEnum;
+use App\Enums\Company\LoyaltyProgram\CanLoginTypeEnum;
 use App\Exceptions\GeneralException;
 use App\Rules\PhoneRule;
 use App\Services\ConfirmationService;
