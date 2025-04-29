@@ -27,6 +27,7 @@ use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\NotificationGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\OrderGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\OrderItemGraphQLType;
+use App\GraphQL\LoyaltyProgram\Client\Types\ProfileGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\TariffGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
@@ -62,7 +63,6 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
                 CardGraphQLType::class,
                 TariffGraphQLType::class,
                 AttachCardGraphQLType::class,
-                CardGraphQLType::class,
                 AttachCardDataGraphQLType::class,
                 QrGraphQLType::class,
                 OrderGraphQLType::class,
@@ -71,6 +71,7 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
                 NotificationGraphQLType::class,
                 ShopGraphQLType::class,
                 LoyaltyProgramImageGraphQLType::class,
+                ProfileGraphQLType::class,
             ],
             'middleware' => ['auth:loyalty-program-client', 'is_soft_delete_loyalty_program_client_token', 'loyalty_program'],
         ];
