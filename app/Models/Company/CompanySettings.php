@@ -62,10 +62,15 @@ class CompanySettings extends Model
         self::updating(function (self $model) {
             if ($model->isDirty('value') && $model->type === SettingsTypeEnum::FILE) {
                 $originalValue = $model->getOriginal('value');
-                if ($model->getAttributeValue('value') === null) {
-                    $model->setAttribute('value', '');
-                } elseif ($originalValue && Storage::disk('local')->exists($originalValue)) {
-                    Storage::disk('local')->delete($originalValue);
+                $newValue = $model->getAttributeValue('value') ?? '';
+
+                if ($newValue === '') {
+                    $model->setAttribute('value', $newValue);
+                } elseif ($originalValue) {
+                    $disk = $model->name === CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH ? 'local' : 'public';
+                    if (Storage::disk($disk)->exists($originalValue)) {
+                        Storage::disk($disk)->delete($originalValue);
+                    }
                 }
             }
         });

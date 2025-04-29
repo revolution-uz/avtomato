@@ -2,10 +2,10 @@
 
 namespace App\Nova\Company;
 
+use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Main\SettingsTypeEnum;
 use App\Models\Company\CompanySettings;
 use App\Nova\Resource;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -60,7 +60,7 @@ class CompanySettingsResource extends Resource
     {
         $response = [
             ID::make('Id')->sortable(),
-            Text::make('Name')->exceptOnForms(),
+            Text::make('Name')->displayUsing(fn () => $this->name->getLabel())->exceptOnForms(),
             Text::make('Description')->exceptOnForms(),
             Select::make('Type')->options(SettingsTypeEnum::getAllTypesForDropdown())->displayUsingLabels()->exceptOnForms(),
         ];
@@ -72,9 +72,16 @@ class CompanySettingsResource extends Resource
             SettingsTypeEnum::TEXT => Textarea::make('Value')->rules(['required', 'max:2014']),
             SettingsTypeEnum::DATETIME => DateTime::make('Value')->rules(['required', 'datetime']),
             SettingsTypeEnum::DATE => DateTime::make('Value')->rules(['required', 'date']),
-            SettingsTypeEnum::FILE => $request->isResourceIndexRequest() ?
-                Boolean::make('Value') :
-                File::make('Value')->rules(['mimes:json', 'max:100'])->disk('local')->path('credentials'),
+            SettingsTypeEnum::FILE => $request->isResourceIndexRequest()
+                ? Boolean::make('Value')
+                : File::make('Value')
+                    ->rules([
+                        'required',
+                        $this->name === CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH ? 'mimes:json' : 'mimes:mp4,avi,mov,mkv',
+                        $this->name === CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH ? 'max:100' : 'max:51200',
+                    ])
+                    ->disk($this->name === CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH ? 'local' : 'public')
+                    ->path($this->name === CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH ? 'credentials' : 'uploads/loyalty_program'),
             SettingsTypeEnum::STRING, null => Text::make('Value')->rules(['required', 'max:255']),
         };
 

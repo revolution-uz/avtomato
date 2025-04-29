@@ -109,7 +109,7 @@ class ChangeStatusGraphQLMutationTest extends GraphQLTestCase
     {
         $role = Role::factory()->create();
         $simpleAdmin = $this->createSimpleAdminUser($role->id);
-        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_ATTACH_CARD)->firstOrFail();
+        $permission = Permission::query()->where('slug', PermissionEnum::INSTALLMENT_EDIT)->firstOrFail();
 
         $branches = Branch::factory()->count(2)->create();
         $installment = Installment::factory()->create(['branch_id' => $branches[1]->id, 'status' => InstallmentStatusEnum::ACTIVE]);
