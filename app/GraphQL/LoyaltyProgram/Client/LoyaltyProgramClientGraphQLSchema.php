@@ -7,6 +7,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Mutations\LoyaltyProgramImageGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ProductGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\ShopGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\TariffGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\AttachCardGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\CancelSubscriptionGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\ConfirmCardGraphQLMutation;
@@ -22,6 +23,7 @@ use App\GraphQL\LoyaltyProgram\Client\Queries\ShopsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\SingleNotificationGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\SingleOrderGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Client\Queries\SingleShopGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Client\Types\ActiveTariffGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\AttachCardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\NotificationGraphQLType;
@@ -29,7 +31,6 @@ use App\GraphQL\LoyaltyProgram\Client\Types\OrderGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\OrderItemGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\ProfileGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
-use App\GraphQL\LoyaltyProgram\Client\Types\TariffGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
 
@@ -62,6 +63,7 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
                 SubscriptionGraphQLType::class,
                 CardGraphQLType::class,
                 TariffGraphQLType::class,
+                ActiveTariffGraphQLType::class,
                 AttachCardGraphQLType::class,
                 AttachCardDataGraphQLType::class,
                 QrGraphQLType::class,

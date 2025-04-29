@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Client\Queries;
 
-use App\GraphQL\LoyaltyProgram\Client\Types\TariffGraphQLType;
+use App\GraphQL\LoyaltyProgram\Client\Types\ActiveTariffGraphQLType;
 use App\Models\Company\LoyaltyProgram\Tariff;
 use Closure;
 use GraphQL\Error\Error;
@@ -19,7 +19,7 @@ class ActiveTariffGraphQLQuery extends Query
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(TariffGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(ActiveTariffGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array

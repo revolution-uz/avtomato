@@ -8,9 +8,9 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class TariffGraphQLType extends GraphQLType
+class ActiveTariffGraphQLType extends GraphQLType
 {
-    public const string GRAPHQL_TYPE_NAME = 'TariffGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'ActiveTariffGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
