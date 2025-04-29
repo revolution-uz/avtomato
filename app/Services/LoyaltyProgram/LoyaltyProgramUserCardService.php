@@ -151,11 +151,11 @@ readonly class LoyaltyProgramUserCardService
         }
 
         // Handle a deleted card for the user
-        if ($deletedCard = $cardQuery->clone()->withTrashed()->where('user_id', $userId)->first()) {
-            $deletedCard->restore();
-            $deletedCard->update(['status' => CardStatusEnum::INACTIVE]);
+        if ($deletedCard = $cardQuery->clone()->onlyTrashed()->first()) {
+            $newCard = $deletedCard->replicate(['user_id', 'status', 'deleted_at']);
+            $newCard->fill(['user_id' => $userId, 'status' => CardStatusEnum::INACTIVE])->saveOrFail();
 
-            return $this->buildResponse($deletedCard);
+            return $this->buildResponse($newCard);
         }
 
         // Card is attached to another user
