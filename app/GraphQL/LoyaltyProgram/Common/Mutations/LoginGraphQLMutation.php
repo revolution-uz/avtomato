@@ -46,11 +46,11 @@ class LoginGraphQLMutation extends Mutation
             throw new Error('Phone or code is wrong');
         }
 
-        $user = User::query()->firstOrCreate([
-            'phone' => $args['phone'],
-        ], [
-            'main_device' => request()->header('Device-Name'),
-        ]);
+        $user = User::query()->firstOrCreate(['phone' => $args['phone']]);
+
+        if (! $user->main_device) {
+            $user->updateOrFail(['main_device' => request()->header('Device-Name')]);
+        }
 
         return $user->createTokenWithData(
             Str::substr(request()->header('Device-Name'), 0, 255),
