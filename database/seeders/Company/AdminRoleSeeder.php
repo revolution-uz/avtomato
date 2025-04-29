@@ -43,7 +43,9 @@ class AdminRoleSeeder extends Seeder
                     }
                 }
             }
+
         } catch (Throwable $e) {
+            $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());
         }
     }
