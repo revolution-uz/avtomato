@@ -13,7 +13,6 @@ use Closure;
 use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
@@ -35,14 +34,6 @@ class CreateCardScoringGraphQLMutation extends Mutation
             'type' => [
                 'type' => Type::nonNull(Type::int()),
                 'rules' => ['required', 'integer', Rule::in(ScoringRequestTypeEnum::cardTypes())],
-            ],
-            'from' => [
-                'type' => Type::nonNull(Type::string()),
-                'rules' => ['required', 'date_format:Y-m-d'],
-            ],
-            'to' => [
-                'type' => Type::string(),
-                'rules' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:from'],
             ],
         ];
     }
@@ -68,11 +59,10 @@ class CreateCardScoringGraphQLMutation extends Mutation
     {
         $type = ScoringRequestTypeEnum::from($args['type']);
         $dto = CardCreateRequestDTO::from($args['data']);
-        $dateRanges = Arr::only($args, ['from', 'to']);
         $phone = $args['data']['phone'] ?? null;
 
         return $type === ScoringRequestTypeEnum::HUMO
-            ? $this->cardScoringService->scoringHumo($dto, $dateRanges, $phone)
-            : $this->cardScoringService->scoringUzcard($dto, $dateRanges);
+            ? $this->cardScoringService->scoringHumo($dto, $phone)
+            : $this->cardScoringService->scoringUzcard($dto);
     }
 }

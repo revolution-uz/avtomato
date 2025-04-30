@@ -40,4 +40,7 @@ return [
     'payment_unavailable' => 'Payment is temporarily unavailable',
     'confirmation_code_sent' => 'Confirmation code sent to the SMS notification number',
     'payment_processing' => 'Payment is being processed',
+    'invalid_otp' => 'OTP provided is invalid',
+    'otp_expired' => 'OTP has expired',
+    'unknown_error' => 'An unexpected error occurred. Please check your information and try again.',
 ];

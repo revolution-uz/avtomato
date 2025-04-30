@@ -51,6 +51,16 @@ class UniredFaker
         self::fakeResponse('../JSON-for-testing/unired/set-webhook.json');
     }
 
+    public static function monitoringHumo(): void
+    {
+        self::fakeResponse('../JSON-for-testing/scoring/unired-humo-response.json');
+    }
+
+    public static function monitoringUzcard(): void
+    {
+        self::fakeResponse('../JSON-for-testing/scoring/unired-uzcard-response.json');
+    }
+
     public static function badResponse(): void
     {
         self::fakeResponse('../JSON-for-testing/unired/bad-response.json');

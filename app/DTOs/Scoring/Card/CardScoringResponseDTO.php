@@ -3,9 +3,10 @@
 namespace App\DTOs\Scoring\Card;
 
 use App\DTOs\Scoring\Base\BaseScoringResponse;
-use App\DTOs\Unired\Client\UniredMonitoringCardResponseDTO;
-use App\DTOs\Unired\Client\UniredMonitoringCardRowDTO;
+use App\DTOs\Unired\Client\UniredMonitoringHumoResponseDTO;
+use App\DTOs\Unired\Client\UniredMonitoringUzcardResponseDTO;
 use App\Enums\Company\Scoring\CardScoringTypeCodeEnum;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\DataCollection;
 
@@ -45,14 +46,37 @@ class CardScoringResponseDTO extends BaseScoringResponse
         return self::from(['report' => $report]);
     }
 
-    public static function parseFromUnired(UniredMonitoringCardResponseDTO $dto): self
+    public static function parseFromHumo(UniredMonitoringHumoResponseDTO $dto): self
+    {
+        $report = self::processTransactions(
+            $dto->rows,
+            fn ($transaction) => $transaction->TRAN_DATE_TIME->format('Y-m'),
+            fn ($transaction) => $transaction->TRAN_AMT,
+            fn ($transaction) => $transaction->TRAN_TYPE
+        );
+
+        return self::from(['report' => $report]);
+    }
+
+    public static function parseFromUniredUzcard(UniredMonitoringUzcardResponseDTO $dto)
+    {
+        $report = self::processTransactions(
+            $dto->content,
+            fn ($transaction) => $transaction->udate->format('Y-m'),
+            fn ($transaction) => $transaction->reqamt,
+            fn ($transaction) => $transaction->transType
+        );
+
+        return self::from(['report' => $report]);
+    }
+
+    private static function processTransactions(Collection $transactions, callable $getMonth, callable $getAmount, callable $getTranType): array
     {
         $report = [];
-        /** @var UniredMonitoringCardRowDTO $transaction */
-        foreach ($dto->rows as $transaction) {
-            $month = date('Y-m', strtotime($transaction->TRAN_DATE_TIME));
-            $amount = $transaction->TRAN_AMT;
-            $tranType = $transaction->TRAN_TYPE;
+        foreach ($transactions as $transaction) {
+            $month = $getMonth($transaction);
+            $amount = $getAmount($transaction);
+            $tranType = $getTranType($transaction);
 
             if (! isset($report[$month])) {
                 $report[$month] = [
@@ -71,7 +95,7 @@ class CardScoringResponseDTO extends BaseScoringResponse
             $report[$month]['details'][$tranType] += $amount;
         }
 
-        $report = array_map(function ($stat) {
+        return array_map(function ($stat) {
             $stat['details'] = array_map(function ($tranType, $sum) {
                 return [
                     'description' => CardScoringTypeCodeEnum::getDescription($tranType),
@@ -82,7 +106,5 @@ class CardScoringResponseDTO extends BaseScoringResponse
 
             return $stat;
         }, $report);
-
-        return self::from(['report' => $report]);
     }
 }

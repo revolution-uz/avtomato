@@ -45,4 +45,7 @@ return [
     'payment_unavailable' => 'To\'lov vaqtincha amalga oshirilmaydi',
     'confirmation_code_sent' => 'Tasdiqlash kodi SMS orqali yuborildi',
     'payment_processing' => 'To\'lov qayta ishlanmoqda',
+    'invalid_otp' => 'Kiritilgan OTP noto\'g\'ri',
+    'otp_expired' => 'OTP muddati tugagan',
+    'unknown_error' => 'Kutilmagan xatolik yuz berdi. Iltimos, ma\'lumotlaringizni qayta tekshirib, yana bir bor urinib ko\'ring.',
 ];
