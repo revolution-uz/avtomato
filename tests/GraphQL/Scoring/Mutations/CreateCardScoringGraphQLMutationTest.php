@@ -110,7 +110,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals('Scoring failed. Please, check your data again', $response->json('errors.0.extensions.validation.otp.0'));
+        $this->assertEquals(__('api.unknown_error'), $response->json('errors.0.extensions.validation.otp.0'));
         $this->assertTrue(BalanceCharge::query()->doesntExist());
     }
 
@@ -131,7 +131,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals('Scoring failed. Please, check your data again', $response->json('errors.0.extensions.validation.otp.0'));
+        $this->assertEquals(__('api.unknown_error'), $response->json('errors.0.extensions.validation.otp.0'));
         $this->assertTrue(BalanceCharge::query()->doesntExist());
     }
 
