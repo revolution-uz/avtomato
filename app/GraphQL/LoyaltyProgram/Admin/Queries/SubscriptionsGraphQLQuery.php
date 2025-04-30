@@ -29,31 +29,31 @@ class SubscriptionsGraphQLQuery extends Query
         return [
             'sort' => [
                 'type' => Type::string(),
-                'rules' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
+                'rules' => ['nullable', 'string', 'regex:/^[-]?[a-z_]+$/'],
             ],
             'search' => [
                 'type' => Type::string(),
-                'rules' => 'nullable|string|max:255',
+                'rules' => ['nullable', 'string', 'max:255'],
             ],
             'page' => [
                 'type' => Type::int(),
-                'rules' => 'nullable|int|min:1',
+                'rules' => ['nullable', 'int', 'min:1'],
             ],
             'per_page' => [
                 'type' => Type::int(),
-                'rules' => 'nullable|int|min:5|max:100',
+                'rules' => ['nullable', 'int', 'min:5', 'max:100'],
             ],
-            'is_active' => [
+            'is_available' => [
                 'type' => Type::boolean(),
                 'rules' => ['nullable', 'bool'],
             ],
             'from' => [
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:to|date_format:Y-m-d',
+                'rules' => ['nullable', 'required_with:to', 'date_format:Y-m-d'],
             ],
             'to' => [
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:from|date_format:Y-m-d|after_or_equal:from',
+                'rules' => ['nullable', 'required_with:from', 'date_format:Y-m-d', 'after_or_equal:from'],
             ],
         ];
     }
@@ -73,8 +73,8 @@ class SubscriptionsGraphQLQuery extends Query
                 ->orWhereHas('user', fn ($q) => $q
                     ->where('first_name', 'ILIKE', "%{$args['search']}%")
                     ->orWhere('last_name', 'ILIKE', "%{$args['search']}%")))
-            ->when(isset($args['is_active']), fn (Builder $q) => $q
-                ->where('is_active', $args['is_active']))
+            ->when(isset($args['is_available']), fn (Builder $q) => $q
+                ->whereIsAvailable($args['is_available']))
             ->when(isset($args['from'], $args['to']), fn (Builder $q) => $q
                 ->whereDate('created_at', '>=', $args['from'])
                 ->whereDate('created_at', '<=', $args['to']))

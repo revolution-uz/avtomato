@@ -71,7 +71,7 @@ class UsersGraphQLQuery extends Query
                 });
             })
             ->when(isset($args['has_available_subscription']), fn (Builder $q) => $q
-                ->whereHas('subscriptions', fn (Builder $q) => $q->whereIsAvailable()))
+                ->whereHas('subscriptions', fn (Builder $q) => $q->whereIsAvailable($args['has_available_subscription'])))
             ->when(
                 isset($args['sort']),
                 fn (Builder|User $q) => $q->orderBySortable($args['sort']),

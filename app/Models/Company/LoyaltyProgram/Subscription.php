@@ -22,7 +22,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Tariff $tariff
  * @property User $user
  *
- * @method self whereIsAvailable()
+ * @method self whereIsAvailable(bool $is_active = true)
  */
 class Subscription extends Model
 {
@@ -41,7 +41,7 @@ class Subscription extends Model
     ];
 
     protected $casts = [
-        'expired_at' => 'datetime',
+        'expired_at' => 'date',
     ];
 
     protected $attributes = [
@@ -63,19 +63,25 @@ class Subscription extends Model
         return $this->is_active && $this->tariff->is_active && $this->expired_at->isFuture();
     }
 
-    public function scopeWhereIsAvailable($query)
+    public function scopeWhereIsAvailable($query, bool $is_active = true)
     {
         return $query
-            ->where('is_active', true)
-            ->whereHas('tariff', fn ($q) => $q->where('is_active', true))
-            ->where('expired_at', '>', Carbon::now());
+            ->where('is_active', $is_active)
+            ->when($is_active,
+                fn ($q) => $q->whereHas('tariff', fn ($q) => $q->where('is_active', true)),
+                fn ($q) => $q->orWhereHas('tariff', fn ($q) => $q->where('is_active', false))
+            )
+            ->when($is_active,
+                fn ($q) => $q->whereDate('expired_at', '>', Carbon::today()),
+                fn ($q) => $q->orWhereDate('expired_at', '<=', Carbon::today())
+            );
     }
 
     public function extendSubscription(): void
     {
         $this->is_active = true;
         $this->remaining_limit_amount = $this->tariff->limit_amount;
-        $this->expired_at = Carbon::now()->addDays($this->tariff->subscription_days);
+        $this->expired_at = Carbon::today()->addDays($this->tariff->subscription_days);
         $this->saveOrFail();
     }
 }

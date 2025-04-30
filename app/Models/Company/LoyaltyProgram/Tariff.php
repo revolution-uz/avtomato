@@ -41,4 +41,14 @@ class Tariff extends Model
         'limit_amount',
         'is_active',
     ];
+
+    public function isValidForFreeTrial(User $user): bool
+    {
+        return $this->free_days !== 0 && (
+            $user->subscriptions()->doesntExist() || (
+                $user->subscriptions()->where('tariff_id', $this->id)->doesntExist()
+                && $this->is_free_for_previous_subscribers
+            )
+        );
+    }
 }

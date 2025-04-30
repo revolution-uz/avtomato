@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\LoyaltyProgram\Common\Types;
+namespace App\GraphQL\LoyaltyProgram\Client\Types;
 
 use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\LoyaltyProgram\Tariff;
@@ -8,9 +8,9 @@ use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class TariffGraphQLType extends GraphQLType
+class ActiveTariffGraphQLType extends GraphQLType
 {
-    public const string GRAPHQL_TYPE_NAME = 'TariffGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'ActiveTariffGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
@@ -54,6 +54,10 @@ class TariffGraphQLType extends GraphQLType
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (Tariff $root) => $root->is_active,
+            ],
+            'is_valid_for_free_trial' => [
+                'type' => Type::nonNull(Type::boolean()),
+                'resolve' => fn (Tariff $root) => $root->isValidForFreeTrial(auth('loyalty-program-client')->user()),
             ],
         ];
     }

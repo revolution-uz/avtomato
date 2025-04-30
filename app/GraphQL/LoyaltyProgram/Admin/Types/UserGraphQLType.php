@@ -4,7 +4,6 @@ namespace App\GraphQL\LoyaltyProgram\Admin\Types;
 
 use App\GraphQL\GraphQLTypeHelper;
 use App\GraphQL\LoyaltyProgram\Client\Types\CardGraphQLType;
-use App\GraphQL\LoyaltyProgram\Client\Types\QrGraphQLType;
 use App\Models\Company\LoyaltyProgram\User;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -63,13 +62,9 @@ class UserGraphQLType extends GraphQLType
                 'type' => Type::listOf(GraphQL::type(SubscriptionGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (User $root) => $root->subscriptions,
             ],
-            'qr' => [
-                'type' => GraphQL::type(QrGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (User $root) => $root->qr,
-            ],
             'cards' => [
                 'type' => Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (User $root) => $root->cards()->active()->get(),
+                'resolve' => fn (User $root) => $root->cards,
             ],
             'has_available_subscription' => [
                 'type' => Type::nonNull(Type::boolean()),

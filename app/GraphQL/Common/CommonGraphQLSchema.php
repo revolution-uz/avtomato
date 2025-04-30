@@ -18,6 +18,7 @@ use App\GraphQL\Common\Types\InstallmentMonthlyInfoGraphQLType;
 use App\GraphQL\Common\Types\InstallmentNplByIncreasingValueGraphQLType;
 use App\GraphQL\Common\Types\InstallmentOverdueGraphQLType;
 use App\GraphQL\Common\Types\MahallaGraphQLType;
+use App\GraphQL\Common\Types\ModuleGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\GraphQL\Common\Types\SettingsGraphQLType;
 use Rebing\GraphQL\Support\Contracts\ConfigConvertible;
@@ -50,6 +51,7 @@ class CommonGraphQLSchema implements ConfigConvertible
                 InstallmentAmountsByIncreasingValueGraphQLType::class,
                 InstallmentNplByIncreasingValueGraphQLType::class,
                 ChartItemGraphQLType::class,
+                ModuleGraphQLType::class,
             ],
             'middleware' => ['optional_auth:sanctum'],
         ];
