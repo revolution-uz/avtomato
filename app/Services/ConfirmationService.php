@@ -46,7 +46,10 @@ class ConfirmationService
 
     public function canLogin(User $user, string $deviceName, int $attempts): CanLoginTypeEnum
     {
-        if ($success_login_attempts = $user->getSuccessLoginAttempts($deviceName, Utilities::A_MONTH)) {
+        if (
+            $deviceName !== $user->main_device &&
+            $success_login_attempts = $user->getSuccessLoginAttempts(Utilities::A_MONTH)
+        ) {
             return $success_login_attempts < $attempts ? CanLoginTypeEnum::LAST_CHANCE : CanLoginTypeEnum::CANNOT_LOGIN;
         }
 

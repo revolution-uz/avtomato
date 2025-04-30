@@ -27,21 +27,16 @@ class LoginGraphQLMutation extends Mutation
     {
         return [
             'phone' => [
-                'name' => 'phone',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => ['required', 'digits:12', new PhoneRule],
             ],
             'code' => [
-                'name' => 'code',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => ['required', 'digits:6'],
             ],
         ];
     }
 
-    /**
-     * @throws Error
-     */
     public function resolve($root, array $args): string
     {
         if (
@@ -52,6 +47,10 @@ class LoginGraphQLMutation extends Mutation
         }
 
         $user = User::query()->firstOrCreate(['phone' => $args['phone']]);
+
+        if (! $user->main_device) {
+            $user->updateOrFail(['main_device' => request()->header('Device-Name')]);
+        }
 
         return $user->createTokenWithData(
             Str::substr(request()->header('Device-Name'), 0, 255),
