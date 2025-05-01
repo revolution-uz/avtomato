@@ -13,7 +13,7 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property string $number
  * @property string $expiry
  * @property bool $is_verified
- * @property string $external_id
+ * @property string|null $external_id
  *
  * @method self whereNumber(string $cardNumber)
  * @method self verified()

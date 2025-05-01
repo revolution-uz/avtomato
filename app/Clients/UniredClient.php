@@ -267,7 +267,6 @@ class UniredClient extends BaseClient
 
     public function monitoringHumo(UniredClientMonitoringCardRequestDTO $params): UniredResponseDTO
     {
-
         return $this->makeRequest(self::MONITORING_HUMO, $params->toArray());
     }
 
@@ -282,7 +281,10 @@ class UniredClient extends BaseClient
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->token,
         ];
-        $response = Http::withHeaders($headers)->$httpMethod($this->baseUrl . $path, $data);
+        $response = Http::withHeaders($headers)
+            ->timeout(150)
+            ->connectTimeout(150)
+            ->$httpMethod($this->baseUrl . $path, $data);
         $headers['Authorization'] = 'Bearer ****' . substr($this->token, -9);
         $this->logRequest(new HttpRequestLogDTO(
             method: $httpMethod,

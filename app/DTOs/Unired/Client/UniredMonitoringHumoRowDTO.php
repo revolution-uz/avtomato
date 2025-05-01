@@ -3,8 +3,11 @@
 namespace App\DTOs\Unired\Client;
 
 use App\DTOs\Unired\Base\BaseUniredDTO;
+use Illuminate\Support\Carbon;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
-class UniredMonitoringCardRowDTO extends BaseUniredDTO
+class UniredMonitoringHumoRowDTO extends BaseUniredDTO
 {
     public function __construct(
         public string $CARD_ACCT,
@@ -17,7 +20,8 @@ class UniredMonitoringCardRowDTO extends BaseUniredDTO
         public string $TRAN_CCY,
         public string $TRAN_AMT,
         public string $CCY_EXP,
-        public string $TRAN_DATE_TIME,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s')]
+        public Carbon $TRAN_DATE_TIME,
         public string $REC_DATE,
         public string $POST_DATE,
         public string $ACCNT_CCY,

@@ -31,7 +31,7 @@ class ConfirmScoringCardGraphQLMutation extends Mutation
             ],
             'otp' => [
                 'type' => Type::nonNull(Type::string()),
-                'rules' => ['required', 'string'],
+                'rules' => ['required', 'digits:6'],
             ],
             'type' => [
                 'type' => Type::nonNull(Type::int()),

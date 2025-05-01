@@ -12,9 +12,9 @@ use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Models\Company\ScoringRequest;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Carbon;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Fakers\UniredFaker;
 use Tests\GraphQL\GraphQLTestCase;
 
 class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
@@ -44,14 +44,12 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successHumoCardCreate(): void
     {
+        UniredFaker::monitoringHumo();
         CentralScoringCard::factory()->create(['number' => $this->_humoInput['number'], 'is_verified' => true]);
-        $this->mockUrl('https://autopaygroup.uz/api/v1/partners', json_decode(file_get_contents(storage_path('../JSON-for-testing/scoring/unired-humo-response.json')), true));
 
         $variables = [
             ...$this->_humoInput,
             'type' => ScoringRequestTypeEnum::HUMO->value,
-            'from' => Carbon::now()->subDays(random_int(50, 100))->format('Y-m-d'),
-            'to' => Carbon::now()->addDays(random_int(1, 50))->format('Y-m-d'),
         ];
 
         $response = $this
@@ -72,14 +70,12 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successUzCardCreate(): void
     {
+        UniredFaker::monitoringUzcard();
         CentralScoringCard::factory()->create(['number' => $this->_uzCardInput['number'], 'is_verified' => true]);
-        $this->mockUrl('https://autopaygroup.uz/api/v1/partners', json_decode(file_get_contents(storage_path('../JSON-for-testing/scoring/unired-humo-response.json')), true));
 
         $variables = [
             ...$this->_uzCardInput,
             'type' => ScoringRequestTypeEnum::UZCARD->value,
-            'from' => Carbon::now()->subDays(random_int(50, 100))->format('Y-m-d'),
-            'to' => Carbon::now()->addDays(random_int(1, 50))->format('Y-m-d'),
         ];
 
         $response = $this
@@ -105,8 +101,6 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $variables = [
             ...$this->_humoInput,
             'type' => ScoringRequestTypeEnum::HUMO->value,
-            'from' => Carbon::now()->subDays(random_int(50, 100))->format('Y-m-d'),
-            'to' => Carbon::now()->addDays(random_int(1, 50))->format('Y-m-d'),
         ];
 
         $response = $this
@@ -116,7 +110,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals('Scoring failed. Please, check your data again', $response->json('errors.0.extensions.validation.otp.0'));
+        $this->assertEquals(__('api.unknown_error'), $response->json('errors.0.extensions.validation.otp.0'));
         $this->assertTrue(BalanceCharge::query()->doesntExist());
     }
 
@@ -128,8 +122,6 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $variables = [
             ...$this->_uzCardInput,
             'type' => ScoringRequestTypeEnum::UZCARD->value,
-            'from' => Carbon::now()->subDays(random_int(50, 100))->format('Y-m-d'),
-            'to' => Carbon::now()->addDays(random_int(1, 50))->format('Y-m-d'),
         ];
 
         $response = $this
@@ -139,7 +131,7 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals('Scoring failed. Please, check your data again', $response->json('errors.0.extensions.validation.otp.0'));
+        $this->assertEquals(__('api.unknown_error'), $response->json('errors.0.extensions.validation.otp.0'));
         $this->assertTrue(BalanceCharge::query()->doesntExist());
     }
 
@@ -150,8 +142,6 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
             'number' => '9860353506066262',
             'expiry' => 1231,
             'type' => ScoringRequestTypeEnum::HUMO->value,
-            'from' => Carbon::now()->subDays(random_int(50, 100))->format('Y-m-d'),
-            'to' => Carbon::now()->addDays(random_int(1, 50))->format('Y-m-d'),
         ];
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -163,8 +153,6 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
             'number' => '9860353506066262',
             'expiry' => '0000',
             'type' => ScoringRequestTypeEnum::KATM_CREDIT_HISTORY->value,
-            'from' => Carbon::now()->subDays(random_int(50, 100))->format('Y-m-d'),
-            'to' => Carbon::now()->addDays(random_int(1, 50))->format('Y-m-d'),
         ];
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -178,8 +166,6 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
             'number' => '315039531300',
             'expiry' => '123',
             'type' => ScoringRequestTypeEnum::HUMO->value,
-            'from' => Carbon::now()->subDays(random_int(50, 100))->format('Y-m-d'),
-            'to' => Carbon::now()->addDays(random_int(1, 50))->format('Y-m-d'),
         ];
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -197,8 +183,6 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
             'expiry' => '0428',
             'phone' => '998901234567',
             'type' => ScoringRequestTypeEnum::HUMO->value,
-            'from' => Carbon::now()->subDays(random_int(50, 100))->format('Y-m-d'),
-            'to' => Carbon::now()->addDays(random_int(1, 50))->format('Y-m-d'),
         ];
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -217,8 +201,6 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
         $variables = [
             ...$this->_humoInput,
             'type' => ScoringRequestTypeEnum::HUMO->value,
-            'from' => Carbon::now()->subDays(random_int(50, 100))->format('Y-m-d'),
-            'to' => Carbon::now()->addDays(random_int(1, 50))->format('Y-m-d'),
         ];
         $response = $this
             ->actingAs($this->createAdminUser())
@@ -237,14 +219,10 @@ class CreateCardScoringGraphQLMutationTest extends GraphQLTestCase
                     \$expiry: String!
                     \$phone: String
                     \$type: Int!
-                    \$from: String!
-                    \$to: String
                 ) {
                     createCardScoring(
                         data: { number: \$number, expiry: \$expiry, phone: \$phone }
                         type: \$type
-                        from: \$from
-                        to: \$to
                     ) {
                         {$this->convertIntoQuery($this->_structure)}
                     }

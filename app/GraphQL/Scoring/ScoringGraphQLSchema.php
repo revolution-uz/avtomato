@@ -92,7 +92,6 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 SingleRoyxatCreditHistoryGraphQLQuery::class,
                 UzumNasiyaLimitRequestsGraphQLQuery::class,
                 SingleUzumNasiyaLimitRequestGraphQLQuery::class,
-                ConfirmScoringCardGraphQLMutation::class,
             ],
             'mutation' => [
                 CreateCardScoringGraphQLMutation::class,
@@ -101,6 +100,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 CreateRoyxatCreditHistoryScoringGraphQLMutation::class,
                 CreateUzumNasiyaLimitScoringGraphQLMutation::class,
                 DeleteScoringRequestsGraphQLMutation::class,
+                ConfirmScoringCardGraphQLMutation::class,
             ],
             'types' => [
                 CardCreateInputGraphQLType::class,
