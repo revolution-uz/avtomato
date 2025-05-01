@@ -31,7 +31,7 @@ readonly class CustomerCardService
                 $oldCard = $this->createOrGetCard($customerId, $request);
                 $oldCard->fillData($response->data, CardStatusEnum::INACTIVE);
 
-                $this->confirmationService->send($oldCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
+                $this->confirmationService->send($oldCard->phone, SmsTemplateEnum::CARD_CONFIRMATION_FOR_INSTALLMENT);
                 $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $oldCard->phone, 'transaction_id' => $oldCard->id]);
 
                 return [$oldCard, $customResponse];
@@ -49,7 +49,7 @@ readonly class CustomerCardService
         if ((clone $cardQuery)->where('customer_id', $customerId)->where('status', CardStatusEnum::ACTIVE)->exists()) {
             throw ValidationException::withMessages(['number' => __('api.already_attached_card')]);
         } elseif ($inactiveCard = (clone $cardQuery)->where('customer_id', $customerId)->where('status', CardStatusEnum::INACTIVE)->first()) {
-            $this->confirmationService->send($inactiveCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
+            $this->confirmationService->send($inactiveCard->phone, SmsTemplateEnum::CARD_CONFIRMATION_FOR_INSTALLMENT);
             $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $inactiveCard->phone, 'transaction_id' => $inactiveCard->id]);
 
             return [$inactiveCard, $customResponse];
@@ -61,7 +61,7 @@ readonly class CustomerCardService
         $newCard->computingBeforeInsert();
         $newCard->saveOrFail();
 
-        $this->confirmationService->send($newCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
+        $this->confirmationService->send($newCard->phone, SmsTemplateEnum::CARD_CONFIRMATION_FOR_INSTALLMENT);
         $customResponse = AtmosAttachCardResponseDTO::from(['result' => AtmosResultDTO::from(['code' => 'OK']), 'phone' => $newCard->phone, 'transaction_id' => $newCard->id]);
 
         return [$newCard, $customResponse];

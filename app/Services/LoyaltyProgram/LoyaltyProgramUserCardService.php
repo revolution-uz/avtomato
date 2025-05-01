@@ -45,7 +45,7 @@ readonly class LoyaltyProgramUserCardService
                 $oldCard = $this->createCard($userId, $args);
                 $oldCard->fillData($response->data, CardStatusEnum::INACTIVE);
 
-                $this->confirmationService->send($oldCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
+                $this->confirmationService->send($oldCard->phone, SmsTemplateEnum::CARD_CONFIRMATION_FOR_LOYALTY_PROGRAM);
 
                 return $this->buildResponse($oldCard);
             }
@@ -145,7 +145,7 @@ readonly class LoyaltyProgramUserCardService
 
         // Handle an inactive card for the user
         if ($inactiveCard = $cardQuery->clone()->where('user_id', $userId)->where('status', CardStatusEnum::INACTIVE)->first()) {
-            $this->confirmationService->send($inactiveCard->phone, SmsTemplateEnum::CARD_CONFIRMATION);
+            $this->confirmationService->send($inactiveCard->phone, SmsTemplateEnum::CARD_CONFIRMATION_FOR_LOYALTY_PROGRAM);
 
             return $this->buildResponse($inactiveCard);
         }
