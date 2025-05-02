@@ -100,7 +100,7 @@ class DeleteAdminGraphQLMutationTest extends GraphQLTestCase
             ],
         ]);
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('api.not found', ['attribute' => 'ids.0']), $response->json('errors.0.extensions.validation')['ids.0'][0]);
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'ids.0']), $response->json('errors.0.extensions.validation')['ids.0'][0]);
     }
 
     #[Test]
