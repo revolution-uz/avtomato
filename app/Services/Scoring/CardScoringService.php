@@ -74,7 +74,9 @@ readonly class CardScoringService
 
         $uniredDto = UniredClientMonitoringCardRequestDTO::from([
             'card_number' => $dto->number,
-            'date_from' => Carbon::now()->subDays($type === ScoringRequestTypeEnum::HUMO ? 89 : 59)->toDateString(),
+            'date_from' => $type === ScoringRequestTypeEnum::HUMO ?
+                Carbon::now()->subMonths(3)->addDay()->toDateString() :
+                Carbon::now()->subDays(59)->toDateString(),
         ]);
 
         try {
