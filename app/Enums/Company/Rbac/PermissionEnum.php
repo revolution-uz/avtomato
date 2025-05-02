@@ -77,6 +77,8 @@ enum PermissionEnum: string
     case INSTALLMENT_VIEW_STATISTICS = 'installment_view_statistics';
     case INSTALLMENT_CREATE = 'installment_create';
     case INSTALLMENT_EDIT = 'installment_edit';
+    case INSTALLMENT_SETTINGS_VIEW_ALL = 'installment_settings_view_all';
+    case INSTALLMENT_SETTINGS_EDIT = 'installment_settings_edit';
     case INSTALLMENT_ATTACH_CARD = 'installment_attach_card';
     case INSTALLMENT_DETACH_CARD = 'installment_detach_card';
     case INSTALLMENT_ATTACH_GUARANTOR = 'installment_attach_guarantor';
@@ -86,8 +88,6 @@ enum PermissionEnum: string
     case INSTALLMENT_CREATE_TRANSACTION = 'installment_create_transaction';
     case INSTALLMENT_UPDATE_COMMENT = 'installment_update_comment';
     case INSTALLMENT_DELETE_COMMENT = 'installment_delete_comment';
-    case INSTALLMENT_SETTINGS_VIEW_ALL = 'installment_settings_view_all';
-    case INSTALLMENT_SETTINGS_EDIT = 'installment_settings_edit';
 
     case INSTALLMENT_VIEW_DOCUMENT = 'installment_view_document';
     case INSTALLMENT_UPLOAD_DOCUMENT = 'installment_upload_document';
@@ -525,6 +525,8 @@ enum PermissionEnum: string
             self::INSTALLMENT_VIEW_STATISTICS,
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_EDIT,
+            self::INSTALLMENT_SETTINGS_VIEW_ALL,
+            self::INSTALLMENT_SETTINGS_EDIT,
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD,
             self::INSTALLMENT_ATTACH_GUARANTOR,
@@ -534,8 +536,6 @@ enum PermissionEnum: string
             self::INSTALLMENT_CREATE_COMMENT,
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT,
-            self::INSTALLMENT_SETTINGS_VIEW_ALL,
-            self::INSTALLMENT_SETTINGS_EDIT,
 
             self::INSTALLMENT_VIEW_DOCUMENT,
             self::INSTALLMENT_UPLOAD_DOCUMENT,
@@ -603,6 +603,8 @@ enum PermissionEnum: string
                 self::INSTALLMENT_VIEW_STATISTICS->value,
                 self::INSTALLMENT_CREATE->value,
                 self::INSTALLMENT_EDIT->value,
+                self::INSTALLMENT_SETTINGS_VIEW_ALL->value,
+                self::INSTALLMENT_SETTINGS_EDIT->value,
                 self::INSTALLMENT_ATTACH_CARD->value,
                 self::INSTALLMENT_DETACH_CARD->value,
                 self::INSTALLMENT_ATTACH_GUARANTOR->value,
@@ -611,8 +613,6 @@ enum PermissionEnum: string
                 self::INSTALLMENT_CREATE_COMMENT->value,
                 self::INSTALLMENT_UPDATE_COMMENT->value,
                 self::INSTALLMENT_DELETE_COMMENT->value,
-                self::INSTALLMENT_SETTINGS_VIEW_ALL->value,
-                self::INSTALLMENT_SETTINGS_EDIT->value,
                 self::INSTALLMENT_VIEW_DOCUMENT->value,
                 self::INSTALLMENT_UPLOAD_DOCUMENT->value,
                 self::INSTALLMENT_DELETE_DOCUMENT->value,
@@ -902,6 +902,8 @@ enum PermissionEnum: string
             self::INSTALLMENT_VIEW_STATISTICS,
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_EDIT,
+            self::INSTALLMENT_SETTINGS_VIEW_ALL,
+            self::INSTALLMENT_SETTINGS_EDIT,
             self::DASHBOARD_INFO_VIEW => FeatureEnum::INSTALLMENT_MANAGEMENT,
 
             self::INSTALLMENT_ATTACH_CARD,
@@ -913,9 +915,7 @@ enum PermissionEnum: string
 
             self::INSTALLMENT_CREATE_COMMENT,
             self::INSTALLMENT_UPDATE_COMMENT,
-            self::INSTALLMENT_DELETE_COMMENT,
-            self::INSTALLMENT_SETTINGS_VIEW_ALL,
-            self::INSTALLMENT_SETTINGS_EDIT => FeatureEnum::INSTALLMENT_COMMENT,
+            self::INSTALLMENT_DELETE_COMMENT => FeatureEnum::INSTALLMENT_COMMENT,
 
             self::INSTALLMENT_VIEW_DOCUMENT,
             self::INSTALLMENT_UPLOAD_DOCUMENT,
@@ -1131,6 +1131,8 @@ enum PermissionEnum: string
 
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_EDIT,
+            self::INSTALLMENT_SETTINGS_VIEW_ALL,
+            self::INSTALLMENT_SETTINGS_EDIT,
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD,
             self::INSTALLMENT_ATTACH_GUARANTOR,
@@ -1140,8 +1142,6 @@ enum PermissionEnum: string
             self::INSTALLMENT_CREATE_TRANSACTION,
             self::INSTALLMENT_UPDATE_COMMENT,
             self::INSTALLMENT_DELETE_COMMENT,
-            self::INSTALLMENT_SETTINGS_VIEW_ALL,
-            self::INSTALLMENT_SETTINGS_EDIT,
 
             self::INSTALLMENT_VIEW_DOCUMENT,
             self::INSTALLMENT_UPLOAD_DOCUMENT,
