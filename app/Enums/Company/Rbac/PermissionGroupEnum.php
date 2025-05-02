@@ -97,6 +97,8 @@ enum PermissionGroupEnum: string
                 PermissionEnum::INSTALLMENT_CREATE_TRANSACTION,
                 PermissionEnum::INSTALLMENT_UPDATE_COMMENT,
                 PermissionEnum::INSTALLMENT_DELETE_COMMENT,
+                PermissionEnum::INSTALLMENT_SETTINGS_VIEW_ALL,
+                PermissionEnum::INSTALLMENT_SETTINGS_EDIT,
                 PermissionEnum::INSTALLMENT_VIEW_DOCUMENT,
                 PermissionEnum::INSTALLMENT_UPLOAD_DOCUMENT,
                 PermissionEnum::INSTALLMENT_DELETE_DOCUMENT,

@@ -43,12 +43,11 @@ class ChangeSettingsGraphQLMutation extends Mutation
     public function type(): Type
     {
         return Type::nonNull(Type::listOf(Type::nonNull(GraphQL::type(SettingsGraphQLType::GRAPHQL_TYPE_NAME))));
-
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::SETTINGS_EDIT);
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_SETTINGS_EDIT);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
