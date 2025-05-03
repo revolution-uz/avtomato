@@ -12,7 +12,7 @@ class PricingController
 {
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        $baseModules = BaseModule::query()->whereNotIn('name', [ModuleEnum::ICAN])->all();
+        $baseModules = BaseModule::query()->whereNotIn('name', [ModuleEnum::ICAN])->get()->all();
 
         $moduleNames = [
             'installment' => 'Nasiya savdo moduli',
