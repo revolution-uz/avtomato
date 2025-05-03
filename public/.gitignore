@@ -1,5 +1,4 @@
 static/
-sw.js
 index.html
 workbox-*.*
 manifest.webmanifest
