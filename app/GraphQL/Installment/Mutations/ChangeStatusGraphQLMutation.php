@@ -81,7 +81,7 @@ class ChangeStatusGraphQLMutation extends Mutation
                     if (! $status) {
                         $fail('Status is not valid');
                     }
-                    if ($installment && ! in_array($installment->status, InstallmentStatusEnum::getStatusListByStatus($status))) {
+                    if ($installment && ! in_array($status, InstallmentStatusEnum::getStatusListByStatus($installment->status))) {
                         $fail('Status is not valid for this installment');
                     }
                 },
