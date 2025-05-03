@@ -21,21 +21,15 @@ class CardMonthlyDetailedAnalyticsGraphQLType extends GraphQLType
         return [
             'description' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => function (DetailedAnalyticsInMonthDTO $root) {
-                    return $root->description;
-                },
+                'resolve' => fn (DetailedAnalyticsInMonthDTO $root) => __($root->description),
             ],
             'type_code' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => function (DetailedAnalyticsInMonthDTO $root) {
-                    return $root->type_code;
-                },
+                'resolve' => fn (DetailedAnalyticsInMonthDTO $root) => $root->type_code,
             ],
             'amount' => [
                 'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
-                'resolve' => function (DetailedAnalyticsInMonthDTO $root) {
-                    return $root->amount;
-                },
+                'resolve' => fn (DetailedAnalyticsInMonthDTO $root) => $root->amount,
             ],
         ];
     }

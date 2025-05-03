@@ -90,7 +90,7 @@ readonly class CardScoringService
             $model->client_code = $this->uniredClient->getClientCode();
             $model->status = ScoringRequestStatusEnum::SUCCESS;
             if ($type === ScoringRequestTypeEnum::HUMO) {
-                $model->response = CardScoringResponseDTO::parseFromHumo(
+                $model->response = CardScoringResponseDTO::parseFromUniredHumo(
                     UniredMonitoringHumoResponseDTO::from($response->result)
                 );
             } else {
