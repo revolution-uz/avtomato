@@ -22,4 +22,5 @@ return [
     'loyalty_program_app_min_version' => 'Loyalty program app minimum version',
     'loyalty_program_update_type' => 'Loyalty program update type',
     'loyalty_program_instruction_video_path' => 'Loyalty program instruction video path',
+    'loyalty_program_instruction_video_type' => 'Loyalty program instruction video type',
 ];

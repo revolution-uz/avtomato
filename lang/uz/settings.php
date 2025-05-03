@@ -22,4 +22,5 @@ return [
     'loyalty_program_app_min_version' => 'Mijozlar bonus dasturi ilovasining minimal versiyasi',
     'loyalty_program_update_type' => 'Mijozlar bonus dasturi yangilanish turi',
     'loyalty_program_instruction_video_path' => 'Mijozlar bonus dasturi bo‘yicha ko‘rsatma video yo‘li',
+    'loyalty_program_instruction_video_type' => 'Mijozlar bonus dasturi bo‘yicha ko‘rsatma video turi',
 ];

@@ -3,6 +3,7 @@
 namespace App\GraphQL\LoyaltyProgram\Common\Types;
 
 use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\Main\SettingsTypeEnum;
 use App\GraphQL\GraphQLTypeHelper;
 use App\Models\Company\CompanySettings;
 use GraphQL\Type\Definition\Type;
@@ -57,7 +58,15 @@ class SettingsGraphQLType extends GraphQLType
                 'resolve' => function (Collection $root) {
                     $path = $root->first(fn (CompanySettings $settings) => $settings->name === CompanySettingsEnum::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH);
 
-                    return ! empty($path->value) ? asset($path->value) : null;
+                    if (empty($path?->value)) {
+                        return null;
+                    }
+
+                    $videoType = CompanySettings::query()
+                        ->where('name', CompanySettingsEnum::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE)
+                        ->value('value');
+
+                    return $videoType == SettingsTypeEnum::STRING->value ? $path->value : asset($path->value);
                 },
             ],
         ];

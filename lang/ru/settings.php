@@ -22,4 +22,5 @@ return [
     'loyalty_program_app_min_version' => 'Минимальная версия приложения программы лояльности',
     'loyalty_program_update_type' => 'Тип обновления программы лояльности',
     'loyalty_program_instruction_video_path' => 'Путь к видеоинструкции программы лояльности',
+    'loyalty_program_instruction_video_type' => 'Тип видеоинструкции программы лояльности',
 ];
