@@ -46,7 +46,7 @@ class CardScoringResponseDTO extends BaseScoringResponse
         return self::from(['report' => $report]);
     }
 
-    public static function parseFromHumo(UniredMonitoringHumoResponseDTO $dto): self
+    public static function parseFromUniredHumo(UniredMonitoringHumoResponseDTO $dto): self
     {
         $report = self::processTransactions(
             $dto->rows,
@@ -75,7 +75,7 @@ class CardScoringResponseDTO extends BaseScoringResponse
         $report = [];
         foreach ($transactions as $transaction) {
             $month = $getMonth($transaction);
-            $amount = $getAmount($transaction);
+            $amount = $getAmount($transaction) / 100;
             $tranType = $getTranType($transaction);
 
             if (! isset($report[$month])) {

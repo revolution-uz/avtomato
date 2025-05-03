@@ -1,0 +1,22 @@
+{
+  "Purchase Payment (P2P Send)": "Xarid to'lovi (P2P jo'natish)",
+  "Transfer crediting (P2P crediting)": "O'tkazmani kreditlash (P2P kreditlash)",
+  "Cash withdrawal": "Naqd pul yechib olish",
+  "Account replenishment via cash in ATM": "Bankomat orqali hisobni to'ldirish",
+  "Refund (cancellation) of purchase": "Xaridni qaytarish (bekor qilish)",
+  "Goods/services payment (non-P2P)": "Mahsulot/xizmatlar uchun to'lov (P2P emas)",
+  "\"Tez QR\" payment": "\"Tez QR\" orqali to'lov",
+  "P2P payment processing": "P2P to'lovni qayta ishlash",
+  "Electronic payments (all)": "Elektron to'lovlar (barchasi)",
+  "E-POS virtual terminal": "E-POS virtual terminali",
+  "E-POS (others)": "E-POS (boshqalar)",
+  "Tax payments": "Soliq to'lovlari",
+  "Charity donations": "Xayriya hissalari",
+  "State duties": "Davlat bojxonalari",
+  "Gov services payments": "Davlat xizmatlari uchun to'lovlar",
+  "Mandatory penalties": "Majburiy jarimalar",
+  "E-auction payments": "Elektron auksion to'lovlari",
+  "Transport ticket payments": "Transport chiptalari uchun to'lovlar",
+  "Utility payments": "Kommunal to'lovlar",
+  "Unknown type": "Noma'lum tur"
+}
