@@ -22,4 +22,5 @@ return [
     'loyalty_program_app_min_version' => 'Мижозлар бонус дастури иловасининг минимал версияси',
     'loyalty_program_update_type' => 'Мижозлар бонус дастури янгиланиш тури',
     'loyalty_program_instruction_video_path' => 'Мижозлар бонус дастури бўйича кўрсатма видеоси йўли',
+    'loyalty_program_instruction_video_type' => 'Мижозлар бонус дастури бўйича кўрсатма видеоси тури',
 ];

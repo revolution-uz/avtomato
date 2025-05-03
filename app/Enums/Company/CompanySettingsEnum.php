@@ -31,6 +31,7 @@ enum CompanySettingsEnum: string
     case LOYALTY_PROGRAM_SUPPORT_PHONE = 'lp_support_phone';
     case LOYALTY_PROGRAM_APP_MIN_VERSION = 'lp_app_min_version';
     case LOYALTY_PROGRAM_UPDATE_TYPE = 'lp_update_type';
+    case LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE = 'lp_instruction_video_type';
     case LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH = 'lp_instruction_video_path';
 
     // ICAN settings
@@ -47,7 +48,8 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_BALANCE_LIMIT,
             self::ICAN_BRANCH_ID,
             self::ICAN_EMPLOYEE_ID,
-            self::LOYALTY_PROGRAM_UPDATE_TYPE => SettingsTypeEnum::INT,
+            self::LOYALTY_PROGRAM_UPDATE_TYPE,
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE => SettingsTypeEnum::INT,
 
             self::SMS_INSTALLMENT_AUTO_CHARGE,
             self::SMS_INSTALLMENT_NOTIFICATION,
@@ -85,6 +87,7 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_SUPPORT_BOT_USERNAME,
             self::LOYALTY_PROGRAM_SUPPORT_PHONE,
             self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => '',
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE => SettingsTypeEnum::FILE->value,
         };
     }
 
@@ -134,6 +137,7 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_APP_MIN_VERSION => __('settings.loyalty_program_app_min_version'),
             self::LOYALTY_PROGRAM_UPDATE_TYPE => __('settings.loyalty_program_update_type'),
             self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => __('settings.loyalty_program_instruction_video_path'),
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE => __('settings.loyalty_program_instruction_video_type'),
         };
     }
 }

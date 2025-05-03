@@ -65,25 +65,30 @@ class CompanySettingsResource extends Resource
             Select::make('Type')->options(SettingsTypeEnum::getAllTypesForDropdown())->displayUsingLabels()->exceptOnForms(),
         ];
 
-        $response[] = match ($this->type) {
-            SettingsTypeEnum::INT => Number::make('Value')->rules(['required', 'integer']),
-            SettingsTypeEnum::BOOLEAN => Boolean::make('Value')->rules(['required', 'boolean']),
-            SettingsTypeEnum::FLOAT => Number::make('Value')->rules(['required', 'decimal']),
-            SettingsTypeEnum::TEXT => Textarea::make('Value')->rules(['required', 'max:2014']),
-            SettingsTypeEnum::DATETIME => DateTime::make('Value')->rules(['required', 'datetime']),
-            SettingsTypeEnum::DATE => DateTime::make('Value')->rules(['required', 'date']),
-            SettingsTypeEnum::FILE => $request->isResourceIndexRequest()
+        if ($this->name === CompanySettingsEnum::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH) {
+            $videoType = CompanySettings::query()
+                ->where('name', CompanySettingsEnum::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE)
+                ->value('value');
+
+            $response[] = $request->isResourceIndexRequest()
                 ? Boolean::make('Value')
-                : File::make('Value')
-                    ->rules([
-                        'required',
-                        $this->name === CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH ? 'mimes:json' : 'mimes:mp4,avi,mov,mkv',
-                        $this->name === CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH ? 'max:100' : 'max:51200',
-                    ])
-                    ->disk($this->name === CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH ? 'local' : 'public')
-                    ->path($this->name === CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH ? 'credentials' : 'uploads/loyalty_program'),
-            SettingsTypeEnum::STRING, null => Text::make('Value')->rules(['required', 'max:255']),
-        };
+                : ($videoType == SettingsTypeEnum::STRING->value
+                    ? Text::make('Value')->rules(['required', 'max:255'])
+                    : File::make('Value')->rules(['required', 'mimes:mp4,avi,mov,mkv', 'max:51200'])->disk('public')->path('uploads/loyalty_program'));
+        } else {
+            $response[] = match ($this->type) {
+                SettingsTypeEnum::INT => Number::make('Value')->rules(['required', 'integer']),
+                SettingsTypeEnum::BOOLEAN => Boolean::make('Value')->rules(['required', 'boolean']),
+                SettingsTypeEnum::FLOAT => Number::make('Value')->rules(['required', 'decimal']),
+                SettingsTypeEnum::TEXT => Textarea::make('Value')->rules(['required', 'max:2014']),
+                SettingsTypeEnum::DATETIME => DateTime::make('Value')->rules(['required', 'datetime']),
+                SettingsTypeEnum::DATE => DateTime::make('Value')->rules(['required', 'date']),
+                SettingsTypeEnum::FILE => $request->isResourceIndexRequest()
+                    ? Boolean::make('Value')
+                    : File::make('Value')->rules(['required', 'mimes:json', 'max:100'])->disk('local')->path('credentials'),
+                SettingsTypeEnum::STRING, null => Text::make('Value')->rules(['required', 'max:255']),
+            };
+        }
 
         $response[] = DateTime::make('Updated at', 'updated_at')->exceptOnForms();
 
