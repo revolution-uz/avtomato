@@ -24,7 +24,7 @@ return [
     'scoring_inps_history' => 'Ежемесячный счет',
     'scoring_mib_info' => 'MIB-оценка',
     'scoring_tax_info' => 'Налоговый рейтинг',
-    'scoring_humo' => 'Ваш уровень юмора',
+    'scoring_humo' => 'Хумо скоринг',
     'scoring_uzcard' => 'Узкард скоринг',
     'activity_log' => 'История активности',
     'atmos_card_pay' => 'Вывод денег на карту Атмос',
