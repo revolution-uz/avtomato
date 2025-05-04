@@ -14,11 +14,14 @@ enum FeatureEnum: string
     case CALCULATOR_INSTALLMENT = 'calculator_installment';
     case INSTALLMENT_MANAGEMENT = 'installment_management';
     case SMS = 'sms';
-    case INSTALLMENT_AUTO_CHARGE = 'installment_auto_charge';
+    case INSTALLMENT_AUTO_CHARGE = 'installment_auto_charge'; // to charge by card (via Atmos)
+    case INSTALLMENT_AUTO_CHARGE_BY_PINFL = 'installment_auto_charge_by_pinfl'; // to charge by PINFL (via Atmos)
+    case ATMOS_CARD_PAY = 'atmos_card_pay'; // only serves to save Atmos Card Pay credentials
+    case ATMOS_PINFL_PAY = 'atmos_pinfl_pay'; // only serves to save Atmos PINFl Pay credentials
+    case UNIRED_PAY = 'unired_pay';
     case INSTALLMENT_GUARANTOR = 'installment_guarantor';
     case INSTALLMENT_COMMENT = 'installment_comment';
     case INSTALLMENT_DOCUMENT = 'installment_document';
-    case INSTALLMENT_AUTO_CHARGE_BY_PINFL = 'installment_auto_charge_by_pinfl';
     case TARIFF_MANAGEMENT = 'tariff_management';
     case TRANSACTION_MANAGEMENT = 'transaction_management';
     case TRANSACTION_TYPE_MANAGEMENT = 'transaction_type_management';
@@ -35,9 +38,6 @@ enum FeatureEnum: string
     case SCORING_ROYXAT_CREDIT_HISTORY = 'scoring_royxat_credit_history';
     case SCORING_UZUM_NASIYA_LIMIT = 'scoring_uzum_nasiya_limit';
     case ACTIVITY_LOG = 'activity_log';
-    case ATMOS_CARD_PAY = 'atmos_card_pay';
-    case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
-    case UNIRED_PAY = 'unired_pay';
     case ECOMMERCE = 'ecommerce_management';
     case SBP_PAY = 'sbp_pay';
     case TELEGRAM_BOT_FEATURE = 'telegram_bot_feature';
