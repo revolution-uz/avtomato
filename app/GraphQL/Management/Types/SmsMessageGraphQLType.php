@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Management\Types;
 
+use App\GraphQL\Scalars\BigInteger;
 use App\Models\Company\SmsMessage;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -35,7 +36,7 @@ class SmsMessageGraphQLType extends GraphQLType
                 'resolve' => fn (SmsMessage $root) => $root->status->value,
             ],
             'ext_id' => [
-                'type' => Type::int(),
+                'type' => GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (SmsMessage $root) => $root->ext_id,
             ],
             'installment_id' => [
