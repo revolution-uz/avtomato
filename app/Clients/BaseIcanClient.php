@@ -75,7 +75,7 @@ abstract class BaseIcanClient extends BaseClient
             throw new GeneralException('Cannot activate the token');
         }
 
-        if (! $try) {
+        if ($try) {
             $url .= count($data) > 0 ? '?' . http_build_query($data) : '';
         }
 
