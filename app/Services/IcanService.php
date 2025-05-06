@@ -64,7 +64,7 @@ class IcanService
          * @var Collection<IcanTransactionDTO>|null $transactions
          * @var IcanMetaDTO|null $meta
          */
-        [$transactions, $meta] = $this->icanClient->getTransactions(IcanTransactionStatusEnum::SUCCESS, $page);
+        ['transactions' => $transactions, 'meta' => $meta] = $this->icanClient->getTransactions(IcanTransactionStatusEnum::SUCCESS, $page);
 
         if (! $transactions || ! $meta) {
             return false;
@@ -92,7 +92,7 @@ class IcanService
          * @var Collection<IcanTransactionDTO>|null $transactions
          * @var IcanMetaDTO|null $meta
          */
-        [$transactions, $meta] = $this->icanClient->getTransactions(IcanTransactionStatusEnum::CANCELED, $page);
+        ['transactions' => $transactions, 'meta' => $meta] = $this->icanClient->getTransactions(IcanTransactionStatusEnum::CANCELED, $page);
 
         if (! $transactions || ! $meta) {
             return false;
