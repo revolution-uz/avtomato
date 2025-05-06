@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Clients\IcanClient;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
@@ -94,7 +95,8 @@ class Transaction extends Model
                     return false;
                 }
 
-                CreateIcanTransactionJob::dispatch($transaction->id);
+                $icanService = new IcanService(new IcanClient());
+                $icanService->createTransaction($transaction);
             }
         });
 
