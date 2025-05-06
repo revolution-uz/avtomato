@@ -68,6 +68,7 @@ class SyncIcanTransactionsForCompany extends Command
             $this->info('Syncing page ' . $page);
             $hasMorePages = $icanService->syncTransactions($page, all: true);
             $page++;
+            sleep(1);
         } while ($hasMorePages);
 
         return CommandAlias::SUCCESS;
