@@ -202,7 +202,7 @@ class UniredService
 
     public function reversePayment(Transaction $transaction): UniredResponseDTO
     {
-        return $this->uniredClient->cancelPayment(new UniredCancelPaymentRequestDTO(Utilities::generateIdByTenancy($transaction->id), $transaction->external_id));
+        return $this->uniredClient->cancelPayment(new UniredCancelPaymentRequestDTO($transaction->external_id));
     }
 
     public function setWebhook(string $webhook, bool $status)
