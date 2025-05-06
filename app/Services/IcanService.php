@@ -113,6 +113,10 @@ class IcanService
         }
 
         foreach ($transactions as $transactionDto) {
+            if ($transactionDto->payment_type === 'mib') {
+                continue;
+            }
+
             try {
                 $transaction = $this->createOrUpdateTransaction($transactionDto);
 
@@ -141,6 +145,10 @@ class IcanService
         }
 
         foreach ($transactions as $transactionDto) {
+            if ($transactionDto->payment_type === 'mib') {
+                continue;
+            }
+
             try {
                 $this->createOrUpdateTransaction($transactionDto);
             } catch (Throwable $e) {
