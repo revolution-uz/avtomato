@@ -69,7 +69,7 @@ abstract class BaseIcanClient extends BaseClient
     /**
      * @throws GeneralException
      */
-    private function sendHttpRequest(string $url, array $data, string $method): array
+    private function sendHttpRequest(string $url, array $data, string $method, bool $try = true): array
     {
         if (! $token = $this->getActiveToken()) {
             throw new GeneralException('Cannot activate the token');
@@ -126,6 +126,11 @@ abstract class BaseIcanClient extends BaseClient
                 headers: ['Authorization' => $token],
                 body: $data,
             ), 'error');
+
+            if ($try) {
+                sleep(5);
+                return $this->sendHttpRequest($url, $data, $method, false);
+            }
 
             throw new GeneralException($exception->getMessage());
         }
