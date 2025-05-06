@@ -28,13 +28,17 @@ class IcanClient extends BaseIcanClient
         return ClientCodeEnum::ICAN;
     }
 
-    public function getTariffs(int $page = 0, int $pageSize = 100): array
+    public function getTariffs(int $page = 0, int $pageSize = 100, bool $onlyDeleted = false): array
     {
         $data = [
             'page' => $page,
             'page-size' => $pageSize,
             'with' => [],
         ];
+
+        if ($onlyDeleted) {
+            $data['show'] = 'only-deleted';
+        }
 
         try {
             $response = $this->makeRequest(self::TARIFFS, $data, 'get');

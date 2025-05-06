@@ -35,13 +35,13 @@ class IcanService
 
     public function __construct(private readonly IcanClient $icanClient) {}
 
-    public function syncTariffs(int $page): bool
+    public function syncTariffs(int $page, bool $onlyDeleted): bool
     {
         /**
          * @var Collection<IcanTariffDTO>|null $credits
          * @var IcanMetaDTO|null $meta
          */
-        ['tariffs' => $tariffs, 'meta' => $meta] = $this->icanClient->getTariffs($page);
+        ['tariffs' => $tariffs, 'meta' => $meta] = $this->icanClient->getTariffs($page, onlyDeleted: $onlyDeleted);
 
         if (! $tariffs || ! $meta) {
             return false;
