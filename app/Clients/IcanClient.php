@@ -68,7 +68,7 @@ class IcanClient extends BaseIcanClient
             $response = $this->makeRequest(self::TRANSACTIONS, $data, 'get');
 
             return [
-                'transactions' => collect($response['data'])->map([IcanTransactionDTO::class, 'from']),
+                'transactions' => IcanTransactionDTO::collect($response['data']),
                 'meta' => IcanMetaDTO::from($response['meta']),
             ];
 
