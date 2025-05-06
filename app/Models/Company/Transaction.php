@@ -95,8 +95,8 @@ class Transaction extends Model
                 }
 
                 $icanService = new IcanService(new IcanClient());
-//                $response = $icanService->createTransaction($transaction);
-//                $transaction->ican_id = $response->id;
+                $response = $icanService->createTransaction($transaction);
+                $transaction->ican_id = $response->id;
             }
         });
 
