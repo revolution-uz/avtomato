@@ -10,6 +10,7 @@ use App\DTOs\Ican\Request\IcanTransactionRequestDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\External\IcanTransactionStatusEnum;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class IcanClient extends BaseIcanClient
 {
@@ -42,6 +43,8 @@ class IcanClient extends BaseIcanClient
             ];
 
         } catch (Exception $e) {
+            Log::error($e);
+
             return ['credits' => null, 'meta' => null];
         }
     }
