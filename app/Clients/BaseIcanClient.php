@@ -86,6 +86,15 @@ abstract class BaseIcanClient extends BaseClient
                 ->connectTimeout(150)
                 ->$method($url);
 
+            parent::logRequest(new HttpRequestLogDTO(
+                method: $method,
+                url: $url,
+                status: $response->status(),
+                response: $response->body(),
+                duration: $response->transferStats?->getTransferTime(),
+                body: $data,
+            ));
+
             if (! $response->successful() || empty($response->json())) {
                 if ($response->status() === 429) {
                     parent::logRequest(new HttpRequestLogDTO(
