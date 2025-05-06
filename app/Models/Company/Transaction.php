@@ -181,15 +181,15 @@ class Transaction extends Model
         $uniredService = app(UniredService::class);
 
         if ($this->transaction_type_id == TransactionType::ATMOS_WITH_CARD) {
-            return $atmosService->reverseCardPayment($this);
+            $atmosService->reverseCardPayment($this);
         } elseif ($this->transaction_type_id == TransactionType::ATMOS_WITH_PINFL) {
-            return $atmosService->reversePinflPayment($this);
+            $atmosService->reversePinflPayment($this);
         } elseif ($this->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
-            return $uniredService->reversePayment($this);
-        } else {
-            $this->status = TransactionStatusEnum::CANCELED;
-
-            return $this->saveOrFail();
+            $uniredService->reversePayment($this);
         }
+
+        $this->status = TransactionStatusEnum::CANCELED;
+
+        return $this->saveOrFail();
     }
 }
