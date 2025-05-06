@@ -106,7 +106,7 @@ class InstallmentGraphQLType extends GraphQLType
             ],
             'debt' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Installment $root) => $root->debtAmount,
+                'resolve' => fn (Installment $root) => abs($root->debtAmount) < 2 ? 0 : $root->debtAmount,
             ],
             'monthly_payment' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
