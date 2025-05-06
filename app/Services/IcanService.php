@@ -217,7 +217,7 @@ class IcanService
             'type' => InstallmentTypeEnum::WITHOUT_CARD,
             'amount' => $credit->amount,
             'initial_fee' => $credit->initial_payment,
-            'percent' => $credit->percent,
+            'percent' => $tariff->percent,
             'description' => $credit->comment,
             'sms_notify' => false,
             'any_card_charge' => false,
