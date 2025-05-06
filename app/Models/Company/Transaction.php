@@ -6,7 +6,6 @@ use App\Clients\IcanClient;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
-use App\Jobs\CreateIcanTransactionJob;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
 use App\Services\AtmosService;
@@ -96,8 +95,8 @@ class Transaction extends Model
                 }
 
                 $icanService = new IcanService(new IcanClient());
-                $response = $icanService->createTransaction($transaction);
-                $transaction->ican_id = $response->id;
+//                $response = $icanService->createTransaction($transaction);
+//                $transaction->ican_id = $response->id;
             }
         });
 

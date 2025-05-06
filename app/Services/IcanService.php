@@ -156,7 +156,7 @@ class IcanService
         return $icanCreditDto->overdue_debt;
     }
 
-    public function createTransaction(Transaction $transaction): ?IcanTransactionDTO
+    public function createTransaction(Transaction $transaction): IcanTransactionDTO
     {
         $dto = IcanTransactionRequestDTO::from([
             'credit_id' => $transaction->installment->ican_id,
