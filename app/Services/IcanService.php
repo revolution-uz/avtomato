@@ -237,8 +237,8 @@ class IcanService
             'period' => $credit->period,
             'canceled_at' => Carbon::parse($credit->canceled_at),
             'cancellation_details' => $credit->cancel_reason,
-            'starts_in' => Carbon::parse($credit->activated_at ?: $credit->created_at)->addMonth(),
-            'paid_amount' => $credit->amount - $credit->main_debt,
+            'starts_in' => Carbon::parse($credit->start_date ?: ($credit->activated_at ?: $credit->created_at))->addMonth(),
+            'paid_amount' => $credit->amount - $credit->initial_payment - $credit->main_debt,
             'updated_at' => Carbon::parse($credit->updated_at),
         ]);
 
