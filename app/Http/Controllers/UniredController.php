@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\Company\Installment;
 use App\Services\UniredService;
 use Exception;
+use Illuminate\Support\Carbon;
 
 class UniredController extends Controller
 {
@@ -27,6 +28,10 @@ class UniredController extends Controller
                         : $installment->customer_id;
 
                     if (Company\Transaction::query()->where('external_id', $request->ext)->exists()) {
+                        $transaction = Company\Transaction::query()->where('external_id', $request->ext)->first();
+                        $transaction->card_pan = $request->card['pan'] ?? '****';
+                        $transaction->paid_at = Carbon::parse($request->created_at)->addHours(5);
+                        $transaction->save();
                         return response()->json(['success' => true, 'message' => 'OK'], 200);
                     }
 
