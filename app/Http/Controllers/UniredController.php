@@ -26,6 +26,10 @@ class UniredController extends Controller
                         ? $request->getInstallmentGuarantorCustomerId()
                         : $installment->customer_id;
 
+                    if (Company\Transaction::query()->where('external_id', $request->ext)->exists()) {
+                        return response()->json(['success' => true, 'message' => 'OK'], 200);
+                    }
+
                     if ($this->uniredService->createTransaction($installment, $customerId, $request)) {
                         return response()->json(['success' => true, 'message' => 'OK'], 200);
                     }
