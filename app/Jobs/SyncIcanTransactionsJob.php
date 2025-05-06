@@ -29,7 +29,7 @@ class SyncIcanTransactionsJob implements ShouldBeUniqueUntilProcessing, ShouldQu
     public function handle(IcanService $icanService): void
     {
         if ($this->status === IcanTransactionStatusEnum::SUCCESS) {
-            $hasMorePages = $icanService->syncTransactions($this->page);
+            $hasMorePages = $icanService->syncTransactions($this->page, all: false);
 
         } else {
             $hasMorePages = $icanService->syncCanceledTransactions($this->page);
