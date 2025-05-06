@@ -87,7 +87,7 @@ class UniredService
             $customer->last_name,
             $customer->middle_name,
         ));
-        if ($response->status) {
+        if ($response->status && $customer->phones) {
             $response = $this->uniredClient->addClientPhones(new UniredAddClientPhonesRequestDTO(
                 $customer->pinfl,
                 array_map(fn ($phone) => substr($phone, -9), $customer->phones->pluck('phone')->toArray())
