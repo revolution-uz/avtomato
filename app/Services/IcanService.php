@@ -47,8 +47,6 @@ class IcanService
             return false;
         }
 
-        Log::info($tariffs);
-
         foreach ($tariffs as $tariff) {
             try {
                 Tariff::query()->updateOrCreate([
