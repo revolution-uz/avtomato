@@ -98,7 +98,7 @@ class IcanService
         return $meta->last_page > $page;
     }
 
-    public function syncTransactions(int $page): bool
+    public function syncTransactions(int $page, bool $all): bool
     {
         /**
          * @var Collection<IcanTransactionDTO>|null $transactions
@@ -114,7 +114,7 @@ class IcanService
             try {
                 $transaction = $this->createOrUpdateTransaction($transactionDto);
 
-                if (! $transaction->wasRecentlyCreated) {
+                if (! $all && ! $transaction->wasRecentlyCreated) {
                     return false;
                 }
 
