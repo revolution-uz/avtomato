@@ -40,7 +40,7 @@ class IcanService
          * @var Collection<IcanCreditDTO>|null $credits
          * @var IcanMetaDTO|null $meta
          */
-        [$credits, $meta] = $this->icanClient->getCredits($page);
+        ['credits' => $credits, 'meta' => $meta] = $this->icanClient->getCredits($page);
 
         if (! $credits || ! $meta) {
             return false;
