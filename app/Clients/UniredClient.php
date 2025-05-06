@@ -60,7 +60,7 @@ class UniredClient extends BaseClient
     const PAYMENT_GET = 'payment.get';
     const PAYMENT_CHANGE_SEND_STATUS = 'payment.change.send.status';
     const PAYMENT_REGISTER = 'payment.register';
-    const PAYMENT_CANCEL = 'payment.cancel';
+    const PAYMENT_CANCEL = 'transaction.cancel';
     const CHECK_WEBHOOK = 'webhook.check';
     const SET_WEBHOOK = 'webhook.set';
 
