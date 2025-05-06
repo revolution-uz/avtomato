@@ -13,6 +13,7 @@ use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\CustomerTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
+use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Enums\External\IcanCreditStatusEnum;
 use App\Enums\External\IcanTransactionStatusEnum;
@@ -22,6 +23,7 @@ use App\Models\Company\CompanyAdmin;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
+use App\Models\Company\Phone;
 use App\Models\Company\Tariff;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
@@ -211,11 +213,20 @@ class IcanService
     {
         $installment = Installment::query()->where('ican_id', $credit->id)->first();
         $tariff = $this->createOrGetTariff($credit);
+        $customer = $this->createOrGetCustomer($credit->person_main->user_document->data);
+
+        foreach ($credit->phones_for_sms as $phoneForSms) {
+            /** @var Phone $phone */
+            $phone = Phone::query()->firstOrCreate(['phone' => $phoneForSms]);
+            if (!$customer->phones->where(fn(Phone $x) => $x->id == $phone->id)->first()) {
+                $customer->phones()->attach($phone->id, ['type' => PhoneTypeEnum::PRIVATE, 'comment' => null, 'installment_notifications' => true]);
+            }
+        }
 
         if (! $installment) {
             $installment->fill([
                 'ican_id' => $credit->id,
-                'customer_id' => $this->createOrGetCustomer($credit->person_main->user_document->data)->id,
+                'customer_id' => $customer->id,
                 'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
                 'sms_notify' => false,
                 'any_card_charge' => false,
