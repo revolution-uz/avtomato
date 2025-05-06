@@ -89,7 +89,7 @@ class Transaction extends Model
             if ($transaction->installment->ican_id) {
                 $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($transaction->installment->ican_id);
 
-                if ($debtAmount > $transaction->amount) {
+                if ($debtAmount < $transaction->amount) {
                     $transaction->reverse();
 
                     return false;
