@@ -11,7 +11,7 @@ class IcanTariffDTO extends Data
         public ?int $company_id,
         public ?string $name,
         public ?string $type,
-        public ?int $percent,
+        public ?float $percent,
         public ?int $grace_period,
         public ?int $min_period,
         public ?int $max_period,

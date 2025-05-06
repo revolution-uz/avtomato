@@ -5,6 +5,7 @@ namespace App\Clients;
 use App\DTOs\Ican\IcanCreditDTO;
 use App\DTOs\Ican\IcanMetaDTO;
 use App\DTOs\Ican\IcanProfileDTO;
+use App\DTOs\Ican\IcanTariffDTO;
 use App\DTOs\Ican\IcanTransactionDTO;
 use App\DTOs\Ican\Request\IcanTransactionRequestDTO;
 use App\Enums\ClientCodeEnum;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class IcanClient extends BaseIcanClient
 {
+    const TARIFFS = '/company/company/tariff';
     const CREDITS = '/company/credit/credit';
     const CREDITS_SINGLE = '/company/credit/credit/{ican_id}';
     const TRANSACTIONS = '/company/credit/transaction';
@@ -24,6 +26,29 @@ class IcanClient extends BaseIcanClient
     public function getClientCode(): ClientCodeEnum
     {
         return ClientCodeEnum::ICAN;
+    }
+
+    public function getTariffs(int $page = 0, int $pageSize = 100): array
+    {
+        $data = [
+            'page' => $page,
+            'page-size' => $pageSize,
+            'with' => [],
+        ];
+
+        try {
+            $response = $this->makeRequest(self::TARIFFS, $data, 'get');
+
+            return [
+                'tariffs' => IcanTariffDTO::collect($response['data']),
+                'meta' => IcanMetaDTO::from($response['meta']),
+            ];
+
+        } catch (Exception $e) {
+            Log::error($e);
+
+            return ['tariffs' => null, 'meta' => null];
+        }
     }
 
     public function getCredits(int $page = 0, int $pageSize = 100): array
@@ -73,6 +98,7 @@ class IcanClient extends BaseIcanClient
             ];
 
         } catch (Exception $e) {
+            Log::error($e);
             return ['transactions' => null, 'meta' => null];
         }
     }
@@ -83,6 +109,7 @@ class IcanClient extends BaseIcanClient
             return IcanTransactionDTO::from($this->makeRequest(self::TRANSACTIONS_CREATE, $dto->toArray()));
 
         } catch (Exception $e) {
+            Log::error($e);
             return null;
         }
     }
@@ -95,6 +122,7 @@ class IcanClient extends BaseIcanClient
             return IcanCreditDTO::from($this->makeRequest($path, [], 'get'));
 
         } catch (Exception $e) {
+            Log::error($e);
             return null;
         }
     }
@@ -105,6 +133,7 @@ class IcanClient extends BaseIcanClient
             return IcanProfileDTO::from($this->makeAuthRequest(self::PROFILE, [], 'get'));
 
         } catch (Exception $e) {
+            Log::error($e);
             return null;
         }
     }
