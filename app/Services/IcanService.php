@@ -25,6 +25,7 @@ use App\Models\Company\Installment;
 use App\Models\Company\Tariff;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -231,11 +232,11 @@ class IcanService
                 default => new GeneralException('Invalid credit status'),
             },
             'period' => $credit->period,
-            'canceled_at' => $credit->canceled_at,
+            'canceled_at' => Carbon::parse($credit->canceled_at)->subHours(5),
             'cancellation_details' => $credit->cancel_reason,
-            'starts_in' => $credit->activated_at ?: $credit->created_at,
+            'starts_in' => Carbon::parse($credit->activated_at ?: $credit->created_at)->subHours(5),
             'paid_amount' => $credit->amount - $credit->main_debt,
-            'updated_at' => $credit->updated_at,
+            'updated_at' => Carbon::parse($credit->updated_at)->subHours(5),
         ]);
 
         if (! $installment->exists || $installment->isDirty()) {
@@ -257,7 +258,7 @@ class IcanService
             'transaction_type_id' => TransactionType::ICAN_INTEGRATION,
             'amount' => $transactionDto->amount,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
-            'paid_at' => $transactionDto->payments->first()?->created_at,
+            'paid_at' => Carbon::parse($transactionDto->payments->first()?->created_at)->subHours(5),
             'card_pan' => $transactionDto->service_data?->pan,
             'is_initial_fee' => $transactionDto->payments->first()?->is_initial_payment,
             'status' => match ($transactionDto->status) {
