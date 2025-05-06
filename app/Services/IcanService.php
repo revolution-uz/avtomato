@@ -209,23 +209,28 @@ class IcanService
 
     private function createOrUpdateInstallment(IcanCreditDTO $credit): Installment
     {
-        $installment = Installment::query()->firstOrNew(['ican_id' => $credit->id]);
+        $installment = Installment::query()->where('ican_id', $credit->id)->first();
         $tariff = $this->createOrGetTariff($credit);
 
+        if (! $installment) {
+            $installment->fill([
+                'ican_id' => $credit->id,
+                'customer_id' => $this->createOrGetCustomer($credit->person_main->user_document->data)->id,
+                'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
+                'sms_notify' => false,
+                'any_card_charge' => false,
+                'is_blacklist' => false,
+                'type' => InstallmentTypeEnum::WITH_PINFL,
+            ]);
+        }
+
         $installment->fill([
-            'ican_id' => $credit->id,
-            'customer_id' => $this->createOrGetCustomer($credit->person_main->user_document->data)->id,
             'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
             'tariff_id' => $tariff->id,
-            'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
-            'type' => InstallmentTypeEnum::WITHOUT_CARD,
             'amount' => $credit->amount,
             'initial_fee' => $credit->initial_payment,
             'percent' => $tariff->percent,
             'description' => $credit->comment,
-            'sms_notify' => false,
-            'any_card_charge' => false,
-            'is_blacklist' => false,
             'status' => match ($credit->status) {
                 IcanCreditStatusEnum::CANCELED->value => InstallmentStatusEnum::CANCELED,
                 IcanCreditStatusEnum::ACTIVE->value => InstallmentStatusEnum::ACTIVE,
