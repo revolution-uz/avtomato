@@ -170,6 +170,10 @@ class IcanService
 
     private function createOrGetTariff(IcanCreditDTO $credit): Tariff
     {
+        if (is_null($credit->tariff)) {
+            return Tariff::query()->where('ican_id', $credit->tariff_id)->where('ican_period', $credit->period)->firstOrFail();
+        }
+
         return Tariff::query()->firstOrCreate([
             'ican_id' => $credit->tariff_id,
             'ican_period' => $credit->period,
