@@ -16,12 +16,27 @@ enum CompanySettingsEnum: string
     case SMS_INSTALLMENT_AUTO_CHARGE = 'sms_installment_auto_charge'; // auto charge notification
     case SMS_INSTALLMENT_NOTIFICATION = 'sms_installment_notification'; // charge notification
     case SMS_INSTALLMENT_PAYMENT = 'sms_installment_payment'; // debt notification
+
+    // Telegram bot settings
     case TELEGRAM_BOT_ENABLED = 'telegram_bot_enabled';
     case TELEGRAM_BOT_TOKEN = 'telegram_bot_token';
     case TELEGRAM_CHAT_ID = 'telegram_chat_id';
+
+    // Loyalty program settings
     case LOYALTY_PROGRAM_SYNC_TOKEN = 'loyalty_program_sync_token';
     case LOYALTY_PROGRAM_BALANCE_LIMIT = 'loyalty_program_balance_limit';
     case LOYALTY_PROGRAM_FIREBASE_PATH = 'loyalty_program_firebase_path';
+    case LOYALTY_PROGRAM_APP_MAINTENANCE_MODE = 'lp_app_maintenance_mode';
+    case LOYALTY_PROGRAM_SUPPORT_BOT_USERNAME = 'lp_support_bot_username';
+    case LOYALTY_PROGRAM_SUPPORT_PHONE = 'lp_support_phone';
+    case LOYALTY_PROGRAM_APP_MIN_VERSION = 'lp_app_min_version';
+    case LOYALTY_PROGRAM_UPDATE_TYPE = 'lp_update_type';
+    case LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE = 'lp_instruction_video_type';
+    case LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH = 'lp_instruction_video_path';
+
+    // ICAN settings
+    case ICAN_BRANCH_ID = 'ican_branch_id';
+    case ICAN_EMPLOYEE_ID = 'ican_employee_id';
 
     public static function getType(self $type): SettingsTypeEnum
     {
@@ -30,31 +45,49 @@ enum CompanySettingsEnum: string
             self::PINFL_AFTER_DUE_DAYS,
             self::GUARANTOR_AFTER_DUE_DAYS,
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS,
-            self::LOYALTY_PROGRAM_BALANCE_LIMIT => SettingsTypeEnum::INT,
+            self::LOYALTY_PROGRAM_BALANCE_LIMIT,
+            self::ICAN_BRANCH_ID,
+            self::ICAN_EMPLOYEE_ID,
+            self::LOYALTY_PROGRAM_UPDATE_TYPE,
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE => SettingsTypeEnum::INT,
 
             self::SMS_INSTALLMENT_AUTO_CHARGE,
             self::SMS_INSTALLMENT_NOTIFICATION,
             self::SMS_INSTALLMENT_PAYMENT,
-            self::TELEGRAM_BOT_ENABLED => SettingsTypeEnum::BOOLEAN,
+            self::TELEGRAM_BOT_ENABLED,
+            self::LOYALTY_PROGRAM_APP_MAINTENANCE_MODE => SettingsTypeEnum::BOOLEAN,
 
             self::LOYALTY_PROGRAM_SYNC_TOKEN,
             self::TELEGRAM_BOT_TOKEN,
-            self::TELEGRAM_CHAT_ID => SettingsTypeEnum::STRING,
+            self::TELEGRAM_CHAT_ID,
+            self::LOYALTY_PROGRAM_SUPPORT_BOT_USERNAME,
+            self::LOYALTY_PROGRAM_SUPPORT_PHONE,
+            self::LOYALTY_PROGRAM_APP_MIN_VERSION => SettingsTypeEnum::STRING,
 
-            self::LOYALTY_PROGRAM_FIREBASE_PATH => SettingsTypeEnum::FILE,
+            self::LOYALTY_PROGRAM_FIREBASE_PATH,
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => SettingsTypeEnum::FILE,
         };
     }
 
     public static function getDefaultValue(self $type): int|bool|string
     {
         return match ($type) {
-            self::CARD_AFTER_DUE_DAYS => 1,
+            self::CARD_AFTER_DUE_DAYS, self::LOYALTY_PROGRAM_APP_MIN_VERSION, self::LOYALTY_PROGRAM_UPDATE_TYPE, self::ICAN_BRANCH_ID => 1,
             self::PINFL_AFTER_DUE_DAYS => 5,
             self::GUARANTOR_AFTER_DUE_DAYS => 10,
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS => 15,
             self::SMS_INSTALLMENT_AUTO_CHARGE => true,
-            self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT, self::TELEGRAM_BOT_ENABLED => false,
-            self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID, self::LOYALTY_PROGRAM_SYNC_TOKEN, self::LOYALTY_PROGRAM_BALANCE_LIMIT, self::LOYALTY_PROGRAM_FIREBASE_PATH => '',
+            self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT, self::TELEGRAM_BOT_ENABLED, self::LOYALTY_PROGRAM_APP_MAINTENANCE_MODE => false,
+            self::TELEGRAM_BOT_TOKEN,
+            self::TELEGRAM_CHAT_ID,
+            self::LOYALTY_PROGRAM_SYNC_TOKEN,
+            self::LOYALTY_PROGRAM_BALANCE_LIMIT,
+            self::LOYALTY_PROGRAM_FIREBASE_PATH,
+            self::ICAN_EMPLOYEE_ID,
+            self::LOYALTY_PROGRAM_SUPPORT_BOT_USERNAME,
+            self::LOYALTY_PROGRAM_SUPPORT_PHONE,
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => '',
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE => SettingsTypeEnum::FILE->value,
         };
     }
 
@@ -96,6 +129,15 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_SYNC_TOKEN => __('settings.loyalty_program_sync_token'),
             self::LOYALTY_PROGRAM_BALANCE_LIMIT => __('settings.loyalty_program_card_balance_check'),
             self::LOYALTY_PROGRAM_FIREBASE_PATH => __('settings.loyalty_program_firebase_path'),
+            self::ICAN_BRANCH_ID => __('settings.ican_branch_id'),
+            self::ICAN_EMPLOYEE_ID => __('settings.ican_employee_id'),
+            self::LOYALTY_PROGRAM_APP_MAINTENANCE_MODE => __('settings.loyalty_program_app_maintenance_mode'),
+            self::LOYALTY_PROGRAM_SUPPORT_BOT_USERNAME => __('settings.loyalty_program_support_bot_username'),
+            self::LOYALTY_PROGRAM_SUPPORT_PHONE => __('settings.loyalty_program_support_phone'),
+            self::LOYALTY_PROGRAM_APP_MIN_VERSION => __('settings.loyalty_program_app_min_version'),
+            self::LOYALTY_PROGRAM_UPDATE_TYPE => __('settings.loyalty_program_update_type'),
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => __('settings.loyalty_program_instruction_video_path'),
+            self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE => __('settings.loyalty_program_instruction_video_type'),
         };
     }
 }

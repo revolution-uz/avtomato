@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Website;
 
+use App\Enums\ModuleEnum;
 use App\Models\BaseModule;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -11,7 +12,7 @@ class PricingController
 {
     public function index(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        $baseModules = BaseModule::all();
+        $baseModules = BaseModule::query()->whereNotIn('name', [ModuleEnum::ICAN])->get()->all();
 
         $moduleNames = [
             'installment' => 'Nasiya savdo moduli',

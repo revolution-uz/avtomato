@@ -48,7 +48,7 @@ class SendMessageToTelegramJob implements ShouldBeUnique, ShouldQueue
      */
     public function handle(): void
     {
-        $botToken = Settings::getConfig(SettingsEnum::TELEGRAM_BOT_TOKEN);
+        $botToken = Settings::getValue(SettingsEnum::TELEGRAM_BOT_TOKEN);
 
         $response = Http::post('https://api.telegram.org/bot' . $botToken . '/sendMessage', $this->data);
 

@@ -74,8 +74,10 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read Carbon $nextPaymentDate
  * @property mixed $wholeDebtAmount
  * @property float $portion
+ * @property int|null $ican_id
  *
  * @method static Builder whereNextPayDate(string $operator, Carbon $date)
+ * @method static Builder excludeIcanInstallments()
  */
 class Installment extends Model
 {
@@ -107,6 +109,8 @@ class Installment extends Model
         'guarantor_after_due_days',
         'guarantor_pinfl_after_due_days',
         'paid_amount',
+        'ican_id',
+        'updated_at',
     ];
 
     protected $casts = [
@@ -365,6 +369,11 @@ class Installment extends Model
     public function scopeSumProfit($query)
     {
         return $query->sumCustomRaw(self::getProfitAmountRaw());
+    }
+
+    public function scopeExcludeIcanInstallments($query)
+    {
+        return $query->whereNull('ican_id');
     }
 
     public function fixPaidAmount(): void

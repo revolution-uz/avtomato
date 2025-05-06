@@ -52,12 +52,7 @@ class SendDebtSmsJob implements ShouldBeUnique, ShouldQueue
             }
             $message = new SmsMessage;
             $message->phone = $phone->phone;
-            $message->message = $template->getMessage([
-                'credit_number' => $installment->id,
-                'amount' => $installment->debtAmount,
-                'company' => tenant('name'),
-                'phone' => tenant('owner_phone'),
-            ]);
+            $message->message = $template->getMessage(['credit_number' => $installment->id, 'amount' => $installment->debtAmount]);
             $message->status = SmsMessageStatusEnum::ACCEPTED;
             $message->saveOrFail();
             $balanceService->chargeAmount($feature->name, $message);

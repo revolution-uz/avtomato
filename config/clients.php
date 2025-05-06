@@ -98,4 +98,14 @@ return [
         'callback-token' => env('QR_PAY_CALLBACK_TOKEN', ''),
         'validity' => 365,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | ICAN Client
+    |--------------------------------------------------------------------------
+    */
+    'ican' => [
+        'base_url' => 'https://api.credit.icangroup.uz',
+        'auth_base_url' => 'https://api.base.icangroup.uz',
+    ],
 ];

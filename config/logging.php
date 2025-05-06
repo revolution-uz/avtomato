@@ -153,6 +153,30 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'sms-sayqal-callback' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/sms-sayqal-callback.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'ican-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/ican-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'ican-service' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/ican-service.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
         'document-generator-client' => [
             'driver' => 'daily',
             'path' => storage_path('logs/document-generator-client.log'),

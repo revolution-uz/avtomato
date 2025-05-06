@@ -6,6 +6,7 @@ use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Enums\FeatureEnum;
+use App\Enums\Main\SettingsEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Models\Company\Branch;
 use App\Models\Company\Feature;
@@ -14,6 +15,7 @@ use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
+use App\Models\Settings;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -127,6 +129,12 @@ class InstallmentService
     {
         if ($status == InstallmentStatusEnum::ACTIVE) {
             if ($installment->isPaidInitialFee()) {
+                if ($installment->status == InstallmentStatusEnum::INACTIVE) {
+                    $amount = Settings::getConfig(SettingsEnum::INSTALLMENT_ACTIVATION_FEE);
+
+                    $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_MANAGEMENT, $installment, $amount);
+                }
+
                 $installment->status = $status;
 
                 return $installment->save();

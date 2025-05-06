@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 /**
  * @property string $transactionid
@@ -62,7 +62,7 @@ class SayqalSmsCallbackRequest extends FormRequest
     {
         if (! isset($this->arr)) {
             if (! preg_match('/^\d+' . Utilities::TENANT_SEPARATOR . '\d+$/', $this->smsid)) {
-                throw new HttpResponseException(response()->json(['success'], 200));
+                throw new GeneralException('Invalid SMS ID format');
             }
             $this->arr = explode(Utilities::TENANT_SEPARATOR, $this->smsid);
         }

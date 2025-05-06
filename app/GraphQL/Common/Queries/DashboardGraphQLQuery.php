@@ -61,11 +61,15 @@ class DashboardGraphQLQuery extends Query
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return auth('company-admin')->check() && RbacHelper::checkPermission(PermissionEnum::DASHBOARD_INFO_VIEW);
+        return auth('company-admin')->check();
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
+        if (! RbacHelper::checkPermission(PermissionEnum::DASHBOARD_INFO_VIEW)) {
+            return null;
+        }
+
         return new DashboardService(
             $args['transaction_by_type_start_date'] ?? null,
             $args['transaction_by_type_end_date'] ?? null,

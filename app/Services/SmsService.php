@@ -81,10 +81,10 @@ class SmsService
         return $message;
     }
 
-    public function sendConfirmationSms(CardConfirmationSms $confirmationSms, bool $isEcommerceOtp = false): void
+    public function sendConfirmationSms(CardConfirmationSms $confirmationSms, SmsTemplateEnum $smsTemplateEnum): void
     {
         $feature = BaseFeature::where('name', FeatureEnum::SMS)->firstOrFail();
-        $template = SmsTemplate::query()->findOrFail($isEcommerceOtp ? SmsTemplateEnum::ECOMMERCE_OTP->value : SmsTemplateEnum::CARD_CONFIRMATION->value);
+        $template = SmsTemplate::query()->findOrFail($smsTemplateEnum->value);
 
         $data = FeatureSmsData::from($feature->original_data);
 
@@ -93,30 +93,28 @@ class SmsService
             SmsProviderEnum::SMS_FLY => new SmsFlyClient($data->secret),
         };
 
-        $client->sendMessage(id: $confirmationSms->id, phone: $confirmationSms->phone, text: $template->getMessage(['code' => $confirmationSms->code]));
+        $client->sendMessage(
+            id: $confirmationSms->id,
+            phone: $confirmationSms->phone,
+            text: $template->getMessage(['code' => $confirmationSms->code, 'signature' => request()->header('signature', '')])
+        );
     }
 
-    public function callbackSayqalSms(SayqalSmsCallbackRequest $request): bool
+    public function callbackSayqalSms(SayqalSmsCallbackRequest $request): void
     {
-        $message = SmsMessage::query()->find($request->getSmsId());
+        $message = SmsMessage::query()->findOrFail($request->getSmsId());
 
-        if (! $message) {
-            return false;
-        }
-
-        $message->update([
+        $message->updateOrFail([
             'status' => $request->status,
             'updated_at' => $request->statusdate,
         ]);
 
         if ($request->status == SmsMessageStatusEnum::DELIVERED->value) {
             $feature = Feature::findByName(FeatureEnum::SMS);
-            $message->charge->update(['amount' => $feature->chargeable_amount * $request->smsCount()]);
+            $message->charge?->updateOrFail(['amount' => $feature->chargeable_amount * $request->smsCount()]);
         } else {
-            $message->charge->delete();
+            $message->charge?->deleteOrFail();
         }
-
-        return true;
     }
 
     public function callbackSayqalVoice(SayqalVoiceCallbackRequest $request)

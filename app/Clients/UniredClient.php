@@ -8,6 +8,9 @@ use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhoneRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
+use App\DTOs\Unired\Client\UniredClientCardRegisterRequestDTO;
+use App\DTOs\Unired\Client\UniredClientCardVerifyRequestDTO;
+use App\DTOs\Unired\Client\UniredClientMonitoringCardRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardCountDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
@@ -69,6 +72,10 @@ class UniredClient extends BaseClient
     const CARD_INFO = 'card.info';
     const PROCESSING_HUMO_SEARCH = 'processing.humo.search';
     const PROCESSING_UZCARD_SEARCH = 'processing.uzcard.search';
+    const CARD_REGISTER = 'card.register';
+    const CARD_VERIFY = 'card.verify';
+    const MONITORING_HUMO = 'monitoring.humo';
+    const MONITORING_UZCARD = 'monitoring.uzcard';
 
     private string $baseUrl;
     private string $token;
@@ -248,13 +255,36 @@ class UniredClient extends BaseClient
         return $this->makeRequest(self::PROCESSING_UZCARD_SEARCH, $params->toArray());
     }
 
+    public function cardRegister(UniredClientCardRegisterRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::CARD_REGISTER, $params->toArray());
+    }
+
+    public function cardVerify(UniredClientCardVerifyRequestDTO $params)
+    {
+        return $this->makeRequest(self::CARD_VERIFY, $params->toArray());
+    }
+
+    public function monitoringHumo(UniredClientMonitoringCardRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::MONITORING_HUMO, $params->toArray());
+    }
+
+    public function monitoringUzcard(UniredClientMonitoringCardRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::MONITORING_UZCARD, $params->toArray());
+    }
+
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO
     {
         $headers = [
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->token,
         ];
-        $response = Http::withHeaders($headers)->$httpMethod($this->baseUrl . $path, $data);
+        $response = Http::withHeaders($headers)
+            ->timeout(150)
+            ->connectTimeout(150)
+            ->$httpMethod($this->baseUrl . $path, $data);
         $headers['Authorization'] = 'Bearer ****' . substr($this->token, -9);
         $this->logRequest(new HttpRequestLogDTO(
             method: $httpMethod,

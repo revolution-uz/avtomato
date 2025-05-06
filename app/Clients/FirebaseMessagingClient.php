@@ -6,8 +6,8 @@ use App\DTOs\Firebase\FirebaseDataDTO;
 use App\DTOs\Firebase\FirebaseDTO;
 use App\DTOs\Firebase\FirebaseNotificationDTO;
 use App\Enums\Company\CompanySettingsEnum;
+use App\Exceptions\GeneralException;
 use App\Models\Company\CompanySettings;
-use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Contract\Messaging;
@@ -75,13 +75,11 @@ class FirebaseMessagingClient
             return $this->firebaseMessaging;
         }
 
-        Log::channel('daily')->info('here: 47');
-
         $path = CompanySettings::getConfig(CompanySettingsEnum::LOYALTY_PROGRAM_FIREBASE_PATH);
 
         if (! $path || ! Storage::disk('local')->exists($path)) {
             Log::channel('firebase')->error('Firebase credentials path is invalid or does not exist.');
-            throw new Exception('Firebase credentials path is invalid or does not exist.');
+            throw new GeneralException('Firebase credentials path is invalid or does not exist.', 422);
         }
 
         $firebase_credentials = Storage::disk('local')->get($path);
@@ -89,7 +87,7 @@ class FirebaseMessagingClient
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             Log::channel('firebase')->error('Invalid JSON in Firebase credentials.', ['error' => json_last_error_msg()]);
-            throw new Exception('Invalid JSON in Firebase credentials.');
+            throw new GeneralException('Invalid JSON in Firebase credentials.', 422);
         }
 
         $factory = (new Factory)->withServiceAccount($firebase_credentials);

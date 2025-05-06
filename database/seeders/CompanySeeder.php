@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Company\Rbac\UserRoleEnum;
 use App\Enums\Company\UserStatusEnum;
 use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Rbac\Role;
@@ -17,6 +16,8 @@ use Database\Seeders\Company\PermissionSeeder;
 use Database\Seeders\Company\SmsTemplateSeeder;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class CompanySeeder extends Seeder
 {
@@ -37,18 +38,26 @@ class CompanySeeder extends Seeder
         $this->call(BranchSeeder::class);
         $this->call(EcommerceOrderStatusSeeder::class);
         // TODO remove before production
-        /** @var CompanyAdmin $admin */
-        $admin = CompanyAdmin::query()->firstOrCreate(
-            ['username' => 'admin'],
-            [
-                'username' => 'admin',
-                'first_name' => 'Yura',
-                'last_name' => 'Sultonov',
-                'status' => UserStatusEnum::ACTIVE,
-                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-                'role_id' => Role::where('name', UserRoleEnum::ADMIN)->first()->id,
-            ]
-        );
+        CompanyAdmin::query()->firstOrCreate([
+            'username' => 'admin',
+        ], [
+            'first_name' => 'Yura',
+            'last_name' => 'Sultonov',
+            'status' => UserStatusEnum::ACTIVE,
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'role_id' => Role::getAdmin()->id,
+        ]);
+
+        CompanyAdmin::query()->firstOrCreate([
+            'username' => CompanyAdmin::ICAN_INTEGRATOR,
+        ], [
+            'first_name' => 'Ican',
+            'last_name' => 'Integrator',
+            'status' => UserStatusEnum::ACTIVE,
+            'password' => Hash::make(Str::random(8)),
+            'role_id' => Role::getAdmin()->id,
+        ]);
+
         activity()->enableLogging();
     }
 }

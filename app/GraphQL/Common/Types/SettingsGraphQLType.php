@@ -53,9 +53,13 @@ class SettingsGraphQLType extends GraphQLType
                     return auth()->check() ? BalanceService::getBalance() : 0;
                 },
             ],
-            'multibranch_module' => [
+            'multibranch_module' => [ // todo: remove this field now only used in vue
                 'type' => Type::string(),
                 'resolve' => fn ($root) => auth()->check() ? Module::getActiveMultiBranchModule()?->name->value : null,
+            ],
+            'modules' => [
+                'type' => GraphQL::type(ModuleGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn () => auth()->check() ? Module::query()->get() : null,
             ],
         ];
     }

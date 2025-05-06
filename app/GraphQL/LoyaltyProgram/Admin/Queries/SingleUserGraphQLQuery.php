@@ -3,7 +3,7 @@
 namespace App\GraphQL\LoyaltyProgram\Admin\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
-use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\UserGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\User;
 use Closure;

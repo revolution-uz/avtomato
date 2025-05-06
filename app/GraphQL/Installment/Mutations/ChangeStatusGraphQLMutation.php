@@ -28,7 +28,7 @@ class ChangeStatusGraphQLMutation extends Mutation
 
     public function args(): array
     {
-        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_ATTACH_CARD);
+        $branches = RbacHelper::getEnabledBranches(PermissionEnum::INSTALLMENT_EDIT);
 
         return [
             'installment_id' => [
@@ -54,7 +54,7 @@ class ChangeStatusGraphQLMutation extends Mutation
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
     {
-        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_ATTACH_CARD);
+        return RbacHelper::checkPermission(PermissionEnum::INSTALLMENT_EDIT);
     }
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
@@ -81,7 +81,7 @@ class ChangeStatusGraphQLMutation extends Mutation
                     if (! $status) {
                         $fail('Status is not valid');
                     }
-                    if ($installment && ! in_array($installment->status, InstallmentStatusEnum::getStatusListByStatus($status))) {
+                    if ($installment && ! in_array($status, InstallmentStatusEnum::getStatusListByStatus($installment->status))) {
                         $fail('Status is not valid for this installment');
                     }
                 },

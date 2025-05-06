@@ -82,6 +82,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
 
         $response = $this
             ->actingAs($this->_user, 'loyalty-program-client')
+            ->withHeader('signature', 'test')
             ->postJson(route('graphql.loyalty-program-client'), $this->buildGraphQLQuery($variables));
 
         $this->assertSuccessAttachCardResponse($response, $variables);
@@ -123,8 +124,7 @@ class AttachCardGraphQLMutationTest extends GraphQLTestCase
         $this->assertSuccessAttachCardResponse($response, $variables);
 
         $deletedCard->refresh();
-        $this->assertEquals($deletedCard->id, $response->json('data.attachCard.card.id'));
-        $this->assertEquals(CardStatusEnum::INACTIVE, $deletedCard->status);
+        $this->assertNotEquals($deletedCard->id, $response->json('data.attachCard.card.id'));
 
         $this->assertEquals($response->json('data.attachCard.card.id'), $response->json('data.attachCard.attachData.transaction_id'));
         $this->assertEquals($deletedCard->phone, $response->json('data.attachCard.attachData.phone'));

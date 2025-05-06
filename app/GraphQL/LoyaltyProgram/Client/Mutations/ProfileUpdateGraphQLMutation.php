@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Client\Mutations;
 
-use App\GraphQL\LoyaltyProgram\Client\Types\UserGraphQLType;
+use App\GraphQL\LoyaltyProgram\Client\Types\ProfileGraphQLType;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -17,7 +17,7 @@ class ProfileUpdateGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(GraphQL::type(UserGraphQLType::GRAPHQL_TYPE_NAME));
+        return Type::nonNull(GraphQL::type(ProfileGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array

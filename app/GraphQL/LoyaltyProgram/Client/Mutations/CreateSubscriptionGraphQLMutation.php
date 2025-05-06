@@ -56,7 +56,7 @@ class CreateSubscriptionGraphQLMutation extends Mutation
             throw ValidationException::withMessages(['cards' => 'You need to add at least one active card to create a subscription.']);
         }
 
-        if ($user->subscriptions()->where('tariff_id', $args['tariff_id'])->exists()) {
+        if ($user->subscriptions()->where('is_active', true)->where('tariff_id', $args['tariff_id'])->exists()) {
             throw ValidationException::withMessages(['tariff_id' => 'A subscription with this tariff already exists.']);
         }
 

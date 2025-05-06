@@ -22,11 +22,11 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $number
  * @property int $hash
  * @property string $expiry
- * @property string $owner
- * @property string $phone
+ * @property string|null $owner
+ * @property string|null $phone
  * @property CardStatusEnum $status
  * @property float $balance
- * @property string $external_id
+ * @property string|null $external_id
  * @property int $user_id
  * @property Carbon $created_at
  * @property Carbon $updated_at

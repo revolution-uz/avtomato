@@ -79,6 +79,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.loyalty_program_sync' => \App\Http\Middleware\AuthLoyaltyProgramSync::class,
         'auth.sayqal' => \App\Http\Middleware\AuthSayqal::class,
+        'log.sayqal' => \App\Http\Middleware\SayqalLogger::class,
         'auth.unired' => \App\Http\Middleware\AuthUnired::class,
         'auth.qr_pay' => \App\Http\Middleware\AuthQrPay::class,
         'tenant_logging' => \App\Http\Middleware\TenantLogging::class,

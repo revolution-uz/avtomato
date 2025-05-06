@@ -19,6 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $max_amount
  * @property int $min_initial_fee
  * @property int $max_initial_fee
+ * @property int|null $ican_id
  * @property-read Installment[] $installments
  */
 class Tariff extends Model
@@ -36,6 +37,7 @@ class Tariff extends Model
         'max_amount',
         'min_initial_fee',
         'max_initial_fee',
+        'ican_id',
     ];
 
     public function installments(): HasMany

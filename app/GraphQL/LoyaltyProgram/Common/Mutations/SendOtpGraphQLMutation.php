@@ -2,12 +2,12 @@
 
 namespace App\GraphQL\LoyaltyProgram\Common\Mutations;
 
+use App\Enums\Company\SmsTemplateEnum;
 use App\Rules\PhoneRule;
 use App\Services\ConfirmationService;
 use GraphQL\Error\Error;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Mutation;
-use Throwable;
 
 class SendOtpGraphQLMutation extends Mutation
 {
@@ -26,7 +26,6 @@ class SendOtpGraphQLMutation extends Mutation
     {
         return [
             'phone' => [
-                'name' => 'phone',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => ['required', 'digits:12', new PhoneRule],
             ],
@@ -35,15 +34,12 @@ class SendOtpGraphQLMutation extends Mutation
 
     public function resolve($root, $args): bool
     {
-        try {
-            if (! $this->confirmationService->canLoginIntoLoyaltyProgram($args['phone'], request()->header('Device-Name'))->isValid()) {
-                throw new Error('You cannot login');
-            }
-
-            return $this->confirmationService->send($args['phone'], isEcommerceOtp: true);
-
-        } catch (Throwable $e) {
-            throw new Error($e->getMessage());
+        $deviceName = request()->header('Device-Name');
+        if (empty($deviceName) || ! $this->confirmationService->canLoginIntoLoyaltyProgram($args['phone'], $deviceName)->isValid()) {
+            throw new Error('You cannot login');
         }
+
+        return $this->confirmationService->send($args['phone'], SmsTemplateEnum::LOYALTY_PROGRAM_OTP);
+
     }
 }

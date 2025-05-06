@@ -25,7 +25,6 @@ class ConfirmCardGraphQLMutation extends Mutation
     {
         return [
             'card_id' => [
-                'name' => 'card_id',
                 'type' => Type::nonNull(Type::int()),
                 'rules' => [
                     'required',
@@ -34,12 +33,10 @@ class ConfirmCardGraphQLMutation extends Mutation
                 ],
             ],
             'transaction_id' => [
-                'name' => 'transaction_id',
                 'type' => Type::nonNull(GraphQL::type(BigInteger::GRAPHQL_TYPE_NAME)),
                 'rules' => 'required|int',
             ],
             'otp' => [
-                'name' => 'otp',
                 'type' => Type::nonNull(Type::string()),
                 'rules' => 'required|string',
             ],

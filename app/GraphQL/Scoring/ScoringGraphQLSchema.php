@@ -6,6 +6,7 @@ use App\GraphQL\Common\Types\DistrictGraphQLType;
 use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
 use App\GraphQL\Scalars\BigInteger;
+use App\GraphQL\Scoring\Mutations\ConfirmScoringCardGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\CreateCardScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\CreateDebtScoringGraphQLMutation;
 use App\GraphQL\Scoring\Mutations\CreateKatmScoringGraphQLMutation;
@@ -32,6 +33,7 @@ use App\GraphQL\Scoring\Types\Card\CardMonthlyDetailedAnalyticsGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardScoringGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardScoringRequestGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardScoringResponseGraphQLType;
+use App\GraphQL\Scoring\Types\Card\CreateCardScoringGraphQLType;
 use App\GraphQL\Scoring\Types\Debt\DebtCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\Debt\DebtScoringGraphQLType;
 use App\GraphQL\Scoring\Types\Debt\DebtScoringRequestGraphQLType;
@@ -98,6 +100,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 CreateRoyxatCreditHistoryScoringGraphQLMutation::class,
                 CreateUzumNasiyaLimitScoringGraphQLMutation::class,
                 DeleteScoringRequestsGraphQLMutation::class,
+                ConfirmScoringCardGraphQLMutation::class,
             ],
             'types' => [
                 CardCreateInputGraphQLType::class,
@@ -106,6 +109,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 CardScoringGraphQLType::class,
                 CardScoringRequestGraphQLType::class,
                 CardScoringResponseGraphQLType::class,
+                CreateCardScoringGraphQLType::class,
 
                 DebtCreateInputGraphQLType::class,
                 DebtScoringGraphQLType::class,

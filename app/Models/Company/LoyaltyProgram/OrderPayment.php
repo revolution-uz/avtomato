@@ -2,7 +2,7 @@
 
 namespace App\Models\Company\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgramm\OrderPaymentStatusEnum;
+use App\Enums\Company\LoyaltyProgram\OrderPaymentStatusEnum;
 use App\Models\Company\CompanyAdmin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

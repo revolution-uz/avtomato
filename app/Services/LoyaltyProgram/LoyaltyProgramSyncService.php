@@ -6,7 +6,7 @@ use App\DTOs\LoyaltyProgram\ItemDTO;
 use App\DTOs\LoyaltyProgram\PriceDTO;
 use App\DTOs\LoyaltyProgram\ShopDTO;
 use App\DTOs\LoyaltyProgram\StockDTO;
-use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
+use App\Enums\Company\LoyaltyProgram\ShopStatusEnum;
 use App\Models\Company\LoyaltyProgram\Item;
 use App\Models\Company\LoyaltyProgram\Price;
 use App\Models\Company\LoyaltyProgram\Shop;

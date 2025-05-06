@@ -2,10 +2,10 @@
 
 namespace App\Nova\Company;
 
+use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Main\SettingsTypeEnum;
 use App\Models\Company\CompanySettings;
 use App\Nova\Resource;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -60,23 +60,35 @@ class CompanySettingsResource extends Resource
     {
         $response = [
             ID::make('Id')->sortable(),
-            Text::make('Name')->exceptOnForms(),
+            Text::make('Name')->displayUsing(fn () => $this->name->getLabel())->exceptOnForms(),
             Text::make('Description')->exceptOnForms(),
             Select::make('Type')->options(SettingsTypeEnum::getAllTypesForDropdown())->displayUsingLabels()->exceptOnForms(),
         ];
 
-        $response[] = match ($this->type) {
-            SettingsTypeEnum::INT => Number::make('Value')->rules(['required', 'integer']),
-            SettingsTypeEnum::BOOLEAN => Boolean::make('Value')->rules(['required', 'boolean']),
-            SettingsTypeEnum::FLOAT => Number::make('Value')->rules(['required', 'decimal']),
-            SettingsTypeEnum::TEXT => Textarea::make('Value')->rules(['required', 'max:2014']),
-            SettingsTypeEnum::DATETIME => DateTime::make('Value')->rules(['required', 'datetime']),
-            SettingsTypeEnum::DATE => DateTime::make('Value')->rules(['required', 'date']),
-            SettingsTypeEnum::FILE => $request->isResourceIndexRequest() ?
-                Boolean::make('Value') :
-                File::make('Value')->rules(['mimes:json', 'max:100'])->disk('local')->path('credentials'),
-            SettingsTypeEnum::STRING, null => Text::make('Value')->rules(['required', 'max:255']),
-        };
+        if ($this->name === CompanySettingsEnum::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH) {
+            $videoType = CompanySettings::query()
+                ->where('name', CompanySettingsEnum::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE)
+                ->value('value');
+
+            $response[] = $request->isResourceIndexRequest()
+                ? Boolean::make('Value')
+                : ($videoType == SettingsTypeEnum::STRING->value
+                    ? Text::make('Value')->rules(['required', 'max:255'])
+                    : File::make('Value')->rules(['required', 'mimes:mp4,avi,mov,mkv', 'max:51200'])->disk('public')->path('uploads/loyalty_program'));
+        } else {
+            $response[] = match ($this->type) {
+                SettingsTypeEnum::INT => Number::make('Value')->rules(['required', 'integer']),
+                SettingsTypeEnum::BOOLEAN => Boolean::make('Value')->rules(['required', 'boolean']),
+                SettingsTypeEnum::FLOAT => Number::make('Value')->rules(['required', 'decimal']),
+                SettingsTypeEnum::TEXT => Textarea::make('Value')->rules(['required', 'max:2014']),
+                SettingsTypeEnum::DATETIME => DateTime::make('Value')->rules(['required', 'datetime']),
+                SettingsTypeEnum::DATE => DateTime::make('Value')->rules(['required', 'date']),
+                SettingsTypeEnum::FILE => $request->isResourceIndexRequest()
+                    ? Boolean::make('Value')
+                    : File::make('Value')->rules(['required', 'mimes:json', 'max:100'])->disk('local')->path('credentials'),
+                SettingsTypeEnum::STRING, null => Text::make('Value')->rules(['required', 'max:255']),
+            };
+        }
 
         $response[] = DateTime::make('Updated at', 'updated_at')->exceptOnForms();
 
