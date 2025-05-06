@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('sync:successful-balance-funds')->dailyAt('03:00');
         $schedule->command('populate:sync-ican-credit-jobs')->hourly()->between('07:00', '22:00');
         $schedule->command('populate:sync-ican-transaction-jobs')->everyTenMinutes();
+        $schedule->command('populate:sync-ican-tariff-jobs')->everyTenMinutes();
         $schedule->command('populate:sync-canceled-ican-transaction-jobs')->dailyAt('04:00');
         // $schedule->command('inspire')->hourly();
     }

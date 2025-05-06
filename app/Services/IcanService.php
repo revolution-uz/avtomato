@@ -141,7 +141,6 @@ class IcanService
         foreach ($transactions as $transactionDto) {
             try {
                 $this->createOrUpdateTransaction($transactionDto);
-
             } catch (Throwable $e) {
                 Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
             }
@@ -236,11 +235,11 @@ class IcanService
                 default => new GeneralException('Invalid credit status'),
             },
             'period' => $credit->period,
-            'canceled_at' => $credit->canceled_at,
+            'canceled_at' => Carbon::parse($credit->canceled_at),
             'cancellation_details' => $credit->cancel_reason,
-            'starts_in' => $credit->activated_at ?: $credit->created_at,
+            'starts_in' => Carbon::parse($credit->activated_at ?: $credit->created_at)->addMonth(),
             'paid_amount' => $credit->amount - $credit->main_debt,
-            'updated_at' => $credit->updated_at,
+            'updated_at' => Carbon::parse($credit->updated_at),
         ]);
 
         if (! $installment->exists || $installment->isDirty()) {
@@ -262,7 +261,7 @@ class IcanService
             'transaction_type_id' => TransactionType::ICAN_INTEGRATION,
             'amount' => $transactionDto->amount,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
-            'paid_at' => Carbon::parse($transactionDto->payments->first()?->created_at)->subHours(5),
+            'paid_at' => Carbon::parse($transactionDto->payments->first()?->created_at),
             'card_pan' => $transactionDto->service_data?->pan,
             'is_initial_fee' => $transactionDto->payments->first()?->is_initial_payment,
             'status' => match ($transactionDto->status) {
