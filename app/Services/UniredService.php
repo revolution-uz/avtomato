@@ -242,7 +242,7 @@ class UniredService
         $transaction->installment_id = $installment->id;
         $transaction->customer_id = $customer_id;
         $transaction->card_pan = $request->card['pan'] ?? '****';
-        $transaction->paid_at = Carbon::parse($request->created_at);
+        $transaction->paid_at = Carbon::parse($request->created_at)->addHours(5);
 
         return $transaction->saveOrFail();
     }
