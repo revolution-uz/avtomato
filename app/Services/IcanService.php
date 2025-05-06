@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Clients\IcanClient;
 use App\DTOs\Ican\IcanCreditDTO;
 use App\DTOs\Ican\IcanMetaDTO;
+use App\DTOs\Ican\IcanTariffDTO;
 use App\DTOs\Ican\IcanTransactionDTO;
 use App\DTOs\Ican\IcanUserDocumentDataDTO;
 use App\DTOs\Ican\Request\IcanTransactionRequestDTO;
@@ -33,6 +34,32 @@ class IcanService
     private string $logChannel = 'ican-service';
 
     public function __construct(private readonly IcanClient $icanClient) {}
+
+    public function syncTariffs(int $page): bool
+    {
+        /**
+         * @var Collection<IcanTariffDTO>|null $credits
+         * @var IcanMetaDTO|null $meta
+         */
+        ['tariffs' => $tariffs, 'meta' => $meta] = $this->icanClient->getTariffs($page);
+
+        if (! $tariffs || ! $meta) {
+            return false;
+        }
+
+        Log::info($tariffs);
+
+        foreach ($tariffs as $tariff) {
+            try {
+//                $this->createOrUpdateInstallment($tariff);
+            } catch (Throwable $e) {
+                Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
+            }
+        }
+
+        return $meta->last_page > $page;
+    }
+
 
     public function syncCredits(int $page): bool
     {
