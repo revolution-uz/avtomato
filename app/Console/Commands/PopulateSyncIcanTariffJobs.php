@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\FeatureEnum;
+use App\Jobs\SyncIcanDeletedTariffsJob;
 use App\Jobs\SyncIcanTariffsJob;
 use App\Models\Company;
 use App\Models\Company\Feature;
@@ -35,13 +36,13 @@ class PopulateSyncIcanTariffJobs extends Command
             tenancy()->initialize($company);
 
             if (
-                ! Feature::isFeatureActive(FeatureEnum::ICAN) || ! $balanceService->isAvailableCompany()
+                !Feature::isFeatureActive(FeatureEnum::ICAN) || !$balanceService->isAvailableCompany()
             ) {
                 continue;
             }
 
-            dispatch(new SyncIcanTariffsJob(0, false));
-            dispatch(new SyncIcanTariffsJob(0, true));
+            SyncIcanTariffsJob::dispatch();
+            SyncIcanDeletedTariffsJob::dispatch();
         }
 
         return CommandAlias::SUCCESS;
