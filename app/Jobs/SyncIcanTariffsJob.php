@@ -17,7 +17,7 @@ class SyncIcanTariffsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(private readonly int $page = 0, private readonly bool $onlyDeleted)
+    public function __construct(private readonly int $page, private readonly bool $onlyDeleted)
     {
         $this->onQueue('sync-ican');
     }
