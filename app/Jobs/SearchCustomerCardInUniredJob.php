@@ -40,6 +40,9 @@ class SearchCustomerCardInUniredJob implements ShouldBeUniqueUntilProcessing, Sh
         ) {
             return;
         }
+
+        return;
+
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($this->installmentId);
         $debt_amount = $installment->debtAmount;
