@@ -161,7 +161,7 @@ class IcanService
         $dto = IcanTransactionRequestDTO::from([
             'credit_id' => $transaction->installment->ican_id,
             'amount' => $transaction->amount,
-            'employee_id' => $this->getEmployeeId(),
+            'employee_id' => 335514,
         ]);
 
         return $this->icanClient->createTransaction($dto);
