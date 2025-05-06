@@ -51,7 +51,7 @@ class IcanService
 
         foreach ($tariffs as $tariff) {
             try {
-//                $this->createOrUpdateInstallment($tariff);
+                $this->createOrUpdateTariff($tariff);
             } catch (Throwable $e) {
                 Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
             }
@@ -155,9 +155,9 @@ class IcanService
         return $this->icanClient->createTransaction($dto);
     }
 
-    private function createOrGetTariff(IcanCreditDTO $credit): Tariff
+    private function createOrUpdateTariff(IcanCreditDTO $credit): Tariff
     {
-        return Tariff::query()->firstOrCreate([
+        return Tariff::query()->updateOrCreate([
             'ican_id' => $credit->tariff_id,
         ], [
             'name' => $credit->tariff?->name,
@@ -198,7 +198,7 @@ class IcanService
             'ican_id' => $credit->id,
             'customer_id' => $this->createOrGetCustomer($credit->person_main->user_document->data)->id,
             'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
-            'tariff_id' => $this->createOrGetTariff($credit)->id,
+            'tariff_id' => $this->createOrUpdateTariff($credit)->id,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
             'type' => InstallmentTypeEnum::WITHOUT_CARD,
             'amount' => $credit->amount,
