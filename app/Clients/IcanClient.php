@@ -38,7 +38,7 @@ class IcanClient extends BaseIcanClient
             $response = $this->makeRequest(self::CREDITS, $data, 'get');
 
             return [
-                'credits' => collect($response['data'])->map([IcanCreditDTO::class, 'from']),
+                'credits' => IcanCreditDTO::collect($response['data']),
                 'meta' => IcanMetaDTO::from($response['meta']),
             ];
 
