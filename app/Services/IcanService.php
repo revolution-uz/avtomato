@@ -38,7 +38,7 @@ class IcanService
     public function syncTariffs(int $page, bool $onlyDeleted): bool
     {
         /**
-         * @var Collection<IcanTariffDTO>|null $credits
+         * @var Collection<IcanTariffDTO>|null $tariffs
          * @var IcanMetaDTO|null $meta
          */
         ['tariffs' => $tariffs, 'meta' => $meta] = $this->icanClient->getTariffs($page, onlyDeleted: $onlyDeleted);
@@ -48,21 +48,24 @@ class IcanService
         }
 
         foreach ($tariffs as $tariff) {
-            try {
-                Tariff::query()->updateOrCreate([
-                    'ican_id' => $tariff->id,
+            for ($period = $tariff->min_period; $period <= $tariff->max_period; $period++) {
+                try {
+                    Tariff::query()->updateOrCreate([
+                        'ican_id' => $tariff->id,
+                        'ican_period' => $period,
                 ], [
-                    'name' => $tariff->name,
-                    'percent' => $tariff->percent,
-                    'min_period' => $tariff->min_period,
-                    'max_period' => $tariff->max_period,
-                    'min_amount' => $tariff->min_amount,
-                    'max_amount' => $tariff->max_amount,
-                    'min_initial_fee' => 0,
-                    'max_initial_fee' => 2_000_000_000,
-                ]);
-            } catch (Throwable $e) {
-                Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
+                        'name' => $tariff->name . ($tariff->min_period == $tariff->max_period ? '' : ' - |' . $period . 'oy uchun|'),
+                        'percent' => $tariff->percent * $period,
+                        'min_period' => $tariff->min_period,
+                        'max_period' => $tariff->max_period,
+                        'min_amount' => $tariff->min_amount,
+                        'max_amount' => $tariff->max_amount,
+                        'min_initial_fee' => 0,
+                        'max_initial_fee' => 2_000_000_000,
+                    ]);
+                } catch (Throwable $e) {
+                    Log::channel($this->logChannel)->error('Error syncing credits: ' . $e->getMessage(), ['exception' => $e]);
+                }
             }
         }
 
@@ -168,13 +171,14 @@ class IcanService
     {
         return Tariff::query()->firstOrCreate([
             'ican_id' => $credit->tariff_id,
+            'ican_period' => $credit->period,
         ], [
-            'name' => $credit->tariff?->name,
-            'percent' => $credit->tariff?->percent,
-            'min_period' => $credit->tariff?->min_period,
-            'max_period' => $credit->tariff?->max_period,
-            'min_amount' => $credit->tariff?->min_amount,
-            'max_amount' => $credit->tariff?->max_amount,
+            'name' => $credit->tariff->name . ($credit->tariff->min_period == $credit->tariff->max_period ? '' : ' - |' . $credit->period . 'oy uchun|'),
+            'percent' => $credit->tariff->percent * $credit->period,
+            'min_period' => $credit->tariff->min_period,
+            'max_period' => $credit->tariff->max_period,
+            'min_amount' => $credit->tariff->min_amount,
+            'max_amount' => $credit->tariff->max_amount,
             'min_initial_fee' => 0,
             'max_initial_fee' => 2_000_000_000,
         ]);
