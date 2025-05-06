@@ -50,5 +50,6 @@ class IcanCreditDTO extends Data
         public ?bool $is_deleted,
         public ?IcanPersonMainDTO $person_main,
         public ?IcanTariffDTO $tariff,
+        public ?IcanPaymentScheduleDTO $payment_schedule,
     ) {}
 }

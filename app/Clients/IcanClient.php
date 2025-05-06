@@ -60,7 +60,7 @@ class IcanClient extends BaseIcanClient
         $data = [
             'page' => $page,
             'page-size' => $pageSize,
-            'with' => ['tariff', 'person_main', 'person_main.user_document'],
+            'with' => ['tariff', 'person_main', 'person_main.user_document', 'payment_schedule'],
         ];
 
         try {
