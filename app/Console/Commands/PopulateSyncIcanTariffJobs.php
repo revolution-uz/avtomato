@@ -40,8 +40,8 @@ class PopulateSyncIcanTariffJobs extends Command
                 continue;
             }
 
-            (new SyncIcanTariffsJob(0, false))->dispatch();
-            (new SyncIcanTariffsJob(0, true))->dispatch();
+            dispatch(new SyncIcanTariffsJob(0, false));
+            dispatch(new SyncIcanTariffsJob(0, true));
         }
 
         return CommandAlias::SUCCESS;
