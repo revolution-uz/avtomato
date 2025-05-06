@@ -78,6 +78,7 @@ class InstallmentsGraphQLQuery extends Query
                         ->where('first_name', 'ilike', "%{$args['search']}%")
                         ->orWhere('last_name', 'ilike', "%{$args['search']}%")
                         ->orWhere('middle_name', 'ilike', "%{$args['search']}%")
+                        ->orWhere('pinfl', 'ilike', "%{$args['search']}%")
                     )
                     ->orWhereHas('branch', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
                     ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
