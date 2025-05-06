@@ -58,6 +58,11 @@ abstract class BaseIcanClient extends BaseClient
         return $this->sendHttpRequest($this->baseUrl . $path, $data, $method);
     }
 
+    protected function makeRequestAsForm(string $path, array $data): array
+    {
+        return $this->sendHttpFormRequest($this->baseUrl . $path, $data);
+    }
+
     /**
      * @throws GeneralException
      */
@@ -132,6 +137,72 @@ abstract class BaseIcanClient extends BaseClient
             if ($try) {
                 sleep(5);
                 return $this->sendHttpRequest($url, $data, $method, false);
+            }
+
+            throw new GeneralException($exception->getMessage());
+        }
+    }
+
+    private function sendHttpFormRequest(string $url, array $data, bool $try = true): array
+    {
+        if (! $token = $this->getActiveToken()) {
+            throw new GeneralException('Cannot activate the token');
+        }
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $token,
+                'Content-Type' => 'application/json',
+                'Connection' => 'close',
+            ])->timeout(150)
+                ->connectTimeout(150)
+                ->asForm()
+                ->post($url, $data);
+
+            parent::logRequest(new HttpRequestLogDTO(
+                method: 'post',
+                url: $url,
+                status: $response->status(),
+                response: $response->body(),
+                duration: $response->transferStats?->getTransferTime(),
+                body: $data,
+            ));
+
+            if (! $response->successful() || empty($response->json())) {
+                if ($response->status() === 429) {
+                    parent::logRequest(new HttpRequestLogDTO(
+                        method: 'post',
+                        url: $url,
+                        status: $response->status(),
+                        response: $response->body(),
+                        duration: $response->transferStats?->getTransferTime(),
+                        body: $data,
+                    ));
+                    $retryAfter = $response->json('seconds_left', 60);
+                    sleep($retryAfter);
+
+                    return $this->sendHttpFormRequest($url, $data);
+                }
+
+                throw new GeneralException($response->json('message', 'Unexpected response'));
+            }
+
+            return $response->json();
+
+        } catch (Throwable $exception) {
+            parent::logRequest(new HttpRequestLogDTO(
+                method: 'post',
+                url: $url,
+                status: $exception->getCode(),
+                response: $exception->getMessage(),
+                duration: null,
+                headers: ['Authorization' => $token],
+                body: $data,
+            ), 'error');
+
+            if ($try) {
+                sleep(5);
+                return $this->sendHttpFormRequest($url, $data, false);
             }
 
             throw new GeneralException($exception->getMessage());

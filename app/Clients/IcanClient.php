@@ -107,15 +107,9 @@ class IcanClient extends BaseIcanClient
         }
     }
 
-    public function createTransaction(IcanTransactionRequestDTO $dto): ?IcanTransactionDTO
+    public function createTransaction(IcanTransactionRequestDTO $dto): IcanTransactionDTO
     {
-        try {
-            return IcanTransactionDTO::from($this->makeRequest(self::TRANSACTIONS_CREATE, $dto->toArray()));
-
-        } catch (Exception $e) {
-            Log::error($e);
-            return null;
-        }
+        return IcanTransactionDTO::from($this->makeRequestAsForm(self::TRANSACTIONS_CREATE, $dto->toArray()));
     }
 
     public function getSingleCredit(int $ican_id): ?IcanCreditDTO
