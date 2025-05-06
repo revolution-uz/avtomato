@@ -296,6 +296,8 @@ class UniredClient extends BaseClient
             body: $data,
         ));
 
+        sleep(1);
+
         return UniredResponseDTO::from($response->json());
     }
 
