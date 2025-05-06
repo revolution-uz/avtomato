@@ -202,12 +202,13 @@ class IcanService
     private function createOrUpdateInstallment(IcanCreditDTO $credit): Installment
     {
         $installment = Installment::query()->firstOrNew(['ican_id' => $credit->id]);
+        $tariff = $this->createOrGetTariff($credit);
 
         $installment->fill([
             'ican_id' => $credit->id,
             'customer_id' => $this->createOrGetCustomer($credit->person_main->user_document->data)->id,
             'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
-            'tariff_id' => $this->createOrGetTariff($credit)->id,
+            'tariff_id' => $tariff->id,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
             'type' => InstallmentTypeEnum::WITHOUT_CARD,
             'amount' => $credit->amount,
