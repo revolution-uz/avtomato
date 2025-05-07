@@ -9,7 +9,6 @@ use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
-use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -22,10 +21,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
+ * Class Installment
+ *
  * @property int $id
  * @property int $customer_id
  * @property int $branch_id
@@ -33,51 +35,55 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $tariff_id
  * @property float $percent
  * @property float $amount
- * @property float $installment_amount
  * @property float $paid_amount
  * @property float $initial_fee
  * @property string $description
  * @property bool $sms_notify
  * @property bool $any_card_charge
  * @property bool $is_blacklist
- * @property bool $auto_pay
  * @property int $period
  * @property string $plum_id
- * @property Carbon|null $starts_in
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property Carbon|null $canceled_at
  * @property int|null $card_after_due_days
  * @property int|null $pinfl_after_due_days
  * @property int|null $guarantor_after_due_days
  * @property int|null $guarantor_pinfl_after_due_days
- * @property int|null $overdue_days
  * @property int|null $unired_id
  * @property string $cancellation_details
  * @property InstallmentTypeEnum $type
  * @property InstallmentStatusEnum $status
- * @property Branch $branch
- * @property Tariff $tariff
+ * @property int|null $ican_id
+ * @property Carbon|null $starts_in
+ * @property Carbon|null $canceled_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property Customer $customer
- * @property Card[]|Collection<int, Card> $cards
- * @property Attachment[] $documents
- * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
- * @property Customer[]|Collection<int, Customer> $guarantors
+ * @property Branch $branch
+ * @property CompanyAdmin $admin
+ * @property Tariff $tariff
+ * @property Transaction $initialFeeTransaction
  * @property Transaction[]|Collection<int, Transaction> $transactions
- * @property InstallmentGuarantor[] $guarantorList
- * @property-read  CompanyAdmin $admin
- * @property-read float $debtAmount
+ * @property InstallmentGuarantor[]|Collection<int, InstallmentGuarantor> $guarantorList
+ * @property Attachment[]|Collection<int, Attachment> $documents
+ * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
+ * @property-read float $installment_amount
+ * @property-read bool $auto_pay
+ * @property-read int|null $overdue_days
+ * @property-read float $debt_amount
+ * @property-read float $wholeDebtAmount
  * @property-read float $monthlyPayment
  * @property-read bool $is_active
- * @property-read float $is_fully_paid
+ * @property-read bool $is_fully_paid
  * @property-read Carbon $nextPaymentDate
- * @property mixed $wholeDebtAmount
- * @property float $portion
- * @property int|null $ican_id
+ * @property-read float $portion
  *
- * @method static Builder whereNextPayDate(string $operator, Carbon $date)
- * @method static Builder excludeIcanInstallments()
+ * @method static Builder|Installment whereHasDebt()
+ * @method static Builder|Installment whereNextPayDate(string $expression, Carbon $date)
+ * @method static Builder|Installment countId()
+ * @method static Builder|Installment sumDebt()
+ * @method static Builder|Installment sumInstallmentAmount()
+ * @method static Builder|Installment sumProfit()
+ * @method static Builder|Installment excludeIcanInstallments()
  */
 class Installment extends Model
 {
@@ -110,7 +116,6 @@ class Installment extends Model
         'guarantor_pinfl_after_due_days',
         'paid_amount',
         'ican_id',
-        'updated_at',
         'unired_id',
     ];
 
