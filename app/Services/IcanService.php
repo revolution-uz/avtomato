@@ -56,7 +56,7 @@ class IcanService
                     Tariff::query()->updateOrCreate([
                         'ican_id' => $tariff->id,
                         'ican_period' => $period,
-                ], [
+                    ], [
                         'name' => $tariff->name . ($tariff->min_period == $tariff->max_period ? '' : ' - |' . $period . 'oy uchun|'),
                         'percent' => $tariff->percent * $period,
                         'min_period' => $tariff->min_period,
@@ -74,7 +74,6 @@ class IcanService
 
         return $meta->last_page > $page;
     }
-
 
     public function syncCredits(int $page): bool
     {
@@ -226,13 +225,13 @@ class IcanService
         foreach ($credit->phones_for_sms as $phoneForSms) {
             /** @var Phone $phone */
             $phone = Phone::query()->firstOrCreate(['phone' => $phoneForSms]);
-            if (!$customer->phones->where(fn(Phone $x) => $x->id == $phone->id)->first()) {
+            if (! $customer->phones->where(fn (Phone $x) => $x->id == $phone->id)->first()) {
                 $customer->phones()->attach($phone->id, ['type' => PhoneTypeEnum::PRIVATE, 'comment' => null, 'installment_notifications' => true]);
             }
         }
 
         if (! $installment) {
-            $installment = new Installment();
+            $installment = new Installment;
             $installment->fill([
                 'ican_id' => $credit->id,
                 'customer_id' => $customer->id,
@@ -303,24 +302,24 @@ class IcanService
         return $transaction;
     }
 
-    private function getEmployeeId()
-    {
-        $employeeId = CompanySettings::getConfig(CompanySettingsEnum::ICAN_EMPLOYEE_ID);
-
-        if (empty($employeeId)) {
-            $icanProfileDto = $this->icanClient->getProfile();
-
-            if (! $icanProfileDto) {
-                throw new GeneralException('Could not get Ican profile');
-            }
-
-            $employeeId = $icanProfileDto->id;
-
-            CompanySettings::query()
-                ->where('name', CompanySettingsEnum::ICAN_EMPLOYEE_ID)
-                ->update(['value' => $employeeId]);
-        }
-
-        return $employeeId;
-    }
+    // private function getEmployeeId()
+    // {
+    //     $employeeId = CompanySettings::getConfig(CompanySettingsEnum::ICAN_EMPLOYEE_ID);
+    //
+    //     if (empty($employeeId)) {
+    //         $icanProfileDto = $this->icanClient->getProfile();
+    //
+    //         if (! $icanProfileDto) {
+    //             throw new GeneralException('Could not get Ican profile');
+    //         }
+    //
+    //         $employeeId = $icanProfileDto->id;
+    //
+    //         CompanySettings::query()
+    //             ->where('name', CompanySettingsEnum::ICAN_EMPLOYEE_ID)
+    //             ->update(['value' => $employeeId]);
+    //     }
+    //
+    //     return $employeeId;
+    // }
 }
