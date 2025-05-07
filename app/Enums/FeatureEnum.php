@@ -19,6 +19,7 @@ enum FeatureEnum: string
     case ATMOS_CARD_PAY = 'atmos_card_pay'; // only serves to save Atmos Card Pay credentials
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay'; // only serves to save Atmos PINFl Pay credentials
     case UNIRED_PAY = 'unired_pay';
+    case UNIRED_CARD_MANAGEMENT = 'unired_card_management';
     case INSTALLMENT_GUARANTOR = 'installment_guarantor';
     case INSTALLMENT_COMMENT = 'installment_comment';
     case INSTALLMENT_DOCUMENT = 'installment_document';
@@ -50,6 +51,7 @@ enum FeatureEnum: string
     {
         return match ($this) {
             self::UNIRED_PAY => 'PINFL orqali pul yechish uchun UNIRED',
+            self::UNIRED_CARD_MANAGEMENT => 'UNIRED kartalarini boshqarish funksiyasi',
             self::ATMOS_PINFL_PAY => 'PINFL orqali pul yechish uchun ATMOS',
             self::ATMOS_CARD_PAY => 'Karta orqali pul yechish uchun ATMOS',
             self::PROFILE_EDIT => 'Admin o\'z profilini o\'zgartira olish funksiyasi',
@@ -128,6 +130,7 @@ enum FeatureEnum: string
             self::INSTALLMENT_AUTO_CHARGE_BY_PINFL,
             self::TELEGRAM_BOT_FEATURE,
             self::LOYALTY_PROGRAM,
+            self::UNIRED_CARD_MANAGEMENT,
         ]);
     }
 }

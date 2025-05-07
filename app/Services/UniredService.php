@@ -250,34 +250,17 @@ class UniredService
 
     public function updatePinflCardsList(Customer $customer): bool
     {
-        $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
-        $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
-        $is_uzcard_update = ! $response->uzcard || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
-        $is_humo_update = ! $response->humo || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
-
-        if ($centralCustomer) {
-            if (
-                Utilities::isNotAllowedRefresheCards($centralCustomer->unired_uzcard_searched_at)
-                &&
-                Utilities::isNotAllowedRefresheCards($centralCustomer->unired_humo_searched_at)
-            ) {
-                return true;
-            }
-        } else {
-            $centralCustomer = new CentralCustomer;
-            $centralCustomer->pinfl = $customer->pinfl;
-            $centralCustomer->first_name = $customer->first_name;
-            $centralCustomer->last_name = $customer->last_name;
-            $centralCustomer->middle_name = $customer->middle_name;
-        }
+        $centralCustomer = CentralCustomer::query()->firstOrNew([
+            'pinfl' => $customer->pinfl,
+        ], [
+            'first_name' => $customer->first_name,
+            'last_name' => $customer->last_name,
+            'middle_name' => $customer->middle_name,
+        ]);
 
         try {
-            if ($is_uzcard_update) {
-                $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
-            }
-            if ($is_humo_update) {
-                $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
-            }
+            $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+            $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
             $centralCustomer->unired_uzcard_searched_at = Carbon::now();
             $centralCustomer->unired_humo_searched_at = Carbon::now();
 

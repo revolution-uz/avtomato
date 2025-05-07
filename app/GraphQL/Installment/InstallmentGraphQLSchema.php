@@ -5,6 +5,7 @@ namespace App\GraphQL\Installment;
 use App\GraphQL\Common\Types\DistrictGraphQLType;
 use App\GraphQL\Common\Types\MahallaGraphQLType;
 use App\GraphQL\Common\Types\RegionGraphQLType;
+use App\GraphQL\Customer\Mutations\UpdateCustomerPINFLCardsGraphQLMutation;
 use App\GraphQL\Customer\Types\AddressGraphQLType;
 use App\GraphQL\Customer\Types\CardGraphQLType;
 use App\GraphQL\Customer\Types\CustomerGraphQLType;
@@ -163,6 +164,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 UpdateInstallmentCustomerAnyCardChargeGraphQLMutation::class,
                 ChangeSettingsGraphQLMutation::class,
                 UpdateTelegramBotSettingsGraphQLMutation::class,
+                UpdateCustomerPINFLCardsGraphQLMutation::class,
             ],
             'types' => [
                 InstallmentInputGraphQLType::class,

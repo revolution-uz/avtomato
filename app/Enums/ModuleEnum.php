@@ -50,6 +50,7 @@ enum ModuleEnum: string
             FeatureEnum::TRANSACTION_TYPE_MANAGEMENT,
             FeatureEnum::INSTALLMENT_MANAGEMENT,
             FeatureEnum::UNIRED_PAY,
+            FeatureEnum::UNIRED_CARD_MANAGEMENT,
             FeatureEnum::ATMOS_CARD_PAY,
             FeatureEnum::ATMOS_PINFL_PAY,
             FeatureEnum::TELEGRAM_BOT_FEATURE => [self::INSTALLMENT],
