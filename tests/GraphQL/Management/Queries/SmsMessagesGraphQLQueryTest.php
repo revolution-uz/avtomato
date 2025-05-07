@@ -18,7 +18,6 @@ class SmsMessagesGraphQLQueryTest extends GraphQLTestCase
         'phone',
         'message',
         'status',
-        'ext_id',
         'installment_id',
         'customer_id',
         'customer' => [
@@ -169,7 +168,6 @@ class SmsMessagesGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals($message->phone, $response->json('data.smsMessages.data.0.phone'));
         $this->assertEquals($message->message, $response->json('data.smsMessages.data.0.message'));
         $this->assertEquals($message->status->value, $response->json('data.smsMessages.data.0.status'));
-        $this->assertEquals($message->ext_id, $response->json('data.smsMessages.data.0.ext_id'));
         $this->assertEquals($message->created_at->timestamp, $response->json('data.smsMessages.data.0.created_at'));
         $this->assertEquals($message->updated_at->timestamp, $response->json('data.smsMessages.data.0.updated_at'));
     }
