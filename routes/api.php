@@ -26,7 +26,7 @@ Route::middleware(['log.sayqal', 'auth.sayqal'])->prefix('sayqal-callback')->con
 });
 Route::middleware('auth.unired')->prefix('unired-callback')->controller(UniredController::class)->group(function () {
     Route::post('web-hook', 'webHook')->name('uniredCallback.webHook');
-    Route::get('check-payment', 'checkPayment')->name('uniredCallback.checkPayment');
+    Route::post('check-payment', 'checkPayment')->name('uniredCallback.checkPayment');
     Route::post('send-sms', 'sendSms')->name('uniredCallback.sendSms');
 });
 Route::middleware('auth.qr-pay')->prefix('qr-pay')->controller(QrPayCallbackController::class)->group(function () {
