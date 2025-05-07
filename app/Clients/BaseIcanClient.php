@@ -136,6 +136,7 @@ abstract class BaseIcanClient extends BaseClient
 
             if ($try) {
                 sleep(5);
+
                 return $this->sendHttpRequest($url, $data, $method, false);
             }
 
@@ -202,6 +203,7 @@ abstract class BaseIcanClient extends BaseClient
 
             if ($try) {
                 sleep(5);
+
                 return $this->sendHttpFormRequest($url, $data, false);
             }
 

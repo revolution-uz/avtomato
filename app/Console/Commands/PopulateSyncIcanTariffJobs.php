@@ -36,7 +36,7 @@ class PopulateSyncIcanTariffJobs extends Command
             tenancy()->initialize($company);
 
             if (
-                !Feature::isFeatureActive(FeatureEnum::ICAN) || !$balanceService->isAvailableCompany()
+                ! Feature::isFeatureActive(FeatureEnum::ICAN) || ! $balanceService->isAvailableCompany()
             ) {
                 continue;
             }

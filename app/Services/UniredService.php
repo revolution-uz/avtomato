@@ -87,6 +87,7 @@ class UniredService
             $customer->last_name,
             $customer->middle_name,
         ));
+        // @phpstan-ignore-next-line
         if ($response->status && $customer->phones && $customer->phones->isNotEmpty()) {
             $response = $this->uniredClient->addClientPhones(new UniredAddClientPhonesRequestDTO(
                 $customer->pinfl,
