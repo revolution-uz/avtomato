@@ -7,6 +7,8 @@ use App\Http\Requests\UniredPaymentWebhookCallbackRequest;
 use App\Http\Requests\UniredSendPaymentSmsCallbackRequest;
 use App\Models\Company;
 use App\Models\Company\Installment;
+use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
 use App\Services\UniredService;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -27,20 +29,22 @@ class UniredController extends Controller
                         ? $request->getInstallmentGuarantorCustomerId()
                         : $installment->customer_id;
 
-                    if (Company\Transaction::query()->where('external_id', $request->ext)->exists()) {
-                        $transaction = Company\Transaction::query()->where('external_id', $request->ext)->first();
-                        $transaction->card_pan = $request->card['pan'] ?? '****';
-                        $transaction->paid_at = Carbon::parse($request->created_at)->addHours(5);
-                        $transaction->save();
+                    Transaction::query()->updateOrCreate([
+                        'external_id' => $request->ext,
+                    ], [
+                        'transaction_type_id' => TransactionType::UNIRED_WITH_PINFL,
+                        'branch_id' => $installment->branch_id,
+                        'external_id' => $request->ext,
+                        'amount' => $request->amount / 100,
+                        'installment_id' => $installment->id,
+                        'customer_id' => $customerId,
+                        'card_pan' => $request->card['pan'] ?? '****',
+                        'card_owner' => $request->card['owner'] ?? null,
+                        'card_phone' => empty($request->card['phone']) ? null : $request->card['phone'],
+                        'paid_at' => Carbon::parse($request->created_at)->addHours(5),
+                    ]);
 
-                        return response()->json(['success' => true, 'message' => 'OK'], 200);
-                    }
-
-                    if ($this->uniredService->createTransaction($installment, $customerId, $request)) {
-                        return response()->json(['success' => true, 'message' => 'OK'], 200);
-                    }
-
-                    return response()->json(['message' => 'Transaction has already been created'], 501);
+                    return response()->json(['success' => true, 'message' => 'OK'], 200);
                 }
 
                 return response()->json(['message' => 'Installment not found'], 501);
