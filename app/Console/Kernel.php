@@ -22,9 +22,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('process:waiting-scoring-requests')->dailyAt('01:00');
         $schedule->command('populate:subscription-charge-jobs')->dailyAt('02:00');
         $schedule->command('sync:successful-balance-funds')->dailyAt('03:00');
-        $schedule->command('populate:sync-ican-credit-jobs')->hourly()->between('07:00', '22:00');
-        $schedule->command('populate:sync-ican-transaction-jobs')->everyTenMinutes();
-        $schedule->command('populate:sync-ican-tariff-jobs')->everyTenMinutes();
+        $schedule->command('populate:sync-ican-credit-jobs')->everyTwoHours()->between('07:00', '22:00');
+        $schedule->command('populate:sync-ican-transaction-jobs')->everyThirtyMinutes();
+        $schedule->command('populate:sync-ican-tariff-jobs')->everyFifteenMinutes();
         $schedule->command('populate:sync-canceled-ican-transaction-jobs')->dailyAt('04:00');
         // $schedule->command('inspire')->hourly();
     }
