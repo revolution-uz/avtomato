@@ -4,6 +4,7 @@ namespace App\GraphQL\Installment\Types;
 
 use App\GraphQL\Scalars\BigFloat;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Support\Carbon;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
@@ -20,7 +21,7 @@ class StatisticsGraphQLType extends GraphQLType
         return [
             'date' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => fn ($root) => $root->date,
+                'resolve' => fn ($root) => Carbon::parse($root->date)->timestamp,
             ],
             'debt_amount' => [
                 'type' => Type::nonNull(GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME)),
