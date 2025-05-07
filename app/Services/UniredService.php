@@ -251,6 +251,11 @@ class UniredService
     public function updatePinflCardsList(Customer $customer): bool
     {
         $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
+
+        if (! $centralCustomer) {
+            return true;
+        }
+
         $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
         sleep(1);
         $is_uzcard_update = ! $response->uzcard || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
