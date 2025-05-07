@@ -30,6 +30,10 @@ class CreateIcanTransactionJob implements ShouldBeUniqueUntilProcessing, ShouldQ
     {
         $transaction = Transaction::query()->findOrFail($this->transactionId);
 
+        if ($transaction->ican_id) {
+            return;
+        }
+
         $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($transaction->installment->ican_id);
 
         if ($debtAmount < $transaction->amount) {
