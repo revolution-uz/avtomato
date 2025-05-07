@@ -232,6 +232,7 @@ class IcanService
         }
 
         if (! $installment) {
+            $installment = new Installment();
             $installment->fill([
                 'ican_id' => $credit->id,
                 'customer_id' => $customer->id,
