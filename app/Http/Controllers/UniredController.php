@@ -76,7 +76,7 @@ class UniredController extends Controller
 
                 $response = [
                     'code' => 100,
-                    'debt' => $avtomatoDebt,
+                    'debt' => max(0, $avtomatoDebt),
                 ];
             }
         }
