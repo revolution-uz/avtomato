@@ -154,7 +154,7 @@ class UniredServiceTest extends TestCase
                 'is_verified' => true,
                 'is_blocked' => true,
                 'block_reason' => 'Card not found',
-                'blocked_at' => '2025-01-17T08:32:44+00:00',
+                'blocked_at' => '2025-01-17T08:32:44+05:00',
                 'owner' => 'John Doe',
                 'pan' => '986060******8244',
                 'phone' => '9989939**000',

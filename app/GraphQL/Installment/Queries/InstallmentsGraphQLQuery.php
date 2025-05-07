@@ -82,7 +82,7 @@ class InstallmentsGraphQLQuery extends Query
                     )
                     ->orWhereHas('branch', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
                     ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
-                    ->when(is_int($args['search']), fn(Builder $q) => $q->orWhere('id', $args['search']))
+                    ->when(is_int($args['search']), fn (Builder $q) => $q->orWhere('id', $args['search']))
                 )
                 ->when(
                     isset($args['debt_only']) && $args['debt_only'],
