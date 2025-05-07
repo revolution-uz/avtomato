@@ -51,7 +51,8 @@ enum ModuleEnum: string
             FeatureEnum::INSTALLMENT_MANAGEMENT,
             FeatureEnum::UNIRED_PAY,
             FeatureEnum::ATMOS_CARD_PAY,
-            FeatureEnum::ATMOS_PINFL_PAY => [self::INSTALLMENT],
+            FeatureEnum::ATMOS_PINFL_PAY,
+            FeatureEnum::TELEGRAM_BOT_FEATURE => [self::INSTALLMENT],
             FeatureEnum::SCORING_CREDIT_HISTORY,
             FeatureEnum::SCORING_INPS_HISTORY,
             FeatureEnum::SCORING_PENSION_INFO,
@@ -66,8 +67,7 @@ enum ModuleEnum: string
             FeatureEnum::BALANCE_CHARGE,
             FeatureEnum::THEME_MANAGEMENT,
             FeatureEnum::GENERAL_FEATURE,
-            FeatureEnum::COMPANY_MANAGEMENT,
-            FeatureEnum::TELEGRAM_BOT_FEATURE => self::cases(),
+            FeatureEnum::COMPANY_MANAGEMENT => self::cases(),
         };
     }
 
