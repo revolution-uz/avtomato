@@ -7,6 +7,7 @@ use App\Enums\Company\CustomerTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\GenderEnum;
+use App\Models\CentralCustomer;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,7 +50,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Phone[]|Collection<int,Phone> $phones
  * @property Card[]|Collection<int,Card> $cards
  * @property Tag[]|Collection<int, Tag> $tags
- * @property UniredCard[]|Collection<int,UniredCard> $uniredCards
  * @property ScoringRequest[]|Collection<int,ScoringRequest> $scoringRequests
  * @property CustomerTypeEnum $type
  * @property-read string $full_name
@@ -151,9 +151,9 @@ class Customer extends Model
             ->wherePivotNull('deleted_at');
     }
 
-    public function uniredCards(): HasMany
+    public function getUniredCards(): ?Collection
     {
-        return $this->hasMany(UniredCard::class);
+        return CentralCustomer::query()->firstWhere('pinfl', $this->pinfl)?->uniredCards;
     }
 
     public function fullName(): Attribute

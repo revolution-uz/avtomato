@@ -5,8 +5,8 @@ namespace App\GraphQL\Installment\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Customer\Types\UniredCardGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\CentralUniredCard;
 use App\Models\Company\Installment;
-use App\Models\Company\UniredCard;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -61,13 +61,15 @@ class InstallmentPinflCardsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return UniredCard::query()
-            ->whereHas('customer.installments', fn ($q) => $q->where('installments.id', $args['installment_id']))
-            ->orWhereHas('customer.guaranteedInstallments', fn ($q) => $q->where('installments.id', $args['installment_id']))
+        $installment = Installment::query()->findOrFail($args['installment_id']);
+        $customerPINFLs = $installment->guarantors->pluck('pinfl')->prepend($installment->customer->pinfl)->toArray();
+
+        return CentralUniredCard::query()
+            ->whereHas('customer', fn (Builder $q) => $q->whereIn('pinfl', $customerPINFLs))
             ->when(
                 isset($args['sort']),
-                fn (Builder|Installment $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|Installment $q) => $q->orderByDesc('id')
+                fn (Builder $q) => $q->orderBySortable($args['sort']),
+                fn (Builder $q) => $q->orderByDesc('id')
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }

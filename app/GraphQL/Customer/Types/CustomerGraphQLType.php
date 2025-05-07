@@ -100,7 +100,7 @@ class CustomerGraphQLType extends GraphQLType
             ],
             'unired_cards' => [
                 'type' => Type::listOf(GraphQL::type(UniredCardGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Customer $root) => $root->uniredCards,
+                'resolve' => fn (Customer $root) => $root->getUniredCards(),
             ],
             'addresses' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(AddressGraphQLType::GRAPHQL_TYPE_NAME))),

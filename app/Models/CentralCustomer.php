@@ -6,6 +6,7 @@ use App\Models\Company\OrderBySortable;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
@@ -47,4 +48,9 @@ class CentralCustomer extends Model
         'unired_humo_searched_at' => 'datetime',
         'unired_uzcard_searched_at' => 'datetime',
     ];
+
+    public function uniredCards(): HasMany
+    {
+        return $this->hasMany(CentralUniredCard::class, 'customer_id', 'id');
+    }
 }

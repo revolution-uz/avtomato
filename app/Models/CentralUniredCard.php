@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models;
 
 use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\CardTypeEnum;
-use Carbon\Carbon;
+use App\Models\Company\OrderBySortable;
+use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Stancl\Tenancy\Database\Concerns\TenantConnection;
+use Illuminate\Support\Carbon;
+use Laravel\Sanctum\HasApiTokens;
+use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
 /**
  * @property int $id
@@ -27,13 +30,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read CardStatusEnum $status
- * @property Customer $customer
+ * @property CentralCustomer $customer
  */
-class UniredCard extends Model
+class CentralUniredCard extends Model
 {
-    use HasFactory, OrderBySortable, TenantConnection;
+    use CentralConnection, HasApiTokens, HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable;
 
-    public static array $sortables = ['id', 'pinfl'];
+    public static array $sortables = ['id'];
 
     protected $fillable = [
         'customer_id',
@@ -68,6 +71,6 @@ class UniredCard extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(CentralCustomer::class, 'customer_id', 'id');
     }
 }
