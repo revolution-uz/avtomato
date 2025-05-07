@@ -84,20 +84,6 @@ class Transaction extends Model
             if (auth('company-admin')->check()) {
                 $transaction->admin_id = auth('company-admin')->id();
             }
-
-            if ($transaction->installment->ican_id) {
-                $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($transaction->installment->ican_id);
-
-                if ($debtAmount < $transaction->amount) {
-                    $transaction->reverse();
-
-                    return false;
-                }
-
-                $icanService = new IcanService(new IcanClient);
-                $response = $icanService->createTransaction($transaction);
-                $transaction->ican_id = $response->id;
-            }
         });
 
         static::created(function (self $transaction) {
@@ -111,6 +97,20 @@ class Transaction extends Model
             }
             if ($transaction->transactionType->is_system) {
                 CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
+            }
+
+            if ($transaction->installment->ican_id) {
+                $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($transaction->installment->ican_id);
+
+                if ($debtAmount < $transaction->amount) {
+                    $transaction->reverse();
+
+                    return false;
+                }
+
+                $icanService = new IcanService(new IcanClient());
+                $response = $icanService->createTransaction($transaction);
+                $transaction->ican_id = $response->id;
             }
 
             SendTransactionSmsJob::dispatch($transaction->id);
