@@ -102,6 +102,8 @@ class AdminsGraphQLQueryTest extends GraphQLTestCase
                 'installment_view_statistics',
                 'installment_create',
                 'installment_edit',
+                'installment_settings_view_all',
+                'installment_settings_edit',
                 'installment_attach_card',
                 'installment_detach_card',
                 'installment_attach_guarantor',

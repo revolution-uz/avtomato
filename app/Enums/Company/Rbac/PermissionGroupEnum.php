@@ -88,6 +88,8 @@ enum PermissionGroupEnum: string
                 PermissionEnum::INSTALLMENT_VIEW_STATISTICS,
                 PermissionEnum::INSTALLMENT_CREATE,
                 PermissionEnum::INSTALLMENT_EDIT,
+                PermissionEnum::INSTALLMENT_SETTINGS_VIEW_ALL,
+                PermissionEnum::INSTALLMENT_SETTINGS_EDIT,
                 PermissionEnum::INSTALLMENT_ATTACH_CARD,
                 PermissionEnum::INSTALLMENT_DETACH_CARD,
                 PermissionEnum::INSTALLMENT_ATTACH_GUARANTOR,
