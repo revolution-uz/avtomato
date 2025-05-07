@@ -57,12 +57,8 @@ class UniredController extends Controller
     public function checkPayment(UniredCheckPaymentCallbackRequest $request)
     {
         $response = [
-            'success' => true,
             'code' => 0,
-            'message' => 'SUCCESS',
-            'result' => [
-                'debt' => 0,
-            ],
+            'debt' => 0,
         ];
         if ($companyId = $request->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
@@ -79,19 +75,13 @@ class UniredController extends Controller
                 }
 
                 $response = [
-                    'success' => true,
                     'code' => 0,
-                    'message' => 'SUCCESS',
-                    'result' => [
-                        'debt' => $avtomatoDebt,
-                    ],
+                    'debt' => $avtomatoDebt,
                 ];
             } else {
                 $response = [
-                    'success' => false,
                     'code' => 199,
-                    'message' => 'Не правильные параметры: invalid_params : loan id invalid',
-                    'result' => null,
+                    'debt' => 0,
                 ];
             }
         }
