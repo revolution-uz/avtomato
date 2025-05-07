@@ -2,14 +2,13 @@
 
 namespace App\Models\Company;
 
-use App\Clients\IcanClient;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
+use App\Jobs\CreateIcanTransactionJob;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
 use App\Services\AtmosService;
-use App\Services\IcanService;
 use App\Services\UniredService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -100,17 +99,7 @@ class Transaction extends Model
             }
 
             if ($transaction->installment->ican_id) {
-                $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($transaction->installment->ican_id);
-
-                if ($debtAmount < $transaction->amount) {
-                    $transaction->reverse();
-
-                    return false;
-                }
-
-                $icanService = new IcanService(new IcanClient);
-                $response = $icanService->createTransaction($transaction);
-                $transaction->ican_id = $response->id;
+                CreateIcanTransactionJob::dispatch($transaction->id);
             }
 
             SendTransactionSmsJob::dispatch($transaction->id);
