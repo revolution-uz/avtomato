@@ -103,6 +103,7 @@ class IcanClient extends BaseIcanClient
 
         } catch (Exception $e) {
             Log::error($e);
+
             return ['transactions' => null, 'meta' => null];
         }
     }
@@ -121,6 +122,7 @@ class IcanClient extends BaseIcanClient
 
         } catch (Exception $e) {
             Log::error($e);
+
             return null;
         }
     }
@@ -132,6 +134,7 @@ class IcanClient extends BaseIcanClient
 
         } catch (Exception $e) {
             Log::error($e);
+
             return null;
         }
     }

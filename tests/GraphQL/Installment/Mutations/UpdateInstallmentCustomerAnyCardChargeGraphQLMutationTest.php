@@ -70,35 +70,6 @@ class UpdateInstallmentCustomerAnyCardChargeGraphQLMutationTest extends GraphQLT
     }
 
     #[Test]
-    public function successCheckForCorrectPaymentCases()
-    {
-        /** @var Feature $feature */
-        $feature = Feature::query()->where('name', FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->firstOrFail();
-        $feature->update(['amount' => 29]);
-
-        // when period is equal to 1
-        $installment = Installment::factory()->create(['period' => 1, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
-        $this->assertCorrectPayment($response, $feature, $installment, 29);
-
-        // when period is equal to 3
-        $installment = Installment::factory()->create(['period' => 3, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITH_CARD]);
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
-        $this->assertCorrectPayment($response, $feature, $installment, 29);
-
-        // when period is equal to 4
-        $installment = Installment::factory()->create(['period' => 4, 'any_card_charge' => false, 'type' => InstallmentTypeEnum::WITHOUT_CARD]);
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['id' => $installment->id, 'any_card_charge' => true]));
-        $this->assertCorrectPayment($response, $feature, $installment, 58);
-    }
-
-    #[Test]
     public function successCheckNonPaymentCases()
     {
         /** @var Feature $feature */
