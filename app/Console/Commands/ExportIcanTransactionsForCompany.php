@@ -36,33 +36,37 @@ class ExportIcanTransactionsForCompany extends Command
     public function handle(): int
     {
         $companyId = $this->option('companyId');
-        if (!$companyId) {
+        if (! $companyId) {
             $this->error('Company ID is required.');
+
             return CommandAlias::FAILURE;
         }
 
         $this->info('Syncing transactions for company ID: ' . $companyId);
 
         $company = Company::find($companyId);
-        if (!$company) {
+        if (! $company) {
             $this->error('Company not found.');
+
             return CommandAlias::FAILURE;
         }
 
         if ($company->status !== CompanyStatusEnum::ACTIVE) {
             $this->error('Company is not active.');
+
             return CommandAlias::FAILURE;
         }
 
         // Initialize the tenant
         tenancy()->initialize($company);
         // Check if the company has the ICan feature enabled
-        if (!Company\Feature::isFeatureActive(FeatureEnum::ICAN)) {
+        if (! Company\Feature::isFeatureActive(FeatureEnum::ICAN)) {
             $this->error('Company does not have the ICan feature enabled.');
+
             return CommandAlias::FAILURE;
         }
 
-        $icanService = new IcanService(new IcanClient());
+        $icanService = new IcanService(new IcanClient);
         $transactions = Company\Transaction::query()->whereNull('ican_id')->where('status', TransactionStatusEnum::SUCCESS)->get();
 
         foreach ($transactions as $transaction) {

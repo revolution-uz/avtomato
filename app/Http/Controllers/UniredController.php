@@ -32,6 +32,7 @@ class UniredController extends Controller
                         $transaction->card_pan = $request->card['pan'] ?? '****';
                         $transaction->paid_at = Carbon::parse($request->created_at)->addHours(5);
                         $transaction->save();
+
                         return response()->json(['success' => true, 'message' => 'OK'], 200);
                     }
 

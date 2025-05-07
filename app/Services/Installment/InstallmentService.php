@@ -177,7 +177,7 @@ class InstallmentService
                     FROM installment_precalculations
                 )
             SELECT
-                EXTRACT(EPOCH  FROM date) AS date, COALESCE(SUM(debt_amount), 0) AS debt_amount_sum, COALESCE(SUM(paid_amount), 0) AS paid_amount_sum
+                date, COALESCE(SUM(debt_amount), 0) AS debt_amount_sum, COALESCE(SUM(paid_amount), 0) AS paid_amount_sum
             FROM date_series ds
                 LEFT JOIN installment_calculations ic ON ds.date = ic.payment_date
             GROUP BY ds.date
