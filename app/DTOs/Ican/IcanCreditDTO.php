@@ -37,7 +37,7 @@ class IcanCreditDTO extends Data
         public ?bool $is_my_uzcard_auto_payment_turned_on,
         public ?string $created_at,
         public ?string $updated_at,
-        public ?int $katm_registration_claim_id,
+        public ?string $katm_registration_claim_id,
         public ?string $activated_at,
         public ?string $canceled_at,
         public ?string $client_type,
@@ -50,5 +50,6 @@ class IcanCreditDTO extends Data
         public ?bool $is_deleted,
         public ?IcanPersonMainDTO $person_main,
         public ?IcanTariffDTO $tariff,
+        public ?IcanPaymentScheduleDTO $payment_schedule,
     ) {}
 }

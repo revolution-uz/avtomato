@@ -87,7 +87,7 @@ class UniredService
             $customer->last_name,
             $customer->middle_name,
         ));
-        if ($response->status) {
+        if ($response->status && $customer->phones && $customer->phones->isNotEmpty()) {
             $response = $this->uniredClient->addClientPhones(new UniredAddClientPhonesRequestDTO(
                 $customer->pinfl,
                 array_map(fn ($phone) => substr($phone, -9), $customer->phones->pluck('phone')->toArray())
@@ -202,7 +202,7 @@ class UniredService
 
     public function reversePayment(Transaction $transaction): UniredResponseDTO
     {
-        return $this->uniredClient->cancelPayment(new UniredCancelPaymentRequestDTO(Utilities::generateIdByTenancy($transaction->id), $transaction->external_id));
+        return $this->uniredClient->cancelPayment(new UniredCancelPaymentRequestDTO($transaction->external_id));
     }
 
     public function setWebhook(string $webhook, bool $status)
@@ -242,7 +242,7 @@ class UniredService
         $transaction->installment_id = $installment->id;
         $transaction->customer_id = $customer_id;
         $transaction->card_pan = $request->card['pan'] ?? '****';
-        $transaction->paid_at = Carbon::parse($request->created_at);
+        $transaction->paid_at = Carbon::parse($request->created_at)->addHours(5);
 
         return $transaction->saveOrFail();
     }

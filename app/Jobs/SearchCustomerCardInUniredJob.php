@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
+use App\Models\Company\UniredCard;
 use App\Services\UniredService;
 use App\Services\User\BalanceService;
 use Exception;
@@ -40,11 +41,12 @@ class SearchCustomerCardInUniredJob implements ShouldBeUniqueUntilProcessing, Sh
         ) {
             return;
         }
+
         /** @var Installment $installment */
         $installment = Installment::query()->findOrFail($this->installmentId);
         $debt_amount = $installment->debtAmount;
         if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->any_card_charge && $installment->is_active) {
-            if ($installment->isAvailableCustomerPinfl()) {
+            if ($installment->isAvailableCustomerPinfl() && ! UniredCard::query()->where('customer_id', $installment->customer_id)->exists()) {
                 $uniredService->updatePinflCardsList($installment->customer);
             }
             if ($installment->isAvailableGuarantorPinfl()) {

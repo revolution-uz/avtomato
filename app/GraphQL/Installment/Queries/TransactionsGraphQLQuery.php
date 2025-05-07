@@ -6,6 +6,7 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -96,6 +97,7 @@ class TransactionsGraphQLQuery extends Query
 
         return Transaction::query()
             ->with(['installment', 'admin', 'customer', 'transactionType', 'installment.branch'])
+            ->where('transaction_type_id', TransactionType::UNIRED_WITH_PINFL)
             ->when(
                 isset($args['amount']),
                 fn (Builder $q) => $q
