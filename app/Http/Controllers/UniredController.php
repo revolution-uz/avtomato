@@ -57,7 +57,7 @@ class UniredController extends Controller
     public function checkPayment(UniredCheckPaymentCallbackRequest $request)
     {
         $response = [
-            'code' => 0,
+            'code' => 101,
             'debt' => 0,
         ];
         if ($companyId = $request->getCompanyId()) {
@@ -75,13 +75,8 @@ class UniredController extends Controller
                 }
 
                 $response = [
-                    'code' => 0,
+                    'code' => 100,
                     'debt' => $avtomatoDebt,
-                ];
-            } else {
-                $response = [
-                    'code' => 199,
-                    'debt' => 0,
                 ];
             }
         }
