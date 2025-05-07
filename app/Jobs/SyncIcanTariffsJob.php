@@ -29,6 +29,8 @@ class SyncIcanTariffsJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
     {
         $hasMorePages = $icanService->syncTariffs($this->page, false);
 
+        sleep(1);
+
         if ($hasMorePages) {
             self::dispatch($this->page + 1);
         }

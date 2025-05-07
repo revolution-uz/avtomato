@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
+use App\Services\IcanService;
 use App\Services\UniredService;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -60,25 +61,34 @@ class UniredController extends Controller
     {
         if ($companyId = $request->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
+            $installment = Installment::find($request->getInstallmentId());
+            if ($installment) {
+                $avtomatoDebt = (int) $installment->debtAmount * 100;
 
-            if ($debt = $this->uniredService->getInstallmentDebt($request->getInstallmentId())) {
+                if ($installment->ican_id) {
+                    $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($installment->ican_id);
+
+                    if ($avtomatoDebt > $debtAmount * 100) {
+                        $avtomatoDebt = $debtAmount * 100;
+                    }
+                }
+
                 return response()->json([
                     'success' => true,
                     'code' => 0,
                     'message' => 'SUCCESS',
                     'result' => [
-                        'debt' => $debt,
+                        'debt' => $avtomatoDebt,
                     ],
                 ], 200);
             }
-            if ($debt === null) {
-                return response()->json([
-                    'success' => false,
-                    'code' => 199,
-                    'message' => 'Не правильные параметры: invalid_params : loan id invalid',
-                    'result' => null,
-                ], 200);
-            }
+
+            return response()->json([
+                'success' => false,
+                'code' => 199,
+                'message' => 'Не правильные параметры: invalid_params : loan id invalid',
+                'result' => null,
+            ], 200);
         }
 
         return response()->json([

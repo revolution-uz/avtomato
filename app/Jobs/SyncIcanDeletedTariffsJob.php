@@ -29,6 +29,8 @@ class SyncIcanDeletedTariffsJob implements ShouldBeUniqueUntilProcessing, Should
     {
         $hasMorePages = $icanService->syncTariffs($this->page, true);
 
+        sleep(1);
+
         if ($hasMorePages) {
             self::dispatch($this->page + 1);
         }
