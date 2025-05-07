@@ -252,6 +252,7 @@ class UniredService
     {
         $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
         $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
+        sleep(1);
         $is_uzcard_update = ! $response->uzcard || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
         $is_humo_update = ! $response->humo || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
 
@@ -274,9 +275,11 @@ class UniredService
         try {
             if ($is_uzcard_update) {
                 $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+                sleep(1);
             }
             if ($is_humo_update) {
                 $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+                sleep(1);
             }
             $centralCustomer->unired_uzcard_searched_at = Carbon::now();
             $centralCustomer->unired_humo_searched_at = Carbon::now();
