@@ -266,6 +266,7 @@ class UniredService
         $is_uzcard_update = ! $response->uzcard || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
         $is_humo_update = ! $response->humo || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
 
+        // @phpstan-ignore-next-line
         if ($centralCustomer) {
             if (
                 Utilities::isNotAllowedRefresheCards($centralCustomer->unired_uzcard_searched_at)
