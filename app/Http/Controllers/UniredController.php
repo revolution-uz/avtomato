@@ -35,11 +35,11 @@ class UniredController extends Controller
                         $transaction->paid_at = Carbon::parse($request->created_at)->addHours(5);
                         $transaction->save();
 
-                        return response()->json(['success' => true, 'message' => 'OK'], 200);
+                        return response()->json(['success' => true, 'message' => 'Updated'], 200);
                     }
 
                     if ($this->uniredService->createTransaction($installment, $customerId, $request)) {
-                        return response()->json(['success' => true, 'message' => 'OK'], 200);
+                        return response()->json(['success' => true, 'message' => 'Created'], 200);
                     }
 
                     return response()->json(['message' => 'Transaction has already been created'], 501);
