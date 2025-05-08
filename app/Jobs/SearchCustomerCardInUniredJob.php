@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Enums\FeatureEnum;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
-use App\Models\Company\UniredCard;
 use App\Services\UniredService;
 use App\Services\User\BalanceService;
 use Exception;

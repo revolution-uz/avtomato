@@ -9,14 +9,9 @@
         "amount": "100000",
         "upper_commission": "1",
         "status": "SUCCESS"
-      },
-      {
-        "pan": "860066******5555",
-        "amount": "100000",
-        "upper_commission": "1",
-        "status": "SUCCESS"
       }
-    ]
+    ],
+    "ofd_url": "www.ofd_url_example.uz"
   },
   "code": "200",
   "description": "Transaction confirmed"
