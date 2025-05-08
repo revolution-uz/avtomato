@@ -5,12 +5,10 @@ namespace App\GraphQL\Common\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Common\Types\DashboardGraphQLType;
 use App\Helpers\RbacHelper;
-use App\Models\Company\Branch;
 use App\Services\Installment\DashboardService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -31,30 +29,27 @@ class DashboardGraphQLQuery extends Query
             'transaction_by_type_start_date' => [
                 'name' => 'transaction_by_type_start_date',
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:transaction_by_type_end_date|date_format:Y-m-d',
+                'rules' => ['nullable', 'required_with:transaction_by_type_end_date', 'date_format:Y-m-d'],
             ],
             'transaction_by_type_end_date' => [
                 'name' => 'transaction_by_type_end_date',
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:transaction_by_type_start_date|date_format:Y-m-d|after_or_equal:transaction_by_type_start_date',
+                'rules' => ['nullable', 'required_with:transaction_by_type_start_date', 'date_format:Y-m-d', 'after_or_equal:transaction_by_type_start_date'],
             ],
             'installment_by_age_start_date' => [
                 'name' => 'installment_by_age_start_date',
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:installment_by_age_end_date|date_format:Y-m-d',
+                'rules' => ['nullable', 'required_with:installment_by_age_end_date', 'date_format:Y-m-d'],
             ],
             'installment_by_age_end_date' => [
                 'name' => 'installment_by_age_end_date',
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:installment_by_age_start_date|date_format:Y-m-d|after_or_equal:installment_by_age_start_date',
+                'rules' => ['nullable', 'required_with:installment_by_age_start_date', 'date_format:Y-m-d', 'after_or_equal:installment_by_age_start_date'],
             ],
             'branch_id' => [
                 'name' => 'branch_id',
                 'type' => Type::int(),
-                'rules' => [
-                    'nullable',
-                    Rule::exists(Branch::class, 'id')->whereNull('deleted_at'),
-                ],
+                'rules' => ['nullable', 'int', 'exists:branches,id,deleted_at,NULL'],
             ],
         ];
     }
