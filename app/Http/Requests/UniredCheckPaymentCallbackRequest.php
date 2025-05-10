@@ -7,7 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @property string $loan_id
- * @property int $old_debt
  */
 class UniredCheckPaymentCallbackRequest extends FormRequest
 {
@@ -15,7 +14,6 @@ class UniredCheckPaymentCallbackRequest extends FormRequest
     {
         return [
             'loan_id' => 'required|string',
-            'old_debt' => 'required|int',
         ];
     }
 

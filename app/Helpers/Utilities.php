@@ -64,11 +64,11 @@ class Utilities
 
     public static function isNotAllowedAutoUpdateCards(?Carbon $searched_at): bool
     {
-        return is_null($searched_at) || $searched_at >= Carbon::now()->subMonths(self::PINFL_CARD_UPDATE_MONTHS);
+        return ! is_null($searched_at) && $searched_at >= Carbon::now()->subMonths(self::PINFL_CARD_UPDATE_MONTHS);
     }
 
-    public static function isNotAllowedRefresheCards(Carbon $searched_at): bool
+    public static function isNotAllowedRefresheCards(?Carbon $searched_at): bool
     {
-        return $searched_at >= Carbon::now()->subMonths(self::PINFL_CARD_UPDATE_REFRESH_DAYS);
+        return ! is_null($searched_at) && $searched_at >= Carbon::now()->subMonths(self::PINFL_CARD_UPDATE_REFRESH_DAYS);
     }
 }

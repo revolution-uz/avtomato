@@ -13,6 +13,7 @@ use App\Services\IcanService;
 use App\Services\UniredService;
 use Exception;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UniredController extends Controller
 {
@@ -59,6 +60,10 @@ class UniredController extends Controller
 
     public function checkPayment(UniredCheckPaymentCallbackRequest $request)
     {
+        $response = [
+            'code' => 101,
+            'debt' => 0,
+        ];
         if ($companyId = $request->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
             $installment = Installment::find($request->getInstallmentId());
@@ -73,32 +78,19 @@ class UniredController extends Controller
                     }
                 }
 
-                return response()->json([
-                    'success' => true,
-                    'code' => 0,
-                    'message' => 'SUCCESS',
-                    'result' => [
-                        'debt' => $avtomatoDebt,
-                    ],
-                ], 200);
+                $response = [
+                    'code' => 100,
+                    'debt' => max(0, $avtomatoDebt),
+                ];
             }
-
-            return response()->json([
-                'success' => false,
-                'code' => 199,
-                'message' => 'Не правильные параметры: invalid_params : loan id invalid',
-                'result' => null,
-            ], 200);
         }
 
-        return response()->json([
-            'success' => true,
-            'code' => 0,
-            'message' => 'SUCCESS',
-            'result' => [
-                'debt' => 0,
-            ],
-        ], 200);
+        Log::channel('unired-callback')->info('checkPayment', [
+            'request' => $request->all(),
+            'response' => $response,
+        ]);
+
+        return response()->json($response, 200);
     }
 
     public function sendSms(UniredSendPaymentSmsCallbackRequest $request)

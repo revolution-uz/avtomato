@@ -123,8 +123,8 @@ class AtmosServiceTest extends TestCase
         $transactions = Transaction::query()->get();
         $transactionAttempts = TransactionAttempt::query()->get();
 
-        $this->assertEquals(2, $transactions->count());
-        $this->assertEquals(2, $transactionAttempts->count());
+        $this->assertEquals(1, $transactions->count());
+        $this->assertEquals(1, $transactionAttempts->count());
 
         $this->assertEquals($this->_installment->id, $transactionAttempts[0]->installment_id);
         $this->assertEquals($this->_customer->id, $transactionAttempts[0]->customer_id);
@@ -132,13 +132,6 @@ class AtmosServiceTest extends TestCase
         $this->assertEquals(345000, $transactionAttempts[0]->amount);
         $this->assertNull($transactionAttempts[0]->card_id);
         $this->assertEquals(TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL, $transactionAttempts[0]->type);
-
-        $this->assertEquals($this->_installment->id, $transactionAttempts[1]->installment_id);
-        $this->assertEquals($this->_customer->id, $transactionAttempts[1]->customer_id);
-        $this->assertEquals(TransactionAttemptStatusEnum::SUCCESS, $transactionAttempts[1]->status);
-        $this->assertEquals(344000, $transactionAttempts[1]->amount);
-        $this->assertNull($transactionAttempts[1]->card_id);
-        $this->assertEquals(TransactionAttemptTypeEnum::ATMOS_PAY_WITH_PINFL, $transactionAttempts[1]->type);
 
         $this->assertEquals(TransactionType::ATMOS_WITH_PINFL, $transactions[0]->transaction_type_id);
         $this->assertEquals('12345678', $transactions[0]->external_id);
@@ -149,19 +142,10 @@ class AtmosServiceTest extends TestCase
         $this->assertEquals('860066******5544', $transactions[0]->card_pan);
         $this->assertTrue($transactions[0]->paid_at->between(Carbon::now()->subMinute(), Carbon::now()));
 
-        $this->assertEquals(TransactionType::ATMOS_WITH_PINFL, $transactions[1]->transaction_type_id);
-        $this->assertEquals('12345678', $transactions[1]->external_id);
-        $this->assertEquals(1000, $transactions[1]->amount);
-        $this->assertNull($transactions[1]->card_id);
-        $this->assertEquals($this->_installment->id, $transactions[1]->installment_id);
-        $this->assertEquals($this->_customer->id, $transactions[1]->customer_id);
-        $this->assertEquals('860066******5555', $transactions[1]->card_pan);
-        $this->assertTrue($transactions[1]->paid_at->between(Carbon::now()->subMinute(), Carbon::now()));
-
         $this->_installment->refresh();
         $this->assertEquals(345000, $debtAmount);
-        $this->assertEquals(2000, $this->_installment->paid_amount);
-        $this->assertEquals($this->_installment->monthlyPayment - 2000, $this->_installment->debtAmount);
+        $this->assertEquals(1000, $this->_installment->paid_amount);
+        $this->assertEquals($this->_installment->monthlyPayment - 1000, $this->_installment->debtAmount);
     }
 
     #[Test]
