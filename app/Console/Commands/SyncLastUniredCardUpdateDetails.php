@@ -35,18 +35,18 @@ class SyncLastUniredCardUpdateDetails extends Command
         $service = new UniredService(new UniredClient);
         /** @var CentralCustomer $customer */
         foreach (CentralCustomer::all() as $customer) {
-            /** @var Collection<int,UniredPinflCardUpdateResponseDTO> $cardUpdates */
+            /** @var UniredPinflCardUpdateResponseDTO[] $cardUpdates */
             $cardUpdates = $service->getCardUpdates($customer->pinfl);
 
             $this->info('----------------------------');
             $this->info('Current customer: ' . $customer->id);
             $this->info('Uzcard searched at: ' . $customer->unired_uzcard_searched_at);
             $this->info('Humo searched at: ' . $customer->unired_humo_searched_at);
-            $this->info('Unired card updates count: ' . $cardUpdates->count());
+            $this->info('Unired card updates count: ' . count($cardUpdates));
             $customer->unired_uzcard_searched_at = null;
             $customer->unired_humo_searched_at = null;
 
-            if ($cardUpdates->isEmpty()) {
+            if (count($cardUpdates) === 0) {
                 $this->info('No card updates for customer ' . $customer->id);
                 $customer->save();
 
