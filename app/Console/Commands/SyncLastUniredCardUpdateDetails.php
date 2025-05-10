@@ -34,7 +34,7 @@ class SyncLastUniredCardUpdateDetails extends Command
     {
         $service = new UniredService(new UniredClient);
         /** @var CentralCustomer $customer */
-        foreach (CentralCustomer::all() as $customer) {
+        foreach (CentralCustomer::query()->latest()->all() as $customer) {
             /** @var UniredPinflCardUpdateResponseDTO[] $cardUpdates */
             $cardUpdates = $service->getCardUpdates($customer->pinfl);
 
