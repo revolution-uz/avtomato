@@ -62,13 +62,13 @@ class Utilities
         return tenant('id') . self::TENANT_SEPARATOR . $id;
     }
 
-    public static function isNotAllowedAutoUpdateCards(?Carbon $searched_at): bool
+    public static function isAllowedAutoUpdateCards(?Carbon $searched_at): bool
     {
-        return ! is_null($searched_at) && $searched_at >= Carbon::now()->subMonths(self::PINFL_CARD_UPDATE_MONTHS);
+        return is_null($searched_at) || $searched_at < Carbon::now()->subMonths(self::PINFL_CARD_UPDATE_MONTHS);
     }
 
-    public static function isNotAllowedRefreshCardsOften(?Carbon $searched_at): bool
+    public static function isAllowedRefreshCardsOften(?Carbon $searched_at): bool
     {
-        return ! is_null($searched_at) && $searched_at >= Carbon::now()->subDays(self::PINFL_CARD_UPDATE_REFRESH_DAYS);
+        return is_null($searched_at) || $searched_at < Carbon::now()->subDays(self::PINFL_CARD_UPDATE_REFRESH_DAYS);
     }
 }
