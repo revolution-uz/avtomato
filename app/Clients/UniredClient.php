@@ -14,6 +14,7 @@ use App\DTOs\Unired\Client\UniredClientMonitoringCardRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardCountDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
+use App\DTOs\Unired\Client\UniredClientPinflGetCardUpdatesRequestDTO;
 use App\DTOs\Unired\Client\UniredContractLoanIdDTO;
 use App\DTOs\Unired\Client\UniredCreateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredCreateOrUpdateClientRequestDTO;
@@ -72,6 +73,7 @@ class UniredClient extends BaseClient
     const CARD_INFO = 'card.info';
     const PROCESSING_HUMO_SEARCH = 'processing.humo.search';
     const PROCESSING_UZCARD_SEARCH = 'processing.uzcard.search';
+    const PROCESSING_GET_HISTORY = 'processing.get.history';
     const CARD_REGISTER = 'card.register';
     const CARD_VERIFY = 'card.verify';
     const MONITORING_HUMO = 'monitoring.humo';
@@ -273,6 +275,11 @@ class UniredClient extends BaseClient
     public function monitoringUzcard(UniredClientMonitoringCardRequestDTO $params): UniredResponseDTO
     {
         return $this->makeRequest(self::MONITORING_UZCARD, $params->toArray());
+    }
+
+    public function getCardUpdates(UniredClientPinflGetCardUpdatesRequestDTO $params): UniredResponseDTO
+    {
+        return $this->makeRequest(self::PROCESSING_GET_HISTORY, ['page_size' => 200, 'page_number' => 0, 'search' => $params->toArray()]);
     }
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO

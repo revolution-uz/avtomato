@@ -10,9 +10,11 @@ use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
+use App\DTOs\Unired\Client\UniredClientPinflGetCardUpdatesRequestDTO;
 use App\DTOs\Unired\Client\UniredContractLoanIdDTO;
 use App\DTOs\Unired\Client\UniredCreateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredPinflCardsResponseDTO;
+use App\DTOs\Unired\Client\UniredPinflCardUpdateResponseDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
 use App\DTOs\Unired\Contract\UniredCreateContractRequestDTO;
 use App\DTOs\Unired\Contract\UniredUpdateContractDataRequestDTO;
@@ -36,6 +38,7 @@ use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Exception;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class UniredService
@@ -307,6 +310,22 @@ class UniredService
             );
             throw new GeneralException("Failed to update cards list for PINFL: {$customer->pinfl}");
         }
+    }
+
+    public function getCardUpdates(string $pinfl): Collection
+    {
+        $response = $this->uniredClient->getCardUpdates(
+            new UniredClientPinflGetCardUpdatesRequestDTO(
+                date_from: Carbon::today()->subYear()->startOfMonth()->toDateString(),
+                date_to: Carbon::today()->addDay()->endOfMonth()->toDateString(),
+                pinfls: [$pinfl],
+            )
+        );
+        if ($response->isSuccess()) {
+            return UniredPinflCardUpdateResponseDTO::collect($response->result);
+        }
+
+        return collect();
     }
 
     private function updateDebitAndSwitchAuto(string $loan_id, int $debit_amount, bool $auto): ?bool
