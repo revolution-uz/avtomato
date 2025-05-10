@@ -26,7 +26,7 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  */
 class CentralCustomer extends Model
 {
-    use CentralConnection, HasApiTokens, HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes;
+    use CentralConnection, HasFactory, SoftDeletes;
 
     public static array $sortables = ['id', 'pinfl', 'first_name', 'last_name', 'middle_name'];
 

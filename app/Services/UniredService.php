@@ -312,17 +312,21 @@ class UniredService
         }
     }
 
-    public function getCardUpdates(string $pinfl): array
+    public function getCardUpdates(string $pinfl, int $page = 0): array
     {
         $response = $this->uniredClient->getCardUpdates(
             new UniredClientPinflGetCardUpdatesRequestDTO(
                 date_from: Carbon::today()->subYear()->startOfMonth()->toDateString(),
                 date_to: Carbon::today()->addDay()->endOfMonth()->toDateString(),
                 pinfls: [$pinfl],
-            )
+            ),
+            $page
         );
+        sleep(1);
         if ($response->isSuccess()) {
-            return UniredPinflCardUpdateResponseDTO::collect($response->result['data']);
+            return UniredPinflCardUpdateResponseDTO::collect(
+                $response->result['last_page'] === $page ? $response->result['data'] : array_merge($response->result['data'], $this->getCardUpdates($pinfl, $page + 1))
+            );
         }
 
         return [];
