@@ -265,11 +265,8 @@ class UniredService
 
         //        $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
         //        sleep(1);
-        $is_uzcard_update = ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
-        $is_humo_update = ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
-
-        $is_uzcard_update = ! Utilities::isNotAllowedRefreshCardsOften($centralCustomer->unired_uzcard_searched_at) && $is_uzcard_update;
-        $is_humo_update = ! Utilities::isNotAllowedRefreshCardsOften($centralCustomer->unired_humo_searched_at) && $is_humo_update;
+        $is_uzcard_update = Utilities::isAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at) && Utilities::isAllowedRefreshCardsOften($centralCustomer->unired_uzcard_searched_at);
+        $is_humo_update = Utilities::isAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at) && Utilities::isAllowedRefreshCardsOften($centralCustomer->unired_humo_searched_at);
 
         try {
             if ($is_uzcard_update) {
