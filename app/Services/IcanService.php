@@ -237,7 +237,7 @@ class IcanService
                 'customer_id' => $customer->id,
                 'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
                 'sms_notify' => false,
-                'any_card_charge' => false,
+                'any_card_charge' => true,
                 'is_blacklist' => false,
                 'type' => InstallmentTypeEnum::WITH_PINFL,
             ]);
