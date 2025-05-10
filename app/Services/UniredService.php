@@ -312,7 +312,7 @@ class UniredService
         }
     }
 
-    public function getCardUpdates(string $pinfl): Collection
+    public function getCardUpdates(string $pinfl): array
     {
         $response = $this->uniredClient->getCardUpdates(
             new UniredClientPinflGetCardUpdatesRequestDTO(
@@ -325,7 +325,7 @@ class UniredService
             return UniredPinflCardUpdateResponseDTO::collect($response->result['data']);
         }
 
-        return collect();
+        return [];
     }
 
     private function updateDebitAndSwitchAuto(string $loan_id, int $debit_amount, bool $auto): ?bool
