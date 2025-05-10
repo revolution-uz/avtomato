@@ -160,10 +160,15 @@ class UniredService
         if ($response->isSuccess()) {
             $cardDto = UniredPinflCardsResponseDTO::from($response->result);
 
-            return array_merge(
-                array_map(fn ($card) => $card + ['type' => CardTypeEnum::UZCARD->value], $cardDto->uzcard->data->toArray()),
-                array_map(fn ($card) => $card + ['type' => CardTypeEnum::HUMO->value], $cardDto->humo->data->toArray()),
-            );
+            $result = [];
+            if ($cardDto->uzcard && $cardDto->uzcard->data) {
+                $result = array_merge($result, array_map(fn ($card) => $card + ['type' => CardTypeEnum::UZCARD->value], $cardDto->uzcard->data->toArray()));
+            }
+            if ($cardDto->humo && $cardDto->humo->data) {
+                $result = array_merge($result, array_map(fn ($card) => $card + ['type' => CardTypeEnum::HUMO->value], $cardDto->humo->data->toArray()));
+            }
+
+            return $result;
         }
 
         return [];
@@ -281,14 +286,14 @@ class UniredService
         try {
             if ($is_uzcard_update) {
                 $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+                $centralCustomer->unired_uzcard_searched_at = Carbon::now();
                 sleep(1);
             }
             if ($is_humo_update) {
                 $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+                $centralCustomer->unired_humo_searched_at = Carbon::now();
                 sleep(1);
             }
-            $centralCustomer->unired_uzcard_searched_at = Carbon::now();
-            $centralCustomer->unired_humo_searched_at = Carbon::now();
 
             return $centralCustomer->save();
         } catch (Exception $e) {
