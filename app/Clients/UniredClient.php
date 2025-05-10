@@ -277,9 +277,12 @@ class UniredClient extends BaseClient
         return $this->makeRequest(self::MONITORING_UZCARD, $params->toArray());
     }
 
-    public function getCardUpdates(UniredClientPinflGetCardUpdatesRequestDTO $params): UniredResponseDTO
+    public function getCardUpdates(UniredClientPinflGetCardUpdatesRequestDTO $params, int $page): UniredResponseDTO
     {
-        return $this->makeRequest(self::PROCESSING_GET_HISTORY, ['page_size' => 200, 'page_number' => 0, 'search' => $params->toArray()]);
+        return $this->makeRequest(
+            self::PROCESSING_GET_HISTORY,
+            ['page_size' => 500, 'page_number' => $page, 'search' => $params->toArray()]
+        );
     }
 
     private function httpRequest(array $data, string $httpMethod, string $path): UniredResponseDTO
