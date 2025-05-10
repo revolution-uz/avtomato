@@ -322,7 +322,7 @@ class UniredService
             )
         );
         if ($response->isSuccess()) {
-            return UniredPinflCardUpdateResponseDTO::collect($response->result);
+            return UniredPinflCardUpdateResponseDTO::collect($response->result['data']);
         }
 
         return collect();
