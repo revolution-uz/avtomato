@@ -38,7 +38,6 @@ use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use Exception;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class UniredService
@@ -264,27 +263,13 @@ class UniredService
             return true;
         }
 
-        $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
-        sleep(1);
-        $is_uzcard_update = ! $response->uzcard || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
-        $is_humo_update = ! $response->humo || ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
+        //        $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
+        //        sleep(1);
+        $is_uzcard_update = ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at);
+        $is_humo_update = ! Utilities::isNotAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at);
 
-        // @phpstan-ignore-next-line
-        if ($centralCustomer) {
-            if (
-                Utilities::isNotAllowedRefresheCards($centralCustomer->unired_uzcard_searched_at)
-                &&
-                Utilities::isNotAllowedRefresheCards($centralCustomer->unired_humo_searched_at)
-            ) {
-                return true;
-            }
-        } else {
-            $centralCustomer = new CentralCustomer;
-            $centralCustomer->pinfl = $customer->pinfl;
-            $centralCustomer->first_name = $customer->first_name;
-            $centralCustomer->last_name = $customer->last_name;
-            $centralCustomer->middle_name = $customer->middle_name;
-        }
+        $is_uzcard_update = ! Utilities::isNotAllowedRefreshCardsOften($centralCustomer->unired_uzcard_searched_at) && $is_uzcard_update;
+        $is_humo_update = ! Utilities::isNotAllowedRefreshCardsOften($centralCustomer->unired_humo_searched_at) && $is_humo_update;
 
         try {
             if ($is_uzcard_update) {

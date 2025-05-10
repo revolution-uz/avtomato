@@ -244,7 +244,7 @@ class AtmosService
 
         if ($centralCustomer) {
             if (Utilities::isNotAllowedAutoUpdateCards($centralCustomer->atmos_pinfl_searched_at)) {
-                if ($atmos_status_code !== AtmosPinflPaymentCode::CARDS_NOT_FOUND->value || Utilities::isNotAllowedRefresheCards($centralCustomer->atmos_pinfl_searched_at)) {
+                if ($atmos_status_code !== AtmosPinflPaymentCode::CARDS_NOT_FOUND->value || Utilities::isNotAllowedRefreshCardsOften($centralCustomer->atmos_pinfl_searched_at)) {
                     return true;
                 }
             }
