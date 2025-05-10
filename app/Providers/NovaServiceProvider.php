@@ -20,6 +20,7 @@ use App\Nova\Company\BranchResource;
 use App\Nova\Company\CompanySettingsResource;
 use App\Nova\Company\FeatureResource;
 use App\Nova\Company\InstallmentResource;
+use App\Nova\Company\LoyaltyProgram\IntroResource;
 use App\Nova\Company\LoyaltyProgram\ItemResource;
 use App\Nova\Company\LoyaltyProgram\PriceResource;
 use App\Nova\Company\LoyaltyProgram\ShopResource;
@@ -85,6 +86,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(ItemResource::class),
                         MenuItem::resource(PriceResource::class),
                         MenuItem::resource(StockResource::class),
+                        MenuItem::resource(IntroResource::class),
                     ])->collapsable(),
                 ];
             }
