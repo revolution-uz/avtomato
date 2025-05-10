@@ -3,19 +3,19 @@
 namespace App\GraphQL\LoyaltyProgram\Common\Types;
 
 use App\GraphQL\GraphQLTypeHelper;
-use App\Models\Company\LoyaltyProgram\Intro;
+use App\Models\Company\LoyaltyProgram\OnboardingImage;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
-class IntroGraphQLType extends GraphQLType
+class OnboardingImageGraphQLType extends GraphQLType
 {
     use GraphQLTypeHelper;
 
-    public const string GRAPHQL_TYPE_NAME = 'IntroGraphQLType';
+    public const string GRAPHQL_TYPE_NAME = 'OnboardingImageGraphQLType';
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'model' => Intro::class,
+        'model' => OnboardingImage::class,
     ];
 
     public function fields(): array
@@ -23,19 +23,19 @@ class IntroGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Intro $root) => $root->id,
+                'resolve' => fn (OnboardingImage $root) => $root->id,
             ],
             'image_url' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (Intro $root) => $root->image_url,
+                'resolve' => fn (OnboardingImage $root) => $root->image_url,
             ],
             'order' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (Intro $root) => $root->order,
+                'resolve' => fn (OnboardingImage $root) => $root->order,
             ],
             'is_active' => [
                 'type' => Type::nonNull(Type::boolean()),
-                'resolve' => fn (Intro $root) => $root->is_active,
+                'resolve' => fn (OnboardingImage $root) => $root->is_active,
             ],
         ];
     }

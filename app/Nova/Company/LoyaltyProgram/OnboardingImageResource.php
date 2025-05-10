@@ -2,7 +2,7 @@
 
 namespace App\Nova\Company\LoyaltyProgram;
 
-use App\Models\Company\LoyaltyProgram\Intro;
+use App\Models\Company\LoyaltyProgram\OnboardingImage;
 use App\Nova\Resource;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
@@ -10,14 +10,14 @@ use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class IntroResource extends Resource
+class OnboardingImageResource extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<Intro>
+     * @var class-string<OnboardingImage>
      */
-    public static string $model = Intro::class;
+    public static string $model = OnboardingImage::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

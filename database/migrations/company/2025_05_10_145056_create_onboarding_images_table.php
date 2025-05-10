@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('loyalty_program_intros', function (Blueprint $table) {
+        Schema::create('loyalty_program_onboarding_images', function (Blueprint $table) {
             $table->id();
             $table->string('image_path');
             $table->unsignedInteger('order');
@@ -19,6 +19,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('loyalty_program_intros');
+        Schema::dropIfExists('loyalty_program_onboarding_images');
     }
 };

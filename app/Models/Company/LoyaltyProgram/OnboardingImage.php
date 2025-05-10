@@ -19,13 +19,13 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $updated_at
  * @property-read string $image_url
  */
-class Intro extends Model
+class OnboardingImage extends Model
 {
     use HasFactory, OrderBySortable, TenantConnection;
 
     protected static array $sortables = ['id', 'order', 'is_active'];
 
-    protected $table = 'loyalty_program_intros';
+    protected $table = 'loyalty_program_onboarding_images';
 
     protected $fillable = [
         'image_path',
