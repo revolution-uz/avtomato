@@ -111,6 +111,7 @@ class Installment extends Model
         'paid_amount',
         'ican_id',
         'updated_at',
+        'created_at',
         'unired_id',
     ];
 
