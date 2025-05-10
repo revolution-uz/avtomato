@@ -34,13 +34,13 @@ class CreateIcanTransactionJob implements ShouldBeUniqueUntilProcessing, ShouldQ
             return;
         }
 
-//        $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($transaction->installment->ican_id);
-//
-//        if ($debtAmount < $transaction->amount) {
-//            $transaction->reverse();
-//
-//            return;
-//        }
+        //        $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($transaction->installment->ican_id);
+        //
+        //        if ($debtAmount < $transaction->amount) {
+        //            $transaction->reverse();
+        //
+        //            return;
+        //        }
 
         $icanResponse = $icanService->createTransaction($transaction);
         $transaction->ican_id = $icanResponse->id;
