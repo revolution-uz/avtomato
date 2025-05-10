@@ -8,7 +8,6 @@ use App\Models\CentralCustomer;
 use App\Services\UniredService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class SyncLastUniredCardUpdateDetails extends Command
