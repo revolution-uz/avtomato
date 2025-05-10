@@ -318,7 +318,7 @@ class UniredService
         }
     }
 
-    public function getCardUpdates(string $pinfl, int $page = 0): array
+    public function getCardUpdates(string $pinfl, int $page = 1): array
     {
         $response = $this->uniredClient->getCardUpdates(
             new UniredClientPinflGetCardUpdatesRequestDTO(
