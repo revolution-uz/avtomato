@@ -106,7 +106,7 @@ abstract class BaseAtmosClient extends BaseClient
         if ($credentials->expires_in <= time()) {
             $response = $this->getNewToken($credentials->username, $credentials->password);
             $credentials->access_token = $response->access_token;
-            $credentials->expires_in = $response->expires_in + time();
+            $credentials->expires_in = ($response->expires_in - 120) + time();
             $credentials->token_type = $response->token_type;
             $feature->data = $credentials->toArray();
 

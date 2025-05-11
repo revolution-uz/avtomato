@@ -237,7 +237,7 @@ class IcanService
                 'customer_id' => $customer->id,
                 'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
                 'sms_notify' => false,
-                'any_card_charge' => false,
+                'any_card_charge' => true,
                 'is_blacklist' => false,
                 'type' => InstallmentTypeEnum::WITH_PINFL,
             ]);
@@ -264,6 +264,7 @@ class IcanService
             'starts_in' => $credit->start_date ? Carbon::parse($credit->start_date) : Carbon::create($credit->activated_at ?: $credit->created_at)->addMonth(),
             'paid_amount' => $credit->payment_schedule?->total?->total_paid ?: $credit->amount - $credit->initial_payment - $credit->main_debt,
             'updated_at' => Carbon::parse($credit->updated_at),
+            'created_at' => Carbon::parse($credit->created_at),
         ]);
 
         if (! $installment->exists || $installment->isDirty()) {
