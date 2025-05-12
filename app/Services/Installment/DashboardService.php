@@ -193,7 +193,7 @@ class DashboardService
     private function ageBasedInstallments(bool $overdue = false): array
     {
         $query = Customer::query()
-            ->leftJoin('installments', 'customers.id', '=', 'installments.customer_id')
+            ->rightJoin('installments', 'customers.id', '=', 'installments.customer_id')
             ->when(! $overdue, fn ($q) => $q
                 ->when(
                     $this->installment_by_age_start_date && $this->installment_by_age_end_date,
