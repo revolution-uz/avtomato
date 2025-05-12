@@ -29,6 +29,8 @@ return [
     'installment_create' => 'Permission to create installment',
     'installment_create_transaction' => 'Permission to create installment transaction',
     'installment_edit' => 'Permission to edit installment',
+    'installment_settings_view_all' => 'Permission to view all installment settings',
+    'installment_settings_edit' => 'Permission to edit installment settings',
     'installment_attach_card' => 'Permission to attach card',
     'installment_detach_card' => 'Permission to detach card',
     'installment_attach_guarantor' => 'Permission to attach guarantor',

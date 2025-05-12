@@ -29,6 +29,8 @@ return [
     'installment_create' => 'Разрешение на создание рассрочки',
     'installment_create_transaction' => 'Разрешение на создание транзакции рассрочки',
     'installment_edit' => 'Разрешение на редактирование рассрочки',
+    'installment_settings_view_all' => 'Разрешение на просмотр всех настроек рассрочки',
+    'installment_settings_edit' => 'Разрешение на редактирование настроек рассрочки',
     'installment_attach_card' => 'Разрешение на привязку карты',
     'installment_detach_card' => 'Разрешение на отвязку карты',
     'installment_attach_guarantor' => 'Разрешение на привязку поручителя',

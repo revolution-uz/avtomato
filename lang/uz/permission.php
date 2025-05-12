@@ -29,6 +29,8 @@ return [
     'installment_create' => 'Muddatli to\'lov yaratishga ruxsat',
     'installment_create_transaction' => 'Muddatli to\'lovda transaksiya yaratishga ruxsat',
     'installment_edit' => 'Muddatli to\'lovni tahrirlashga ruxsat',
+    'installment_settings_view_all' => 'Barcha muddatli to\'lov sozlamalarini ko\'rishga ruxsat',
+    'installment_settings_edit' => 'Muddatli to\'lov sozlamalarini tahrirlashga ruxsat',
     'installment_attach_card' => 'Kartani bog\'lashga ruxsat',
     'installment_detach_card' => 'Kartani ajratishga ruxsat',
     'installment_attach_guarantor' => 'Kafil qo\'shishga ruxsat',
