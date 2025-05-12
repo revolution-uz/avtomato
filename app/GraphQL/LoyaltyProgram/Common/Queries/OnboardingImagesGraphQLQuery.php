@@ -38,7 +38,7 @@ class OnboardingImagesGraphQLQuery extends Query
             ->when(
                 isset($args['sort']),
                 fn (Builder $q) => $q->orderBySortable($args['sort']),
-                fn (Builder $q) => $q->orderByDesc('order')
+                fn (Builder $q) => $q->orderBy('order')
             )
             ->get();
     }
