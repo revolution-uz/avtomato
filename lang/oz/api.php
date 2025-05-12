@@ -8,6 +8,8 @@ return [
     'not found' => 'Топилмади',
     'success' => 'Муваффақиятли',
     'otp_was_wrong' => 'Тасдиқлаш коди хато',
+    'up_to_days' => ':days кунгача',
+    'above_days' => ':days кундан юқори',
     'installment_status_CANCELED' => 'Бекор қилинган',
     'installment_status_FROZEN' => 'Музлатилган',
     'installment_status_INACTIVE' => 'Фаол эмас',

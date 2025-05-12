@@ -29,6 +29,8 @@ return [
     'installment_create' => 'Муддатли тўлов яратишга рухсат',
     'installment_create_transaction' => 'Муддатли тўловда трансакция яратишга рухсат',
     'installment_edit' => 'Муддатли тўловни таҳрирлашга рухсат',
+    'installment_settings_view_all' => 'Барча муддатли тўлов созламаларини кўришга рухсат',
+    'installment_settings_edit' => 'Муддатли тўлов созламаларини таҳрирлашга рухсат',
     'installment_attach_card' => 'Картани боғлашга рухсат',
     'installment_detach_card' => 'Картани ажратишга рухсат',
     'installment_attach_guarantor' => 'Кафил қўшишга рухсат',

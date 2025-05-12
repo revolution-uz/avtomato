@@ -7,6 +7,8 @@ return [
     'not found' => 'Not found',
     'success' => 'Success',
     'otp_was_wrong' => 'Confirmation code was wrong',
+    'up_to_days' => 'Up to :days days',
+    'above_days' => 'Above 60 days',
     'installment_status_CANCELED' => 'Canceled',
     'installment_status_FROZEN' => 'Frozen',
     'installment_status_INACTIVE' => 'Inactive',
