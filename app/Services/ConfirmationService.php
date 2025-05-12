@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Enums\Company\LoyaltyProgram\CanLoginTypeEnum;
 use App\Enums\Company\SmsTemplateEnum;
+use App\Enums\Main\SettingsEnum;
 use App\Helpers\Utilities;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\LoyaltyProgram\User;
+use App\Models\Settings;
 use Exception;
 use Illuminate\Support\Carbon;
 
@@ -22,6 +24,15 @@ class ConfirmationService
     public function send(string $phone, SmsTemplateEnum $smsTemplateEnum): true
     {
         if ($this->canSendSms($phone)) {
+            if ($phone == Settings::getConfig(SettingsEnum::TEST_PHONE)) {
+                CardConfirmationSms::query()->create([
+                    'phone' => $phone,
+                    'code' => Settings::getConfig(SettingsEnum::TEST_OTP),
+                ]);
+
+                return true;
+            }
+
             $confirmationSms = CardConfirmationSms::query()->create(['phone' => $phone, 'code' => $this->generateCode()]);
             $this->smsService->sendConfirmationSms($confirmationSms, $smsTemplateEnum);
         }
