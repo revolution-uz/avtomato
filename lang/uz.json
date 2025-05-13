@@ -18,5 +18,7 @@
   "E-auction payments": "Elektron auksion to'lovlari",
   "Transport ticket payments": "Transport chiptalari uchun to'lovlar",
   "Utility payments": "Kommunal to'lovlar",
-  "Unknown type": "Noma'lum tur"
+  "Unknown type": "Noma'lum tur",
+  "Unknown": "Noma'lum",
+  "60-others": "60-boshqalar"
 }
