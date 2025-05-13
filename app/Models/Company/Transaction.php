@@ -11,6 +11,7 @@ use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
 use App\Services\AtmosService;
 use App\Services\UniredService;
+use App\Services\User\BalanceService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -200,7 +201,7 @@ class Transaction extends Model
                 ->firstOrFail();
             $comission = CardTypeEnum::getCardType($this->card_pan) ? $feature->humo_percent : $feature->uzcard_percent;
             if ($comission && ($amount = $this->amount * $comission) > 0) {
-                app(BalanceCharge::class)->chargeAmount($featureEnum, $this, $amount);
+                app(BalanceService::class)->chargeAmount($featureEnum, $this, $amount);
             }
         }
     }
