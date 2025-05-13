@@ -28,14 +28,12 @@ use App\Enums\Company\CardTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
-use App\Http\Requests\UniredPaymentWebhookCallbackRequest;
 use App\Models\CentralCustomer;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Transaction;
-use App\Models\Company\TransactionType;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -235,24 +233,6 @@ class UniredService
     public function sendPaymentSms(mixed $getPhone, ?string $getCardPan): bool
     {
         return true;
-    }
-
-    public function createTransaction(Installment $installment, int $customer_id, UniredPaymentWebhookCallbackRequest $request): bool
-    {
-        if (Transaction::query()->where('external_id', $request->ext)->exists()) {
-            return false;
-        }
-        $transaction = new Transaction;
-        $transaction->transaction_type_id = TransactionType::UNIRED_WITH_PINFL;
-        $transaction->branch_id = $installment->branch_id;
-        $transaction->external_id = $request->ext;
-        $transaction->amount = $request->amount / 100;
-        $transaction->installment_id = $installment->id;
-        $transaction->customer_id = $customer_id;
-        $transaction->card_pan = $request->card['pan'] ?? '****';
-        $transaction->paid_at = Carbon::parse($request->created_at)->addHours(5);
-
-        return $transaction->saveOrFail();
     }
 
     public function updatePinflCardsList(Customer $customer): bool
