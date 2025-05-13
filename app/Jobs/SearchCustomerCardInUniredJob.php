@@ -46,12 +46,12 @@ class SearchCustomerCardInUniredJob implements ShouldBeUniqueUntilProcessing, Sh
         $debt_amount = $installment->debtAmount;
         if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->any_card_charge && $installment->is_active) {
             if ($installment->isAvailableCustomerPinfl()) {
-                $uniredService->updatePinflCardsList($installment->customer);
+                $uniredService->autoUpdatePinflCardsList($installment->customer);
             }
             if ($installment->isAvailableGuarantorPinfl()) {
                 foreach ($installment->guarantorList as $guarantor) {
                     if ($guarantor->any_card_charge) {
-                        $uniredService->updatePinflCardsList($guarantor->customer);
+                        $uniredService->autoUpdatePinflCardsList($guarantor->customer);
                     }
                 }
             }

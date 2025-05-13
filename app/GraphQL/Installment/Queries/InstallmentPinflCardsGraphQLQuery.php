@@ -62,10 +62,10 @@ class InstallmentPinflCardsGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         $installment = Installment::query()->findOrFail($args['installment_id']);
-        $customerPINFLs = $installment->guarantors->pluck('pinfl')->prepend($installment->customer->pinfl)->toArray();
+        $customerPinfls = $installment->guarantors->pluck('pinfl')->prepend($installment->customer->pinfl)->toArray();
 
         return CentralUniredCard::query()
-            ->whereHas('customer', fn (Builder $q) => $q->whereIn('pinfl', $customerPINFLs))
+            ->whereHas('customer', fn (Builder $q) => $q->whereIn('pinfl', $customerPinfls))
             ->when(
                 isset($args['sort']),
                 fn (Builder $q) => $q->orderBySortable($args['sort']),

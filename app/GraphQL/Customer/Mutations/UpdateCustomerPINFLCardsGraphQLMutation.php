@@ -61,14 +61,7 @@ class UpdateCustomerPINFLCardsGraphQLMutation extends Mutation
 
             $cards = $this->uniredService->getCards($customer);
 
-            /** @var CentralCustomer $centralCustomer */
-            $centralCustomer = CentralCustomer::query()->firstOrNew([
-                'pinfl' => $customer->pinfl,
-            ], [
-                'first_name' => $customer->first_name,
-                'last_name' => $customer->last_name,
-                'middle_name' => $customer->middle_name,
-            ]);
+            $centralCustomer = CentralCustomer::query()->where('pinfl', $customer->pinfl)->firstOrFail();
 
             $centralCustomer->uniredCards()->upsert(
                 $cards,

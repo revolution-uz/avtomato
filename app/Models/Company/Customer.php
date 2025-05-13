@@ -180,4 +180,15 @@ class Customer extends Model
     {
         return Attribute::make(get: fn () => $this->passport_series . $this->passport_number);
     }
+
+    public function getOrNewCentralCustomer()
+    {
+        return CentralCustomer::query()->firstOrNew([
+            'pinfl' => $this->pinfl,
+        ], [
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'middle_name' => $this->middle_name,
+        ]);
+    }
 }

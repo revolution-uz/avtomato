@@ -235,7 +235,7 @@ class UniredService
         return true;
     }
 
-    public function updatePinflCardsList(Customer $customer): bool
+    public function autoUpdatePinflCardsList(Customer $customer): bool
     {
         $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
 
@@ -267,6 +267,50 @@ class UniredService
             }
 
             return $centralCustomer->save();
+        } catch (Exception $e) {
+            Log::channel('unired-client')->info(
+                'Error updating PINFL cards list',
+                [
+                    'class' => get_called_class(),
+                    'error' => $e->getMessage(),
+                    'pinfl' => $customer->pinfl,
+                ]
+            );
+            throw new GeneralException("Failed to update cards list for PINFL: {$customer->pinfl}");
+        }
+    }
+
+    public function updatePinflCardsList(Customer $customer): bool
+    {
+        $centralCustomer = CentralCustomer::query()->firstOrNew([
+            'pinfl' => $customer->pinfl,
+        ], [
+            'first_name' => $customer->first_name,
+            'last_name' => $customer->last_name,
+            'middle_name' => $customer->middle_name,
+        ]);
+
+        $is_uzcard_update = Utilities::isAllowedRefreshPinflCardsForMutation($centralCustomer->unired_uzcard_searched_at);
+        $is_humo_update = Utilities::isAllowedRefreshPinflCardsForMutation($centralCustomer->unired_humo_searched_at);
+
+        try {
+            if ($is_uzcard_update) {
+                $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+
+                if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
+                    $centralCustomer->unired_uzcard_searched_at = Carbon::now();
+                }
+            }
+            if ($is_humo_update) {
+                $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+
+                if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
+                    $centralCustomer->unired_humo_searched_at = Carbon::now();
+                }
+            }
+
+            return $centralCustomer->save();
+
         } catch (Exception $e) {
             Log::channel('unired-client')->info(
                 'Error updating PINFL cards list',
