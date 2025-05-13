@@ -18,5 +18,7 @@
   "E-auction payments": "Платежи за электронные аукционы",
   "Transport ticket payments": "Платежи за транспортные билеты",
   "Utility payments": "Коммунальные платежи",
-  "Unknown type": "Неизвестный тип"
+  "Unknown type": "Неизвестный тип",
+  "Unknown": "Неизвестно",
+  "60-others": "60-другие"
 }
