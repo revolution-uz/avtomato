@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -53,14 +54,18 @@ class BaseFeatureResource extends Resource
             Text::make(__('nova.feature.name'), 'name')->filterable()->exceptOnForms(),
             Text::make(__('nova.feature.description'), 'description')->filterable()->onlyOnIndex()->displayUsing(fn ($item) => Str::limit($item, 50)),
             // @phpstan-ignore-next-line
-            ...($this->resource->name?->isChargeable() ?? false ? [Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable()] : []),
+            Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable(),
+            //            ...($this->resource->name?->isChargeable() ?? false ? [Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable()] : []),
             Boolean::make(__('nova.feature.is_default_active'), 'is_default_active')->filterable()->showOnUpdating(function (NovaRequest $request, BaseFeature $resource) {
                 return (bool) $resource->modules->first(fn (BaseModule $module) => $module->is_default_active);
             }),
+
             // @phpstan-ignore-next-line
             ...($this->resource->name?->getExampleData() ?? false ? [Code::make(__('nova.feature.original_data'), 'original_data')->json()->help($this->resource->name->getExampleData())] : []),
             DateTime::make(__('nova.feature.created_at'), 'created_at')->filterable()->onlyOnDetail(),
             DateTime::make(__('nova.feature.updated_at'), 'updated_at')->filterable()->onlyOnDetail(),
+            Number::make(__('nova.feature.humo_percent'), 'humo_percent')->filterable()->hideFromIndex(),
+            Number::make(__('nova.feature.uzcard_percent'), 'uzcard_percent')->filterable()->hideFromIndex(),
 
             BelongsToMany::make(__('nova.feature.modules'), 'modules', BaseModuleResource::class),
         ];

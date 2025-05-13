@@ -5,8 +5,10 @@ namespace App\Models\Company;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
+use App\Helpers\Utilities;
 use App\Jobs\CreateIcanTransactionJob;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
+use App\Jobs\CreateOrUpdateTransactionFeeJob;
 use App\Jobs\SendTransactionSmsJob;
 use App\Services\AtmosService;
 use App\Services\UniredService;
@@ -30,6 +32,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $card_owner
  * @property string|null $card_phone
  * @property int $transaction_type_id
+ * @property bool $is_humo
  * @property string|null $external_id
  * @property float $amount
  * @property bool $is_initial_fee
@@ -101,6 +104,7 @@ class Transaction extends Model
                 $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
             }
             if ($transaction->transactionType->is_system) {
+                CreateOrUpdateTransactionFeeJob::dispatch($transaction->id);
                 CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
             }
 
@@ -172,19 +176,31 @@ class Transaction extends Model
 
     public function reverse()
     {
+        if ($this->status == TransactionStatusEnum::CANCELED) {
+            return true;
+        }
         $atmosService = app(AtmosService::class);
         $uniredService = app(UniredService::class);
+        $isCancelled = true;
 
         if ($this->transaction_type_id == TransactionType::ATMOS_WITH_CARD) {
-            $atmosService->reverseCardPayment($this);
+            $isCancelled = $atmosService->reverseCardPayment($this->external_id);
         } elseif ($this->transaction_type_id == TransactionType::ATMOS_WITH_PINFL) {
-            $atmosService->reversePinflPayment($this);
+            $isCancelled = $atmosService->reversePinflPayment($this->id);
         } elseif ($this->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
-            $uniredService->reversePayment($this);
+            $isCancelled = $uniredService->reversePayment($this->external_id);
+        }
+        if ($isCancelled) {
+            $this->status = TransactionStatusEnum::CANCELED;
+
+            return $this->saveOrFail();
         }
 
-        $this->status = TransactionStatusEnum::CANCELED;
+        return $isCancelled;
+    }
 
-        return $this->saveOrFail();
+    public function isHumo()
+    {
+        return in_array(substr($this->card_pan, 0, 4), Utilities::binHumo());
     }
 }

@@ -11,7 +11,6 @@ use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
 use App\Enums\Company\AtmosPinflPaymentCode;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
-use App\Enums\Company\TransactionStatusEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
 use App\Jobs\AtmosPinflCardUpdateJob;
@@ -52,17 +51,9 @@ class AtmosService
      * @throws Throwable
      * @throws GeneralException
      */
-    public function reverseCardPayment(Transaction $transaction): bool
+    public function reverseCardPayment(string $external_id): bool
     {
-        $response = $this->atmosCardClient->reversePayment($transaction->external_id);
-        if ($response->result->isSuccess()) {
-            $transaction->status = TransactionStatusEnum::CANCELED;
-            $transaction->saveOrFail();
-
-            return true;
-        }
-
-        return false;
+        return $this->atmosCardClient->reversePayment($external_id)->result->isSuccess();
     }
 
     public function removeCard(Card $card)
@@ -212,9 +203,9 @@ class AtmosService
      * @throws Throwable
      * @throws GeneralException
      */
-    public function reversePinflPayment(Transaction $transaction): bool
+    public function reversePinflPayment(int $transaction_id): bool
     {
-        $transactionAttempts = TransactionAttempt::query()->where('transaction_id', $transaction->id)->get();
+        $transactionAttempts = TransactionAttempt::query()->where('transaction_id', $transaction_id)->get();
         $isReversed = false;
         foreach ($transactionAttempts as $transactionAttempt) {
             $paymentState = $this->checkAttempt($transactionAttempt);
@@ -225,14 +216,8 @@ class AtmosService
                 }
             }
         }
-        if ($isReversed) {
-            $transaction->status = TransactionStatusEnum::CANCELED;
-            $transaction->saveOrFail();
 
-            return true;
-        }
-
-        return false;
+        return $isReversed;
     }
 
     /**

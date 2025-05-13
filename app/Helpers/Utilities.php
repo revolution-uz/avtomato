@@ -71,4 +71,9 @@ class Utilities
     {
         return is_null($searched_at) || $searched_at < Carbon::now()->subDays(self::PINFL_CARD_UPDATE_REFRESH_DAYS);
     }
+
+    public static function binHumo()
+    {
+        return ['9860', '4073', '5555'];
+    }
 }
