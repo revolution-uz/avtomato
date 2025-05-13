@@ -231,21 +231,14 @@ class DashboardService
 
         $count = $query->clone()->count();
 
-        $ageRanges = collect([
-            ['label' => 'unknown'],
-            ['label' => '18-25'],
-            ['label' => '26-33'],
-            ['label' => '34-40'],
-            ['label' => '41-49'],
-            ['label' => '50-59'],
-            ['label' => '60-others'],
-        ]);
+        $ageRanges = collect(['unknown', '18-25', '26-33', '34-40', '41-49', '50-59', '60-others']);
 
         return $ageRanges->map(fn ($range) => [
-            'label' => $range['label'],
-            'value' => ($results->firstWhere('label', $range['label'])->value ?? 0) / ($count == 0 ? 1 : $count) * 100,
+            'key' => $range,
+            'label' => __(ucfirst($range)),
+            'value' => ($results->firstWhere('label', $range)->value ?? 0) / ($count == 0 ? 1 : $count) * 100,
         ])
-            ->filter(fn ($item) => $item['label'] !== 'unknown' || $item['value'] !== 0)
+            ->filter(fn ($item) => $item['key'] !== 'unknown' || $item['value'] !== 0)
             ->toArray();
     }
 }
