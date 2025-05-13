@@ -54,17 +54,12 @@ class UpdateCustomerPinflCardsGraphQLMutation extends Mutation
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): true
     {
         $customer = Customer::query()->findOrFail($args['customer_id']);
-
-        $centralCustomer = $customer->getOrNewCentralCustomer();
+        $centralCustomer = $customer->getOrCreateCentralCustomer();
 
         try {
             $this->uniredService->updatePinflCardsList($centralCustomer);
 
             $cards = $this->uniredService->getCardsByPinfl($centralCustomer->pinfl);
-
-            if (! $centralCustomer->exists()) {
-                $centralCustomer->saveOrFail();
-            }
 
             $centralCustomer->uniredCards()->upsert(
                 $cards,

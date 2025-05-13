@@ -151,7 +151,7 @@ class Customer extends Model
             ->wherePivotNull('deleted_at');
     }
 
-    public function getUniredCards(): ?Collection
+    public function getUniredCards()
     {
         return CentralCustomer::query()->firstWhere('pinfl', $this->pinfl)?->uniredCards;
     }
@@ -181,9 +181,9 @@ class Customer extends Model
         return Attribute::make(get: fn () => $this->passport_series . $this->passport_number);
     }
 
-    public function getOrNewCentralCustomer()
+    public function getOrCreateCentralCustomer()
     {
-        return CentralCustomer::query()->firstOrNew([
+        return CentralCustomer::query()->firstOrCreate([
             'pinfl' => $this->pinfl,
         ], [
             'first_name' => $this->first_name,

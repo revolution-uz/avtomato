@@ -2,9 +2,10 @@
 
 namespace Tests\GraphQL\Installment\Queries;
 
+use App\Models\CentralCustomer;
+use App\Models\CentralUniredCard;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
-use App\Models\Company\UniredCard;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -38,11 +39,17 @@ class InstallmentPinflCardsGraphQLQueryTest extends GraphQLTestCase
     {
         parent::setUp();
 
-        $customer = Customer::factory()->create();
-        $guarantor = Customer::factory()->create();
+        CentralCustomer::truncate();
+        CentralUniredCard::truncate();
 
-        UniredCard::factory()->count(floor($this->_totalCardsCount / 2))->create(['customer_id' => $customer->id]);
-        UniredCard::factory()->count(ceil($this->_totalCardsCount / 2))->create(['customer_id' => $guarantor->id]);
+        $centralCustomer = CentralCustomer::factory()->create();
+        $centralGuarantor = CentralCustomer::factory()->create();
+
+        $customer = Customer::factory()->create(['pinfl' => $centralCustomer->pinfl]);
+        $guarantor = Customer::factory()->create(['pinfl' => $centralGuarantor->pinfl]);
+
+        CentralUniredCard::factory()->count(floor($this->_totalCardsCount / 2))->create(['customer_id' => $centralCustomer->id]);
+        CentralUniredCard::factory()->count(ceil($this->_totalCardsCount / 2))->create(['customer_id' => $centralGuarantor->id]);
 
         $this->_installment = Installment::factory()->create(['customer_id' => $customer->id]);
         $this->_installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
@@ -86,7 +93,7 @@ class InstallmentPinflCardsGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'sort' => 'id']));
 
         $this->assertSuccessInstallmentPinflCardsResponse($response);
-        $cardIds = UniredCard::query()->orderBy('id')->limit(10)->pluck('id')->toArray();
+        $cardIds = CentralUniredCard::query()->orderBy('id')->limit(10)->pluck('id')->toArray();
         $this->assertEquals($cardIds, $response->json('data.installmentPinflCards.data.*.id'));
     }
 
@@ -98,7 +105,7 @@ class InstallmentPinflCardsGraphQLQueryTest extends GraphQLTestCase
             ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['installment_id' => $this->_installment->id, 'sort' => '-id']));
 
         $this->assertSuccessInstallmentPinflCardsResponse($response);
-        $cardIds = UniredCard::query()->orderByDesc('id')->limit(10)->pluck('id')->toArray();
+        $cardIds = CentralUniredCard::query()->orderByDesc('id')->limit(10)->pluck('id')->toArray();
         $this->assertEquals($cardIds, $response->json('data.installmentPinflCards.data.*.id'));
     }
 

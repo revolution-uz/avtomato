@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Enums\FeatureEnum;
-use App\Exceptions\UniredException;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Services\UniredService;
@@ -42,12 +41,7 @@ class CreateOrUpdateCustomerUniredCardsJob implements ShouldBeUniqueUntilProcess
         }
 
         $customer = Customer::query()->findOrFail($this->customerId);
-
-        $centralCustomer = $customer->getOrNewCentralCustomer();
-
-        if (! $centralCustomer->exists()) {
-            $centralCustomer->save();
-        }
+        $centralCustomer = $customer->getOrCreateCentralCustomer();
 
         try {
             $cards = $uniredService->getCardsByPinfl($centralCustomer->pinfl);
@@ -58,7 +52,7 @@ class CreateOrUpdateCustomerUniredCardsJob implements ShouldBeUniqueUntilProcess
                 ['pinfl', 'auto', 'is_verified', 'is_blocked', 'block_reason', 'blocked_at', 'owner', 'pan', 'phone', 'type']
             );
 
-        } catch (UniredException $e) {
+        } catch (Exception $e) {
             return;
         }
     }

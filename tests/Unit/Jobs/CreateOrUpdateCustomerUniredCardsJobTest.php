@@ -5,6 +5,8 @@ namespace Tests\Unit\Jobs;
 use App\Clients\UniredClient;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Jobs\CreateOrUpdateCustomerUniredCardsJob;
+use App\Models\CentralCustomer;
+use App\Models\CentralUniredCard;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Services\UniredService;
@@ -23,6 +25,9 @@ class CreateOrUpdateCustomerUniredCardsJobTest extends TestCase
     {
         parent::setUp();
 
+        CentralCustomer::truncate();
+        CentralUniredCard::truncate();
+
         $this->_balanceServiceMock = $this->mock(BalanceService::class);
     }
 
@@ -38,7 +43,10 @@ class CreateOrUpdateCustomerUniredCardsJobTest extends TestCase
         $job = new CreateOrUpdateCustomerUniredCardsJob($customer->id);
 
         $job->handle(new UniredService(new UniredClient), $this->_balanceServiceMock);
-        $this->assertCount(2, $customer->uniredCards);
+
+        $centralCustomer = $customer->getOrCreateCentralCustomer();
+        $this->assertNotNull($centralCustomer);
+        $this->assertCount(2, $centralCustomer->uniredCards);
     }
 
     #[Test]
@@ -56,6 +64,8 @@ class CreateOrUpdateCustomerUniredCardsJobTest extends TestCase
 
         $job->handle(new UniredService(new UniredClient), $this->_balanceServiceMock);
 
-        $this->assertCount(2, $customer->uniredCards);
+        $centralCustomer = $customer->getOrCreateCentralCustomer();
+        $this->assertNotNull($centralCustomer);
+        $this->assertCount(2, $centralCustomer->uniredCards);
     }
 }

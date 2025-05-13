@@ -16,6 +16,7 @@ class CentralUniredCardFactory extends Factory
     {
         return [
             'uuid' => $this->faker->uuid(),
+            'pinfl' => $this->faker->regexify('[0-9]{14}'),
             'auto' => $this->faker->boolean(),
             'is_verified' => $this->faker->boolean(),
             'is_blocked' => $this->faker->boolean(),
