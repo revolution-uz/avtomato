@@ -55,7 +55,6 @@ class BaseFeatureResource extends Resource
             Text::make(__('nova.feature.description'), 'description')->filterable()->onlyOnIndex()->displayUsing(fn ($item) => Str::limit($item, 50)),
             // @phpstan-ignore-next-line
             Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable(),
-            //            ...($this->resource->name?->isChargeable() ?? false ? [Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable()] : []),
             Boolean::make(__('nova.feature.is_default_active'), 'is_default_active')->filterable()->showOnUpdating(function (NovaRequest $request, BaseFeature $resource) {
                 return (bool) $resource->modules->first(fn (BaseModule $module) => $module->is_default_active);
             }),
