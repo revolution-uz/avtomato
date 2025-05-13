@@ -2,13 +2,12 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\CardTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
-use App\Helpers\Utilities;
 use App\Jobs\CreateIcanTransactionJob;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
-use App\Jobs\CreateOrUpdateTransactionFeeJob;
 use App\Jobs\SendTransactionSmsJob;
 use App\Services\AtmosService;
 use App\Services\UniredService;
@@ -32,7 +31,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $card_owner
  * @property string|null $card_phone
  * @property int $transaction_type_id
- * @property bool $is_humo
  * @property string|null $external_id
  * @property float $amount
  * @property bool $is_initial_fee
@@ -104,8 +102,8 @@ class Transaction extends Model
                 $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
             }
             if ($transaction->transactionType->is_system) {
-                CreateOrUpdateTransactionFeeJob::dispatch($transaction->id);
                 CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
+                $transaction->computeFee();
             }
 
             if ($transaction->installment->ican_id) {
@@ -164,11 +162,6 @@ class Transaction extends Model
         return $this->belongsTo(Branch::class);
     }
 
-    public function canceled(): void
-    {
-        $this->updateOrFail(['status' => TransactionStatusEnum::CANCELED]);
-    }
-
     public function scopeOnlySuccess($query)
     {
         return $query->where('status', TransactionStatusEnum::SUCCESS);
@@ -199,8 +192,16 @@ class Transaction extends Model
         return $isCancelled;
     }
 
-    public function isHumo()
+    private function computeFee()
     {
-        return in_array(substr($this->card_pan, 0, 4), Utilities::binHumo());
+        if ($featureEnum = TransactionType::getFeature($this->transaction_type_id)) {
+            $feature = Feature::query()
+                ->where('feature', $featureEnum)
+                ->firstOrFail();
+            $comission = CardTypeEnum::getCardType($this->card_pan) ? $feature->humo_percent : $feature->uzcard_percent;
+            if ($comission && ($amount = $this->amount * $comission) > 0) {
+                app(BalanceCharge::class)->chargeAmount($featureEnum, $this, $amount);
+            }
+        }
     }
 }

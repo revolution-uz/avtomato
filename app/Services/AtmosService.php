@@ -11,6 +11,7 @@ use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
 use App\Enums\Company\AtmosPinflPaymentCode;
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\Company\TransactionAttemptTypeEnum;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
 use App\Jobs\AtmosPinflCardUpdateJob;
@@ -193,7 +194,10 @@ class AtmosService
         if ($confirmWithPinfl->isReversed()) {
             /** @var Transaction $transaction */
             $transaction = Transaction::findOrFail($transactionAttempt->transaction_id);
-            $transaction->canceled();
+            if ($transaction->status != TransactionStatusEnum::CANCELED) {
+                $transaction->status = TransactionStatusEnum::CANCELED;
+                $transaction->save();
+            }
             $transactionAttempt->failed();
             $transaction->installment->fixPaidAmount();
         }
