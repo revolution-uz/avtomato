@@ -24,18 +24,20 @@ class UniredPaymentWebhookCallbackRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pinfl' => 'required|string',
-            'loan_id' => 'required|string',
             'ext' => 'required|string',
             'card' => 'required|array',
-            'amount' => 'required|int',
+            'card.pan' => 'nullable|string',
+            'card.owner' => 'nullable|string',
+            'card.phone' => 'nullable|string',
             'date' => 'required|string',
-            'terminal' => 'required|string',
-            'merchant' => 'required|string',
-            'merchant_id' => 'required|int',
+            'pinfl' => 'required|string',
+            'amount' => 'required|int',
             'status' => 'required|string',
-            'refunded_at' => 'nullable|string',
+            'loan_id' => 'required|string',
+            'merchant' => 'required|string',
+            'terminal' => 'required|string',
             'created_at' => 'required|string',
+            'merchant_id' => 'required|int',
         ];
     }
 

@@ -11,36 +11,40 @@ use App\Jobs\SendTransactionSmsJob;
 use App\Services\AtmosService;
 use App\Services\UniredService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
+ * Class Transaction
+ *
  * @property int $id
  * @property int|null $branch_id
- * @property Branch|null $branch
  * @property int $installment_id
- * @property Installment $installment
  * @property int $customer_id
- * @property Customer $customer
- * @property int $card_id
- * @property Card $card
+ * @property int|null $card_id
  * @property string|null $card_pan
+ * @property string|null $card_owner
+ * @property string|null $card_phone
  * @property int $transaction_type_id
- * @property TransactionType $transactionType
  * @property string|null $external_id
  * @property float $amount
  * @property bool $is_initial_fee
- * @property int $admin_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read  CompanyAdmin $admin
+ * @property int|null $admin_id
  * @property Carbon|null $paid_at
  * @property TransactionStatusEnum $status
  * @property int|null $ican_id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Installment $installment
+ * @property Customer $customer
+ * @property Card|null $card
+ * @property TransactionType $transactionType
+ * @property CompanyAdmin|null $admin
+ * @property Branch|null $branch
  *
  * @method static Builder onlySuccess()
  */
@@ -55,6 +59,8 @@ class Transaction extends Model
         'branch_id',
         'customer_id',
         'card_id',
+        'card_owner',
+        'card_phone',
         'transaction_type_id',
         'external_id',
         'amount',
