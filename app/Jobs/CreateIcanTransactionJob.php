@@ -20,7 +20,7 @@ class CreateIcanTransactionJob implements ShouldBeUniqueUntilProcessing, ShouldQ
 
     public function __construct(private readonly int $transactionId)
     {
-        $this->onQueue('sync-ican');
+        $this->onQueue('ican-transaction');
     }
 
     /**
@@ -30,7 +30,23 @@ class CreateIcanTransactionJob implements ShouldBeUniqueUntilProcessing, ShouldQ
     {
         $transaction = Transaction::query()->findOrFail($this->transactionId);
 
-        $icanService->createTransaction($transaction);
+        if ($transaction->ican_id) {
+            return;
+        }
+
+        //        $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($transaction->installment->ican_id);
+        //
+        //        if ($debtAmount < $transaction->amount) {
+        //            $transaction->reverse();
+        //
+        //            return;
+        //        }
+
+        $icanResponse = $icanService->createTransaction($transaction);
+        $transaction->ican_id = $icanResponse->id;
+        $transaction->save();
+
+        sleep(20);
     }
 
     /**

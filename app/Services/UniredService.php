@@ -10,9 +10,11 @@ use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
+use App\DTOs\Unired\Client\UniredClientPinflGetCardUpdatesRequestDTO;
 use App\DTOs\Unired\Client\UniredContractLoanIdDTO;
 use App\DTOs\Unired\Client\UniredCreateClientRequestDTO;
 use App\DTOs\Unired\Client\UniredPinflCardsResponseDTO;
+use App\DTOs\Unired\Client\UniredPinflCardUpdateResponseDTO;
 use App\DTOs\Unired\Client\UniredToggleClientAutoRequestDTO;
 use App\DTOs\Unired\Contract\UniredCreateContractRequestDTO;
 use App\DTOs\Unired\Contract\UniredUpdateContractDataRequestDTO;
@@ -26,14 +28,12 @@ use App\Enums\Company\CardTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
-use App\Http\Requests\UniredPaymentWebhookCallbackRequest;
 use App\Models\CentralCustomer;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Transaction;
-use App\Models\Company\TransactionType;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -160,10 +160,15 @@ class UniredService
         if ($response->isSuccess()) {
             $cardDto = UniredPinflCardsResponseDTO::from($response->result);
 
-            return array_merge(
-                array_map(fn ($card) => $card + ['type' => CardTypeEnum::UZCARD->value], $cardDto->uzcard->data->toArray()),
-                array_map(fn ($card) => $card + ['type' => CardTypeEnum::HUMO->value], $cardDto->humo->data->toArray()),
-            );
+            $result = [];
+            if ($cardDto->uzcard && $cardDto->uzcard->data) {
+                $result = array_merge($result, array_map(fn ($card) => $card + ['type' => CardTypeEnum::UZCARD->value], $cardDto->uzcard->data->toArray()));
+            }
+            if ($cardDto->humo && $cardDto->humo->data) {
+                $result = array_merge($result, array_map(fn ($card) => $card + ['type' => CardTypeEnum::HUMO->value], $cardDto->humo->data->toArray()));
+            }
+
+            return $result;
         }
 
         return [];
@@ -230,39 +235,36 @@ class UniredService
         return true;
     }
 
-    public function createTransaction(Installment $installment, int $customer_id, UniredPaymentWebhookCallbackRequest $request): bool
-    {
-        if (Transaction::query()->where('external_id', $request->ext)->exists()) {
-            return false;
-        }
-        $transaction = new Transaction;
-        $transaction->transaction_type_id = TransactionType::UNIRED_WITH_PINFL;
-        $transaction->branch_id = $installment->branch_id;
-        $transaction->external_id = $request->ext;
-        $transaction->amount = $request->amount / 100;
-        $transaction->installment_id = $installment->id;
-        $transaction->customer_id = $customer_id;
-        $transaction->card_pan = $request->card['pan'] ?? '****';
-        $transaction->paid_at = Carbon::parse($request->created_at)->addHours(5);
-
-        return $transaction->saveOrFail();
-    }
-
     public function updatePinflCardsList(Customer $customer): bool
     {
-        $centralCustomer = CentralCustomer::query()->firstOrNew([
-            'pinfl' => $customer->pinfl,
-        ], [
-            'first_name' => $customer->first_name,
-            'last_name' => $customer->last_name,
-            'middle_name' => $customer->middle_name,
-        ]);
+        $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
+
+        if (! $centralCustomer) {
+            return true;
+        }
+
+        //        $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
+        //        sleep(1);
+        $is_uzcard_update = Utilities::isAllowedAutoUpdateCards($centralCustomer->unired_uzcard_searched_at) && Utilities::isAllowedRefreshCardsOften($centralCustomer->unired_uzcard_searched_at);
+        $is_humo_update = Utilities::isAllowedAutoUpdateCards($centralCustomer->unired_humo_searched_at) && Utilities::isAllowedRefreshCardsOften($centralCustomer->unired_humo_searched_at);
 
         try {
-            $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
-            $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
-            $centralCustomer->unired_uzcard_searched_at = Carbon::now();
-            $centralCustomer->unired_humo_searched_at = Carbon::now();
+            if ($is_uzcard_update) {
+                $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+
+                if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
+                    $centralCustomer->unired_uzcard_searched_at = Carbon::now();
+                }
+
+                sleep(1);
+            }
+            if ($is_humo_update) {
+                $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+                if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
+                    $centralCustomer->unired_humo_searched_at = Carbon::now();
+                }
+                sleep(1);
+            }
 
             return $centralCustomer->save();
         } catch (Exception $e) {
@@ -276,6 +278,26 @@ class UniredService
             );
             throw new GeneralException("Failed to update cards list for PINFL: {$customer->pinfl}");
         }
+    }
+
+    public function getCardUpdates(string $pinfl, int $page = 1): array
+    {
+        $response = $this->uniredClient->getCardUpdates(
+            new UniredClientPinflGetCardUpdatesRequestDTO(
+                date_from: Carbon::today()->subYear()->startOfMonth()->toDateString(),
+                date_to: Carbon::today()->addDay()->endOfMonth()->toDateString(),
+                pinfls: [$pinfl],
+            ),
+            $page
+        );
+        sleep(1);
+        if ($response->isSuccess()) {
+            return UniredPinflCardUpdateResponseDTO::collect(
+                $response->result['last_page'] === $page ? $response->result['data'] : array_merge($response->result['data'], $this->getCardUpdates($pinfl, $page + 1))
+            );
+        }
+
+        return [];
     }
 
     private function updateDebitAndSwitchAuto(string $loan_id, int $debit_amount, bool $auto): ?bool

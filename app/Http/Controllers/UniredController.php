@@ -7,9 +7,13 @@ use App\Http\Requests\UniredPaymentWebhookCallbackRequest;
 use App\Http\Requests\UniredSendPaymentSmsCallbackRequest;
 use App\Models\Company;
 use App\Models\Company\Installment;
+use App\Models\Company\Transaction;
+use App\Models\Company\TransactionType;
+use App\Services\IcanService;
 use App\Services\UniredService;
 use Exception;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UniredController extends Controller
 {
@@ -27,20 +31,22 @@ class UniredController extends Controller
                         ? $request->getInstallmentGuarantorCustomerId()
                         : $installment->customer_id;
 
-                    if (Company\Transaction::query()->where('external_id', $request->ext)->exists()) {
-                        $transaction = Company\Transaction::query()->where('external_id', $request->ext)->first();
-                        $transaction->card_pan = $request->card['pan'] ?? '****';
-                        $transaction->paid_at = Carbon::parse($request->created_at)->addHours(5);
-                        $transaction->save();
+                    Transaction::query()->updateOrCreate([
+                        'external_id' => $request->ext,
+                    ], [
+                        'transaction_type_id' => TransactionType::UNIRED_WITH_PINFL,
+                        'branch_id' => $installment->branch_id,
+                        'external_id' => $request->ext,
+                        'amount' => $request->amount / 100,
+                        'installment_id' => $installment->id,
+                        'customer_id' => $customerId,
+                        'card_pan' => $request->card['pan'] ?? '****',
+                        'card_owner' => $request->card['owner'] ?? null,
+                        'card_phone' => empty($request->card['phone']) ? null : $request->card['phone'],
+                        'paid_at' => Carbon::parse($request->created_at)->addHours(5),
+                    ]);
 
-                        return response()->json(['success' => true, 'message' => 'OK'], 200);
-                    }
-
-                    if ($this->uniredService->createTransaction($installment, $customerId, $request)) {
-                        return response()->json(['success' => true, 'message' => 'OK'], 200);
-                    }
-
-                    return response()->json(['message' => 'Transaction has already been created'], 501);
+                    return response()->json(['success' => true, 'message' => 'OK'], 200);
                 }
 
                 return response()->json(['message' => 'Installment not found'], 501);
@@ -54,37 +60,37 @@ class UniredController extends Controller
 
     public function checkPayment(UniredCheckPaymentCallbackRequest $request)
     {
+        $response = [
+            'code' => 101,
+            'debt' => 0,
+        ];
         if ($companyId = $request->getCompanyId()) {
             tenancy()->initialize(Company::findOrFail($companyId));
+            $installment = Installment::find($request->getInstallmentId());
+            if ($installment) {
+                $avtomatoDebt = (int) $installment->debtAmount * 100;
 
-            if ($debt = $this->uniredService->getInstallmentDebt($request->getInstallmentId())) {
-                return response()->json([
-                    'success' => true,
-                    'code' => 0,
-                    'message' => 'SUCCESS',
-                    'result' => [
-                        'debt' => $debt,
-                    ],
-                ], 200);
-            }
-            if ($debt === null) {
-                return response()->json([
-                    'success' => false,
-                    'code' => 199,
-                    'message' => 'Не правильные параметры: invalid_params : loan id invalid',
-                    'result' => null,
-                ], 200);
+                if ($installment->ican_id) {
+                    $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($installment->ican_id);
+
+                    if ($avtomatoDebt > $debtAmount * 100) {
+                        $avtomatoDebt = $debtAmount * 100;
+                    }
+                }
+
+                $response = [
+                    'code' => 100,
+                    'debt' => max(0, $avtomatoDebt),
+                ];
             }
         }
 
-        return response()->json([
-            'success' => true,
-            'code' => 0,
-            'message' => 'SUCCESS',
-            'result' => [
-                'debt' => 0,
-            ],
-        ], 200);
+        Log::channel('unired-callback')->info('checkPayment', [
+            'request' => $request->all(),
+            'response' => $response,
+        ]);
+
+        return response()->json($response, 200);
     }
 
     public function sendSms(UniredSendPaymentSmsCallbackRequest $request)

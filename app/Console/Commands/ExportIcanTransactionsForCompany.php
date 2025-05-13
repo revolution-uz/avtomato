@@ -73,7 +73,7 @@ class ExportIcanTransactionsForCompany extends Command
             $icanTransaction = $icanService->createTransaction($transaction);
             $transaction->ican_id = $icanTransaction->id;
             $transaction->save();
-            sleep(3);
+            sleep(10);
         }
 
         return CommandAlias::SUCCESS;

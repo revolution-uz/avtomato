@@ -10,7 +10,6 @@ use App\Enums\Company\TransactionStatusEnum;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Contracts\Database\Query\Expression;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -69,21 +68,12 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read float $installment_amount
  * @property-read bool $auto_pay
  * @property-read int|null $overdue_days
- * @property-read float $debt_amount
  * @property-read float $wholeDebtAmount
  * @property-read float $monthlyPayment
  * @property-read bool $is_active
  * @property-read bool $is_fully_paid
  * @property-read Carbon $nextPaymentDate
  * @property-read float $portion
- *
- * @method static Builder|Installment whereHasDebt()
- * @method static Builder|Installment whereNextPayDate(string $expression, Carbon $date)
- * @method static Builder|Installment countId()
- * @method static Builder|Installment sumDebt()
- * @method static Builder|Installment sumInstallmentAmount()
- * @method static Builder|Installment sumProfit()
- * @method static Builder|Installment excludeIcanInstallments()
  */
 class Installment extends Model
 {
@@ -128,7 +118,11 @@ class Installment extends Model
 
     public static function getDebtAmountRaw(): Expression
     {
-        return DB::raw('(amount - initial_fee) * ((percent + 100) / 100) - paid_amount');
+        $installmentAmount = '(amount - initial_fee) * (percent + 100) / 100';
+        $monthlyPayment = "{$installmentAmount} / period";
+        $diffInMonths = 'LEAST(GREATEST(EXTRACT(YEAR FROM AGE(starts_in)) * 12 + EXTRACT(MONTH FROM AGE(starts_in)) + 1, 0), period)';
+
+        return DB::raw("{$monthlyPayment} * {$diffInMonths} - paid_amount");
     }
 
     public static function getInstallmentAmountRaw(): Expression
@@ -355,26 +349,6 @@ class Installment extends Model
     public function scopeWhereNextPayDate($query, string $expression, Carbon $date)
     {
         return $query->where(self::getNextPayDateRaw(), $expression, $date);
-    }
-
-    public function scopeCountId($query)
-    {
-        return $query->count('id');
-    }
-
-    public function scopeSumDebt($query)
-    {
-        return $query->sum(self::getDebtAmountRaw());
-    }
-
-    public function scopeSumInstallmentAmount($query)
-    {
-        return $query->sum(self::getInstallmentAmountRaw());
-    }
-
-    public function scopeSumProfit($query)
-    {
-        return $query->sumCustomRaw(self::getProfitAmountRaw());
     }
 
     public function scopeExcludeIcanInstallments($query)

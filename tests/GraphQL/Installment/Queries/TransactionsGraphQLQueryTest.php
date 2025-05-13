@@ -62,55 +62,54 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successWithoutArguments()
     {
-        $response = $this->sendToGraphQL();
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery());
+
         $this->assertSuccessTransactionsResponse($response);
     }
 
     #[Test]
     public function successPagination()
     {
-        $response = $this->sendToGraphQL(['page' => 4]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['page' => 4]));
+
         $this->assertSuccessTransactionsResponse($response, page: 4);
     }
 
     #[Test]
     public function successPerPage()
     {
-        $response = $this->sendToGraphQL(['per_page' => 25]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['per_page' => 25]));
+
         $this->assertSuccessTransactionsResponse($response, perPage: 25);
     }
 
     #[Test]
     public function successSortAscending()
     {
-        $response = $this->sendToGraphQL(['sort' => 'id']);
-        $this->assertSuccessTransactionsResponse($response);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['sort' => 'id']));
 
+        $this->assertSuccessTransactionsResponse($response);
         $transactionIds = Transaction::orderBy('id')->limit(10)->pluck('id')->toArray();
         $this->assertEquals($transactionIds, $response->json('data.transactions.data.*.id'));
-    }
-
-    #[Test]
-    public function successId()
-    {
-        $transaction = Transaction::query()->first();
-        $response = $this->sendToGraphQL(['id' => $transaction->id]);
-        $this->assertSuccessTransactionsResponse($response, total: 1);
-        $this->assertEquals(Transaction::query()->first()->id, $response->json('data.transactions.data.0.id'));
-    }
-
-    #[Test]
-    public function emptyId()
-    {
-        $response = $this->sendToGraphQL(['id' => 423]);
-        $this->assertEmpty($response->json('data.transactions.data'));
     }
 
     #[Test]
     public function successInstallmentId()
     {
         $transaction = Transaction::query()->first();
-        $response = $this->sendToGraphQL(['installment_id' => $transaction->installment_id]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['installment_id' => $transaction->installment_id]));
+
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->installment->id, $response->json('data.transactions.data.0.installment_id'));
     }
@@ -118,7 +117,10 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function errorInstallmentId()
     {
-        $response = $this->sendToGraphQL(['installment_id' => 93]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['installment_id' => 999999999]));
+
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'installment id']), $response->json('errors.0.extensions.validation.installment_id.0'));
     }
@@ -127,7 +129,11 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     public function successCustomerId()
     {
         $transaction = Transaction::query()->first();
-        $response = $this->sendToGraphQL(['customer_id' => $transaction->customer_id]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['customer_id' => $transaction->customer_id]));
+
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->customer->id, $response->json('data.transactions.data.0.customer_id'));
     }
@@ -135,7 +141,10 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function emptyCustomerId()
     {
-        $response = $this->sendToGraphQL(['customer_id' => 93]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['customer_id' => 999999999]));
+
         $this->assertEmpty($response->json('data.transactions.data'));
     }
 
@@ -143,7 +152,11 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     public function successCardId()
     {
         $transaction = Transaction::query()->first();
-        $response = $this->sendToGraphQL(['card_id' => $transaction->card->id]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['card_id' => $transaction->card->id]));
+
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->card_id, $response->json('data.transactions.data.0.card_id'));
     }
@@ -151,7 +164,10 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function errorCardId()
     {
-        $response = $this->sendToGraphQL(['card_id' => 93]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['card_id' => 9999999999]));
+
         $this->assertEmpty($response->json('data.transactions.data'));
     }
 
@@ -159,7 +175,11 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     public function successTransactionTypeId()
     {
         $transaction = Transaction::query()->first();
-        $response = $this->sendToGraphQL(['transaction_type_id' => $transaction->transactionType->id]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['transaction_type_id' => $transaction->transactionType->id]));
+
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->transactionType->id, $response->json('data.transactions.data.0.transaction_type_id'));
     }
@@ -170,7 +190,11 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         /** @var Branch $branch */
         $branch = Branch::factory()->create();
         $transactions = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
-        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['branches' => [$branch->id]]));
+
         $this->assertSuccessTransactionsResponse($response, total: 5);
         foreach ($transactions as $transaction) {
             $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
@@ -186,10 +210,13 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $transactions = Transaction::factory()->count(5)->create(['installment_id' => $installments[0]->id, 'branch_id' => null]);
         Transaction::factory()->count(5)->create(['installment_id' => $installments[1]->id, 'branch_id' => null]);
 
-        $response = $this->sendToGraphQL([
-            'installment_id' => $installments[0]->id,
-            'branches' => [$branch->id],
-        ]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery([
+                'installment_id' => $installments[0]->id,
+                'branches' => [$branch->id],
+            ]));
+
         $this->assertSuccessTransactionsResponse($response, total: 5);
         foreach ($transactions as $transaction) {
             $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
@@ -203,7 +230,11 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $branch = Branch::factory()->create();
         $installment = Installment::factory()->create(['branch_id' => $branch->id]);
         $transactions = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
-        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['branches' => [$branch->id]]));
+
         $this->assertSuccessTransactionsResponse($response, total: 5);
         foreach ($transactions as $transaction) {
             $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
@@ -218,7 +249,11 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $transactionsWithBranch = Transaction::factory()->count(5)->create(['branch_id' => $branch->id]);
         $installment = Installment::factory()->create(['branch_id' => $branch->id]);
         $transactionsWithoutBranch = Transaction::factory()->count(5)->create(['branch_id' => null, 'installment_id' => $installment->id]);
-        $response = $this->sendToGraphQL(['branches' => [$branch->id]]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['branches' => [$branch->id]]));
+
         $this->assertSuccessTransactionsResponse($response, total: 10);
         foreach ($transactionsWithBranch->merge($transactionsWithoutBranch) as $transaction) {
             $this->assertNotNull(Arr::first($response->json('data.transactions.data.*.id'), fn ($item) => $item == $transaction->id));
@@ -228,7 +263,10 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function errorTransactionTypeId()
     {
-        $response = $this->sendToGraphQL(['transaction_type_id' => 93]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['transaction_type_id' => 93]));
+
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'transaction type id']), $response->json('errors.0.extensions.validation.transaction_type_id.0'));
     }
@@ -236,7 +274,10 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successSortDescending()
     {
-        $response = $this->sendToGraphQL(['sort' => '-id']);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['sort' => '-id']));
+
         $this->assertSuccessTransactionsResponse($response);
 
         $transactionIds = Transaction::orderByDesc('id')->limit(10)->pluck('id')->toArray();
@@ -262,32 +303,44 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         ]);
 
         // ID
-        $response = $this->sendToGraphQL(['search' => (string) $transaction->id]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['search' => (string) $transaction->id]));
         $this->assertSuccessTransactionsResponse($response, total: 'IGNORE');
         $this->assertNotNull(Arr::first($response->json('data.transactions.data'), fn ($item) => $item['id'] === $transaction->id));
 
         // External ID
-        $response = $this->sendToGraphQL(['search' => $transaction->external_id]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['search' => $transaction->external_id]));
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
 
         // Branch name
-        $response = $this->sendToGraphQL(['search' => $branch->name]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['search' => $branch->name]));
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
 
         // Installment ID
-        $response = $this->sendToGraphQL(['search' => (string) $installment->id]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['search' => (string) $installment->id]));
         $this->assertSuccessTransactionsResponse($response, total: 'IGNORE');
         $this->assertNotNull(Arr::first($response->json('data.transactions.data'), fn ($item) => $item['id'] === $transaction->id));
 
         // Customer firstname
-        $response = $this->sendToGraphQL(['search' => $customer->first_name]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['search' => $customer->first_name]));
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
 
         // Customer lastname
-        $response = $this->sendToGraphQL(['search' => $customer->last_name]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['search' => $customer->last_name]));
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals($transaction->id, $response->json('data.transactions.data.0.id'));
     }
@@ -295,10 +348,12 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function successWithDateRange()
     {
-        $response = $this->sendToGraphQL([
-            'from' => Carbon::now()->subWeek()->format('Y-m-d'),
-            'to' => Carbon::now()->subDay()->format('Y-m-d'),
-        ]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery([
+                'from' => Carbon::now()->subWeek()->format('Y-m-d'),
+                'to' => Carbon::now()->subDay()->format('Y-m-d'),
+            ]));
 
         $this->assertSuccessTransactionsResponse($response, total: 5);
     }
@@ -306,15 +361,21 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function errorWithDateRange()
     {
-        $response = $this->sendToGraphQL(['from' => 'dfghjkjk']);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['from' => 'dfghjkjk']));
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(__('validation.date_format', ['attribute' => 'from', 'format' => 'Y-m-d']), $response->json('errors.0.extensions.validation.from.0'));
 
-        $response = $this->sendToGraphQL(['from' => Carbon::now()->format('Y-m-d'), 'to' => null]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['from' => Carbon::now()->format('Y-m-d'), 'to' => null]));
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(__('validation.required_with', ['attribute' => 'to', 'values' => 'from']), $response->json('errors.0.extensions.validation.to.0'));
 
-        $response = $this->sendToGraphQL(['from' => null, 'to' => Carbon::now()->format('Y-m-d')]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['from' => null, 'to' => Carbon::now()->format('Y-m-d')]));
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(__('validation.required_with', ['attribute' => 'from', 'values' => 'to']), $response->json('errors.0.extensions.validation.from.0'));
     }
@@ -322,12 +383,16 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function errorPage()
     {
-        $response = $this->sendToGraphQL(['page' => 'asnjfasnjfasn']);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['page' => 'asnjfasnjfasn']));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('Variable "$page" got invalid value "asnjfasnjfasn"; Int cannot represent non-integer value: "asnjfasnjfasn"', $response->json('errors.0.message'));
 
-        $response = $this->sendToGraphQL(['page' => 0]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['page' => 0]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
@@ -337,18 +402,24 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function errorPerPage()
     {
-        $response = $this->sendToGraphQL(['per_page' => 'asnjfasnjfasn']);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['per_page' => 'asnjfasnjfasn']));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('Variable "$per_page" got invalid value "asnjfasnjfasn"; Int cannot represent non-integer value: "asnjfasnjfasn"', $response->json('errors.0.message'));
 
-        $response = $this->sendToGraphQL(['per_page' => 0]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['per_page' => 0]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.min.numeric', ['attribute' => 'per page', 'min' => 5]), $response->json('errors.0.extensions.validation.per_page.0'));
 
-        $response = $this->sendToGraphQL(['per_page' => 101]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['per_page' => 101]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
@@ -358,12 +429,16 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     #[Test]
     public function errorSort()
     {
-        $response = $this->sendToGraphQL(['sort' => 111]);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['sort' => 111]));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('Variable "$sort" got invalid value 111; String cannot represent a non string value: 111', $response->json('errors.0.message'));
 
-        $response = $this->sendToGraphQL(['sort' => 'non-exist-column']);
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['sort' => 'non-exist-column']));
         $response->assertOk();
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
@@ -385,10 +460,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $role->permissions()->attach($permission, ['branch_id' => $branches[0]->id]);
         $response = $this
             ->actingAs($simpleAdmin)
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery()
-            );
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery());
         $response->assertOk();
         $response->assertJsonIsObject();
         $this->assertArrayHasKey('total', $response->json('data.transactions'));
@@ -397,10 +469,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         $role->permissions()->attach($permission, ['branch_id' => $branches[1]->id]);
         $response = $this
             ->actingAs($simpleAdmin)
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery()
-            );
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery());
         $this->assertSuccessTransactionsResponse($response, total: 10);
         $this->assertEquals(
             Transaction::query()
@@ -411,63 +480,51 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
         );
     }
 
-    private function sendToGraphQL(array $data = []): TestResponse
-    {
-        return $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery($data));
-    }
-
     private function buildGraphQLQuery(array $variables = []): array
     {
-        $query = [];
-        $query['variables'] = $variables;
-        $query['query'] = '
-            query Transactions(
-                $sort: String
-                $search: String
-                $page: Int
-                $per_page: Int
-                $id: Int
-                $installment_id: Int
-                $branches: [Int!]
-                $customer_id: Int
-                $card_id: Int
-                $transaction_type_id: Int
-                $from: String
-                $to: String
-            ) {
-                transactions(
-                    sort: $sort
-                    search: $search
-                    page: $page
-                    per_page: $per_page
-                    id: $id
-                    installment_id: $installment_id
-                    branches: $branches
-                    customer_id: $customer_id
-                    card_id: $card_id
-                    transaction_type_id: $transaction_type_id
-                    from: $from
-                    to: $to
+        return [
+            'query' => <<<GRAPHQL
+                query Transactions(
+                    \$sort: String
+                    \$search: String
+                    \$page: Int
+                    \$per_page: Int
+                    \$branches: [Int!]
+                    \$admin_id: Int
+                    \$installment_id: Int
+                    \$customer_id: Int
+                    \$card_id: Int
+                    \$transaction_type_id: Int
+                    \$from: String
+                    \$to: String
                 ) {
-                    ' . $this->convertIntoQuery($this->_structure) . '
+                    transactions(
+                        sort: \$sort
+                        search: \$search
+                        page: \$page
+                        per_page: \$per_page
+                        branches: \$branches
+                        admin_id: \$admin_id
+                        installment_id: \$installment_id
+                        customer_id: \$customer_id
+                        card_id: \$card_id
+                        transaction_type_id: \$transaction_type_id
+                        from: \$from
+                        to: \$to
+                    ) {
+                        {$this->convertIntoQuery($this->_structure)}
+                    }
                 }
-            }
-        ';
-
-        return $query;
+            GRAPHQL,
+            'variables' => $variables,
+        ];
     }
 
     private function assertSuccessTransactionsResponse(TestResponse $response, $total = null, $perPage = null, $page = null): void
     {
         $response->assertOk();
         $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'transactions' => $this->_structure,
-            ],
-        ]);
+        $response->assertJsonStructure(['data' => ['transactions' => $this->_structure]]);
 
         if ($total == 'IGNORE') {
             $total = $response->json('data.transactions.total');

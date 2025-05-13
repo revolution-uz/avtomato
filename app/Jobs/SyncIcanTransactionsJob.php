@@ -35,6 +35,8 @@ class SyncIcanTransactionsJob implements ShouldBeUniqueUntilProcessing, ShouldQu
             $hasMorePages = $icanService->syncCanceledTransactions($this->page);
         }
 
+        sleep(1);
+
         if ($hasMorePages) {
             self::dispatch($this->status, $this->page + 1);
         }

@@ -18,5 +18,7 @@
   "E-auction payments": "Электрон аукцион тўловлари",
   "Transport ticket payments": "Транспорт чипталари учун тўловлар",
   "Utility payments": "Коммунал тўловлар",
-  "Unknown type": "Номаълум тур"
+  "Unknown type": "Номаълум тур",
+  "Unknown": "Номаълум",
+  "60-others": "60-бошқалар"
 }
