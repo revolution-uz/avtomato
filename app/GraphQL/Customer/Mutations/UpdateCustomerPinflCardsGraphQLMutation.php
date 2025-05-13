@@ -6,7 +6,6 @@ use App\Enums\Company\CustomerTypeEnum;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\FeatureEnum;
 use App\Helpers\RbacHelper;
-use App\Models\CentralCustomer;
 use App\Models\Company\Customer;
 use App\Services\UniredService;
 use App\Services\User\BalanceService;
@@ -18,10 +17,10 @@ use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 
-class UpdateCustomerPINFLCardsGraphQLMutation extends Mutation
+class UpdateCustomerPinflCardsGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'updateCustomerPINFLCards',
+        'name' => 'updateCustomerPinflCards',
     ];
 
     public function __construct(private UniredService $uniredService, private BalanceService $balanceService) {}
@@ -56,12 +55,16 @@ class UpdateCustomerPINFLCardsGraphQLMutation extends Mutation
     {
         $customer = Customer::query()->findOrFail($args['customer_id']);
 
+        $centralCustomer = $customer->getOrNewCentralCustomer();
+
         try {
-            $this->uniredService->updatePinflCardsList($customer);
+            $this->uniredService->updatePinflCardsList($centralCustomer);
 
-            $cards = $this->uniredService->getCards($customer);
+            $cards = $this->uniredService->getCardsByPinfl($centralCustomer->pinfl);
 
-            $centralCustomer = CentralCustomer::query()->where('pinfl', $customer->pinfl)->firstOrFail();
+            if (! $centralCustomer->exists()) {
+                $centralCustomer->saveOrFail();
+            }
 
             $centralCustomer->uniredCards()->upsert(
                 $cards,

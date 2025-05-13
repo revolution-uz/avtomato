@@ -154,9 +154,9 @@ class UniredService
         return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int) ($installment->debtAmount * 100), false);
     }
 
-    public function getCards(Customer $customer): array
+    public function getCardsByPinfl(string $pinfl): array
     {
-        $response = $this->uniredClient->getCards(new UniredClientPinflGetCardRequestDTO($customer->pinfl));
+        $response = $this->uniredClient->getCards(new UniredClientPinflGetCardRequestDTO($pinfl));
         if ($response->isSuccess()) {
             $cardDto = UniredPinflCardsResponseDTO::from($response->result);
 
@@ -280,31 +280,23 @@ class UniredService
         }
     }
 
-    public function updatePinflCardsList(Customer $customer): bool
+    public function updatePinflCardsList(CentralCustomer $centralCustomer): bool
     {
-        $centralCustomer = CentralCustomer::query()->firstOrNew([
-            'pinfl' => $customer->pinfl,
-        ], [
-            'first_name' => $customer->first_name,
-            'last_name' => $customer->last_name,
-            'middle_name' => $customer->middle_name,
-        ]);
-
-        $is_uzcard_update = Utilities::isAllowedRefreshPinflCardsForMutation($centralCustomer->unired_uzcard_searched_at);
-        $is_humo_update = Utilities::isAllowedRefreshPinflCardsForMutation($centralCustomer->unired_humo_searched_at);
+        $is_uzcard_update = Utilities::isAllowedRefreshPinflCards($centralCustomer->unired_uzcard_searched_at);
+        $is_humo_update = Utilities::isAllowedRefreshPinflCards($centralCustomer->unired_humo_searched_at);
 
         try {
             if ($is_uzcard_update) {
-                $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+                $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
 
-                if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
+                if (isset($response->result[$centralCustomer->pinfl]) && isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
                     $centralCustomer->unired_uzcard_searched_at = Carbon::now();
                 }
             }
             if ($is_humo_update) {
-                $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
+                $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
 
-                if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
+                if (isset($response->result[$centralCustomer->pinfl]) && isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
                     $centralCustomer->unired_humo_searched_at = Carbon::now();
                 }
             }
@@ -317,10 +309,10 @@ class UniredService
                 [
                     'class' => get_called_class(),
                     'error' => $e->getMessage(),
-                    'pinfl' => $customer->pinfl,
+                    'pinfl' => $centralCustomer->pinfl,
                 ]
             );
-            throw new GeneralException("Failed to update cards list for PINFL: {$customer->pinfl}");
+            throw new GeneralException("Failed to update cards list for PINFL: {$centralCustomer->pinfl}");
         }
     }
 

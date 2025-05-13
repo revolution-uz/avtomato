@@ -14,7 +14,7 @@ class Utilities
 
     const PINFL_CARD_UPDATE_MONTHS = 3; //3 month to update cards
     const PINFL_CARD_UPDATE_REFRESH_DAYS = 5; //5 days to refresh cards
-    const MIN_PINFL_CARD_UPDATE_DAYS_FOR_MUTATION = 1;
+    const MIN_PINFL_CARD_UPDATE_DAYS = 1;
     const LOYALTY_USER_MAX_SESSIONS = 1;
     const A_MONTH = 2592000;
 
@@ -73,8 +73,8 @@ class Utilities
         return is_null($searched_at) || $searched_at < Carbon::now()->subDays(self::PINFL_CARD_UPDATE_REFRESH_DAYS);
     }
 
-    public static function isAllowedRefreshPinflCardsForMutation(?Carbon $searched_at): bool
+    public static function isAllowedRefreshPinflCards(?Carbon $searched_at): bool
     {
-        return is_null($searched_at) || $searched_at < Carbon::now()->subDays(self::MIN_PINFL_CARD_UPDATE_DAYS_FOR_MUTATION);
+        return is_null($searched_at) || $searched_at < Carbon::now()->subDays(self::MIN_PINFL_CARD_UPDATE_DAYS);
     }
 }

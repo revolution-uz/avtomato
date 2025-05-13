@@ -41,13 +41,16 @@ class CreateOrUpdateCustomerUniredCardsJob implements ShouldBeUniqueUntilProcess
             return;
         }
 
-        /** @var Customer $customer */
         $customer = Customer::query()->findOrFail($this->customerId);
 
-        try {
-            $cards = $uniredService->getCards($customer);
+        $centralCustomer = $customer->getOrNewCentralCustomer();
 
-            $centralCustomer = $customer->getOrNewCentralCustomer();
+        if (! $centralCustomer->exists()) {
+            $centralCustomer->save();
+        }
+
+        try {
+            $cards = $uniredService->getCardsByPinfl($centralCustomer->pinfl);
 
             $centralCustomer->uniredCards()->upsert(
                 $cards,
