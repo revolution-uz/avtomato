@@ -14,6 +14,8 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property int $id
  * @property FeatureEnum $name
  * @property int $original_amount
+ * @property float $humo_percent
+ * @property float $uzcard_percent
  * @property bool $is_default_active
  * @property array|null $original_data
  * @property Carbon $created_at
@@ -30,6 +32,8 @@ class BaseFeature extends Model
         'original_amount',
         'is_default_active',
         'original_data',
+        'humo_percent',
+        'uzcard_percent',
     ];
 
     protected $casts = [

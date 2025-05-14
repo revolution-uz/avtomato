@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\CardTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
@@ -10,6 +11,7 @@ use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
 use App\Services\AtmosService;
 use App\Services\UniredService;
+use App\Services\User\BalanceService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -102,6 +104,7 @@ class Transaction extends Model
             }
             if ($transaction->transactionType->is_system) {
                 CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
+                $transaction->computeFee();
             }
 
             if ($transaction->installment->ican_id) {
@@ -160,11 +163,6 @@ class Transaction extends Model
         return $this->belongsTo(Branch::class);
     }
 
-    public function canceled(): void
-    {
-        $this->updateOrFail(['status' => TransactionStatusEnum::CANCELED]);
-    }
-
     public function scopeOnlySuccess($query)
     {
         return $query->where('status', TransactionStatusEnum::SUCCESS);
@@ -172,19 +170,40 @@ class Transaction extends Model
 
     public function reverse()
     {
+        if ($this->status == TransactionStatusEnum::CANCELED) {
+            return true;
+        }
         $atmosService = app(AtmosService::class);
         $uniredService = app(UniredService::class);
+        $isCancelled = true;
 
         if ($this->transaction_type_id == TransactionType::ATMOS_WITH_CARD) {
-            $atmosService->reverseCardPayment($this);
+            $isCancelled = $atmosService->reverseCardPayment($this->external_id);
         } elseif ($this->transaction_type_id == TransactionType::ATMOS_WITH_PINFL) {
-            $atmosService->reversePinflPayment($this);
+            $isCancelled = $atmosService->reversePinflPayment($this->id);
         } elseif ($this->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
-            $uniredService->reversePayment($this);
+            $isCancelled = $uniredService->reversePayment($this->external_id);
+        }
+        if ($isCancelled) {
+            $this->status = TransactionStatusEnum::CANCELED;
+
+            return $this->saveOrFail();
         }
 
-        $this->status = TransactionStatusEnum::CANCELED;
+        return $isCancelled;
+    }
 
-        return $this->saveOrFail();
+    private function computeFee()
+    {
+        if ($featureEnum = TransactionType::getFeature($this->transaction_type_id)) {
+            if ($feature = Feature::query()
+                ->where('name', $featureEnum)
+                ->first()) {
+                $commission = CardTypeEnum::getCardType($this->card_pan) === CardTypeEnum::HUMO ? $feature->humo_percent : $feature->uzcard_percent;
+                if ($commission && ($amount = $this->amount * $commission) > 0) {
+                    app(BalanceService::class)->chargeAmount($featureEnum, $this, $amount);
+                }
+            }
+        }
     }
 }
