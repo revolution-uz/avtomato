@@ -26,6 +26,11 @@ class UniredFaker
         self::fakeResponse('../JSON-for-testing/unired/client-create-or-update.json');
     }
 
+    public static function createContracts(): void
+    {
+        self::fakeResponse('../JSON-for-testing/unired/contract-create.json');
+    }
+
     public static function createCustomer(): void
     {
         self::fakeResponse('../JSON-for-testing/unired/client-create-or-update.json');

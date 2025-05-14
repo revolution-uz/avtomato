@@ -8,6 +8,7 @@ return [
     'sms_installment_auto_charge' => 'Avtomatik to\'lovdan keyin SMS yuborish',
     'sms_installment_notification' => 'Naqd to\'lovdan keyin SMS yuborish',
     'sms_installment_payment' => 'Qarzdorlik haqida SMS yuborish',
+    'pinfl_cards_update_months' => 'PINFL kartlarini yangilash davri (oylarda)',
     'telegram_bot_enabled' => 'Telegram bot orqali xabar yuborish',
     'telegram_bot_token' => 'Telegram bot tokeni',
     'telegram_chat_id' => 'Telegram guruh chat IDsi',

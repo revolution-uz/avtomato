@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Nova\Company;
+namespace App\Nova;
 
 use App\Enums\Company\CardTypeEnum;
-use App\Models\Company\UniredCard;
-use App\Nova\Resource;
+use App\Models\CentralUniredCard;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
@@ -15,16 +14,16 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
- * @property UniredCard $resource
+ * @property CentralUniredCard $resource
  */
-class UniredCardResource extends Resource
+class CentralUniredCardResource extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<UniredCard>
+     * @var class-string<CentralUniredCard>
      */
-    public static string $model = UniredCard::class;
+    public static string $model = CentralUniredCard::class;
 
     /**
      * The columns that should be searched.
@@ -49,7 +48,7 @@ class UniredCardResource extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('customer', 'customer', CustomerResource::class),
+            BelongsTo::make('customer', 'customer', CentralCustomerResource::class),
             Text::make('pinfl')->sortable(),
             Text::make('uuid')->sortable(),
             Boolean::make('auto')->sortable(),

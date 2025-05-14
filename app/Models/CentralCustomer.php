@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
 /**
@@ -20,6 +22,7 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property CentralUniredCard[]|Collection<int, CentralUniredCard> $uniredCards
  */
 class CentralCustomer extends Model
 {
@@ -44,4 +47,9 @@ class CentralCustomer extends Model
         'unired_humo_searched_at' => 'datetime',
         'unired_uzcard_searched_at' => 'datetime',
     ];
+
+    public function uniredCards(): HasMany
+    {
+        return $this->hasMany(CentralUniredCard::class, 'customer_id', 'id');
+    }
 }

@@ -103,6 +103,7 @@ enum PermissionGroupEnum: string
                 PermissionEnum::INSTALLMENT_UPLOAD_DOCUMENT,
                 PermissionEnum::INSTALLMENT_DELETE_DOCUMENT,
                 PermissionEnum::DASHBOARD_INFO_VIEW,
+                PermissionEnum::UPDATE_CUSTOMER_PINFL_CARDS,
             ],
             self::TARIFF_MANAGEMENT => [
                 PermissionEnum::TARIFF_VIEW_ALL,

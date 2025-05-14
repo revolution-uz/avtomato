@@ -9,7 +9,6 @@ use App\Enums\FeatureEnum;
 use App\Enums\Main\SettingsEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Models\Company\Branch;
-use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
@@ -84,18 +83,11 @@ class InstallmentService
         if ($auto_charge !== null) {
             if ($auto_charge && ! ($installment->type->value & InstallmentTypeEnum::WITH_CARD->value)) {
                 $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_CARD->value);
-                if (! $this->withdrawAutoCharge($installment)) {
-                    throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
-                }
             }
         }
         if ($any_card_charge !== null) {
             if ($any_card_charge && ! ($installment->type->value & InstallmentTypeEnum::WITH_PINFL->value)) {
                 $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_PINFL->value);
-                $installment->any_card_charge = $any_card_charge;
-                if (! $this->withdrawAnyCardCharge($installment)) {
-                    throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
-                }
             }
             $installment->any_card_charge = $any_card_charge;
         }
@@ -285,37 +277,5 @@ class InstallmentService
             'total_amount_by_type' => array_values($formattedTotalAmountByType),
             'full_total_amount' => number_format($fullTotalAmount, 2, '.', ' '),
         ];
-    }
-
-    private function withdrawAutoCharge(Installment $installment): bool
-    {
-        /** @var Feature $feature */
-        $feature = Feature::query()->where('name', FeatureEnum::INSTALLMENT_AUTO_CHARGE)->firstOrFail();
-
-        $amount = $feature->chargeable_amount * ceil($installment->period / 3);
-
-        if ($this->balanceService->isAvailableCompany()) {
-            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment, $amount);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private function withdrawAnyCardCharge(Installment $installment): bool
-    {
-        /** @var Feature $feature */
-        $feature = Feature::query()->where('name', FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->firstOrFail();
-
-        $amount = $feature->chargeable_amount * ceil($installment->period / 3);
-
-        if ($this->balanceService->isAvailableCompany()) {
-            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment, $amount);
-
-            return true;
-        }
-
-        return false;
     }
 }
