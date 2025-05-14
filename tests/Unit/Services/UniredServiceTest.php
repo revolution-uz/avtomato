@@ -176,7 +176,7 @@ class UniredServiceTest extends TestCase
     {
         UniredFaker::reversePayment();
         $transaction = Transaction::factory()->create();
-        $response = $this->_uniredService->reversePayment($transaction);
+        $response = $this->_uniredService->reversePayment($transaction->external_id);
         $this->assertNotNull($response);
     }
 

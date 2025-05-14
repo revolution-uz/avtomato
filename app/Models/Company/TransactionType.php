@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\FeatureEnum;
 use App\Traits\HasTranslations;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -51,6 +52,16 @@ class TransactionType extends Model
     public static function autoPayList(): array
     {
         return [self::ATMOS_WITH_CARD, self::ATMOS_WITH_PINFL, self::UNIRED_WITH_PINFL];
+    }
+
+    public static function getFeature(int $transaction_type_id): ?FeatureEnum
+    {
+        return match ($transaction_type_id) {
+            self::ATMOS_WITH_CARD => FeatureEnum::ATMOS_CARD_PAY,
+            self::ATMOS_WITH_PINFL => FeatureEnum::ATMOS_PINFL_PAY,
+            self::UNIRED_WITH_PINFL => FeatureEnum::UNIRED_PAY,
+            default => null,
+        };
     }
 
     public function setNames(string $name): void

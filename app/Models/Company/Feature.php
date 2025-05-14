@@ -21,6 +21,8 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property bool $is_active
  * @property-read int $original_amount
  * @property int|null $amount
+ * @property float $humo_percent
+ * @property float $uzcard_percent
  * @property-read  array|null $original_data
  * @property array|null $data
  * @property Carbon|null $created_at
@@ -37,6 +39,8 @@ class Feature extends Model
         'is_active',
         'amount',
         'data',
+        'humo_percent',
+        'uzcard_percent',
     ];
 
     protected $casts = [
