@@ -197,10 +197,10 @@ class Transaction extends Model
     {
         if ($featureEnum = TransactionType::getFeature($this->transaction_type_id)) {
             if ($feature = Feature::query()
-                ->where('feature', $featureEnum)
+                ->where('name', $featureEnum)
                 ->first()) {
-                $comission = CardTypeEnum::getCardType($this->card_pan) === CardTypeEnum::HUMO ? $feature->humo_percent : $feature->uzcard_percent;
-                if ($comission && ($amount = $this->amount * $comission) > 0) {
+                $commission = CardTypeEnum::getCardType($this->card_pan) === CardTypeEnum::HUMO ? $feature->humo_percent : $feature->uzcard_percent;
+                if ($commission && ($amount = $this->amount * $commission) > 0) {
                     app(BalanceService::class)->chargeAmount($featureEnum, $this, $amount);
                 }
             }
