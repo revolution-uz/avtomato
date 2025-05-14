@@ -35,10 +35,22 @@ class LoyaltyProgramStatisticsGraphQLType extends GraphQLType
                 'type' => Type::nonNull(GraphQL::type(LoyaltyProgramStatisticsCardGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (LoyaltyProgramStatisticsService $service) => $service->getNonExtendedSubscriptionUsers(),
             ],
-            // Chart
-            'chart' => [
+            // Charts
+            'users_chart' => [
                 'type' => Type::listOf(GraphQL::type(LoyaltyProgramStatisticsChartGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (LoyaltyProgramStatisticsService $service) => $service->getChartData(),
+                'resolve' => fn (LoyaltyProgramStatisticsService $service) => $service->getUsersChart(),
+            ],
+            'subscribed_users_chart' => [
+                'type' => Type::listOf(GraphQL::type(LoyaltyProgramStatisticsChartGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (LoyaltyProgramStatisticsService $service) => $service->getSubscribedUsersChart(),
+            ],
+            'extended_subscription_users_chart' => [
+                'type' => Type::listOf(GraphQL::type(LoyaltyProgramStatisticsChartGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (LoyaltyProgramStatisticsService $service) => $service->getExtendedSubscriptionUsersChart(),
+            ],
+            'non_extended_subscription_users_chart' => [
+                'type' => Type::listOf(GraphQL::type(LoyaltyProgramStatisticsChartGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (LoyaltyProgramStatisticsService $service) => $service->getNonExtendedSubscriptionUsersChart(),
             ],
         ];
     }

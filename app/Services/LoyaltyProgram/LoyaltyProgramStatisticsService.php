@@ -2,7 +2,6 @@
 
 namespace App\Services\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgram\LoyaltyProgramStatisticsChartEnum;
 use App\Models\Company\LoyaltyProgram\User;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,11 +16,9 @@ class LoyaltyProgramStatisticsService
     private Expression $startDateExpression;
     private Expression $startDateExpressionWithAlias;
     private Expression $userCountExpressionWithAlias;
-    private LoyaltyProgramStatisticsChartEnum $chartType;
 
-    public function __construct(int $chart_type, ?string $from = null, ?string $to = null)
+    public function __construct(?string $from = null, ?string $to = null)
     {
-        $this->chartType = LoyaltyProgramStatisticsChartEnum::from($chart_type);
         $this->from = $from ?: Carbon::now()->subMonth()->format('Y-m-d');
         $this->to = $to ?: Carbon::now()->format('Y-m-d');
 
@@ -103,17 +100,7 @@ class LoyaltyProgramStatisticsService
         ];
     }
 
-    public function getChartData(): array
-    {
-        return match ($this->chartType) {
-            LoyaltyProgramStatisticsChartEnum::USERS_CHART => $this->getUsersChart(),
-            LoyaltyProgramStatisticsChartEnum::SUBSCRIBED_USERS_CHART => $this->getSubscribedUsersChart(),
-            LoyaltyProgramStatisticsChartEnum::EXTENDED_SUBSCRIPTION_USERS_CHART => $this->getExtendedSubscriptionUsersChart(),
-            LoyaltyProgramStatisticsChartEnum::NON_EXTENDED_SUBSCRIPTION_USERS_CHART => $this->getNonExtendedSubscriptionUsersChart(),
-        };
-    }
-
-    private function getUsersChart(): array
+    public function getUsersChart(): array
     {
         return User::query()
             ->select($this->userCountExpressionWithAlias, DB::raw('DATE(created_at) as date'))
@@ -124,7 +111,7 @@ class LoyaltyProgramStatisticsService
             ->toArray();
     }
 
-    private function getSubscribedUsersChart(): array
+    public function getSubscribedUsersChart(): array
     {
         return $this->joinQuery
             ->select($this->userCountExpressionWithAlias, $this->startDateExpressionWithAlias)
@@ -135,7 +122,7 @@ class LoyaltyProgramStatisticsService
             ->toArray();
     }
 
-    private function getExtendedSubscriptionUsersChart(): array
+    public function getExtendedSubscriptionUsersChart(): array
     {
         return $this->joinQuery
             ->select($this->userCountExpressionWithAlias, $this->startDateExpressionWithAlias)
@@ -147,7 +134,7 @@ class LoyaltyProgramStatisticsService
             ->toArray();
     }
 
-    private function getNonExtendedSubscriptionUsersChart(): array
+    public function getNonExtendedSubscriptionUsersChart(): array
     {
         return User::query()
             ->rightJoin(
