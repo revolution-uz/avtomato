@@ -95,6 +95,8 @@ enum PermissionEnum: string
 
     case DASHBOARD_INFO_VIEW = 'dashboard_info_view';
 
+    case UPDATE_CUSTOMER_PINFL_CARDS = 'update_customer_pinfl_cards';
+
     // Manage tariffs
     case TARIFF_VIEW_ALL = 'tariff_view_all';
     case TARIFF_VIEW = 'tariff_view';
@@ -415,6 +417,8 @@ enum PermissionEnum: string
 
             self::DASHBOARD_INFO_VIEW,
 
+            self::UPDATE_CUSTOMER_PINFL_CARDS,
+
             self::SETTINGS_EDIT,
 
             //e-commerce
@@ -620,6 +624,7 @@ enum PermissionEnum: string
                 self::INSTALLMENT_DELETE_DOCUMENT->value,
                 self::INSTALLMENT_CREATE_TRANSACTION->value,
                 self::DASHBOARD_INFO_VIEW->value,
+                self::UPDATE_CUSTOMER_PINFL_CARDS->value,
             ],
             PermissionGroupEnum::TARIFF_MANAGEMENT->value => [
                 self::TARIFF_VIEW_ALL->value,
@@ -907,7 +912,8 @@ enum PermissionEnum: string
             self::INSTALLMENT_EDIT,
             self::INSTALLMENT_SETTINGS_VIEW_ALL,
             self::INSTALLMENT_SETTINGS_EDIT,
-            self::DASHBOARD_INFO_VIEW => FeatureEnum::INSTALLMENT_MANAGEMENT,
+            self::DASHBOARD_INFO_VIEW,
+            self::UPDATE_CUSTOMER_PINFL_CARDS => FeatureEnum::INSTALLMENT_MANAGEMENT,
 
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD => FeatureEnum::INSTALLMENT_AUTO_CHARGE,

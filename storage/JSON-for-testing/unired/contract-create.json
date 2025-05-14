@@ -1,0 +1,12 @@
+{
+  "status": true,
+  "result": {
+    "created": [
+      "1_127"
+    ],
+    "existing_loans": [],
+    "not_found_clients": [],
+    "duplicated_loans": []
+  },
+  "error": null
+}

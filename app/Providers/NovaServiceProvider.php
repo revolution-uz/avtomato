@@ -14,6 +14,7 @@ use App\Nova\BlogCategoryResource;
 use App\Nova\BlogResource;
 use App\Nova\CentralBalanceFundResource;
 use App\Nova\CentralCustomerResource;
+use App\Nova\CentralUniredCardResource;
 use App\Nova\Company\BalanceChargeResource;
 use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
@@ -29,7 +30,6 @@ use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SbpTransactionResource;
 use App\Nova\Company\SmsTemplateResource;
-use App\Nova\Company\UniredCardResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
@@ -79,7 +79,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(SmsTemplateResource::class),
                         MenuItem::resource(InstallmentResource::class),
                         MenuItem::resource(SbpTransactionResource::class),
-                        MenuItem::resource(UniredCardResource::class),
                     ])->collapsable(),
                     MenuSection::make('Loyalty Program', [
                         MenuItem::resource(ShopResource::class),
@@ -109,6 +108,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(BlogResource::class),
                     MenuItem::resource(BlogCategoryResource::class),
                     MenuItem::resource(CentralBalanceFundResource::class),
+                    MenuItem::resource(CentralUniredCardResource::class),
                     (new TransactionByCompanies)->menu($request),
                 ])->collapsable(),
             ];
