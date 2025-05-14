@@ -28,6 +28,7 @@ use App\Enums\Company\CardTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
+use App\Models\Company\BalanceCharge;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -210,9 +211,9 @@ class UniredService
         return UniredGetPaymentsPaginationResponseDTO::from($uniredResponseDto->result);
     }
 
-    public function reversePayment(Transaction $transaction): UniredResponseDTO
+    public function reversePayment(string $external_id): UniredResponseDTO
     {
-        return $this->uniredClient->cancelPayment(new UniredCancelPaymentRequestDTO($transaction->external_id));
+        return $this->uniredClient->cancelPayment(new UniredCancelPaymentRequestDTO($external_id));
     }
 
     public function setWebhook(string $webhook, bool $status)
@@ -335,6 +336,13 @@ class UniredService
         }
 
         return [];
+    }
+
+    public function createTransactionFee(Transaction $transaction)
+    {
+        if (BalanceCharge::query()->where(['transaction_id' => $transaction->id])->exists()) {
+            return;
+        }
     }
 
     private function updateDebitAndSwitchAuto(string $loan_id, int $debit_amount, bool $auto): ?bool

@@ -52,17 +52,9 @@ class AtmosService
      * @throws Throwable
      * @throws GeneralException
      */
-    public function reverseCardPayment(Transaction $transaction): bool
+    public function reverseCardPayment(string $external_id): bool
     {
-        $response = $this->atmosCardClient->reversePayment($transaction->external_id);
-        if ($response->result->isSuccess()) {
-            $transaction->status = TransactionStatusEnum::CANCELED;
-            $transaction->saveOrFail();
-
-            return true;
-        }
-
-        return false;
+        return $this->atmosCardClient->reversePayment($external_id)->result->isSuccess();
     }
 
     public function removeCard(Card $card)
@@ -202,7 +194,10 @@ class AtmosService
         if ($confirmWithPinfl->isReversed()) {
             /** @var Transaction $transaction */
             $transaction = Transaction::findOrFail($transactionAttempt->transaction_id);
-            $transaction->canceled();
+            if ($transaction->status != TransactionStatusEnum::CANCELED) {
+                $transaction->status = TransactionStatusEnum::CANCELED;
+                $transaction->save();
+            }
             $transactionAttempt->failed();
             $transaction->installment->fixPaidAmount();
         }
@@ -212,9 +207,9 @@ class AtmosService
      * @throws Throwable
      * @throws GeneralException
      */
-    public function reversePinflPayment(Transaction $transaction): bool
+    public function reversePinflPayment(int $transaction_id): bool
     {
-        $transactionAttempts = TransactionAttempt::query()->where('transaction_id', $transaction->id)->get();
+        $transactionAttempts = TransactionAttempt::query()->where('transaction_id', $transaction_id)->get();
         $isReversed = false;
         foreach ($transactionAttempts as $transactionAttempt) {
             $paymentState = $this->checkAttempt($transactionAttempt);
@@ -225,14 +220,8 @@ class AtmosService
                 }
             }
         }
-        if ($isReversed) {
-            $transaction->status = TransactionStatusEnum::CANCELED;
-            $transaction->saveOrFail();
 
-            return true;
-        }
-
-        return false;
+        return $isReversed;
     }
 
     /**

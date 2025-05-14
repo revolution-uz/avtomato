@@ -19,6 +19,7 @@ use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateTariffGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UpdateUserGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Mutations\UploadLoyaltyProgramImageGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\CardsGraphQLQuery;
+use App\GraphQL\LoyaltyProgram\Admin\Queries\LoyaltyProgramStatisticsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\NotificationsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\OrdersGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\PaymentsGraphQLQuery;
@@ -38,6 +39,9 @@ use App\GraphQL\LoyaltyProgram\Admin\Queries\TariffsGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Queries\UsersGraphQLQuery;
 use App\GraphQL\LoyaltyProgram\Admin\Types\CardGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\CardInputGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\LoyaltyProgramStatisticsCardGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\LoyaltyProgramStatisticsChartGraphQLType;
+use App\GraphQL\LoyaltyProgram\Admin\Types\LoyaltyProgramStatisticsGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationInputGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\OrderGraphQLType;
@@ -106,6 +110,7 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 SingleCardGraphQLQuery::class,
                 SinglePaymentGraphQLQuery::class,
                 SingleProductGraphQLQuery::class,
+                LoyaltyProgramStatisticsGraphQLQuery::class,
             ],
             'types' => [
                 UserGraphQLType::class,
@@ -136,6 +141,9 @@ class LoyaltyProgramAdminGraphQLSchema implements ConfigConvertible
                 PermissionEditableItemGraphQLType::class,
                 PermissionBranchItemGraphQLType::class,
                 PermissionGraphQLType::class,
+                LoyaltyProgramStatisticsGraphQLType::class,
+                LoyaltyProgramStatisticsCardGraphQLType::class,
+                LoyaltyProgramStatisticsChartGraphQLType::class,
             ],
             'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'loyalty_program', 'tenant_logging'],
         ];
