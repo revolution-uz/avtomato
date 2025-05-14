@@ -102,7 +102,9 @@ class SubscriptionService
     {
         $card = null;
         $confirmPayResponseDTO = null;
-        foreach ($user->cards as $index => $card) {
+
+        $cards = $user->cards()->active()->get();
+        foreach ($cards as $index => $card) {
             $preConfirmPayResponseDTO = $this->_atmosCardClient->preConfirmPayment($card->external_id, $createPayResponseDTO->transaction_id);
 
             if ($preConfirmPayResponseDTO->result->isSuccess()) {
@@ -113,7 +115,7 @@ class SubscriptionService
                 }
             }
 
-            if ($index === $user->cards->count() - 1) {
+            if ($index === $cards->count() - 1) {
                 throw new GeneralException(
                     $preConfirmPayResponseDTO->result->isSuccess()
                         ? $confirmPayResponseDTO->result->getDescription()
