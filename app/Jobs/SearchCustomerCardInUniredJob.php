@@ -42,16 +42,20 @@ class SearchCustomerCardInUniredJob implements ShouldBeUniqueUntilProcessing, Sh
         }
 
         /** @var Installment $installment */
-        $installment = Installment::query()->findOrFail($this->installmentId);
+        $installment = Installment::query()->with('customer', 'guarantorList')->findOrFail($this->installmentId);
         $debt_amount = $installment->debtAmount;
         if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->any_card_charge && $installment->is_active) {
             if ($installment->isAvailableCustomerPinfl()) {
-                $uniredService->autoUpdatePinflCardsList($installment->customer);
+                $uniredService->updatePinflCardsList($installment->customer);
+                $uniredService->getAndSyncPinflCards($installment->customer);
+                $balanceService->chargeAmount(FeatureEnum::UNIRED_CARD_MANAGEMENT, $installment->customer);
             }
             if ($installment->isAvailableGuarantorPinfl()) {
                 foreach ($installment->guarantorList as $guarantor) {
                     if ($guarantor->any_card_charge) {
-                        $uniredService->autoUpdatePinflCardsList($guarantor->customer);
+                        $uniredService->updatePinflCardsList($guarantor->customer);
+                        $uniredService->getAndSyncPinflCards($guarantor->customer);
+                        $balanceService->chargeAmount(FeatureEnum::UNIRED_CARD_MANAGEMENT, $guarantor->customer);
                     }
                 }
             }

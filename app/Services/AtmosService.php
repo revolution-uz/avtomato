@@ -243,8 +243,8 @@ class AtmosService
         $centralCustomer = CentralCustomer::where('pinfl', $customer->pinfl)->first();
 
         if ($centralCustomer) {
-            if (! Utilities::isAllowedAutoUpdateCards($centralCustomer->atmos_pinfl_searched_at)) {
-                if ($atmos_status_code !== AtmosPinflPaymentCode::CARDS_NOT_FOUND->value || ! Utilities::isAllowedRefreshCardsOften($centralCustomer->atmos_pinfl_searched_at)) {
+            if (! Utilities::isAllowedUpdatePinflCards($centralCustomer->atmos_pinfl_searched_at)) {
+                if ($atmos_status_code !== AtmosPinflPaymentCode::CARDS_NOT_FOUND->value) {
                     return true;
                 }
             }

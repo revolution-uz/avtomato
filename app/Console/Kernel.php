@@ -15,7 +15,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('populate:installment-charge-jobs')->everyFiveMinutes();
         $schedule->command('populate:transaction-attempt-check-jobs')->everyFifteenMinutes();
         $schedule->command('populate:create-or-update-installment-in-unired-jobs')->dailyAt('00:00');
-        $schedule->command('populate:create-or-update-customer-unired-cards-jobs')->dailyAt('05:00');
         $schedule->command('daily:delete-logs')->dailyAt('00:00');
         $schedule->command('populate:debt-sms-jobs')->dailyAt('00:00');
         $schedule->command('money:withdraw-balance')->dailyAt('00:00');

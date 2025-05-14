@@ -2,19 +2,15 @@
 
 namespace App\Helpers;
 
+use App\Enums\Company\CompanySettingsEnum;
+use App\Models\Company\CompanySettings;
 use Carbon\Carbon;
 
 class Utilities
 {
     public const TENANT_SEPARATOR = '_';
 
-    const ATMOS_PINFL_CARD_UPDATE_MONTHS = 3; //3 month to update cards
-    const ATMOS_PINFL_CARD_UPDATE_REFRESH_DAYS = 5; //5 days to refresh cards
-    const QR_PAY_UZS_CURRENCY = 860;
-
-    const PINFL_CARD_UPDATE_MONTHS = 3; //3 month to update cards
-    const PINFL_CARD_UPDATE_REFRESH_DAYS = 5; //5 days to refresh cards
-    const MIN_PINFL_CARD_UPDATE_DAYS = 1;
+    const MIN_MANUAL_PINFL_CARD_UPDATE_DAYS = 1;
     const LOYALTY_USER_MAX_SESSIONS = 1;
     const A_MONTH = 2592000;
 
@@ -63,18 +59,19 @@ class Utilities
         return tenant('id') . self::TENANT_SEPARATOR . $id;
     }
 
-    public static function isAllowedAutoUpdateCards(?Carbon $searched_at): bool
+    public static function isAllowedUpdatePinflCards(?Carbon $searched_at): bool
     {
-        return is_null($searched_at) || $searched_at < Carbon::now()->subMonths(self::PINFL_CARD_UPDATE_MONTHS);
+        $pinflCardUpdateMonths = CompanySettings::getValue(CompanySettingsEnum::PINFL_CARDS_UPDATE_MONTHS);
+
+        if ($pinflCardUpdateMonths == 0) {
+            return false;
+        }
+
+        return is_null($searched_at) || $searched_at < Carbon::now()->subMonths($pinflCardUpdateMonths);
     }
 
-    public static function isAllowedRefreshCardsOften(?Carbon $searched_at): bool
+    public static function isAllowedManualUpdatePinflCards(?Carbon $searched_at): bool
     {
-        return is_null($searched_at) || $searched_at < Carbon::now()->subDays(self::PINFL_CARD_UPDATE_REFRESH_DAYS);
-    }
-
-    public static function isAllowedRefreshPinflCards(?Carbon $searched_at): bool
-    {
-        return is_null($searched_at) || $searched_at < Carbon::now()->subDays(self::MIN_PINFL_CARD_UPDATE_DAYS);
+        return is_null($searched_at) || $searched_at < Carbon::now()->subDays(self::MIN_MANUAL_PINFL_CARD_UPDATE_DAYS);
     }
 }

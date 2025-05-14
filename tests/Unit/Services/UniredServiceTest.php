@@ -9,6 +9,7 @@ use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\UniredException;
+use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\Phone;
@@ -128,7 +129,8 @@ class UniredServiceTest extends TestCase
     {
         UniredFaker::getCards();
 
-        $response = $this->_uniredService->getCardsByPinfl('41310900000086');
+        $customer = Customer::factory()->create();
+        $response = $this->_uniredService->getAndSyncPinflCards($customer);
 
         $this->assertCount(2, $response);
         $this->assertEquals($response, [
