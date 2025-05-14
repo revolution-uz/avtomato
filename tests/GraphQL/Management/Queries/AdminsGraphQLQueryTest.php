@@ -117,6 +117,7 @@ class AdminsGraphQLQueryTest extends GraphQLTestCase
                 'installment_upload_document',
                 'installment_delete_document',
                 'dashboard_info_view',
+                'update_customer_pinfl_cards',
                 'tariff_view_all',
                 'tariff_view',
                 'tariff_edit',
