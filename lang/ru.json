@@ -20,5 +20,6 @@
   "Utility payments": "Коммунальные платежи",
   "Unknown type": "Неизвестный тип",
   "Unknown": "Неизвестно",
-  "60-others": "60-другие"
+  "60-others": "60-другие",
+  "Customer does not have any installments or guaranteed installments": "У клиента нет никаких рассрочек или гарантированных рассрочек"
 }
