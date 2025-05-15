@@ -53,7 +53,7 @@ class User extends Authenticatable
         'birth_date' => 'date',
     ];
 
-    public static function findByQr($qr): ?self
+    public static function findByQr(string $qr): ?self
     {
         $qrDto = explode('$$', $qr);
         if (count($qrDto) !== 3 || $qrDto[1] < now()->timestamp) {
