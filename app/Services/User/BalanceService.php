@@ -7,10 +7,12 @@ use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
 use App\DTOs\Management\BalanceFundConfirmDTO;
 use App\Enums\Company\CompanyStatusEnum;
 use App\Enums\FeatureEnum;
+use App\Enums\Main\SettingsEnum;
 use App\Exceptions\GeneralException;
 use App\Models\Company\BalanceCharge;
 use App\Models\Company\BalanceFund;
 use App\Models\Company\Feature;
+use App\Models\Settings;
 use Illuminate\Database\Eloquent\Model;
 
 class BalanceService
@@ -28,7 +30,7 @@ class BalanceService
 
     public static function isAvailableBalance()
     {
-        return self::getBalance() > self::MIN_BALANCE_AMOUNT;
+        return self::getBalance() > Settings::getConfig(SettingsEnum::MIN_ALLOWED_COMPANY_BALANCE);
     }
 
     public function chargeAmount(FeatureEnum $featureName, Model $model, ?int $amount = null): BalanceCharge
