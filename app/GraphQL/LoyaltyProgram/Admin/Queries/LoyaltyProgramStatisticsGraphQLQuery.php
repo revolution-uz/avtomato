@@ -9,6 +9,8 @@ use App\Services\LoyaltyProgram\LoyaltyProgramStatisticsService;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Support\Carbon;
+use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -44,6 +46,13 @@ class LoyaltyProgramStatisticsGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return new LoyaltyProgramStatisticsService($args['from'] ?? null, $args['to'] ?? null);
+        $from = isset($args['from']) ? Carbon::createFromFormat('Y-m-d', $args['from']) : null;
+        $to = isset($args['to']) ? Carbon::createFromFormat('Y-m-d', $args['to']) : null;
+
+        if ($from && $to && $from->diffInDays($to) > 365) {
+            throw ValidationException::withMessages(['to' => 'The range between from and to must not exceed 365 days.']);
+        }
+
+        return new LoyaltyProgramStatisticsService($from, $to);
     }
 }
