@@ -54,6 +54,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property CustomerTypeEnum $type
  * @property-read string $full_name
  * @property-read string $passport
+ * @property-read Carbon|null $unired_cards_last_updated_at
  *
  * @method static Builder|static query()
  * @method static Customer find(int $id)
@@ -153,7 +154,7 @@ class Customer extends Model
 
     public function getUniredCards()
     {
-        return CentralCustomer::query()->firstWhere('pinfl', $this->pinfl)?->uniredCards;
+        return $this->getCentralCustomer()?->uniredCards;
     }
 
     public function fullName(): Attribute
@@ -179,6 +180,22 @@ class Customer extends Model
     public function passport(): Attribute
     {
         return Attribute::make(get: fn () => $this->passport_series . $this->passport_number);
+    }
+
+    public function uniredCardsLastUpdatedAt(): Attribute
+    {
+        return Attribute::make(get: function () {
+            $centralCustomer = $this->getCentralCustomer();
+
+            return $centralCustomer
+                ? max($centralCustomer->unired_humo_searched_at, $centralCustomer->unired_uzcard_searched_at)
+                : null;
+        });
+    }
+
+    public function getCentralCustomer(): ?CentralCustomer
+    {
+        return CentralCustomer::query()->firstWhere('pinfl', $this->pinfl);
     }
 
     public function getOrCreateCentralCustomer()

@@ -82,6 +82,10 @@ class CustomerGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (Customer $root) => $root->gender->value,
             ],
+            'unired_cards_last_updated_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (Customer $root) => $root->unired_cards_last_updated_at?->timestamp,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Customer $root) => $root->created_at->timestamp,

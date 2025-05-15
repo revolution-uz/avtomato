@@ -20,5 +20,6 @@
   "Utility payments": "Kommunal to'lovlar",
   "Unknown type": "Noma'lum tur",
   "Unknown": "Noma'lum",
-  "60-others": "60-boshqalar"
+  "60-others": "60-boshqalar",
+    "Customer does not have any installments or guaranteed installments": "Mijozda hech qanday muddatli to'lov yoki kafolatlangan muddatli to'lov yo'q"
 }
