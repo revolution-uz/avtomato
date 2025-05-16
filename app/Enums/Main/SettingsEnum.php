@@ -12,16 +12,14 @@ enum SettingsEnum: string
     case CLIENT_APP_MIN_VERSION = 'client_app_min_version';
     case TELEGRAM_BOT_TOKEN = 'telegram_bot_token';
     case TELEGRAM_CHAT_ID = 'telegram_chat_id';
-    case INSTALLMENT_ACTIVATION_FEE = 'installment_activation_fee';
     case TEST_PHONE = 'test_phone';
     case TEST_OTP = 'test_otp';
-    case MIN_ALLOWED_COMPANY_BALANCE = 'min_allowed_company_balance';
 
     public static function getType(self $type): SettingsTypeEnum
     {
         return match ($type) {
             self::PARTNER_APP_MAINTENANCE_MODE, self::CLIENT_API_MAINTENANCE_MODE, self::PARTNER_WEB_MAINTENANCE_MODE, self::WEBSITE_MAINTENANCE_MODE => SettingsTypeEnum::BOOLEAN,
-            self::PARTNER_APP_MIN_VERSION, self::CLIENT_APP_MIN_VERSION, self::INSTALLMENT_ACTIVATION_FEE, self::MIN_ALLOWED_COMPANY_BALANCE => SettingsTypeEnum::INT,
+            self::PARTNER_APP_MIN_VERSION, self::CLIENT_APP_MIN_VERSION => SettingsTypeEnum::INT,
             self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID, self::TEST_PHONE, self::TEST_OTP => SettingsTypeEnum::STRING,
         };
     }
@@ -29,8 +27,7 @@ enum SettingsEnum: string
     public static function getDefaultValue(self $type): string|int
     {
         return match ($type) {
-            self::MIN_ALLOWED_COMPANY_BALANCE => -100000,
-            self::PARTNER_APP_MAINTENANCE_MODE, self::CLIENT_API_MAINTENANCE_MODE, self::PARTNER_WEB_MAINTENANCE_MODE, self::WEBSITE_MAINTENANCE_MODE, self::INSTALLMENT_ACTIVATION_FEE => 0,
+            self::PARTNER_APP_MAINTENANCE_MODE, self::CLIENT_API_MAINTENANCE_MODE, self::PARTNER_WEB_MAINTENANCE_MODE, self::WEBSITE_MAINTENANCE_MODE => 0,
             self::PARTNER_APP_MIN_VERSION, self::CLIENT_APP_MIN_VERSION => 1,
             self::TELEGRAM_BOT_TOKEN, self::TELEGRAM_CHAT_ID, self::TEST_PHONE, self::TEST_OTP => '',
         };
