@@ -19,6 +19,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_ru
  * @property string $name_en
  * @property bool $is_system
+ * @property string|null $ican_flag
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -40,6 +41,7 @@ class TransactionType extends Model
         'name_ru',
         'name_en',
         'is_system',
+        'ican_flag',
     ];
 
     protected $translatedColumns = ['name'];
