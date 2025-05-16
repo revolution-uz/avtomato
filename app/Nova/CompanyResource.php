@@ -7,6 +7,7 @@ use App\Models\Company;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -92,6 +93,7 @@ class CompanyResource extends Resource
                         $fail("{$attribute} 28 dan katta son kiritmang!");
                     }
                 }),
+            Number::make(__('nova.company.min_allowed_balance'), 'min_allowed_balance'),
             HasMany::make('Domains', 'domains', DomainResource::class),
         ];
     }
