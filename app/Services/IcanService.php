@@ -53,7 +53,7 @@ class IcanService
                 'name_uz' => $value,
                 'name_ru' => $value,
                 'name_en' => $value,
-                'is_system' => true,
+                'is_system' => false,
             ];
         }
 
@@ -308,7 +308,7 @@ class IcanService
             'installment_id' => $this->createOrUpdateInstallment($transactionDto->credit)->id,
             'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
             'customer_id' => $this->createOrGetCustomer($transactionDto->credit->person_main->user_document->data)->id,
-            'transaction_type_id' => TransactionType::ICAN_INTEGRATION,
+            'transaction_type_id' => TransactionType::getIdByIcanFlag($transactionDto->payment_type),
             'amount' => $transactionDto->amount,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
             'paid_at' => Carbon::parse($transactionDto->payments->first()?->created_at),
