@@ -69,9 +69,9 @@ class TransactionsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => ['nullable', 'int', 'exists:cards,id,deleted_at,NULL'],
             ],
-            'transaction_type_id' => [
-                'type' => Type::int(),
-                'rules' => ['nullable', 'int', 'exists:transaction_types,id,deleted_at,NULL'],
+            'transaction_types' => [
+                'type' => Type::listOf(Type::nonNull(Type::int())),
+                'rules' => ['nullable', 'array', 'distinct'],
             ],
             'from' => [
                 'type' => Type::string(),
@@ -116,9 +116,9 @@ class TransactionsGraphQLQuery extends Query
                     ->where('card_id', $args['card_id'])
             )
             ->when(
-                isset($args['transaction_type_id']),
+                isset($args['transaction_types']),
                 fn (Builder $q) => $q
-                    ->where('transaction_type_id', $args['transaction_type_id'])
+                    ->whereIn('transaction_type_id', $args['transaction_types'])
             )
             ->when(
                 $this->_branches,
@@ -166,6 +166,11 @@ class TransactionsGraphQLQuery extends Query
                 Rule::exists(Branch::class, 'id')
                     ->whereNull('deleted_at')
                     ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),
+            ],
+            'transaction_types.*' => [
+                'required',
+                'int',
+                'exists:transaction_types,id,deleted_at,NULL',
             ],
         ];
     }

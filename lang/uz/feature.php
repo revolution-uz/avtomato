@@ -16,7 +16,7 @@ return [
     'atmos_card_pay' => 'Atmos karta orqali pul yechish',
     'atmos_pinfl_pay' => 'Atmos PINFL orqali pul olish',
     'unired_pinfl_pay' => 'Unired orqali pul yechish',
-    'unired_card_management' => 'Unired PINFL orqali to\'lov xizmati',
+    'unired_card_management' => 'PINFL orqali bank kartalar ro\'yxatini yangilash xizmati',
     'installment_guarantor' => 'Muddatli to\'lovga kafil qo\'shish',
     'installment_comment' => 'Muddatli to\'lovga izoh qo\'shish',
     'installment_document' => 'Muddatli to\'lovda hujjatlar bilan ishlash',

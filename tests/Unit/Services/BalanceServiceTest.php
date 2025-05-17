@@ -4,6 +4,7 @@ namespace Tests\Unit\Services;
 
 use App\Clients\AtmosBalanceClient;
 use App\Enums\Company\CompanyStatusEnum;
+use App\Models\Company;
 use App\Models\Company\BalanceCharge;
 use App\Models\Company\BalanceFund;
 use App\Models\Company\Feature;
@@ -36,18 +37,22 @@ class BalanceServiceTest extends TestCase
     #[Test]
     public function getBalanceWorking()
     {
+        /** @var Company $company */
+        $company = tenant();
+        $company->update(['min_allowed_balance' => -100000]);
+
         BalanceCharge::factory()->create(['amount' => 50000, 'feature_id' => $this->_feature->id]);
         $this->assertEquals(-50000, BalanceService::getBalance());
-        $this->assertEquals(CompanyStatusEnum::ACTIVE, tenant()->refresh()?->status);
+        $this->assertEquals(CompanyStatusEnum::ACTIVE, $company->refresh()?->status);
 
         // Make company status inactive
         BalanceCharge::factory()->create(['amount' => 50000, 'feature_id' => $this->_feature->id]);
         $this->assertEquals(-100000, BalanceService::getBalance());
-        $this->assertEquals(CompanyStatusEnum::INACTIVE, tenant()->refresh()?->status);
+        $this->assertEquals(CompanyStatusEnum::INACTIVE, $company->refresh()?->status);
 
         // Make company status active
         BalanceFund::factory()->create(['amount' => 1]);
         $this->assertEquals(-99999, BalanceService::getBalance());
-        $this->assertEquals(CompanyStatusEnum::ACTIVE, tenant()->refresh()?->status);
+        $this->assertEquals(CompanyStatusEnum::ACTIVE, $company->refresh()?->status);
     }
 }

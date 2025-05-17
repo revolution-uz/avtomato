@@ -115,6 +115,7 @@ enum FeatureEnum: string
             self::SCORING_MIB_INFO => '{"provider": "asaxiy", "username": "username", "password": "password"}',
             self::SMS => '{"provider": "sms_fly", "username": "username", "secret": "secret"}',
             self::ICAN => '{"username": "", "password": "", "expires_in": 0, "access_token": ""}',
+            self::INSTALLMENT_MANAGEMENT => '{"activation_fee": 0}',
             default => null,
         };
     }

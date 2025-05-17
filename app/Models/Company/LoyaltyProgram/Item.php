@@ -57,14 +57,14 @@ class Item extends Model
 
     public function prices(): HasMany
     {
-        return $this->hasMany(Price::class, 'external_item_code', 'external_code')
-            ->where('external_shop_code', $this->external_shop_code);
+        return $this->hasMany(Price::class, 'external_item_code', 'external_code');
+        // ->where('external_shop_code', $this->external_shop_code);
     }
 
     public function stocks(): HasMany
     {
-        return $this->hasMany(Stock::class, 'external_item_code', 'external_code')
-            ->where('external_shop_code', $this->external_shop_code);
+        return $this->hasMany(Stock::class, 'external_item_code', 'external_code');
+        // ->where('external_shop_code', $this->external_shop_code);
     }
 
     public function getPriceAttribute()
