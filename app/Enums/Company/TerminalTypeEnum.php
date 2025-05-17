@@ -22,10 +22,7 @@ enum TerminalTypeEnum: int
             self::UNIRED_CARD => FeatureEnum::UNIRED_CARD_PAY,
             self::UNIRED_PINFL => FeatureEnum::UNIRED_PINFL_PAY,
         };
-        if ($featureEnum && $feature = $featureEnum->getFeature()) {
-            return $feature->data;
-        }
 
-        return [];
+        return $featureEnum?->getFeature()?->data;
     }
 }
