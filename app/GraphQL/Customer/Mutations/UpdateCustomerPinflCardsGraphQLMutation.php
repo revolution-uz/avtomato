@@ -10,12 +10,9 @@ use App\Models\Company\Customer;
 use App\Services\UniredService;
 use App\Services\User\BalanceService;
 use Closure;
-use Exception;
-use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Mutation;
 
 class UpdateCustomerPinflCardsGraphQLMutation extends Mutation
