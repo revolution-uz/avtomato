@@ -16,7 +16,7 @@ return [
     'atmos_card_pay' => 'Списание через карту Atmos',
     'atmos_pinfl_pay' => 'Списание через ПИНФЛ Atmos',
     'unired_pay' => 'Списание через Unired',
-    'unired_card_management' => 'Платежный сервис через Unired ПИНФЛ',
+    'unired_card_management' => 'Сервис обновления списка банковских карт через ПИНФЛ',
     'installment_guarantor' => 'Добавить поручителя для рассрочки',
     'installment_comment' => 'Добавить комментарий к рассрочке',
     'installment_document' => 'Работа с документами в рассрочке',
