@@ -21,7 +21,6 @@ enum TerminalTypeEnum: int
             self::ATMOS_PINFL => FeatureEnum::ATMOS_PINFL_PAY,
             self::UNIRED_CARD => FeatureEnum::UNIRED_CARD_PAY,
             self::UNIRED_PINFL => FeatureEnum::UNIRED_PINFL_PAY,
-            default => null,
         };
         if ($featureEnum && $feature = $featureEnum->getFeature()) {
             return $feature->data;
