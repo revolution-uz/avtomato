@@ -49,7 +49,7 @@ enum ModuleEnum: string
             FeatureEnum::TRANSACTION_MANAGEMENT,
             FeatureEnum::TRANSACTION_TYPE_MANAGEMENT,
             FeatureEnum::INSTALLMENT_MANAGEMENT,
-            FeatureEnum::UNIRED_PAY,
+            FeatureEnum::UNIRED_PINFL_PAY,
             FeatureEnum::UNIRED_CARD_MANAGEMENT,
             FeatureEnum::ATMOS_PINFL_PAY => [self::INSTALLMENT],
             FeatureEnum::TELEGRAM_BOT_FEATURE,

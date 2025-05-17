@@ -59,7 +59,7 @@ class TransactionType extends Model
         return match ($transaction_type_id) {
             self::ATMOS_WITH_CARD => FeatureEnum::ATMOS_CARD_PAY,
             self::ATMOS_WITH_PINFL => FeatureEnum::ATMOS_PINFL_PAY,
-            self::UNIRED_WITH_PINFL => FeatureEnum::UNIRED_PAY,
+            self::UNIRED_WITH_PINFL => FeatureEnum::UNIRED_PINFL_PAY,
             default => null,
         };
     }

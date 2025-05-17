@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use App\Models\Company\Feature;
+
 enum FeatureEnum: string
 {
     case PROFILE_EDIT = 'profile_edit';
@@ -18,7 +20,8 @@ enum FeatureEnum: string
     case INSTALLMENT_AUTO_CHARGE_BY_PINFL = 'installment_auto_charge_by_pinfl'; // to charge by PINFL (via Atmos)
     case ATMOS_CARD_PAY = 'atmos_card_pay'; // only serves to save Atmos Card Pay credentials
     case ATMOS_PINFL_PAY = 'atmos_pinfl_pay'; // only serves to save Atmos PINFl Pay credentials
-    case UNIRED_PAY = 'unired_pay';
+    case UNIRED_CARD_PAY = 'unired_card_pay';
+    case UNIRED_PINFL_PAY = 'unired_pinfl_pay';
     case UNIRED_CARD_MANAGEMENT = 'unired_card_management';
     case INSTALLMENT_GUARANTOR = 'installment_guarantor';
     case INSTALLMENT_COMMENT = 'installment_comment';
@@ -50,7 +53,7 @@ enum FeatureEnum: string
     public function getDefaultDescription(): ?string
     {
         return match ($this) {
-            self::UNIRED_PAY => 'PINFL orqali pul yechish uchun UNIRED',
+            self::UNIRED_PINFL_PAY => 'PINFL orqali pul yechish uchun UNIRED',
             self::UNIRED_CARD_MANAGEMENT => 'UNIRED kartalarini boshqarish funksiyasi',
             self::ATMOS_PINFL_PAY => 'PINFL orqali pul yechish uchun ATMOS',
             self::ATMOS_CARD_PAY => 'Karta orqali pul yechish uchun ATMOS',
@@ -99,7 +102,7 @@ enum FeatureEnum: string
         return match ($this) {
             self::ATMOS_PINFL_PAY,
             self::ATMOS_CARD_PAY => '{"username": "", "password": "", "store_id": 0, "expires_in": 0, "access_token": "", "token_type": "Bearer"}',
-            self::UNIRED_PAY => '{"id" : 0, "name" : "", "merchant_uzcard" : "", "terminal_uzcard" : "", "merchant_humo" : "", "terminal_humo" : "", "phone" : ""}',
+            self::UNIRED_PINFL_PAY => '{"id" : 0, "name" : "", "merchant_uzcard" : "", "terminal_uzcard" : "", "merchant_humo" : "", "terminal_humo" : "", "phone" : ""}',
             self::SBP_PAY => '{"username": "", "password": "", "access_token_key": "", "expires_in": 0}',
             self::SCORING_CREDIT_HISTORY,
             self::SCORING_PENSION_INFO,
@@ -132,5 +135,10 @@ enum FeatureEnum: string
             self::LOYALTY_PROGRAM,
             self::UNIRED_CARD_MANAGEMENT,
         ]);
+    }
+
+    public function getFeature()
+    {
+        return Feature::query()->where('name', $this)->first();
     }
 }

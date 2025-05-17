@@ -14,6 +14,7 @@ use Database\Seeders\Company\LocationSeeder;
 use Database\Seeders\Company\ModuleSeeder;
 use Database\Seeders\Company\PermissionSeeder;
 use Database\Seeders\Company\SmsTemplateSeeder;
+use Database\Seeders\Company\TerminalSeeder;
 use Database\Seeders\Company\TransactionTypeSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -37,6 +38,7 @@ class CompanySeeder extends Seeder
         $this->call(SmsTemplateSeeder::class);
         $this->call(BranchSeeder::class);
         $this->call(EcommerceOrderStatusSeeder::class);
+        $this->call(TerminalSeeder::class);
         // TODO remove before production
         CompanyAdmin::query()->firstOrCreate([
             'username' => 'admin',

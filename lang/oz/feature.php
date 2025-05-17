@@ -15,7 +15,7 @@ return [
     'installment_auto_charge_by_pinfl' => 'Муддатли тўловдан авто пул ечиш (ПИНФЛ орқали)',
     'atmos_card_pay' => 'Atmos карта орқали пул ечиш',
     'atmos_pinfl_pay' => 'Atmos ПИНФЛ орқали пул олиш',
-    'unired_pay' => 'Unired орқали пул ечиш',
+    'unired_pinfl_pay' => 'Unired орқали пул ечиш',
     'unired_card_management' => 'Unired ПИНФЛ орқали тўлов хизмати',
     'installment_guarantor' => 'Муддатли тўловга кафил қўшиш',
     'installment_comment' => 'Муддатли тўловга изоҳ қўшиш',

@@ -58,7 +58,7 @@ class UniredServiceTest extends TestCase
         $response = $this->_uniredService->createBranch(UniredCreateBranchRequestDTO::from($this->_inputCompany));
 
         $this->assertTrue($response);
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
         $this->assertEquals($this->_inputCompany['id'], $feature->data['id']);
         $this->assertEquals($this->_inputCompany['name'], $feature->data['name']);
         $this->assertEquals($this->_inputCompany['merchant_uzcard'], $feature->data['merchant_uzcard']);
@@ -73,7 +73,7 @@ class UniredServiceTest extends TestCase
     public function successUpdateBranch()
     {
         UniredFaker::updateBranch();
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
         $feature->data = array_merge($this->_inputCompany, ['name' => 'Before Updated']);
         $feature->save();
 
@@ -95,7 +95,7 @@ class UniredServiceTest extends TestCase
     public function successSwitchOffCompany()
     {
         UniredFaker::switchOffCompany();
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
         $feature->data = $this->_inputCompany;
         $feature->save();
 
@@ -115,8 +115,8 @@ class UniredServiceTest extends TestCase
     #[Test]
     public function successCreateOrUpdateCustomer()
     {
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $feature->data = FeatureEnum::UNIRED_PAY->getExampleData();
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
+        $feature->data = FeatureEnum::UNIRED_PINFL_PAY->getExampleData();
         $feature->saveOrFail();
 
         UniredFaker::createOrUpdateCustomer();

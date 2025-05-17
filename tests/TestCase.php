@@ -12,6 +12,7 @@ use Database\Seeders\Company\FeatureSeeder;
 use Database\Seeders\Company\ModuleSeeder;
 use Database\Seeders\Company\PermissionSeeder;
 use Database\Seeders\Company\SmsTemplateSeeder;
+use Database\Seeders\Company\TerminalSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
@@ -67,6 +68,7 @@ abstract class TestCase extends BaseTestCase
         Artisan::call('tenants:seed', ['--class' => SmsTemplateSeeder::class, '--tenants' => [$tenant->id]]);
         Artisan::call('tenants:seed', ['--class' => CompanySettingsSeeder::class, '--tenants' => [$tenant->id]]);
         Artisan::call('tenants:seed', ['--class' => BranchSeeder::class, '--tenants' => [$tenant->id]]);
+        Artisan::call('tenants:seed', ['--class' => TerminalSeeder::class, '--tenants' => [$tenant->id]]);
     }
 
     public function createAdminUser()
