@@ -178,7 +178,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['transaction_type_id' => $transaction->transactionType->id]));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['transaction_types' => [$transaction->transactionType->id]]));
 
         $this->assertSuccessTransactionsResponse($response, total: 1);
         $this->assertEquals(Transaction::query()->first()->transactionType->id, $response->json('data.transactions.data.0.transaction_type_id'));
@@ -265,10 +265,10 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
     {
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['transaction_type_id' => 93]));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['transaction_types' => [93]]));
 
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(trans('validation.exists', ['attribute' => 'transaction type id']), $response->json('errors.0.extensions.validation.transaction_type_id.0'));
+        $this->assertEquals(trans('validation.exists', ['attribute' => 'transaction_types.0']), $response->json('errors.0.extensions.validation')['transaction_types.0'][0]);
     }
 
     #[Test]
@@ -494,7 +494,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                     \$installment_id: Int
                     \$customer_id: Int
                     \$card_id: Int
-                    \$transaction_type_id: Int
+                    \$transaction_types: [Int!]
                     \$from: String
                     \$to: String
                 ) {
@@ -508,7 +508,7 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                         installment_id: \$installment_id
                         customer_id: \$customer_id
                         card_id: \$card_id
-                        transaction_type_id: \$transaction_type_id
+                        transaction_types: \$transaction_types
                         from: \$from
                         to: \$to
                     ) {
