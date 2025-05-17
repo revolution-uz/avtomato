@@ -23,6 +23,6 @@ enum TerminalTypeEnum: int
             self::UNIRED_PINFL => FeatureEnum::UNIRED_PINFL_PAY,
         };
 
-        return $featureEnum?->getFeature()?->data;
+        return $featureEnum->getFeature()->data;
     }
 }
