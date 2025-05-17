@@ -8,16 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('terminals', function (Blueprint $table) {
+        Schema::create('terminals', function (Blueprint $table) {
             $table->id();
-            $table->integer('branch_id');
-            $table->integer('type');
+            $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
+            $table->tinyInteger('type')->index();
             $table->text('data')->nullable();
             $table->timestamps();
-            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
-            $table->index(['branch_id', 'type']);
         });
-
     }
 
     public function down(): void
