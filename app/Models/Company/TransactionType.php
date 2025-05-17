@@ -34,6 +34,7 @@ class TransactionType extends Model
     const int ATMOS_WITH_PINFL = 2;
     const int UNIRED_WITH_PINFL = 3;
     const int ICAN_INTEGRATION = 4;
+    const int UNIRED_WITH_CARD = 5;
 
     protected $fillable = [
         'name_uz',
@@ -59,6 +60,7 @@ class TransactionType extends Model
         return match ($transaction_type_id) {
             self::ATMOS_WITH_CARD => FeatureEnum::ATMOS_CARD_PAY,
             self::ATMOS_WITH_PINFL => FeatureEnum::ATMOS_PINFL_PAY,
+            self::UNIRED_WITH_CARD => FeatureEnum::UNIRED_CARD_PAY,
             self::UNIRED_WITH_PINFL => FeatureEnum::UNIRED_PINFL_PAY,
             default => null,
         };
