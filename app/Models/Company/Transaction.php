@@ -193,7 +193,7 @@ class Transaction extends Model
         return $isCancelled;
     }
 
-    private function computeCommission()
+    private function computeCommission(): void
     {
         if ($featureEnum = TransactionType::getFeature($this->transaction_type_id)) {
             if ($feature = Feature::query()
