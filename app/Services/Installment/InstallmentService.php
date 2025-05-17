@@ -6,15 +6,14 @@ use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Enums\Main\SettingsEnum;
 use App\Exceptions\BalanceIsNotEnoughException;
 use App\Models\Company\Branch;
+use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Models\Company\InstallmentGuarantor;
 use App\Models\Company\Tariff;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
-use App\Models\Settings;
 use App\Services\User\BalanceService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -122,7 +121,7 @@ class InstallmentService
         if ($status == InstallmentStatusEnum::ACTIVE) {
             if ($installment->isPaidInitialFee()) {
                 if ($installment->status == InstallmentStatusEnum::INACTIVE) {
-                    $amount = Settings::getConfig(SettingsEnum::INSTALLMENT_ACTIVATION_FEE);
+                    $amount = $this->getInstallmentActivationFee();
 
                     $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_MANAGEMENT, $installment, $amount);
                 }
@@ -277,5 +276,14 @@ class InstallmentService
             'total_amount_by_type' => array_values($formattedTotalAmountByType),
             'full_total_amount' => number_format($fullTotalAmount, 2, '.', ' '),
         ];
+    }
+
+    public function getInstallmentActivationFee()
+    {
+        $feature = Feature::findByName(FeatureEnum::INSTALLMENT_MANAGEMENT);
+
+        $data = $feature->data ?? $feature->original_data ?? [];
+
+        return $data['activation_fee'] ?? 0;
     }
 }

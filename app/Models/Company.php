@@ -28,6 +28,7 @@ use Stancl\Tenancy\Database\Models\Tenant;
  * @property int $payment_day
  * @property string|null $logo
  * @property array|null $data
+ * @property int $min_allowed_balance
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read string|null $logo_url
@@ -54,6 +55,7 @@ class Company extends Tenant implements TenantWithDatabase
         'status',
         'payment_day',
         'logo',
+        'min_allowed_balance',
     ];
 
     protected $casts = [

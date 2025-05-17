@@ -16,7 +16,7 @@ return [
     'atmos_card_pay' => 'Atmos карта орқали пул ечиш',
     'atmos_pinfl_pay' => 'Atmos ПИНФЛ орқали пул олиш',
     'unired_pay' => 'Unired орқали пул ечиш',
-    'unired_card_management' => 'Unired ПИНФЛ орқали тўлов хизмати',
+    'unired_card_management' => 'ПИНФЛ орқали банк карталар рўйхатини янгилаш хизмати',
     'installment_guarantor' => 'Муддатли тўловга кафил қўшиш',
     'installment_comment' => 'Муддатли тўловга изоҳ қўшиш',
     'installment_document' => 'Муддатли тўловда ҳужжатлар билан ишлаш',
