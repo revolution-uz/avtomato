@@ -104,7 +104,7 @@ class Transaction extends Model
             }
             if ($transaction->transactionType->is_system) {
                 CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
-                $transaction->computeFee();
+                $transaction->computeCommission();
             }
 
             if ($transaction->installment->ican_id) {
@@ -193,15 +193,22 @@ class Transaction extends Model
         return $isCancelled;
     }
 
-    private function computeFee()
+    private function computeCommission()
     {
         if ($featureEnum = TransactionType::getFeature($this->transaction_type_id)) {
             if ($feature = Feature::query()
                 ->where('name', $featureEnum)
                 ->first()) {
-                $commission = CardTypeEnum::getCardType($this->card_pan) === CardTypeEnum::HUMO ? $feature->humo_percent : $feature->uzcard_percent;
-                if ($commission && ($amount = $this->amount * $commission) > 0) {
-                    app(BalanceService::class)->chargeAmount($featureEnum, $this, $amount);
+                $commission = max(0, CardTypeEnum::getCardType($this->card_pan) === CardTypeEnum::HUMO ? $feature->humo_percent : $feature->uzcard_percent);
+                if ($commissionCharge = BalanceCharge::query()
+                    ->where('chargeable_id', $this->id)
+                    ->where('chargeable_type', Transaction::class)
+                    ->where('feature_id', $feature->id)
+                    ->first()) {
+                    $commissionCharge->amount = $this->amount * $commission;
+                    $commissionCharge->save();
+                } else {
+                    app(BalanceService::class)->chargeAmount($featureEnum, $this, $this->amount * $commission);
                 }
             }
         }
