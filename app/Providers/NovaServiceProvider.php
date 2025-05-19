@@ -81,6 +81,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(SbpTransactionResource::class),
                     ])->collapsable(),
                     MenuSection::make('Loyalty Program', [
+                        MenuItem::resource(\App\Nova\Company\LoyaltyProgram\UserResource::class),
                         MenuItem::resource(ShopResource::class),
                         MenuItem::resource(ItemResource::class),
                         MenuItem::resource(PriceResource::class),

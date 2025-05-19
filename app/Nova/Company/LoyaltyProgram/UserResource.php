@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Nova\Company\LoyaltyProgram;
+
+use App\Models\Company\LoyaltyProgram\User;
+use App\Nova\Actions\LoyaltyProgram\UserQrCodeGenerateAction;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Resource;
+
+class UserResource extends Resource
+{
+    public static $model = User::class;
+
+    public static $title = 'phone';
+
+    public static $search = [
+        'phone', 'first_name', 'last_name', 'birth_date',
+    ];
+
+    public function fields(Request $request)
+    {
+        return [
+            ID::make()->sortable(),
+            Text::make('Phone', 'phone')->sortable()->rules('required', 'max:255'),
+            Text::make('First Name', 'first_name')->sortable()->rules('nullable', 'max:255'),
+            Text::make('Last Name', 'first_name')->sortable()->rules('nullable', 'max:255'),
+            Text::make('Birth Date', 'birth_date')->sortable()->rules('nullable', 'date'),
+            Text::make('Main Device', 'main_device')->sortable()->rules('nullable', 'max:255'),
+            Text::make('QR Code', 'main_device')->onlyOnDetail()->asHtml()
+                ->resolveUsing(function ($value) {
+                    return $this->getQrAttribute(3600)['id'];
+                }),
+        ];
+    }
+
+    public function cards(Request $request): array
+    {
+        return [];
+    }
+
+    public function filters(Request $request): array
+    {
+        return [];
+    }
+
+    public function lenses(Request $request): array
+    {
+        return [];
+    }
+
+    public function actions(Request $request): array
+    {
+        return [
+            (new UserQrCodeGenerateAction)->onlyInline(),
+        ];
+    }
+
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToReplicate(Request $request)
+    {
+        return false;
+    }
+}
