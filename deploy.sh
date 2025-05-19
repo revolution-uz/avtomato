@@ -18,13 +18,13 @@ echo "🧹 Clear cache"
 su - www-data -s /bin/bash -c 'cd /var/www/automato && php artisan optimize:clear'
 
 echo "🌐 Installing packages"
-su - www-data -s /bin/bash -c 'cd /var/www/automato && nvm use 20 && npm ci --include=dev'
+su - www-data -s /bin/bash -c 'cd /var/www/automato && source ~/.nvm/nvm.sh && npm ci --include=dev'
 
 echo "🌐 Installing packages"
-su - www-data -s /bin/bash -c 'cd /var/www/automato && nvm use 20 && npm run build'
+su - www-data -s /bin/bash -c 'cd /var/www/automato && source ~/.nvm/nvm.sh && npm run build'
 
 echo "🌐 Installing packages (without development)"
-su - www-data -s /bin/bash -c 'cd /var/www/automato && nvm use 20 && npm ci --omit=dev'
+su - www-data -s /bin/bash -c 'cd /var/www/automato && source ~/.nvm/nvm.sh && npm ci --omit=dev'
 
 echo "🔄 Restarting Supervisor"
 sudo supervisorctl restart all
