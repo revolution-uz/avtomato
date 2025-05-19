@@ -2,7 +2,9 @@
 
 namespace Database\Seeders\Company;
 
+use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
+use App\Models\Company\Feature;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
 use App\Services\IcanService;
@@ -16,13 +18,15 @@ class ChangeIcanTransactionsTypeSeeder extends Seeder
     public function run(): void
     {
         try {
-            $transactionType = $this->getIdByIcanFlag('auto_payment');
+            if (Feature::isFeatureActive(FeatureEnum::ICAN)) {
+                $transactionType = $this->getIdByIcanFlag('auto_payment');
 
-            Transaction::query()
-                ->whereNotNull('ican_id')
-                ->update([
-                    'transaction_type_id' => $transactionType,
-                ]);
+                Transaction::query()
+                    ->whereNotNull('ican_id')
+                    ->update([
+                        'transaction_type_id' => $transactionType,
+                    ]);
+            }
 
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
