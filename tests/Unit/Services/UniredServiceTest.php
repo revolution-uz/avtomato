@@ -94,7 +94,7 @@ class UniredServiceTest extends TestCase
     #[Test]
     public function successSwitchOffCompany()
     {
-        UniredFaker::switchOffCompany();
+        UniredFaker::switchOffBranch();
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
         $feature->data = $this->_inputCompany;
         $feature->save();
@@ -135,10 +135,7 @@ class UniredServiceTest extends TestCase
         UniredFaker::getCards();
 
         $customer = Customer::factory()->create();
-        $this->_uniredService->getAndSyncPinflCards($customer);
-
         $centralCustomer = $customer->getOrCreateCentralCustomer();
-
         $expectedData = [
             [
                 'pinfl' => '413109***0086',
@@ -168,6 +165,9 @@ class UniredServiceTest extends TestCase
             ],
         ];
 
+        $res = $this->_uniredService->getAndSyncPinflCards($customer);
+
+        $this->assertTrue($res);
         $this->assertCount(count($expectedData), $centralCustomer->uniredCards);
 
         foreach ($centralCustomer->uniredCards as $key => $card) {

@@ -37,6 +37,7 @@ use App\Models\Company\Transaction;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class UniredService
 {
@@ -154,7 +155,7 @@ class UniredService
         return $this->updateDebitAndSwitchAuto(Utilities::generateIdByTenancy($installment->id), (int) ($installment->debtAmount * 100), false);
     }
 
-    public function getAndSyncPinflCards(Customer $customer): void
+    public function getAndSyncPinflCards(Customer $customer): bool
     {
         $centralCustomer = $customer->getOrCreateCentralCustomer();
 
@@ -176,7 +177,11 @@ class UniredService
                 ['uuid'],
                 ['pinfl', 'auto', 'is_verified', 'is_blocked', 'block_reason', 'blocked_at', 'owner', 'pan', 'phone', 'type']
             );
+
+            return true;
         }
+
+        return false;
     }
 
     public function switchOnInstallment(Installment $installment): void
@@ -284,38 +289,43 @@ class UniredService
     {
         $centralCustomer = $customer->getOrCreateCentralCustomer();
 
+        if (
+            $customer->installments()->whereNotNull('unired_id')->doesntExist() &&
+            $customer->guaranteedInstallments()->whereNotNull('installment_guarantors.unired_id')->doesntExist()
+        ) {
+            throw ValidationException::withMessages(['customer_id' => __('Customer does not have any installments or guaranteed installments')]);
+        }
+
         $is_uzcard_update = Utilities::isAllowedManualUpdatePinflCards($centralCustomer->unired_uzcard_searched_at);
         $is_humo_update = Utilities::isAllowedManualUpdatePinflCards($centralCustomer->unired_humo_searched_at);
 
-        try {
-            if ($is_uzcard_update) {
-                $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
-
-                if (isset($response->result[$centralCustomer->pinfl]) && isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
-                    $centralCustomer->unired_uzcard_searched_at = Carbon::now();
-                }
-            }
-            if ($is_humo_update) {
-                $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
-
-                if (isset($response->result[$centralCustomer->pinfl]) && isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
-                    $centralCustomer->unired_humo_searched_at = Carbon::now();
-                }
-            }
-
-            return $centralCustomer->save();
-
-        } catch (Exception $e) {
-            Log::channel('unired-client')->info(
-                'Error updating PINFL cards list',
-                [
-                    'class' => get_called_class(),
-                    'error' => $e->getMessage(),
-                    'pinfl' => $centralCustomer->pinfl,
-                ]
-            );
-            throw new GeneralException("Failed to update cards list for PINFL: {$centralCustomer->pinfl}");
+        if (! $is_uzcard_update && ! $is_humo_update) {
+            throw ValidationException::withMessages(['customer_id' => __('Customer cards can only be renewed once within 24 hours')]);
         }
+
+        $dto = new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]);
+
+        if ($is_uzcard_update) {
+            $response = $this->uniredClient->updateUzcardCards($dto);
+
+            if (isset($response->result[$centralCustomer->pinfl]) && isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
+                $centralCustomer->unired_uzcard_searched_at = Carbon::now();
+            } else {
+                $errorHumo = $response->result[$centralCustomer->pinfl]['error'] ?? 'Unknown error';
+            }
+        }
+
+        if ($is_humo_update) {
+            $response = $this->uniredClient->updateHumoCards($dto);
+
+            if (isset($response->result[$centralCustomer->pinfl]) && isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
+                $centralCustomer->unired_humo_searched_at = Carbon::now();
+            } else {
+                $errorUzcard = $response->result[$centralCustomer->pinfl]['error'] ?? 'Unknown error';
+            }
+        }
+
+        return $centralCustomer->save() && (! isset($errorHumo) || ! isset($errorUzcard));
     }
 
     public function getCardUpdates(string $pinfl, int $page = 1): array

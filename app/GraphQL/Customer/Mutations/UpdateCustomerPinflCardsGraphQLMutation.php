@@ -10,12 +10,9 @@ use App\Models\Company\Customer;
 use App\Services\UniredService;
 use App\Services\User\BalanceService;
 use Closure;
-use Exception;
-use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Mutation;
 
 class UpdateCustomerPinflCardsGraphQLMutation extends Mutation
@@ -52,26 +49,19 @@ class UpdateCustomerPinflCardsGraphQLMutation extends Mutation
         return RbacHelper::checkPermission(PermissionEnum::UPDATE_CUSTOMER_PINFL_CARDS);
     }
 
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): true
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): bool
     {
         $customer = Customer::query()->findOrFail($args['customer_id']);
 
         if (
-            $customer->installments()->whereNotNull('unired_id')->doesntExist() &&
-            $customer->guaranteedInstallments()->whereNotNull('installment_guarantors.unired_id')->doesntExist()
+            $this->uniredService->manualUpdatePinflCardsList($customer) &&
+            $this->uniredService->getAndSyncPinflCards($customer)
         ) {
-            throw ValidationException::withMessages(['customer_id' => __('Customer does not have any installments or guaranteed installments')]);
-        }
-
-        try {
-            $this->uniredService->manualUpdatePinflCardsList($customer);
-            $this->uniredService->getAndSyncPinflCards($customer);
             $this->balanceService->chargeAmount(FeatureEnum::UNIRED_CARD_MANAGEMENT, $customer);
 
             return true;
-
-        } catch (Exception $e) {
-            throw new Error($e->getMessage());
         }
+
+        return false;
     }
 }

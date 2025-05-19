@@ -21,5 +21,6 @@
   "Unknown type": "Noma'lum tur",
   "Unknown": "Noma'lum",
   "60-others": "60-boshqalar",
-    "Customer does not have any installments or guaranteed installments": "Mijozda hech qanday muddatli to'lov yoki kafolatlangan muddatli to'lov yo'q"
+  "Customer does not have any installments or guaranteed installments": "Mijozda hech qanday muddatli to'lov yoki kafolatlangan muddatli to'lov yo'q",
+  "Customer cards can only be renewed once within 24 hours": "Mijoz kartalari 24 soat ichida faqat bir marta yangilanishi mumkin"
 }
