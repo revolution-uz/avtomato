@@ -78,7 +78,7 @@ class UniredFaker
 
     public static function fakeResponse(string $jsonPath, $status = 200): void
     {
-        $partnerUrl = config('clients.unired.base_url');
+        $partnerUrl = config('clients.unired.pinfl.base_url');
 
         Http::fake([
             $partnerUrl => Http::response(json_decode(file_get_contents(storage_path($jsonPath)), true), $status),

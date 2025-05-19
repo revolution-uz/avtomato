@@ -75,6 +75,9 @@ class AtmosService
 
     public function withdrawAmountAndCreateCardTransaction(Card $card, Installment $installment, float &$amount): void
     {
+        if ($installment->branch_id) {
+            $this->atmosCardClient->setBranchId($installment->branch_id);
+        }
         /** @var TransactionAttempt $transactionAttempt */
         $transactionAttempt = TransactionAttempt::create([
             'installment_id' => $installment->id,
@@ -130,6 +133,9 @@ class AtmosService
 
     public function withdrawAmountAndCreatePINFLTransaction(Customer $customer, Installment $installment, float &$amount): void
     {
+        if ($installment->branch_id) {
+            $this->atmosPinflClient->setBranchId($installment->branch_id);
+        }
         /** @var TransactionAttempt $transactionAttempt */
         $transactionAttempt = TransactionAttempt::create([
             'installment_id' => $installment->id,
@@ -175,6 +181,9 @@ class AtmosService
 
     public function checkInProgress(TransactionAttempt $transactionAttempt): void
     {
+        if ($transactionAttempt->installment->branch_id) {
+            $this->atmosPinflClient->setBranchId($transactionAttempt->installment->branch_id);
+        }
         $confirmWithPinfl = $this->checkAttempt($transactionAttempt);
 
         if ($confirmWithPinfl->payload->isSuccess()) {
@@ -190,6 +199,9 @@ class AtmosService
 
     public function checkIsSuccess(TransactionAttempt $transactionAttempt): void
     {
+        if ($transactionAttempt->installment->branch_id) {
+            $this->atmosPinflClient->setBranchId($transactionAttempt->installment->branch_id);
+        }
         $confirmWithPinfl = $this->checkAttempt($transactionAttempt);
         if ($confirmWithPinfl->isReversed()) {
             /** @var Transaction $transaction */
@@ -212,6 +224,10 @@ class AtmosService
         $transactionAttempts = TransactionAttempt::query()->where('transaction_id', $transaction_id)->get();
         $isReversed = false;
         foreach ($transactionAttempts as $transactionAttempt) {
+            /** @var TransactionAttempt $transactionAttempt */
+            if ($transactionAttempt->installment->branch_id) {
+                $this->atmosPinflClient->setBranchId($transactionAttempt->installment->branch_id);
+            }
             $paymentState = $this->checkAttempt($transactionAttempt);
             if ($paymentState->isSuccess() && $paymentState->payload->isSuccess()) {
                 $reversePaymentState = $this->atmosPinflClient->payCancel($paymentState->payload->ext_id, $paymentState->payload->transaction_id);

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Clients\UniredClient;
+use App\Clients\UniredPinflClient;
 use App\DTOs\Unired\Branch\UniredBranchResponseDTO;
 use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Log;
 
 class UniredService
 {
-    public function __construct(private UniredClient $uniredClient) {}
+    public function __construct(private UniredPinflClient $uniredClient) {}
 
     public function createBranch(UniredCreateBranchRequestDTO $params): bool
     {
@@ -218,7 +218,7 @@ class UniredService
 
     public function setWebhook(string $webhook, bool $status)
     {
-        return $this->uniredClient->setWebhook(new UniredSetWebhookDTO($webhook, config('clients.unired.callback-token'), $status));
+        return $this->uniredClient->setWebhook(new UniredSetWebhookDTO($webhook, config('clients.unired.pinfl.callback-token'), $status));
     }
 
     public function checkWebhook()

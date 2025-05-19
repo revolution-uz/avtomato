@@ -10,6 +10,7 @@ use App\DTOs\Atmos\CardPay\AtmosCreatePaymentResponseDTO;
 use App\DTOs\Atmos\CardPay\AtmosPreConfirmPaymentResponseDTO;
 use App\DTOs\Atmos\CardPay\AtmosTransactionReversePaymentDto;
 use App\Enums\ClientCodeEnum;
+use App\Enums\Company\TerminalTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use Throwable;
@@ -36,6 +37,8 @@ class AtmosCardClient extends BaseAtmosClient
         $this->baseUrl = config('clients.atmos.card.base_url');
         $this->channel = 'atmos-card-client';
         $this->featureName = FeatureEnum::ATMOS_CARD_PAY;
+        $this->terminalTypeEnum = TerminalTypeEnum::ATMOS_CARD;
+        $this->setBranchId((int) config('clients.atmos.card.default_branch_id'));
     }
 
     public function getClientCode(): ClientCodeEnum

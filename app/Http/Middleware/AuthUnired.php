@@ -24,6 +24,6 @@ class AuthUnired
 
     private function getStaticToken(): string
     {
-        return strval(config('clients.unired.callback-token', ''));
+        return strval(config('clients.unired.pinfl.callback-token', ''));
     }
 }

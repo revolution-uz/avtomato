@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services;
 
-use App\Clients\UniredClient;
+use App\Clients\UniredPinflClient;
 use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
 use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
@@ -47,7 +47,7 @@ class UniredServiceTest extends TestCase
         CentralCustomer::truncate();
         CentralUniredCard::truncate();
 
-        $this->_uniredService = new UniredService(new UniredClient);
+        $this->_uniredService = new UniredService(new UniredPinflClient);
     }
 
     #[Test]

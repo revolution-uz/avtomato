@@ -33,10 +33,11 @@ use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredPaginationRequestDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\ClientCodeEnum;
+use App\Enums\Company\TerminalTypeEnum;
 use App\Exceptions\UniredException;
 use Illuminate\Support\Facades\Http;
 
-class UniredClient extends BaseClient
+class UniredPinflClient extends BaseClient
 {
     // Authorization Module
     const SYSTEM_SET_TOKEN = 'system.set.token';
@@ -81,12 +82,16 @@ class UniredClient extends BaseClient
 
     private string $baseUrl;
     private string $token;
+    private TerminalTypeEnum $terminalTypeEnum;
+    private int $branchId;
 
     public function __construct()
     {
-        $this->baseUrl = config('clients.unired.base_url');
-        $this->token = config('clients.unired.token');
+        $this->baseUrl = config('clients.unired.pinfl.base_url');
+        $this->token = config('clients.unired.pinfl.token');
         $this->channel = 'unired-client';
+        $this->terminalTypeEnum = TerminalTypeEnum::UNIRED_PINFL;
+        $this->setBranchId((int) config('clients.unired.pinfl.default_branch_id'));
     }
 
     public function getClientCode(): ClientCodeEnum
@@ -320,5 +325,10 @@ class UniredClient extends BaseClient
         }
 
         return $response;
+    }
+
+    private function setBranchId(int $branchId)
+    {
+        $this->branchId = $branchId;
     }
 }

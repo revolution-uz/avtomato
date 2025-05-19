@@ -28,6 +28,7 @@ class AtmosPinflClient extends BaseAtmosClient
         $this->baseUrl = config('clients.atmos.pinfl.base_url');
         $this->channel = 'atmos-pinfl-client';
         $this->featureName = FeatureEnum::ATMOS_PINFL_PAY;
+        $this->setBranchId((int) config('clients.atmos.pinfl.default_branch_id'));
     }
 
     public function getClientCode(): ClientCodeEnum

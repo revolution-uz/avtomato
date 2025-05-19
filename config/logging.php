@@ -121,6 +121,38 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'unired-card-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/unired-card-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'unired-pinfl-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/unired-pinfl-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'unired-card-callback' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/unired-card-callback.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'unired-pinfl-callback' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/unired-pinfl-callback.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
         'unired-client' => [
             'driver' => 'daily',
             'path' => storage_path('logs/unired-client.log'),

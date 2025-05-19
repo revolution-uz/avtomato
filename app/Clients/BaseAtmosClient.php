@@ -6,6 +6,7 @@ use App\DTOs\Atmos\AtmosAuthTokenDTO;
 use App\DTOs\Atmos\AtmosCredentialsDTO;
 use App\DTOs\Atmos\AtmosResultDTO;
 use App\DTOs\HttpRequestLogDTO;
+use App\Enums\Company\TerminalTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Models\Company\Feature;
@@ -18,6 +19,13 @@ abstract class BaseAtmosClient extends BaseClient
 
     protected ?FeatureEnum $featureName = null;
     protected ?string $baseUrl;
+    protected TerminalTypeEnum $terminalTypeEnum;
+    protected int $branchId;
+
+    public function setBranchId(int $branchId)
+    {
+        $this->branchId = $branchId;
+    }
 
     protected function getNewToken(string $username, string $password): AtmosAuthTokenDTO
     {
@@ -94,11 +102,11 @@ abstract class BaseAtmosClient extends BaseClient
 
         $feature = Feature::findByName($this->featureName);
 
-        if (! $feature->is_active || ! $feature->data) {
+        if (! $feature->is_active || ! ($terminalData = $feature->getTerminalData($this->terminalTypeEnum, $this->branchId))) {
             return null;
         }
 
-        $credentials = AtmosCredentialsDTO::from($feature->data);
+        $credentials = AtmosCredentialsDTO::from($terminalData);
         if (! $credentials->username) {
             return null;
         }
@@ -124,10 +132,10 @@ abstract class BaseAtmosClient extends BaseClient
 
         $feature = Feature::findByName($this->featureName);
 
-        if (! $feature->is_active || ! $feature->data) {
+        if (! $feature->is_active || ! ($terminalData = $feature->getTerminalData($this->terminalTypeEnum, $this->branchId))) {
             return null;
         }
 
-        return AtmosCredentialsDTO::from($feature->data)->store_id;
+        return AtmosCredentialsDTO::from($terminalData)->store_id;
     }
 }
