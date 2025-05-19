@@ -7,6 +7,7 @@ use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Rbac\Role;
 use Database\Seeders\Company\AdminRoleSeeder;
 use Database\Seeders\Company\BranchSeeder;
+use Database\Seeders\Company\ChangeIcanTransactionsTypeSeeder;
 use Database\Seeders\Company\CompanySettingsSeeder;
 use Database\Seeders\Company\EcommerceOrderStatusSeeder;
 use Database\Seeders\Company\FeatureSeeder;
@@ -57,6 +58,9 @@ class CompanySeeder extends Seeder
             'password' => Hash::make(Str::random(8)),
             'role_id' => Role::getAdmin()->id,
         ]);
+
+        // todo: remove the seeder class after running it once
+        $this->call(ChangeIcanTransactionsTypeSeeder::class);
 
         activity()->enableLogging();
     }

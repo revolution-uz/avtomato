@@ -38,6 +38,31 @@ class IcanService
 
     public function __construct(private readonly IcanClient $icanClient) {}
 
+    public function syncTransactionTypes(): bool
+    {
+        $transactionTypes = $this->icanClient->getTransactionTypes();
+
+        if (empty($transactionTypes)) {
+            return false;
+        }
+
+        $bulkData = [];
+        foreach ($transactionTypes as $key => $value) {
+            $bulkData[] = [
+                'ican_flag' => $key,
+                'name_uz' => $value,
+                'name_ru' => $value,
+                'name_en' => $value,
+                'is_system' => false,
+            ];
+        }
+
+        TransactionType::upsert($bulkData, ['ican_flag'], ['name_uz', 'name_ru', 'name_en', 'is_system']);
+        TransactionType::query()->whereNotIn('ican_flag', array_keys($transactionTypes))->delete();
+
+        return true;
+    }
+
     public function syncTariffs(int $page, bool $onlyDeleted): bool
     {
         /**
@@ -283,7 +308,7 @@ class IcanService
             'installment_id' => $this->createOrUpdateInstallment($transactionDto->credit)->id,
             'branch_id' => CompanySettings::getConfig(CompanySettingsEnum::ICAN_BRANCH_ID),
             'customer_id' => $this->createOrGetCustomer($transactionDto->credit->person_main->user_document->data)->id,
-            'transaction_type_id' => TransactionType::ICAN_INTEGRATION,
+            'transaction_type_id' => TransactionType::getIdByIcanFlag($transactionDto->payment_type),
             'amount' => $transactionDto->amount,
             'admin_id' => CompanyAdmin::getIcanIntegrator()->id,
             'paid_at' => Carbon::parse($transactionDto->payments->first()?->created_at),
