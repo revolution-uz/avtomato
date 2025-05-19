@@ -1,0 +1,31 @@
+{
+  "status": true,
+  "result": {
+    "30708091011123": {
+      "cards_count": 4,
+      "cards": [
+        {
+          "pan": "986011******0001",
+          "owner": "JOHN DOE",
+          "phone": null
+        },
+        {
+          "pan": "986011******0002",
+          "owner": "JOHN DOE",
+          "phone": null
+        },
+        {
+          "pan": "986011******0003",
+          "owner": "JOHN DOE",
+          "phone": null
+        },
+        {
+          "pan": "986011******0004",
+          "owner": "JOHN DOE",
+          "phone": null
+        }
+      ]
+    }
+  },
+  "error": null
+}
