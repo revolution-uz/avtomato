@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class IcanClient extends BaseIcanClient
 {
+    const SYSTEM = '/common/system';
     const TARIFFS = '/company/company/tariff';
     const CREDITS = '/company/credit/credit';
     const CREDITS_SINGLE = '/company/credit/credit/{ican_id}';
@@ -26,6 +27,20 @@ class IcanClient extends BaseIcanClient
     public function getClientCode(): ClientCodeEnum
     {
         return ClientCodeEnum::ICAN;
+    }
+
+    public function getTransactionTypes(): array
+    {
+        try {
+            $response = $this->makeRequest(self::SYSTEM, [], 'get');
+
+            return $response['enums']['Credit']['TransactionPaymentType'];
+
+        } catch (Exception $e) {
+            Log::error($e);
+
+            return [];
+        }
     }
 
     public function getTariffs(int $page = 0, int $pageSize = 100, bool $onlyDeleted = false): array
