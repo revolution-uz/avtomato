@@ -26,6 +26,7 @@ use App\Nova\Company\LoyaltyProgram\OnboardingImageResource;
 use App\Nova\Company\LoyaltyProgram\PriceResource;
 use App\Nova\Company\LoyaltyProgram\ShopResource;
 use App\Nova\Company\LoyaltyProgram\StockResource;
+use App\Nova\Company\LoyaltyProgram\SubscriptionResource;
 use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SbpTransactionResource;
@@ -81,6 +82,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(SbpTransactionResource::class),
                     ])->collapsable(),
                     MenuSection::make('Loyalty Program', [
+                        MenuItem::resource(\App\Nova\Company\LoyaltyProgram\UserResource::class),
+                        MenuItem::resource(SubscriptionResource::class),
                         MenuItem::resource(ShopResource::class),
                         MenuItem::resource(ItemResource::class),
                         MenuItem::resource(PriceResource::class),
