@@ -15,7 +15,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
 /**
  * @property int $id
  * @property int $feature_id
- * @property int $amount
+ * @property float $amount
  * @property int $chargeable_id
  * @property string $chargeable_type
  * @property Carbon $created_at
