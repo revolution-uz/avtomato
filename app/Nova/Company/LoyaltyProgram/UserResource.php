@@ -4,6 +4,7 @@ namespace App\Nova\Company\LoyaltyProgram;
 
 use App\Models\Company\LoyaltyProgram\User;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Resource;
@@ -31,8 +32,7 @@ class UserResource extends Resource
             Text::make('Phone', 'phone')->sortable()->rules('required', 'max:255'),
             Text::make('First Name', 'first_name')->sortable()->rules('nullable', 'max:255'),
             Text::make('Last Name', 'first_name')->sortable()->rules('nullable', 'max:255'),
-            Text::make('Birth Date', 'birth_date')->sortable()->rules('nullable', 'date'),
-            Text::make('Main Device', 'main_device')->sortable()->rules('nullable', 'max:255'),
+            Date::make('Birth Date', 'birth_date')->sortable()->rules('nullable', 'date'),
             Text::make('QR Code', 'main_device')->onlyOnDetail()->asHtml()
                 ->resolveUsing(function ($value) {
                     return $this->getQrAttribute(3600)['id'];
