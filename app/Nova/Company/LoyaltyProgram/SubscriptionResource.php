@@ -3,7 +3,6 @@
 namespace App\Nova\Company\LoyaltyProgram;
 
 use App\Models\Company\LoyaltyProgram\Subscription;
-use App\Models\Company\LoyaltyProgram\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -14,9 +13,8 @@ use Laravel\Nova\Resource;
 
 /**
  * @property int $id
- * @property string $phone
  *
- * @mixin User
+ * @mixin Subscription
  */
 class SubscriptionResource extends Resource
 {
@@ -48,7 +46,7 @@ class SubscriptionResource extends Resource
                 })->exceptOnForms(),
             Text::make('Tariff Name', 'tariff.name')->sortable()->rules('nullable', 'max:255')
                 ->resolveUsing(function ($value) {
-                    return $this->tariff->name;
+                    return $this->tariff->name_uz;
                 })->exceptOnForms(),
             DateTime::make('Expired At', 'expired_at')->sortable()->rules('nullable', 'date'),
             Boolean::make('Is Active', 'is_active')->sortable()->rules('required', 'boolean')->default(true),
