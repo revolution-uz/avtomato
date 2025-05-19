@@ -3,12 +3,17 @@
 namespace App\Nova\Company\LoyaltyProgram;
 
 use App\Models\Company\LoyaltyProgram\User;
-use App\Nova\Actions\LoyaltyProgram\UserQrCodeGenerateAction;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Resource;
 
+/**
+ * @property int $id
+ * @property string $phone
+ *
+ * @mixin User
+ */
 class UserResource extends Resource
 {
     public static $model = User::class;
@@ -52,9 +57,7 @@ class UserResource extends Resource
 
     public function actions(Request $request): array
     {
-        return [
-            (new UserQrCodeGenerateAction)->onlyInline(),
-        ];
+        return [];
     }
 
     public function authorizedToDelete(Request $request)
