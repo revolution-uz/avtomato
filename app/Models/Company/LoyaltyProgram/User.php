@@ -62,9 +62,6 @@ class User extends Authenticatable
         $attributeXorSum = (int) $qrDto[0];
         $timestamp = (int) $qrDto[1];
         $userId = $attributeXorSum ^ $timestamp ^ tenant('id');
-        if (self::getQrString($attributeXorSum, $userId, $timestamp) !== $qr) {
-            throw new Exception('Invalid QR code');
-        }
 
         return static::query()->findOrFail($userId);
     }
