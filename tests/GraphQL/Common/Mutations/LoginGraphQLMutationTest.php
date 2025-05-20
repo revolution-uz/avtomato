@@ -8,7 +8,7 @@ use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
 
-class LoginGraphQLQueryTest extends GraphQLTestCase
+class LoginGraphQLMutationTest extends GraphQLTestCase
 {
     private CompanyAdmin $_admin;
 
@@ -53,15 +53,9 @@ class LoginGraphQLQueryTest extends GraphQLTestCase
             );
 
         $response->assertOk();
-        $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'errors' => [
-                '*' => [
-                    'message',
-                ],
-            ],
-        ]);
-        $this->assertEquals($response->json('errors.0.message'), 'Login or password is wrong');
+        $this->assertArrayHasKey('errors', $response->json());
+        $this->assertEquals('validation', $response->json('errors.0.message'));
+        $this->assertEquals('Логин или пароль неверны', $response->json('errors.0.extensions.validation.username.0'));
     }
 
     private function buildGraphQLQuery(string $username, string $password): array

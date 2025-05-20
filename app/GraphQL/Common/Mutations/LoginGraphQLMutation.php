@@ -8,6 +8,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Error\AuthorizationError;
 use Rebing\GraphQL\Support\Mutation;
 
@@ -26,11 +27,9 @@ class LoginGraphQLMutation extends Mutation
     {
         return [
             'username' => [
-                'name' => 'username',
                 'type' => Type::nonNull(Type::string()),
             ],
             'password' => [
-                'name' => 'password',
                 'type' => Type::nonNull(Type::string()),
             ],
         ];
@@ -43,12 +42,13 @@ class LoginGraphQLMutation extends Mutation
     {
         /** @var CompanyAdmin|null $admin */
         $admin = CompanyAdmin::query()->where('username', $args['username'])->first();
+
         if (! $admin || ! Hash::check($args['password'], $admin->password)) {
-            throw new AuthorizationError('Login or password is wrong');
+            throw ValidationException::withMessages(['username' => __('validation.invalid_credentials')]);
         }
 
         if (! request()->hasHeader('Device-Name') || ! request()->hasHeader('Device-Type') || ! request()->hasHeader('Device-OS')) {
-            throw new AuthorizationError('Login or password is wrong');
+            throw ValidationException::withMessages(['username' => __('validation.invalid_credentials')]);
         }
 
         return $admin->createTokenWithData(

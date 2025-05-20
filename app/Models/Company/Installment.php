@@ -196,7 +196,7 @@ class Installment extends Model
 
         if ($guarantor = $this->guarantors->first()) {
             $guarantorApplication = (new Attachment)->fill([
-                'id' => 0,
+                'id' => -1,
                 'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
                 'name' => __('api.guarantor_application'),
                 'original_name' => __('api.guarantor_application'),
