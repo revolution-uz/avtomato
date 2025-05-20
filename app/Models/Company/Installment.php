@@ -181,7 +181,7 @@ class Installment extends Model
         $documents = [];
 
         $customerApplication = (new Attachment)->fill([
-            'id' => 1,
+            'id' => 0,
             'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
             'name' => __('api.customer_application'),
             'original_name' => __('api.customer_application'),
@@ -196,7 +196,7 @@ class Installment extends Model
 
         if ($guarantor = $this->guarantors->first()) {
             $guarantorApplication = (new Attachment)->fill([
-                'id' => 2,
+                'id' => -1,
                 'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
                 'name' => __('api.guarantor_application'),
                 'original_name' => __('api.guarantor_application'),
