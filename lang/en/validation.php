@@ -168,6 +168,8 @@ return [
         ],
     ],
 
+    'invalid_credentials' => 'Login or password is wrong',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
