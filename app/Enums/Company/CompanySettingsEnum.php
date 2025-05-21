@@ -16,7 +16,7 @@ enum CompanySettingsEnum: string
     case SMS_INSTALLMENT_AUTO_CHARGE = 'sms_installment_auto_charge'; // auto charge notification
     case SMS_INSTALLMENT_NOTIFICATION = 'sms_installment_notification'; // charge notification
     case SMS_INSTALLMENT_PAYMENT = 'sms_installment_payment'; // debt notification
-    case PINFL_CARDS_UPDATE_MONTHS = 'pinfl_cards_update_months';
+    case PINFL_CARDS_UPDATE_DAYS = 'pinfl_cards_update_days';
 
     // Telegram bot settings
     case TELEGRAM_BOT_ENABLED = 'telegram_bot_enabled';
@@ -51,7 +51,7 @@ enum CompanySettingsEnum: string
             self::ICAN_EMPLOYEE_ID,
             self::LOYALTY_PROGRAM_UPDATE_TYPE,
             self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE,
-            self::PINFL_CARDS_UPDATE_MONTHS => SettingsTypeEnum::INT,
+            self::PINFL_CARDS_UPDATE_DAYS => SettingsTypeEnum::INT,
 
             self::SMS_INSTALLMENT_AUTO_CHARGE,
             self::SMS_INSTALLMENT_NOTIFICATION,
@@ -74,7 +74,7 @@ enum CompanySettingsEnum: string
     public static function getDefaultValue(self $type): int|bool|string
     {
         return match ($type) {
-            self::PINFL_CARDS_UPDATE_MONTHS => 0,
+            self::PINFL_CARDS_UPDATE_DAYS => 90,
             self::CARD_AFTER_DUE_DAYS, self::LOYALTY_PROGRAM_APP_MIN_VERSION, self::LOYALTY_PROGRAM_UPDATE_TYPE, self::ICAN_BRANCH_ID => 1,
             self::PINFL_AFTER_DUE_DAYS => 5,
             self::GUARANTOR_AFTER_DUE_DAYS => 10,
@@ -104,7 +104,7 @@ enum CompanySettingsEnum: string
             self::SMS_INSTALLMENT_AUTO_CHARGE,
             self::SMS_INSTALLMENT_NOTIFICATION,
             self::SMS_INSTALLMENT_PAYMENT,
-            self::PINFL_CARDS_UPDATE_MONTHS,
+            self::PINFL_CARDS_UPDATE_DAYS,
         ];
     }
 
@@ -127,7 +127,7 @@ enum CompanySettingsEnum: string
             self::SMS_INSTALLMENT_AUTO_CHARGE => __('settings.sms_installment_auto_charge'),
             self::SMS_INSTALLMENT_NOTIFICATION => __('settings.sms_installment_notification'),
             self::SMS_INSTALLMENT_PAYMENT => __('settings.sms_installment_payment'),
-            self::PINFL_CARDS_UPDATE_MONTHS => __('settings.pinfl_cards_update_months'),
+            self::PINFL_CARDS_UPDATE_DAYS => __('settings.pinfl_cards_update_days'),
             self::TELEGRAM_BOT_ENABLED => __('settings.telegram_bot_enabled'),
             self::TELEGRAM_BOT_TOKEN => __('settings.telegram_bot_token'),
             self::TELEGRAM_CHAT_ID => __('settings.telegram_chat_id'),
