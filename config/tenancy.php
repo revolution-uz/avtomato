@@ -20,7 +20,6 @@ return [
         'automato.testpay.uz',
         'automato.uz',
         'avtomato.uz',
-        'localhost'
     ],
 
     /**
