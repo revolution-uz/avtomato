@@ -40,7 +40,7 @@ return [
      * Database tenancy config. Used by DatabaseTenancyBootstrapper.
      */
     'database' => [
-        'central_connection' => 'sqlite',
+        'central_connection' => 'central',
 
         /**
          * Connection used as a "template" for the dynamically created tenant database connection.
