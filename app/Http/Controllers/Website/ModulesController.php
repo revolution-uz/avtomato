@@ -173,7 +173,7 @@ class ModulesController
                 [
                     'title' => 'KATM, kredit tarixi ma’lumotlari',
                     'desc' => 'KATM – bu mijozlarning kredit tarixi ma’lumotlari asosida, tahlil qilib ishonchlilik darajasini baholab beradi. Kechiktirilgan to‘lovlar va vaqti bo‘yicha skoring.',
-                    'price' => $this->getPrice('scoring-credit_history'),
+                    'price' => $this->getPrice('scoring_credit_history'),
                     'note' => '',
                     'icon' => '/assets/icons/id-card.svg',
                 ],
