@@ -260,6 +260,8 @@ class UniredService
                 $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
                 if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
                     $centralCustomer->unired_uzcard_searched_at = Carbon::now();
+                } else {
+                    $errorHumo = $response->result[$customer->pinfl]['error'] ?? 'Unknown error';
                 }
                 sleep(1);
             }
@@ -267,11 +269,14 @@ class UniredService
                 $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
                 if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
                     $centralCustomer->unired_humo_searched_at = Carbon::now();
+                } else {
+                    $errorUzcard = $response->result[$customer->pinfl]['error'] ?? 'Unknown error';
                 }
                 sleep(1);
             }
 
-            return $centralCustomer->save();
+            return $centralCustomer->save() && (! isset($errorHumo) || ! isset($errorUzcard));
+
         } catch (Exception $e) {
             Log::channel('unired-client')->info(
                 'Error updating PINFL cards list',
