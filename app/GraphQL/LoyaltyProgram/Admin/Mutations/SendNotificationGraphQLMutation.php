@@ -3,12 +3,16 @@
 namespace App\GraphQL\LoyaltyProgram\Admin\Mutations;
 
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\GraphQL\LoyaltyProgram\Admin\Types\NotificationGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\LoyaltyProgram\Notification;
 use App\Services\FirebaseService;
 use Closure;
+use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\ValidationException;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
 class SendNotificationGraphQLMutation extends Mutation
@@ -21,7 +25,7 @@ class SendNotificationGraphQLMutation extends Mutation
 
     public function type(): Type
     {
-        return Type::nonNull(Type::boolean());
+        return Type::nonNull(GraphQL::type(NotificationGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function args(): array
@@ -39,10 +43,15 @@ class SendNotificationGraphQLMutation extends Mutation
         return RbacHelper::checkPermission(PermissionEnum::LOYALTY_PROGRAM_NOTIFICATION_SEND);
     }
 
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): true
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): Notification
     {
         $notification = Notification::query()->findOrFail($args['id']);
 
-        return $this->_firebaseService->sendNotification($notification);
+        try {
+            return $this->_firebaseService->sendNotification($notification);
+
+        } catch (Exception $exception) {
+            throw $exception->getCode() !== 422 ? $exception : ValidationException::withMessages(['id' => $exception->getMessage()]);
+        }
     }
 }

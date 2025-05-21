@@ -6,7 +6,7 @@ use App\DTOs\LoyaltyProgram\ItemDTO;
 use App\DTOs\LoyaltyProgram\PriceDTO;
 use App\DTOs\LoyaltyProgram\ShopDTO;
 use App\DTOs\LoyaltyProgram\StockDTO;
-use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
+use App\Enums\Company\LoyaltyProgram\ShopStatusEnum;
 use App\Models\Company\LoyaltyProgram\Item;
 use App\Models\Company\LoyaltyProgram\Price;
 use App\Models\Company\LoyaltyProgram\Shop;
@@ -22,7 +22,6 @@ class LoyaltyProgramSyncService
             $shopModel->external_code = $shopDTO->code;
         }
         $shopModel->external_name = $shopDTO->name;
-        $shopModel->external_address = $shopDTO->address;
         $shopModel->save();
     }
 

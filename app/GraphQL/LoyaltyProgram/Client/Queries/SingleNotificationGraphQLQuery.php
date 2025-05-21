@@ -7,7 +7,6 @@ use App\Models\Company\LoyaltyProgram\Notification;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
 
@@ -26,12 +25,8 @@ class SingleNotificationGraphQLQuery extends Query
     {
         return [
             'id' => [
-                'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => [
-                    'required',
-                    Rule::exists(Notification::class, 'id'),
-                ],
+                'rules' => ['required', 'exists:loyalty_program_notifications,id,send_at,NOT_NULL'],
             ],
         ];
     }

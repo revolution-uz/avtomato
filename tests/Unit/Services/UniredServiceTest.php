@@ -9,6 +9,8 @@ use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\UniredException;
+use App\Models\CentralCustomer;
+use App\Models\CentralUniredCard;
 use App\Models\Company\Customer;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -41,6 +43,9 @@ class UniredServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        CentralCustomer::truncate();
+        CentralUniredCard::truncate();
 
         $this->_uniredService = new UniredService(new UniredClient);
     }
@@ -89,7 +94,7 @@ class UniredServiceTest extends TestCase
     #[Test]
     public function successSwitchOffCompany()
     {
-        UniredFaker::switchOffCompany();
+        UniredFaker::switchOffBranch();
         $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
         $feature->data = $this->_inputCompany;
         $feature->save();
@@ -128,12 +133,10 @@ class UniredServiceTest extends TestCase
     public function successGetCards()
     {
         UniredFaker::getCards();
+
         $customer = Customer::factory()->create();
-
-        $response = $this->_uniredService->getCards($customer);
-
-        $this->assertCount(2, $response);
-        $this->assertEquals($response, [
+        $centralCustomer = $customer->getOrCreateCentralCustomer();
+        $expectedData = [
             [
                 'pinfl' => '413109***0086',
                 'uuid' => 'KB0RWS53CAQDVHFZ9J11T560Y',
@@ -154,13 +157,32 @@ class UniredServiceTest extends TestCase
                 'is_verified' => true,
                 'is_blocked' => true,
                 'block_reason' => 'Card not found',
-                'blocked_at' => '2025-01-17T08:32:44+00:00',
+                'blocked_at' => '2025-01-17T08:32:44+05:00',
                 'owner' => 'John Doe',
                 'pan' => '986060******8244',
                 'phone' => '9989939**000',
                 'type' => 2,
             ],
-        ]);
+        ];
+
+        $res = $this->_uniredService->getAndSyncPinflCards($customer);
+
+        $this->assertTrue($res);
+        $this->assertCount(count($expectedData), $centralCustomer->uniredCards);
+
+        foreach ($centralCustomer->uniredCards as $key => $card) {
+            $this->assertEquals($expectedData[$key]['pinfl'], $card->pinfl);
+            $this->assertEquals($expectedData[$key]['uuid'], $card->uuid);
+            $this->assertEquals($expectedData[$key]['auto'], $card->auto);
+            $this->assertEquals($expectedData[$key]['is_verified'], $card->is_verified);
+            $this->assertEquals($expectedData[$key]['is_blocked'], $card->is_blocked);
+            $this->assertEquals($expectedData[$key]['block_reason'], $card->block_reason);
+            $this->assertEquals($expectedData[$key]['blocked_at'], $card->blocked_at?->format('Y-m-d\TH:i:sP'));
+            $this->assertEquals($expectedData[$key]['owner'], $card->owner);
+            $this->assertEquals($expectedData[$key]['pan'], $card->pan);
+            $this->assertEquals($expectedData[$key]['phone'], $card->phone);
+            $this->assertEquals($expectedData[$key]['type'], $card->type?->value);
+        }
     }
 
     #[Test]
@@ -176,7 +198,7 @@ class UniredServiceTest extends TestCase
     {
         UniredFaker::reversePayment();
         $transaction = Transaction::factory()->create();
-        $response = $this->_uniredService->reversePayment($transaction);
+        $response = $this->_uniredService->reversePayment($transaction->external_id);
         $this->assertNotNull($response);
     }
 

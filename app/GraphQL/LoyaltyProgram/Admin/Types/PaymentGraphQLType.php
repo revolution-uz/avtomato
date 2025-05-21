@@ -39,7 +39,7 @@ class PaymentGraphQLType extends GraphQLType
                 'resolve' => fn (LoyaltyProgramPayment $root) => $root->card_id,
             ],
             'subscription_id' => [
-                'type' => Type::nonNull(Type::int()),
+                'type' => Type::int(),
                 'resolve' => fn (LoyaltyProgramPayment $root) => $root->subscription_id,
             ],
             'user_id' => [
@@ -59,7 +59,7 @@ class PaymentGraphQLType extends GraphQLType
                 'resolve' => fn (LoyaltyProgramPayment $root) => $root->user,
             ],
             'subscription' => [
-                'type' => Type::nonNull(GraphQL::type(SubscriptionGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => GraphQL::type(SubscriptionGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (LoyaltyProgramPayment $root) => $root->subscription,
             ],
         ];

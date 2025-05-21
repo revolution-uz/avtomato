@@ -33,6 +33,10 @@ class InstallmentGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Installment $root) => $root->id,
             ],
+            'ican_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (Installment $root) => $root->ican_id,
+            ],
             'customer_id' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Installment $root) => $root->customer_id,
@@ -163,7 +167,7 @@ class InstallmentGraphQLType extends GraphQLType
             ],
             'debt' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (Installment $root) => $root->debtAmount,
+                'resolve' => fn (Installment $root) => abs($root->debtAmount) < 2 ? 0 : $root->debtAmount,
             ],
             'monthly_payment' => [
                 'type' => GraphQL::type(BigFloat::GRAPHQL_TYPE_NAME),

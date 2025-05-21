@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Customer\Types;
 
-use App\Models\Company\UniredCard;
+use App\Models\CentralUniredCard;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
 
@@ -19,67 +19,67 @@ class UniredCardGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (UniredCard $root) => $root->id,
+                'resolve' => fn (CentralUniredCard $root) => $root->id,
             ],
             'customer_id' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (UniredCard $root) => $root->customer_id,
+                'resolve' => fn (CentralUniredCard $root) => $root->customer_id,
             ],
             'pinfl' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (UniredCard $root) => $root->pinfl,
+                'resolve' => fn (CentralUniredCard $root) => $root->pinfl,
             ],
             'uuid' => [
                 'type' => Type::nonNull(Type::string()),
-                'resolve' => fn (UniredCard $root) => $root->uuid,
+                'resolve' => fn (CentralUniredCard $root) => $root->uuid,
             ],
             'pan' => [
                 'type' => Type::string(),
-                'resolve' => fn (UniredCard $root) => $root->pan,
+                'resolve' => fn (CentralUniredCard $root) => $root->pan,
             ],
             'phone' => [
                 'type' => Type::string(),
-                'resolve' => fn (UniredCard $root) => $root->phone,
+                'resolve' => fn (CentralUniredCard $root) => $root->phone,
             ],
             'type' => [
                 'type' => Type::int(),
-                'resolve' => fn (UniredCard $root) => $root->type?->value,
+                'resolve' => fn (CentralUniredCard $root) => $root->type?->value,
             ],
             'owner' => [
                 'type' => Type::string(),
-                'resolve' => fn (UniredCard $root) => $root->owner,
+                'resolve' => fn (CentralUniredCard $root) => $root->owner,
             ],
             'auto' => [
                 'type' => Type::boolean(),
-                'resolve' => fn (UniredCard $root) => $root->auto,
+                'resolve' => fn (CentralUniredCard $root) => $root->auto,
             ],
             'is_verified' => [
                 'type' => Type::boolean(),
-                'resolve' => fn (UniredCard $root) => $root->is_verified,
+                'resolve' => fn (CentralUniredCard $root) => $root->is_verified,
             ],
             'is_blocked' => [
                 'type' => Type::boolean(),
-                'resolve' => fn (UniredCard $root) => $root->is_blocked,
+                'resolve' => fn (CentralUniredCard $root) => $root->is_blocked,
             ],
             'status' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => fn (UniredCard $root) => $root->status->value,
+                'resolve' => fn (CentralUniredCard $root) => $root->status->value,
             ],
             'block_reason' => [
                 'type' => Type::string(),
-                'resolve' => fn (UniredCard $root) => $root->block_reason,
+                'resolve' => fn (CentralUniredCard $root) => $root->block_reason,
             ],
             'blocked_at' => [
                 'type' => Type::int(),
-                'resolve' => fn (UniredCard $root) => $root->blocked_at?->timestamp,
+                'resolve' => fn (CentralUniredCard $root) => $root->blocked_at?->timestamp,
             ],
             'created_at' => [
                 'type' => Type::int(),
-                'resolve' => fn (UniredCard $root) => $root->created_at->timestamp,
+                'resolve' => fn (CentralUniredCard $root) => $root->created_at->timestamp,
             ],
             'updated_at' => [
                 'type' => Type::int(),
-                'resolve' => fn (UniredCard $root) => $root->updated_at->timestamp,
+                'resolve' => fn (CentralUniredCard $root) => $root->updated_at->timestamp,
             ],
         ];
     }

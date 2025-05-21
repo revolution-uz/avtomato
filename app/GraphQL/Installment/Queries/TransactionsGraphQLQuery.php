@@ -5,6 +5,7 @@ namespace App\GraphQL\Installment\Queries;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\TransactionGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Branch;
 use App\Models\Company\Transaction;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -34,53 +35,51 @@ class TransactionsGraphQLQuery extends Query
         return [
             'sort' => [
                 'type' => Type::string(),
-                'rules' => 'nullable|string|regex:/^[-]?[a-z_]+$/',
+                'rules' => ['nullable', 'string', 'regex:/^[-]?[a-z_]+$/'],
             ],
             'search' => [
                 'type' => Type::string(),
-                'rules' => 'nullable|string|max:255',
+                'rules' => ['nullable', 'string', 'max:255'],
             ],
             'page' => [
                 'type' => Type::int(),
-                'rules' => 'nullable|int|min:1',
+                'rules' => ['nullable', 'int', 'min:1'],
             ],
             'per_page' => [
                 'type' => Type::int(),
-                'rules' => 'nullable|int|min:5|max:100',
-            ],
-            'id' => [
-                'type' => Type::int(),
-                'rules' => 'int|min:1',
-            ],
-            'installment_id' => [
-                'type' => Type::int(),
-                'rules' => ['nullable', 'int', Rule::exists('installments', 'id')->whereNull('deleted_at')],
+                'rules' => ['nullable', 'int', 'min:5', 'max:100'],
             ],
             'branches' => [
                 'type' => Type::listOf(Type::nonNull(Type::int())),
-                'rules' => 'nullable|array',
+                'rules' => ['nullable', 'array', 'distinct'],
+            ],
+            'admin_id' => [
+                'type' => Type::int(),
+                'rules' => ['nullable', 'int', 'exists:admins,id,deleted_at,NULL'],
+            ],
+            'installment_id' => [
+                'type' => Type::int(),
+                'rules' => ['nullable', 'int', 'exists:installments,id,deleted_at,NULL'],
             ],
             'customer_id' => [
-                'name' => 'customer_id',
                 'type' => Type::int(),
+                'rules' => ['nullable', 'int', 'exists:customers,id,deleted_at,NULL'],
             ],
             'card_id' => [
                 'type' => Type::int(),
-                'rules' => ['nullable', 'int', Rule::exists('cards', 'id')->whereNull('deleted_at')],
+                'rules' => ['nullable', 'int', 'exists:cards,id,deleted_at,NULL'],
             ],
-            'transaction_type_id' => [
-                'type' => Type::int(),
-                'rules' => ['nullable', 'int', Rule::exists('transaction_types', 'id')->whereNull('deleted_at')],
+            'transaction_types' => [
+                'type' => Type::listOf(Type::nonNull(Type::int())),
+                'rules' => ['nullable', 'array', 'distinct'],
             ],
             'from' => [
-                'name' => 'from',
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:to|date_format:Y-m-d',
+                'rules' => ['nullable', 'required_with:to', 'date_format:Y-m-d'],
             ],
             'to' => [
-                'name' => 'to',
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:from|date_format:Y-m-d|after_or_equal:from',
+                'rules' => ['nullable', 'required_with:from', 'date_format:Y-m-d', 'after_or_equal:from'],
             ],
         ];
     }
@@ -97,24 +96,9 @@ class TransactionsGraphQLQuery extends Query
         return Transaction::query()
             ->with(['installment', 'admin', 'customer', 'transactionType', 'installment.branch'])
             ->when(
-                isset($args['amount']),
-                fn (Builder $q) => $q
-                    ->where('amount', $args['amount'])
-            )
-            ->when(
-                isset($args['id']),
-                fn (Builder $q) => $q
-                    ->where('id', $args['id'])
-            )
-            ->when(
-                isset($args['branch_id']),
-                fn (Builder $q) => $q
-                    ->whereHas('installment', fn (Builder $q) => $q->where('branch_id', $args['branch_id']))
-            )
-            ->when(
                 isset($args['admin_id']),
                 fn (Builder $q) => $q
-                    ->where('id', $args['admin_id'])
+                    ->where('admin_id', $args['admin_id'])
             )
             ->when(
                 isset($args['installment_id']),
@@ -132,9 +116,9 @@ class TransactionsGraphQLQuery extends Query
                     ->where('card_id', $args['card_id'])
             )
             ->when(
-                isset($args['transaction_type_id']),
+                isset($args['transaction_types']),
                 fn (Builder $q) => $q
-                    ->where('transaction_type_id', $args['transaction_type_id'])
+                    ->whereIn('transaction_type_id', $args['transaction_types'])
             )
             ->when(
                 $this->_branches,
@@ -146,6 +130,12 @@ class TransactionsGraphQLQuery extends Query
                             ->whereHas('installment', fn (Builder $q) => $q->whereIn('branch_id', $this->_branches))
                         )
                     )
+            )
+            ->when(
+                isset($args['from'], $args['to']),
+                fn (Builder|Transaction $q) => $q
+                    ->whereDate('paid_at', '>=', $args['from'])
+                    ->whereDate('paid_at', '<=', $args['to'])
             )
             ->when(
                 isset($args['sort']),
@@ -164,12 +154,6 @@ class TransactionsGraphQLQuery extends Query
                         ->orWhere('last_name', 'ilike', "%{$args['search']}%")
                     )
             )
-            ->when(
-                isset($args['from'], $args['to']),
-                fn (Builder|Transaction $q) => $q
-                    ->whereDate('paid_at', '>=', $args['from'])
-                    ->whereDate('paid_at', '<=', $args['to'])
-            )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
     }
 
@@ -178,9 +162,15 @@ class TransactionsGraphQLQuery extends Query
         return [
             'branches.*' => [
                 'required',
-                Rule::exists('branches', 'id')
+                'int',
+                Rule::exists(Branch::class, 'id')
                     ->whereNull('deleted_at')
                     ->when($this->_branches, fn ($q) => $q->whereIn('id', $this->_branches)),
+            ],
+            'transaction_types.*' => [
+                'required',
+                'int',
+                'exists:transaction_types,id,deleted_at,NULL',
             ],
         ];
     }

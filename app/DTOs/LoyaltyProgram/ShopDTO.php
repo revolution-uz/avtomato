@@ -9,6 +9,5 @@ class ShopDTO extends Data
     public function __construct(
         public string $code,
         public ?string $name,
-        public ?string $address
     ) {}
 }

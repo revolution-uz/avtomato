@@ -134,6 +134,8 @@ return [
         ],
     ],
 
+    'invalid_credentials' => 'Login yoki parol noto\'g\'ri',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes

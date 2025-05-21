@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\Company\OrderBySortable;
-use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
 /**
@@ -23,10 +22,11 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property CentralUniredCard[]|Collection<int, CentralUniredCard> $uniredCards
  */
 class CentralCustomer extends Model
 {
-    use CentralConnection, HasApiTokens, HasFactory, LogsActivityDirtyOnlyTrait, OrderBySortable, SoftDeletes;
+    use CentralConnection, HasFactory, SoftDeletes;
 
     public static array $sortables = ['id', 'pinfl', 'first_name', 'last_name', 'middle_name'];
 
@@ -47,4 +47,9 @@ class CentralCustomer extends Model
         'unired_humo_searched_at' => 'datetime',
         'unired_uzcard_searched_at' => 'datetime',
     ];
+
+    public function uniredCards(): HasMany
+    {
+        return $this->hasMany(CentralUniredCard::class, 'customer_id', 'id');
+    }
 }

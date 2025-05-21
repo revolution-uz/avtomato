@@ -28,7 +28,7 @@ class BalanceService
 
     public static function isAvailableBalance()
     {
-        return self::getBalance() > self::MIN_BALANCE_AMOUNT;
+        return self::getBalance() > tenant('min_allowed_balance');
     }
 
     public function chargeAmount(FeatureEnum $featureName, Model $model, ?int $amount = null): BalanceCharge

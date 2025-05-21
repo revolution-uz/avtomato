@@ -6,6 +6,7 @@ use App\DTOs\Scoring\Card\CardCreateRequestDTO;
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\GraphQL\Scoring\Types\Card\CardCreateInputGraphQLType;
+use App\GraphQL\Scoring\Types\Card\CreateCardScoringGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Services\Scoring\CardScoringService;
 use Closure;
@@ -22,32 +23,24 @@ class CreateCardScoringGraphQLMutation extends Mutation
         'name' => 'createCardScoring',
     ];
 
-    public function __construct(
-        private readonly CardScoringService $cardScoringService,
-    ) {}
+    public function __construct(private readonly CardScoringService $cardScoringService) {}
 
     public function args(): array
     {
         return [
             'data' => [
-                'name' => 'data',
                 'type' => Type::nonNull(GraphQL::type(CardCreateInputGraphQLType::GRAPHQL_TYPE_NAME)),
             ],
             'type' => [
-                'name' => 'type',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => [
-                    'required',
-                    'integer',
-                    Rule::in(ScoringRequestTypeEnum::cardTypes()),
-                ],
+                'rules' => ['required', 'integer', Rule::in(ScoringRequestTypeEnum::cardTypes())],
             ],
         ];
     }
 
     public function type(): Type
     {
-        return Type::nonNull(Type::int());
+        return Type::nonNull(GraphQL::type(CreateCardScoringGraphQLType::GRAPHQL_TYPE_NAME));
     }
 
     public function authorize($root, array $args, $ctx, ?ResolveInfo $resolveInfo = null, ?Closure $getSelectFields = null): bool
@@ -62,13 +55,14 @@ class CreateCardScoringGraphQLMutation extends Mutation
         return RbacHelper::checkPermission($permission);
     }
 
-    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields): array
     {
         $type = ScoringRequestTypeEnum::from($args['type']);
         $dto = CardCreateRequestDTO::from($args['data']);
+        $phone = $args['data']['phone'] ?? null;
 
         return $type === ScoringRequestTypeEnum::HUMO
-            ? $this->cardScoringService->scoringHumo($dto)->id
-            : $this->cardScoringService->scoringUzcard($dto)->id;
+            ? $this->cardScoringService->scoringHumo($dto, $phone)
+            : $this->cardScoringService->scoringUzcard($dto);
     }
 }

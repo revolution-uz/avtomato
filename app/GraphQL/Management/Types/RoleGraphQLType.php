@@ -16,7 +16,6 @@ class RoleGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Role GraphQL Type',
         'model' => Role::class,
     ];
 
@@ -25,52 +24,31 @@ class RoleGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'ID of attachment',
-                'resolve' => function (Role $root) {
-                    return $root->id;
-                },
+                'resolve' => fn (Role $root) => $root->id,
             ],
             'name' => [
                 'type' => Type::nonNull(Type::string()),
-                'description' => 'Attachment url',
-                'resolve' => function (Role $root) {
-                    return $root->name;
-                },
+                'resolve' => fn (Role $root) => $root->name,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'Attachment created timestamp',
-                'resolve' => function (Role $root) {
-                    return $root->created_at->timestamp;
-                },
+                'resolve' => fn (Role $root) => $root->created_at->timestamp,
             ],
             'updated_at' => [
                 'type' => Type::nonNull(Type::int()),
-                'description' => 'Attachment updated timestamp',
-                'resolve' => function (Role $root) {
-                    return $root->updated_at->timestamp;
-                },
+                'resolve' => fn (Role $root) => $root->updated_at->timestamp,
             ],
             'deleted_at' => [
                 'type' => Type::int(),
-                'description' => 'Attachment deleted timestamp',
-                'resolve' => function (Role $root) {
-                    return $root->deleted_at?->timestamp;
-                },
+                'resolve' => fn (Role $root) => $root->deleted_at?->timestamp,
             ],
             'permission_groups' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(PermissionGroupGraphQLType::GRAPHQL_TYPE_NAME))),
-                'description' => 'Permissions of admin',
-                'resolve' => function (Role $root) {
-                    return $root->mapAllPermissionByBranch();
-                },
+                'resolve' => fn (Role $root) => $root->mapAllPermissionByBranch(),
             ],
             'permissions' => [
-                'type' => GraphQL::type(PermissionGraphQLType::GRAPHQL_TYPE_NAME),
-                'description' => 'Permissions of admin',
-                'resolve' => function (Role $root) {
-                    return $root->mapRolePermissionByBranch();
-                },
+                'type' => Type::nonNull(GraphQL::type(PermissionGraphQLType::GRAPHQL_TYPE_NAME)),
+                'resolve' => fn (Role $root) => $root->mapRolePermissionByBranch(),
             ],
         ];
     }

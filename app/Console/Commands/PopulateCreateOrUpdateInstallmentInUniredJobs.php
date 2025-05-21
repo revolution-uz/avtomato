@@ -9,8 +9,8 @@ use App\Models\Company;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Services\User\BalanceService;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class PopulateCreateOrUpdateInstallmentInUniredJobs extends Command

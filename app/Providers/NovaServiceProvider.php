@@ -12,21 +12,25 @@ use App\Nova\BaseModuleResource;
 use App\Nova\BaseSmsTemplateResource;
 use App\Nova\BlogCategoryResource;
 use App\Nova\BlogResource;
+use App\Nova\CentralBalanceFundResource;
 use App\Nova\CentralCustomerResource;
+use App\Nova\CentralUniredCardResource;
 use App\Nova\Company\BalanceChargeResource;
 use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
+use App\Nova\Company\CompanySettingsResource;
 use App\Nova\Company\FeatureResource;
 use App\Nova\Company\InstallmentResource;
 use App\Nova\Company\LoyaltyProgram\ItemResource;
+use App\Nova\Company\LoyaltyProgram\OnboardingImageResource;
 use App\Nova\Company\LoyaltyProgram\PriceResource;
 use App\Nova\Company\LoyaltyProgram\ShopResource;
 use App\Nova\Company\LoyaltyProgram\StockResource;
+use App\Nova\Company\LoyaltyProgram\SubscriptionResource;
 use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SbpTransactionResource;
 use App\Nova\Company\SmsTemplateResource;
-use App\Nova\Company\UniredCardResource;
 use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
@@ -68,7 +72,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(UserResource::class),
                         MenuItem::resource(ModuleResource::class),
                         MenuItem::resource(FeatureResource::class),
-                        MenuItem::resource(\App\Nova\Company\CompanySettingsResource::class),
+                        MenuItem::resource(CompanySettingsResource::class),
                         MenuItem::resource(BranchResource::class),
                         MenuItem::resource(RoleResource::class),
                         MenuItem::resource(BalanceFundResource::class),
@@ -76,13 +80,15 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(SmsTemplateResource::class),
                         MenuItem::resource(InstallmentResource::class),
                         MenuItem::resource(SbpTransactionResource::class),
-                        MenuItem::resource(UniredCardResource::class),
                     ])->collapsable(),
                     MenuSection::make('Loyalty Program', [
+                        MenuItem::resource(\App\Nova\Company\LoyaltyProgram\UserResource::class),
+                        MenuItem::resource(SubscriptionResource::class),
                         MenuItem::resource(ShopResource::class),
                         MenuItem::resource(ItemResource::class),
                         MenuItem::resource(PriceResource::class),
                         MenuItem::resource(StockResource::class),
+                        MenuItem::resource(OnboardingImageResource::class),
                     ])->collapsable(),
                 ];
             }
@@ -101,10 +107,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(BaseModuleResource::class),
                     MenuItem::resource(BaseFeatureResource::class),
                     MenuItem::resource(BaseSmsTemplateResource::class),
-                    (new TransactionByCompanies)->menu($request),
                     MenuItem::resource(NewCustomerResource::class),
                     MenuItem::resource(BlogResource::class),
                     MenuItem::resource(BlogCategoryResource::class),
+                    MenuItem::resource(CentralBalanceFundResource::class),
+                    MenuItem::resource(CentralUniredCardResource::class),
+                    (new TransactionByCompanies)->menu($request),
                 ])->collapsable(),
             ];
         });

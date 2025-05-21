@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
-use App\Enums\Company\LoyaltyProgramm\CanLoginTypeEnum;
+use App\Enums\Company\LoyaltyProgram\CanLoginTypeEnum;
+use App\Enums\Company\SmsTemplateEnum;
+use App\Enums\Main\SettingsEnum;
 use App\Helpers\Utilities;
 use App\Models\Company\CardConfirmationSms;
 use App\Models\Company\LoyaltyProgram\User;
+use App\Models\Settings;
 use Exception;
 use Illuminate\Support\Carbon;
 
@@ -18,11 +21,20 @@ class ConfirmationService
     /**
      * @throws Exception
      */
-    public function send(string $phone, bool $isEcommerceOtp = false): true
+    public function send(string $phone, SmsTemplateEnum $smsTemplateEnum): true
     {
         if ($this->canSendSms($phone)) {
+            if ($phone == Settings::getConfig(SettingsEnum::TEST_PHONE)) {
+                CardConfirmationSms::query()->create([
+                    'phone' => $phone,
+                    'code' => Settings::getConfig(SettingsEnum::TEST_OTP),
+                ]);
+
+                return true;
+            }
+
             $confirmationSms = CardConfirmationSms::query()->create(['phone' => $phone, 'code' => $this->generateCode()]);
-            $this->smsService->sendConfirmationSms($confirmationSms, $isEcommerceOtp);
+            $this->smsService->sendConfirmationSms($confirmationSms, $smsTemplateEnum);
         }
 
         return true;
@@ -45,7 +57,10 @@ class ConfirmationService
 
     public function canLogin(User $user, string $deviceName, int $attempts): CanLoginTypeEnum
     {
-        if ($success_login_attempts = $user->getSuccessLoginAttempts($deviceName, Utilities::A_MONTH)) {
+        if (
+            $deviceName !== $user->main_device &&
+            $success_login_attempts = $user->getSuccessLoginAttempts(Utilities::A_MONTH)
+        ) {
             return $success_login_attempts < $attempts ? CanLoginTypeEnum::LAST_CHANCE : CanLoginTypeEnum::CANNOT_LOGIN;
         }
 

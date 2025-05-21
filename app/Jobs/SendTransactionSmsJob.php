@@ -97,13 +97,7 @@ class SendTransactionSmsJob implements ShouldBeUnique, ShouldQueue
             $message->installment_id = $this->_transaction->installment_id;
             $message->customer_id = $customer->id;
             $message->customer_type = $customerType;
-            $message->message = $this->_template->getMessage([
-                'pan' => $this->_transaction->card_pan,
-                'amount' => $this->_transaction->amount,
-                'credit_number' => $this->_transaction->installment_id,
-                'company' => tenant('name'),
-                'phone' => tenant('owner_phone'),
-            ]);
+            $message->message = $this->_template->getMessage(['pan' => $this->_transaction->card_pan, 'amount' => $this->_transaction->amount, 'credit_number' => $this->_transaction->installment_id]);
             $message->status = SmsMessageStatusEnum::ACCEPTED;
             $message->saveOrFail();
             $this->_balanceService->chargeAmount($this->_feature->name, $message);

@@ -15,12 +15,16 @@ class Kernel extends ConsoleKernel
         $schedule->command('populate:installment-charge-jobs')->everyFiveMinutes();
         $schedule->command('populate:transaction-attempt-check-jobs')->everyFifteenMinutes();
         $schedule->command('populate:create-or-update-installment-in-unired-jobs')->dailyAt('00:00');
-        $schedule->command('populate:create-or-update-customer-unired-cards-jobs')->dailyAt('05:00');
         $schedule->command('daily:delete-logs')->dailyAt('00:00');
         $schedule->command('populate:debt-sms-jobs')->dailyAt('00:00');
         $schedule->command('money:withdraw-balance')->dailyAt('00:00');
         $schedule->command('process:waiting-scoring-requests')->dailyAt('01:00');
         $schedule->command('populate:subscription-charge-jobs')->dailyAt('02:00');
+        $schedule->command('sync:successful-balance-funds')->dailyAt('03:00');
+        $schedule->command('populate:sync-ican-credit-jobs')->everyTwoHours()->between('07:00', '22:00');
+        $schedule->command('populate:sync-ican-transaction-jobs')->everyThirtyMinutes();
+        $schedule->command('populate:sync-ican-tariff-jobs')->everyTwoHours()->between('07:00', '22:00');
+        $schedule->command('populate:sync-canceled-ican-transaction-jobs')->dailyAt('04:00');
         // $schedule->command('inspire')->hourly();
     }
 

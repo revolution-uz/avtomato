@@ -7,6 +7,7 @@ use App\Enums\Company\CustomerTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\GenderEnum;
+use App\Models\CentralCustomer;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,11 +50,11 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Phone[]|Collection<int,Phone> $phones
  * @property Card[]|Collection<int,Card> $cards
  * @property Tag[]|Collection<int, Tag> $tags
- * @property UniredCard[]|Collection<int,UniredCard> $uniredCards
  * @property ScoringRequest[]|Collection<int,ScoringRequest> $scoringRequests
  * @property CustomerTypeEnum $type
  * @property-read string $full_name
  * @property-read string $passport
+ * @property-read Carbon|null $unired_cards_last_updated_at
  *
  * @method static Builder|static query()
  * @method static Customer find(int $id)
@@ -151,9 +152,9 @@ class Customer extends Model
             ->wherePivotNull('deleted_at');
     }
 
-    public function uniredCards(): HasMany
+    public function getUniredCards()
     {
-        return $this->hasMany(UniredCard::class);
+        return $this->getCentralCustomer()?->uniredCards;
     }
 
     public function fullName(): Attribute
@@ -179,5 +180,32 @@ class Customer extends Model
     public function passport(): Attribute
     {
         return Attribute::make(get: fn () => $this->passport_series . $this->passport_number);
+    }
+
+    public function uniredCardsLastUpdatedAt(): Attribute
+    {
+        return Attribute::make(get: function () {
+            $centralCustomer = $this->getCentralCustomer();
+
+            return $centralCustomer
+                ? max($centralCustomer->unired_humo_searched_at, $centralCustomer->unired_uzcard_searched_at)
+                : null;
+        });
+    }
+
+    public function getCentralCustomer(): ?CentralCustomer
+    {
+        return CentralCustomer::query()->firstWhere('pinfl', $this->pinfl);
+    }
+
+    public function getOrCreateCentralCustomer()
+    {
+        return CentralCustomer::query()->firstOrCreate([
+            'pinfl' => $this->pinfl,
+        ], [
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'middle_name' => $this->middle_name,
+        ]);
     }
 }

@@ -22,7 +22,7 @@ class UploadLoyaltyProgramImageGraphQLMutation extends Mutation
         return [
             'image' => [
                 'type' => GraphQL::type('Upload'),
-                'rules' => ['required', 'file', 'mimes:jpeg,png,jpg', 'max:1024'],
+                'rules' => ['required', 'file', 'mimes:jpeg,png,jpg', 'max:10240'],
             ],
         ];
     }

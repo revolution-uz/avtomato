@@ -82,18 +82,11 @@ class InstallmentService
         if ($auto_charge !== null) {
             if ($auto_charge && ! ($installment->type->value & InstallmentTypeEnum::WITH_CARD->value)) {
                 $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_CARD->value);
-                if (! $this->withdrawAutoCharge($installment)) {
-                    throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
-                }
             }
         }
         if ($any_card_charge !== null) {
             if ($any_card_charge && ! ($installment->type->value & InstallmentTypeEnum::WITH_PINFL->value)) {
                 $installment->type = InstallmentTypeEnum::from($installment->type->value | InstallmentTypeEnum::WITH_PINFL->value);
-                $installment->any_card_charge = $any_card_charge;
-                if (! $this->withdrawAnyCardCharge($installment)) {
-                    throw ValidationException::withMessages(['type' => __('api.You do not have enough balance to update installment type')]);
-                }
             }
             $installment->any_card_charge = $any_card_charge;
         }
@@ -127,6 +120,12 @@ class InstallmentService
     {
         if ($status == InstallmentStatusEnum::ACTIVE) {
             if ($installment->isPaidInitialFee()) {
+                if ($installment->status == InstallmentStatusEnum::INACTIVE) {
+                    $amount = $this->getInstallmentActivationFee();
+
+                    $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_MANAGEMENT, $installment, $amount);
+                }
+
                 $installment->status = $status;
 
                 return $installment->save();
@@ -169,7 +168,7 @@ class InstallmentService
                     FROM installment_precalculations
                 )
             SELECT
-                EXTRACT(EPOCH  FROM date) AS date, COALESCE(SUM(debt_amount), 0) AS debt_amount_sum, COALESCE(SUM(paid_amount), 0) AS paid_amount_sum
+                date, COALESCE(SUM(debt_amount), 0) AS debt_amount_sum, COALESCE(SUM(paid_amount), 0) AS paid_amount_sum
             FROM date_series ds
                 LEFT JOIN installment_calculations ic ON ds.date = ic.payment_date
             GROUP BY ds.date
@@ -279,35 +278,12 @@ class InstallmentService
         ];
     }
 
-    private function withdrawAutoCharge(Installment $installment): bool
+    public function getInstallmentActivationFee()
     {
-        /** @var Feature $feature */
-        $feature = Feature::query()->where('name', FeatureEnum::INSTALLMENT_AUTO_CHARGE)->firstOrFail();
+        $feature = Feature::findByName(FeatureEnum::INSTALLMENT_MANAGEMENT);
 
-        $amount = $feature->chargeable_amount * ceil($installment->period / 3);
+        $data = $feature->data ?? $feature->original_data ?? [];
 
-        if ($this->balanceService->isAvailableCompany()) {
-            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE, $installment, $amount);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private function withdrawAnyCardCharge(Installment $installment): bool
-    {
-        /** @var Feature $feature */
-        $feature = Feature::query()->where('name', FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->firstOrFail();
-
-        $amount = $feature->chargeable_amount * ceil($installment->period / 3);
-
-        if ($this->balanceService->isAvailableCompany()) {
-            $this->balanceService->chargeAmount(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL, $installment, $amount);
-
-            return true;
-        }
-
-        return false;
+        return $data['activation_fee'] ?? 0;
     }
 }

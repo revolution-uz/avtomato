@@ -15,23 +15,27 @@ class OrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'transaction_id' => $this->id,
+            'order_id' => $this->id,
+            'client' => [
+                'name' => $this->user->full_name,
+                'phone' => $this->user->phone,
+            ],
             'status' => [
                 'value' => $this->status->value,
                 'label' => $this->status->label(),
             ],
-            'total_discount_amount' => $this->total_discount_amount,
-            'total_amount' => $this->total_amount,
+            //            'total_discount_amount' => $this->total_discount_amount,
+            //            'total_amount' => $this->total_amount,
             'items' => $this->items->map(function (OrderItem $item) {
                 return [
-                    'id' => $item->id,
-                    'name' => $item->product->external_name,
+                    //                    'id' => $item->id,
+                    //                    'name' => $item->product->external_name,
                     'item_code' => $item->product->external_code,
-                    'price' => $item->price,
+                    //                    'price' => $item->price,
                     'qty' => $item->quantity,
-                    'discount' => $item->discount_amount,
+                    //                    'discount' => $item->discount_amount,
                     'final_price' => $item->final_price,
-                    'total_price' => $item->final_price * $item->quantity,
+                    //                    'total_price' => $item->final_price * $item->quantity,
                 ];
             })->toArray(),
         ];

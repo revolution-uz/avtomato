@@ -38,6 +38,8 @@ class Notification extends Model
         'title_ru',
         'body_uz',
         'body_ru',
+        'image_uz_id',
+        'image_ru_id',
         'sent_at',
     ];
 

@@ -1,0 +1,16 @@
+{
+  "status": true,
+  "result": {
+    "30708091011123": {
+      "cards_count": 1,
+      "cards": [
+        {
+          "pan": "561411******0001",
+          "owner": "JOHN DOE",
+          "phone": "99897300**00"
+        }
+      ]
+    }
+  },
+  "error": null
+}

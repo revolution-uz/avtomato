@@ -8,6 +8,7 @@ use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Transaction;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class DashboardService
@@ -71,14 +72,14 @@ class DashboardService
         $installmentOverdueCountQuery = Installment::query()->where('status', InstallmentStatusEnum::ACTIVE)->whereNextPayDate('<=', Carbon::now());
         $installmentOverdueBeforeWeekQuery = $installmentOverdueCountQuery->clone()->where('created_at', '<', Carbon::today()->startOfWeek());
         $installment_overdue_count = $installmentOverdueCountQuery->clone()->count();
-        $installment_overdue_amount = $installmentOverdueCountQuery->clone()->sum('amount');
+        $installment_overdue_amount = $installmentOverdueCountQuery->clone()->sum(Installment::getDebtAmountRaw());
         $before_week_count = $installmentOverdueBeforeWeekQuery->clone()->where('created_at', '<', Carbon::today()->startOfWeek())->count();
         $before_week_amount = $installmentOverdueBeforeWeekQuery->clone()->where('created_at', '<', Carbon::today()->startOfWeek())->sum('amount');
 
         return [
             'count' => $installment_overdue_count,
             'count_increasing_percent' => max(0, Utilities::preventDivideByZero($installment_overdue_count, $before_week_count) * 100 - 100),
-            'amount' => $before_week_amount,
+            'amount' => $installment_overdue_amount,
             'amount_increasing_percent' => max(0, Utilities::preventDivideByZero($installment_overdue_amount, $before_week_amount) * 100 - 100),
         ];
     }
@@ -110,7 +111,7 @@ class DashboardService
                 'name' => __('api.installment_status_' . $status->name),
                 'type' => 'line',
                 'stack' => 'Total',
-                'count' => $query->clone()->where('created_at', '>=', Carbon::today()->startOfYear())->countId(),
+                'count' => $query->clone()->where('created_at', '>=', Carbon::today()->startOfYear())->count(),
                 'data' => $data,
             ];
         }
@@ -131,17 +132,13 @@ class DashboardService
             $total_count -= $count;
             $total_amount -= $amount;
             $result[] = [
-                'overdue_days' => __('api.till :days days', [
-                    'days' => $i,
-                ]),
+                'overdue_days' => __('api.up_to_days', ['days' => $i]),
                 'amount' => $amount,
                 'count' => $count,
             ];
         }
         $result[] = [
-            'overdue_days' => __('api.above :days days', [
-                'days' => 60,
-            ]),
+            'overdue_days' => __('api.above_days', ['days' => 60]),
             'amount' => $total_amount,
             'count' => $total_count,
         ];
@@ -195,19 +192,8 @@ class DashboardService
 
     private function ageBasedInstallments(bool $overdue = false): array
     {
-        $results = Customer::selectRaw('
-            CASE
-                WHEN birth_date IS NULL THEN \'unknown\'
-                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 18 AND 25 THEN \'18-25\'
-                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 26 AND 33 THEN \'26-33\'
-                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 34 AND 40 THEN \'34-40\'
-                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 41 AND 49 THEN \'41-49\'
-                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 50 AND 59 THEN \'50-59\'
-                ELSE \'60-others\'
-            END AS label,
-            COUNT(installments.id) as value
-        ')
-            ->leftJoin('installments', 'customers.id', '=', 'installments.customer_id')
+        $query = Customer::query()
+            ->rightJoin('installments', 'customers.id', '=', 'installments.customer_id')
             ->when(! $overdue, fn ($q) => $q
                 ->when(
                     $this->installment_by_age_start_date && $this->installment_by_age_end_date,
@@ -225,25 +211,34 @@ class DashboardService
                         ]))
                 ->where(Installment::getNextPayDateRaw(), '<', Carbon::now()))
             ->when($this->branch_id, fn ($q) => $q
-                ->where('installments.branch_id', $this->branch_id))
+                ->where('installments.branch_id', $this->branch_id));
+
+        /** @var Collection $results */
+        $results = $query->clone()->selectRaw('
+            CASE
+                WHEN birth_date IS NULL THEN \'unknown\'
+                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 18 AND 25 THEN \'18-25\'
+                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 26 AND 33 THEN \'26-33\'
+                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 34 AND 40 THEN \'34-40\'
+                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 41 AND 49 THEN \'41-49\'
+                WHEN EXTRACT(YEAR FROM AGE(birth_date)) BETWEEN 50 AND 59 THEN \'50-59\'
+                ELSE \'60-others\'
+            END AS label,
+            COUNT(installments.id) as value
+        ')
             ->groupBy('label')
             ->get();
 
-        $ageRanges = collect([
-            ['label' => 'unknown'],
-            ['label' => '18-25'],
-            ['label' => '26-33'],
-            ['label' => '34-40'],
-            ['label' => '41-49'],
-            ['label' => '50-59'],
-            ['label' => '60-others'],
-        ]);
+        $count = $query->clone()->count();
+
+        $ageRanges = collect(['unknown', '18-25', '26-33', '34-40', '41-49', '50-59', '60-others']);
 
         return $ageRanges->map(fn ($range) => [
-            'label' => $range['label'],
-            'value' => $results->firstWhere('label', $range['label'])->value ?? 0,
+            'key' => $range,
+            'label' => __(ucfirst($range)),
+            'value' => ($results->firstWhere('label', $range)->value ?? 0) / ($count == 0 ? 1 : $count) * 100,
         ])
-            ->filter(fn ($item) => $item['label'] !== 'unknown' || $item['value'] !== 0)
+            ->filter(fn ($item) => $item['key'] !== 'unknown' || $item['value'] !== 0)
             ->toArray();
     }
 }

@@ -52,12 +52,19 @@ class LoyaltyProgramSyncController extends Controller
 
     public function postPrices(Request $request)
     {
-        $prices = collect($request->input('prices'))->map(function ($priceData) {
-            return PriceDTO::from($priceData);
-        });
-
-        foreach ($prices as $price) {
-            SyncPricesJob::dispatch($price);
+        $prices = $request->input('prices');
+        foreach ($prices as $priceData) {
+            if (isset($priceData['item_code']) && isset($priceData['price'])) {
+                if (isset($priceData['shop_ids'])) {
+                    foreach ($priceData['shop_ids'] as $shopId) {
+                        $priceData['shop_id'] = $shopId;
+                        SyncPricesJob::dispatch(PriceDTO::from($priceData));
+                    }
+                }
+                if (isset($priceData['shop_id'])) {
+                    SyncPricesJob::dispatch(PriceDTO::from($priceData));
+                }
+            }
         }
 
         $response = $this->prepareSuccessResponse(['message' => 'Prices are processed successfully']);

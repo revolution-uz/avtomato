@@ -70,8 +70,15 @@ class UsersGraphQLQuery extends Query
                         ->orWhere('last_name', 'ILIKE', $search);
                 });
             })
-            ->when(isset($args['has_available_subscription']), fn (Builder $q) => $q
-                ->whereHas('subscriptions', fn (Builder $q) => $q->whereIsAvailable()))
+            ->when(
+                isset($args['has_available_subscription']),
+                fn (Builder $q) => $q->whereHas(
+                    'subscriptions',
+                    fn (Builder $q) => $q->whereIsAvailable(),
+                    $args['has_available_subscription'] ? '>=' : '=',
+                    $args['has_available_subscription'] ? 1 : 0
+                )
+            )
             ->when(
                 isset($args['sort']),
                 fn (Builder|User $q) => $q->orderBySortable($args['sort']),

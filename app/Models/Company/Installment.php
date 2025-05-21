@@ -9,9 +9,7 @@ use App\Enums\Company\InstallmentTypeEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Traits\LogsActivityDirtyOnlyTrait;
-use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Expression;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,10 +20,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
+ * Class Installment
+ *
  * @property int $id
  * @property int $customer_id
  * @property int $branch_id
@@ -33,49 +34,46 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $tariff_id
  * @property float $percent
  * @property float $amount
- * @property float $installment_amount
  * @property float $paid_amount
  * @property float $initial_fee
  * @property string $description
  * @property bool $sms_notify
  * @property bool $any_card_charge
  * @property bool $is_blacklist
- * @property bool $auto_pay
  * @property int $period
  * @property string $plum_id
- * @property Carbon|null $starts_in
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property Carbon|null $canceled_at
  * @property int|null $card_after_due_days
  * @property int|null $pinfl_after_due_days
  * @property int|null $guarantor_after_due_days
  * @property int|null $guarantor_pinfl_after_due_days
- * @property int|null $overdue_days
  * @property int|null $unired_id
  * @property string $cancellation_details
  * @property InstallmentTypeEnum $type
  * @property InstallmentStatusEnum $status
- * @property Branch $branch
- * @property Tariff $tariff
+ * @property int|null $ican_id
+ * @property Carbon|null $starts_in
+ * @property Carbon|null $canceled_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property Customer $customer
- * @property Card[]|Collection<int, Card> $cards
- * @property Attachment[] $documents
- * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
- * @property Customer[]|Collection<int, Customer> $guarantors
+ * @property Branch $branch
+ * @property CompanyAdmin $admin
+ * @property Tariff $tariff
+ * @property Transaction $initialFeeTransaction
  * @property Transaction[]|Collection<int, Transaction> $transactions
- * @property InstallmentGuarantor[] $guarantorList
- * @property-read  CompanyAdmin $admin
- * @property-read float $debtAmount
+ * @property InstallmentGuarantor[]|Collection<int, InstallmentGuarantor> $guarantorList
+ * @property Attachment[]|Collection<int, Attachment> $documents
+ * @property InstallmentComment[]|Collection<int, InstallmentComment> $comments
+ * @property-read float $installment_amount
+ * @property-read bool $auto_pay
+ * @property-read int|null $overdue_days
+ * @property-read float $wholeDebtAmount
  * @property-read float $monthlyPayment
  * @property-read bool $is_active
- * @property-read float $is_fully_paid
+ * @property-read bool $is_fully_paid
  * @property-read Carbon $nextPaymentDate
- * @property mixed $wholeDebtAmount
- * @property float $portion
- *
- * @method static Builder whereNextPayDate(string $operator, Carbon $date)
+ * @property-read float $portion
  */
 class Installment extends Model
 {
@@ -107,6 +105,8 @@ class Installment extends Model
         'guarantor_after_due_days',
         'guarantor_pinfl_after_due_days',
         'paid_amount',
+        'ican_id',
+        'unired_id',
     ];
 
     protected $casts = [
@@ -118,7 +118,11 @@ class Installment extends Model
 
     public static function getDebtAmountRaw(): Expression
     {
-        return DB::raw('(amount - initial_fee) * ((percent + 100) / 100) - paid_amount');
+        $installmentAmount = '(amount - initial_fee) * (percent + 100) / 100';
+        $monthlyPayment = "{$installmentAmount} / period";
+        $diffInMonths = 'LEAST(GREATEST(EXTRACT(YEAR FROM AGE(starts_in)) * 12 + EXTRACT(MONTH FROM AGE(starts_in)) + 1, 0), period)';
+
+        return DB::raw("{$monthlyPayment} * {$diffInMonths} - paid_amount");
     }
 
     public static function getInstallmentAmountRaw(): Expression
@@ -192,7 +196,7 @@ class Installment extends Model
 
         if ($guarantor = $this->guarantors->first()) {
             $guarantorApplication = (new Attachment)->fill([
-                'id' => 0,
+                'id' => -1,
                 'type' => AttachmentTypeEnum::INSTALLMENT_DOCUMENT,
                 'name' => __('api.guarantor_application'),
                 'original_name' => __('api.guarantor_application'),
@@ -347,24 +351,9 @@ class Installment extends Model
         return $query->where(self::getNextPayDateRaw(), $expression, $date);
     }
 
-    public function scopeCountId($query)
+    public function scopeExcludeIcanInstallments($query)
     {
-        return $query->count('id');
-    }
-
-    public function scopeSumDebt($query)
-    {
-        return $query->sum(self::getDebtAmountRaw());
-    }
-
-    public function scopeSumInstallmentAmount($query)
-    {
-        return $query->sum(self::getInstallmentAmountRaw());
-    }
-
-    public function scopeSumProfit($query)
-    {
-        return $query->sumCustomRaw(self::getProfitAmountRaw());
+        return $query->whereNull('ican_id');
     }
 
     public function fixPaidAmount(): void

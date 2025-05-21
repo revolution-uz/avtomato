@@ -9,8 +9,8 @@ use App\Models\Company;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Services\User\BalanceService;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class PopulateInstallmentChargeJobs extends Command
@@ -53,6 +53,7 @@ class PopulateInstallmentChargeJobs extends Command
             $installments = Installment::query()->select('id')
                 ->where('status', InstallmentStatusEnum::ACTIVE)
                 ->whereNextPayDate('<=', Carbon::now())
+                ->excludeIcanInstallments()
                 ->get();
 
             if (! count($installments)) {

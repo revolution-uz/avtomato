@@ -2,41 +2,51 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\CardTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
+use App\Jobs\CreateIcanTransactionJob;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
+use App\Services\AtmosService;
+use App\Services\UniredService;
+use App\Services\User\BalanceService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
+ * Class Transaction
+ *
  * @property int $id
  * @property int|null $branch_id
- * @property Branch|null $branch
  * @property int $installment_id
- * @property Installment $installment
  * @property int $customer_id
- * @property Customer $customer
- * @property int $card_id
- * @property Card $card
+ * @property int|null $card_id
  * @property string|null $card_pan
+ * @property string|null $card_owner
+ * @property string|null $card_phone
  * @property int $transaction_type_id
- * @property TransactionType $transactionType
  * @property string|null $external_id
  * @property float $amount
  * @property bool $is_initial_fee
- * @property int $admin_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read  CompanyAdmin $admin
+ * @property int|null $admin_id
  * @property Carbon|null $paid_at
  * @property TransactionStatusEnum $status
+ * @property int|null $ican_id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Installment $installment
+ * @property Customer $customer
+ * @property Card|null $card
+ * @property TransactionType $transactionType
+ * @property CompanyAdmin|null $admin
+ * @property Branch|null $branch
  *
  * @method static Builder onlySuccess()
  */
@@ -51,6 +61,8 @@ class Transaction extends Model
         'branch_id',
         'customer_id',
         'card_id',
+        'card_owner',
+        'card_phone',
         'transaction_type_id',
         'external_id',
         'amount',
@@ -59,6 +71,7 @@ class Transaction extends Model
         'card_pan',
         'is_initial_fee',
         'status',
+        'ican_id',
     ];
 
     protected $casts = [
@@ -73,11 +86,10 @@ class Transaction extends Model
         parent::boot();
 
         static::creating(function (self $transaction) {
-            if ($transaction->paid_at === null) {
-                $transaction->paid_at = Carbon::now();
-            }
+            $transaction->paid_at ??= Carbon::now();
+
             if (auth('company-admin')->check()) {
-                $transaction->admin_id = auth('company-admin')->user()->id;
+                $transaction->admin_id = auth('company-admin')->id();
             }
         });
 
@@ -92,6 +104,11 @@ class Transaction extends Model
             }
             if ($transaction->transactionType->is_system) {
                 CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
+                $transaction->computeCommission();
+            }
+
+            if ($transaction->installment->ican_id) {
+                CreateIcanTransactionJob::dispatch($transaction->id);
             }
 
             SendTransactionSmsJob::dispatch($transaction->id);
@@ -146,13 +163,45 @@ class Transaction extends Model
         return $this->belongsTo(Branch::class);
     }
 
-    public function canceled(): void
-    {
-        $this->updateOrFail(['status' => TransactionStatusEnum::CANCELED]);
-    }
-
     public function scopeOnlySuccess($query)
     {
         return $query->where('status', TransactionStatusEnum::SUCCESS);
+    }
+
+    public function reverse()
+    {
+        if ($this->status == TransactionStatusEnum::CANCELED) {
+            return true;
+        }
+        $atmosService = app(AtmosService::class);
+        $uniredService = app(UniredService::class);
+        $isCancelled = true;
+
+        if ($this->transaction_type_id == TransactionType::ATMOS_WITH_CARD) {
+            $isCancelled = $atmosService->reverseCardPayment($this->external_id);
+        } elseif ($this->transaction_type_id == TransactionType::ATMOS_WITH_PINFL) {
+            $isCancelled = $atmosService->reversePinflPayment($this->id);
+        } elseif ($this->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
+            $isCancelled = $uniredService->reversePayment($this->external_id);
+        }
+        if ($isCancelled) {
+            $this->status = TransactionStatusEnum::CANCELED;
+
+            return $this->saveOrFail();
+        }
+
+        return $isCancelled;
+    }
+
+    private function computeCommission(): void
+    {
+        if ($featureEnum = TransactionType::getFeature($this->transaction_type_id)) {
+            if ($feature = Feature::query()
+                ->where('name', $featureEnum)
+                ->first()) {
+                $commission = max(0, CardTypeEnum::getCardType($this->card_pan) === CardTypeEnum::HUMO ? $feature->humo_percent : $feature->uzcard_percent);
+                app(BalanceService::class)->chargeAmount($featureEnum, $this, $this->amount * $commission);
+            }
+        }
     }
 }

@@ -129,6 +129,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'unired-callback' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/unired-callback.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
         'royxat-client' => [
             'driver' => 'daily',
             'path' => storage_path('logs/royxat-client.log'),
@@ -148,6 +156,30 @@ return [
         'sms-sayqal-client' => [
             'driver' => 'daily',
             'path' => storage_path('logs/sms-sayqal-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'sms-sayqal-callback' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/sms-sayqal-callback.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'ican-client' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/ican-client.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'ican-service' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/ican-service.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
             'replace_placeholders' => true,

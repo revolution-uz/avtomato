@@ -4,6 +4,8 @@ namespace Database\Seeders\Company;
 
 use App\Models\Company\Ecommerce\OrderStatus;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class EcommerceOrderStatusSeeder extends Seeder
 {
@@ -44,8 +46,14 @@ class EcommerceOrderStatusSeeder extends Seeder
             ],
         ];
 
-        foreach ($orderStatuses as $orderStatus) {
-            OrderStatus::query()->firstOrCreate(['id' => $orderStatus['id']], $orderStatus);
+        try {
+            foreach ($orderStatuses as $orderStatus) {
+                OrderStatus::query()->firstOrCreate(['id' => $orderStatus['id']], $orderStatus);
+            }
+
+        } catch (Throwable $e) {
+            $this->command->error('Error: ' . $e->getMessage());
+            Log::error($e->getMessage());
         }
     }
 }

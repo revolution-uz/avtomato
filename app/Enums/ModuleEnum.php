@@ -20,6 +20,7 @@ enum ModuleEnum: string
     case ECOMMERCE = 'ecommerce';
     case SBP_PAY = 'sbp_pay';
     case LOYALTY_PROGRAM = 'loyalty_program';
+    case ICAN = 'ican';
 
     /**
      * @return ModuleEnum[]
@@ -31,11 +32,12 @@ enum ModuleEnum: string
             FeatureEnum::BRANCH_MANAGEMENT,
             FeatureEnum::ACTIVITY_LOG,
             FeatureEnum::ROLE_MANAGEMENT => [self::MULTIBRANCH_2, self::MULTIBRANCH_3, self::MULTIBRANCH_4, self::ECOMMERCE],
-            FeatureEnum::SMS => [self::INSTALLMENT, self::MARKETING],
+            FeatureEnum::SMS => [self::INSTALLMENT, self::MARKETING, self::LOYALTY_PROGRAM],
             FeatureEnum::CUSTOMER_MANAGEMENT => [self::INSTALLMENT, self::SCORING],
             FeatureEnum::ECOMMERCE => [self::ECOMMERCE],
             FeatureEnum::SBP_PAY => [self::SBP_PAY],
             FeatureEnum::LOYALTY_PROGRAM => [self::LOYALTY_PROGRAM],
+            FeatureEnum::ICAN => [self::ICAN],
             FeatureEnum::CUSTOMER_CARDS_MANAGEMENT,
             FeatureEnum::CALCULATOR_INSTALLMENT,
             FeatureEnum::INSTALLMENT_AUTO_CHARGE,
@@ -48,8 +50,10 @@ enum ModuleEnum: string
             FeatureEnum::TRANSACTION_TYPE_MANAGEMENT,
             FeatureEnum::INSTALLMENT_MANAGEMENT,
             FeatureEnum::UNIRED_PAY,
-            FeatureEnum::ATMOS_CARD_PAY,
+            FeatureEnum::UNIRED_CARD_MANAGEMENT,
             FeatureEnum::ATMOS_PINFL_PAY => [self::INSTALLMENT],
+            FeatureEnum::TELEGRAM_BOT_FEATURE,
+            FeatureEnum::ATMOS_CARD_PAY => [self::INSTALLMENT, self::LOYALTY_PROGRAM],
             FeatureEnum::SCORING_CREDIT_HISTORY,
             FeatureEnum::SCORING_INPS_HISTORY,
             FeatureEnum::SCORING_PENSION_INFO,
@@ -64,8 +68,7 @@ enum ModuleEnum: string
             FeatureEnum::BALANCE_CHARGE,
             FeatureEnum::THEME_MANAGEMENT,
             FeatureEnum::GENERAL_FEATURE,
-            FeatureEnum::COMPANY_MANAGEMENT,
-            FeatureEnum::TELEGRAM_BOT_FEATURE => self::cases(),
+            FeatureEnum::COMPANY_MANAGEMENT => self::cases(),
         };
     }
 

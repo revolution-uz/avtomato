@@ -98,4 +98,24 @@ return [
         'callback-token' => env('QR_PAY_CALLBACK_TOKEN', ''),
         'validity' => 365,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | ICAN Client
+    |--------------------------------------------------------------------------
+    */
+    'ican' => [
+        'base_url' => 'https://api.credit.icangroup.uz',
+        'auth_base_url' => 'https://api.base.icangroup.uz',
+    ],
+
+    /*
+     * --------------------------------------------------------------------------
+     * Loyalty program Client
+     */
+    'loyalty_program' => [
+        'security' => [
+            'qr_salt' => env('LOYALTY_PROGRAM_QR_SALT', 'salt must be hard as possible'),
+        ],
+    ],
 ];

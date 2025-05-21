@@ -23,17 +23,11 @@ enum PermissionEnum: string
 
     // Manage tariffs
     case BALANCE_FUND_VIEW_ALL = 'balance_fund_view_all';
-    case BALANCE_FUND_VIEW = 'balance_fund_view';
-    case BALANCE_FUND_DELETE = 'balance_fund_delete';
     case BALANCE_FUND_CREATE = 'balance_fund_create';
     case BALANCE_FUND_CONFIRM = 'balance_fund_confirm';
 
     // Balance charges
     case BALANCE_CHARGE_VIEW_ALL = 'balance_charge_view_all';
-    case BALANCE_CHARGE_VIEW = 'balance_charge_view';
-    case BALANCE_CHARGE_DELETE = 'balance_charge_delete';
-    case BALANCE_CHARGE_CREATE = 'balance_charge_create';
-    case BALANCE_CHARGE_CONFIRM = 'balance_charge_confirm';
 
     // Manage Admins
     case ADMIN_VIEW_ALL = 'admin_view_all';
@@ -42,14 +36,12 @@ enum PermissionEnum: string
     case ADMIN_EDIT = 'admin_edit';
     case ADMIN_DELETE = 'admin_delete';
     case ADMIN_CHANGE_PASSWORD = 'admin_change_password';
-    case ADMIN_CHANGE_AVATAR = 'admin_change_avatar';
     case ADMIN_CHANGE_ROLE = 'admin_change_role';
     case ADMIN_DEVICES = 'admin_devices';
     case ADMIN_REVOKE_DEVICE = 'admin_revoke_device';
 
     // Manage Themes
     case PROFILE_CHANGE_THEME = 'profile_change_theme';
-    case ADMIN_CHANGE_THEME = 'admin_change_theme';
 
     // MANAGE ROLES
     case ROLE_VIEW_ALL = 'role_view_all';
@@ -65,10 +57,8 @@ enum PermissionEnum: string
     case CUSTOMER_EDIT = 'customer_edit';
     case CUSTOMER_VIEW_ALL = 'customer_view_all';
     case CUSTOMER_VIEW = 'customer_view';
-    case CUSTOMER_VIEW_INSTALLMENTS = 'customer_view_installments';
-    case CUSTOMER_CARD_VIEW = 'customer_card_view';
     case CUSTOMER_CARD_EDIT = 'customer_card_edit';
-    case CUSTOMER_CARD_REMOVE = 'customer_card_remove';
+    case CUSTOMER_CARD_DETACH = 'customer_card_detach';
     case CUSTOMER_TAG_ATTACH = 'customer_tag_attach';
     case CUSTOMER_TAG_DETACH = 'customer_tag_detach';
     case CUSTOMER_TAG_VIEW = 'customer_tag_view';
@@ -80,20 +70,15 @@ enum PermissionEnum: string
 
     // Calculator installment
     case CALCULATE_INSTALLMENT = 'calculate_installment';
-    case CALCULATOR_EXPORT = 'calculator_export';
 
     // Manage installment
     case INSTALLMENT_VIEW_ALL = 'installment_view_all';
     case INSTALLMENT_VIEW = 'installment_view';
     case INSTALLMENT_VIEW_STATISTICS = 'installment_view_statistics';
-    case INSTALLMENT_START = 'installment_start';
-    case INSTALLMENT_CANCEL = 'installment_cancel';
-    case INSTALLMENT_FREEZE = 'installment_freeze';
-    case INSTALLMENT_FINISH = 'installment_finish';
-    case INSTALLMENT_CUSTOMER_LIST = 'installment_customer_list';
     case INSTALLMENT_CREATE = 'installment_create';
     case INSTALLMENT_EDIT = 'installment_edit';
-    case INSTALLMENT_DELETE = 'installment_delete';
+    case INSTALLMENT_SETTINGS_VIEW_ALL = 'installment_settings_view_all';
+    case INSTALLMENT_SETTINGS_EDIT = 'installment_settings_edit';
     case INSTALLMENT_ATTACH_CARD = 'installment_attach_card';
     case INSTALLMENT_DETACH_CARD = 'installment_detach_card';
     case INSTALLMENT_ATTACH_GUARANTOR = 'installment_attach_guarantor';
@@ -109,6 +94,8 @@ enum PermissionEnum: string
     case INSTALLMENT_DELETE_DOCUMENT = 'installment_delete_document';
 
     case DASHBOARD_INFO_VIEW = 'dashboard_info_view';
+
+    case UPDATE_CUSTOMER_PINFL_CARDS = 'update_customer_pinfl_cards';
 
     // Manage tariffs
     case TARIFF_VIEW_ALL = 'tariff_view_all';
@@ -165,13 +152,11 @@ enum PermissionEnum: string
 
     // Scoring MIB
     case SCORING_MIB_INFO_VIEW_ALL = 'scoring_mib_info_view_all';
-    case SCORING_MIB_INFO_VIEW = 'scoring_mib_info_view';
     case SCORING_MIB_INFO_CREATE = 'scoring_mib_info_create';
     case SCORING_MIB_INFO_DELETE = 'scoring_mib_info_delete';
 
     // Scoring TAX
     case SCORING_TAX_INFO_VIEW_ALL = 'scoring_tax_info_view_all';
-    case SCORING_TAX_INFO_VIEW = 'scoring_tax_info_view';
     case SCORING_TAX_INFO_CREATE = 'scoring_tax_info_create';
     case SCORING_TAX_INFO_DELETE = 'scoring_tax_info_delete';
 
@@ -287,8 +272,6 @@ enum PermissionEnum: string
     case LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL = 'loyalty_program_subscription_view_all';
     case LOYALTY_PROGRAM_SUBSCRIPTION_VIEW = 'loyalty_program_subscription_view';
     case LOYALTY_PROGRAM_SUBSCRIPTION_EDIT = 'loyalty_program_subscription_edit';
-    case LOYALTY_PROGRAM_SUBSCRIPTION_DELETE = 'loyalty_program_subscription_delete';
-    case LOYALTY_PROGRAM_SUBSCRIPTION_CREATE = 'loyalty_program_subscription_create';
     case LOYALTY_PROGRAM_ORDER_VIEW_ALL = 'loyalty_program_order_view_all';
     case LOYALTY_PROGRAM_ORDER_VIEW = 'loyalty_program_order_view';
     case LOYALTY_PROGRAM_SHOP_VIEW_ALL = 'loyalty_program_shop_view_all';
@@ -297,12 +280,14 @@ enum PermissionEnum: string
     case LOYALTY_PROGRAM_CARD_VIEW_ALL = 'loyalty_program_card_view_all';
     case LOYALTY_PROGRAM_CARD_VIEW = 'loyalty_program_card_view';
     case LOYALTY_PROGRAM_CARD_EDIT = 'loyalty_program_card_edit';
+    case LOYALTY_PROGRAM_CARD_DELETE = 'loyalty_program_card_delete';
     case LOYALTY_PROGRAM_PAYMENT_VIEW_ALL = 'loyalty_program_payment_view_all';
     case LOYALTY_PROGRAM_PAYMENT_VIEW = 'loyalty_program_payment_view';
     case LOYALTY_PROGRAM_PAYMENT_CANCEL = 'loyalty_program_payment_cancel';
     case LOYALTY_PROGRAM_IMAGE_CREATE = 'loyalty_program_image_create';
     case LOYALTY_PROGRAM_PRODUCT_VIEW_ALL = 'loyalty_program_product_view_all';
     case LOYALTY_PROGRAM_PRODUCT_VIEW = 'loyalty_program_product_view';
+    case LOYALTY_PROGRAM_STATISTICS = 'loyalty_program_statistics';
 
     // QR Pay
     case QR_PAY_TRANSACTION_VIEW_ALL = 'qr_pay_transaction_view_all';
@@ -322,16 +307,10 @@ enum PermissionEnum: string
             self::PROFILE_REVOKE_DEVICE,
 
             self::BALANCE_FUND_VIEW_ALL,
-            self::BALANCE_FUND_VIEW,
             self::BALANCE_FUND_CONFIRM,
-            self::BALANCE_FUND_DELETE,
             self::BALANCE_FUND_CREATE,
 
             self::BALANCE_CHARGE_VIEW_ALL,
-            self::BALANCE_CHARGE_VIEW,
-            self::BALANCE_CHARGE_CONFIRM,
-            self::BALANCE_CHARGE_DELETE,
-            self::BALANCE_CHARGE_CREATE,
 
             self::ADMIN_VIEW_ALL,
             self::ADMIN_VIEW,
@@ -339,21 +318,17 @@ enum PermissionEnum: string
             self::ADMIN_EDIT,
             self::ADMIN_DELETE,
             self::ADMIN_CHANGE_PASSWORD,
-            self::ADMIN_CHANGE_AVATAR,
             self::ADMIN_CHANGE_ROLE,
             self::ADMIN_DEVICES,
             self::ADMIN_REVOKE_DEVICE,
-            self::ADMIN_CHANGE_THEME,
 
             self::CUSTOMER_VIEW_ALL,
             self::CUSTOMER_VIEW,
-            self::CUSTOMER_VIEW_INSTALLMENTS,
             self::CUSTOMER_CREATE,
             self::CUSTOMER_INFO_BY_PASSPORT,
             self::CUSTOMER_EDIT,
-            self::CUSTOMER_CARD_VIEW,
             self::CUSTOMER_CARD_EDIT,
-            self::CUSTOMER_CARD_REMOVE,
+            self::CUSTOMER_CARD_DETACH,
             self::CUSTOMER_TAG_VIEW,
             self::CUSTOMER_TAG_ATTACH,
             self::CUSTOMER_TAG_DETACH,
@@ -371,7 +346,6 @@ enum PermissionEnum: string
             self::ROLE_PERMISSIONS,
 
             self::CALCULATE_INSTALLMENT,
-            self::CALCULATOR_EXPORT,
 
             self::TARIFF_VIEW_ALL,
             self::TARIFF_VIEW,
@@ -410,12 +384,10 @@ enum PermissionEnum: string
             self::SCORING_PENSION_INFO_DELETE,
 
             self::SCORING_MIB_INFO_VIEW_ALL,
-            self::SCORING_MIB_INFO_VIEW,
             self::SCORING_MIB_INFO_CREATE,
             self::SCORING_MIB_INFO_DELETE,
 
             self::SCORING_TAX_INFO_VIEW_ALL,
-            self::SCORING_TAX_INFO_VIEW,
             self::SCORING_TAX_INFO_CREATE,
             self::SCORING_TAX_INFO_DELETE,
 
@@ -444,6 +416,8 @@ enum PermissionEnum: string
             self::ACTIVITY_LOG_VIEW_OWN,
 
             self::DASHBOARD_INFO_VIEW,
+
+            self::UPDATE_CUSTOMER_PINFL_CARDS,
 
             self::SETTINGS_EDIT,
 
@@ -529,8 +503,6 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL,
             self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW,
             self::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
-            self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
-            self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE,
             self::LOYALTY_PROGRAM_ORDER_VIEW_ALL,
             self::LOYALTY_PROGRAM_ORDER_VIEW,
             self::LOYALTY_PROGRAM_SHOP_VIEW_ALL,
@@ -539,12 +511,14 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_CARD_VIEW_ALL,
             self::LOYALTY_PROGRAM_CARD_VIEW,
             self::LOYALTY_PROGRAM_CARD_EDIT,
+            self::LOYALTY_PROGRAM_CARD_DELETE,
             self::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL,
             self::LOYALTY_PROGRAM_PAYMENT_VIEW,
             self::LOYALTY_PROGRAM_IMAGE_CREATE,
             self::LOYALTY_PROGRAM_PRODUCT_VIEW_ALL,
             self::LOYALTY_PROGRAM_PRODUCT_VIEW,
             self::LOYALTY_PROGRAM_PAYMENT_CANCEL,
+            self::LOYALTY_PROGRAM_STATISTICS,
 
             // qr pay
             self::QR_PAY_TRANSACTION_VIEW_ALL,
@@ -556,15 +530,11 @@ enum PermissionEnum: string
             self::INSTALLMENT_VIEW,
             self::INSTALLMENT_VIEW_STATISTICS,
             self::INSTALLMENT_CREATE,
-            self::INSTALLMENT_START,
-            self::INSTALLMENT_CANCEL,
-            self::INSTALLMENT_FREEZE,
-            self::INSTALLMENT_FINISH,
             self::INSTALLMENT_EDIT,
-            self::INSTALLMENT_DELETE,
+            self::INSTALLMENT_SETTINGS_VIEW_ALL,
+            self::INSTALLMENT_SETTINGS_EDIT,
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD,
-            self::INSTALLMENT_CUSTOMER_LIST,
             self::INSTALLMENT_ATTACH_GUARANTOR,
             self::INSTALLMENT_UPDATE_GUARANTOR,
             self::INSTALLMENT_DETACH_GUARANTOR,
@@ -601,22 +571,18 @@ enum PermissionEnum: string
                 self::ADMIN_EDIT->value,
                 self::ADMIN_DELETE->value,
                 self::ADMIN_CHANGE_PASSWORD->value,
-                self::ADMIN_CHANGE_AVATAR->value,
                 self::ADMIN_CHANGE_ROLE->value,
                 self::ADMIN_DEVICES->value,
                 self::ADMIN_REVOKE_DEVICE->value,
-                self::ADMIN_CHANGE_THEME->value,
             ],
             PermissionGroupEnum::CUSTOMER_MANAGEMENT->value => [
                 self::CUSTOMER_VIEW_ALL->value,
                 self::CUSTOMER_VIEW->value,
-                self::CUSTOMER_VIEW_INSTALLMENTS->value,
                 self::CUSTOMER_CREATE->value,
                 self::CUSTOMER_INFO_BY_PASSPORT->value,
                 self::CUSTOMER_EDIT->value,
-                self::CUSTOMER_CARD_VIEW->value,
                 self::CUSTOMER_CARD_EDIT->value,
-                self::CUSTOMER_CARD_REMOVE->value,
+                self::CUSTOMER_CARD_DETACH->value,
                 self::CUSTOMER_TAG_VIEW->value,
                 self::CUSTOMER_TAG_ATTACH->value,
                 self::CUSTOMER_TAG_DETACH->value,
@@ -636,20 +602,15 @@ enum PermissionEnum: string
             ],
             PermissionGroupEnum::CALCULATOR_INSTALLMENT->value => [
                 self::CALCULATE_INSTALLMENT->value,
-                self::CALCULATOR_EXPORT->value,
             ],
             PermissionGroupEnum::INSTALLMENT_MANAGEMENT->value => [
                 self::INSTALLMENT_VIEW_ALL->value,
                 self::INSTALLMENT_VIEW->value,
                 self::INSTALLMENT_VIEW_STATISTICS->value,
                 self::INSTALLMENT_CREATE->value,
-                self::INSTALLMENT_START->value,
-                self::INSTALLMENT_CANCEL->value,
-                self::INSTALLMENT_FREEZE->value,
-                self::INSTALLMENT_FINISH->value,
-                self::INSTALLMENT_CUSTOMER_LIST->value,
                 self::INSTALLMENT_EDIT->value,
-                self::INSTALLMENT_DELETE->value,
+                self::INSTALLMENT_SETTINGS_VIEW_ALL->value,
+                self::INSTALLMENT_SETTINGS_EDIT->value,
                 self::INSTALLMENT_ATTACH_CARD->value,
                 self::INSTALLMENT_DETACH_CARD->value,
                 self::INSTALLMENT_ATTACH_GUARANTOR->value,
@@ -663,6 +624,7 @@ enum PermissionEnum: string
                 self::INSTALLMENT_DELETE_DOCUMENT->value,
                 self::INSTALLMENT_CREATE_TRANSACTION->value,
                 self::DASHBOARD_INFO_VIEW->value,
+                self::UPDATE_CUSTOMER_PINFL_CARDS->value,
             ],
             PermissionGroupEnum::TARIFF_MANAGEMENT->value => [
                 self::TARIFF_VIEW_ALL->value,
@@ -722,13 +684,11 @@ enum PermissionEnum: string
             ],
             PermissionGroupEnum::SCORING_MIB_INFO->value => [
                 self::SCORING_MIB_INFO_VIEW_ALL->value,
-                self::SCORING_MIB_INFO_VIEW->value,
                 self::SCORING_MIB_INFO_CREATE->value,
                 self::SCORING_MIB_INFO_DELETE->value,
             ],
             PermissionGroupEnum::SCORING_TAX_INFO->value => [
                 self::SCORING_TAX_INFO_VIEW_ALL->value,
-                self::SCORING_TAX_INFO_VIEW->value,
                 self::SCORING_TAX_INFO_CREATE->value,
                 self::SCORING_TAX_INFO_DELETE->value,
             ],
@@ -767,17 +727,11 @@ enum PermissionEnum: string
             ],
             PermissionGroupEnum::BALANCE_FUND->value => [
                 self::BALANCE_FUND_VIEW_ALL->value,
-                self::BALANCE_FUND_VIEW->value,
                 self::BALANCE_FUND_CONFIRM->value,
-                self::BALANCE_FUND_DELETE->value,
                 self::BALANCE_FUND_CREATE->value,
             ],
             PermissionGroupEnum::BALANCE_CHARGE->value => [
                 self::BALANCE_CHARGE_VIEW_ALL->value,
-                self::BALANCE_CHARGE_VIEW->value,
-                self::BALANCE_CHARGE_CONFIRM->value,
-                self::BALANCE_CHARGE_DELETE->value,
-                self::BALANCE_CHARGE_CREATE->value,
             ],
             PermissionGroupEnum::ACTIVITY_LOG->value => [
                 self::ACTIVITY_LOG_VIEW->value,
@@ -871,8 +825,6 @@ enum PermissionEnum: string
                 self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW->value,
                 self::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT->value,
-                self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE->value,
-                self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE->value,
                 self::LOYALTY_PROGRAM_ORDER_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_ORDER_VIEW->value,
                 self::LOYALTY_PROGRAM_SHOP_VIEW_ALL->value,
@@ -881,12 +833,14 @@ enum PermissionEnum: string
                 self::LOYALTY_PROGRAM_CARD_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_CARD_VIEW->value,
                 self::LOYALTY_PROGRAM_CARD_EDIT->value,
+                self::LOYALTY_PROGRAM_CARD_DELETE->value,
                 self::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_PAYMENT_VIEW->value,
                 self::LOYALTY_PROGRAM_IMAGE_CREATE->value,
                 self::LOYALTY_PROGRAM_PRODUCT_VIEW_ALL->value,
                 self::LOYALTY_PROGRAM_PRODUCT_VIEW->value,
                 self::LOYALTY_PROGRAM_PAYMENT_CANCEL->value,
+                self::LOYALTY_PROGRAM_STATISTICS->value,
             ],
 
             PermissionGroupEnum::QR_PAY->value => [
@@ -908,16 +862,10 @@ enum PermissionEnum: string
             self::PROFILE_REVOKE_DEVICE => FeatureEnum::PROFILE_EDIT,
 
             self::BALANCE_FUND_VIEW_ALL,
-            self::BALANCE_FUND_VIEW,
             self::BALANCE_FUND_CONFIRM,
-            self::BALANCE_FUND_DELETE,
             self::BALANCE_FUND_CREATE => FeatureEnum::BALANCE_FUND,
 
-            self::BALANCE_CHARGE_VIEW_ALL,
-            self::BALANCE_CHARGE_VIEW,
-            self::BALANCE_CHARGE_CONFIRM,
-            self::BALANCE_CHARGE_DELETE,
-            self::BALANCE_CHARGE_CREATE => FeatureEnum::BALANCE_CHARGE,
+            self::BALANCE_CHARGE_VIEW_ALL => FeatureEnum::BALANCE_CHARGE,
 
             self::ADMIN_VIEW_ALL,
             self::ADMIN_VIEW,
@@ -925,12 +873,10 @@ enum PermissionEnum: string
             self::ADMIN_EDIT,
             self::ADMIN_DELETE,
             self::ADMIN_CHANGE_PASSWORD,
-            self::ADMIN_CHANGE_AVATAR,
             self::ADMIN_CHANGE_ROLE,
             self::ADMIN_DEVICES,
             self::ADMIN_REVOKE_DEVICE, => FeatureEnum::USER_MANAGEMENT,
 
-            self::ADMIN_CHANGE_THEME,
             self::PROFILE_CHANGE_THEME => FeatureEnum::THEME_MANAGEMENT,
 
             self::ROLE_VIEW_ALL,
@@ -942,12 +888,10 @@ enum PermissionEnum: string
 
             self::CUSTOMER_VIEW_ALL,
             self::CUSTOMER_VIEW,
-            self::CUSTOMER_VIEW_INSTALLMENTS,
             self::CUSTOMER_CREATE,
             self::CUSTOMER_EDIT,
-            self::CUSTOMER_CARD_VIEW,
             self::CUSTOMER_CARD_EDIT,
-            self::CUSTOMER_CARD_REMOVE,
+            self::CUSTOMER_CARD_DETACH,
             self::CUSTOMER_INFO_BY_PASSPORT,
             self::CUSTOMER_TAG_VIEW,
             self::CUSTOMER_TAG_ATTACH,
@@ -958,23 +902,18 @@ enum PermissionEnum: string
             self::TAG_EDIT,
             self::TAG_DELETE => FeatureEnum::CUSTOMER_MANAGEMENT,
 
-            self::CALCULATE_INSTALLMENT,
-            self::CALCULATOR_EXPORT => FeatureEnum::CALCULATOR_INSTALLMENT,
+            self::CALCULATE_INSTALLMENT => FeatureEnum::CALCULATOR_INSTALLMENT,
 
             self::INSTALLMENT_CREATE_TRANSACTION,
             self::INSTALLMENT_VIEW_ALL,
             self::INSTALLMENT_VIEW,
             self::INSTALLMENT_VIEW_STATISTICS,
             self::INSTALLMENT_CREATE,
-            self::INSTALLMENT_START,
-            self::INSTALLMENT_CANCEL,
-            self::INSTALLMENT_FREEZE,
-            self::INSTALLMENT_FINISH,
-            self::INSTALLMENT_CUSTOMER_LIST,
             self::INSTALLMENT_EDIT,
-            self::INSTALLMENT_DELETE,
-
-            self::DASHBOARD_INFO_VIEW => FeatureEnum::INSTALLMENT_MANAGEMENT,
+            self::INSTALLMENT_SETTINGS_VIEW_ALL,
+            self::INSTALLMENT_SETTINGS_EDIT,
+            self::DASHBOARD_INFO_VIEW,
+            self::UPDATE_CUSTOMER_PINFL_CARDS => FeatureEnum::INSTALLMENT_MANAGEMENT,
 
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD => FeatureEnum::INSTALLMENT_AUTO_CHARGE,
@@ -1037,12 +976,10 @@ enum PermissionEnum: string
             self::SCORING_PENSION_INFO_DELETE => FeatureEnum::SCORING_PENSION_INFO,
 
             self::SCORING_MIB_INFO_VIEW_ALL,
-            self::SCORING_MIB_INFO_VIEW,
             self::SCORING_MIB_INFO_CREATE,
             self::SCORING_MIB_INFO_DELETE => FeatureEnum::SCORING_MIB_INFO,
 
             self::SCORING_TAX_INFO_VIEW_ALL,
-            self::SCORING_TAX_INFO_VIEW,
             self::SCORING_TAX_INFO_CREATE,
             self::SCORING_TAX_INFO_DELETE => FeatureEnum::SCORING_TAX_INFO,
 
@@ -1153,8 +1090,6 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW_ALL,
             self::LOYALTY_PROGRAM_SUBSCRIPTION_VIEW,
             self::LOYALTY_PROGRAM_SUBSCRIPTION_EDIT,
-            self::LOYALTY_PROGRAM_SUBSCRIPTION_DELETE,
-            self::LOYALTY_PROGRAM_SUBSCRIPTION_CREATE,
             self::LOYALTY_PROGRAM_ORDER_VIEW_ALL,
             self::LOYALTY_PROGRAM_ORDER_VIEW,
             self::LOYALTY_PROGRAM_SHOP_VIEW_ALL,
@@ -1163,12 +1098,14 @@ enum PermissionEnum: string
             self::LOYALTY_PROGRAM_CARD_VIEW_ALL,
             self::LOYALTY_PROGRAM_CARD_VIEW,
             self::LOYALTY_PROGRAM_CARD_EDIT,
+            self::LOYALTY_PROGRAM_CARD_DELETE,
             self::LOYALTY_PROGRAM_PAYMENT_VIEW_ALL,
             self::LOYALTY_PROGRAM_PAYMENT_VIEW,
             self::LOYALTY_PROGRAM_IMAGE_CREATE,
             self::LOYALTY_PROGRAM_PRODUCT_VIEW_ALL,
             self::LOYALTY_PROGRAM_PRODUCT_VIEW,
-            self::LOYALTY_PROGRAM_PAYMENT_CANCEL => FeatureEnum::LOYALTY_PROGRAM,
+            self::LOYALTY_PROGRAM_PAYMENT_CANCEL,
+            self::LOYALTY_PROGRAM_STATISTICS => FeatureEnum::LOYALTY_PROGRAM,
 
             self::QR_PAY_TRANSACTION_VIEW_ALL,
             self::QR_PAY_TRANSACTION_VIEW,
@@ -1184,19 +1121,11 @@ enum PermissionEnum: string
     public function isRelatedToCompanyStatus(): bool
     {
         return match ($this) {
-            self::BALANCE_FUND_DELETE,
-
-            self::BALANCE_CHARGE_DELETE,
-            self::BALANCE_CHARGE_CREATE,
-            self::BALANCE_CHARGE_CONFIRM,
-
             self::ADMIN_CREATE,
             self::ADMIN_EDIT,
             self::ADMIN_DELETE,
             self::ADMIN_CHANGE_PASSWORD,
-            self::ADMIN_CHANGE_AVATAR,
             self::ADMIN_CHANGE_ROLE,
-            self::ADMIN_CHANGE_THEME,
 
             self::ROLE_CREATE,
             self::ROLE_EDIT,
@@ -1206,18 +1135,14 @@ enum PermissionEnum: string
             self::CUSTOMER_CREATE,
             self::CUSTOMER_EDIT,
             self::CUSTOMER_CARD_EDIT,
-            self::CUSTOMER_CARD_REMOVE,
+            self::CUSTOMER_CARD_DETACH,
 
             self::CALCULATE_INSTALLMENT,
-            self::CALCULATOR_EXPORT,
 
-            self::INSTALLMENT_START,
-            self::INSTALLMENT_CANCEL,
-            self::INSTALLMENT_FREEZE,
-            self::INSTALLMENT_FINISH,
             self::INSTALLMENT_CREATE,
             self::INSTALLMENT_EDIT,
-            self::INSTALLMENT_DELETE,
+            self::INSTALLMENT_SETTINGS_VIEW_ALL,
+            self::INSTALLMENT_SETTINGS_EDIT,
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD,
             self::INSTALLMENT_ATTACH_GUARANTOR,
@@ -1236,7 +1161,6 @@ enum PermissionEnum: string
             self::TARIFF_DELETE,
             self::TARIFF_CREATE,
 
-            self::TRANSACTION_CREATE,
             self::TRANSACTION_EDIT,
             self::TRANSACTION_DELETE,
             self::TRANSACTION_REVERSE,

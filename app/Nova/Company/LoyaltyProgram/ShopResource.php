@@ -18,7 +18,7 @@ class ShopResource extends Resource
     public static $title = 'name';
 
     public static $search = [
-        'id', 'external_shop_code', 'name', 'address', 'external_code', 'external_name', 'external_address',
+        'id', 'external_shop_code', 'name', 'address', 'external_code', 'external_name',
     ];
 
     public function fields(Request $request)
@@ -37,7 +37,6 @@ class ShopResource extends Resource
             ])->sortable()->rules('required'),
             Text::make('External Code', 'external_code')->sortable()->rules('required', 'max:255'),
             Text::make('External Name', 'external_name')->sortable()->rules('required', 'max:255'),
-            Text::make('External Address', 'external_address')->sortable()->rules('required', 'max:255'),
         ];
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\LoyaltyProgram\Admin\Types;
 
-use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
+use App\Enums\Company\LoyaltyProgram\ShopStatusEnum;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\InputType;

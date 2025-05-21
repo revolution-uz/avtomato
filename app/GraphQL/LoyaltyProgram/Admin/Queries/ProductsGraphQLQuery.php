@@ -43,9 +43,9 @@ class ProductsGraphQLQuery extends Query
                 'type' => Type::int(),
                 'rules' => 'nullable|int|min:5|max:100',
             ],
-            'shop_code' => [
-                'type' => Type::string(),
-                'rules' => ['nullable', 'string', 'exists:loyalty_program_shops,external_code,deleted_at,NULL'],
+            'shop_codes' => [
+                'type' => Type::listOf(Type::string()),
+                'rules' => ['array', 'distinct', 'min:1'],
             ],
         ];
     }
@@ -61,13 +61,20 @@ class ProductsGraphQLQuery extends Query
             ->when(isset($args['search']), fn (Builder $q) => $q
                 ->where('external_code', 'ILIKE', "%{$args['search']}%")
                 ->orWhere('external_name', 'ILIKE', "%{$args['search']}%"))
-            ->when(isset($args['shop_code']), fn (Builder $q) => $q
-                ->where('external_shop_code', $args['shop_code']))
+            ->when(isset($args['shop_codes']), fn (Builder $q) => $q
+                ->whereIn('external_shop_code', $args['shop_codes']))
             ->when(
                 isset($args['sort']),
                 fn (Builder|Item $q) => $q->orderBySortable($args['sort']),
                 fn (Builder|Item $q) => $q->orderByDesc('id')
             )
             ->paginate(perPage: $args['per_page'] ?? 10, page: $args['page'] ?? 1);
+    }
+
+    protected function rules(array $args = []): array
+    {
+        return [
+            'shop_codes.*' => ['required', 'string'/*'exists:loyalty_program_shops,external_code,deleted_at,NULL'*/],
+        ];
     }
 }

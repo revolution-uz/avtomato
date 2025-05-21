@@ -34,10 +34,6 @@ class SmsMessageGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (SmsMessage $root) => $root->status->value,
             ],
-            'ext_id' => [
-                'type' => Type::int(),
-                'resolve' => fn (SmsMessage $root) => $root->ext_id,
-            ],
             'installment_id' => [
                 'type' => Type::int(),
                 'resolve' => fn (SmsMessage $root) => $root->installment_id,

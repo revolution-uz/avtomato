@@ -2,7 +2,7 @@
 
 namespace App\Models\Company\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
+use App\Enums\Company\LoyaltyProgram\ShopStatusEnum;
 use App\Models\Company\OrderBySortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,19 +23,17 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int|null $image_id
  * @property string $external_code
  * @property string $external_name
- * @property string $external_address
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property LoyaltyProgramImage|null $image
  * @property-read string $display_name
- * @property-read string $display_address
  */
 class Shop extends Model
 {
     use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
 
-    protected static array $sortables = ['id', 'name', 'address', 'external_code', 'external_name', 'external_address', 'status'];
+    protected static array $sortables = ['id', 'name', 'address', 'external_code', 'external_name', 'status'];
 
     protected $table = 'loyalty_program_shops';
 
@@ -48,7 +46,6 @@ class Shop extends Model
         'image_id',
         'external_code',
         'external_name',
-        'external_address',
     ];
 
     protected $casts = [
@@ -63,10 +60,5 @@ class Shop extends Model
     public function getDisplayNameAttribute(): string
     {
         return $this->name ?? $this->external_name;
-    }
-
-    public function getDisplayAddressAttribute(): string
-    {
-        return $this->address ?? $this->external_address;
     }
 }

@@ -7,11 +7,11 @@ use App\Enums\Company\Rbac\PermissionEnum;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\Installment;
-use Carbon\Carbon;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
@@ -78,9 +78,11 @@ class InstallmentsGraphQLQuery extends Query
                         ->where('first_name', 'ilike', "%{$args['search']}%")
                         ->orWhere('last_name', 'ilike', "%{$args['search']}%")
                         ->orWhere('middle_name', 'ilike', "%{$args['search']}%")
+                        ->orWhere('pinfl', 'ilike', "%{$args['search']}%")
                     )
                     ->orWhereHas('branch', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
                     ->orWhereHas('tariff', fn (Builder $q) => $q->where('name', 'ilike', "%{$args['search']}%"))
+                    ->when(is_int($args['search']), fn (Builder $q) => $q->orWhere('id', $args['search']))
                 )
                 ->when(
                     isset($args['debt_only']) && $args['debt_only'],

@@ -2,8 +2,8 @@
 
 namespace App\GraphQL\LoyaltyProgram\Client\Queries;
 
-use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
-use App\GraphQL\LoyaltyProgram\Client\Types\ShopGraphQLType;
+use App\Enums\Company\LoyaltyProgram\ShopStatusEnum;
+use App\GraphQL\LoyaltyProgram\Admin\Types\ShopGraphQLType;
 use App\Models\Company\LoyaltyProgram\Shop;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;

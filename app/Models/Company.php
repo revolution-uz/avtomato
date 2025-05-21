@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use App\Enums\Company\CompanyStatusEnum;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
@@ -16,15 +19,20 @@ use Stancl\Tenancy\Database\Models\Tenant;
  * @property string $name
  * @property string $owner_phone
  * @property string $owner_name
- * @property string $address
- * @property string $bank_name
- * @property string $bank_code
- * @property string $account_number
- * @property string $tin
+ * @property string|null $address
+ * @property string|null $bank_name
+ * @property string|null $bank_code
+ * @property string|null $account_number
+ * @property string|null $tin
  * @property CompanyStatusEnum $status
  * @property int $payment_day
  * @property string|null $logo
+ * @property array|null $data
+ * @property int $min_allowed_balance
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property-read string|null $logo_url
+ * @property CentralBalanceFund[]|Collection<int, CentralBalanceFund> $balanceFunds
  */
 class Company extends Tenant implements TenantWithDatabase
 {
@@ -47,6 +55,7 @@ class Company extends Tenant implements TenantWithDatabase
         'status',
         'payment_day',
         'logo',
+        'min_allowed_balance',
     ];
 
     protected $casts = [
@@ -89,5 +98,10 @@ class Company extends Tenant implements TenantWithDatabase
     public function getLogoUrlAttribute(): string
     {
         return Storage::url($this->logo);
+    }
+
+    public function balanceFunds(): HasMany
+    {
+        return $this->hasMany(CentralBalanceFund::class);
     }
 }

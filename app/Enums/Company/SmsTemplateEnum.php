@@ -5,12 +5,14 @@ namespace App\Enums\Company;
 enum SmsTemplateEnum: int
 {
     case AUTO_CHARGE = 1;
-    case CARD_CONFIRMATION = 2;
+    case CARD_CONFIRMATION_FOR_INSTALLMENT = 2;
     case CHARGE = 3;
     case DEBT = 4;
     case ECOMMERCE_OTP = 5;
     case DEBT_10 = 6;
     case DEBT_20 = 7;
+    case LOYALTY_PROGRAM_OTP = 8;
+    case CARD_CONFIRMATION_FOR_LOYALTY_PROGRAM = 9;
 
     public static function getExampleData(): array
     {
@@ -21,6 +23,7 @@ enum SmsTemplateEnum: int
             'company' => tenant('name'),
             'phone' => tenant('owner_phone'),
             'code' => 232432,
+            'signature' => '113AzSJeOIn',
         ];
     }
 
@@ -32,10 +35,10 @@ enum SmsTemplateEnum: int
                 'original_template' => ':pan kartadan :amount so\'m N:credit_number shartnomaga asosan :company ga yechildi. Ma\'lumot uchun: :phone',
                 'description' => 'Avtomatlashtirilgan to\'lov bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
             ],
-            self::CARD_CONFIRMATION => [
+            self::CARD_CONFIRMATION_FOR_INSTALLMENT => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
-                'original_template' => 'Avtomato tizimida kartangizni muddatli to\'lovga biriktirish tasdiqlash kodi-:code',
-                'description' => 'Karta ma\'lumotlarini tasdiqlovchi SMS xabarlar uchun ishlatiladigan shablonni ifodalaydi.',
+                'original_template' => ':company tizimida kartangizni muddatli to\'lovga biriktirish tasdiqlash kodi-:code :signature',
+                'description' => 'Kartani muddatli to\'lov tizimiga biriktirish uchun tasdiqlash kodini yuborish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
             self::CHARGE => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
@@ -53,7 +56,7 @@ enum SmsTemplateEnum: int
             ],
             self::ECOMMERCE_OTP => [
                 'status' => SmsTemplateStatusEnum::ACTIVE,
-                'original_template' => 'Ecommerce tizimidan ro\'yxatdan o\'tish uchun kod: :code',
+                'original_template' => ':company tizimidan ro\'yxatdan o\'tish uchun kod: :code',
                 'description' => 'Onlayn do\'kondan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
             self::DEBT_10 => [
@@ -73,6 +76,16 @@ enum SmsTemplateEnum: int
                     'overdue_days' => 20,
                 ],
                 'description' => 'Qarzdorlik bildirishnomalari uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+            self::LOYALTY_PROGRAM_OTP => [
+                'status' => SmsTemplateStatusEnum::ACTIVE,
+                'original_template' => ':company tizimidan ro\'yxatdan o\'tish uchun kod: :code :signature',
+                'description' => 'Mijozlar bonus dasturidan ro\'yxatdan o\'tish uchun ishlatiladigan shablonni ifodalaydi.',
+            ],
+            self::CARD_CONFIRMATION_FOR_LOYALTY_PROGRAM => [
+                'status' => SmsTemplateStatusEnum::ACTIVE,
+                'original_template' => ':company tizimiga kartangizni biriktirish tasdiqlash kodi-:code :signature',
+                'description' => 'Tasdiqlash kodi orqali kartani tizimga biriktirish uchun ishlatiladigan shablonni ifodalaydi.',
             ],
         };
     }

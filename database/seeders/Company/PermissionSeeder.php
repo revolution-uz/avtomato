@@ -20,7 +20,6 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-
         try {
             DB::transaction(static function () {
                 foreach (PermissionGroupEnum::cases() as $group) {
@@ -45,6 +44,7 @@ class PermissionSeeder extends Seeder
                 RolePermission::query()->whereNotIn('permission_id', Permission::query()->pluck('id')->all())->delete();
             });
         } catch (Throwable $e) {
+            $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());
         }
     }

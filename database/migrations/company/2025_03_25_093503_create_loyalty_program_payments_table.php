@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('loyalty_program_payments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 2, 10);
+            $table->decimal('amount', total: 10);
             $table->unsignedTinyInteger('status');
             $table->timestamp('paid_at')->nullable();
             $table->unsignedBigInteger('card_id')->index();

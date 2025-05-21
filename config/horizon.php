@@ -284,6 +284,26 @@ return [
             'timeout' => 600,
             'nice' => 0,
         ],
+        'supervisor-12' => [
+            'connection' => 'redis',
+            'queue' => ['sync-ican'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 600,
+            'nice' => 0,
+        ],
+        'supervisor-13' => [
+            'connection' => 'redis',
+            'queue' => ['ican-transaction'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'memory' => 128,
+            'tries' => 1,
+            'timeout' => 600,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [

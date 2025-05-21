@@ -43,6 +43,7 @@ class NotificationsGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return Notification::query()
+            ->whereNotNull('sent_at')
             ->when(
                 isset($args['sort']),
                 fn (Builder|Notification $q) => $q->orderBySortable($args['sort']),

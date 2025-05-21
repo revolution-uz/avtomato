@@ -5,6 +5,8 @@ namespace Database\Seeders\Company;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Models\Company\CompanySettings;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CompanySettingsSeeder extends Seeder
 {
@@ -13,13 +15,19 @@ class CompanySettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (CompanySettingsEnum::cases() as $case) {
-            CompanySettings::query()->firstOrCreate([
-                'name' => $case->value,
-            ], [
-                'value' => CompanySettingsEnum::getDefaultValue($case),
-                'type' => CompanySettingsEnum::getType($case),
-            ]);
+        try {
+            foreach (CompanySettingsEnum::cases() as $case) {
+                CompanySettings::query()->firstOrCreate([
+                    'name' => $case->value,
+                ], [
+                    'value' => CompanySettingsEnum::getDefaultValue($case),
+                    'type' => CompanySettingsEnum::getType($case),
+                ]);
+            }
+
+        } catch (Throwable $e) {
+            $this->command->error('Error: ' . $e->getMessage());
+            Log::error($e->getMessage());
         }
     }
 }

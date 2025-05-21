@@ -2,11 +2,13 @@
 
 namespace App\Models\Company\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgramm\OrderStatusEnum;
+use App\Enums\Company\LoyaltyProgram\OrderStatusEnum;
 use App\Models\Company\OrderBySortable;
+use App\Models\Company\PersonalAccessToken;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
@@ -20,6 +22,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $first_name
  * @property string|null $last_name
  * @property Carbon|null $birth_date
+ * @property string|null $main_device
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -43,23 +46,29 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'birth_date',
+        'main_device',
     ];
 
     protected $casts = [
         'birth_date' => 'date',
     ];
 
-    public static function findByQr($qr): ?self
+    public static function findByQr(string $qr): ?self
     {
         $qrDto = explode('$$', $qr);
-        if (count($qrDto) !== 2 || $qrDto[1] < now()->timestamp) {
+        if (count($qrDto) !== 3 || $qrDto[1] < now()->timestamp) {
             throw new Exception('Invalid QR code');
         }
-        $qrId = $qrDto[0];
-        $timestamp = $qrDto[1];
-        $userId = $qrId ^ $timestamp ^ tenant('id');
+        $attributeXorSum = (int) $qrDto[0];
+        $timestamp = (int) $qrDto[1];
+        $userId = $attributeXorSum ^ $timestamp ^ tenant('id');
 
         return static::query()->findOrFail($userId);
+    }
+
+    private static function getQrString(int $attributeXorSum, int $userId, float|int|string $timestamp): string
+    {
+        return substr($attributeXorSum . '$$' . $timestamp . '$$' . md5(config('loyalty_program.security.qr_salt') . '$' . $userId . '$' . tenant('id') . '$' . $timestamp), 0, 36);
     }
 
     public function subscriptions(): HasMany
@@ -77,6 +86,11 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function tokens(): MorphMany
+    {
+        return $this->morphMany(PersonalAccessToken::class, 'tokenable');
+    }
+
     public function createTokenWithData(string $deviceName, array $data = []): string
     {
         $this->tokens()->delete();
@@ -86,22 +100,23 @@ class User extends Authenticatable
         return $token->plainTextToken;
     }
 
-    public function getSuccessLoginAttempts(string $deviceName, int $last_time): int
+    public function getSuccessLoginAttempts(int $last_time): int
     {
         return $this->tokens()
+            ->withTrashed()
             ->where('created_at', '>', now()->subSeconds($last_time))
             ->where('expires_at', '>', now())
-            ->where('name', '!=', $deviceName)
-            ->count('id');
+            ->whereNot('name', $this->main_device)
+            ->count();
     }
 
-    public function getQrAttribute(): array
+    public function getQrAttribute(int $expiration = 30): array
     {
-        $timestamp = now()->addSeconds(30)->timestamp;
-        $qrId = $this->id ^ $timestamp ^ tenant('id');
+        $timestamp = now()->addSeconds($expiration)->timestamp;
+        $attributeXorSum = $this->id ^ $timestamp ^ tenant('id');
 
         return [
-            'id' => $qrId . '$$' . $timestamp,
+            'id' => $this->getQrString($attributeXorSum, $this->id, $timestamp),
             'expires_in' => $timestamp,
         ];
     }

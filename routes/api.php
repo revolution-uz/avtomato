@@ -20,13 +20,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware('auth.sayqal')->prefix('sayqal-callback')->controller(SayqalController::class)->group(function () {
+Route::middleware(['log.sayqal', 'auth.sayqal'])->prefix('sayqal-callback')->controller(SayqalController::class)->group(function () {
     Route::post('sms', 'sms')->name('sayqalCallback.sms');
     Route::post('voice', 'voice')->name('sayqalCallback.voice');
 });
 Route::middleware('auth.unired')->prefix('unired-callback')->controller(UniredController::class)->group(function () {
     Route::post('web-hook', 'webHook')->name('uniredCallback.webHook');
-    Route::get('check-payment', 'checkPayment')->name('uniredCallback.checkPayment');
+    Route::post('check-payment', 'checkPayment')->name('uniredCallback.checkPayment');
     Route::post('send-sms', 'sendSms')->name('uniredCallback.sendSms');
 });
 Route::middleware('auth.qr-pay')->prefix('qr-pay')->controller(QrPayCallbackController::class)->group(function () {

@@ -2,7 +2,7 @@
 
 namespace Database\Factories\Company\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgramm\ShopStatusEnum;
+use App\Enums\Company\LoyaltyProgram\ShopStatusEnum;
 use App\Models\Company\LoyaltyProgram\Shop;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +20,6 @@ class ShopFactory extends Factory
             'status' => $this->faker->randomElement(ShopStatusEnum::cases()),
             'external_code' => $this->faker->unique()->uuid(),
             'external_name' => $this->faker->company,
-            'external_address' => $this->faker->address,
         ];
     }
 }

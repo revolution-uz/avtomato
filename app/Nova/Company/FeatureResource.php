@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -56,6 +57,8 @@ class FeatureResource extends Resource
             Currency::make(__('nova.feature.original_amount'), 'original_amount')->currency('UZS')->filterable()->exceptOnForms(),
             // @phpstan-ignore-next-line
             Currency::make(__('nova.feature.amount'), 'amount')->currency('UZS')->filterable()->showOnUpdating(fn () => $this->resource->name?->isChargeable() ?? false),
+            Number::make(__('nova.feature.humo_percent'), 'humo_percent')->filterable(),
+            Number::make(__('nova.feature.uzcard_percent'), 'uzcard_percent')->filterable(),
             Boolean::make(__('nova.feature.is_active'), 'is_active')->filterable()->showOnUpdating(function (NovaRequest $request, Feature $resource) {
                 return (bool) $resource->modules->first(fn (Module $module) => $module->is_active);
             }),

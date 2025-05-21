@@ -82,6 +82,10 @@ class CustomerGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (Customer $root) => $root->gender->value,
             ],
+            'unired_cards_last_updated_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (Customer $root) => $root->unired_cards_last_updated_at?->timestamp,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Customer $root) => $root->created_at->timestamp,
@@ -100,7 +104,7 @@ class CustomerGraphQLType extends GraphQLType
             ],
             'unired_cards' => [
                 'type' => Type::listOf(GraphQL::type(UniredCardGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (Customer $root) => $root->uniredCards,
+                'resolve' => fn (Customer $root) => $root->getUniredCards(),
             ],
             'addresses' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(AddressGraphQLType::GRAPHQL_TYPE_NAME))),

@@ -48,15 +48,17 @@ class SmsTemplatesGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return SmsTemplate::query()
-            ->when(! Feature::isFeatureActive(FeatureEnum::ECOMMERCE), fn (Builder|SmsTemplate $q) => $q
+            ->when(! Feature::isFeatureActive(FeatureEnum::ECOMMERCE), fn (Builder $q) => $q
                 ->whereNotIn('id', [SmsTemplateEnum::ECOMMERCE_OTP->value]))
-            ->when(isset($args['search']), fn (Builder|SmsTemplate $q) => $q
+            ->when(! Feature::isFeatureActive(FeatureEnum::LOYALTY_PROGRAM), fn (Builder $q) => $q
+                ->whereNotIn('id', [SmsTemplateEnum::LOYALTY_PROGRAM_OTP->value]))
+            ->when(isset($args['search']), fn (Builder $q) => $q
                 ->where('template', 'ILIKE', "%{$args['search']}%")
                 ->orWhere('original_template', 'ILIKE', "%{$args['search']}%"))
             ->when(
                 isset($args['sort']),
-                fn (Builder|SmsTemplate $q) => $q->orderBySortable($args['sort']),
-                fn (Builder|SmsTemplate $q) => $q->orderByDesc('id')
+                fn (Builder $q) => $q->orderBySortable($args['sort']),
+                fn (Builder $q) => $q->orderByDesc('id')
             )
             ->get();
     }

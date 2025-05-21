@@ -65,10 +65,17 @@ class HomeController extends Controller
             'phone' => 'required|digits:9',
         ]);
 
-        $newCustomer = new NewCustomer;
-        $newCustomer->full_name = $request->full_name;
-        $newCustomer->phone = "+998{$request->phone}";
-        $newCustomer->saveOrFail();
+        if (
+            NewCustomer::query()
+                ->where('is_checked', false)
+                ->where('phone', "+998{$request->phone}")
+                ->doesntExist()
+        ) {
+            $newCustomer = new NewCustomer;
+            $newCustomer->full_name = $request->full_name;
+            $newCustomer->phone = "+998{$request->phone}";
+            $newCustomer->saveOrFail();
+        }
 
         return redirect()->back()->with('success', true);
     }
