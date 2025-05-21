@@ -249,44 +249,56 @@ class UniredService
     {
         $centralCustomer = $customer->getOrCreateCentralCustomer();
 
-        // $response = $this->uniredClient->getPinflCardCounts($customer->pinfl);
+        // $response = $this->uniredClient->getPinflCardCounts($centralCustomer->pinfl);
         // sleep(1);
 
-        $is_uzcard_update = Utilities::isAllowedUpdatePinflCards($centralCustomer->unired_uzcard_searched_at);
-        $is_humo_update = Utilities::isAllowedUpdatePinflCards($centralCustomer->unired_humo_searched_at);
-
         try {
-            if ($is_uzcard_update) {
-                $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
-                if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
+            $updatesPerformed = false;
+
+            // Update Uzcard
+            if (Utilities::isAllowedUpdatePinflCards($centralCustomer->unired_uzcard_searched_at)) {
+                $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
+
+                if (
+                    isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0
+                ) {
                     $centralCustomer->unired_uzcard_searched_at = Carbon::now();
-                } else {
-                    $errorHumo = $response->result[$customer->pinfl]['error'] ?? 'Unknown error';
+                    $updatesPerformed = true;
                 }
-                sleep(1);
-            }
-            if ($is_humo_update) {
-                $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$customer->pinfl]));
-                if (isset($response->result[$customer->pinfl]) && isset($response->result[$customer->pinfl]['cards_count']) && $response->result[$customer->pinfl]['cards_count'] > 0) {
-                    $centralCustomer->unired_humo_searched_at = Carbon::now();
-                } else {
-                    $errorUzcard = $response->result[$customer->pinfl]['error'] ?? 'Unknown error';
-                }
+
                 sleep(1);
             }
 
-            return $centralCustomer->save() && (! isset($errorHumo) || ! isset($errorUzcard));
+            // Update Humo
+            if (Utilities::isAllowedUpdatePinflCards($centralCustomer->unired_humo_searched_at)) {
+                $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
+
+                if (
+                    isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0
+                ) {
+                    $centralCustomer->unired_humo_searched_at = Carbon::now();
+                    $updatesPerformed = true;
+                }
+
+                sleep(1);
+            }
+
+            if ($updatesPerformed) {
+                return $centralCustomer->saveOrFail();
+            }
+
+            return false;
 
         } catch (Exception $e) {
-            Log::channel('unired-client')->info(
+            Log::channel('unired-client')->error(
                 'Error updating PINFL cards list',
                 [
                     'class' => get_called_class(),
                     'error' => $e->getMessage(),
-                    'pinfl' => $customer->pinfl,
+                    'pinfl' => $centralCustomer->pinfl,
                 ]
             );
-            throw new GeneralException("Failed to update cards list for PINFL: {$customer->pinfl}");
+            throw new GeneralException("Failed to update cards list for PINFL: {$centralCustomer->pinfl}");
         }
     }
 
@@ -308,29 +320,31 @@ class UniredService
             throw ValidationException::withMessages(['customer_id' => __('Customer cards can only be renewed once within 24 hours')]);
         }
 
-        $dto = new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]);
+        $updatesPerformed = false;
 
         if ($is_uzcard_update) {
-            $response = $this->uniredClient->updateUzcardCards($dto);
+            $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
 
-            if (isset($response->result[$centralCustomer->pinfl]) && isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
+            if (isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
                 $centralCustomer->unired_uzcard_searched_at = Carbon::now();
-            } else {
-                $errorHumo = $response->result[$centralCustomer->pinfl]['error'] ?? 'Unknown error';
+                $updatesPerformed = true;
             }
         }
 
         if ($is_humo_update) {
-            $response = $this->uniredClient->updateHumoCards($dto);
+            $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
 
-            if (isset($response->result[$centralCustomer->pinfl]) && isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
+            if (isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
                 $centralCustomer->unired_humo_searched_at = Carbon::now();
-            } else {
-                $errorUzcard = $response->result[$centralCustomer->pinfl]['error'] ?? 'Unknown error';
+                $updatesPerformed = true;
             }
         }
 
-        return $centralCustomer->save() && (! isset($errorHumo) || ! isset($errorUzcard));
+        if ($updatesPerformed) {
+            return $centralCustomer->saveOrFail();
+        }
+
+        return false;
     }
 
     public function getCardUpdates(string $pinfl, int $page = 1): array
