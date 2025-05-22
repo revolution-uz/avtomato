@@ -38,6 +38,6 @@ class InstallmentComment extends Model
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(CompanyAdmin::class);
+        return $this->belongsTo(CompanyAdmin::class)->withTrashed();
     }
 }

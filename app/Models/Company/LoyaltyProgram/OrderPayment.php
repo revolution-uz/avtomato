@@ -51,6 +51,6 @@ class OrderPayment extends Model
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(CompanyAdmin::class, 'admin_id');
+        return $this->belongsTo(CompanyAdmin::class)->withTrashed();
     }
 }
