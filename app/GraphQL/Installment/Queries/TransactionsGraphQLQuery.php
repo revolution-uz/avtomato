@@ -55,7 +55,7 @@ class TransactionsGraphQLQuery extends Query
             ],
             'admin_id' => [
                 'type' => Type::int(),
-                'rules' => ['nullable', 'int', 'exists:admins,id,deleted_at,NULL'],
+                'rules' => ['nullable', 'int', 'exists:admins,id'],
             ],
             'installment_id' => [
                 'type' => Type::int(),
