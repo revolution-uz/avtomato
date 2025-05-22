@@ -64,9 +64,9 @@ class CompanyAdmin extends Authenticatable
         'template_theme' => UserTemplateThemeDto::class,
     ];
 
-    public static function getIcanIntegrator(): self
+    public static function getIcanIntegrator()
     {
-        return self::query()->where('username', self::ICAN_INTEGRATOR)->firstOrFail();
+        return self::query()->withTrashed()->where('username', self::ICAN_INTEGRATOR)->firstOrFail();
     }
 
     public function tokens(): MorphMany
