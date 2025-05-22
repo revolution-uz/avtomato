@@ -54,7 +54,7 @@ class Utilities
         return $numerator / ($denominator != 0 ? $denominator : 1);
     }
 
-    public static function generateIdByTenancy(int $id): string
+    public static function generateIdByTenancy(int|string $id): string
     {
         return tenant('id') . self::TENANT_SEPARATOR . $id;
     }
