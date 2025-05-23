@@ -99,16 +99,17 @@ class Transaction extends Model
             if (! $transaction->is_initial_fee) {
                 $installment->increment('paid_amount', $transaction->amount);
             }
-            if ($installment->wholeDebtAmount <= 1) {
-                $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
+            if ($installment->unired_id) {
+                CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
             }
             if ($transaction->transactionType->is_system) {
-                CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
                 $transaction->computeCommission();
             }
-
-            if ($transaction->installment->ican_id) {
+            if ($installment->ican_id) {
                 CreateIcanTransactionJob::dispatch($transaction->id);
+            }
+            if ($installment->wholeDebtAmount <= 1) {
+                $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
             }
 
             SendTransactionSmsJob::dispatch($transaction->id);
