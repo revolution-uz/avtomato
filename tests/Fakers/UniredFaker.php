@@ -109,9 +109,25 @@ class UniredFaker
 
     public static function monitoringUzcard(): void
     {
-        $path = storage_path('../JSON-for-testing/scoring/unired-uzcard-response.json');
+        $partnerUrl = config('clients.unired.base_url');
+        $method = UniredClient::MONITORING_UZCARD;
 
-        self::fakeResponse(UniredClient::MONITORING_UZCARD, $path);
+        $dataPages = [
+            0 => json_decode(file_get_contents(storage_path('../JSON-for-testing/scoring/unired-uzcard-response-1.json')), true),
+            1 => json_decode(file_get_contents(storage_path('../JSON-for-testing/scoring/unired-uzcard-response-2.json')), true),
+        ];
+
+        Http::fake([
+            $partnerUrl => function (Request $request) use ($dataPages, $method) {
+                if ($method === $request->data()['method']) {
+                    $page = $request->data()['params']['page_number'] ?? 0;
+
+                    return Http::response($dataPages[$page] ?? $dataPages[0]);
+                }
+
+                return null;
+            },
+        ]);
     }
 
     public static function badResponse(): void

@@ -1,0 +1,62 @@
+{
+    "status": true,
+    "result": {
+        "total_elements": 0,
+        "number_of_elements": 0,
+        "total_pages": 2,
+        "page_number": 0,
+        "total_debit": 0,
+        "total_credit": 0,
+        "content": [
+            {
+                "utrnno": 24394222770,
+                "transType": "700",
+                "hpan": "626247******4002",
+                "utime": 200701,
+                "udate": 20250413,
+                "reqamt": 100000,
+                "resp": -1,
+                "reversal": false,
+                "merchant": "900948720",
+                "terminal": "48509",
+                "merchantName": "ATB QQB SAMARQAND BXO",
+                "street": "Payarik Bulokboshi",
+                "city": "TASHKENT",
+                "credit": false,
+                "mcc": 6011,
+                "currency": 860,
+                "actamt": 10100000,
+                "acctbal": 0,
+                "conamt": 10100000,
+                "oked": null,
+                "inn": null,
+                "serviceId": ""
+            },
+            {
+                "utrnno": 24394219059,
+                "transType": "785",
+                "hpan": "626247******4002",
+                "utime": 200639,
+                "udate": 20250413,
+                "reqamt": 100000,
+                "resp": -1,
+                "reversal": false,
+                "merchant": "105746019",
+                "terminal": "92801443",
+                "merchantName": "AO CLICK",
+                "street": "SHAYXONTOHUR TUMANI DARBOZA 46",
+                "city": "",
+                "credit": true,
+                "mcc": 7372,
+                "currency": 860,
+                "actamt": 1000800,
+                "acctbal": 0,
+                "conamt": 1000800,
+                "oked": null,
+                "inn": null,
+                "serviceId": ""
+            }
+        ]
+    },
+    "error": null
+}
