@@ -20,7 +20,7 @@ class PopulateCreateOrUpdateInstallmentInUniredJobs extends Command
      *
      * @var string
      */
-    protected $signature = 'populate:create-or-update-installment-in-unired-jobs';
+    protected $signature = 'populate:create-or-update-installment-in-unired-jobs {--companyId= : The ID of the company to sync transactions for}';
 
     /**
      * The console command description.
@@ -34,7 +34,9 @@ class PopulateCreateOrUpdateInstallmentInUniredJobs extends Command
      */
     public function handle(BalanceService $balanceService): int
     {
-        foreach (Company::get() as $company) {
+        $companyId = $this->option('companyId');
+
+        foreach (($companyId ? Company::query()->where('id', $companyId)->get() : Company::get()) as $company) {
             tenancy()->initialize($company);
 
             if (
