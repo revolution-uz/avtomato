@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (ApplicationEnvironmentEnum::isProduction()) {
+        if (ApplicationEnvironmentEnum::isProduction() && ! ApplicationEnvironmentEnum::isApiRequest()) {
             URL::forceScheme('https');
         }
 

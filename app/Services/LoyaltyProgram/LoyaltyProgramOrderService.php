@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class LoyaltyProgramOrderService
 {
-    public function createOrder(array $items, int $shop_id, string $qr): OrderResource
+    public function createOrder(array $items, string $shop_code, string $qr): OrderResource
     {
         try {
             $user = User::findByQr($qr);
@@ -31,7 +31,7 @@ class LoyaltyProgramOrderService
             $order->saveOrFail();
 
             foreach ($items as $item) {
-                $this->createItem($item, $shop_id, $order);
+                $this->createItem($item, $shop_code, $order);
             }
 
             if ($order->total_discount_amount > $user->active_subscription_limit) {
@@ -70,12 +70,12 @@ class LoyaltyProgramOrderService
         return false;
     }
 
-    private function createItem(array $item, int $shop_id, Order $order): bool
+    private function createItem(array $item, string $external_shop_code, Order $order): bool
     {
         $loyaltyProgramItem = Item::query()->firstWhere('external_code', $item['item_code']);
         $loyaltyProgramPrice = Price::query()
             ->where('external_item_code', $item['item_code'])
-            ->where('external_shop_code', $shop_id)
+            ->where('external_shop_code', $external_shop_code)
             ->first();
 
         if ($loyaltyProgramItem && $loyaltyProgramPrice) {

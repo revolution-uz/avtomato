@@ -11,7 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *     qty: int,
  * }> $items
  * @property-read string $qr
- * @property-read int $shop_id
+ * @property-read string $shop_code
  */
 class CreateOrderRequest extends FormRequest
 {
@@ -28,7 +28,7 @@ class CreateOrderRequest extends FormRequest
             'items.*.price' => 'required|numeric',
             'items.*.qty' => 'required|integer|min:1',
             'qr' => 'required|string',
-            'shop_id' => 'required|integer|exists:loyalty_program_shops,external_code',
+            'shop_code' => 'required|string|exists:loyalty_program_shops,external_code',
         ];
     }
 }
