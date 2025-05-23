@@ -16,12 +16,12 @@ use Throwable;
 
 class UniredCardClient
 {
-    const METHOD_ACCOUNT_LIST = 'account.list';
+    const METHOD_TERMINAL_LIST = 'terminal.list';
 
     protected const METHOD_LOGIN = 'login';
 
-    private const METHOD_ACCOUNT_CREATE = 'account.create';
-    private const METHOD_ACCOUNT_DEACTIVATE = 'account.deactivate';
+    private const METHOD_TERMINAL_CREATE = 'terminal.create';
+    private const METHOD_TERMINAL_DEACTIVATE = 'terminal.deactivate';
     private const METHOD_TRANSFER_CREATE = 'transfer.create.qr.acc';
     private const METHOD_TRANSFER_STATE = 'transfer.state';
 
@@ -48,7 +48,7 @@ class UniredCardClient
      */
     public function createAccount(SbpCreateAccountRequestDTO $params): BaseQrPayResponseDTO
     {
-        return $this->makeRequest(self::METHOD_ACCOUNT_CREATE, $params->toArray());
+        return $this->makeRequest(self::METHOD_TERMINAL_CREATE, $params->toArray());
     }
 
     /**
@@ -56,7 +56,7 @@ class UniredCardClient
      */
     public function deactivateAccount(int $account_id): BaseQrPayResponseDTO
     {
-        return $this->makeRequest(self::METHOD_ACCOUNT_DEACTIVATE, ['account_id' => $account_id]);
+        return $this->makeRequest(self::METHOD_TERMINAL_DEACTIVATE, ['account_id' => $account_id]);
     }
 
     /**
@@ -191,7 +191,7 @@ class UniredCardClient
 
     public function syncAccounts(): BaseQrPayResponseDTO
     {
-        return $this->makeRequest(self::METHOD_ACCOUNT_LIST, []);
+        return $this->makeRequest(self::METHOD_TERMINAL_LIST, []);
     }
 
     /**
