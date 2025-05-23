@@ -293,7 +293,7 @@ class IcanService
         ]);
 
         if (! $installment->exists || $installment->isDirty()) {
-            $installment->saveQuietly();
+            $installment->save();
         }
 
         return $installment;
@@ -322,7 +322,7 @@ class IcanService
         ]);
 
         if (! $transaction->exists || $transaction->isDirty()) {
-            $transaction->saveQuietly();
+            $transaction->save();
         }
 
         return $transaction;
