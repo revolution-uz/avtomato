@@ -76,7 +76,7 @@ readonly class CardScoringService
             'card_number' => $dto->number,
             'date_from' => $type === ScoringRequestTypeEnum::HUMO ?
                 Carbon::now()->subMonths(3)->addDay()->toDateString() :
-                Carbon::now()->subDays(59)->toDateString(),
+                Carbon::now()->subYear()->toDateString(),
         ]);
 
         try {
@@ -94,9 +94,18 @@ readonly class CardScoringService
                     UniredMonitoringHumoResponseDTO::from($response->result)
                 );
             } else {
-                $model->response = CardScoringResponseDTO::parseFromUniredUzcard(
-                    UniredMonitoringUzcardResponseDTO::from($response->result)
-                );
+                $totalPages = 1;
+                for ($i = 0; $i < $totalPages; $i++) {
+                    $uniredDto->page_number = $i;
+                    $response = $this->uniredClient->monitoringUzcard($uniredDto);
+
+                    $result = UniredMonitoringUzcardResponseDTO::from($response->result);
+                    $responseDto = CardScoringResponseDTO::parseFromUniredUzcard($result, $responseDto ?? null);
+
+                    $totalPages = $result->total_pages;
+                }
+
+                $model->response = $responseDto;
             }
             $model->saveOrFail();
 

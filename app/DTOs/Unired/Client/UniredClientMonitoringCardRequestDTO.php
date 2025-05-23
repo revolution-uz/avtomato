@@ -10,5 +10,6 @@ class UniredClientMonitoringCardRequestDTO extends BaseUniredDTO
         public string $card_number,
         public string $date_from,
         // date_to - default: today
+        public int $page_number = 0,
     ) {}
 }
