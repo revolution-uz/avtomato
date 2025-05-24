@@ -17,7 +17,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property int $amount
  * @property string|null $phone_number
- * @property int|null $external_transaction_id
+ * @property int|null $external_transaction_id // string in db
  * @property string|null $terminal_id
  * @property string|null $merchant_id
  * @property string|null $card_number
@@ -43,6 +43,7 @@ class BalanceFund extends Model
         'terminal_id',
         'merchant_id',
         'card_number',
+        'admin_id',
     ];
 
     protected $casts = [
@@ -63,7 +64,7 @@ class BalanceFund extends Model
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(CompanyAdmin::class);
+        return $this->belongsTo(CompanyAdmin::class)->withTrashed();
     }
 
     public function cardPan(): Attribute

@@ -45,11 +45,11 @@ class OrderStatusHistory extends Model
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class)->withTrashed();
     }
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(CompanyAdmin::class, 'admin_id');
+        return $this->belongsTo(CompanyAdmin::class)->withTrashed();
     }
 }
