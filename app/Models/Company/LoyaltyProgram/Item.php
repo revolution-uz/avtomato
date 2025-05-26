@@ -52,7 +52,7 @@ class Item extends Model
 
     public function shop(): BelongsTo
     {
-        return $this->belongsTo(Shop::class, 'external_shop_code', 'external_code');
+        return $this->belongsTo(Shop::class, 'external_shop_code', 'external_code')->withTrashed();
     }
 
     public function prices(): HasMany

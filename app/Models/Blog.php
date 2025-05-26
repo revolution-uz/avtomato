@@ -94,6 +94,6 @@ class Blog extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(BlogCategory::class, 'category_id');
+        return $this->belongsTo(BlogCategory::class, 'category_id')->withTrashed();
     }
 }

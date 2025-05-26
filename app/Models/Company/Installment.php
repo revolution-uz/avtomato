@@ -244,7 +244,7 @@ class Installment extends Model
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(CompanyAdmin::class, 'admin_id')->withTrashed();
+        return $this->belongsTo(CompanyAdmin::class)->withTrashed();
     }
 
     public function initialFeeTransaction(): HasOne

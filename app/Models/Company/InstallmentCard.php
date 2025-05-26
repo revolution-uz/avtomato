@@ -29,7 +29,7 @@ class InstallmentCard extends Model
 
     public function installment(): BelongsTo
     {
-        return $this->belongsTo(Installment::class);
+        return $this->belongsTo(Installment::class)->withTrashed();
     }
 
     public function card(): BelongsTo

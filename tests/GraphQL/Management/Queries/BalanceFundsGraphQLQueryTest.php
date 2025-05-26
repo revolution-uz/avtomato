@@ -3,6 +3,7 @@
 namespace Tests\GraphQL\Management\Queries;
 
 use App\Models\Company\BalanceFund;
+use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -20,6 +21,19 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
         'external_transaction_id',
         'card_number',
         'created_at',
+        'admin' => [
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'phone',
+            'status',
+            'language',
+            'role_id',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ],
     ];
 
     protected function setUp(): void
@@ -229,6 +243,22 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
         $this->assertEquals(trans('validation.regex', ['attribute' => 'sort']), $response->json('errors.0.extensions.validation.sort.0'));
     }
 
+    #[Test]
+    public function successWithDeletedAdmin()
+    {
+        BalanceFund::query()->forceDelete();
+        $balanceFund = BalanceFund::factory()->withAdmin()->create();
+        $balanceFund->admin->delete();
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.management'), $this->buildGraphQLQuery());
+
+        $this->assertSuccessBalanceFundsResponse($response, 1, withAdmin: true);
+        $this->assertEquals($balanceFund->admin->id, $response->json('data.balanceFunds.data.0.admin.id'));
+        $this->assertNotNull($response->json('data.balanceFunds.data.0.admin.deleted_at'));
+    }
+
     private function buildGraphQLQuery(array $variables = []): array
     {
         $query = [];
@@ -252,8 +282,12 @@ class BalanceFundsGraphQLQueryTest extends GraphQLTestCase
         return $query;
     }
 
-    private function assertSuccessBalanceFundsResponse(TestResponse $response, $total = null, $perPage = null, $page = null): void
+    private function assertSuccessBalanceFundsResponse(TestResponse $response, $total = null, $perPage = null, $page = null, bool $withAdmin = false): void
     {
+        if (! $withAdmin) {
+            $this->_structure = Arr::except($this->_structure, 'admin');
+        }
+
         $response->assertOk();
         $response->assertJsonIsObject();
         $response->assertJsonStructure([
