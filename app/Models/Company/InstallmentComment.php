@@ -33,11 +33,11 @@ class InstallmentComment extends Model
 
     public function installment(): BelongsTo
     {
-        return $this->belongsTo(Installment::class);
+        return $this->belongsTo(Installment::class)->withTrashed();
     }
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(CompanyAdmin::class);
+        return $this->belongsTo(CompanyAdmin::class)->withTrashed();
     }
 }

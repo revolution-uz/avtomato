@@ -1,0 +1,9 @@
+{
+    "status": true,
+    "result": {
+        "30708091011123": {
+            "error": "Not found any card with this personCode"
+        }
+    },
+    "error": null
+}

@@ -15,13 +15,17 @@ class TransactionTypeSeeder extends Seeder
             TransactionType::ATMOS_WITH_CARD => ['name_uz' => 'Atmos karta bilan', 'name_ru' => 'Атмос с картой ', 'name_en' => 'Atmos with card'],
             TransactionType::ATMOS_WITH_PINFL => ['name_uz' => 'Atmos passport bilan', 'name_ru' => 'Атмос с паспортом', 'name_en' => 'Atmos with passport'],
             TransactionType::UNIRED_WITH_PINFL => ['name_uz' => 'Unired passport bilan', 'name_ru' => 'Униред с паспортом', 'name_en' => 'Unired with passport'],
-            TransactionType::ICAN_INTEGRATION => ['name_uz' => 'ICAN integratsiyasi', 'name_ru' => 'Интеграция ICAN', 'name_en' => 'ICAN Integration'],
         ];
 
         try {
             foreach ($transactionTypes as $id => $data) {
                 TransactionType::query()->updateOrCreate(['id' => $id], array_merge($data, ['is_system' => true]));
             }
+
+            TransactionType::query()
+                ->where('is_system', true)
+                ->whereNotIn('id', array_keys($transactionTypes))
+                ->delete();
 
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());

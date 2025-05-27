@@ -38,7 +38,7 @@ class OrderStatusHistory extends Model
     // Optional: Define relationships if needed
     public function admin()
     {
-        return $this->belongsTo(CompanyAdmin::class, 'admin_id');
+        return $this->belongsTo(CompanyAdmin::class)->withTrashed();
     }
 
     public function order()

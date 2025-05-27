@@ -49,6 +49,68 @@ class UniredServiceTest extends TestCase
     }
 
     #[Test]
+    public function successCreateBranch()
+    {
+        UniredFaker::createBranch();
+
+        $response = $this->_uniredService->createBranch(UniredCreateBranchRequestDTO::from($this->_inputCompany));
+
+        $this->assertTrue($response);
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $this->assertEquals($this->_inputCompany['id'], $feature->data['id']);
+        $this->assertEquals($this->_inputCompany['name'], $feature->data['name']);
+        $this->assertEquals($this->_inputCompany['merchant_uzcard'], $feature->data['merchant_uzcard']);
+        $this->assertEquals($this->_inputCompany['terminal_uzcard'], $feature->data['terminal_uzcard']);
+        $this->assertEquals($this->_inputCompany['merchant_humo'], $feature->data['merchant_humo']);
+        $this->assertEquals($this->_inputCompany['terminal_humo'], $feature->data['terminal_humo']);
+        $this->assertEquals($this->_inputCompany['phone'], $feature->data['phone']);
+        $this->assertFalse(isset($feature->data['auto_payment']));
+    }
+
+    #[Test]
+    public function successUpdateBranch()
+    {
+        UniredFaker::updateBranch();
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $feature->data = array_merge($this->_inputCompany, ['name' => 'Before Updated']);
+        $feature->save();
+
+        $response = $this->_uniredService->updateBranch(UniredUpdateBranchRequestDTO::from($this->_inputCompany));
+
+        $this->assertTrue($response);
+        $feature->refresh();
+        $this->assertEquals($this->_inputCompany['id'], $feature->data['id']);
+        $this->assertEquals($this->_inputCompany['name'], $feature->data['name']);
+        $this->assertEquals($this->_inputCompany['merchant_uzcard'], $feature->data['merchant_uzcard']);
+        $this->assertEquals($this->_inputCompany['terminal_uzcard'], $feature->data['terminal_uzcard']);
+        $this->assertEquals($this->_inputCompany['merchant_humo'], $feature->data['merchant_humo']);
+        $this->assertEquals($this->_inputCompany['terminal_humo'], $feature->data['terminal_humo']);
+        $this->assertEquals($this->_inputCompany['phone'], $feature->data['phone']);
+        $this->assertEquals($this->_inputCompany['auto_payment'], $feature->data['auto_payment']);
+    }
+
+    #[Test]
+    public function successSwitchOffCompany()
+    {
+        UniredFaker::switchOffBranch();
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $feature->data = $this->_inputCompany;
+        $feature->save();
+
+        $this->_uniredService->switchOffBranch();
+
+        $feature->refresh();
+        $this->assertEquals($this->_inputCompany['id'], $feature->data['id']);
+        $this->assertEquals($this->_inputCompany['name'], $feature->data['name']);
+        $this->assertEquals($this->_inputCompany['merchant_uzcard'], $feature->data['merchant_uzcard']);
+        $this->assertEquals($this->_inputCompany['terminal_uzcard'], $feature->data['terminal_uzcard']);
+        $this->assertEquals($this->_inputCompany['merchant_humo'], $feature->data['merchant_humo']);
+        $this->assertEquals($this->_inputCompany['terminal_humo'], $feature->data['terminal_humo']);
+        $this->assertEquals($this->_inputCompany['phone'], $feature->data['phone']);
+        $this->assertFalse($feature->data['auto_payment']);
+    }
+
+    #[Test]
     public function successCreateOrUpdateCustomer()
     {
         $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
@@ -71,10 +133,7 @@ class UniredServiceTest extends TestCase
         UniredFaker::getCards();
 
         $customer = Customer::factory()->create();
-        $this->_uniredService->getAndSyncPinflCards($customer);
-
         $centralCustomer = $customer->getOrCreateCentralCustomer();
-
         $expectedData = [
             [
                 'pinfl' => '413109***0086',
@@ -104,6 +163,9 @@ class UniredServiceTest extends TestCase
             ],
         ];
 
+        $res = $this->_uniredService->getAndSyncPinflCards($customer);
+
+        $this->assertTrue($res);
         $this->assertCount(count($expectedData), $centralCustomer->uniredCards);
 
         foreach ($centralCustomer->uniredCards as $key => $card) {

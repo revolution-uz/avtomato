@@ -22,4 +22,9 @@ enum ApplicationEnvironmentEnum: string
     {
         return self::getCurrent() === self::PRODUCTION ? 'avtomato_' : 'avtomato_test_';
     }
+
+    public static function isApiRequest(): bool
+    {
+        return request()->is('api/*');
+    }
 }

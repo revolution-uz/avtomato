@@ -50,12 +50,12 @@ class Subscription extends Model
 
     public function tariff(): BelongsTo
     {
-        return $this->belongsTo(Tariff::class);
+        return $this->belongsTo(Tariff::class)->withTrashed();
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function getIsAvailableAttribute(): bool

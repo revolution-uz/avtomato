@@ -58,7 +58,7 @@ class CardScoringResponseDTO extends BaseScoringResponse
         return self::from(['report' => $report]);
     }
 
-    public static function parseFromUniredUzcard(UniredMonitoringUzcardResponseDTO $dto)
+    public static function parseFromUniredUzcard(UniredMonitoringUzcardResponseDTO $dto, ?self $responseDto = null): self
     {
         $report = self::processTransactions(
             $dto->content,
@@ -67,7 +67,28 @@ class CardScoringResponseDTO extends BaseScoringResponse
             fn ($transaction) => $transaction->transType
         );
 
-        return self::from(['report' => $report]);
+        if (! $responseDto) {
+            return self::from(['report' => $report]);
+        }
+
+        foreach ($report as $monthKey => $item) {
+            if (isset($responseDto->report[$monthKey])) {
+                $responseDto->report[$monthKey]->full_amount += $item['full_amount'];
+                $existingDetails = $responseDto->report[$monthKey]->details->toCollection()->keyBy('type_code');
+
+                foreach ($item['details'] as $detail) {
+                    if ($existingDetails->has($detail['type_code'])) {
+                        $existingDetails[$detail['type_code']]->amount += $detail['amount'];
+                    } else {
+                        $responseDto->report[$monthKey]->details[] = DetailedAnalyticsInMonthDTO::from($detail);
+                    }
+                }
+            } else {
+                $responseDto->report[$monthKey] = MonthlyAnalyticsDTO::from($item);
+            }
+        }
+
+        return $responseDto;
     }
 
     private static function processTransactions(Collection $transactions, callable $getMonth, callable $getAmount, callable $getTranType): array

@@ -54,20 +54,20 @@ class Utilities
         return $numerator / ($denominator != 0 ? $denominator : 1);
     }
 
-    public static function generateIdByTenancy(int $id): string
+    public static function generateIdByTenancy(int|string $id): string
     {
         return tenant('id') . self::TENANT_SEPARATOR . $id;
     }
 
     public static function isAllowedUpdatePinflCards(?Carbon $searched_at): bool
     {
-        $pinflCardUpdateMonths = CompanySettings::getValue(CompanySettingsEnum::PINFL_CARDS_UPDATE_MONTHS);
+        $pinflCardUpdateDays = CompanySettings::getValue(CompanySettingsEnum::PINFL_CARDS_UPDATE_DAYS);
 
-        if ($pinflCardUpdateMonths == 0) {
+        if ($pinflCardUpdateDays == 0) {
             return false;
         }
 
-        return is_null($searched_at) || $searched_at < Carbon::now()->subMonths($pinflCardUpdateMonths);
+        return is_null($searched_at) || $searched_at < Carbon::now()->subDays($pinflCardUpdateDays);
     }
 
     public static function isAllowedManualUpdatePinflCards(?Carbon $searched_at): bool

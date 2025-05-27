@@ -62,16 +62,13 @@ class User extends Authenticatable
         $attributeXorSum = (int) $qrDto[0];
         $timestamp = (int) $qrDto[1];
         $userId = $attributeXorSum ^ $timestamp ^ tenant('id');
-        if (self::getQrString($attributeXorSum, $userId, $timestamp) !== $qr) {
-            throw new Exception('Invalid QR code');
-        }
 
         return static::query()->findOrFail($userId);
     }
 
     private static function getQrString(int $attributeXorSum, int $userId, float|int|string $timestamp): string
     {
-        return substr($attributeXorSum . '$$' . $timestamp . '$$' . md5(config('loyalty_program.security.qr_salt') . '$' . $userId . '$' . tenant('id') . '$' . $timestamp), 0, 20);
+        return substr($attributeXorSum . '$$' . $timestamp . '$$' . md5(config('loyalty_program.security.qr_salt') . '$' . $userId . '$' . tenant('id') . '$' . $timestamp), 0, 36);
     }
 
     public function subscriptions(): HasMany
@@ -113,9 +110,9 @@ class User extends Authenticatable
             ->count();
     }
 
-    public function getQrAttribute(): array
+    public function getQrAttribute(int $expiration = 30): array
     {
-        $timestamp = now()->addSeconds(30)->timestamp;
+        $timestamp = now()->addSeconds($expiration)->timestamp;
         $attributeXorSum = $this->id ^ $timestamp ^ tenant('id');
 
         return [

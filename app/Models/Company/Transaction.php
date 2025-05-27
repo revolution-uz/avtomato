@@ -99,16 +99,17 @@ class Transaction extends Model
             if (! $transaction->is_initial_fee) {
                 $installment->increment('paid_amount', $transaction->amount);
             }
-            if ($installment->wholeDebtAmount <= 1) {
-                $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
+            if ($installment->unired_id) {
+                CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
             }
             if ($transaction->transactionType->is_system) {
-                CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
-                $transaction->computeFee();
+                $transaction->computeCommission();
             }
-
-            if ($transaction->installment->ican_id) {
+            if ($installment->ican_id) {
                 CreateIcanTransactionJob::dispatch($transaction->id);
+            }
+            if ($installment->wholeDebtAmount <= 1) {
+                $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
             }
 
             SendTransactionSmsJob::dispatch($transaction->id);
@@ -155,7 +156,7 @@ class Transaction extends Model
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(CompanyAdmin::class, 'admin_id', 'id');
+        return $this->belongsTo(CompanyAdmin::class)->withTrashed();
     }
 
     public function branch(): BelongsTo
@@ -193,16 +194,14 @@ class Transaction extends Model
         return $isCancelled;
     }
 
-    private function computeFee()
+    private function computeCommission(): void
     {
         if ($featureEnum = TransactionType::getFeature($this->transaction_type_id)) {
             if ($feature = Feature::query()
                 ->where('name', $featureEnum)
                 ->first()) {
-                $commission = CardTypeEnum::getCardType($this->card_pan) === CardTypeEnum::HUMO ? $feature->humo_percent : $feature->uzcard_percent;
-                if ($commission && ($amount = $this->amount * $commission) > 0) {
-                    app(BalanceService::class)->chargeAmount($featureEnum, $this, $amount);
-                }
+                $commission = max(0, CardTypeEnum::getCardType($this->card_pan) === CardTypeEnum::HUMO ? $feature->humo_percent : $feature->uzcard_percent);
+                app(BalanceService::class)->chargeAmount($featureEnum, $this, $this->amount * $commission);
             }
         }
     }

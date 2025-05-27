@@ -3,6 +3,8 @@
 namespace App\Models\Company;
 
 use App\Enums\FeatureEnum;
+use App\Exceptions\GeneralException;
+use App\Services\IcanService;
 use App\Traits\HasTranslations;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Carbon\Carbon;
@@ -19,6 +21,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $name_ru
  * @property string $name_en
  * @property bool $is_system
+ * @property string|null $ican_flag
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -30,17 +33,19 @@ class TransactionType extends Model
 
     public static array $sortables = ['id', 'name', 'is_system', 'created_at', 'updated_at'];
 
+    private static array $_cache = [];
+
     const int ATMOS_WITH_CARD = 1;
     const int ATMOS_WITH_PINFL = 2;
     const int UNIRED_WITH_PINFL = 3;
-    const int ICAN_INTEGRATION = 4;
-    const int UNIRED_WITH_CARD = 5;
 
     protected $fillable = [
+        'id',
         'name_uz',
         'name_ru',
         'name_en',
         'is_system',
+        'ican_flag',
     ];
 
     protected $translatedColumns = ['name'];
@@ -60,10 +65,28 @@ class TransactionType extends Model
         return match ($transaction_type_id) {
             self::ATMOS_WITH_CARD => FeatureEnum::ATMOS_CARD_PAY,
             self::ATMOS_WITH_PINFL => FeatureEnum::ATMOS_PINFL_PAY,
-            self::UNIRED_WITH_CARD => FeatureEnum::UNIRED_CARD_PAY,
-            self::UNIRED_WITH_PINFL => FeatureEnum::UNIRED_PINFL_PAY,
+            self::UNIRED_WITH_PINFL => FeatureEnum::UNIRED_PAY,
             default => null,
         };
+    }
+
+    public static function getIdByIcanFlag(string $flag): int
+    {
+        if (empty(self::$_cache)) {
+            self::$_cache = self::query()->whereNotNull('ican_flag')->pluck('id', 'ican_flag')->toArray();
+        }
+
+        if (! array_key_exists($flag, self::$_cache)) {
+            $icanService = app(IcanService::class);
+            $icanService->syncTransactionTypes();
+            self::$_cache = self::query()->whereNotNull('ican_flag')->pluck('id', 'ican_flag')->toArray();
+
+            if (! array_key_exists($flag, self::$_cache)) {
+                throw new GeneralException('Transaction type not found with ican flag: ' . $flag);
+            }
+        }
+
+        return self::$_cache[$flag];
     }
 
     public function setNames(string $name): void

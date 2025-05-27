@@ -47,7 +47,7 @@ class OrderItem extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Item::class, 'product_id');
+        return $this->belongsTo(Item::class, 'product_id')->withTrashed();
     }
 
     public function getTotalAmountAttribute(): float

@@ -8,7 +8,7 @@ return [
     'sms_installment_auto_charge' => 'Автоматик тўловдан кейин СМС юбориш',
     'sms_installment_notification' => 'Нақд тўловдан кейин СМС юбориш',
     'sms_installment_payment' => 'Қарз ҳақида СМС юбориш',
-    'pinfl_cards_update_months' => 'ПИНФЛ карталарини янгилаш даври (ойларда)',
+    'pinfl_cards_update_days' => 'ПИНФЛ карталарини янгилаш даври',
     'telegram_bot_enabled' => 'Телеграм бот орқали хабар юбориш',
     'telegram_bot_token' => 'Телеграм бот токени',
     'telegram_chat_id' => 'Телеграм гуруҳ чат IDси',

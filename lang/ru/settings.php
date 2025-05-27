@@ -8,7 +8,7 @@ return [
     'sms_installment_auto_charge' => 'Отправка ЅМЅ после автоматического платежа',
     'sms_installment_notification' => 'Отправка ЅМЅ после оплаты наличными',
     'sms_installment_payment' => 'Отправка ЅМЅ о задолженности',
-    'pinfl_cards_update_months' => 'Период обновления карт ПИНФЛ (в месяцах)',
+    'pinfl_cards_update_days' => 'Период обновления карт ПИНФЛ',
     'telegram_bot_enabled' => 'Отправить сообщение через Телеграм бот',
     'telegram_bot_token' => 'Токен бота Телеграм',
     'telegram_chat_id' => 'Идентификатор чата группы Телеграм',
