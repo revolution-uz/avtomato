@@ -30,18 +30,16 @@ class AdminSeeder extends Seeder
                 'role_id' => Role::getAdmin()->id,
             ]);
 
-            $icanIntegrator = CompanyAdmin::query()
-                ->withTrashed()
-                ->firstOrCreate([
-                    'username' => CompanyAdmin::ICAN_INTEGRATOR,
-                ], [
-                    'first_name' => 'Ican',
-                    'last_name' => 'Integrator',
-                    'status' => UserStatusEnum::ACTIVE,
-                    'password' => Hash::make(Str::random(8)),
-                    'role_id' => Role::getAdmin()->id,
-                ]);
-            $icanIntegrator->delete(); // set deleted_at null
+            CompanyAdmin::query()->updateOrCreate([
+                'username' => CompanyAdmin::ICAN_INTEGRATOR,
+            ], [
+                'first_name' => 'Ican',
+                'last_name' => 'Integrator',
+                'status' => UserStatusEnum::ACTIVE,
+                'password' => Hash::make(Str::random(8)),
+                'role_id' => Role::getAdmin()->id,
+                'is_system' => true,
+            ]);
 
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
