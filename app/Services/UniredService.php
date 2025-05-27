@@ -4,9 +4,6 @@ namespace App\Services;
 
 use App\Clients\UniredPinflClient;
 use App\DTOs\Unired\Branch\UniredBranchResponseDTO;
-use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
-use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
-use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
@@ -25,6 +22,7 @@ use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationResponseDTO;
 use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\Company\CardTypeEnum;
+use App\Enums\Company\TerminalTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
@@ -41,42 +39,6 @@ use Illuminate\Support\Facades\Log;
 class UniredService
 {
     public function __construct(private UniredPinflClient $uniredClient) {}
-
-    public function createBranch(UniredCreateBranchRequestDTO $params): bool
-    {
-        $uniredResponseDto = $this->uniredClient->createBranch($params);
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
-        $feature->data = UniredBranchResponseDTO::from($uniredResponseDto->result)->toArray();
-
-        return $feature->saveOrFail();
-    }
-
-    public function updateBranch(UniredUpdateBranchRequestDTO $params): bool
-    {
-        $uniredResponseDto = $this->uniredClient->updateBranch($params);
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
-        $feature->data = array_merge($feature->data, UniredUpdateBranchRequestDTO::from($uniredResponseDto->result)->toArray());
-
-        return $feature->saveOrFail();
-    }
-
-    public function switchOffBranch(): bool
-    {
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
-        $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->data['id'], false));
-        $feature->data = array_merge($feature->data, ['auto_payment' => false]);
-
-        return $feature->saveOrFail();
-    }
-
-    public function switchOnBranch(): bool
-    {
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
-        $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->data['id'], true));
-        $feature->data = array_merge($feature->data, ['auto_payment' => true]);
-
-        return $feature->saveOrFail();
-    }
 
     public function createCustomer(Customer $customer): ?bool
     {
@@ -103,7 +65,7 @@ class UniredService
     public function createInstallment(Installment $installment): bool
     {
         $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
-        $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
+        $branchFeatureDto = UniredBranchResponseDTO::from($feature->getTerminalData(TerminalTypeEnum::UNIRED_PINFL, $installment->branch_id) ?? $feature->original_data);
         if ($this->uniredClient->createContracts(new UniredCreateContractRequestDTO(
             $installment->customer->pinfl,
             Utilities::generateIdByTenancy($installment->id),
@@ -127,7 +89,7 @@ class UniredService
     public function createInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): bool
     {
         $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
-        $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
+        $branchFeatureDto = UniredBranchResponseDTO::from($feature->getTerminalData(TerminalTypeEnum::UNIRED_PINFL, $installmentGuarantor->installment->branch_id) ?? $feature->original_data);
 
         if ($this->uniredClient->createContracts(new UniredCreateContractRequestDTO(
             $installmentGuarantor->customer->pinfl,

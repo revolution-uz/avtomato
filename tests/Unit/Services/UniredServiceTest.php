@@ -3,8 +3,6 @@
 namespace Tests\Unit\Services;
 
 use App\Clients\UniredPinflClient;
-use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
-use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationRequestDTO;
 use App\Enums\Company\PhoneTypeEnum;
 use App\Enums\FeatureEnum;
@@ -48,68 +46,6 @@ class UniredServiceTest extends TestCase
         CentralUniredCard::truncate();
 
         $this->_uniredService = new UniredService(new UniredPinflClient);
-    }
-
-    #[Test]
-    public function successCreateBranch()
-    {
-        UniredFaker::createBranch();
-
-        $response = $this->_uniredService->createBranch(UniredCreateBranchRequestDTO::from($this->_inputCompany));
-
-        $this->assertTrue($response);
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
-        $this->assertEquals($this->_inputCompany['id'], $feature->data['id']);
-        $this->assertEquals($this->_inputCompany['name'], $feature->data['name']);
-        $this->assertEquals($this->_inputCompany['merchant_uzcard'], $feature->data['merchant_uzcard']);
-        $this->assertEquals($this->_inputCompany['terminal_uzcard'], $feature->data['terminal_uzcard']);
-        $this->assertEquals($this->_inputCompany['merchant_humo'], $feature->data['merchant_humo']);
-        $this->assertEquals($this->_inputCompany['terminal_humo'], $feature->data['terminal_humo']);
-        $this->assertEquals($this->_inputCompany['phone'], $feature->data['phone']);
-        $this->assertFalse(isset($feature->data['auto_payment']));
-    }
-
-    #[Test]
-    public function successUpdateBranch()
-    {
-        UniredFaker::updateBranch();
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
-        $feature->data = array_merge($this->_inputCompany, ['name' => 'Before Updated']);
-        $feature->save();
-
-        $response = $this->_uniredService->updateBranch(UniredUpdateBranchRequestDTO::from($this->_inputCompany));
-
-        $this->assertTrue($response);
-        $feature->refresh();
-        $this->assertEquals($this->_inputCompany['id'], $feature->data['id']);
-        $this->assertEquals($this->_inputCompany['name'], $feature->data['name']);
-        $this->assertEquals($this->_inputCompany['merchant_uzcard'], $feature->data['merchant_uzcard']);
-        $this->assertEquals($this->_inputCompany['terminal_uzcard'], $feature->data['terminal_uzcard']);
-        $this->assertEquals($this->_inputCompany['merchant_humo'], $feature->data['merchant_humo']);
-        $this->assertEquals($this->_inputCompany['terminal_humo'], $feature->data['terminal_humo']);
-        $this->assertEquals($this->_inputCompany['phone'], $feature->data['phone']);
-        $this->assertEquals($this->_inputCompany['auto_payment'], $feature->data['auto_payment']);
-    }
-
-    #[Test]
-    public function successSwitchOffCompany()
-    {
-        UniredFaker::switchOffCompany();
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
-        $feature->data = $this->_inputCompany;
-        $feature->save();
-
-        $this->_uniredService->switchOffBranch();
-
-        $feature->refresh();
-        $this->assertEquals($this->_inputCompany['id'], $feature->data['id']);
-        $this->assertEquals($this->_inputCompany['name'], $feature->data['name']);
-        $this->assertEquals($this->_inputCompany['merchant_uzcard'], $feature->data['merchant_uzcard']);
-        $this->assertEquals($this->_inputCompany['terminal_uzcard'], $feature->data['terminal_uzcard']);
-        $this->assertEquals($this->_inputCompany['merchant_humo'], $feature->data['merchant_humo']);
-        $this->assertEquals($this->_inputCompany['terminal_humo'], $feature->data['terminal_humo']);
-        $this->assertEquals($this->_inputCompany['phone'], $feature->data['phone']);
-        $this->assertFalse($feature->data['auto_payment']);
     }
 
     #[Test]
