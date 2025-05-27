@@ -27,12 +27,13 @@ class UpdateAdminRoleGraphQLMutation extends Mutation
     {
         return [
             'id' => [
-                'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', Rule::exists('admins', 'id')->whereNull('deleted_at')],
+                'rules' => [
+                    'required',
+                    Rule::exists(CompanyAdmin::class, 'id')->where('is_system', false)->whereNull('deleted_at'),
+                ],
             ],
             'role_id' => [
-                'name' => 'role_id',
                 'type' => Type::nonNull(Type::int()),
                 'rules' => ['required', 'int', Rule::exists('roles', 'id')->whereNull('deleted_at')],
             ],

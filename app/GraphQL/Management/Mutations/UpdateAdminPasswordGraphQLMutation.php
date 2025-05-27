@@ -27,15 +27,17 @@ class UpdateAdminPasswordGraphQLMutation extends Mutation
     {
         return [
             'id' => [
-                'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    Rule::exists(CompanyAdmin::class, 'id')->where('is_system', false)->whereNull('deleted_at'),
+                ],
             ],
             'password' => [
-                'name' => 'password',
                 'type' => Type::nonNull(Type::string()),
+                'rules' => ['required', 'string', 'min:8', 'confirmed'],
             ],
             'password_confirmation' => [
-                'name' => 'password_confirmation',
                 'type' => Type::nonNull(Type::string()),
             ],
         ];
@@ -51,13 +53,5 @@ class UpdateAdminPasswordGraphQLMutation extends Mutation
         (new UserService)->updatePassword(CompanyAdmin::findOrFail($args['id']), $args['password']);
 
         return true;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'id' => ['required', Rule::exists('admins', 'id')->whereNull('deleted_at')],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ];
     }
 }
