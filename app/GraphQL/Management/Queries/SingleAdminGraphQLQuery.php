@@ -29,7 +29,7 @@ class SingleAdminGraphQLQuery extends Query
             'id' => [
                 'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
-                'rules' => ['required', 'exists:admins,id'],
+                'rules' => ['required', 'exists:admins,id,deleted_at,NULL'],
             ],
         ];
     }
