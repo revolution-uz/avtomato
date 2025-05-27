@@ -51,9 +51,12 @@ class DeleteAdminGraphQLMutation extends Mutation
                 'required',
                 'integer',
                 Rule::exists(CompanyAdmin::class, 'id')
-                    ->whereNot('id', auth('company-admin')->id())
-                    ->where('is_system', false)
-                    ->whereNot('role_id', Role::getAdmin()->id),
+                    ->where(function ($query) {
+                        $query->whereNot('id', auth('company-admin')->id())
+                            ->where('is_system', false)
+                            ->whereNot('role_id', Role::getAdmin()->id)
+                            ->whereNull('deleted_at');
+                    }),
             ],
         ];
     }

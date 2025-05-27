@@ -32,7 +32,11 @@ class UpdateAdminGraphQLMutation extends Mutation
                 'rules' => [
                     'required',
                     'integer',
-                    Rule::exists(CompanyAdmin::class, 'id')->where('is_system', false)->whereNull('deleted_at'),
+                    Rule::exists(CompanyAdmin::class, 'id')
+                        ->where(function ($query) {
+                            $query->where('is_system', false)
+                                ->whereNull('deleted_at');
+                        }),
                 ],
             ],
             'first_name' => [
