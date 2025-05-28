@@ -9,6 +9,7 @@ return [
     'sms_installment_notification' => 'Sending SMS after cash payment',
     'sms_installment_payment' => 'Sending SMS about debt',
     'pinfl_cards_update_days' => 'PINFL card update period',
+    'pinfl_cards_update_min_debt' => 'Minimum debt amount for updating PINFL cards',
     'telegram_bot_enabled' => 'Send a message via Telegram bot',
     'telegram_bot_token' => 'Telegram bot token',
     'telegram_chat_id' => 'Telegram group chat ID',

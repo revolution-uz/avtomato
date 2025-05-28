@@ -9,6 +9,7 @@ return [
     'sms_installment_notification' => 'Нақд тўловдан кейин СМС юбориш',
     'sms_installment_payment' => 'Қарз ҳақида СМС юбориш',
     'pinfl_cards_update_days' => 'ПИНФЛ карталарини янгилаш даври',
+    'pinfl_cards_update_min_debt' => 'ПИНФЛ карталарини янгилаш учун минимал қарз миқдори',
     'telegram_bot_enabled' => 'Телеграм бот орқали хабар юбориш',
     'telegram_bot_token' => 'Телеграм бот токени',
     'telegram_chat_id' => 'Телеграм гуруҳ чат IDси',

@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\FeatureEnum;
+use App\Models\Company\CompanySettings;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
 use App\Services\UniredService;
@@ -21,7 +23,6 @@ class SearchCustomerCardInUniredJob implements ShouldBeUniqueUntilProcessing, Sh
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    const MINIMUM_WITHDRAW_AMOUNT = 50000;
     const JOB_ID = 'search-customer-card-in-unired';
 
     public function __construct(private readonly int $installmentId)
@@ -41,10 +42,12 @@ class SearchCustomerCardInUniredJob implements ShouldBeUniqueUntilProcessing, Sh
             return;
         }
 
+        $minimumWithdrawAmount = CompanySettings::getConfig(CompanySettingsEnum::PINFL_CARDS_UPDATE_MIN_DEBT);
+
         /** @var Installment $installment */
         $installment = Installment::query()->with('customer', 'guarantorList')->findOrFail($this->installmentId);
-        $debt_amount = $installment->debtAmount;
-        if ($debt_amount > self::MINIMUM_WITHDRAW_AMOUNT && $installment->any_card_charge && $installment->is_active) {
+
+        if ($installment->debt_amount >= $minimumWithdrawAmount && $installment->any_card_charge && $installment->is_active) {
             if ($installment->isAvailableCustomerPinfl()) {
                 if (
                     $uniredService->updatePinflCardsList($installment->customer) &&

@@ -9,6 +9,7 @@ return [
     'sms_installment_notification' => 'Naqd to\'lovdan keyin SMS yuborish',
     'sms_installment_payment' => 'Qarzdorlik haqida SMS yuborish',
     'pinfl_cards_update_days' => 'PINFL kartlarini yangilash davri',
+    'pinfl_cards_update_min_debt' => 'PINFL kartlarini yangilash uchun minimal qarz miqdori',
     'telegram_bot_enabled' => 'Telegram bot orqali xabar yuborish',
     'telegram_bot_token' => 'Telegram bot tokeni',
     'telegram_chat_id' => 'Telegram guruh chat IDsi',
