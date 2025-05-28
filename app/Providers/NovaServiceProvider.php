@@ -18,6 +18,7 @@ use App\Nova\CentralUniredCardResource;
 use App\Nova\Company\BalanceChargeResource;
 use App\Nova\Company\BalanceFundResource;
 use App\Nova\Company\BranchResource;
+use App\Nova\Company\CompanyAdminResource;
 use App\Nova\Company\CompanySettingsResource;
 use App\Nova\Company\FeatureResource;
 use App\Nova\Company\InstallmentResource;
@@ -31,7 +32,6 @@ use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SbpTransactionResource;
 use App\Nova\Company\SmsTemplateResource;
-use App\Nova\Company\UserResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
 use App\Nova\NewCustomerResource;
@@ -69,7 +69,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         // here will be another statistic dashboards
                     ])->collapsable()->icon('view-grid'),
                     MenuSection::make('Resources', [
-                        MenuItem::resource(UserResource::class),
+                        MenuItem::resource(CompanyAdminResource::class),
                         MenuItem::resource(ModuleResource::class),
                         MenuItem::resource(FeatureResource::class),
                         MenuItem::resource(CompanySettingsResource::class),
