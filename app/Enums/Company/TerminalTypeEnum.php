@@ -4,6 +4,7 @@ namespace App\Enums\Company;
 
 use App\Enums\EnumMethods;
 use App\Enums\FeatureEnum;
+use App\Models\Company\Feature;
 
 enum TerminalTypeEnum: int
 {
@@ -23,6 +24,6 @@ enum TerminalTypeEnum: int
             self::UNIRED_PINFL => FeatureEnum::UNIRED_PINFL_PAY,
         };
 
-        return $featureEnum->getFeature()->data;
+        return Feature::findByName($featureEnum)->data;
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Enums;
 
-use App\Models\Company\Feature;
-
 enum FeatureEnum: string
 {
     case PROFILE_EDIT = 'profile_edit';
@@ -138,10 +136,5 @@ enum FeatureEnum: string
             self::LOYALTY_PROGRAM,
             self::UNIRED_CARD_MANAGEMENT,
         ]);
-    }
-
-    public function getFeature()
-    {
-        return Feature::query()->where('name', $this)->first();
     }
 }
