@@ -2,7 +2,7 @@
 
 namespace App\Services\Scoring;
 
-use App\Clients\UniredClient;
+use App\Clients\UniredPinflClient;
 use App\DTOs\Scoring\Card\CardCreateRequestDTO;
 use App\DTOs\Scoring\Card\CardScoringResponseDTO;
 use App\DTOs\Unired\Client\UniredClientCardRegisterRequestDTO;
@@ -27,7 +27,7 @@ readonly class CardScoringService
     const CARD_TYPE_UZCARD = 'uzcard';
     const CONFIRMED_CARD_ERROR_CODE = 'card_already_confirmed';
 
-    public function __construct(private UniredClient $uniredClient, private BalanceService $balanceService) {}
+    public function __construct(private UniredPinflClient $uniredClient, private BalanceService $balanceService) {}
 
     public function scoringHumo(CardCreateRequestDTO $dto, string $phone)
     {

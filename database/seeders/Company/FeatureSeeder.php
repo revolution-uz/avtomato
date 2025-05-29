@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Company;
 
+use App\Enums\FeatureEnum;
 use App\Models\BaseFeature;
 use App\Models\Company\Feature;
 use App\Models\Company\Rbac\Permission;
@@ -13,6 +14,11 @@ class FeatureSeeder extends Seeder
 {
     public function run(): void
     {
+        // todo: remove this after first run
+        $feature = FeatureEnum::UNIRED_PINFL_PAY;
+        Feature::query()->where('name', 'unired_pay')->update(['name' => $feature->value]);
+        // end
+
         try {
             /** @var BaseFeature $baseFeature */
             foreach (BaseFeature::query()->get()->all() as $baseFeature) {

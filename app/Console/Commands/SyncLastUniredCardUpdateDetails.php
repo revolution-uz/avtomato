@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Clients\UniredClient;
+use App\Clients\UniredPinflClient;
 use App\DTOs\Unired\Client\UniredPinflCardUpdateResponseDTO;
 use App\Models\CentralCustomer;
 use App\Services\UniredService;
@@ -31,7 +31,7 @@ class SyncLastUniredCardUpdateDetails extends Command
      */
     public function handle(): int
     {
-        $service = new UniredService(new UniredClient);
+        $service = new UniredService(new UniredPinflClient);
         /** @var CentralCustomer $customer */
         foreach (CentralCustomer::query()->latest()->get() as $customer) {
             /** @var UniredPinflCardUpdateResponseDTO[] $cardUpdates */

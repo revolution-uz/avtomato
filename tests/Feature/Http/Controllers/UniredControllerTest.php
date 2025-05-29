@@ -29,7 +29,7 @@ class UniredControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->_token = config('clients.unired.callback-token');
+        $this->_token = config('clients.unired.pinfl.callback-token');
         $this->_customer = Customer::factory()->create();
 
         $this->_installmentInput = [

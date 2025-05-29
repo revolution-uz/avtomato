@@ -7,6 +7,7 @@ use App\DTOs\Atmos\Transaction\AtmosTransactionCancelResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionCreateResponseDTO;
 use App\DTOs\Atmos\Transaction\AtmosTransactionInfoResponseDTO;
 use App\Enums\ClientCodeEnum;
+use App\Enums\Company\TerminalTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Models\Company\Customer;
@@ -28,6 +29,8 @@ class AtmosPinflClient extends BaseAtmosClient
         $this->baseUrl = config('clients.atmos.pinfl.base_url');
         $this->channel = 'atmos-pinfl-client';
         $this->featureName = FeatureEnum::ATMOS_PINFL_PAY;
+        $this->terminalTypeEnum = TerminalTypeEnum::ATMOS_PINFL;
+        $this->setBranchId((int) config('clients.atmos.pinfl.default_branch_id'));
     }
 
     public function getClientCode(): ClientCodeEnum

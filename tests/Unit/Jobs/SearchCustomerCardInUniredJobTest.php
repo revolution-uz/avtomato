@@ -67,7 +67,7 @@ class SearchCustomerCardInUniredJobTest extends TestCase
     #[Test]
     public function doesNotSearchOrChargeWhenFeatureInactive(): void
     {
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
         $feature->update(['is_active' => false]);
 
         $installment = Installment::factory()->make($this->_installmentInput);

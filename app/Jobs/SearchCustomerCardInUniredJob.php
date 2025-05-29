@@ -36,7 +36,7 @@ class SearchCustomerCardInUniredJob implements ShouldBeUniqueUntilProcessing, Sh
     public function handle(UniredService $uniredService, BalanceService $balanceService): void
     {
         if (
-            ! Feature::isFeatureActive(FeatureEnum::UNIRED_PAY)
+            ! Feature::isFeatureActive(FeatureEnum::UNIRED_PINFL_PAY)
             or ! $balanceService->isAvailableCompany()
         ) {
             return;

@@ -15,7 +15,7 @@ return [
     'installment_auto_charge_by_pinfl' => 'Авто списание для рассрочки (через ПИНФЛ)',
     'atmos_card_pay' => 'Списание через карту Atmos',
     'atmos_pinfl_pay' => 'Списание через ПИНФЛ Atmos',
-    'unired_pay' => 'Списание через Unired',
+    'unired_pinfl_pay' => 'Списание через Unired',
     'unired_card_management' => 'Сервис обновления списка банковских карт через ПИНФЛ',
     'installment_guarantor' => 'Добавить поручителя для рассрочки',
     'installment_comment' => 'Добавить комментарий к рассрочке',

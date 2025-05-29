@@ -44,11 +44,13 @@ return [
             'store_id' => env('ATMOS_CARD_STORE_ID'),
             'username' => env('ATMOS_CARD_USERNAME', ''),
             'password' => env('ATMOS_CARD_PASSWORD', ''),
+            'default_branch_id' => env('ATMOS_CARD_DEFAULT_BRANCH_ID', 1),
         ],
         'pinfl' => [
             'base_url' => 'https://apigw.atmos.uz',
             'username' => env('ATMOS_PINFL_USERNAME', ''),
             'password' => env('ATMOS_PINFL_PASSWORD', ''),
+            'default_branch_id' => env('ATMOS_PINFL_DEFAULT_BRANCH_ID', 1),
         ],
     ],
 
@@ -58,9 +60,21 @@ return [
     |--------------------------------------------------------------------------
     */
     'unired' => [
-        'base_url' => 'https://autopaygroup.uz/api/v1/partners',
-        'token' => env('UNIRED_TOKEN', ''),
-        'callback-token' => env('CALLBACK_TOKEN', ''),
+        'card' => [
+            'base_url' => 'https://gw.cloudgate.uz/unipos',
+            'login' => env('UNIRED_CARD_LOGIN', ''),
+            'password' => env('UNIRED_CARD_PASSWORD', ''),
+            'secret' => env('UNIRED_CARD_SECRET', ''),
+            'callback-token' => env('UNIRED_CARD_CALLBACK_TOKEN', ''),
+            'validity' => 365,
+            'default_branch_id' => env('UNIRED_CARD_DEFAULT_BRANCH_ID', 1),
+
+        ],
+        'pinfl' => [
+            'base_url' => 'https://autopaygroup.uz/api/v1/partners',
+            'token' => env('UNIRED_PINFL_TOKEN', env('UNIRED_TOKEN', '')),
+            'callback-token' => env('UNIRED_PINFL_CALLBACK_TOKEN', env('CALLBACK_TOKEN', '')),
+        ],
     ],
 
     /*

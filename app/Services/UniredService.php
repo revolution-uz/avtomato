@@ -2,11 +2,8 @@
 
 namespace App\Services;
 
-use App\Clients\UniredClient;
+use App\Clients\UniredPinflClient;
 use App\DTOs\Unired\Branch\UniredBranchResponseDTO;
-use App\DTOs\Unired\Branch\UniredCreateBranchRequestDTO;
-use App\DTOs\Unired\Branch\UniredToggleBranchAutoRequestDTO;
-use App\DTOs\Unired\Branch\UniredUpdateBranchRequestDTO;
 use App\DTOs\Unired\Client\UniredAddClientPhonesRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflCardUpdateRequestDTO;
 use App\DTOs\Unired\Client\UniredClientPinflGetCardRequestDTO;
@@ -25,6 +22,7 @@ use App\DTOs\Unired\Payment\UniredGetPaymentsPaginationResponseDTO;
 use App\DTOs\Unired\System\UniredSetWebhookDTO;
 use App\DTOs\Unired\UniredResponseDTO;
 use App\Enums\Company\CardTypeEnum;
+use App\Enums\Company\TerminalTypeEnum;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Helpers\Utilities;
@@ -41,47 +39,11 @@ use Illuminate\Validation\ValidationException;
 
 class UniredService
 {
-    public function __construct(private UniredClient $uniredClient) {}
-
-    public function createBranch(UniredCreateBranchRequestDTO $params): bool
-    {
-        $uniredResponseDto = $this->uniredClient->createBranch($params);
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $feature->data = UniredBranchResponseDTO::from($uniredResponseDto->result)->toArray();
-
-        return $feature->saveOrFail();
-    }
-
-    public function updateBranch(UniredUpdateBranchRequestDTO $params): bool
-    {
-        $uniredResponseDto = $this->uniredClient->updateBranch($params);
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $feature->data = array_merge($feature->data, UniredUpdateBranchRequestDTO::from($uniredResponseDto->result)->toArray());
-
-        return $feature->saveOrFail();
-    }
-
-    public function switchOffBranch(): bool
-    {
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->data['id'], false));
-        $feature->data = array_merge($feature->data, ['auto_payment' => false]);
-
-        return $feature->saveOrFail();
-    }
-
-    public function switchOnBranch(): bool
-    {
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $this->uniredClient->toggleBranchAuto(new UniredToggleBranchAutoRequestDTO($feature->data['id'], true));
-        $feature->data = array_merge($feature->data, ['auto_payment' => true]);
-
-        return $feature->saveOrFail();
-    }
+    public function __construct(private UniredPinflClient $uniredPinflClient) {}
 
     public function createCustomer(Customer $customer): ?bool
     {
-        $response = $this->uniredClient->createClients(new UniredCreateClientRequestDTO(
+        $response = $this->uniredPinflClient->createClients(new UniredCreateClientRequestDTO(
             $customer->pinfl,
             $customer->passport_series . $customer->passport_number,
             $customer->first_name,
@@ -90,7 +52,7 @@ class UniredService
         ));
         // @phpstan-ignore-next-line
         if ($response->status && $customer->phones && $customer->phones->isNotEmpty()) {
-            $response = $this->uniredClient->addClientPhones(new UniredAddClientPhonesRequestDTO(
+            $response = $this->uniredPinflClient->addClientPhones(new UniredAddClientPhonesRequestDTO(
                 $customer->pinfl,
                 array_map(fn ($phone) => substr($phone, -9), $customer->phones->pluck('phone')->toArray())
             ));
@@ -103,9 +65,9 @@ class UniredService
 
     public function createInstallment(Installment $installment): bool
     {
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
-        if ($this->uniredClient->createContracts(new UniredCreateContractRequestDTO(
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
+        $branchFeatureDto = UniredBranchResponseDTO::from($feature->getTerminalData(TerminalTypeEnum::UNIRED_PINFL, $installment->branch_id) ?? $feature->original_data);
+        if ($this->uniredPinflClient->createContracts(new UniredCreateContractRequestDTO(
             $installment->customer->pinfl,
             Utilities::generateIdByTenancy($installment->id),
             Utilities::generateIdByTenancy($installment->id),
@@ -127,10 +89,10 @@ class UniredService
 
     public function createInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): bool
     {
-        $feature = Feature::findByName(FeatureEnum::UNIRED_PAY);
-        $branchFeatureDto = UniredBranchResponseDTO::from($feature->data ?? $feature->original_data);
+        $feature = Feature::findByName(FeatureEnum::UNIRED_PINFL_PAY);
+        $branchFeatureDto = UniredBranchResponseDTO::from($feature->getTerminalData(TerminalTypeEnum::UNIRED_PINFL, $installmentGuarantor->installment->branch_id) ?? $feature->original_data);
 
-        if ($this->uniredClient->createContracts(new UniredCreateContractRequestDTO(
+        if ($this->uniredPinflClient->createContracts(new UniredCreateContractRequestDTO(
             $installmentGuarantor->customer->pinfl,
             Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
             Utilities::generateIdByTenancy($installmentGuarantor->installment_id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id),
@@ -159,7 +121,7 @@ class UniredService
     {
         $centralCustomer = $customer->getOrCreateCentralCustomer();
 
-        $response = $this->uniredClient->getCards(new UniredClientPinflGetCardRequestDTO($centralCustomer->pinfl));
+        $response = $this->uniredPinflClient->getCards(new UniredClientPinflGetCardRequestDTO($centralCustomer->pinfl));
 
         if ($response->isSuccess()) {
             $cardDto = UniredPinflCardsResponseDTO::from($response->result);
@@ -191,7 +153,7 @@ class UniredService
 
     public function deleteInstallment(Installment $installment)
     {
-        return $this->uniredClient->deleteContract(new UniredContractLoanIdDTO($installment->customer->pinfl, Utilities::generateIdByTenancy($installment->id)));
+        return $this->uniredPinflClient->deleteContract(new UniredContractLoanIdDTO($installment->customer->pinfl, Utilities::generateIdByTenancy($installment->id)));
     }
 
     public function switchOffInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): void
@@ -201,34 +163,34 @@ class UniredService
 
     public function switchOnInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor): void
     {
-        $this->uniredClient->toggleClientAuto(new UniredToggleClientAutoRequestDTO(Utilities::generateIdByTenancy($installmentGuarantor->id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id), true));
+        $this->uniredPinflClient->toggleClientAuto(new UniredToggleClientAutoRequestDTO(Utilities::generateIdByTenancy($installmentGuarantor->id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id), true));
     }
 
     public function deleteInstallmentGuarantor(InstallmentGuarantor $installmentGuarantor)
     {
-        return $this->uniredClient->deleteContract(new UniredContractLoanIdDTO($installmentGuarantor->customer->pinfl, Utilities::generateIdByTenancy($installmentGuarantor->id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id)));
+        return $this->uniredPinflClient->deleteContract(new UniredContractLoanIdDTO($installmentGuarantor->customer->pinfl, Utilities::generateIdByTenancy($installmentGuarantor->id . Utilities::TENANT_SEPARATOR . $installmentGuarantor->customer_id)));
     }
 
     public function getPayments(UniredGetPaymentsPaginationRequestDTO $params): UniredGetPaymentsPaginationResponseDTO
     {
-        $uniredResponseDto = $this->uniredClient->getPayments($params);
+        $uniredResponseDto = $this->uniredPinflClient->getPayments($params);
 
         return UniredGetPaymentsPaginationResponseDTO::from($uniredResponseDto->result);
     }
 
     public function reversePayment(string $external_id): UniredResponseDTO
     {
-        return $this->uniredClient->cancelPayment(new UniredCancelPaymentRequestDTO($external_id));
+        return $this->uniredPinflClient->cancelPayment(new UniredCancelPaymentRequestDTO($external_id));
     }
 
     public function setWebhook(string $webhook, bool $status)
     {
-        return $this->uniredClient->setWebhook(new UniredSetWebhookDTO($webhook, config('clients.unired.callback-token'), $status));
+        return $this->uniredPinflClient->setWebhook(new UniredSetWebhookDTO($webhook, config('clients.unired.pinfl.callback-token'), $status));
     }
 
     public function checkWebhook()
     {
-        return $this->uniredClient->checkWebhook();
+        return $this->uniredPinflClient->checkWebhook();
     }
 
     public function getInstallmentDebt(?int $installment_id): ?int
@@ -257,7 +219,7 @@ class UniredService
 
             // Update Uzcard
             if (Utilities::isAllowedUpdatePinflCards($centralCustomer->unired_uzcard_searched_at)) {
-                $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
+                $response = $this->uniredPinflClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
 
                 if (
                     isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0
@@ -271,7 +233,7 @@ class UniredService
 
             // Update Humo
             if (Utilities::isAllowedUpdatePinflCards($centralCustomer->unired_humo_searched_at)) {
-                $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
+                $response = $this->uniredPinflClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
 
                 if (
                     isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0
@@ -323,7 +285,7 @@ class UniredService
         $updatesPerformed = false;
 
         if ($is_uzcard_update) {
-            $response = $this->uniredClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
+            $response = $this->uniredPinflClient->updateUzcardCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
 
             if (isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
                 $centralCustomer->unired_uzcard_searched_at = Carbon::now();
@@ -332,7 +294,7 @@ class UniredService
         }
 
         if ($is_humo_update) {
-            $response = $this->uniredClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
+            $response = $this->uniredPinflClient->updateHumoCards(new UniredClientPinflCardUpdateRequestDTO([$centralCustomer->pinfl]));
 
             if (isset($response->result[$centralCustomer->pinfl]['cards_count']) && $response->result[$centralCustomer->pinfl]['cards_count'] > 0) {
                 $centralCustomer->unired_humo_searched_at = Carbon::now();
@@ -349,7 +311,7 @@ class UniredService
 
     public function getCardUpdates(string $pinfl, int $page = 1): array
     {
-        $response = $this->uniredClient->getCardUpdates(
+        $response = $this->uniredPinflClient->getCardUpdates(
             new UniredClientPinflGetCardUpdatesRequestDTO(
                 date_from: Carbon::today()->subYear()->startOfMonth()->toDateString(),
                 date_to: Carbon::today()->addDay()->endOfMonth()->toDateString(),
@@ -376,7 +338,7 @@ class UniredService
 
     private function updateDebitAndSwitchAuto(string $loan_id, int $debit_amount, bool $auto): ?bool
     {
-        $response = $this->uniredClient->updateContract(new UniredUpdateContractRequestDTO(
+        $response = $this->uniredPinflClient->updateContract(new UniredUpdateContractRequestDTO(
             $loan_id,
             new UniredUpdateContractDataRequestDTO(
                 $auto,

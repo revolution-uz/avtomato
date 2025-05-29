@@ -15,7 +15,7 @@ return [
     'installment_auto_charge_by_pinfl' => 'Auto withdrawal for installment (via PINFL)',
     'atmos_card_pay' => 'Withdraw via Atmos card',
     'atmos_pinfl_pay' => 'Withdraw via Atmos PINFL',
-    'unired_pay' => 'Withdraw via Unired',
+    'unired_pinfl_pay' => 'Withdraw via Unired',
     'unired_card_management' => 'Service for updating the bank card list via PINFL',
     'installment_guarantor' => 'Add guarantor for installment',
     'installment_comment' => 'Add comment to installment',

@@ -2,6 +2,7 @@
 
 namespace App\Models\Company;
 
+use App\Enums\Company\TerminalTypeEnum;
 use App\Enums\FeatureEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -91,5 +92,17 @@ class Feature extends Model
     public function balanceCharges(): HasMany
     {
         return $this->hasMany(BalanceCharge::class);
+    }
+
+    public function getTerminalData(TerminalTypeEnum $typeEnum, int $branchId): ?array
+    {
+        if ($terminal = Terminal::query()
+            ->where('branch_id', $branchId)
+            ->where('type', $typeEnum)
+            ->first()) {
+            return $terminal->data ?? $this->data;
+        }
+
+        return $this->data;
     }
 }

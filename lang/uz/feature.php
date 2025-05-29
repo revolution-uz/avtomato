@@ -15,7 +15,7 @@ return [
     'installment_auto_charge_by_pinfl' => 'Muddatli to\'lovdan avto pul yechish (PINFL orqali)',
     'atmos_card_pay' => 'Atmos karta orqali pul yechish',
     'atmos_pinfl_pay' => 'Atmos PINFL orqali pul olish',
-    'unired_pay' => 'Unired orqali pul yechish',
+    'unired_pinfl_pay' => 'Unired orqali pul yechish',
     'unired_card_management' => 'PINFL orqali bank kartalar ro\'yxatini yangilash xizmati',
     'installment_guarantor' => 'Muddatli to\'lovga kafil qo\'shish',
     'installment_comment' => 'Muddatli to\'lovga izoh qo\'shish',

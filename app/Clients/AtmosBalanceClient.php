@@ -15,6 +15,7 @@ class AtmosBalanceClient extends AtmosCardClient
         $this->baseUrl = config('clients.atmos.card.base_url');
         $this->channel = 'atmos-balance-client';
         $this->featureName = FeatureEnum::ATMOS_CARD_PAY;
+        $this->setBranchId((int) config('clients.atmos.card.default_branch_id'));
     }
 
     public function getClientCode(): ClientCodeEnum
