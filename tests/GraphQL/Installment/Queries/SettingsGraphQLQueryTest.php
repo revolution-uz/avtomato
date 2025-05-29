@@ -11,6 +11,14 @@ use Tests\GraphQL\GraphQLTestCase;
 
 class SettingsGraphQLQueryTest extends GraphQLTestCase
 {
+    private $_structure = [
+        'id',
+        'name',
+        'label',
+        'type',
+        'value',
+    ];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -23,10 +31,7 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
     {
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(),
-            );
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery());
 
         $this->assertSuccessSettingsResponse($response);
     }
@@ -37,97 +42,60 @@ class SettingsGraphQLQueryTest extends GraphQLTestCase
         // Default - Russian
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(),
-            );
-
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery());
         $this->assertEquals('Списание денег с карты клиента при просрочке платежа', $response->json('data.settings.0.label'));
 
         // English
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(),
-                ['Accept-Language' => 'en']
-            );
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(), ['Accept-Language' => 'en']);
 
         $this->assertEquals('Writing off money from a client\'s card in case of late payment', $response->json('data.settings.0.label'));
 
         // Russian
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(),
-                ['Accept-Language' => 'ru']
-            );
-
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(), ['Accept-Language' => 'ru']);
         $this->assertEquals('Списание денег с карты клиента при просрочке платежа', $response->json('data.settings.0.label'));
 
         // Uzbek - Latin
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(),
-                ['Accept-Language' => 'uz']
-            );
-
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(), ['Accept-Language' => 'uz']);
         $this->assertEquals('To\'lov vaqtidan o\'tib ketganda mijozning kartasidan pul yechib olish', $response->json('data.settings.0.label'));
 
         // Uzbek - Cyrillic
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(
-                route('graphql.installment'),
-                $this->buildGraphQLQuery(),
-                ['Accept-Language' => 'oz']
-
-            );
-
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(), ['Accept-Language' => 'oz']);
         $this->assertEquals('Тўлов кечиктирилган тақдирда мижознинг картасидан пулни ҳисобдан чиқариш', $response->json('data.settings.0.label'));
     }
 
-    private function buildGraphQLQuery(): array
+    public function buildGraphQLQuery(array $variables = []): array
     {
-        $query = [];
-        $query['variables'] = [];
-        $query['query'] = '
-            query Settings {
-                settings {
-                    id
-                    name
-                    label
-                    type
-                    value
+        return [
+            'query' => <<<GRAPHQL
+                query Settings {
+                    settings {
+                        {$this->convertIntoQuery($this->_structure)}
+                    }
                 }
-            }
-        ';
-
-        return $query;
+            GRAPHQL,
+            'variables' => $variables,
+        ];
     }
 
     private function assertSuccessSettingsResponse(TestResponse $response)
     {
         $response->assertOk();
         $response->assertJsonIsObject();
-        $response->assertJsonStructure([
-            'data' => [
-                'settings' => [
-                    '*' => [
-                        'id',
-                        'name',
-                        'label',
-                        'type',
-                        'value',
-                    ],
-                ],
-            ],
-        ]);
+        $response->assertJsonStructure(['data' => ['settings' => ['*' => $this->_structure]]]);
 
-        $companySettings = CompanySettings::query()->whereIn('name', CompanySettingsEnum::installmentSettings())->get();
+        $companySettings = CompanySettings::query()
+            ->whereIn('name', CompanySettingsEnum::installmentSettings())
+            ->orderByDesc('type')
+            ->orderBy('id')
+            ->get();
         $this->assertEquals($companySettings->count(), count($response->json('data.settings')));
 
         $i = 0;
