@@ -4,6 +4,7 @@ namespace App\Enums\Company;
 
 use App\Enums\EnumMethods;
 use App\Enums\Main\SettingsTypeEnum;
+use App\Enums\Main\SettingsUnitEnum;
 
 enum CompanySettingsEnum: string
 {
@@ -148,6 +149,19 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_UPDATE_TYPE => __('settings.loyalty_program_update_type'),
             self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => __('settings.loyalty_program_instruction_video_path'),
             self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE => __('settings.loyalty_program_instruction_video_type'),
+        };
+    }
+
+    public function getUnit(): ?SettingsUnitEnum
+    {
+        return match ($this) {
+            self::CARD_AFTER_DUE_DAYS,
+            self::PINFL_AFTER_DUE_DAYS,
+            self::GUARANTOR_AFTER_DUE_DAYS,
+            self::GUARANTOR_PINFL_AFTER_DUE_DAYS,
+            self::PINFL_CARDS_UPDATE_DAYS => SettingsUnitEnum::DAY,
+            self::PINFL_CARDS_UPDATE_MIN_DEBT => SettingsUnitEnum::SOM,
+            default => null,
         };
     }
 }

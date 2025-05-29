@@ -40,6 +40,10 @@ class SettingsGraphQLType extends GraphQLType
                 'type' => Type::nonNull(Type::string()),
                 'resolve' => fn (CompanySettings $root) => $root->value,
             ],
+            'unit' => [
+                'type' => Type::int(),
+                'resolve' => fn (CompanySettings $root) => $root->name->getUnit(),
+            ],
         ];
     }
 }
