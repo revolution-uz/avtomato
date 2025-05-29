@@ -42,7 +42,7 @@ class SettingsGraphQLType extends GraphQLType
             ],
             'unit' => [
                 'type' => Type::int(),
-                'resolve' => fn (CompanySettings $root) => $root->name->getUnit(),
+                'resolve' => fn (CompanySettings $root) => $root->unit?->value,
             ],
         ];
     }
