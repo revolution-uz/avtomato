@@ -4,6 +4,7 @@ namespace App\Enums\Company;
 
 use App\Enums\EnumMethods;
 use App\Enums\Main\SettingsTypeEnum;
+use App\Enums\Main\SettingsUnitEnum;
 
 enum CompanySettingsEnum: string
 {
@@ -17,6 +18,7 @@ enum CompanySettingsEnum: string
     case SMS_INSTALLMENT_NOTIFICATION = 'sms_installment_notification'; // charge notification
     case SMS_INSTALLMENT_PAYMENT = 'sms_installment_payment'; // debt notification
     case PINFL_CARDS_UPDATE_DAYS = 'pinfl_cards_update_days';
+    case PINFL_CARDS_UPDATE_MIN_DEBT = 'pinfl_cards_update_min_debt';
 
     // Telegram bot settings
     case TELEGRAM_BOT_ENABLED = 'telegram_bot_enabled';
@@ -51,7 +53,8 @@ enum CompanySettingsEnum: string
             self::ICAN_EMPLOYEE_ID,
             self::LOYALTY_PROGRAM_UPDATE_TYPE,
             self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE,
-            self::PINFL_CARDS_UPDATE_DAYS => SettingsTypeEnum::INT,
+            self::PINFL_CARDS_UPDATE_DAYS,
+            self::PINFL_CARDS_UPDATE_MIN_DEBT => SettingsTypeEnum::INT,
 
             self::SMS_INSTALLMENT_AUTO_CHARGE,
             self::SMS_INSTALLMENT_NOTIFICATION,
@@ -74,11 +77,12 @@ enum CompanySettingsEnum: string
     public static function getDefaultValue(self $type): int|bool|string
     {
         return match ($type) {
-            self::PINFL_CARDS_UPDATE_DAYS => 90,
             self::CARD_AFTER_DUE_DAYS, self::LOYALTY_PROGRAM_APP_MIN_VERSION, self::LOYALTY_PROGRAM_UPDATE_TYPE, self::ICAN_BRANCH_ID => 1,
             self::PINFL_AFTER_DUE_DAYS => 5,
             self::GUARANTOR_AFTER_DUE_DAYS => 10,
             self::GUARANTOR_PINFL_AFTER_DUE_DAYS => 15,
+            self::PINFL_CARDS_UPDATE_DAYS => 90,
+            self::PINFL_CARDS_UPDATE_MIN_DEBT => 50000,
             self::SMS_INSTALLMENT_AUTO_CHARGE => true,
             self::SMS_INSTALLMENT_NOTIFICATION, self::SMS_INSTALLMENT_PAYMENT, self::TELEGRAM_BOT_ENABLED, self::LOYALTY_PROGRAM_APP_MAINTENANCE_MODE => false,
             self::TELEGRAM_BOT_TOKEN,
@@ -105,6 +109,7 @@ enum CompanySettingsEnum: string
             self::SMS_INSTALLMENT_NOTIFICATION,
             self::SMS_INSTALLMENT_PAYMENT,
             self::PINFL_CARDS_UPDATE_DAYS,
+            self::PINFL_CARDS_UPDATE_MIN_DEBT,
         ];
     }
 
@@ -128,6 +133,7 @@ enum CompanySettingsEnum: string
             self::SMS_INSTALLMENT_NOTIFICATION => __('settings.sms_installment_notification'),
             self::SMS_INSTALLMENT_PAYMENT => __('settings.sms_installment_payment'),
             self::PINFL_CARDS_UPDATE_DAYS => __('settings.pinfl_cards_update_days'),
+            self::PINFL_CARDS_UPDATE_MIN_DEBT => __('settings.pinfl_cards_update_min_debt'),
             self::TELEGRAM_BOT_ENABLED => __('settings.telegram_bot_enabled'),
             self::TELEGRAM_BOT_TOKEN => __('settings.telegram_bot_token'),
             self::TELEGRAM_CHAT_ID => __('settings.telegram_chat_id'),
@@ -143,6 +149,19 @@ enum CompanySettingsEnum: string
             self::LOYALTY_PROGRAM_UPDATE_TYPE => __('settings.loyalty_program_update_type'),
             self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_PATH => __('settings.loyalty_program_instruction_video_path'),
             self::LOYALTY_PROGRAM_INSTRUCTION_VIDEO_TYPE => __('settings.loyalty_program_instruction_video_type'),
+        };
+    }
+
+    public function getUnit(): ?SettingsUnitEnum
+    {
+        return match ($this) {
+            self::CARD_AFTER_DUE_DAYS,
+            self::PINFL_AFTER_DUE_DAYS,
+            self::GUARANTOR_AFTER_DUE_DAYS,
+            self::GUARANTOR_PINFL_AFTER_DUE_DAYS,
+            self::PINFL_CARDS_UPDATE_DAYS => SettingsUnitEnum::DAY,
+            self::PINFL_CARDS_UPDATE_MIN_DEBT => SettingsUnitEnum::SOM,
+            default => null,
         };
     }
 }

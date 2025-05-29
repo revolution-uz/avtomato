@@ -116,18 +116,22 @@ class Installment extends Model
         'type' => InstallmentTypeEnum::class,
     ];
 
-    public static function getDebtAmountRaw(): Expression
+    public static function getDebtAmountRaw(bool $asString = false): Expression|string
     {
-        $installmentAmount = '(amount - initial_fee) * (percent + 100) / 100';
+        $installmentAmount = self::getInstallmentAmountRaw(true);
         $monthlyPayment = "{$installmentAmount} / period";
         $diffInMonths = 'LEAST(GREATEST(EXTRACT(YEAR FROM AGE(starts_in)) * 12 + EXTRACT(MONTH FROM AGE(starts_in)) + 1, 0), period)';
 
-        return DB::raw("{$monthlyPayment} * {$diffInMonths} - paid_amount");
+        $debtAmount = "{$monthlyPayment} * {$diffInMonths} - paid_amount";
+
+        return $asString ? $debtAmount : DB::raw($debtAmount);
     }
 
-    public static function getInstallmentAmountRaw(): Expression
+    public static function getInstallmentAmountRaw(bool $asString = false): Expression|string
     {
-        return DB::raw('(amount - initial_fee) * (percent + 100) / 100');
+        $installmentAmount = '(amount - initial_fee) * (percent + 100) / 100';
+
+        return $asString ? $installmentAmount : DB::raw($installmentAmount);
     }
 
     public static function getProfitAmountRaw(): Expression

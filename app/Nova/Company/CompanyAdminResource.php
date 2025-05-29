@@ -3,54 +3,138 @@
 namespace App\Nova\Company;
 
 use App\Enums\Company\UserStatusEnum;
+use App\Enums\Main\AdminRoleEnum;
 use App\Models\Company\CompanyAdmin;
+use App\Nova\Actions\ChangeUserPassword;
+use App\Nova\Actions\LoginAsUser;
 use App\Nova\Resource;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
+/**
+ * @mixin CompanyAdmin
+ */
 class CompanyAdminResource extends Resource
 {
+    /**
+     * The model the resource corresponds to.
+     *
+     * @var class-string<CompanyAdmin>
+     */
     public static $model = CompanyAdmin::class;
 
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
     public static $title = 'username';
 
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
     public static $search = [
-        'name',
+        'id', 'username', 'first_name', 'last_name',
     ];
 
-    public function fields(Request $request): array
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    /**
+     * Get the fields displayed by the resource.
+     */
+    public function fields(NovaRequest $request): array
     {
         return [
             ID::make()->sortable(),
-            Text::make('first_name')->rules('required'),
-            Text::make('last_name')->rules('required'),
-            Text::make('username')->rules('required'),
-            Select::make('status')->options(UserStatusEnum::options())->displayUsingLabels()->rules('required'),
-            Text::make('language')->rules('required'),
-            BelongsTo::make('Role', 'role', RoleResource::class),
+
+            Avatar::make('avatar', 'avatar_preview_path')
+                ->rounded()
+                ->disableDownload()
+                ->maxWidth(50)->showOnUpdating(false),
+
+            Text::make('Username')
+                ->sortable()
+                ->rules('required')->showOnUpdating(fn () => request()->user()->role === AdminRoleEnum::SUPER_ADMIN),
+
+            Text::make('First Name')
+                ->sortable()
+                ->rules('required')->showOnUpdating(false),
+
+            Text::make('Last Name')
+                ->sortable()
+                ->rules('required')->showOnUpdating(false),
+
+            Select::make('Status')
+                ->options(UserStatusEnum::options())
+                ->displayUsingLabels()
+                ->rules('required'),
+
+            Text::make('Language')
+                ->sortable()
+                ->onlyOnDetail()
+                ->rules('required'),
+
+            BelongsTo::make('Role', 'role', RoleResource::class)->showOnUpdating(false),
+
+            Code::make('Template Theme', 'template_theme')
+                ->json()
+                ->onlyOnDetail(),
         ];
     }
 
-    public function cards(Request $request): array
+    /**
+     * Get the cards available for the request.
+     */
+    public function cards(NovaRequest $request): array
     {
         return [];
     }
 
-    public function filters(Request $request): array
+    /**
+     * Get the filters available for the resource.
+     */
+    public function filters(NovaRequest $request): array
     {
         return [];
     }
 
-    public function lenses(Request $request): array
+    /**
+     * Get the lenses available for the resource.
+     */
+    public function lenses(NovaRequest $request): array
     {
         return [];
     }
 
-    public function actions(Request $request): array
+    /**
+     * Get the actions available for the resource.
+     */
+    public function actions(NovaRequest $request): array
     {
-        return [];
+        return [
+            (new LoginAsUser)->showInline(),
+            (new ChangeUserPassword)->showInline(),
+        ];
+    }
+
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToReplicate(Request $request)
+    {
+        return false;
     }
 }
