@@ -4,13 +4,16 @@ namespace Tests\GraphQL\Installment\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
 use App\Models\Company\Branch;
+use App\Models\Company\CompanyAdmin;
 use App\Models\Company\Customer;
 use App\Models\Company\Installment;
 use App\Models\Company\Rbac\Permission;
 use App\Models\Company\Rbac\Role;
 use App\Models\Company\Transaction;
+use Database\Seeders\Company\AdminSeeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\GraphQL\GraphQLTestCase;
@@ -478,6 +481,20 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
                 ->pluck('id')->toArray(),
             $response->json('data.transactions.data.*.id')
         );
+    }
+
+    #[Test]
+    public function successWithSystemAdmins()
+    {
+        Artisan::call('tenants:seed', ['--class' => AdminSeeder::class, '--tenants' => [tenant('id')]]);
+        $systemAdmin = CompanyAdmin::getIcanIntegrator();
+        Transaction::factory()->count(10)->create(['admin_id' => $systemAdmin->id]);
+
+        $response = $this
+            ->actingAs($this->createAdminUser())
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['admin_id' => $systemAdmin->id]));
+
+        $this->assertSuccessTransactionsResponse($response, 10);
     }
 
     private function buildGraphQLQuery(array $variables = []): array

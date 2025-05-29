@@ -32,11 +32,12 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property UserTemplateThemeDto $template_theme
  * @property string $language
  * @property string $password
- * @property-read Attachment|null $avatar
- * @property-read Role|null $role
+ * @property bool $is_system
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
+ * @property Attachment|null $avatar
+ * @property Role|null $role
  */
 class CompanyAdmin extends Authenticatable
 {
@@ -44,7 +45,7 @@ class CompanyAdmin extends Authenticatable
 
     public static array $sortables = ['id', 'username', 'first_name', 'last_name', 'created_at', 'updated_at'];
 
-    const ICAN_INTEGRATOR = 'ican_integrator';
+    const ICAN_INTEGRATOR = 'ican_integrator'; // for elements created in the Ican system
 
     protected $table = 'admins';
 
@@ -57,6 +58,7 @@ class CompanyAdmin extends Authenticatable
         'language',
         'role_id',
         'password',
+        'is_system',
     ];
 
     protected $casts = [

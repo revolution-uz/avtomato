@@ -3,9 +3,11 @@
 namespace App\GraphQL\Management\Queries;
 
 use App\Enums\Company\Rbac\PermissionEnum;
+use App\Enums\FeatureEnum;
 use App\GraphQL\Management\Types\AdminGraphQLType;
 use App\Helpers\RbacHelper;
 use App\Models\Company\CompanyAdmin;
+use App\Models\Company\Feature;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -54,14 +56,12 @@ class AdminsGraphQLQuery extends Query
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
         return CompanyAdmin::query()
-            ->when(isset($args['search']), function (Builder $q) use ($args) {
-                $search = '%' . $args['search'] . '%';
-                $q->where(function (Builder $query) use ($search) {
-                    $query->where('username', 'ILIKE', $search)
-                        ->orWhere('first_name', 'ILIKE', $search)
-                        ->orWhere('last_name', 'ILIKE', $search);
-                });
-            })
+            ->when(! Feature::isFeatureActive(FeatureEnum::ICAN), fn (Builder $q) => $q
+                ->whereNotIn('username', [CompanyAdmin::ICAN_INTEGRATOR]))
+            ->when(isset($args['search']), fn (Builder $q) => $q
+                ->where('username', 'ILIKE', "%{$args['search']}%")
+                ->orWhere('first_name', 'ILIKE', "%{$args['search']}%")
+                ->orWhere('last_name', 'ILIKE', "%{$args['search']}%"))
             ->when(
                 isset($args['sort']),
                 fn (Builder|CompanyAdmin $q) => $q->orderBySortable($args['sort']),

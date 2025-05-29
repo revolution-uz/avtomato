@@ -9,6 +9,7 @@ use App\Models\Company\Rbac\Role;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Validation\Rule;
 use Rebing\GraphQL\Support\Mutation;
 
 class DeleteAdminGraphQLMutation extends Mutation
@@ -49,21 +50,13 @@ class DeleteAdminGraphQLMutation extends Mutation
             'ids.*' => [
                 'required',
                 'integer',
-                'exists:admins,id,deleted_at,NULL',
-                function ($attribute, $value, $fail) {
-                    if ($value === auth()->id()) {
-                        $fail('You cannot delete yourself.');
-                    }
-
-                    if (
-                        CompanyAdmin::query()
-                            ->where('role_id', Role::getAdmin()->id)
-                            ->where('id', $value)
-                            ->exists()
-                    ) {
-                        $fail('You cannot delete an admin with the admin role.');
-                    }
-                },
+                Rule::exists(CompanyAdmin::class, 'id')
+                    ->where(function ($query) {
+                        $query->whereNot('id', auth('company-admin')->id())
+                            ->where('is_system', false)
+                            ->whereNot('role_id', Role::getAdmin()->id)
+                            ->whereNull('deleted_at');
+                    }),
             ],
         ];
     }

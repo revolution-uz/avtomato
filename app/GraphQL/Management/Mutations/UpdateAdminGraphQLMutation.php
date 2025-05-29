@@ -28,16 +28,24 @@ class UpdateAdminGraphQLMutation extends Mutation
     {
         return [
             'id' => [
-                'name' => 'id',
                 'type' => Type::nonNull(Type::int()),
+                'rules' => [
+                    'required',
+                    'integer',
+                    Rule::exists(CompanyAdmin::class, 'id')
+                        ->where(function ($query) {
+                            $query->where('is_system', false)
+                                ->whereNull('deleted_at');
+                        }),
+                ],
             ],
             'first_name' => [
-                'name' => 'first_name',
                 'type' => Type::string(),
+                'rules' => ['nullable', 'string', 'max:50'],
             ],
             'last_name' => [
-                'name' => 'last_name',
                 'type' => Type::string(),
+                'rules' => ['nullable', 'string', 'max:50'],
             ],
         ];
     }
@@ -53,27 +61,5 @@ class UpdateAdminGraphQLMutation extends Mutation
         $model->updateOrFail($args);
 
         return $model;
-    }
-
-    protected function rules(array $args = []): array
-    {
-        return [
-            'id' => [
-                'required',
-                'integer',
-                Rule::exists('admins', 'id')
-                    ->where('id', $args['id']),
-            ],
-            'first_name' => [
-                'nullable',
-                'string',
-                'max:50',
-            ],
-            'last_name' => [
-                'nullable',
-                'string',
-                'max:50',
-            ],
-        ];
     }
 }
