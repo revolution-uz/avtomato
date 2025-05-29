@@ -41,6 +41,7 @@ use App\GraphQL\Installment\Mutations\UpdateTransactionTypeGraphQLMutation;
 use App\GraphQL\Installment\Queries\CalculateGraphQLQuery;
 use App\GraphQL\Installment\Queries\InstallmentPinflCardsGraphQLQuery;
 use App\GraphQL\Installment\Queries\InstallmentsGraphQLQuery;
+use App\GraphQL\Installment\Queries\InstallmentSummaryGraphQLQuery;
 use App\GraphQL\Installment\Queries\SettingsGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleInstallmentGraphQLQuery;
 use App\GraphQL\Installment\Queries\SingleTariffGraphQLQuery;
@@ -61,6 +62,9 @@ use App\GraphQL\Installment\Types\InstallmentGraphGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentGuarantorGraphQLType;
 use App\GraphQL\Installment\Types\InstallmentInputGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentSummaryGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentSummaryItemsGraphQLType;
+use App\GraphQL\Installment\Types\InstallmentSummaryTotalsGraphQLType;
 use App\GraphQL\Installment\Types\SettingsGraphQLType;
 use App\GraphQL\Installment\Types\StatisticsByBranchesGraphQLType;
 use App\GraphQL\Installment\Types\StatisticsGraphQLType;
@@ -136,6 +140,7 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 StatisticsByBranchesGraphQLQuery::class,
                 TelegramBotSettingsGraphQLQuery::class,
                 InstallmentPinflCardsGraphQLQuery::class,
+                InstallmentSummaryGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateInstallmentGraphQLMutation::class,
@@ -201,6 +206,9 @@ class InstallmentGraphQLSchema implements ConfigConvertible
                 BranchForStatisticsGraphQLType::class,
                 TypeTotalGraphQLType::class,
                 StatisticsByBranchesGraphQLType::class,
+                InstallmentSummaryGraphQLType::class,
+                InstallmentSummaryItemsGraphQLType::class,
+                InstallmentSummaryTotalsGraphQLType::class,
 
                 //scoring
                 CardCreateInputGraphQLType::class,
