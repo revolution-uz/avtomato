@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Main\SettingsTypeEnum;
+use App\Enums\Main\SettingsUnitEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
@@ -13,6 +14,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property CompanySettingsEnum $name
  * @property string $value
  * @property SettingsTypeEnum|null $type
+ * @property SettingsUnitEnum|null $unit
  * @property string $description
  */
 class CompanySettings extends Model
@@ -74,5 +76,10 @@ class CompanySettings extends Model
                 }
             }
         });
+    }
+
+    public function getUnitAttribute()
+    {
+        return $this->name->getUnit();
     }
 }
