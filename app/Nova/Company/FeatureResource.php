@@ -36,7 +36,7 @@ class FeatureResource extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'description',
+        'id', 'name',
     ];
 
     public static function authorizedToCreate(Request $request): bool

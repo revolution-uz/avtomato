@@ -14,23 +14,23 @@ use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
- * App\Models\Company\Feature
+ * Class Feature
  *
- * @property-read int $id
- * @property-read FeatureEnum $name
- * @property-read string|null $description
+ * @property int $id
+ * @property FeatureEnum $name
  * @property bool $is_active
- * @property-read int $original_amount
+ * @property int $original_amount
  * @property int|null $amount
- * @property float $humo_percent
- * @property float $uzcard_percent
- * @property-read  array|null $original_data
+ * @property float|null $humo_percent
+ * @property float|null $uzcard_percent
+ * @property array|null $original_data
  * @property array|null $data
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Collection<Module> $modules
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property-read int $chargeable_amount
- * @property-read BalanceCharge[]|Collection<int, BalanceCharge> $balanceCharges
+ * @property-read string $description
+ * @property Module[]|Collection<int, Module> $modules
+ * @property BalanceCharge[]|Collection<int, BalanceCharge> $balanceCharges
  */
 class Feature extends Model
 {
