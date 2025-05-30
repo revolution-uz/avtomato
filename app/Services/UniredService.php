@@ -267,13 +267,7 @@ class UniredService
     public function manualUpdatePinflCardsList(Customer $customer): bool
     {
         $centralCustomer = $customer->getOrCreateCentralCustomer();
-
-        if (
-            $customer->installments()->whereNotNull('unired_id')->doesntExist() &&
-            $customer->guaranteedInstallments()->whereNotNull('installment_guarantors.unired_id')->doesntExist()
-        ) {
-            throw ValidationException::withMessages(['customer_id' => __('Customer does not have any installments or guaranteed installments')]);
-        }
+        $this->createCustomer($customer);
 
         $is_uzcard_update = Utilities::isAllowedManualUpdatePinflCards($centralCustomer->unired_uzcard_searched_at);
         $is_humo_update = Utilities::isAllowedManualUpdatePinflCards($centralCustomer->unired_humo_searched_at);

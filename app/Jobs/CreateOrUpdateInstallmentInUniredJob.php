@@ -49,14 +49,13 @@ class CreateOrUpdateInstallmentInUniredJob implements ShouldBeUniqueUntilProcess
                 if ($installment->unired_id) {
                     $uniredService->updateInstallment($installment);
                     sleep(1);
-                    SearchCustomerCardInUniredJob::dispatch($installment->id);
                 } elseif ($debt_amount > self::MINIMUM_INSTALLMENT_CREATE_AMOUNT) {
                     $uniredService->createCustomer($installment->customer);
                     sleep(1);
                     $uniredService->createInstallment($installment);
                     sleep(1);
-                    SearchCustomerCardInUniredJob::dispatch($installment->id);
                 }
+                SearchCustomerCardInUniredJob::dispatch($installment->id);
             }
             if ($installment->isAvailableGuarantorPinfl()) {
                 foreach ($installment->guarantorList as $guarantor) {
