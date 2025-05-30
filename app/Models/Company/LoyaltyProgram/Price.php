@@ -16,6 +16,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string $external_item_code
  * @property string $external_shop_code
  * @property float $external_price
+ * @property float|null $external_discount_price
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -24,7 +25,7 @@ class Price extends Model
 {
     use HasFactory, OrderBySortable, SoftDeletes, TenantConnection;
 
-    protected static array $sortables = ['id', 'external_item_code', 'external_shop_code', 'external_price'];
+    protected static array $sortables = ['id', 'external_item_code', 'external_shop_code', 'external_price', 'external_discount_price'];
 
     protected $table = 'loyalty_program_prices';
 
@@ -32,5 +33,6 @@ class Price extends Model
         'external_item_code',
         'external_shop_code',
         'external_price',
+        'external_discount_price',
     ];
 }
