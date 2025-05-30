@@ -9,6 +9,7 @@ class PriceDTO extends Data
     public function __construct(
         public string $item_code,
         public string $shop_id,
-        public float $price
+        public float $price,
+        public float $discount_price
     ) {}
 }

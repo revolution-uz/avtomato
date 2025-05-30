@@ -48,6 +48,7 @@ class LoyaltyProgramSyncService
         }
         $priceModel->external_shop_code = $itemDTO->shop_id;
         $priceModel->external_price = $itemDTO->price;
+        $priceModel->external_discount_price = $itemDTO->discount_price;
         $priceModel->save();
     }
 
