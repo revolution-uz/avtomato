@@ -267,7 +267,6 @@ class UniredService
     public function manualUpdatePinflCardsList(Customer $customer): bool
     {
         $centralCustomer = $customer->getOrCreateCentralCustomer();
-        $this->createCustomer($customer);
 
         $is_uzcard_update = Utilities::isAllowedManualUpdatePinflCards($centralCustomer->unired_uzcard_searched_at);
         $is_humo_update = Utilities::isAllowedManualUpdatePinflCards($centralCustomer->unired_humo_searched_at);
@@ -275,6 +274,8 @@ class UniredService
         if (! $is_uzcard_update && ! $is_humo_update) {
             throw ValidationException::withMessages(['customer_id' => __('Customer cards can only be renewed once within 24 hours')]);
         }
+
+        $this->createCustomer($customer);
 
         $updatesPerformed = false;
 
