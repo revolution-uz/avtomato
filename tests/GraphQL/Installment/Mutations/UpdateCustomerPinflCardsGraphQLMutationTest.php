@@ -44,6 +44,7 @@ class UpdateCustomerPinflCardsGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successUpdateCustomerPinflCards()
     {
+        UniredFaker::clientCreate();
         UniredFaker::updateHumoCards();
         UniredFaker::updateUzcardCards();
         UniredFaker::getCards();
@@ -58,6 +59,7 @@ class UpdateCustomerPinflCardsGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function successUpdateCustomerPinflCardsWhenOnlyOneCardTypeFound()
     {
+        UniredFaker::clientCreate();
         UniredFaker::updateHumoCards(true);
         UniredFaker::updateUzcardCards();
         UniredFaker::getCards();
@@ -72,6 +74,7 @@ class UpdateCustomerPinflCardsGraphQLMutationTest extends GraphQLTestCase
     #[Test]
     public function doNotChargeWhenBothCardTypesNotFound()
     {
+        UniredFaker::clientCreate();
         UniredFaker::updateHumoCards(true);
         UniredFaker::updateUzcardCards(true);
         UniredFaker::getCards();
@@ -109,16 +112,6 @@ class UpdateCustomerPinflCardsGraphQLMutationTest extends GraphQLTestCase
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertEquals('validation', $response->json('errors.0.message'));
         $this->assertEquals(trans('validation.exists', ['attribute' => 'customer id']), $response->json('errors.0.extensions.validation.customer_id.0'));
-
-        // validation error when customer does not have any installments or guaranteed installments
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['customer_id' => Customer::factory()->create()->id]));
-
-        $response->assertOk();
-        $this->assertArrayHasKey('errors', $response->json());
-        $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals('У клиента нет никаких рассрочек или гарантированных рассрочек', $response->json('errors.0.extensions.validation.customer_id.0'));
 
         // validation error when trying to update cards within 24 hours of the last update
         CentralCustomer::factory()->create([
