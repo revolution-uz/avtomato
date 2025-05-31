@@ -355,11 +355,6 @@ class Installment extends Model
         return $query->where(self::getNextPayDateRaw(), $expression, $date);
     }
 
-    public function scopeExcludeIcanInstallments($query)
-    {
-        return $query->whereNull('ican_id');
-    }
-
     public function fixPaidAmount(): void
     {
         $this->paid_amount = $this->paidAmountByTransactionAmount(false);

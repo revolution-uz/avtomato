@@ -4,44 +4,41 @@ namespace App\Console\Commands;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
+use App\Helpers\Utilities;
+use App\Jobs\InstallmentChargeViaAtmosPinfl;
 use App\Models\Company;
-use App\Models\Company\Feature;
 use App\Models\Company\Installment;
-use App\Services\User\BalanceService;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
-class PopulateUpdateUniredCardJobs extends Command
+class PopulateInstallmentChargeViaAtmosPinflJobs extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'populate:update-unired-card-jobs';
+    protected $signature = 'populate:installment-charge-via-atmos-pinfl-jobs';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Populate update unired card jobs for all active installments';
+    protected $description = 'Populate installment charge via Atmos PINFL jobs';
 
     /**
      * Execute the console command.
      */
-    public function handle(BalanceService $balanceService): int
+    public function handle(): int
     {
+        $i = 0;
+
         foreach (Company::get() as $company) {
             tenancy()->initialize($company);
 
-            if (
-                ! Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
-                or ! $balanceService->isAvailableCompany()
-                or ! Feature::isFeatureActive(FeatureEnum::UNIRED_PINFL_PAY)
-            ) {
+            if (! Utilities::isAllowedAutoChargeByPinfl(FeatureEnum::ATMOS_PINFL_PAY)) {
                 continue;
             }
 
@@ -56,7 +53,8 @@ class PopulateUpdateUniredCardJobs extends Command
             }
 
             foreach ($installments as $installment) {
-                CreateOrUpdateInstallmentInUniredJob::dispatch($installment->id);
+                InstallmentChargeViaAtmosPinfl::dispatch($installment->id)->delay(now()->addSeconds($i));
+                $i++;
             }
         }
 

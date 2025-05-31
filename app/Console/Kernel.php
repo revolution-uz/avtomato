@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('populate:installment-charge-jobs')->everyFiveMinutes();
+        $schedule->command('populate:installment-charge-via-atmos-card-jobs')->everyTenMinutes()->at('0');
+        $schedule->command('populate:installment-charge-via-atmos-pinfl-jobs')->everyTenMinutes()->at('5');
         $schedule->command('populate:transaction-attempt-check-jobs')->everyFifteenMinutes();
         $schedule->command('populate:create-or-update-installment-in-unired-jobs')->dailyAt('00:00');
         $schedule->command('daily:delete-logs')->dailyAt('00:00');

@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Commands;
 
-use App\Console\Commands\PopulateInstallmentChargeJobs;
+use App\Console\Commands\PopulateInstallmentChargeViaAtmosPinflJobs;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Jobs\InstallmentChargeJob;
+use App\Jobs\InstallmentChargeViaAtmosCard;
 use App\Models\Company;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -37,9 +37,9 @@ class PopulateInstallmentChargeJobsTest extends TestCase
         $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        $dispatchedJobs = Bus::dispatched(InstallmentChargeJob::class);
+        $dispatchedJobs = Bus::dispatched(InstallmentChargeViaAtmosCard::class);
         $this->assertCount(1, $dispatchedJobs);
         $this->assertEquals('installment-charge-' . tenant('id') . '-' . $installment->id, $dispatchedJobs[0]->uniqueId());
         $this->assertEquals('installment-charge', $dispatchedJobs[0]->queue);
@@ -53,9 +53,9 @@ class PopulateInstallmentChargeJobsTest extends TestCase
         $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
         Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->addDay()]);
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
     }
 
     #[Test]
@@ -65,9 +65,9 @@ class PopulateInstallmentChargeJobsTest extends TestCase
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->addDay()]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
     }
 
     #[Test]
@@ -78,9 +78,9 @@ class PopulateInstallmentChargeJobsTest extends TestCase
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->monthlyPayment]);
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
     }
 
     #[Test]
@@ -92,11 +92,11 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::now()]);
         }
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        $dispatchedJobs = Bus::dispatched(InstallmentChargeJob::class);
+        $dispatchedJobs = Bus::dispatched(InstallmentChargeViaAtmosCard::class);
         $this->assertCount(2, $dispatchedJobs);
-        /** @var InstallmentChargeJob $job */
+        /** @var InstallmentChargeViaAtmosCard $job */
         foreach ($dispatchedJobs as $job) {
             $this->assertEquals('installment-charge-' . tenant('id') . '-' . 1, $job->uniqueId());
             $this->assertEquals('installment-charge', $job->queue);
@@ -116,9 +116,9 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
         }
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertDispatchedTimes(InstallmentChargeJob::class, 10);
+        Bus::assertDispatchedTimes(InstallmentChargeViaAtmosCard::class, 10);
     }
 
     #[Test]
@@ -132,9 +132,9 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
         }
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
     }
 
     #[Test]
@@ -146,8 +146,8 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
         }
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
     }
 }

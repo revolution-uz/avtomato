@@ -890,8 +890,6 @@ enum PermissionEnum: string
             self::CUSTOMER_VIEW,
             self::CUSTOMER_CREATE,
             self::CUSTOMER_EDIT,
-            self::CUSTOMER_CARD_EDIT,
-            self::CUSTOMER_CARD_DETACH,
             self::CUSTOMER_INFO_BY_PASSPORT,
             self::CUSTOMER_TAG_VIEW,
             self::CUSTOMER_TAG_ATTACH,
@@ -912,11 +910,14 @@ enum PermissionEnum: string
             self::INSTALLMENT_EDIT,
             self::INSTALLMENT_SETTINGS_VIEW_ALL,
             self::INSTALLMENT_SETTINGS_EDIT,
-            self::DASHBOARD_INFO_VIEW,
-            self::UPDATE_CUSTOMER_PINFL_CARDS => FeatureEnum::INSTALLMENT_MANAGEMENT,
+            self::DASHBOARD_INFO_VIEW => FeatureEnum::INSTALLMENT_MANAGEMENT,
 
+            self::CUSTOMER_CARD_EDIT,
+            self::CUSTOMER_CARD_DETACH,
             self::INSTALLMENT_ATTACH_CARD,
             self::INSTALLMENT_DETACH_CARD => FeatureEnum::INSTALLMENT_AUTO_CHARGE,
+
+            self::UPDATE_CUSTOMER_PINFL_CARDS => FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL,
 
             self::INSTALLMENT_ATTACH_GUARANTOR,
             self::INSTALLMENT_UPDATE_GUARANTOR,

@@ -3,10 +3,9 @@
 namespace App\Jobs;
 
 use App\Enums\FeatureEnum;
-use App\Models\Company\Feature;
+use App\Helpers\Utilities;
 use App\Models\Company\Installment;
 use App\Services\UniredService;
-use App\Services\User\BalanceService;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Cache\Repository;
@@ -33,12 +32,9 @@ class CreateOrUpdateInstallmentInUniredJob implements ShouldBeUniqueUntilProcess
     /**
      * @throws Exception
      */
-    public function handle(UniredService $uniredService, BalanceService $balanceService): void
+    public function handle(UniredService $uniredService): void
     {
-        if (
-            ! Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
-            or ! $balanceService->isAvailableCompany()
-        ) {
+        if (! Utilities::isAllowedAutoChargeByPinfl(FeatureEnum::UNIRED_PINFL_PAY)) {
             return;
         }
         /** @var Installment $installment */

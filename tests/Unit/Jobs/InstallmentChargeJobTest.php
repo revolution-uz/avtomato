@@ -6,7 +6,7 @@ use App\Enums\Company\CardStatusEnum;
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Main\SettingsTypeEnum;
-use App\Jobs\InstallmentChargeJob;
+use App\Jobs\InstallmentChargeViaAtmosCard;
 use App\Models\Company\Card;
 use App\Models\Company\CompanySettings;
 use App\Models\Company\Customer;
@@ -43,7 +43,7 @@ class InstallmentChargeJobTest extends TestCase
         ]);
         $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
         $installment->cards()->attach($card);
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->times(0); // card payment  must not be run
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0); // pinfl payment must not be run
@@ -66,7 +66,7 @@ class InstallmentChargeJobTest extends TestCase
         ]);
         $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
         $installment->cards()->attach($card);
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->times(0); // card payment  must not be run
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0); // pinfl payment must not be ru
@@ -94,7 +94,7 @@ class InstallmentChargeJobTest extends TestCase
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 1, 'type' => SettingsTypeEnum::INT]);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->times(0); // card payment  must not be run
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0); // pinfl payment must not be run
@@ -123,7 +123,7 @@ class InstallmentChargeJobTest extends TestCase
         $installment->cards()->attach($customerCard);
         $installment->cards()->attach($guarantorCard);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
@@ -156,7 +156,7 @@ class InstallmentChargeJobTest extends TestCase
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
         CompanySettings::query()->updateOrCreate(['name' => CompanySettingsEnum::GUARANTOR_PINFL_AFTER_DUE_DAYS], ['value' => 0, 'type' => SettingsTypeEnum::INT]);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
@@ -185,7 +185,7 @@ class InstallmentChargeJobTest extends TestCase
         $installment->cards()->attach($customerCard);
         $installment->cards()->attach($guarantorCard);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs(); // one for customer, second for guarantor
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0); // pinfl payment must not be run
@@ -214,7 +214,7 @@ class InstallmentChargeJobTest extends TestCase
         $installment->cards()->attach($customerCard);
         $installment->cards()->attach($guarantorCard);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->once()->withAnyArgs(); // one for customer
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->once()->withAnyArgs(); // one for customer
@@ -239,7 +239,7 @@ class InstallmentChargeJobTest extends TestCase
         $card = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
         $installment->cards()->attach($card);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->once()->withAnyArgs();
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
@@ -264,7 +264,7 @@ class InstallmentChargeJobTest extends TestCase
         $cards = Card::factory()->count(2)->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $installment->customer_id]);
         $installment->cards()->attach($cards);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->twice()->withAnyArgs();
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
@@ -295,7 +295,7 @@ class InstallmentChargeJobTest extends TestCase
         $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
         $installment->cards()->attach($guarantorCard);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->shouldReceive('withdrawAmountAndCreateCardTransaction')->once()->withArgs(fn ($card, $installment, $amount) => $amount === 100000.0);
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
@@ -326,7 +326,7 @@ class InstallmentChargeJobTest extends TestCase
         $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
         $installment->cards()->attach($guarantorCard);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->times(0);
         $mock->shouldReceive('withdrawAmountAndCreatePINFLTransaction')->once()->withArgs(fn ($card, $installment, $amount) => $amount === 100000.0);
@@ -357,7 +357,7 @@ class InstallmentChargeJobTest extends TestCase
         $installment->guarantors()->attach($guarantor, ['any_card_charge' => true]);
         $installment->cards()->attach($guarantorCard);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->shouldReceive('withdrawAmountAndCreateCardTransaction')->once()->withArgs(fn ($card, $installment, $amount) => $amount === 100000.0);
         $mock->expects()->withdrawAmountAndCreatePINFLTransaction()->times(0);
@@ -388,7 +388,7 @@ class InstallmentChargeJobTest extends TestCase
         $guarantorCard = Card::factory()->create(['status' => CardStatusEnum::ACTIVE, 'customer_id' => $guarantor->id]);
         $installment->cards()->attach($guarantorCard);
 
-        $job = new InstallmentChargeJob($installment->id);
+        $job = new InstallmentChargeViaAtmosCard($installment->id);
         $mock = $this->mock(AtmosService::class);
         $mock->expects()->withdrawAmountAndCreateCardTransaction()->times(0);
         $mock->shouldReceive('withdrawAmountAndCreatePINFLTransaction')->once()->withArgs(fn ($card, $installment, $amount) => $amount === 100000.0);

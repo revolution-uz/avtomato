@@ -192,7 +192,10 @@ return [
         ],
         'supervisor-3' => [
             'connection' => 'redis',
-            'queue' => ['installment-charge'],
+            'queue' => [
+                'installment-charge-via-atmos-card',
+                'installment-charge-via-atmos-pinfl',
+            ],
             'balance' => 'simple',
             'maxProcesses' => 1,
             'memory' => 128,

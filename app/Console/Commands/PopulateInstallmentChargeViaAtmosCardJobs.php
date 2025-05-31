@@ -4,48 +4,41 @@ namespace App\Console\Commands;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Jobs\InstallmentChargeJob;
+use App\Helpers\Utilities;
+use App\Jobs\InstallmentChargeViaAtmosCard;
 use App\Models\Company;
-use App\Models\Company\Feature;
 use App\Models\Company\Installment;
-use App\Services\User\BalanceService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
-class PopulateInstallmentChargeJobs extends Command
+class PopulateInstallmentChargeViaAtmosCardJobs extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'populate:installment-charge-jobs';
+    protected $signature = 'populate:installment-charge-via-atmos-card-jobs';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Populate installment charge jobs for all active installments';
+    protected $description = 'Populate installment charge jobs via Atmos card';
 
     /**
      * Execute the console command.
      */
-    public function handle(BalanceService $balanceService): int
+    public function handle(): int
     {
         $i = 0;
 
         foreach (Company::get() as $company) {
             tenancy()->initialize($company);
 
-            if (
-                ! (
-                    Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE)
-                    or Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
-                )
-                or ! $balanceService->isAvailableCompany()
-            ) {
+            if (! Utilities::isAllowedAutoCharge(FeatureEnum::ATMOS_CARD_PAY)) {
                 continue;
             }
 
@@ -53,7 +46,6 @@ class PopulateInstallmentChargeJobs extends Command
             $installments = Installment::query()->select('id')
                 ->where('status', InstallmentStatusEnum::ACTIVE)
                 ->whereNextPayDate('<=', Carbon::now())
-                ->excludeIcanInstallments()
                 ->get();
 
             if (! count($installments)) {
@@ -61,7 +53,7 @@ class PopulateInstallmentChargeJobs extends Command
             }
 
             foreach ($installments as $installment) {
-                InstallmentChargeJob::dispatch($installment->id)->delay(now()->addSeconds($i));
+                InstallmentChargeViaAtmosCard::dispatch($installment->id)->delay(now()->addSeconds($i));
                 $i++;
             }
         }
