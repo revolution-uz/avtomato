@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
 use App\Helpers\Utilities;
-use App\Jobs\InstallmentChargeViaAtmosPinfl;
+use App\Jobs\InstallmentChargeViaAtmosPinflJob;
 use App\Models\Company;
 use App\Models\Company\Installment;
 use Illuminate\Console\Command;
@@ -53,7 +53,7 @@ class PopulateInstallmentChargeViaAtmosPinflJobs extends Command
             }
 
             foreach ($installments as $installment) {
-                InstallmentChargeViaAtmosPinfl::dispatch($installment->id)->delay(now()->addSeconds($i));
+                InstallmentChargeViaAtmosPinflJob::dispatch($installment->id)->delay(now()->addSeconds($i));
                 $i++;
             }
         }

@@ -16,7 +16,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 
-class InstallmentChargeViaAtmosCard implements ShouldBeUniqueUntilProcessing, ShouldQueue
+class InstallmentChargeViaAtmosCardJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -67,7 +67,7 @@ class InstallmentChargeViaAtmosCard implements ShouldBeUniqueUntilProcessing, Sh
      */
     public function uniqueId(): string
     {
-        return 'installment-charge-' . tenant('id') . '-' . $this->installmentId;
+        return 'installment-charge-via-atmos-card-' . tenant('id') . '-' . $this->installmentId;
     }
 
     public function tags(): array

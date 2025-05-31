@@ -5,7 +5,7 @@ namespace Tests\Unit\Commands;
 use App\Console\Commands\PopulateInstallmentChargeViaAtmosPinflJobs;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Jobs\InstallmentChargeViaAtmosCard;
+use App\Jobs\InstallmentChargeViaAtmosCardJob;
 use App\Models\Company;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -39,7 +39,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
 
         (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        $dispatchedJobs = Bus::dispatched(InstallmentChargeViaAtmosCard::class);
+        $dispatchedJobs = Bus::dispatched(InstallmentChargeViaAtmosCardJob::class);
         $this->assertCount(1, $dispatchedJobs);
         $this->assertEquals('installment-charge-' . tenant('id') . '-' . $installment->id, $dispatchedJobs[0]->uniqueId());
         $this->assertEquals('installment-charge', $dispatchedJobs[0]->queue);
@@ -55,7 +55,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
 
         (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
     }
 
     #[Test]
@@ -67,7 +67,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
 
         (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
     }
 
     #[Test]
@@ -80,7 +80,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
 
         (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
     }
 
     #[Test]
@@ -94,9 +94,9 @@ class PopulateInstallmentChargeJobsTest extends TestCase
 
         (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        $dispatchedJobs = Bus::dispatched(InstallmentChargeViaAtmosCard::class);
+        $dispatchedJobs = Bus::dispatched(InstallmentChargeViaAtmosCardJob::class);
         $this->assertCount(2, $dispatchedJobs);
-        /** @var InstallmentChargeViaAtmosCard $job */
+        /** @var InstallmentChargeViaAtmosCardJob $job */
         foreach ($dispatchedJobs as $job) {
             $this->assertEquals('installment-charge-' . tenant('id') . '-' . 1, $job->uniqueId());
             $this->assertEquals('installment-charge', $job->queue);
@@ -118,7 +118,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
 
         (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertDispatchedTimes(InstallmentChargeViaAtmosCard::class, 10);
+        Bus::assertDispatchedTimes(InstallmentChargeViaAtmosCardJob::class, 10);
     }
 
     #[Test]
@@ -134,7 +134,7 @@ class PopulateInstallmentChargeJobsTest extends TestCase
 
         (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
     }
 
     #[Test]
@@ -148,6 +148,6 @@ class PopulateInstallmentChargeJobsTest extends TestCase
 
         (new PopulateInstallmentChargeViaAtmosPinflJobs)->handle($this->_balanceServiceMock);
 
-        Bus::assertNotDispatched(InstallmentChargeViaAtmosCard::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
     }
 }
