@@ -5,6 +5,7 @@ namespace Database\Seeders\Main;
 use App\Enums\Main\SettingsEnum;
 use App\Models\Settings;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class SettingsSeeder extends Seeder
 {
@@ -23,5 +24,7 @@ class SettingsSeeder extends Seeder
         }
 
         Settings::query()->whereNotIn('name', SettingsEnum::cases())->delete();
+
+        Log::info('SettingsSeeder completed successfully.');
     }
 }

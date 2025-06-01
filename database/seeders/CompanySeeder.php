@@ -23,6 +23,7 @@ class CompanySeeder extends Seeder
     public function run(): void
     {
         activity()->disableLogging();
+
         $this->call(LocationSeeder::class);
         $this->call(ModuleSeeder::class);
         $this->call(FeatureSeeder::class);

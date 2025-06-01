@@ -7,6 +7,7 @@ use App\Enums\ModuleEnum;
 use App\Models\BaseFeature;
 use App\Models\BaseModule;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class BaseFeatureSeeder extends Seeder
 {
@@ -26,5 +27,7 @@ class BaseFeatureSeeder extends Seeder
         }
 
         BaseFeature::query()->whereNotIn('name', FeatureEnum::cases())->forceDelete();
+
+        Log::info('BaseFeatureSeeder completed successfully.');
     }
 }

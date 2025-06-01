@@ -25,6 +25,8 @@ class BranchSeeder extends Seeder
                 ]);
             }
 
+            Log::info('BranchSeeder executed successfully.');
+
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());

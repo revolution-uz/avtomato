@@ -44,6 +44,8 @@ class AdminRoleSeeder extends Seeder
                 }
             }
 
+            Log::info('Admin role permissions seeded successfully.');
+
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());

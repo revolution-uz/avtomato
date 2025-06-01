@@ -37,6 +37,7 @@ use App\Nova\Dashboards\Main;
 use App\Nova\NewCustomerResource;
 use App\Nova\SbpAccountResource;
 use App\Nova\SettingsResource;
+use Avtomato\ConsoleCommands\ConsoleCommands;
 use Avtomato\TransactionByCompanies\TransactionByCompanies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -98,6 +99,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::dashboard(Main::class),
                     // here will be another statistic dashboards
                 ])->collapsable()->icon('view-grid'),
+                (new ConsoleCommands)->menu($request),
                 MenuSection::make('Resources', [
                     MenuItem::resource(CompanyResource::class),
                     MenuItem::resource(AdminResource::class),
@@ -144,6 +146,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         return [
             new TransactionByCompanies,
+            new ConsoleCommands,
         ];
     }
 
