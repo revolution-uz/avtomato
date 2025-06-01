@@ -51,6 +51,8 @@ class EcommerceOrderStatusSeeder extends Seeder
                 OrderStatus::query()->firstOrCreate(['id' => $orderStatus['id']], $orderStatus);
             }
 
+            Log::info('Ecommerce order statuses seeded successfully.');
+
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());

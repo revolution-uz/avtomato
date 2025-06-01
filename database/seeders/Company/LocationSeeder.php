@@ -32,6 +32,8 @@ class LocationSeeder extends Seeder
             $this->createOrUpdateDistricts();
             $this->createOrUpdateMahallas();
 
+            Log::info('Location data seeded successfully.');
+
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());
