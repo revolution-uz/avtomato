@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "ext-pdo": "*",
         "ext-simplexml": "*",
+        "avtomato/console-commands": "dev-master",
         "avtomato/transaction-by-companies": "@dev",
         "chinleung/laravel-multilingual-routes": "^4.1.1",
         "guzzlehttp/guzzle": "^7.9.2",
@@ -104,6 +105,10 @@
         "0": {
             "type": "path",
             "url": "./nova-components/TransactionByCompanies"
+        },
+        "1": {
+            "type": "path",
+            "url": "./nova-components/ConsoleCommands"
         }
     }
 }

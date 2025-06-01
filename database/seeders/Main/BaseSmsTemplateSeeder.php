@@ -5,6 +5,7 @@ namespace Database\Seeders\Main;
 use App\Enums\Company\SmsTemplateEnum;
 use App\Models\BaseSmsTemplate;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class BaseSmsTemplateSeeder extends Seeder
 {
@@ -15,5 +16,7 @@ class BaseSmsTemplateSeeder extends Seeder
         }
 
         BaseSmsTemplate::query()->whereNotIn('id', SmsTemplateEnum::cases())->forceDelete();
+
+        Log::info('BaseSmsTemplateSeeder completed successfully.');
     }
 }

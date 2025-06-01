@@ -43,6 +43,9 @@ class PermissionSeeder extends Seeder
                 Permission::query()->whereNotIn('permission_group_id', PermissionGroup::query()->pluck('id')->all())->delete();
                 RolePermission::query()->whereNotIn('permission_id', Permission::query()->pluck('id')->all())->delete();
             });
+
+            Log::info('Permissions seeded successfully.');
+
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());
