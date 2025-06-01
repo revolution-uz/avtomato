@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8fe14c4d2585ea54f278644355db2ad2",
+    "content-hash": "2aac894d6d1ede01aa02a6472ce8bf79",
     "packages": [
         {
             "name": "amphp/amp",
@@ -813,6 +813,47 @@
                 }
             ],
             "time": "2024-08-03T19:31:26+00:00"
+        },
+        {
+            "name": "avtomato/console-commands",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./nova-components/ConsoleCommands",
+                "reference": "77ab6835a109b5f50afa8e1eefec43f13ff65500"
+            },
+            "require": {
+                "illuminate/support": "^10.0|^11.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "laravel/nova": "^5.0",
+                "laravel/nova-devtool": "^1.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Avtomato\\ConsoleCommands\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Avtomato\\ConsoleCommands\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova tool.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "avtomato/transaction-by-companies",
@@ -14323,6 +14364,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "avtomato/console-commands": 20,
         "avtomato/transaction-by-companies": 20
     },
     "prefer-stable": true,
