@@ -81,14 +81,14 @@ class Utilities
     public static function isAllowedAutoCharge(FeatureEnum $provider): bool
     {
         return Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE)
-            && app(BalanceService::class)->isAvailableCompany()
-            && Feature::isFeatureActive($provider);
+            && Feature::isFeatureActive($provider)
+            && app(BalanceService::class)->isAvailableCompany();
     }
 
     public static function isAllowedAutoChargeByPinfl(FeatureEnum $provider): bool
     {
         return Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
-            && app(BalanceService::class)->isAvailableCompany()
-            && Feature::isFeatureActive($provider);
+            && Feature::isFeatureActive($provider)
+            && app(BalanceService::class)->isAvailableCompany();
     }
 }
