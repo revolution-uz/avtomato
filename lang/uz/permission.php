@@ -85,7 +85,7 @@ return [
     'scoring_inps_history_view' => 'INPS tarixini ko\'rishga ruxsat',
     'scoring_inps_history_create' => 'INPS tarixini yaratishga ruxsat',
     'scoring_inps_history_delete' => 'INPS tarixini o\'chirishga ruxsat',
-    'scoring_personal_info' => 'Pensiya ma\'lumotlariga ruxsat',
+    'scoring_pension_info' => 'Pensiya ma\'lumotlariga ruxsat',
     'scoring_pension_info_view_all' => 'Barcha pensiya ma\'lumotlarini ko\'rishga ruxsat',
     'scoring_pension_info_view' => 'Pensiya ma\'lumotlarini ko\'rishga ruxsat',
     'scoring_pension_info_create' => 'Pensiya ma\'lumotlarini yaratishga ruxsat',

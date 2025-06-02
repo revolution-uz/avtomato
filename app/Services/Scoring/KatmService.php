@@ -7,6 +7,7 @@ use App\DTOs\Scoring\Katm\CreditHistory\KatmCreditHistoryResponseDTO;
 use App\DTOs\Scoring\Katm\InpsHistory\KatmInpsHistoryResponseDTO;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\DTOs\Scoring\Katm\PensionInfo\KatmPensionInfoResponseDTO;
+use App\DTOs\Scoring\Katm\StartInfo\KatmStartInfoResponseDTO;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\Enums\External\AsaxiyRequestStatusEnum;
@@ -67,6 +68,7 @@ readonly class KatmService
                     ScoringRequestTypeEnum::KATM_CREDIT_HISTORY => KatmCreditHistoryResponseDTO::parseFromXml($response['data']),
                     ScoringRequestTypeEnum::KATM_INPS_HISTORY => KatmInpsHistoryResponseDTO::parseFromXml($response['data']),
                     ScoringRequestTypeEnum::KATM_PENSION_INFO => KatmPensionInfoResponseDTO::parseFromXml($response['data']),
+                    ScoringRequestTypeEnum::KATM_START_INFO => KatmStartInfoResponseDTO::parseFromXml($response['data']),
                     default => throw new InvalidArgumentException,
                 };
                 $scoringRequest->saveOrFail();

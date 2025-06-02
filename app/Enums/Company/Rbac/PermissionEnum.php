@@ -150,6 +150,12 @@ enum PermissionEnum: string
     case SCORING_PENSION_INFO_CREATE = 'scoring_pension_info_create';
     case SCORING_PENSION_INFO_DELETE = 'scoring_pension_info_delete';
 
+    // Scoring start info
+    case SCORING_START_INFO_VIEW_ALL = 'scoring_start_info_view_all';
+    case SCORING_START_INFO_VIEW = 'scoring_start_info_view';
+    case SCORING_START_INFO_CREATE = 'scoring_start_info_create';
+    case SCORING_START_INFO_DELETE = 'scoring_start_info_delete';
+
     // Scoring MIB
     case SCORING_MIB_INFO_VIEW_ALL = 'scoring_mib_info_view_all';
     case SCORING_MIB_INFO_CREATE = 'scoring_mib_info_create';
@@ -682,6 +688,12 @@ enum PermissionEnum: string
                 self::SCORING_PENSION_INFO_CREATE->value,
                 self::SCORING_PENSION_INFO_DELETE->value,
             ],
+            PermissionGroupEnum::SCORING_START_INFO->value => [
+                self::SCORING_START_INFO_VIEW_ALL->value,
+                self::SCORING_START_INFO_VIEW->value,
+                self::SCORING_START_INFO_CREATE->value,
+                self::SCORING_START_INFO_DELETE->value,
+            ],
             PermissionGroupEnum::SCORING_MIB_INFO->value => [
                 self::SCORING_MIB_INFO_VIEW_ALL->value,
                 self::SCORING_MIB_INFO_CREATE->value,
@@ -975,6 +987,11 @@ enum PermissionEnum: string
             self::SCORING_PENSION_INFO_VIEW,
             self::SCORING_PENSION_INFO_CREATE,
             self::SCORING_PENSION_INFO_DELETE => FeatureEnum::SCORING_PENSION_INFO,
+
+            self::SCORING_START_INFO_VIEW_ALL,
+            self::SCORING_START_INFO_VIEW,
+            self::SCORING_START_INFO_CREATE,
+            self::SCORING_START_INFO_DELETE => FeatureEnum::SCORING_START_INFO,
 
             self::SCORING_MIB_INFO_VIEW_ALL,
             self::SCORING_MIB_INFO_CREATE,

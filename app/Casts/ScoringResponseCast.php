@@ -7,6 +7,7 @@ use App\DTOs\Scoring\Card\CardScoringResponseDTO;
 use App\DTOs\Scoring\Katm\CreditHistory\KatmCreditHistoryResponseDTO;
 use App\DTOs\Scoring\Katm\InpsHistory\KatmInpsHistoryResponseDTO;
 use App\DTOs\Scoring\Katm\PensionInfo\KatmPensionInfoResponseDTO;
+use App\DTOs\Scoring\Katm\StartInfo\KatmStartInfoResponseDTO;
 use App\DTOs\Scoring\Plum\Mib\MibInfoResponseDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoResponseDTO;
 use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryResponseDTO;
@@ -28,6 +29,7 @@ class ScoringResponseCast implements CastsAttributes
             ScoringRequestTypeEnum::KATM_CREDIT_HISTORY->value => KatmCreditHistoryResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::KATM_INPS_HISTORY->value => KatmInpsHistoryResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::KATM_PENSION_INFO->value => KatmPensionInfoResponseDTO::from(json_decode($value, true)),
+            ScoringRequestTypeEnum::KATM_START_INFO->value => KatmStartInfoResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::PLUM_MIB_INFO->value => MibInfoResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::PLUM_TAX_INFO->value => TaxInfoResponseDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::HUMO->value,

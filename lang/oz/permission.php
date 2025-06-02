@@ -85,7 +85,7 @@ return [
     'scoring_inps_history_view' => 'ИНПС тарихини кўришга рухсат',
     'scoring_inps_history_create' => 'ИНПС тарихини яратишга рухсат',
     'scoring_inps_history_delete' => 'ИНПС тарихини ўчиришга рухсат',
-    'scoring_personal_info' => 'Пенсия маълумотларига рухсат',
+    'scoring_pension_info' => 'Пенсия маълумотларига рухсат',
     'scoring_pension_info_view_all' => 'Барча пенсия маълумотларини кўришга рухсат',
     'scoring_pension_info_view' => 'Пенсия маълумотларини кўришга рухсат',
     'scoring_pension_info_create' => 'Пенсия маълумотларини яратишга рухсат',

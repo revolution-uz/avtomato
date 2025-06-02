@@ -25,7 +25,8 @@ class ScoringRequestCast implements CastsAttributes
         return match ($attributes['type']) {
             ScoringRequestTypeEnum::KATM_CREDIT_HISTORY->value,
             ScoringRequestTypeEnum::KATM_INPS_HISTORY->value,
-            ScoringRequestTypeEnum::KATM_PENSION_INFO->value => KatmCreateRequestDTO::from(json_decode($value, true)),
+            ScoringRequestTypeEnum::KATM_PENSION_INFO->value,
+            ScoringRequestTypeEnum::KATM_START_INFO->value => KatmCreateRequestDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::PLUM_MIB_INFO->value => MibInfoCreateRequestDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::PLUM_TAX_INFO->value => TaxInfoCreateRequestDTO::from(json_decode($value, true)),
             ScoringRequestTypeEnum::HUMO->value,

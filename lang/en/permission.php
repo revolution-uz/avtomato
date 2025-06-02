@@ -85,7 +85,7 @@ return [
     'scoring_inps_history_view' => 'Permission to view inps history',
     'scoring_inps_history_create' => 'Permission to create inps history',
     'scoring_inps_history_delete' => 'Permission to delete inps history',
-    'scoring_personal_info' => 'Permission to pension info',
+    'scoring_pension_info' => 'Permission to pension info',
     'scoring_pension_info_view_all' => 'Permission to view all pension info',
     'scoring_pension_info_view' => 'Permission to view pension info',
     'scoring_pension_info_create' => 'Permission to create all pension info',

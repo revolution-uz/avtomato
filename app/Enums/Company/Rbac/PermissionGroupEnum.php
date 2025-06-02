@@ -24,7 +24,8 @@ enum PermissionGroupEnum: string
     case ROLE_MANAGEMENT = 'role_management';
     case SCORING_CREDIT_HISTORY = 'scoring_credit_history';
     case SCORING_INPS_HISTORY = 'scoring_inps_history';
-    case SCORING_PENSION_INFO = 'scoring_personal_info';
+    case SCORING_PENSION_INFO = 'scoring_pension_info';
+    case SCORING_START_INFO = 'scoring_start_info';
     case SCORING_MIB_INFO = 'scoring_mib_info';
     case SCORING_TAX_INFO = 'scoring_tax_info';
     case SCORING_HUMO = 'scoring_humo';
@@ -158,6 +159,12 @@ enum PermissionGroupEnum: string
                 PermissionEnum::SCORING_PENSION_INFO_VIEW,
                 PermissionEnum::SCORING_PENSION_INFO_CREATE,
                 PermissionEnum::SCORING_PENSION_INFO_DELETE,
+            ],
+            self::SCORING_START_INFO => [
+                PermissionEnum::SCORING_START_INFO_VIEW_ALL,
+                PermissionEnum::SCORING_START_INFO_VIEW,
+                PermissionEnum::SCORING_START_INFO_CREATE,
+                PermissionEnum::SCORING_START_INFO_DELETE,
             ],
             self::SCORING_MIB_INFO => [
                 PermissionEnum::SCORING_MIB_INFO_VIEW_ALL,
