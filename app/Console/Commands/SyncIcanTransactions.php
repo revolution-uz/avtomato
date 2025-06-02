@@ -8,6 +8,7 @@ use App\Enums\Company\TransactionStatusEnum;
 use App\Models\Company;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -44,25 +45,33 @@ class SyncIcanTransactions extends Command
             ->where('transaction_type_id', TransactionType::UNIRED_WITH_PINFL)
             ->whereNull('ican_id')
             ->where('status', TransactionStatusEnum::SUCCESS)
-            ->whereDate('created_at', '<=', Carbon::now()->subDays(3))
+            ->whereDate('created_at', '>=', Carbon::now()->subDays(3))
             ->get();
 
         foreach ($transactions as $transaction) {
-            $dto = IcanTransactionRequestDTO::from([
-                'credit_id' => $transaction->installment->ican_id,
-                'amount' => $transaction->amount < 1 ? 1 : $transaction->amount,
-                'employee_id' => 335514,
-            ]);
+            try {
+                $dto = IcanTransactionRequestDTO::from([
+                    'credit_id' => $transaction->installment->ican_id,
+                    'amount' => $transaction->amount < 1 ? 1 : $transaction->amount,
+                    'employee_id' => 335514,
+                ]);
 
-            $icanTransaction = $icanClient->createTransaction($dto);
+                $icanTransaction = $icanClient->createTransaction($dto);
 
-            $transaction->ican_id = $icanTransaction->id;
-            $transaction->save();
+                $transaction->ican_id = $icanTransaction->id;
+                $transaction->save();
 
-            Log::info('Transaction synced successfully', [
-                'transaction_id' => $transaction->id,
-                'ican_id' => $icanTransaction->id,
-            ]);
+                Log::info('Transaction synced successfully', [
+                    'transaction_id' => $transaction->id,
+                    'ican_id' => $icanTransaction->id,
+                ]);
+
+            } catch (Exception $exception) {
+                Log::error('Error syncing transaction', [
+                    'transaction_id' => $transaction->id,
+                    'error' => $exception->getMessage(),
+                ]);
+            }
         }
 
         Log::info('Ican transactions sync completed', [

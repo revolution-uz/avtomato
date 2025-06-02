@@ -16,7 +16,7 @@ class CompanySettingsSeeder extends Seeder
     public function run(): void
     {
         // todo: remove this after first run
-        CompanySettings::query()->where('name', 'pinfl_cards_update_months');
+        CompanySettings::query()->where('name', 'pinfl_cards_update_months')->delete();
         // end todo
 
         try {
