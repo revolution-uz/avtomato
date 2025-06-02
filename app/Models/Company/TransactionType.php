@@ -89,6 +89,11 @@ class TransactionType extends Model
         return self::$_cache[$flag];
     }
 
+    public function getIsLocalAttribute(): bool
+    {
+        return ! $this->ican_flag; // Assuming that if ican_flag is null, it's a local transaction type
+    }
+
     public function setNames(string $name): void
     {
         $this->name_uz = $name;
