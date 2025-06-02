@@ -3,7 +3,10 @@
 namespace App\Helpers;
 
 use App\Enums\Company\CompanySettingsEnum;
+use App\Enums\FeatureEnum;
 use App\Models\Company\CompanySettings;
+use App\Models\Company\Feature;
+use App\Services\User\BalanceService;
 use Carbon\Carbon;
 
 class Utilities
@@ -73,5 +76,19 @@ class Utilities
     public static function isAllowedManualUpdatePinflCards(?Carbon $searched_at): bool
     {
         return is_null($searched_at) || $searched_at < Carbon::now()->subDays(self::MIN_MANUAL_PINFL_CARD_UPDATE_DAYS);
+    }
+
+    public static function isAllowedAutoCharge(FeatureEnum $provider): bool
+    {
+        return Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE)
+            && Feature::isFeatureActive($provider)
+            && app(BalanceService::class)->isAvailableCompany();
+    }
+
+    public static function isAllowedAutoChargeByPinfl(FeatureEnum $provider): bool
+    {
+        return Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
+            && Feature::isFeatureActive($provider)
+            && app(BalanceService::class)->isAvailableCompany();
     }
 }

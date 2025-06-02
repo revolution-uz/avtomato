@@ -14,10 +14,10 @@ enum FeatureEnum: string
     case CALCULATOR_INSTALLMENT = 'calculator_installment';
     case INSTALLMENT_MANAGEMENT = 'installment_management';
     case SMS = 'sms';
-    case INSTALLMENT_AUTO_CHARGE = 'installment_auto_charge'; // to charge by card (via Atmos)
-    case INSTALLMENT_AUTO_CHARGE_BY_PINFL = 'installment_auto_charge_by_pinfl'; // to charge by PINFL (via Atmos)
-    case ATMOS_CARD_PAY = 'atmos_card_pay'; // only serves to save Atmos Card Pay credentials
-    case ATMOS_PINFL_PAY = 'atmos_pinfl_pay'; // only serves to save Atmos PINFl Pay credentials
+    case INSTALLMENT_AUTO_CHARGE = 'installment_auto_charge'; // access to charge by card
+    case INSTALLMENT_AUTO_CHARGE_BY_PINFL = 'installment_auto_charge_by_pinfl'; // access to charge by pinfl
+    case ATMOS_CARD_PAY = 'atmos_card_pay';
+    case ATMOS_PINFL_PAY = 'atmos_pinfl_pay';
     case UNIRED_CARD_PAY = 'unired_card_pay';
     case UNIRED_PINFL_PAY = 'unired_pinfl_pay';
     case UNIRED_CARD_MANAGEMENT = 'unired_card_management';

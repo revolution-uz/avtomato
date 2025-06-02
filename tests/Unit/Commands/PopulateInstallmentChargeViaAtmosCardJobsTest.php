@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Commands;
 
-use App\Console\Commands\PopulateInstallmentChargeJobs;
+use App\Console\Commands\PopulateInstallmentChargeViaAtmosCardJobs;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Jobs\InstallmentChargeJob;
+use App\Jobs\InstallmentChargeViaAtmosCardJob;
 use App\Models\Company;
 use App\Models\Company\Feature;
 use App\Models\Company\Installment;
@@ -13,36 +13,36 @@ use App\Models\Company\Transaction;
 use App\Services\User\BalanceService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Bus;
+use Mockery;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class PopulateInstallmentChargeJobsTest extends TestCase
+class PopulateInstallmentChargeViaAtmosCardJobsTest extends TestCase
 {
     protected bool $tenancy = true;
     protected bool $multiTenancies = true;
-
-    private $_balanceServiceMock;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         Bus::fake();
-        $this->_balanceServiceMock = $this->mock(BalanceService::class);
     }
 
     #[Test]
     public function isGetsCorrectInstallments(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
+        $this->mockBalanceService();
+
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosCardJobs)->handle();
 
-        $dispatchedJobs = Bus::dispatched(InstallmentChargeJob::class);
+        $dispatchedJobs = Bus::dispatched(InstallmentChargeViaAtmosCardJob::class);
         $this->assertCount(1, $dispatchedJobs);
-        $this->assertEquals('installment-charge-' . tenant('id') . '-' . $installment->id, $dispatchedJobs[0]->uniqueId());
-        $this->assertEquals('installment-charge', $dispatchedJobs[0]->queue);
+        $this->assertEquals('installment-charge-via-atmos-card-' . tenant('id') . '-' . $installment->id, $dispatchedJobs[0]->uniqueId());
+        $this->assertEquals('installment-charge-via-atmos-card', $dispatchedJobs[0]->queue);
         $this->assertTrue($dispatchedJobs[0]->delay instanceof Carbon);
         $this->assertGreaterThanOrEqual(0, $dispatchedJobs[0]->delay->diffInSeconds());
     }
@@ -50,56 +50,60 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function dontPopulateIfStartDateIsSoonAndInitialFeeNotPaid(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
+        $this->mockBalanceService();
+
         Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->addDay()]);
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosCardJobs)->handle();
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
     }
 
     #[Test]
     public function dontPopulateIfStartsSoon(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
+        $this->mockBalanceService();
+
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->addDay()]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosCardJobs)->handle();
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
     }
 
     #[Test]
     public function dontPopulateIfPaid(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
+        $this->mockBalanceService();
+
         $installment = Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()->subDay()]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->initial_fee, 'is_initial_fee' => true]);
         Transaction::factory()->create(['installment_id' => $installment->id, 'amount' => $installment->monthlyPayment]);
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosCardJobs)->handle();
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
     }
 
     #[Test]
     public function successCheckingForTwoAvailableCompanies(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
+        $this->mockBalanceService();
+
         foreach (Company::query()->get() as $company) {
             tenancy()->initialize($company);
             Installment::factory()->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => Carbon::now()]);
         }
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosCardJobs)->handle();
 
-        $dispatchedJobs = Bus::dispatched(InstallmentChargeJob::class);
+        $dispatchedJobs = Bus::dispatched(InstallmentChargeViaAtmosCardJob::class);
         $this->assertCount(2, $dispatchedJobs);
-        /** @var InstallmentChargeJob $job */
+        /** @var InstallmentChargeViaAtmosCardJob $job */
         foreach ($dispatchedJobs as $job) {
-            $this->assertEquals('installment-charge-' . tenant('id') . '-' . 1, $job->uniqueId());
-            $this->assertEquals('installment-charge', $job->queue);
+            $this->assertEquals('installment-charge-via-atmos-card-' . tenant('id') . '-' . 1, $job->uniqueId());
+            $this->assertEquals('installment-charge-via-atmos-card', $job->queue);
             $this->assertTrue($dispatchedJobs[0]->delay instanceof Carbon);
             $this->assertGreaterThanOrEqual(0, $dispatchedJobs[0]->delay->diffInSeconds());
         }
@@ -108,7 +112,8 @@ class PopulateInstallmentChargeJobsTest extends TestCase
     #[Test]
     public function successWithOneAnyActiveFeature(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(true);
+        $this->mockBalanceService();
+
         foreach (Company::all() as $company) {
             tenancy()->initialize($company);
             Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE)->update(['is_active' => true]);
@@ -116,15 +121,16 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
         }
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosCardJobs)->handle();
 
-        Bus::assertDispatchedTimes(InstallmentChargeJob::class, 10);
+        Bus::assertDispatchedTimes(InstallmentChargeViaAtmosCardJob::class, 10);
     }
 
     #[Test]
     public function failWithInactiveFeature(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->times(0);
+        $this->mockBalanceService(0);
+
         foreach (Company::all() as $company) {
             tenancy()->initialize($company);
             Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE)->update(['is_active' => false]);
@@ -132,22 +138,35 @@ class PopulateInstallmentChargeJobsTest extends TestCase
             Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
         }
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosCardJobs)->handle();
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
     }
 
     #[Test]
     public function failWithInsufficientBalance(): void
     {
-        $this->_balanceServiceMock->shouldReceive('isAvailableCompany')->twice()->andReturn(false);
+        $this->mockBalanceService(2, false);
+
         foreach (Company::all() as $company) {
             tenancy()->initialize($company);
             Installment::factory()->count(5)->create(['status' => InstallmentStatusEnum::ACTIVE, 'starts_in' => now()]);
         }
 
-        (new PopulateInstallmentChargeJobs)->handle($this->_balanceServiceMock);
+        (new PopulateInstallmentChargeViaAtmosCardJobs)->handle();
 
-        Bus::assertNotDispatched(InstallmentChargeJob::class);
+        Bus::assertNotDispatched(InstallmentChargeViaAtmosCardJob::class);
+    }
+
+    private function mockBalanceService(int $callCount = 2, bool $returnValue = true): void
+    {
+        $this->instance(
+            BalanceService::class,
+            Mockery::mock(BalanceService::class, function (MockInterface $mock) use ($callCount, $returnValue) {
+                $mock->shouldReceive('isAvailableCompany')
+                    ->times($callCount)
+                    ->andReturn($returnValue);
+            })->makePartial()
+        );
     }
 }

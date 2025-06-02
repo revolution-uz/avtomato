@@ -4,11 +4,10 @@ namespace App\Console\Commands;
 
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\FeatureEnum;
+use App\Helpers\Utilities;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Models\Company;
-use App\Models\Company\Feature;
 use App\Models\Company\Installment;
-use App\Services\User\BalanceService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Symfony\Component\Console\Command\Command as CommandAlias;
@@ -32,18 +31,14 @@ class PopulateCreateOrUpdateInstallmentInUniredJobs extends Command
     /**
      * Execute the console command.
      */
-    public function handle(BalanceService $balanceService): int
+    public function handle(): int
     {
         $companyId = $this->option('companyId');
 
         foreach (($companyId ? Company::query()->where('id', $companyId)->get() : Company::get()) as $company) {
             tenancy()->initialize($company);
 
-            if (
-                ! Feature::isFeatureActive(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)
-                or ! $balanceService->isAvailableCompany()
-                or ! Feature::isFeatureActive(FeatureEnum::UNIRED_PINFL_PAY)
-            ) {
+            if (! Utilities::isAllowedAutoChargeByPinfl(FeatureEnum::UNIRED_PINFL_PAY)) {
                 continue;
             }
 

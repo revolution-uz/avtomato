@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Enums\Company\TransactionAttemptStatusEnum;
 use App\Enums\FeatureEnum;
-use App\Jobs\TransactionAttemptCheckJob;
+use App\Jobs\TransactionAttemptCheckInAtmosJob;
 use App\Models\Company;
 use App\Models\Company\Feature;
 use App\Models\Company\TransactionAttempt;
@@ -38,8 +38,8 @@ class PopulateTransactionAttemptCheckJobs extends Command
 
             if (
                 ! (
-                    Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE)->is_active
-                    or Feature::findByName(FeatureEnum::INSTALLMENT_AUTO_CHARGE_BY_PINFL)->is_active
+                    Feature::isFeatureActive(FeatureEnum::ATMOS_PINFL_PAY)
+                    or Feature::isFeatureActive(FeatureEnum::ATMOS_CARD_PAY)
                 )
                 or ! $balanceService->isAvailableCompany()
             ) {
@@ -56,7 +56,7 @@ class PopulateTransactionAttemptCheckJobs extends Command
             }
 
             foreach ($transactionAttempts as $transactionAttempt) {
-                TransactionAttemptCheckJob::dispatch($transactionAttempt->id);
+                TransactionAttemptCheckInAtmosJob::dispatch($transactionAttempt->id);
             }
         }
 
