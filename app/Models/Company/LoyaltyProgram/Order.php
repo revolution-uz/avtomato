@@ -97,6 +97,6 @@ class Order extends Model
 
     public function getTotalAmountAttribute(): float
     {
-        return $this->items->sum('total_amount');
+        return $this->items()->sumRaw('price * quantity') - $this->total_discount_amount;
     }
 }
