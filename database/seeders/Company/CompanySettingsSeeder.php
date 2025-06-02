@@ -15,6 +15,10 @@ class CompanySettingsSeeder extends Seeder
      */
     public function run(): void
     {
+        // todo: remove this after first run
+        CompanySettings::query()->where('name', 'pinfl_cards_update_months');
+        // end todo
+
         try {
             foreach (CompanySettingsEnum::cases() as $case) {
                 CompanySettings::query()->firstOrCreate([

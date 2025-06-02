@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Jobs;
+namespace Tests\Unit\Jobs;
 
 use App\Enums\Company\CompanySettingsEnum;
 use App\Enums\Company\InstallmentStatusEnum;
