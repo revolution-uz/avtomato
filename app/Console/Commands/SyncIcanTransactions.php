@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Clients\IcanClient;
 use App\DTOs\Ican\Request\IcanTransactionRequestDTO;
+use App\Enums\Company\TransactionStatusEnum;
 use App\Models\Company;
 use App\Models\Company\Transaction;
 use App\Models\Company\TransactionType;
@@ -42,6 +43,7 @@ class SyncIcanTransactions extends Command
         $transactions = Transaction::query()
             ->where('transaction_type_id', TransactionType::UNIRED_WITH_PINFL)
             ->whereNull('ican_id')
+            ->where('status', TransactionStatusEnum::SUCCESS)
             ->whereDate('created_at', '<=', Carbon::now()->subDays(3))
             ->get();
 
