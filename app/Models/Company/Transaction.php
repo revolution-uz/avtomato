@@ -111,9 +111,10 @@ class Transaction extends Model
             if ($installment->wholeDebtAmount <= 1) {
                 $installment->update(['status' => InstallmentStatusEnum::CLOSED]);
             }
-
-            SendTransactionSmsJob::dispatch($transaction->id);
-            event(new TransactionTelegramMessageEvent($transaction));
+            if (! $transaction->transactionType->is_local) {
+                SendTransactionSmsJob::dispatch($transaction->id);
+                event(new TransactionTelegramMessageEvent($transaction));
+            }
         });
 
         static::updating(function (self $transaction) {
