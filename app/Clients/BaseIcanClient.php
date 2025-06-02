@@ -8,6 +8,7 @@ use App\DTOs\Ican\IcanCredentialsDTO;
 use App\Enums\FeatureEnum;
 use App\Exceptions\GeneralException;
 use App\Models\Company\Feature;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
@@ -71,9 +72,6 @@ abstract class BaseIcanClient extends BaseClient
         return $this->sendHttpRequest($this->authBaseUrl . $path, $data, $method);
     }
 
-    /**
-     * @throws GeneralException
-     */
     private function sendHttpRequest(string $url, array $data, string $method, bool $try = true): array
     {
         if (! $token = $this->getActiveToken()) {
@@ -85,13 +83,46 @@ abstract class BaseIcanClient extends BaseClient
         }
 
         try {
+            /** @var Response $response */
             $response = Http::withHeaders([
                 'Authorization' => $token,
                 'Content-Type' => 'application/json',
                 'Connection' => 'close',
-            ])->timeout(150)
-                ->connectTimeout(150)
-                ->$method($url);
+            ])->timeout(150)->connectTimeout(150)->$method($url);
+
+            if (! $response->successful() || empty($response->json())) {
+                if ($response->tooManyRequests()) {
+                    parent::logRequest(new HttpRequestLogDTO(
+                        method: $method,
+                        url: $url,
+                        status: $response->status(),
+                        response: $response->body(),
+                        duration: $response->transferStats?->getTransferTime(),
+                        body: $data,
+                    ), 'warning');
+
+                    sleep($response->json('seconds_left', 60));
+
+                    return $this->sendHttpRequest($url, $data, $method, false);
+
+                } elseif ($response->unauthorized()) {
+                    parent::logRequest(new HttpRequestLogDTO(
+                        method: $method,
+                        url: $url,
+                        status: $response->status(),
+                        response: $response->body(),
+                        duration: $response->transferStats?->getTransferTime(),
+                        body: $data,
+                    ), 'warning');
+
+                    sleep(5);
+                    $this->getActiveToken(true);
+
+                    return $this->sendHttpRequest($url, $data, $method, false);
+                }
+
+                throw new GeneralException($response->json('message', 'Unexpected response'));
+            }
 
             parent::logRequest(new HttpRequestLogDTO(
                 method: $method,
@@ -101,25 +132,6 @@ abstract class BaseIcanClient extends BaseClient
                 duration: $response->transferStats?->getTransferTime(),
                 body: $data,
             ));
-
-            if (! $response->successful() || empty($response->json())) {
-                if ($response->status() === 429) {
-                    parent::logRequest(new HttpRequestLogDTO(
-                        method: $method,
-                        url: $url,
-                        status: $response->status(),
-                        response: $response->body(),
-                        duration: $response->transferStats?->getTransferTime(),
-                        body: $data,
-                    ));
-                    $retryAfter = $response->json('seconds_left', 60);
-                    sleep($retryAfter);
-
-                    return $this->makeRequest($url, $data, $method);
-                }
-
-                throw new GeneralException($response->json('message', 'Unexpected response'));
-            }
 
             return $response->json();
 
@@ -151,14 +163,46 @@ abstract class BaseIcanClient extends BaseClient
         }
 
         try {
+            /** @var Response $response */
             $response = Http::withHeaders([
                 'Authorization' => $token,
                 'Content-Type' => 'application/json',
                 'Connection' => 'close',
-            ])->timeout(150)
-                ->connectTimeout(150)
-                ->asForm()
-                ->post($url, $data);
+            ])->timeout(150)->connectTimeout(150)->asForm()->post($url, $data);
+
+            if (! $response->successful() || empty($response->json())) {
+                if ($response->tooManyRequests()) {
+                    parent::logRequest(new HttpRequestLogDTO(
+                        method: 'post',
+                        url: $url,
+                        status: $response->status(),
+                        response: $response->body(),
+                        duration: $response->transferStats?->getTransferTime(),
+                        body: $data,
+                    ), 'warning');
+
+                    sleep($response->json('seconds_left', 60));
+
+                    return $this->sendHttpFormRequest($url, $data);
+
+                } elseif ($response->unauthorized()) {
+                    parent::logRequest(new HttpRequestLogDTO(
+                        method: 'post',
+                        url: $url,
+                        status: $response->status(),
+                        response: $response->body(),
+                        duration: $response->transferStats?->getTransferTime(),
+                        body: $data,
+                    ), 'warning');
+
+                    sleep(5);
+                    $this->getActiveToken(true);
+
+                    return $this->sendHttpFormRequest($url, $data, false);
+                }
+
+                throw new GeneralException($response->json('message', 'Unexpected response'));
+            }
 
             parent::logRequest(new HttpRequestLogDTO(
                 method: 'post',
@@ -168,25 +212,6 @@ abstract class BaseIcanClient extends BaseClient
                 duration: $response->transferStats?->getTransferTime(),
                 body: $data,
             ));
-
-            if (! $response->successful() || empty($response->json())) {
-                if ($response->status() === 429) {
-                    parent::logRequest(new HttpRequestLogDTO(
-                        method: 'post',
-                        url: $url,
-                        status: $response->status(),
-                        response: $response->body(),
-                        duration: $response->transferStats?->getTransferTime(),
-                        body: $data,
-                    ));
-                    $retryAfter = $response->json('seconds_left', 60);
-                    sleep($retryAfter);
-
-                    return $this->sendHttpFormRequest($url, $data);
-                }
-
-                throw new GeneralException($response->json('message', 'Unexpected response'));
-            }
 
             return $response->json();
 
@@ -211,7 +236,7 @@ abstract class BaseIcanClient extends BaseClient
         }
     }
 
-    private function getActiveToken(): ?string
+    private function getActiveToken(bool $force = false): ?string
     {
         if (! tenancy()->initialized) {
             return null;
@@ -229,10 +254,9 @@ abstract class BaseIcanClient extends BaseClient
             return null;
         }
 
-        if ($credentials->expires_in <= time()) {
+        if ($force || ! $credentials->access_token) {
             $response = $this->getNewToken($credentials->username, $credentials->password);
             $credentials->access_token = $response->token;
-            $credentials->expires_in = now()->addHour()->timestamp;
             $feature->data = $credentials->toArray();
 
             $feature->saveOrFail();
