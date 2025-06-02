@@ -11,6 +11,7 @@ class CommandHelper
     private static array $defaultCommands = [
         'optimize:clear',
         'tenants:seed',
+        'sync-ican-transactions', // todo: remove after first run
     ];
 
     public static function getCommands(): array
