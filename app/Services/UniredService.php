@@ -268,19 +268,14 @@ class UniredService
     {
         $centralCustomer = $customer->getOrCreateCentralCustomer();
 
-        if (
-            $customer->installments()->whereNotNull('unired_id')->doesntExist() &&
-            $customer->guaranteedInstallments()->whereNotNull('installment_guarantors.unired_id')->doesntExist()
-        ) {
-            throw ValidationException::withMessages(['customer_id' => __('Customer does not have any installments or guaranteed installments')]);
-        }
-
         $is_uzcard_update = Utilities::isAllowedManualUpdatePinflCards($centralCustomer->unired_uzcard_searched_at);
         $is_humo_update = Utilities::isAllowedManualUpdatePinflCards($centralCustomer->unired_humo_searched_at);
 
         if (! $is_uzcard_update && ! $is_humo_update) {
             throw ValidationException::withMessages(['customer_id' => __('Customer cards can only be renewed once within 24 hours')]);
         }
+
+        $this->createCustomer($customer);
 
         $updatesPerformed = false;
 

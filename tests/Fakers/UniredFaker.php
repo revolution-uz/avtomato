@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Http;
 
 class UniredFaker
 {
+    public static function clientCreate(): void
+    {
+        $path = storage_path('../JSON-for-testing/unired/client-create.json');
+
+        self::fakeResponse(UniredPinflClient::CLIENT_CREATE, $path);
+    }
+
     public static function createOrUpdateCustomer(): void
     {
         $path = storage_path('../JSON-for-testing/unired/client-create-or-update.json');

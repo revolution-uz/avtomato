@@ -1,18 +1,18 @@
 {
   "status": true,
   "result": {
-    "pinfl": 45261322135488,
-    "passport_id": "AB123141",
-    "loan_id": "330129334501331",
-    "ext_id": "xyz-1234",
-    "firstname": "John",
-    "lastname": "Doe",
-    "middlename": "Matti",
-    "filial_id": 6,
-    "debit_amount": 100000000,
-    "updated_at": "2022-08-02T07:43:03.000000Z",
-    "created_at": "2022-08-02T07:43:03.000000Z",
-    "id": 11
+    "created": {
+      "12345678912345": {
+        "pinfl": "12345678912345",
+        "passport": "AC1234567",
+        "first_name": "ALI",
+        "last_name": "ALIYEV",
+        "middle_name": "XXX",
+        "created_at": "2024-12-19T08:55:54.995416Z",
+        "updated_at": "2024-12-19T08:55:54.995425Z"
+      }
+    },
+    "exists": []
   },
   "error": null
 }
