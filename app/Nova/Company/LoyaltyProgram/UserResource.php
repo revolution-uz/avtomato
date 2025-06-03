@@ -35,7 +35,7 @@ class UserResource extends Resource
             Date::make('Birth Date', 'birth_date')->sortable()->rules('nullable', 'date'),
             Text::make('QR Code', 'main_device')->onlyOnDetail()->asHtml()
                 ->resolveUsing(function ($value) {
-                    return $this->getQrAttribute(3600)['id'];
+                    return $this->getQR(3600)['id'];
                 }),
         ];
     }

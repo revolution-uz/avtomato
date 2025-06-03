@@ -56,7 +56,7 @@ class ProfileGraphQLType extends GraphQLType
             ],
             'qr' => [
                 'type' => GraphQL::type(QrGraphQLType::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (User $root) => $root->qr,
+                'resolve' => fn (User $root) => $root->getQR(),
             ],
             'cards' => [
                 'type' => Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
