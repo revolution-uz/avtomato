@@ -84,7 +84,7 @@ class LoyaltyProgramOrderService
             $orderItem->product_id = $loyaltyProgramItem->id;
             $orderItem->price = $loyaltyProgramPrice->external_price;
             $orderItem->quantity = $item['qty'];
-            $orderItem->discount_amount = (float) $loyaltyProgramPrice->external_discount_price;
+            $orderItem->discount_amount = ($orderItem->price - ($loyaltyProgramPrice->external_discount_price ?? $loyaltyProgramPrice->external_price)) * $orderItem->quantity;
 
             return $orderItem->save();
         }

@@ -57,6 +57,6 @@ class OrderItem extends Model
 
     public function getFinalPriceAttribute(): float
     {
-        return $this->price - $this->discount_amount;
+        return $this->price - $this->discount_amount / $this->quantity;
     }
 }
