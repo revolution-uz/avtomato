@@ -4,6 +4,7 @@ namespace Avtomato\ConsoleCommands\Helpers;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 
 class CommandHelper
@@ -11,6 +12,8 @@ class CommandHelper
     private static array $defaultCommands = [
         'optimize:clear',
         'tenants:seed',
+        'balance-fund:commissions', // todo: remove after first run
+        'balance-fund:pinfl-cards', // todo: remove after first run
     ];
 
     public static function getCommands(): array
@@ -118,6 +121,11 @@ class CommandHelper
         if (isset($parameters['--all']) && isset($parameters['--companyIds'])) {
             unset($parameters['--companyIds']);
         }
+
+        Log::info('CommandHelper::processCommand', [
+            'commandName' => $commandName,
+            'parameters' => $parameters,
+        ]);
 
         Artisan::queue($commandName, $parameters);
     }
