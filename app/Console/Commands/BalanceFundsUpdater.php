@@ -40,10 +40,11 @@ class BalanceFundsUpdater extends Command
 
         $createdCount = 0;
         $totalAmount = 0;
+        $feature = Feature::findByName(FeatureEnum::UNIRED_CARD_MANAGEMENT);
 
         Customer::query()
             ->whereNotNull('pinfl')
-            ->chunk(100, function ($customers) use (&$createdCount, &$totalAmount) {
+            ->chunk(100, function ($customers) use (&$createdCount, &$totalAmount, $feature) {
                 $centralCustomers = CentralCustomer::query()
                     ->whereIn('pinfl', $customers->pluck('pinfl'))
                     ->where(fn ($q) => $q
@@ -52,7 +53,6 @@ class BalanceFundsUpdater extends Command
                     ->get();
 
                 foreach ($centralCustomers as $centralCustomer) {
-                    $feature = Feature::findByName(FeatureEnum::UNIRED_CARD_MANAGEMENT);
                     $customer = $customers->firstWhere('pinfl', $centralCustomer->pinfl);
 
                     if (
