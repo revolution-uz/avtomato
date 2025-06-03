@@ -26,7 +26,6 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property-read array $qr
  * @property-read int|null $active_subscription_limit
  * @property Subscription[] $subscriptions
  * @property Card[]|Collection<int, Card> $cards
@@ -110,7 +109,7 @@ class User extends Authenticatable
             ->count();
     }
 
-    public function getQrAttribute(int $expiration = 30): array
+    public function getQR(int $expiration = 30): array
     {
         $timestamp = now()->addSeconds($expiration)->timestamp;
         $attributeXorSum = $this->id ^ $timestamp ^ tenant('id');
