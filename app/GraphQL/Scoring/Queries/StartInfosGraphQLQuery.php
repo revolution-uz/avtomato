@@ -59,7 +59,7 @@ class StartInfosGraphQLQuery extends Query
         foreach (
             ScoringRequest::query()
                 ->where('status', ScoringRequestStatusEnum::WAITING)
-                ->where('type', ScoringRequestTypeEnum::KATM_INPS_HISTORY)
+                ->where('type', ScoringRequestTypeEnum::KATM_START_INFO)
                 ->select('id')->get() as $item
         ) {
             dispatch(new UpdateScoringRequestStatusJob($item->id))->onQueue('scoring');
