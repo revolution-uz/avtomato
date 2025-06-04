@@ -417,6 +417,11 @@ enum PermissionEnum: string
             self::SCORING_UZUM_NASIYA_LIMIT_CREATE,
             self::SCORING_UZUM_NASIYA_LIMIT_DELETE,
 
+            self::SCORING_START_INFO_VIEW_ALL,
+            self::SCORING_START_INFO_VIEW,
+            self::SCORING_START_INFO_CREATE,
+            self::SCORING_START_INFO_DELETE,
+
             self::ACTIVITY_LOG_VIEW,
             self::ACTIVITY_LOG_VIEW_ALL,
             self::ACTIVITY_LOG_VIEW_OWN,
