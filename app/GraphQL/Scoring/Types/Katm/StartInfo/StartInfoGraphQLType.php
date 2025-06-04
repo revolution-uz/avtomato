@@ -14,7 +14,6 @@ class StartInfoGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Start Info GraphQL Type',
     ];
 
     public function fields(): array
@@ -22,17 +21,11 @@ class StartInfoGraphQLType extends GraphQLType
         return BaseScoringRequestGraphQLType::fields() + [
             'request' => [
                 'type' => GraphQL::type(KatmCreateRequestGraphQLType::GRAPHQL_TYPE_NAME),
-                'description' => 'Request of scoring',
-                'resolve' => function (ScoringRequest $root) {
-                    return $root->request;
-                },
+                'resolve' => fn (ScoringRequest $root) => $root->request,
             ],
             'response' => [
                 'type' => GraphQL::type(KatmStartInfoResponseGraphQLType::GRAPHQL_TYPE_NAME),
-                'description' => 'Response of start info scoring',
-                'resolve' => function (ScoringRequest $root) {
-                    return $root->response;
-                },
+                'resolve' => fn (ScoringRequest $root) => $root->response,
             ],
         ];
     }

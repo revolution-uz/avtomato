@@ -12,7 +12,6 @@ class KatmStartInfoResponseGraphQLType extends GraphQLType
 
     protected $attributes = [
         'name' => self::GRAPHQL_TYPE_NAME,
-        'description' => 'Katm Pension Info Response GraphQL Type',
     ];
 
     public function fields(): array
@@ -20,17 +19,11 @@ class KatmStartInfoResponseGraphQLType extends GraphQLType
         return [
             'short' => [
                 'type' => GraphQL::type(KatmStartInfoReportGraphQLType::GRAPHQL_TYPE_NAME),
-                'description' => 'Short report of Start Info',
-                'resolve' => function (KatmStartInfoResponseDTO $root) {
-                    return $root->report;
-                },
+                'resolve' => fn (KatmStartInfoResponseDTO $root) => $root->report,
             ],
             'full' => [
                 'type' => GraphQL::type(KatmStartInfoReport23GraphQLType::GRAPHQL_TYPE_NAME),
-                'description' => 'Full report of Start Info',
-                'resolve' => function (KatmStartInfoResponseDTO $root) {
-                    return $root->report23;
-                },
+                'resolve' => fn (KatmStartInfoResponseDTO $root) => $root->report23,
             ],
         ];
     }
