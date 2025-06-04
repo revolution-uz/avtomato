@@ -35,6 +35,7 @@ class BalanceCharge extends Model
         'amount',
         'chargeable_id',
         'chargeable_type',
+        'created_at',
     ];
 
     protected static function boot()

@@ -11,6 +11,8 @@ class CommandHelper
     private static array $defaultCommands = [
         'optimize:clear',
         'tenants:seed',
+        'balance-fund:commissions', // todo: remove after first run
+        'balance-fund:pinfl-cards', // todo: remove after first run
     ];
 
     public static function getCommands(): array
