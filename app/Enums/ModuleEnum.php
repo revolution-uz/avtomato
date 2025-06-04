@@ -58,6 +58,7 @@ enum ModuleEnum: string
             FeatureEnum::SCORING_CREDIT_HISTORY,
             FeatureEnum::SCORING_INPS_HISTORY,
             FeatureEnum::SCORING_PENSION_INFO,
+            FeatureEnum::SCORING_START_INFO,
             FeatureEnum::SCORING_MIB_INFO,
             FeatureEnum::SCORING_TAX_INFO,
             FeatureEnum::SCORING_HUMO,

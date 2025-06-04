@@ -85,7 +85,7 @@ return [
     'scoring_inps_history_view' => 'Разрешение на просмотр истории ИНПС',
     'scoring_inps_history_create' => 'Разрешение на создание истории ИНПС',
     'scoring_inps_history_delete' => 'Разрешение на удаление истории ИНПС',
-    'scoring_personal_info' => 'Разрешение на информацию о пенсии',
+    'scoring_pension_info' => 'Разрешение на информацию о пенсии',
     'scoring_pension_info_view_all' => 'Разрешение на просмотр всей информации о пенсии',
     'scoring_pension_info_view' => 'Разрешение на просмотр информации о пенсии',
     'scoring_pension_info_create' => 'Разрешение на создание всей информации о пенсии',

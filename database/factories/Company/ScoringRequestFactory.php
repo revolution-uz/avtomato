@@ -69,7 +69,8 @@ class ScoringRequestFactory extends Factory
         return match ($type) {
             ScoringRequestTypeEnum::KATM_CREDIT_HISTORY,
             ScoringRequestTypeEnum::KATM_INPS_HISTORY,
-            ScoringRequestTypeEnum::KATM_PENSION_INFO => new KatmCreateRequestDTO($this->faker->unique()->randomNumber(14), 'AB', '4143286', Carbon::createFromDate('15-06-2016'), 'Akmal', 'Baxodirov', 'Azamat', '998882019909', '998882019909', Carbon::createFromDate('09-06-1999'), 13, 114),
+            ScoringRequestTypeEnum::KATM_PENSION_INFO,
+            ScoringRequestTypeEnum::KATM_START_INFO => new KatmCreateRequestDTO($this->faker->unique()->randomNumber(14), 'AB', '4143286', Carbon::createFromDate('15-06-2016'), 'Akmal', 'Baxodirov', 'Azamat', '998882019909', '998882019909', Carbon::createFromDate('09-06-1999'), 13, 114),
 
             ScoringRequestTypeEnum::PLUM_MIB_INFO => new MibInfoCreateRequestDTO($this->faker->unique()->randomNumber(14), '+998938651719'),
 

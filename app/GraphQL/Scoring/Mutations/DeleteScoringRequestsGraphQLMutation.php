@@ -51,6 +51,7 @@ class DeleteScoringRequestsGraphQLMutation extends Mutation
                     ScoringRequestTypeEnum::KATM_CREDIT_HISTORY => PermissionEnum::SCORING_CREDIT_HISTORY_DELETE,
                     ScoringRequestTypeEnum::KATM_INPS_HISTORY => PermissionEnum::SCORING_INPS_HISTORY_DELETE,
                     ScoringRequestTypeEnum::KATM_PENSION_INFO => PermissionEnum::SCORING_PENSION_INFO_DELETE,
+                    ScoringRequestTypeEnum::KATM_START_INFO => PermissionEnum::SCORING_START_INFO_DELETE,
                     ScoringRequestTypeEnum::PLUM_MIB_INFO => PermissionEnum::SCORING_MIB_INFO_DELETE,
                     ScoringRequestTypeEnum::PLUM_TAX_INFO => PermissionEnum::SCORING_TAX_INFO_DELETE,
                     ScoringRequestTypeEnum::HUMO => PermissionEnum::SCORING_HUMO_DELETE,

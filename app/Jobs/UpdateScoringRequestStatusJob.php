@@ -44,6 +44,7 @@ class UpdateScoringRequestStatusJob implements ShouldBeUnique, ShouldQueue
                         ScoringRequestTypeEnum::KATM_CREDIT_HISTORY,
                         ScoringRequestTypeEnum::KATM_INPS_HISTORY,
                         ScoringRequestTypeEnum::KATM_PENSION_INFO,
+                        ScoringRequestTypeEnum::KATM_START_INFO,
                     ]
                 )
             ) {

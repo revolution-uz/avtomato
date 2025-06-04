@@ -25,7 +25,9 @@ use App\GraphQL\Scoring\Queries\SingleDebtScoringRequestGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleInpsHistoryGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SinglePensionInfoGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleRoyxatCreditHistoryGraphQLQuery;
+use App\GraphQL\Scoring\Queries\SingleStartInfoGraphQLQuery;
 use App\GraphQL\Scoring\Queries\SingleUzumNasiyaLimitRequestGraphQLQuery;
+use App\GraphQL\Scoring\Queries\StartInfosGraphQLQuery;
 use App\GraphQL\Scoring\Queries\UzumNasiyaLimitRequestsGraphQLQuery;
 use App\GraphQL\Scoring\Types\Card\CardCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CardMonthlyAnalyticsGraphQLType;
@@ -58,6 +60,22 @@ use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionInfoResponseGraphQL
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionRowGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\KatmPensionSizePensionGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\PensionHistory\PensionInfoGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23ClaimQuantitiesGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23ClaimQuantityGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23ClientGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23ClientPhoneGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23GraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23OpenContractGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23OpenContractsGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23SysInfoGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23TotalClaimQuantityGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportClientGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportSubjectClaimGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportSubjectClaimsGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportSysInfoGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoResponseGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\StartInfoGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryBorrowerGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\RoyxatCreditHistory\RoyxatCreditHistoryCreateRequestGraphQLType;
@@ -92,6 +110,8 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 SingleRoyxatCreditHistoryGraphQLQuery::class,
                 UzumNasiyaLimitRequestsGraphQLQuery::class,
                 SingleUzumNasiyaLimitRequestGraphQLQuery::class,
+                StartInfosGraphQLQuery::class,
+                SingleStartInfoGraphQLQuery::class,
             ],
             'mutation' => [
                 CreateCardScoringGraphQLMutation::class,
@@ -158,6 +178,23 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 UzumNasiyaAvailablePeriodResponseGraphQLType::class,
                 UzumNasiyaLimitCreateInputGraphQLType::class,
                 BigInteger::class,
+
+                StartInfoGraphQLType::class,
+                KatmStartInfoResponseGraphQLType::class,
+                KatmStartInfoReportGraphQLType::class,
+                KatmStartInfoReportSysInfoGraphQLType::class,
+                KatmStartInfoReportClientGraphQLType::class,
+                KatmStartInfoReportSubjectClaimsGraphQLType::class,
+                KatmStartInfoReportSubjectClaimGraphQLType::class,
+                KatmStartInfoReport23GraphQLType::class,
+                KatmStartInfoReport23SysInfoGraphQLType::class,
+                KatmStartInfoReport23ClientGraphQLType::class,
+                KatmStartInfoReport23OpenContractsGraphQLType::class,
+                KatmStartInfoReport23ClaimQuantitiesGraphQLType::class,
+                KatmStartInfoReport23ClientPhoneGraphQLType::class,
+                KatmStartInfoReport23OpenContractGraphQLType::class,
+                KatmStartInfoReport23ClaimQuantityGraphQLType::class,
+                KatmStartInfoReport23TotalClaimQuantityGraphQLType::class,
             ],
             'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'tenant_logging'],
         ];

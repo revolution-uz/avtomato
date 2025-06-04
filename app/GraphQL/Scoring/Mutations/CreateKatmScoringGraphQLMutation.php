@@ -43,6 +43,7 @@ class CreateKatmScoringGraphQLMutation extends Mutation
                         ScoringRequestTypeEnum::KATM_CREDIT_HISTORY->value,
                         ScoringRequestTypeEnum::KATM_INPS_HISTORY->value,
                         ScoringRequestTypeEnum::KATM_PENSION_INFO->value,
+                        ScoringRequestTypeEnum::KATM_START_INFO->value,
                     ]),
                 ],
             ],
@@ -61,6 +62,7 @@ class CreateKatmScoringGraphQLMutation extends Mutation
             ScoringRequestTypeEnum::KATM_CREDIT_HISTORY => PermissionEnum::SCORING_CREDIT_HISTORY_CREATE,
             ScoringRequestTypeEnum::KATM_INPS_HISTORY => PermissionEnum::SCORING_INPS_HISTORY_CREATE,
             ScoringRequestTypeEnum::KATM_PENSION_INFO => PermissionEnum::SCORING_PENSION_INFO_CREATE,
+            ScoringRequestTypeEnum::KATM_START_INFO => PermissionEnum::SCORING_START_INFO_CREATE,
             default => throw new Exception('Unexpected match value'),
         };
 

@@ -33,6 +33,7 @@ enum FeatureEnum: string
     case SCORING_CREDIT_HISTORY = 'scoring_credit_history';
     case SCORING_INPS_HISTORY = 'scoring_inps_history';
     case SCORING_PENSION_INFO = 'scoring_pension_info';
+    case SCORING_START_INFO = 'scoring_start_info';
     case SCORING_MIB_INFO = 'scoring_mib_info';
     case SCORING_TAX_INFO = 'scoring_tax_info';
     case SCORING_HUMO = 'scoring_humo';
@@ -65,6 +66,7 @@ enum FeatureEnum: string
             self::ACTIVITY_LOG => 'Foydalanuvchi loglarini ko\'rish imkoniyati',
             self::SCORING_CREDIT_HISTORY => 'Kredit tarixini KATM orqali olish',
             self::SCORING_PENSION_INFO => 'Pensiya tarixini KATM orqali olish',
+            self::SCORING_START_INFO => 'KATM orqali boshlang\'ich ma\'lumotlarni olish',
             self::SCORING_INPS_HISTORY => 'Oyliklar tarixini KATM orqali olish',
             self::SCORING_UZCARD => 'UzCard kartalari yillik oborot skoringi',
             self::SCORING_HUMO => 'Humo kartalari yillik oborot skoringi',
@@ -106,6 +108,7 @@ enum FeatureEnum: string
             self::SBP_PAY => '{"username": "", "password": "", "access_token_key": "", "expires_in": 0}',
             self::SCORING_CREDIT_HISTORY,
             self::SCORING_PENSION_INFO,
+            self::SCORING_START_INFO,
             self::SCORING_INPS_HISTORY,
             self::SCORING_UZCARD,
             self::SCORING_HUMO,
@@ -124,6 +127,7 @@ enum FeatureEnum: string
             self::SCORING_CREDIT_HISTORY,
             self::SCORING_PENSION_INFO,
             self::SCORING_INPS_HISTORY,
+            self::SCORING_START_INFO,
             self::SCORING_UZCARD,
             self::SCORING_HUMO,
             self::SCORING_TAX_INFO,
