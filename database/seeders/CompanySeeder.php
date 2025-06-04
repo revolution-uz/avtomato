@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Database\Seeders\Company\AdminRoleSeeder;
+use Database\Seeders\Company\AdminSeeder;
 use Database\Seeders\Company\BranchSeeder;
 use Database\Seeders\Company\CompanySettingsSeeder;
 use Database\Seeders\Company\EcommerceOrderStatusSeeder;
@@ -35,7 +36,7 @@ class CompanySeeder extends Seeder
         $this->call(BranchSeeder::class);
         $this->call(EcommerceOrderStatusSeeder::class);
         $this->call(TerminalSeeder::class);
-        $this->call(AdminRoleSeeder::class);
+        $this->call(AdminSeeder::class);
 
         activity()->enableLogging();
     }
