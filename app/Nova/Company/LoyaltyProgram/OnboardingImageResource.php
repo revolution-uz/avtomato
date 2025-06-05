@@ -41,7 +41,11 @@ class OnboardingImageResource extends Resource
         return [
             ID::make()->sortable(),
 
-            Image::make('image', 'image_path')
+            Image::make('image_uz')
+                ->acceptedTypes('image/*')
+                ->rules('max:10240'),
+
+            Image::make('image_ru')
                 ->acceptedTypes('image/*')
                 ->rules('max:10240'),
 
