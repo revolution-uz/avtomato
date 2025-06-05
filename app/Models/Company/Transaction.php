@@ -99,9 +99,6 @@ class Transaction extends Model
             if (! $transaction->is_initial_fee) {
                 $installment->increment('paid_amount', $transaction->amount);
             }
-            if ($installment->unired_id) {
-                CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
-            }
             if ($transaction->transactionType->is_system) {
                 $transaction->computeCommission();
             }
@@ -114,6 +111,9 @@ class Transaction extends Model
             if ($transaction->transactionType->is_local) {
                 SendTransactionSmsJob::dispatch($transaction->id);
                 event(new TransactionTelegramMessageEvent($transaction));
+            }
+            if ($installment->unired_id && $transaction->transaction_type_id !== TransactionType::UNIRED_WITH_PINFL) {
+                CreateOrUpdateInstallmentInUniredJob::dispatch($transaction->installment_id);
             }
         });
 

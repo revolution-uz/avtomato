@@ -71,10 +71,10 @@ class UniredController extends Controller
                 $avtomatoDebt = (int) $installment->debtAmount * 100;
 
                 if ($installment->ican_id) {
-                    $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($installment->ican_id);
+                    $debtAmount = app(IcanService::class)->getInstallmentDebtAmount($installment->ican_id) * 100;
 
-                    if ($avtomatoDebt > $debtAmount * 100) {
-                        $avtomatoDebt = $debtAmount * 100;
+                    if ($avtomatoDebt > $debtAmount) {
+                        $avtomatoDebt = $debtAmount;
                     }
                 }
 
