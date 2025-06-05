@@ -75,11 +75,11 @@ class TransactionsGraphQLQuery extends Query
             ],
             'from' => [
                 'type' => Type::string(),
-                'rules' => ['nullable', 'required_with:to', 'date_format:Y-m-d'],
+                'rules' => ['nullable', 'date_format:Y-m-d'],
             ],
             'to' => [
                 'type' => Type::string(),
-                'rules' => ['nullable', 'required_with:from', 'date_format:Y-m-d', 'after_or_equal:from'],
+                'rules' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:from'],
             ],
         ];
     }
@@ -131,12 +131,10 @@ class TransactionsGraphQLQuery extends Query
                         )
                     )
             )
-            ->when(
-                isset($args['from'], $args['to']),
-                fn (Builder|Transaction $q) => $q
-                    ->whereDate('paid_at', '>=', $args['from'])
-                    ->whereDate('paid_at', '<=', $args['to'])
-            )
+            ->when(isset($args['from']), fn (Builder|Transaction $q) => $q
+                ->whereDate('paid_at', '>=', $args['from']))
+            ->when(isset($args['to']), fn (Builder|Transaction $q) => $q
+                ->whereDate('paid_at', '<=', $args['to']))
             ->when(
                 isset($args['sort']),
                 fn (Builder|Transaction $q) => $q->orderBySortable($args['sort']),

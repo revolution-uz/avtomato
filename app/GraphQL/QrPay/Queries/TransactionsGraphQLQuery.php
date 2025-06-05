@@ -47,7 +47,6 @@ class TransactionsGraphQLQuery extends Query
                 'rules' => 'nullable|int|min:5|max:100',
             ],
             'status' => [
-                'name' => 'status',
                 'type' => Type::int(),
                 'rules' => [
                     'nullable',
@@ -56,14 +55,12 @@ class TransactionsGraphQLQuery extends Query
                 ],
             ],
             'from' => [
-                'name' => 'from',
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:to|date_format:Y-m-d',
+                'rules' => 'nullable|date_format:Y-m-d',
             ],
             'to' => [
-                'name' => 'to',
                 'type' => Type::string(),
-                'rules' => 'nullable|required_with:from|date_format:Y-m-d|after_or_equal:from',
+                'rules' => 'nullable|date_format:Y-m-d|after_or_equal:from',
             ],
         ];
     }
@@ -85,11 +82,10 @@ class TransactionsGraphQLQuery extends Query
                 fn ($q) => $q
                     ->where('id', 'ilike', "%{$args['search']}%")
                     ->orWhere('ext_id', 'ilike', "%{$args['search']}%"))
-            ->when(
-                isset($args['from'], $args['to']),
-                fn (Builder|Transaction $q) => $q
-                    ->whereDate('payment_updated_at', '>=', $args['from'])
-                    ->whereDate('payment_updated_at', '<=', $args['to']))
+            ->when(isset($args['from']), fn (Builder|Transaction $q) => $q
+                ->whereDate('payment_updated_at', '>=', $args['from']))
+            ->when(isset($args['to']), fn (Builder|Transaction $q) => $q
+                ->whereDate('payment_updated_at', '<=', $args['to']))
             ->when(
                 isset($args['status']),
                 fn (Builder|Transaction $q) => $q
