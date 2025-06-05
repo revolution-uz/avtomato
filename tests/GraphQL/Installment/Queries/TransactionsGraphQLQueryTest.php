@@ -372,15 +372,9 @@ class TransactionsGraphQLQueryTest extends GraphQLTestCase
 
         $response = $this
             ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['from' => Carbon::now()->format('Y-m-d'), 'to' => null]));
+            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['from' => Carbon::now()->toDateString(), 'to' => Carbon::now()->subDay()->toDateString()]));
         $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(__('validation.required_with', ['attribute' => 'to', 'values' => 'from']), $response->json('errors.0.extensions.validation.to.0'));
-
-        $response = $this
-            ->actingAs($this->createAdminUser())
-            ->postJson(route('graphql.installment'), $this->buildGraphQLQuery(['from' => null, 'to' => Carbon::now()->format('Y-m-d')]));
-        $this->assertEquals('validation', $response->json('errors.0.message'));
-        $this->assertEquals(__('validation.required_with', ['attribute' => 'from', 'values' => 'to']), $response->json('errors.0.extensions.validation.from.0'));
+        $this->assertEquals(__('validation.after_or_equal', ['attribute' => 'to', 'date' => 'from']), $response->json('errors.0.extensions.validation.to.0'));
     }
 
     #[Test]
