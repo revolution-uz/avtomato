@@ -9,10 +9,11 @@ use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\TenantConnection;
 
 /**
- * Class Intro
+ * Class OnboardingImage
  *
  * @property int $id
- * @property int $image_path
+ * @property string $image_uz
+ * @property string|null $image_ru
  * @property int $order
  * @property bool $is_active
  * @property Carbon $created_at
@@ -28,13 +29,18 @@ class OnboardingImage extends Model
     protected $table = 'loyalty_program_onboarding_images';
 
     protected $fillable = [
-        'image_path',
+        'image_uz',
+        'image_ru',
         'order',
         'is_active',
     ];
 
     public function getImageUrlAttribute()
     {
-        return tenant_asset($this->image_path);
+        $locale = app()->getLocale();
+
+        return tenant_asset(
+            $this->getAttribute("image_{$locale}") ?: $this->image_uz
+        );
     }
 }
