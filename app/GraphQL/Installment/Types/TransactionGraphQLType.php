@@ -99,6 +99,10 @@ class TransactionGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (Transaction $root) => $root->paid_at?->timestamp,
             ],
+            'card_type' => [
+                'type' => Type::int(),
+                'resolve' => fn (Transaction $root) => $root->cardType?->value,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (Transaction $root) => $root->created_at->timestamp,

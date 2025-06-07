@@ -14,6 +14,7 @@ use App\Services\UniredService;
 use App\Services\User\BalanceService;
 use App\Traits\LogsActivityDirtyOnlyTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -47,6 +48,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property TransactionType $transactionType
  * @property CompanyAdmin|null $admin
  * @property Branch|null $branch
+ * @property-read CardTypeEnum|null $cardType
  *
  * @method static Builder onlySuccess()
  */
@@ -193,6 +195,20 @@ class Transaction extends Model
         }
 
         return $isCancelled;
+    }
+
+    protected function cardType(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => CardTypeEnum::getCardType($this->card_pan),
+        );
+    }
+
+    protected function cardPan(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ?? $this->card->pan ?? null,
+        );
     }
 
     private function computeCommission(): void

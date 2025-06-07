@@ -20,27 +20,19 @@ class BalanceChargeGraphQLType extends GraphQLType
         return [
             'id' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => function (BalanceCharge $root) {
-                    return $root->id;
-                },
+                'resolve' => fn (BalanceCharge $root) => $root->id,
             ],
             'amount' => [
-                'type' => Type::nonNull(Type::int()),
-                'resolve' => function (BalanceCharge $root) {
-                    return $root->amount;
-                },
+                'type' => Type::nonNull(Type::float()),
+                'resolve' => fn (BalanceCharge $root) => $root->amount,
             ],
             'description' => [
                 'type' => Type::string(),
-                'resolve' => function (BalanceCharge $root) {
-                    return trans('feature.' . $root->feature->name->value) . ', ID=' . $root->chargeable_id;
-                },
+                'resolve' => fn (BalanceCharge $root) => trans('feature.' . $root->feature->name->value) . ', ID=' . $root->chargeable_id,
             ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
-                'resolve' => function (BalanceCharge $root) {
-                    return $root->created_at->timestamp;
-                },
+                'resolve' => fn (BalanceCharge $root) => $root->created_at->timestamp,
             ],
         ];
     }
