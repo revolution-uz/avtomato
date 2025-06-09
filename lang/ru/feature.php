@@ -29,6 +29,7 @@ return [
     'scoring_credit_history' => 'Скоринг кредитной истории',
     'scoring_inps_history' => 'Скоринг ежемесячных доходов',
     'scoring_pension_info' => 'Получение истории пенсий через KATM',
+    'scoring_start_info' => 'Стартовый скоринг',
     'scoring_mib_info' => 'Скоринг МИБ',
     'scoring_tax_info' => 'Скоринг налогов',
     'scoring_humo' => 'Скоринг Humo',

@@ -29,6 +29,7 @@ return [
     'scoring_credit_history' => 'Кредит тарихи скоринги',
     'scoring_inps_history' => 'Ойлик скоринги',
     'scoring_pension_info' => 'КАТМ орқали пенсия тарихини олиш',
+    'scoring_start_info' => 'Старт скоринги',
     'scoring_mib_info' => 'МИБ скоринги',
     'scoring_tax_info' => 'Солиқ скоринги',
     'scoring_humo' => 'Humo скоринги',

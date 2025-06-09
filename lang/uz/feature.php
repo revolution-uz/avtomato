@@ -29,6 +29,7 @@ return [
     'scoring_credit_history' => 'Kredit tarixi skoringi',
     'scoring_inps_history' => 'Oylik skoringi',
     'scoring_pension_info' => 'KATM orqali pensiya tarixini olish',
+    'scoring_start_info' => 'Start skoringi',
     'scoring_mib_info' => 'MIB skoringi',
     'scoring_tax_info' => 'Soliq skoringi',
     'scoring_humo' => 'Humo skoringi',
