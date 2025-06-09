@@ -129,12 +129,6 @@ class Transaction extends Model
                 Installment::query()->where('id', $transaction->installment_id)->decrement('paid_amount', $transaction->amount);
             }
         });
-
-        static::deleted(function (self $transaction) {
-            if (! $transaction->is_initial_fee) {
-                Installment::query()->where('id', $transaction->installment_id)->decrement('paid_amount', $transaction->amount);
-            }
-        });
     }
 
     public function installment(): BelongsTo
