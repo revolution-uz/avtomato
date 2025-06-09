@@ -29,6 +29,7 @@ return [
     'scoring_credit_history' => 'Credit history scoring',
     'scoring_inps_history' => 'Monthly scoring',
     'scoring_pension_info' => 'Retrieve pension history via KATM',
+    'scoring_start_info' => 'Start scoring',
     'scoring_mib_info' => 'MIB scoring',
     'scoring_tax_info' => 'Tax scoring',
     'scoring_humo' => 'Humo scoring',

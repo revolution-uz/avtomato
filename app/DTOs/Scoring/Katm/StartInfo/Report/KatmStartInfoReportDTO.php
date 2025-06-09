@@ -10,7 +10,7 @@ class KatmStartInfoReportDTO extends BaseScoringResponse
         public ?KatmStartInfoReportSysInfoDTO $sysinfo,
         public ?KatmStartInfoReportClientDTO $client,
         public ?KatmStartInfoReportSubjectClaimsDTO $subject_claims,
-        public ?float $subject_debts,
+        public ?KatmStartInfoReportSubjectDebtsDTO $subject_debts,
         public ?float $average_monthly_payment,
     ) {}
 }
