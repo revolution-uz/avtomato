@@ -6,6 +6,7 @@ use App\Enums\Company\CardTypeEnum;
 use App\Enums\Company\InstallmentStatusEnum;
 use App\Enums\Company\TransactionStatusEnum;
 use App\Events\TelegramEvents\TransactionTelegramMessageEvent;
+use App\Exceptions\GeneralException;
 use App\Jobs\CreateIcanTransactionJob;
 use App\Jobs\CreateOrUpdateInstallmentInUniredJob;
 use App\Jobs\SendTransactionSmsJob;
@@ -126,7 +127,14 @@ class Transaction extends Model
                 and $transaction->status === TransactionStatusEnum::CANCELED
                 and ! $transaction->is_initial_fee
             ) {
-                Installment::query()->where('id', $transaction->installment_id)->decrement('paid_amount', $transaction->amount);
+                $installment = $transaction->installment;
+
+                if ($installment->status === InstallmentStatusEnum::CLOSED) {
+                    $installment->status = InstallmentStatusEnum::ACTIVE;
+                }
+
+                $installment->paid_amount -= $transaction->amount;
+                $installment->saveOrFail();
             }
         });
     }
@@ -168,20 +176,27 @@ class Transaction extends Model
 
     public function reverse()
     {
-        if ($this->status == TransactionStatusEnum::CANCELED) {
+        if ($this->status === TransactionStatusEnum::CANCELED) {
             return true;
         }
-        $atmosService = app(AtmosService::class);
-        $uniredService = app(UniredService::class);
-        $isCancelled = true;
 
-        if ($this->transaction_type_id == TransactionType::ATMOS_WITH_CARD) {
-            $isCancelled = $atmosService->reverseCardPayment($this->external_id);
-        } elseif ($this->transaction_type_id == TransactionType::ATMOS_WITH_PINFL) {
-            $isCancelled = $atmosService->reversePinflPayment($this->id);
-        } elseif ($this->transaction_type_id === TransactionType::UNIRED_WITH_PINFL) {
-            $isCancelled = $uniredService->reversePayment($this->external_id);
+        switch ($this->transaction_type_id) {
+            case TransactionType::ATMOS_WITH_CARD:
+                $isCancelled = app(AtmosService::class)->reverseCardPayment($this->external_id);
+                break;
+            case TransactionType::ATMOS_WITH_PINFL:
+                $isCancelled = app(AtmosService::class)->reversePinflPayment($this->id);
+                break;
+            case TransactionType::UNIRED_WITH_PINFL:
+                $isCancelled = app(UniredService::class)->reversePayment($this->external_id);
+                break;
+            default:
+                if ($this->transaction_type_id < 100) {
+                    throw new GeneralException('Unhandled system transaction type');
+                }
+                $isCancelled = true; // For other transaction types
         }
+
         if ($isCancelled) {
             $this->status = TransactionStatusEnum::CANCELED;
 
