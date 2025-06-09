@@ -18,19 +18,19 @@ class KatmStartInfoReportSubjectClaimGraphQLType extends GraphQLType
     {
         return [
             'org_type' => [
-                'type' => Type::float(),
+                'type' => Type::string(),
                 'resolve' => fn (KatmStartInfoReportSubjectClaimDTO $root) => $root->org_type,
             ],
             'claims_qty' => [
-                'type' => Type::float(),
+                'type' => Type::int(),
                 'resolve' => fn (KatmStartInfoReportSubjectClaimDTO $root) => $root->claims_qty,
             ],
             'rejected_qty' => [
-                'type' => Type::float(),
+                'type' => Type::int(),
                 'resolve' => fn (KatmStartInfoReportSubjectClaimDTO $root) => $root->rejected_qty,
             ],
             'granted_qty' => [
-                'type' => Type::float(),
+                'type' => Type::int(),
                 'resolve' => fn (KatmStartInfoReportSubjectClaimDTO $root) => $root->granted_qty,
             ],
         ];

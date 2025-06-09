@@ -91,7 +91,7 @@ class KatmStartInfoReport23ClientGraphQLType extends GraphQLType
                 'resolve' => fn (KatmStartInfoReport23ClientDTO $root) => $root->founders,
             ],
             'phones' => [
-                'type' => Type::listOf(GraphQL::type(KatmStartInfoReport23ClientPhoneGraphQLType::GRAPHQL_TYPE_NAME)),
+                'type' => GraphQL::type(KatmStartInfoReport23ClientPhonesGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (KatmStartInfoReport23ClientDTO $root) => $root->phones,
             ],
         ];

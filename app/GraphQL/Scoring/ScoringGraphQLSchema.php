@@ -64,6 +64,7 @@ use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23ClaimQuantitie
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23ClaimQuantityGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23ClientGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23ClientPhoneGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23ClientPhonesGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23GraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23OpenContractGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReport23OpenContractsGraphQLType;
@@ -73,6 +74,8 @@ use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportClientGraphQLTyp
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportSubjectClaimGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportSubjectClaimsGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportSubjectDebtGraphQLType;
+use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportSubjectDebtsGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoReportSysInfoGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\KatmStartInfoResponseGraphQLType;
 use App\GraphQL\Scoring\Types\Katm\StartInfo\StartInfoGraphQLType;
@@ -186,6 +189,8 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 KatmStartInfoReportClientGraphQLType::class,
                 KatmStartInfoReportSubjectClaimsGraphQLType::class,
                 KatmStartInfoReportSubjectClaimGraphQLType::class,
+                KatmStartInfoReportSubjectDebtGraphQLType::class,
+                KatmStartInfoReportSubjectDebtsGraphQLType::class,
                 KatmStartInfoReport23GraphQLType::class,
                 KatmStartInfoReport23SysInfoGraphQLType::class,
                 KatmStartInfoReport23ClientGraphQLType::class,
@@ -195,6 +200,7 @@ class ScoringGraphQLSchema implements ConfigConvertible
                 KatmStartInfoReport23OpenContractGraphQLType::class,
                 KatmStartInfoReport23ClaimQuantityGraphQLType::class,
                 KatmStartInfoReport23TotalClaimQuantityGraphQLType::class,
+                KatmStartInfoReport23ClientPhonesGraphQLType::class,
             ],
             'middleware' => ['auth:company-admin', 'is_soft_delete_token', 'tenant_logging'],
         ];

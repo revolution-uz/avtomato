@@ -31,7 +31,7 @@ class KatmStartInfoReportGraphQLType extends GraphQLType
                 'resolve' => fn (KatmStartInfoReportDTO $root) => $root->subject_claims,
             ],
             'subject_debts' => [
-                'type' => Type::float(),
+                'type' => GraphQL::type(KatmStartInfoReportSubjectDebtsGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (KatmStartInfoReportDTO $root) => $root->subject_debts,
             ],
             'average_monthly_payment' => [
