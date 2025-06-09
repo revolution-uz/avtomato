@@ -27,8 +27,6 @@ class TransactionTypeSeeder extends Seeder
                 ->whereNotIn('id', array_keys($transactionTypes))
                 ->delete();
 
-            Log::info('Transaction types seeded successfully.');
-
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());

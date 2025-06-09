@@ -35,8 +35,6 @@ class ModuleSeeder extends Seeder
 
             Module::query()->whereNotIn('id', BaseModule::query()->pluck('id'))->forceDelete();
 
-            Log::info('Modules seeded successfully.');
-
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());

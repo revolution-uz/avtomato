@@ -29,8 +29,6 @@ class SmsTemplateSeeder extends Seeder
                 ->where('id', '<', 100)
                 ->forceDelete();
 
-            Log::info('SMS templates seeded successfully.');
-
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());

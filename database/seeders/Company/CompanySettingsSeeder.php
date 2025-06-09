@@ -25,8 +25,6 @@ class CompanySettingsSeeder extends Seeder
                 ]);
             }
 
-            Log::info('Company settings seeded successfully.');
-
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());

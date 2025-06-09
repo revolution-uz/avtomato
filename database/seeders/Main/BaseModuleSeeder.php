@@ -5,7 +5,6 @@ namespace Database\Seeders\Main;
 use App\Enums\ModuleEnum;
 use App\Models\BaseModule;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Log;
 
 class BaseModuleSeeder extends Seeder
 {
@@ -20,7 +19,5 @@ class BaseModuleSeeder extends Seeder
         }
 
         BaseModule::query()->whereNotIn('name', ModuleEnum::cases())->forceDelete();
-
-        Log::info('BaseModuleSeeder completed successfully.');
     }
 }
