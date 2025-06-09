@@ -164,22 +164,6 @@ class TransactionModelTest extends TestCase
     }
 
     #[Test]
-    public function decrementsInstallmentPaidAmountWhenTransactionIsDeleted()
-    {
-        $transaction = Transaction::factory()->create([
-            'installment_id' => $this->_installment->id,
-            'transaction_type_id' => $this->_transactionType->id,
-            'customer_id' => $this->_customer->id,
-            'amount' => 1000,
-        ]);
-        $this->_installment->refresh();
-        $oldPaidAmount = $this->_installment->paid_amount;
-        $transaction->delete();
-
-        $this->assertEquals($oldPaidAmount - 1000, $this->_installment->refresh()->paid_amount);
-    }
-
-    #[Test]
     public function decrementsInstallmentPaidAmountWhenTransactionIsCanceled()
     {
         $transaction = Transaction::factory()->create([
