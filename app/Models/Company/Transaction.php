@@ -51,6 +51,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property-read CardTypeEnum|null $cardType
  *
  * @method static Builder onlySuccess()
+ * @method static Builder withoutDiscount()
  */
 class Transaction extends Model
 {
@@ -170,6 +171,11 @@ class Transaction extends Model
     public function scopeOnlySuccess($query)
     {
         return $query->where('status', TransactionStatusEnum::SUCCESS);
+    }
+
+    public function scopeWithoutDiscount($query)
+    {
+        return $query->whereNot('transaction_type_id', TransactionType::DISCOUNT);
     }
 
     public function reverse()
