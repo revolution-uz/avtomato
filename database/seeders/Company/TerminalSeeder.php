@@ -29,8 +29,6 @@ class TerminalSeeder extends Seeder
                 }
             }
 
-            Log::info('Terminals seeded successfully.');
-
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());

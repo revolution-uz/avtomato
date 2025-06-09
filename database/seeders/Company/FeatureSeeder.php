@@ -46,8 +46,6 @@ class FeatureSeeder extends Seeder
             Permission::query()->whereNotIn('feature_id', BaseFeature::query()->pluck('id'))->forceDelete();
             Feature::query()->whereNotIn('id', BaseFeature::query()->pluck('id'))->forceDelete();
 
-            Log::info('Features and permissions have been successfully seeded.');
-
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());
             Log::error($e->getMessage());

@@ -15,6 +15,7 @@ class TransactionTypeSeeder extends Seeder
             TransactionType::ATMOS_WITH_CARD => ['name_uz' => 'Atmos karta bilan', 'name_ru' => 'Атмос с картой ', 'name_en' => 'Atmos with card'],
             TransactionType::ATMOS_WITH_PINFL => ['name_uz' => 'Atmos passport bilan', 'name_ru' => 'Атмос с паспортом', 'name_en' => 'Atmos with passport'],
             TransactionType::UNIRED_WITH_PINFL => ['name_uz' => 'Unired passport bilan', 'name_ru' => 'Униред с паспортом', 'name_en' => 'Unired with passport'],
+            TransactionType::DISCOUNT => ['name_uz' => 'Chegirma', 'name_ru' => 'Скидка', 'name_en' => 'Discount'],
         ];
 
         try {
@@ -26,8 +27,6 @@ class TransactionTypeSeeder extends Seeder
                 ->where('is_system', true)
                 ->whereNotIn('id', array_keys($transactionTypes))
                 ->delete();
-
-            Log::info('Transaction types seeded successfully.');
 
         } catch (Throwable $e) {
             $this->command->error('Error: ' . $e->getMessage());

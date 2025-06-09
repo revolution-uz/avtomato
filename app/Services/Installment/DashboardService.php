@@ -37,7 +37,7 @@ class DashboardService
 
     public function getTransaction()
     {
-        $transactionQuery = Transaction::query()->onlySuccess();
+        $transactionQuery = Transaction::query()->withoutDiscount()->onlySuccess();
 
         return [
             'count' => $transactionQuery->clone()->count(),
