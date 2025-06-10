@@ -114,4 +114,3 @@ class LoyaltyProgramOrderServiceTest extends TestCase
         $this->assertEquals(0, $subscription->refresh()->remaining_limit_amount);
     }
 }
-
