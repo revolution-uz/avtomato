@@ -109,7 +109,7 @@ class User extends Authenticatable
             ->count();
     }
 
-    public function getQR(int $expiration = 30): array
+    public function getQR(int $expiration = 10): array
     {
         $timestamp = now()->addSeconds($expiration)->timestamp;
         $attributeXorSum = $this->id ^ $timestamp ^ tenant('id');
