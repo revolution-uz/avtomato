@@ -2,6 +2,7 @@
 
 namespace App\Services\LoyaltyProgram;
 
+use App\DTOs\LoyaltyProgram\QrPayloadDTO;
 use App\Enums\Company\LoyaltyProgram\OrderStatusEnum;
 use App\Http\Resources\OrderResource;
 use App\Models\Company\LoyaltyProgram\Item;
@@ -17,9 +18,14 @@ class LoyaltyProgramOrderService
     public function createOrder(array $items, string $shop_code, string $qr): OrderResource
     {
         try {
-            $user = User::findByQr($qr);
+            $qrDto = QrPayloadDTO::fromQr($qr);
+            $user = User::query()->with('shopmate')->findOrFail($qrDto->user_id);
 
-            if (! $user->has_available_subscription) {
+            if ($qrDto->isShopmate && ! $user->shopmate_id) {
+                throw new Exception('User has no shopmate');
+            }
+
+            if (! ($qrDto->isShopmate ? $user->shopmate->has_available_subscription : $user->has_available_subscription)) {
                 throw new Exception('User has no active subscription');
             }
 
@@ -28,19 +34,18 @@ class LoyaltyProgramOrderService
             $order = new Order;
             $order->status = OrderStatusEnum::PENDING;
             $order->user_id = $user->id;
+            $order->shopmate_id = $qrDto->isShopmate ?: $user->shopmate_id;
             $order->saveOrFail();
 
             foreach ($items as $item) {
                 $this->createItem($item, $shop_code, $order);
             }
-
-            if ($order->total_discount_amount > $user->active_subscription_limit) {
-                throw new Exception('Not enough limit');
-            }
+            $order->refresh();
+            $order->applyOrderDiscount();
 
             DB::commit();
 
-            return new OrderResource($order->refresh());
+            return new OrderResource($order);
 
         } catch (Exception $e) {
             DB::rollBack();
