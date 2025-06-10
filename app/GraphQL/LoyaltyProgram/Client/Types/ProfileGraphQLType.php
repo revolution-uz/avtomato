@@ -58,9 +58,17 @@ class ProfileGraphQLType extends GraphQLType
                 'type' => GraphQL::type(QrGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (User $root) => $root->getQR(),
             ],
+            'shopmate_qr' => [
+                'type' => GraphQL::type(QrGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (User $root) => $root->getQR(isShopmate: true),
+            ],
             'cards' => [
                 'type' => Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (User $root) => $root->cards()->active()->get(),
+            ],
+            'shopmate' => [
+                'type' => GraphQL::type(UserGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (User $root) => $root->shopmate,
             ],
         ];
     }

@@ -99,8 +99,12 @@ class User extends Authenticatable
             ->count();
     }
 
-    public function getQR(int $expiration = 10, bool $isShopmate = false): array
+    public function getQR(int $expiration = 10, bool $isShopmate = false): ?array
     {
+        if (($isShopmate && ! $this->shopmate_id) || (! $isShopmate && ! $this->has_available_subscription)) {
+            return null;
+        }
+
         $timestamp = now()->addSeconds($expiration)->timestamp;
 
         $qrDto = QrPayloadDTO::from([

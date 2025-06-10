@@ -66,6 +66,10 @@ class UserGraphQLType extends GraphQLType
                 'type' => Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (User $root) => $root->cards,
             ],
+            'shopmate' => [
+                'type' => GraphQL::type(self::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (User $root) => $root->shopmate,
+            ],
             'has_available_subscription' => [
                 'type' => Type::nonNull(Type::boolean()),
                 'resolve' => fn (User $root) => $root->has_available_subscription,
