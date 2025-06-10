@@ -22,4 +22,14 @@ class SubscriptionFactory extends Factory
             'user_id' => User::factory(),
         ];
     }
+
+    public function active(): static
+    {
+        return $this->state([
+            'is_active' => true,
+            'expired_at' => now()->addDays($this->faker->numberBetween(1, 30)),
+
+            'tariff_id' => Tariff::factory()->active()->create()->id,
+        ]);
+    }
 }

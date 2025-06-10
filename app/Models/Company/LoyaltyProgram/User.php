@@ -2,11 +2,11 @@
 
 namespace App\Models\Company\LoyaltyProgram;
 
-use App\Enums\Company\LoyaltyProgram\OrderStatusEnum;
+use App\DTOs\LoyaltyProgram\QrPayloadDTO;
 use App\Models\Company\OrderBySortable;
 use App\Models\Company\PersonalAccessToken;
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,12 +23,14 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $last_name
  * @property Carbon|null $birth_date
  * @property string|null $main_device
+ * @property int|null $shopmate_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property-read int|null $active_subscription_limit
  * @property Subscription[] $subscriptions
  * @property Card[]|Collection<int, Card> $cards
+ * @property self|null $shopmate
  * @property-read string|null $full_name
  * @property-read bool $has_available_subscription
  */
@@ -46,29 +48,12 @@ class User extends Authenticatable
         'last_name',
         'birth_date',
         'main_device',
+        'shopmate_id',
     ];
 
     protected $casts = [
         'birth_date' => 'date',
     ];
-
-    public static function findByQr(string $qr): ?self
-    {
-        $qrDto = explode('$$', $qr);
-        if (count($qrDto) !== 3 || $qrDto[1] < now()->timestamp) {
-            throw new Exception('Invalid QR code');
-        }
-        $attributeXorSum = (int) $qrDto[0];
-        $timestamp = (int) $qrDto[1];
-        $userId = $attributeXorSum ^ $timestamp ^ tenant('id');
-
-        return static::query()->findOrFail($userId);
-    }
-
-    private static function getQrString(int $attributeXorSum, int $userId, float|int|string $timestamp): string
-    {
-        return substr($attributeXorSum . '$$' . $timestamp . '$$' . md5(config('loyalty_program.security.qr_salt') . '$' . $userId . '$' . tenant('id') . '$' . $timestamp), 0, 36);
-    }
 
     public function subscriptions(): HasMany
     {
@@ -83,6 +68,11 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function shopmate(): BelongsTo
+    {
+        return $this->belongsTo(self::class);
     }
 
     public function tokens(): MorphMany
@@ -109,13 +99,19 @@ class User extends Authenticatable
             ->count();
     }
 
-    public function getQR(int $expiration = 10): array
+    public function getQR(int $expiration = 10, bool $isShopmate = false): array
     {
         $timestamp = now()->addSeconds($expiration)->timestamp;
-        $attributeXorSum = $this->id ^ $timestamp ^ tenant('id');
+
+        $qrDto = QrPayloadDTO::from([
+            'user_id' => $this->id,
+            'timestamp' => $timestamp,
+            'tenant_id' => tenant('id'),
+            'isShopmate' => $isShopmate,
+        ]);
 
         return [
-            'id' => $this->getQrString($attributeXorSum, $this->id, $timestamp),
+            'id' => $qrDto->generateQr(),
             'expires_in' => $timestamp,
         ];
     }
@@ -136,7 +132,7 @@ class User extends Authenticatable
             return null;
         }
 
-        return $subscription->tariff->limit_amount - $this->getOrderDiscountAmount($subscription->created_at);
+        return $subscription->remaining_limit_amount;
     }
 
     public function getFullNameAttribute(): ?string
@@ -146,14 +142,5 @@ class User extends Authenticatable
         }
 
         return $this->last_name . ' ' . $this->first_name;
-    }
-
-    private function getOrderDiscountAmount(Carbon $created_at)
-    {
-        return $this->orders()
-            ->where('created_at', '>', $created_at)
-            ->where('status', OrderStatusEnum::COMPLETED)
-            ->get()
-            ->sum('total_discount_amount');
     }
 }
