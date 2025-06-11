@@ -431,7 +431,7 @@
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Rossiya MIR kartasi bilan O‘zbekistonda
                             to‘lov<br> amalga oshirish imkoniyati</p>
                         <a class="group mt-4 inline-flex items-center sp ace-x-1 text-primary"
-                           href="{{ route('modules/loyalty_program') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/sbp_pay') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -454,7 +454,7 @@
                         <p class="custom-truncate mt-3 text-[#787A7D] leading-6">Mijozlarni bonus va chegirmalar bilan
                             ushlab qoling, obuna tizimi orqali ularning sonini oshiring!</p>
                         <a class="group mt-4 inline-flex items-center space-x-1 text-primary"
-                           href="{{ route('modules/sbp_pay') }}" title="Batafsil ma’lumot">
+                           href="{{ route('modules/loyalty_program') }}" title="Batafsil ma’lumot">
                             <span class="group-hover:mr-2 transition-all duration-200 ease-in-out text-base md:text-[17px] leading-none">Batafsil ma’lumot</span>
                             <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
