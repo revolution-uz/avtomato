@@ -4,7 +4,6 @@ namespace App\GraphQL\Customer\Types;
 
 use App\GraphQL\Installment\Types\InstallmentGraphQLType;
 use App\GraphQL\Scoring\Types\ScoringRequestGraphQLType;
-use App\GraphQL\Scoring\Types\ScoringRequestUnionGraphQLType;
 use App\Models\Company\Customer;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
@@ -120,11 +119,7 @@ class CustomerGraphQLType extends GraphQLType
             ],
             'scorings' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(ScoringRequestGraphQLType::GRAPHQL_TYPE_NAME))),
-                'resolve' => fn (Customer $root) => $root->scoringRequests,
-            ],
-            'scoring_requests' => [
-                'type' => Type::nonNull(Type::listOf(GraphQL::type(ScoringRequestUnionGraphQLType::GRAPHQL_TYPE_NAME))),
-                'resolve' => fn (Customer $root) => $root->scoringRequests,
+                'resolve' => fn (Customer $root) => $root->scoringRequests()->orderByDesc('created_at')->get(),
             ],
             'tags' => [
                 'type' => Type::nonNull(Type::listOf(GraphQL::type(TagGraphQLType::GRAPHQL_TYPE_NAME))),
