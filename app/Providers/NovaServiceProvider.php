@@ -32,6 +32,7 @@ use App\Nova\Company\ModuleResource;
 use App\Nova\Company\RoleResource;
 use App\Nova\Company\SbpTransactionResource;
 use App\Nova\Company\SmsTemplateResource;
+use App\Nova\Company\TerminalResource;
 use App\Nova\CompanyResource;
 use App\Nova\Dashboards\Main;
 use App\Nova\NewCustomerResource;
@@ -81,6 +82,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         MenuItem::resource(SmsTemplateResource::class),
                         MenuItem::resource(InstallmentResource::class),
                         MenuItem::resource(SbpTransactionResource::class),
+                        MenuItem::resource(TerminalResource::class),
                     ])->collapsable(),
                     MenuSection::make('Loyalty Program', [
                         MenuItem::resource(\App\Nova\Company\LoyaltyProgram\UserResource::class),

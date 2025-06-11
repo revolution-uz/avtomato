@@ -15,6 +15,16 @@ enum TerminalTypeEnum: int
     case UNIRED_CARD = 3;
     case UNIRED_PINFL = 4;
 
+    public static function options(): array
+    {
+        return [
+            self::ATMOS_CARD->value => 'Atmos card',
+            self::ATMOS_PINFL->value => 'Atmos pinfl',
+            self::UNIRED_CARD->value => 'Unired card',
+            self::UNIRED_PINFL->value => 'Unired pinfl',
+        ];
+    }
+
     public function getDataFromFeature(): ?array
     {
         $featureEnum = match ($this) {
