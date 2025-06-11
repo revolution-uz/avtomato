@@ -23,14 +23,15 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property string|null $last_name
  * @property Carbon|null $birth_date
  * @property string|null $main_device
- * @property int|null $shopmate_id
+ * @property int|null $distributor_id
+ * @property Carbon|null $distributed_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property-read int|null $active_subscription_limit
  * @property Subscription[] $subscriptions
  * @property Card[]|Collection<int, Card> $cards
- * @property self|null $shopmate
+ * @property self|null $distributor
  * @property-read string|null $full_name
  * @property-read bool $has_available_subscription
  */
@@ -48,7 +49,7 @@ class User extends Authenticatable
         'last_name',
         'birth_date',
         'main_device',
-        'shopmate_id',
+        'distributor_id',
     ];
 
     protected $casts = [
@@ -70,7 +71,7 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function shopmate(): BelongsTo
+    public function distributor(): BelongsTo
     {
         return $this->belongsTo(self::class);
     }
@@ -99,9 +100,17 @@ class User extends Authenticatable
             ->count();
     }
 
-    public function getQR(int $expiration = 10, bool $isShopmate = false): ?array
+    public function getQR(int $expiration = 10, bool $isDistributed = false): ?array
     {
-        if (($isShopmate && ! $this->shopmate_id) || (! $isShopmate && ! $this->has_available_subscription)) {
+        if (
+            (
+                $isDistributed && (
+                    ! $this->distributor_id
+                    || ! $this->distributor->has_available_subscription
+                )
+            )
+            || (! $isDistributed && ! $this->has_available_subscription)
+        ) {
             return null;
         }
 
@@ -111,7 +120,7 @@ class User extends Authenticatable
             'user_id' => $this->id,
             'timestamp' => $timestamp,
             'tenant_id' => tenant('id'),
-            'isShopmate' => $isShopmate,
+            'is_distributed' => $isDistributed,
         ]);
 
         return [

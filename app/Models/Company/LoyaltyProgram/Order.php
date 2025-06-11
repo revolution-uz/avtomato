@@ -20,7 +20,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property int $id
  * @property int $user_id
  * @property OrderStatusEnum $status
- * @property int|null $shopmate_id
+ * @property int|null $subscription_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -31,7 +31,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Collection|OrderItem[] $items
  * @property Collection|OrderStatusHistory[] $statusHistories
  * @property Collection|OrderPayment[] $payments
- * @property User|null $shopmate
+ * @property Subscription|null $subscription
  */
 class Order extends Model
 {
@@ -44,7 +44,7 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'status',
-        'shopmate_id',
+        'subscription_id',
     ];
 
     protected $casts = [
@@ -71,9 +71,9 @@ class Order extends Model
         return $this->hasMany(OrderPayment::class);
     }
 
-    public function shopmate(): BelongsTo
+    public function subscription(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Subscription::class);
     }
 
     public function getTotalDiscountAmountAttribute(): float
@@ -91,18 +91,35 @@ class Order extends Model
         return $this->items->sum('total_amount');
     }
 
-    public function applyOrderDiscount()
+    public function applyOrderDiscount(Subscription $subscription): void
     {
-        $subscription = $this->shopmate_id
-            ? $this->shopmate->getAvailableSubscription()
-            : $this->user->getAvailableSubscription();
-
-        $totalDiscount = $this->total_discount_amount;
-
-        if (! $subscription || $subscription->remaining_limit_amount < $totalDiscount) {
+        if ($subscription->remaining_limit_amount < $this->total_discount_amount) {
             throw new Exception('Not enough limit on subscription');
         }
 
-        $subscription->decrement('remaining_limit_amount', (int) $totalDiscount);
+        $this->subscription()->associate($subscription);
+        $this->saveOrFail();
+    }
+
+    public function confirmOrderDiscount()
+    {
+        $totalDiscount = $this->total_discount_amount;
+
+        if (! $this->subscription || $this->subscription->remaining_limit_amount < $totalDiscount) {
+            throw new Exception('Not enough limit on subscription');
+        }
+
+        $this->subscription->decrement('remaining_limit_amount', (int) $totalDiscount);
+    }
+
+    public function revertOrderDiscount()
+    {
+        $totalDiscount = $this->total_discount_amount;
+
+        if (! $this->subscription) {
+            return;
+        }
+
+        $this->subscription->increment('remaining_limit_amount', (int) $totalDiscount);
     }
 }

@@ -11,7 +11,7 @@ class QrPayloadDTO extends Data
         public int $user_id,
         public int $timestamp,
         public int $tenant_id,
-        public bool $isShopmate,
+        public bool $is_distributed,
     ) {}
 
     public static function fromQr(string $qr): self
@@ -29,7 +29,7 @@ class QrPayloadDTO extends Data
             user_id: $userId,
             timestamp: $timestamp,
             tenant_id: tenant('id'),
-            isShopmate: (bool) (int) $qrDto[2]
+            is_distributed: (bool) (int) $qrDto[2]
         );
     }
 
@@ -37,11 +37,11 @@ class QrPayloadDTO extends Data
     {
         $attributeXorSum = $this->user_id ^ $this->timestamp ^ $this->tenant_id;
 
-        $text = $attributeXorSum . '$$'
+        $qr = $attributeXorSum . '$$'
             . $this->timestamp . '$$'
-            . $this->isShopmate . '$$'
+            . $this->is_distributed . '$$'
             . md5(config('loyalty-program.security.qr_salt') . '$' . $this->user_id . '$' . $this->tenant_id . '$' . $this->timestamp);
 
-        return substr($text, 0, 255);
+        return substr($qr, 0, 36);
     }
 }

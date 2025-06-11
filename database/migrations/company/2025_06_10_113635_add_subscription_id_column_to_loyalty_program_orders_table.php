@@ -9,15 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('loyalty_program_orders', function (Blueprint $table) {
-            $table->unsignedBigInteger('shopmate_id')->index()->nullable();
+            $table->unsignedBigInteger('subscription_id')->index()->nullable();
         });
     }
 
     public function down(): void
     {
         Schema::table('loyalty_program_orders', function (Blueprint $table) {
-            $table->dropIndex(['shopmate_id']);
-            $table->dropColumn('shopmate_id');
+            $table->dropIndex(['subscription_id']);
+            $table->dropColumn('subscription_id');
         });
     }
 };
