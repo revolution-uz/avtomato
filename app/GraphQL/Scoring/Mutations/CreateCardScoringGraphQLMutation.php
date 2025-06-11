@@ -8,6 +8,7 @@ use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
 use App\GraphQL\Scoring\Types\Card\CardCreateInputGraphQLType;
 use App\GraphQL\Scoring\Types\Card\CreateCardScoringGraphQLType;
 use App\Helpers\RbacHelper;
+use App\Models\Company\Customer;
 use App\Services\Scoring\CardScoringService;
 use Closure;
 use Exception;
@@ -28,6 +29,14 @@ class CreateCardScoringGraphQLMutation extends Mutation
     public function args(): array
     {
         return [
+            'customer_id' => [
+                'type' => Type::int(),
+                'rules' => [
+                    'nullable',
+                    'int',
+                    Rule::exists(Customer::class, 'id')->whereNull('deleted_at'),
+                ],
+            ],
             'data' => [
                 'type' => Type::nonNull(GraphQL::type(CardCreateInputGraphQLType::GRAPHQL_TYPE_NAME)),
             ],
@@ -60,9 +69,8 @@ class CreateCardScoringGraphQLMutation extends Mutation
         $type = ScoringRequestTypeEnum::from($args['type']);
         $dto = CardCreateRequestDTO::from($args['data']);
         $phone = $args['data']['phone'] ?? null;
+        $customer_id = $args['customer_id'] ?? null;
 
-        return $type === ScoringRequestTypeEnum::HUMO
-            ? $this->cardScoringService->scoringHumo($dto, $phone)
-            : $this->cardScoringService->scoringUzcard($dto);
+        return $this->cardScoringService->scoringCard($dto, $type, $phone, $customer_id);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Scoring\Types\UzumNasiya;
 
+use App\Rules\PhoneRule;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\InputType;
 
@@ -17,9 +18,8 @@ class UzumNasiyaLimitCreateInputGraphQLType extends InputType
     {
         return [
             'phone' => [
-                'name' => 'phone',
                 'type' => Type::nonNull(Type::string()),
-                'rules' => 'required|string|max:12|min:12',
+                'rules' => ['required', 'digits:12', new PhoneRule],
             ],
         ];
     }

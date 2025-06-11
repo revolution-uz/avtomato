@@ -24,13 +24,14 @@ readonly class UzumNasiyaService
     /**
      * @throws Throwable
      */
-    public function scoring(UzumNasiyaLimitCreateRequestDTO $dto): ScoringRequest
+    public function scoring(UzumNasiyaLimitCreateRequestDTO $dto, ?int $customer_id): ScoringRequest
     {
         $model = new ScoringRequest;
         $model->type = ScoringRequestTypeEnum::UZUM_NASIYA_LIMIT;
         $model->request = $dto;
         $model->client_code = $this->asaxiyClient->getClientCode();
         $model->status = ScoringRequestStatusEnum::WAITING;
+        $model->customer_id = $customer_id;
         $model->saveOrFail();
         $this->balanceService->chargeAmount(FeatureEnum::SCORING_UZUM_NASIYA_LIMIT, $model);
         try {
