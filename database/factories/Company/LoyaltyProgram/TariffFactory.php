@@ -22,4 +22,11 @@ class TariffFactory extends Factory
             'is_active' => $this->faker->boolean,
         ];
     }
+
+    public function active(): static
+    {
+        return $this->state([
+            'is_active' => true,
+        ]);
+    }
 }

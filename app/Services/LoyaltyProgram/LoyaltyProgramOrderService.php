@@ -2,6 +2,7 @@
 
 namespace App\Services\LoyaltyProgram;
 
+use App\DTOs\LoyaltyProgram\QrPayloadDTO;
 use App\Enums\Company\LoyaltyProgram\OrderStatusEnum;
 use App\Http\Resources\OrderResource;
 use App\Models\Company\LoyaltyProgram\Item;
@@ -17,9 +18,14 @@ class LoyaltyProgramOrderService
     public function createOrder(array $items, string $shop_code, string $qr): OrderResource
     {
         try {
-            $user = User::findByQr($qr);
+            $qrDto = QrPayloadDTO::fromQr($qr);
+            $user = User::query()->with('distributor')->findOrFail($qrDto->user_id);
 
-            if (! $user->has_available_subscription) {
+            if ($qrDto->is_distributed && ! $user->distributor) {
+                throw new Exception('User has no distributor');
+            }
+
+            if (! $subscription = $qrDto->is_distributed ? $user->distributor->getAvailableSubscription() : $user->getAvailableSubscription()) {
                 throw new Exception('User has no active subscription');
             }
 
@@ -33,14 +39,12 @@ class LoyaltyProgramOrderService
             foreach ($items as $item) {
                 $this->createItem($item, $shop_code, $order);
             }
-
-            if ($order->total_discount_amount > $user->active_subscription_limit) {
-                throw new Exception('Not enough limit');
-            }
+            $order->refresh();
+            $order->applyOrderDiscount($subscription);
 
             DB::commit();
 
-            return new OrderResource($order->refresh());
+            return new OrderResource($order);
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -51,6 +55,7 @@ class LoyaltyProgramOrderService
     public function confirmOrder(int $order_id): false|OrderResource
     {
         $order = Order::query()->findOrFail($order_id);
+        $order->confirmOrderDiscount();
         $order->status = OrderStatusEnum::COMPLETED;
         if ($order->save()) {
             return new OrderResource($order);
@@ -62,6 +67,7 @@ class LoyaltyProgramOrderService
     public function cancelOrder(int $order_id): false|OrderResource
     {
         $order = Order::query()->findOrFail($order_id);
+        $order->revertOrderDiscount();
         $order->status = OrderStatusEnum::CANCELED;
         if ($order->save()) {
             return new OrderResource($order);

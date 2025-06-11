@@ -42,6 +42,10 @@ class ProfileGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (User $root) => $root->birth_date?->timestamp,
             ],
+            'distributed_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (User $root) => $root->distributed_at?->timestamp,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (User $root) => $root->created_at->timestamp,
@@ -58,9 +62,21 @@ class ProfileGraphQLType extends GraphQLType
                 'type' => GraphQL::type(QrGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (User $root) => $root->getQR(),
             ],
+            'distributor_qr' => [
+                'type' => GraphQL::type(QrGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (User $root) => $root->getQR(isDistributed: true),
+            ],
             'cards' => [
                 'type' => Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (User $root) => $root->cards()->active()->get(),
+            ],
+            'distributor' => [
+                'type' => GraphQL::type(UserGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (User $root) => $root->distributor,
+            ],
+            'recipient' => [
+                'type' => GraphQL::type(UserGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (User $root) => $root->recipient,
             ],
         ];
     }
