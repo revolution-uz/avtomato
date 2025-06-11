@@ -29,16 +29,6 @@ readonly class CardScoringService
 
     public function __construct(private UniredPinflClient $uniredClient, private BalanceService $balanceService) {}
 
-    public function scoringHumo(CardCreateRequestDTO $dto, string $phone)
-    {
-        return $this->scoringCard($dto, ScoringRequestTypeEnum::HUMO, $phone);
-    }
-
-    public function scoringUzcard(CardCreateRequestDTO $dto)
-    {
-        return $this->scoringCard($dto, ScoringRequestTypeEnum::UZCARD);
-    }
-
     public function verifyHumo(CentralScoringCard $card, string $otp): true
     {
         return $this->verifyCard($card, $otp, ScoringRequestTypeEnum::HUMO);
@@ -49,7 +39,7 @@ readonly class CardScoringService
         return $this->verifyCard($card, $otp, ScoringRequestTypeEnum::UZCARD);
     }
 
-    private function scoringCard(CardCreateRequestDTO $dto, ScoringRequestTypeEnum $type, ?string $phone = null): array
+    public function scoringCard(CardCreateRequestDTO $dto, ScoringRequestTypeEnum $type, ?string $phone = null, ?int $customer_id = null): array
     {
         $card = CentralScoringCard::query()->whereNumber($dto->number)->first();
 
@@ -89,6 +79,7 @@ readonly class CardScoringService
             $model->request = $dto;
             $model->client_code = $this->uniredClient->getClientCode();
             $model->status = ScoringRequestStatusEnum::SUCCESS;
+            $model->customer_id = $customer_id;
             if ($type === ScoringRequestTypeEnum::HUMO) {
                 $model->response = CardScoringResponseDTO::parseFromUniredHumo(
                     UniredMonitoringHumoResponseDTO::from($response->result)
@@ -152,7 +143,7 @@ readonly class CardScoringService
         $uniredDto = UniredClientCardRegisterRequestDTO::from([
             'card_number' => $dto->number,
             'expire' => $dto->expiry,
-            'phone' => $phone ? "+{$phone}" : null,
+            'phone' => $phone ?: null,
             'type' => $type === ScoringRequestTypeEnum::HUMO ? self::CARD_TYPE_HUMO : self::CARD_TYPE_UZCARD,
         ]);
 

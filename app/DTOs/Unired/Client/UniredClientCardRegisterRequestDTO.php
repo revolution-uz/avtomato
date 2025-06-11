@@ -12,4 +12,9 @@ class UniredClientCardRegisterRequestDTO extends BaseUniredDTO
         public ?string $phone, // required only humo cards
         public string $type,
     ) {}
+
+    public function toArray(): array
+    {
+        return array_filter(parent::toArray(), fn ($value) => ! is_null($value));
+    }
 }

@@ -11,6 +11,7 @@ use App\DTOs\Scoring\Card\CardCreateRequestDTO;
 use App\DTOs\Scoring\Katm\KatmCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Mib\MibInfoCreateRequestDTO;
 use App\DTOs\Scoring\Plum\Tax\TaxInfoCreateRequestDTO;
+use App\DTOs\Scoring\RoyxatCreditHistory\RoyxatCreditHistoryInputDTO;
 use App\Enums\ClientCodeEnum;
 use App\Enums\Company\Scoring\ScoringRequestStatusEnum;
 use App\Enums\Company\Scoring\ScoringRequestTypeEnum;
@@ -78,14 +79,22 @@ class ScoringRequest extends Model
                 }
             }
             if (is_null($scoringRequest->customer_id)) {
-                if ($scoringRequest->request instanceof KatmCreateRequestDTO || $scoringRequest->request instanceof MibInfoCreateRequestDTO || $scoringRequest->request instanceof TaxInfoCreateRequestDTO) {
+                if (
+                    $scoringRequest->request instanceof KatmCreateRequestDTO
+                    || $scoringRequest->request instanceof MibInfoCreateRequestDTO
+                    || $scoringRequest->request instanceof TaxInfoCreateRequestDTO
+                    || $scoringRequest->request instanceof RoyxatCreditHistoryInputDTO
+                ) {
                     $customerByPassport = CustomerPassportDTO::from($scoringRequest->request);
-                    $customer = Customer::query()->when(
-                        $customerByPassport->passport_series && $customerByPassport->passport_number,
-                        fn ($query) => $query
-                            ->where('passport_series', $customerByPassport->passport_series)
-                            ->where('passport_number', $customerByPassport->passport_number)
-                    )->orWhere('pinfl', $customerByPassport->pinfl)->first();
+
+                    $customer = Customer::query()
+                        ->when($customerByPassport->pinfl, fn ($q) => $q
+                            ->orWhere('pinfl', $customerByPassport->passport_series))
+                        ->when($customerByPassport->passport_series && $customerByPassport->passport_number, fn ($q) => $q
+                            ->orWhere(fn ($sq) => $sq
+                                ->where('passport_series', $customerByPassport->passport_series)
+                                ->where('passport_number', $customerByPassport->passport_number)))
+                        ->first();
 
                     if ($customer) {
                         $scoringRequest->customer_id = $customer->id;

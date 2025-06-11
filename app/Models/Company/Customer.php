@@ -100,16 +100,16 @@ class Customer extends Model
         parent::boot();
 
         static::created(function (self $customer) {
-            $scoringRequests = ScoringRequest::query()->whereNull('customer_id')->when(function ($query) use ($customer) {
-                $query->when(function ($query) use ($customer) {
-                    $query->where('passport_series', $customer->passport_series)
-                        ->where('passport_number', $customer->passport_number);
-                })->orWhere('pinfl', $customer->pinfl);
-            })->get();
-            foreach ($scoringRequests as $scoringRequest) {
-                $scoringRequest->customer_id = $customer->id;
-                $scoringRequest->save();
-            }
+            ScoringRequest::query()
+                ->whereNull('customer_id')
+                ->where(fn ($q) => $q
+                    ->when($customer->pinfl, fn ($sq) => $sq
+                        ->orWhere('request->pinfl', $customer->pinfl))
+                    ->when($customer->passport_series && $customer->passport_number, fn ($sq) => $sq
+                        ->orWhere('request->passport_series', $customer->passport_series)
+                        ->orWhere('request->passport_number', $customer->passport_number)
+                        ->orWhere('request->passport_id', $customer->passport)))
+                ->update(['customer_id' => $customer->id]);
         });
     }
 
