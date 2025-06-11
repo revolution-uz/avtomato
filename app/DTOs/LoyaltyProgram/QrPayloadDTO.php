@@ -40,7 +40,7 @@ class QrPayloadDTO extends Data
         $qr = $attributeXorSum . '$$'
             . $this->timestamp . '$$'
             . $this->is_distributed . '$$'
-            . md5(config('loyalty-program.security.qr_salt') . '$' . $this->user_id . '$' . $this->tenant_id . '$' . $this->timestamp);
+            . md5(config('clients.loyalty_program.security.qr_salt') . '$' . $this->user_id . '$' . $this->tenant_id . '$' . $this->timestamp);
 
         return substr($qr, 0, 36);
     }

@@ -8,6 +8,7 @@ use App\Models\Company\PersonalAccessToken;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -32,6 +33,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Subscription[] $subscriptions
  * @property Card[]|Collection<int, Card> $cards
  * @property self|null $distributor
+ * @property self|null $recipient
  * @property-read string|null $full_name
  * @property-read bool $has_available_subscription
  */
@@ -74,6 +76,11 @@ class User extends Authenticatable
     public function distributor(): BelongsTo
     {
         return $this->belongsTo(self::class);
+    }
+
+    public function recipient(): HasOne
+    {
+        return $this->hasOne(self::class);
     }
 
     public function tokens(): MorphMany

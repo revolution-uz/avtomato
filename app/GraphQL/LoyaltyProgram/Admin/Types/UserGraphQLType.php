@@ -46,6 +46,14 @@ class UserGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (User $root) => $root->birth_date?->timestamp,
             ],
+            'distributor_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (User $root) => $root->distributor_id,
+            ],
+            'distributed_at' => [
+                'type' => Type::int(),
+                'resolve' => fn (User $root) => $root->distributed_at?->timestamp,
+            ],
             'created_at' => [
                 'type' => Type::nonNull(Type::int()),
                 'resolve' => fn (User $root) => $root->created_at->timestamp,
@@ -66,9 +74,13 @@ class UserGraphQLType extends GraphQLType
                 'type' => Type::listOf(GraphQL::type(CardGraphQLType::GRAPHQL_TYPE_NAME)),
                 'resolve' => fn (User $root) => $root->cards,
             ],
-            'shopmate' => [
+            'distributor' => [
                 'type' => GraphQL::type(self::GRAPHQL_TYPE_NAME),
-                'resolve' => fn (User $root) => $root->shopmate,
+                'resolve' => fn (User $root) => $root->distributor,
+            ],
+            'recipient' => [
+                'type' => GraphQL::type(self::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (User $root) => $root->recipient,
             ],
             'has_available_subscription' => [
                 'type' => Type::nonNull(Type::boolean()),

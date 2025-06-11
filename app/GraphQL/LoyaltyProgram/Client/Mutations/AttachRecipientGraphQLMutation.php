@@ -8,14 +8,16 @@ use App\Rules\PhoneRule;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
 
-class AttachShopmateGraphQLMutation extends Mutation
+class AttachRecipientGraphQLMutation extends Mutation
 {
     protected $attributes = [
-        'name' => 'attachShopmate',
+        'name' => 'attachRecipient',
     ];
 
     public function args(): array
@@ -42,12 +44,21 @@ class AttachShopmateGraphQLMutation extends Mutation
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        $user = auth('loyalty-program-client')->user();
+        $distributor = auth('loyalty-program-client')->user();
 
-        $user->shopmate()->associate(
-            User::query()->where('phone', $args['phone'])->firstOrFail()
-        );
+        if ($distributor->recipient) {
+            throw ValidationException::withMessages(['phone' => 'Recipient already attached']);
+        }
 
-        return $user;
+        if ($distributor->distributed_at && $distributor->distributed_at >= Carbon::now()->subMonth()) {
+            throw ValidationException::withMessages(['phone' => 'You cannot attach a recipient within the same month']);
+        }
+
+        $recipient = User::where('phone', $args['phone'])->firstOrFail();
+        $recipient->distributor()->associate($distributor);
+        $distributor->touch('distributed_at');
+        $recipient->saveOrFail();
+
+        return $distributor;
     }
 }

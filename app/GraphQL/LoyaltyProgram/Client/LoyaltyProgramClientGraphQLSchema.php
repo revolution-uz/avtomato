@@ -9,11 +9,12 @@ use App\GraphQL\LoyaltyProgram\Admin\Types\ShopGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\SubscriptionGraphQLType;
 use App\GraphQL\LoyaltyProgram\Admin\Types\TariffGraphQLType;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\AttachCardGraphQLMutation;
-use App\GraphQL\LoyaltyProgram\Client\Mutations\AttachShopmateGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Client\Mutations\AttachRecipientGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\CancelSubscriptionGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\ConfirmCardGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\CreateSubscriptionGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\DetachCardGraphQLMutation;
+use App\GraphQL\LoyaltyProgram\Client\Mutations\DetachRecipientGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\LogoutGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Mutations\ProfileUpdateGraphQLMutation;
 use App\GraphQL\LoyaltyProgram\Client\Queries\ActiveTariffGraphQLQuery;
@@ -48,7 +49,8 @@ class LoyaltyProgramClientGraphQLSchema implements ConfigConvertible
                 AttachCardGraphQLMutation::class,
                 ConfirmCardGraphQLMutation::class,
                 DetachCardGraphQLMutation::class,
-                AttachShopmateGraphQLMutation::class,
+                AttachRecipientGraphQLMutation::class,
+                DetachRecipientGraphQLMutation::class,
             ],
             'query' => [
                 ProfileMeGraphQLQuery::class,
