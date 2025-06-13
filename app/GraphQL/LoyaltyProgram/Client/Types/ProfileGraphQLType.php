@@ -42,6 +42,10 @@ class ProfileGraphQLType extends GraphQLType
                 'type' => Type::int(),
                 'resolve' => fn (User $root) => $root->birth_date?->timestamp,
             ],
+            'distributor_id' => [
+                'type' => Type::int(),
+                'resolve' => fn (User $root) => $root->distributor_id,
+            ],
             'distributed_at' => [
                 'type' => Type::int(),
                 'resolve' => fn (User $root) => $root->distributed_at?->timestamp,
@@ -56,7 +60,7 @@ class ProfileGraphQLType extends GraphQLType
             ],
             'subscriptions' => [
                 'type' => Type::listOf(GraphQL::type(SubscriptionGraphQLType::GRAPHQL_TYPE_NAME)),
-                'resolve' => fn (User $root) => $root->subscriptions()->where('is_active', true)->get(),
+                'resolve' => fn (User $root) => $root->subscriptions,
             ],
             'qr' => [
                 'type' => GraphQL::type(QrGraphQLType::GRAPHQL_TYPE_NAME),
@@ -77,6 +81,14 @@ class ProfileGraphQLType extends GraphQLType
             'recipient' => [
                 'type' => GraphQL::type(UserGraphQLType::GRAPHQL_TYPE_NAME),
                 'resolve' => fn (User $root) => $root->recipient,
+            ],
+            'subscription' => [
+                'type' => GraphQL::type(SubscriptionGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (User $root) => $root->getAvailableSubscription(),
+            ],
+            'distributor_subscription' => [
+                'type' => GraphQL::type(SubscriptionGraphQLType::GRAPHQL_TYPE_NAME),
+                'resolve' => fn (User $root) => $root->distributor?->getAvailableSubscription(),
             ],
         ];
     }
