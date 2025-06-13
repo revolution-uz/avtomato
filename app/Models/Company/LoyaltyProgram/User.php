@@ -30,7 +30,7 @@ use Stancl\Tenancy\Database\Concerns\TenantConnection;
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  * @property-read int|null $active_subscription_limit
- * @property Subscription[] $subscriptions
+ * @property Subscription[]|Collection<int, Subscription> $subscriptions
  * @property Card[]|Collection<int, Card> $cards
  * @property self|null $distributor
  * @property self|null $recipient
@@ -56,6 +56,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'birth_date' => 'date',
+        'distributed_at' => 'datetime',
     ];
 
     public function subscriptions(): HasMany
@@ -80,7 +81,7 @@ class User extends Authenticatable
 
     public function recipient(): HasOne
     {
-        return $this->hasOne(self::class);
+        return $this->hasOne(self::class, 'distributor_id', 'id');
     }
 
     public function tokens(): MorphMany
