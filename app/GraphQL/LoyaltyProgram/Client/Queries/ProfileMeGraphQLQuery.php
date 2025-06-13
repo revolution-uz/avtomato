@@ -3,7 +3,6 @@
 namespace App\GraphQL\LoyaltyProgram\Client\Queries;
 
 use App\GraphQL\LoyaltyProgram\Client\Types\ProfileGraphQLType;
-use App\Models\Company\LoyaltyProgram\Subscription;
 use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -23,10 +22,6 @@ class ProfileMeGraphQLQuery extends Query
 
     public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        // Subscription::factory()->create();
-        //
-        // dd(1);
-
         return auth('loyalty-program-client')->user();
     }
 }
