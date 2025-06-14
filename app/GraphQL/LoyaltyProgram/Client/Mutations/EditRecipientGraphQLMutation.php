@@ -52,17 +52,17 @@ class EditRecipientGraphQLMutation extends Mutation
                 return $distributor->refresh();
             }
 
-            throw ValidationException::withMessages(['phone' => 'No recipient is currently attached to this distributor']);
+            throw ValidationException::withMessages(['phone' => __('api.no_recipient_attached')]);
         }
 
         if (
             $distributor->distributed_at && ($leftDays = (int) Carbon::now()->diffInDays($distributor->distributed_at->addMonth())) > 0
         ) {
-            throw ValidationException::withMessages(['phone' => "You can change the recipient in {$leftDays} day(s)."]);
+            throw ValidationException::withMessages(['phone' => __('api.change_recipient_in_days', ['left_days' => $leftDays])]);
         }
 
         if ($recipient = User::query()->firstWhere('phone', $phone)) {
-            $recipient->distributor()->associate($distributor);
+            $recipient->update(['distributor_id' => $distributor->id]);
 
         } else {
             User::query()->create(['phone' => $phone, 'distributor_id' => $distributor->id]);

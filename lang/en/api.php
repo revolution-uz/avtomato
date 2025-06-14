@@ -45,4 +45,6 @@ return [
     'invalid_otp' => 'OTP provided is invalid',
     'otp_expired' => 'OTP has expired',
     'unknown_error' => 'An unexpected error occurred. Please check your information and try again.',
+    'no_recipient_attached' => 'No recipient is currently attached to this distributor.',
+    'change_recipient_in_days' => 'You can change the recipient in :left_days day(s).',
 ];
