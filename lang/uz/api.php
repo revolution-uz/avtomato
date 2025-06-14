@@ -48,4 +48,6 @@ return [
     'invalid_otp' => 'Kiritilgan OTP noto\'g\'ri',
     'otp_expired' => 'OTP muddati tugagan',
     'unknown_error' => 'Kutilmagan xatolik yuz berdi. Iltimos, ma\'lumotlaringizni qayta tekshirib, yana bir bor urinib ko\'ring.',
+    'no_recipient_attached' => 'Hozirda ushbu tarqatuvchiga birorta ham oluvchi biriktirilmagan',
+    'change_recipient_in_days' => 'Siz oluvchini :left_days kundan keyin o\'zgartirishingiz mumkin',
 ];
