@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Services;
+namespace Tests\Unit\Services;
 
 use App\Enums\Company\LoyaltyProgram\OrderStatusEnum;
 use App\Models\Company\LoyaltyProgram\Item;
